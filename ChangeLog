@@ -1,3 +1,20 @@
+2017-10-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* Makeconfig (+link-static-before-libc): Use the first of
+	$(CRT-$(@F)) and $(csu-objpfx)$(static-start-installed-name).
+	* gmon/Makefile (tests): Add tst-gmon-static.
+	(tests-static): Likewise.
+	(CFLAGS-tst-gmon-static.c): New.
+	(CRT-tst-gmon-static): Likewise.
+	(DEFAULT-LDFLAGS-tst-gmon-static): Likewise.
+	(tst-gmon-static-ENV): Likewise.
+	(tests-special): Likewise.
+	($(objpfx)tst-gmon-static.out): Likewise.
+	(clean-tst-gmon-static-data): Likewise.
+	($(objpfx)tst-gmon-static-gprof.out): Likewise.
+	* gmon/tst-gmon-static-gprof.sh: New file.
+	* gmon/tst-gmon-static.c: Likewise.
+
 2017-10-13  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #22295]

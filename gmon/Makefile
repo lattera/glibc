@@ -33,6 +33,9 @@ tests-static	+= tst-profile-static
 LDFLAGS-tst-profile-static = -profile
 endif
 
+tests += tst-gmon-static
+tests-static += tst-gmon-static
+
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests += tst-gmon-pie
 tests-pie += tst-gmon-pie
@@ -47,6 +50,14 @@ CRT-tst-gmon := $(csu-objpfx)gcrt1.o
 tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-gprof.out
+endif
+
+CFLAGS-tst-gmon-static.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
+CRT-tst-gmon-static := $(csu-objpfx)gcrt1.o
+DEFAULT-LDFLAGS-tst-gmon-static = $(no-pie-ldflag)
+tst-gmon-static-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-static.data
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-gmon-static-gprof.out
 endif
 
 CFLAGS-tst-gmon-pie.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
@@ -81,6 +92,16 @@ clean-tst-gmon-data:
 
 $(objpfx)tst-gmon-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon.out
 	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon $(objpfx)tst-gmon.data.* > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-gmon-static.out: clean-tst-gmon-static-data
+clean-tst-gmon-static-data:
+	rm -f $(objpfx)tst-gmon-static.data.*
+
+$(objpfx)tst-gmon-static-gprof.out: tst-gmon-static-gprof.sh \
+				    $(objpfx)tst-gmon-static.out
+	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon-static \
+		$(objpfx)tst-gmon-static.data.* > $@; \
 	$(evaluate-test)
 
 $(objpfx)tst-gmon-pie.out: clean-tst-gmon-pie-data
