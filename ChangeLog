@@ -1,3 +1,29 @@
+2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthreadP.h (ASSERT_PTHREAD_STRING,
+	ASSERT_PTHREAD_INTERNAL_OFFSET): New macro.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Add build time
+	checks for internal pthread_mutex_t offsets.
+	* sysdeps/aarch64/nptl/pthread-offsets.h
+	(__PTHREAD_MUTEX_NUSERS_OFFSET, __PTHREAD_MUTEX_KIND_OFFSET,
+	__PTHREAD_MUTEX_SPINS_OFFSET, __PTHREAD_MUTEX_ELISION_OFFSET,
+	__PTHREAD_MUTEX_LIST_OFFSET): New macro.
+	* sysdeps/alpha/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/arm/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/hppa/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/i386/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/ia64/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/m68k/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/microblaze/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/mips/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/nios2/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/powerpc/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/s390/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/sh/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/sparc/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/tile/nptl/pthread-offsets.h: Likewise.
+	* sysdeps/x86_64/nptl/pthread-offsets.h: Likewise.
+
 2017-11-07  Florian Weimer  <fweimer@redhat.com>
 
 	* bits/mman-linux.h: Move ...

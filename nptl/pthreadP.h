@@ -639,4 +639,10 @@ check_stacksize_attr (size_t st)
   return EINVAL;
 }
 
+#define ASSERT_PTHREAD_STRING(x) __STRING (x)
+#define ASSERT_PTHREAD_INTERNAL_OFFSET(type, member, offset)		\
+  _Static_assert (offsetof (type, member) == offset,			\
+		  "offset of " #member " field of " #type " != "	\
+		  ASSERT_PTHREAD_STRING (offset))
+
 #endif	/* pthreadP.h */

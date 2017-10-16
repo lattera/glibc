@@ -23,6 +23,7 @@
 #include <kernel-features.h>
 #include "pthreadP.h"
 #include <atomic.h>
+#include <pthread-offsets.h>
 
 #include <stap-probe.h>
 
@@ -58,6 +59,18 @@ __pthread_mutex_init (pthread_mutex_t *mutex,
   const struct pthread_mutexattr *imutexattr;
 
   assert (sizeof (pthread_mutex_t) <= __SIZEOF_PTHREAD_MUTEX_T);
+  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__nusers,
+				  __PTHREAD_MUTEX_NUSERS_OFFSET);
+  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__kind,
+				  __PTHREAD_MUTEX_KIND_OFFSET);
+  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__spins,
+				  __PTHREAD_MUTEX_SPINS_OFFSET);
+#if __PTHREAD_MUTEX_LOCK_ELISION
+  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__elision,
+				  __PTHREAD_MUTEX_ELISION_OFFSET);
+#endif
+  ASSERT_PTHREAD_INTERNAL_OFFSET (pthread_mutex_t, __data.__list,
+				  __PTHREAD_MUTEX_LIST_OFFSET);
 
   imutexattr = ((const struct pthread_mutexattr *) mutexattr
 		?: &default_mutexattr);
