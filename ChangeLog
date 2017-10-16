@@ -1,3 +1,7 @@
+2017-10-16  Florian Weimer  <fweimer@redhat.com>
+
+	* malloc/Makefile (others-extras): Set to mcheck-init.o.
+
 2017-10-16  Carlos O'Donell  <carlos@redhat.com>
 
 	* include/shlib-compat.h (compat_symbol_reference): Update

@@ -100,6 +100,7 @@ LDFLAGS-tst-mallocstate = -rdynamic
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
+others-extras = mcheck-init.o
 
 # Include the cleanup handler.
 aux := set-freeres thread-freeres
