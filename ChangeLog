@@ -1,5 +1,11 @@
 2017-10-16  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22050]
+	* malloc/mcheck-init.c (__malloc_initialize_hook): Use
+	compat_symbol_reference to access non-default version.
+
+2017-10-16  Florian Weimer  <fweimer@redhat.com>
+
 	* malloc/Makefile (others-extras): Set to mcheck-init.o.
 
 2017-10-16  Carlos O'Donell  <carlos@redhat.com>
