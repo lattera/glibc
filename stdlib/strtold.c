@@ -20,7 +20,13 @@
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `float' version, `strtof'.  */
 
+#include <bits/floatn.h>
 #include <bits/long-double.h>
+
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
+# define strtof128 __hide_strtof128
+# define wcstof128 __hide_wcstof128
+#endif
 
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <wchar.h>
@@ -60,5 +66,15 @@ libc_hidden_ver (____new_wcstold_internal, __wcstold_internal)
 long_double_symbol (libc, __new_strtold, strtold);
 long_double_symbol (libc, ____new_strtold_internal, __strtold_internal);
 libc_hidden_ver (____new_strtold_internal, __strtold_internal)
+# endif
+#endif
+
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
+# undef strtof128
+# undef wcstof128
+# ifdef USE_WIDE_CHAR
+weak_alias (NEW (wcstold), wcstof128)
+# else
+weak_alias (NEW (strtold), strtof128)
 # endif
 #endif

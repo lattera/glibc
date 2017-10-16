@@ -1,3 +1,27 @@
+2017-10-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/strtold.c: Include <bits/floatn.h>
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (strtof128): Define
+	and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (wcstof128): Define
+	and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+	* sysdeps/ieee754/ldbl-128/strtold_l.c [__HAVE_FLOAT128 &&
+	!__HAVE_DISTINCT_FLOAT128] (strtof128_l): Define and later
+	undefine as macro.  Define as weak alias if [!USE_WIDE_CHAR].
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (wcstof128_l):
+	Define and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c: Include
+	<bits/floatn.h>.
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (strtof128_l):
+	Define and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (wcstof128_l):
+	Define and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+
 2017-10-15  Carlos O'Donell  <carlos@redhat.com>
 
 	* localedata/collate-test.c (allocate_arrays): Don't use \n in
