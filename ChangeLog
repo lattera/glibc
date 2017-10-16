@@ -1,5 +1,10 @@
 2017-10-16  Florian Weimer  <fweimer@redhat.com>
 
+	* version.h (VERSION): Switch to ".9000" as the development
+	version suffix.
+
+2017-10-16  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22050]
 	* malloc/mcheck-init.c (__malloc_initialize_hook): Use
 	compat_symbol_reference to access non-default version.
