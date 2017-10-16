@@ -1,3 +1,11 @@
+2017-10-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/float128-abi.h: New file.
+	* sysdeps/ieee754/float128/Versions (FLOAT128_VERSION): Move
+	non-__prefixed symbols to ....
+	* math/Versions: ... here.  Include <float128-abi.h>.
+	* stdlib/Versions ... and here.  Include <float128-abi.h>
+
 2017-10-16  Florian Weimer  <fweimer@redhat.com>
 
 	* version.h (VERSION): Switch to ".9000" as the development

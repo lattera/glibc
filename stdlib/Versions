@@ -1,3 +1,4 @@
+%include <float128-abi.h>
 libc {
   GLIBC_2.0 {
     # functions with required interface outside normal name space
@@ -121,6 +122,15 @@ libc {
     strfromd; strfromf; strfroml;
     getrandom; getentropy;
   }
+%ifdef FLOAT128_VERSION
+  FLOAT128_VERSION {
+    strfromf128;
+    strtof128;
+    strtof128_l;
+    wcstof128;
+    wcstof128_l;
+  }
+%endif
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.
