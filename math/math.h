@@ -448,6 +448,15 @@ enum
 /* Return nonzero value if sign of X is negative.  */
 # if __GNUC_PREREQ (6,0)
 #  define signbit(x) __builtin_signbit (x)
+# elif defined __cplusplus
+  /* In C++ mode, __MATH_TG cannot be used, because it relies on
+     __builtin_types_compatible_p, which is a C-only builtin.
+     The check for __cplusplus allows the use of the builtin instead of
+     __MATH_TG. This is provided for libstdc++, only to let its configure
+     test work. No further use of this definition of signbit is expected
+     in C++ mode, since libstdc++ provides its own version of signbit
+     in cmath (which undefines signbit). */
+#  define signbit(x) __builtin_signbitl (x)
 # elif __GNUC_PREREQ (4,0)
 #  define signbit(x) __MATH_TG ((x), __builtin_signbit, (x))
 # else

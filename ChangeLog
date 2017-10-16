@@ -1,3 +1,9 @@
+2017-10-17  Romain Naour  <romain.naour@gmail.com>  (tiny change)
+
+	[BZ #22296]
+	* math/math.h: Let signbit use the builtin in C++ mode with gcc
+	< 6.x
+
 2017-10-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs):
