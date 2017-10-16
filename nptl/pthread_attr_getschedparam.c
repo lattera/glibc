@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <string.h>
 #include "pthreadP.h"
 
@@ -27,7 +26,6 @@ __pthread_attr_getschedparam (const pthread_attr_t *attr,
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   /* Copy the current values.  */

@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <string.h>
 #include "pthreadP.h"
@@ -26,7 +25,6 @@ int
 __pthread_attr_setschedparam (pthread_attr_t *attr,
 			      const struct sched_param *param)
 {
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
   int ret = check_sched_priority_attr (param->sched_priority,

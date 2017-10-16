@@ -32,6 +32,8 @@ int
 __pthread_rwlock_init (pthread_rwlock_t *rwlock,
 		       const pthread_rwlockattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
+
   const struct pthread_rwlockattr *iattr;
 
   iattr = ((const struct pthread_rwlockattr *) attr) ?: &default_rwlockattr;

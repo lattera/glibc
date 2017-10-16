@@ -639,6 +639,14 @@ check_stacksize_attr (size_t st)
   return EINVAL;
 }
 
+#define ASSERT_TYPE_SIZE(type, size) 					\
+  _Static_assert (sizeof (type) == size,				\
+		  "sizeof (" #type ") != " #size)
+
+#define ASSERT_PTHREAD_INTERNAL_SIZE(type, internal) 			\
+  _Static_assert (sizeof ((type) { 0 }).__size >= sizeof (internal), 	\
+		  "sizeof (" #type ".__size) < sizeof (" #internal ")")
+
 #define ASSERT_PTHREAD_STRING(x) __STRING (x)
 #define ASSERT_PTHREAD_INTERNAL_OFFSET(type, member, offset)		\
   _Static_assert (offsetof (type, member) == offset,			\

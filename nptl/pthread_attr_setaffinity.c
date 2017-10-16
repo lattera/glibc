@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -31,7 +30,6 @@ __pthread_attr_setaffinity_new (pthread_attr_t *attr, size_t cpusetsize,
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   if (cpuset == NULL || cpusetsize == 0)

@@ -19,14 +19,12 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <pthreadP.h>
-#include <assert.h>
 
 int
 pthread_getattr_default_np (pthread_attr_t *out)
 {
   struct pthread_attr *real_out;
 
-  assert (sizeof (*out) >= sizeof (struct pthread_attr));
   real_out = (struct pthread_attr *) out;
 
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);

@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include "pthreadP.h"
@@ -33,7 +32,6 @@ __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   /* Catch invalid sizes.  */
@@ -71,7 +69,6 @@ __old_pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   /* Catch invalid sizes.  */

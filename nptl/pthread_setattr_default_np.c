@@ -19,7 +19,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <pthreadP.h>
-#include <assert.h>
 #include <string.h>
 
 
@@ -30,7 +29,6 @@ pthread_setattr_default_np (const pthread_attr_t *in)
   struct pthread_attr attrs;
   int ret;
 
-  assert (sizeof (*in) >= sizeof (struct pthread_attr));
   real_in = (struct pthread_attr *) in;
 
   /* Catch invalid values.  */

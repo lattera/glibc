@@ -1,5 +1,65 @@
 2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/pthreadP.h (ASSERT_TYPE_SIZE, ASSERT_PTHREAD_INTERNAL_SIZE):
+	New macros.
+	* nptl/pthread_attr_init.c (__pthread_mutex_init): Add build time
+	checks for expected input type size.
+	* nptl/pthread_barrier_init.c (__pthread_barrier_init): Likewise.
+	* nptl/pthread_barrierattr_init.c (pthread_barrierattr_init):
+	Likewise.
+	* nptl/pthread_cond_init.c (__pthread_cond_init): Likewise.
+	* nptl/pthread_condattr_init.c (__pthread_condattr_init): Likewise.
+	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Likewise.
+	* nptl/pthread_mutexattr_init.c (__pthread_mutexattr_init): Likewise.
+	* nptl/pthread_rwlock_init.c (__pthread_rwlock_init): Likewise.
+	* nptl/pthread_rwlockattr_init.c (pthread_rwlockattr_init): Likewise.
+	* nptl/sem_init.c (__new_sem_init, __old_sem_init): Likewise
+	* nptl/pthread_attr_destroy.c (__pthread_attr_destroy): Remove
+	superflous runtime assert check.
+	* nptl/pthread_attr_getaffinity.c (__pthread_attr_getaffinity_new):
+	Likewise.
+	* nptl/pthread_attr_getdetachstate.c (__pthread_attr_getdetachstate):
+	Likewise.
+	* nptl/pthread_attr_getguardsize.c (pthread_attr_getguardsize):
+	Likewise.
+	* nptl/pthread_attr_getinheritsched.c (__pthread_attr_getinheritsched):
+	Likewise.
+	* nptl/pthread_attr_getschedparam.c (__pthread_attr_getschedparam):
+	Likewise.
+	* nptl/pthread_attr_getschedpolicy.c (__pthread_attr_getschedpolicy):
+	Likewise.
+	* nptl/pthread_attr_getscope.c (__pthread_attr_getscope): Likewise.
+	* nptl/pthread_attr_getstack.c (__pthread_attr_getstack): Likewise.
+	* nptl/pthread_attr_getstackaddr.c (__pthread_attr_getstackaddr):
+	Likewise.
+	* nptl/pthread_attr_getstacksize.c (__pthread_attr_getstacksize):
+	Likewise.
+	* nptl/pthread_attr_setaffinity.c (__pthread_attr_setaffinity_new):
+	Likewise.
+	* nptl/pthread_attr_setdetachstate.c (__pthread_attr_setdetachstate):
+	Likewise.
+	* nptl/pthread_attr_setguardsize.c (pthread_attr_setguardsize):
+	Likewise.
+	* nptl/pthread_attr_setinheritsched.c
+	(__pthread_attr_setinheritsched): Likewise.
+	* nptl/pthread_attr_setschedparam.c (__pthread_attr_setschedparam):
+	Likewise.
+	* nptl/pthread_attr_setschedpolicy.c (__pthread_attr_setschedpolicy):
+	Likewise.
+	* nptl/pthread_attr_setscope.c (__pthread_attr_setscope): Likewise.
+	* nptl/pthread_attr_setstack.c (__pthread_attr_setstack,
+	__old_pthread_attr_setstack): Likewise.
+	* nptl/pthread_attr_setstackaddr.c (__pthread_attr_setstackaddr):
+	Likewise.
+	* nptl/pthread_attr_setstacksize.c (__pthread_attr_setstacksize):
+	Likewise.
+	* nptl/pthread_getattr_default_np.c (pthread_getattr_default_np):
+	Likewise.
+	* nptl/pthread_mutex_lock.c (__pthread_mutex_lock): Likewise.
+	* nptl/pthread_setattr_default_np.c (pthread_setattr_default_np):
+	Likewise.
+	* nptl/tst-typesizes.c: Remove file.
+
 	* nptl/pthreadP.h (ASSERT_PTHREAD_STRING,
 	ASSERT_PTHREAD_INTERNAL_OFFSET): New macro.
 	* nptl/pthread_mutex_init.c (__pthread_mutex_init): Add build time

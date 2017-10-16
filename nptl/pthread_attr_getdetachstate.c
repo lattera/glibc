@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include "pthreadP.h"
 
 
@@ -25,7 +24,6 @@ __pthread_attr_getdetachstate (const pthread_attr_t *attr, int *detachstate)
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   *detachstate = (iattr->flags & ATTR_FLAG_DETACHSTATE

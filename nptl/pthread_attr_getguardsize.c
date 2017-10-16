@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include "pthreadP.h"
 
 
@@ -25,7 +24,6 @@ pthread_attr_getguardsize (const pthread_attr_t *attr, size_t *guardsize)
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   *guardsize = iattr->guardsize;

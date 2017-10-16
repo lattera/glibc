@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
 #include "pthreadP.h"
 
@@ -26,7 +25,6 @@ __pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
 {
   struct pthread_attr *iattr;
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   /* Some code assumes this function to work even if no stack address

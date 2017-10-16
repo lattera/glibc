@@ -26,6 +26,8 @@
 int
 __pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t *cond_attr)
 {
+  ASSERT_TYPE_SIZE (pthread_cond_t, __SIZEOF_PTHREAD_COND_T);
+
   struct pthread_condattr *icond_attr = (struct pthread_condattr *) cond_attr;
 
   memset (cond, 0, sizeof (pthread_cond_t));

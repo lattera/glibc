@@ -27,6 +27,8 @@
 int
 __new_sem_init (sem_t *sem, int pshared, unsigned int value)
 {
+  ASSERT_PTHREAD_INTERNAL_SIZE (sem_t, struct new_sem);
+
   /* Parameter sanity check.  */
   if (__glibc_unlikely (value > SEM_VALUE_MAX))
     {
@@ -68,6 +70,8 @@ int
 attribute_compat_text_section
 __old_sem_init (sem_t *sem, int pshared, unsigned int value)
 {
+  ASSERT_PTHREAD_INTERNAL_SIZE (sem_t, struct new_sem);
+
   /* Parameter sanity check.  */
   if (__glibc_unlikely (value > SEM_VALUE_MAX))
     {

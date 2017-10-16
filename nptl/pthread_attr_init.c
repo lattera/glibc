@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -34,12 +33,14 @@ __pthread_attr_init_2_1 (pthread_attr_t *attr)
 {
   struct pthread_attr *iattr;
 
+  ASSERT_TYPE_SIZE (pthread_attr_t, __SIZEOF_PTHREAD_ATTR_T);
+  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_attr_t, struct pthread_attr);
+
   /* Many elements are initialized to zero so let us do it all at
      once.  This also takes care of clearing the bytes which are not
      internally used.  */
   memset (attr, '\0', __SIZEOF_PTHREAD_ATTR_T);
 
-  assert (sizeof (*attr) >= sizeof (struct pthread_attr));
   iattr = (struct pthread_attr *) attr;
 
   /* Default guard size specified by the standard.  */

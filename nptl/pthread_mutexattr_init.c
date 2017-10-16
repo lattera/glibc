@@ -23,6 +23,10 @@
 int
 __pthread_mutexattr_init (pthread_mutexattr_t *attr)
 {
+  ASSERT_TYPE_SIZE (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
+  ASSERT_PTHREAD_INTERNAL_SIZE (pthread_mutexattr_t,
+				struct pthread_mutexattr);
+
   if (sizeof (struct pthread_mutexattr) != sizeof (pthread_mutexattr_t))
     memset (attr, '\0', sizeof (*attr));
 
