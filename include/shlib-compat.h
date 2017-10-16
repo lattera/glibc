@@ -78,8 +78,12 @@
 
 #endif
 
-/* Use compat_symbol_reference for a reference to a specific version
-   of a symbol.  Use compat_symbol to define such a symbol.  */
+/* Use compat_symbol_reference for a reference *or* definition of a
+   specific version of a symbol.  Definitions are primarily used to
+   ensure tests reference the exact compat symbol required, or define an
+   interposing symbol of the right version e.g. __malloc_initialize_hook
+   in mcheck-init.c.  Use compat_symbol to define such a symbol within
+   the shared libraries that are built for users.  */
 #define compat_symbol_reference(lib, local, symbol, version) \
   compat_symbol_reference_1 (lib, local, symbol, version)
 #define compat_symbol_reference_1(lib, local, symbol, version) \
