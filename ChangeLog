@@ -1,5 +1,12 @@
 2017-10-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/Makefile (test-types): Add
+	$(type-float128-$(float128-alias-fcts)).
+	* math/test-float128.h (TYPE_STR): Define conditional on
+	[FLT128_MANT_DIG == LDBL_MANT_DIG].
+	(ULP_IDX): Likewise.
+	(ULP_I_IDX): Likewise.
+
 	* stdlib/strtold.c: Include <bits/floatn.h>
 	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128] (strtof128): Define
 	and later undefine as macro.  Define as weak alias if

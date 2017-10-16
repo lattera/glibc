@@ -127,7 +127,8 @@ type-float128-suffix := f128
 type-float128-routines := t_sincosf128 k_sincosf128
 type-float128-yes := float128
 types = $(types-basic) $(type-float128-$(float128-fcts))
-test-types = $(test-types-basic) $(type-float128-$(float128-fcts))
+test-types = $(test-types-basic) $(type-float128-$(float128-fcts)) \
+	     $(type-float128-$(float128-alias-fcts))
 
 # For each of the basic types (float, double, long double), replace the
 # occurrences of 'F' in arg 1 with the appropriate suffix for the type.
