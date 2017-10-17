@@ -1,3 +1,15 @@
+2017-10-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/float.h [!__GNUC_PREREQ (7, 0) && __HAVE_FLOAT128 &&
+	__GLIBC_USE (IEC_60559_TYPES_EXT)] (FLT128_MAX): Define using
+	__f128.
+	[!__GNUC_PREREQ (7, 0) && __HAVE_FLOAT128 && __GLIBC_USE
+	(IEC_60559_TYPES_EXT)] (FLT128_EPSILON): Likewise.
+	[!__GNUC_PREREQ (7, 0) && __HAVE_FLOAT128 && __GLIBC_USE
+	(IEC_60559_TYPES_EXT)] (FLT128_MIN): Likewise.
+	[!__GNUC_PREREQ (7, 0) && __HAVE_FLOAT128 && __GLIBC_USE
+	(IEC_60559_TYPES_EXT)] (FLT128_TRUE_MIN): Likewise.
+
 2017-10-17  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* bits/uio-ext.h (RWF_HIPRI, RWF_DSYNC, RWF_SYNC, RWF_NOWAIT): New
