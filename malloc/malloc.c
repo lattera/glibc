@@ -2921,7 +2921,7 @@ static __thread tcache_perthread_struct *tcache = NULL;
 
 /* Caller must ensure that we know tc_idx is valid and there's room
    for more chunks.  */
-static void
+static __always_inline void
 tcache_put (mchunkptr chunk, size_t tc_idx)
 {
   tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
@@ -2933,7 +2933,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 
 /* Caller must ensure that we know tc_idx is valid and there's
    available chunks to remove.  */
-static void *
+static __always_inline void *
 tcache_get (size_t tc_idx)
 {
   tcache_entry *e = tcache->entries[tc_idx];

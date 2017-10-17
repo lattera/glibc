@@ -1,3 +1,8 @@
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (tcache_put): Inline.
+	(tcache_get): Inline.
+
 2017-10-17  Jordi Mallach  <jordi@gnu.org>
 
 	Aurelien Jarno  <aurelien@aurel32.net>
