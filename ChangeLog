@@ -1,5 +1,16 @@
 2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	[BZ #22159]
+	* malloc/arena.c (ptmalloc_init): Call malloc_init_state.
+	* malloc/malloc.c (do_check_free_chunk): Fix build bug.
+	(do_check_remalloced_chunk): Fix build bug.
+	(do_check_malloc_state): Add assert that checks arena->top.
+	(malloc_consolidate): Remove initialization.
+	(int_mallinfo): Remove call to malloc_consolidate.
+	 (__libc_mallopt): Clarify why malloc_consolidate is needed.
+
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* malloc/malloc.c (FASTCHUNKS_BIT): Remove.
 	(have_fastchunks): Remove.
 	(clear_fastchunks): Remove.
