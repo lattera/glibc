@@ -97,9 +97,6 @@ static const char *to_code = "";
 /* File to write output to.  If NULL write to stdout.  */
 static const char *output_file;
 
-/* Nonzero if verbose ouput is wanted.  */
-int verbose;
-
 /* Nonzero if list of all coded character sets is wanted.  */
 static int list;
 

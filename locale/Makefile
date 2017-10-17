@@ -53,7 +53,8 @@ localedef-modules	:= localedef $(categories:%=ld-%) \
 			   repertoire locarchive
 localedef-aux		:= md5
 locale-modules		:= locale locale-spec
-lib-modules		:= charmap-dir simple-hash xmalloc xstrdup
+lib-modules		:= charmap-dir simple-hash xmalloc xstrdup \
+			   record-status
 
 
 GPERF = gperf

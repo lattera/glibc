@@ -114,7 +114,6 @@ struct localedef_t
 
 
 /* Global variables of the localedef program.  */
-extern int verbose;
 extern const char *repertoire_global;
 extern int max_locarchive_open_retry;
 extern bool no_archive;

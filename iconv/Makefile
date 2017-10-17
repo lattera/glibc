@@ -31,7 +31,8 @@ routines	+= gconv_dl
 vpath %.c ../locale/programs ../intl
 
 iconv_prog-modules = iconv_charmap charmap charmap-dir linereader \
-		     dummy-repertoire simple-hash xstrdup xmalloc
+		     dummy-repertoire simple-hash xstrdup xmalloc \
+		     record-status
 iconvconfig-modules = strtab xmalloc hash-string
 extra-objs	   = $(iconv_prog-modules:=.o) $(iconvconfig-modules:=.o)
 CFLAGS-iconv_prog.c = -I../locale/programs

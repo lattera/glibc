@@ -256,9 +256,15 @@ charmap_read (const char *filename, int verbose, int error_not_found,
 
       if (failed)
 	{
-	  record_warning (_("\
-character map `%s' is not ASCII compatible, locale not ISO C compliant\n"),
-			  result->code_set_name);
+	  /* A user may disable the ASCII compatibility warning check,
+	     but we must remember that the encoding is not ASCII
+	     compatible, since it may have other implications.  Later
+	     we will set _NL_CTYPE_MAP_TO_NONASCII from this value.  */
+	  if (warn_ascii)
+	    record_warning (_(
+"character map `%s' is not ASCII compatible, locale not ISO C compliant "
+"[--no-warnings=ascii]"),
+			    result->code_set_name);
 	  enc_not_ascii_compatible = true;
 	}
     }

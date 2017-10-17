@@ -1,5 +1,34 @@
 2017-10-25  Carlos O'Donell  <carlos@redhat.com>
 
+	* locale/programs/record-status.h: Define globals, and function
+	prototypes. Move function bodies...
+	* locale/programs/record-status.c: ... to here. New file.
+	* iconv/Makefile (iconv_prog-modules): Add record-status.
+	* locale/Makefile (lib-modules): Likewise.
+	* iconv/iconv_prog.c: Remove verbose.
+	* iconv/iconv_prog.h: Include record-status.h (defines verbose).
+	* locale/programs/charmap.c (charmap_read): If warn_ascii is true then
+	record a warning about ASCII compatibility.
+	* locale/programs/ld-monetary.c (monetary_finish): If
+	warn_int_curr_symbol is true then record a warning about the symbol
+	not being in our ISO 4217 list.
+	* locale/programs/locale.c: Include record-status.h. Remove verbose.
+	* locale/programs/localedef.c: Include ctype.h. Remove delcaration of
+	verbose, recorded_warning_count, recorded_error_count, and be_quiet.
+	(OPT_NO_WARN): Define.
+	(OPT_WARN): Define.
+	(options): Add entry for --no-warnings, and --warnings.
+	(set_warnings): New function to enable/disable warnings.
+	(parse_opt): Call set_warnings for OPT_NO_WARN and OPT_WARN.
+	* locale/programs/localedef.h: Remove warn_int_curr_symbol.
+	* localedata/gen-locale.sh: Default flags to `--quiet -c'.
+	Add `--no-warnings=ascii' to locales using SHIFT_JIS or SHIFT_JIXX0213.
+	Pass flags to generate_locale.
+	(generate_locale): Accept new flag argument and pass it to localedef
+	invocation.
+	* localedata/Makefile (INSTALL-SUPPORTED-LOCALES): Use
+	--no-warnings=ascii for SHIFT_JIS and SHIFT_JISX0213 charmaps.
+
 	* localedata/Makefile (test-input-data): Use full file name.
 	* localedata/da_DK.in: Rename to...
 	* localedata/da_DK.ISO-8859-1.in: ...this.

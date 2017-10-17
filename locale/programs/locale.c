@@ -40,6 +40,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+#include "record-status.h"
 #include "localeinfo.h"
 #include "charmap-dir.h"
 #include "../locarchive.h"
@@ -58,13 +59,6 @@ static int do_all;
 
 /* Print names of all available character maps.  */
 static int do_charmaps = 0;
-
-/* Nonzero if verbose output is wanted.  Note that this definition is
-   file-local in scope, and does not extended to uses of verbose in
-   record-status.h functions like record_verbose.  This means that this
-   verbose will not enable record_verbose messages for uses from locale,
-   but it does for uses from localdef (where verbose is global).  */
-static int verbose;
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);

@@ -32,6 +32,7 @@
 #include <error.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <ctype.h>
 
 #include "localedef.h"
 #include "charmap.h"
@@ -47,18 +48,6 @@ struct copy_def_list_t *copy_list;
 
 /* If this is defined be POSIX conform.  */
 int posix_conformance;
-
-/* If not zero give a lot more messages.  */
-int verbose;
-
-/* Warnings recorded by record_warnings (see localedef.h).  */
-int recorded_warning_count;
-
-/* Errors recorded by record_error (see localedef.h).  */
-int recorded_error_count;
-
-/* If not zero suppress warnings and information messages.  */
-int be_quiet;
 
 /* If not zero force output even if warning were issued.  */
 static int force_output;
@@ -114,6 +103,8 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 #define OPT_LIST_ARCHIVE 309
 #define OPT_LITTLE_ENDIAN 400
 #define OPT_BIG_ENDIAN 401
+#define OPT_NO_WARN 402
+#define OPT_WARN 403
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -134,6 +125,13 @@ static const struct argp_option options[] =
   { "quiet", OPT_QUIET, NULL, 0,
     N_("Suppress warnings and information messages") },
   { "verbose", 'v', NULL, 0, N_("Print more messages") },
+  { "no-warnings", OPT_NO_WARN, N_("<warnings>"), 0,
+    N_("Comma-separated list of warnings to disable; "
+       "supported warnings are: ascii, intcurrsym") },
+  { "warnings", OPT_WARN, N_("<warnings>"), 0,
+    N_("Comma-separated list of warnings to enable; "
+       "supported warnings are: ascii, intcurrsym") },
+
   { NULL, 0, NULL, 0, N_("Archive control:") },
   { "no-archive", OPT_NO_ARCHIVE, NULL, 0,
     N_("Don't add new data to archive") },
@@ -309,6 +307,43 @@ no output file produced because errors were issued"));
   exit (recorded_warning_count != 0);
 }
 
+/* Search warnings for matching warnings and if found enable those
+   warnings if ENABLED is true, otherwise disable the warnings.  */
+static void
+set_warnings (char *warnings, bool enabled)
+{
+  char *tok = warnings;
+  char *copy = (char *) malloc (strlen (warnings) + 1);
+  char *save = copy;
+
+  /* As we make a copy of the warnings list we remove all spaces from
+     the warnings list to make the processing a more robust.  We don't
+     support spaces in a warning name.  */
+  do
+    {
+      while (isspace (*tok) != 0)
+        tok++;
+    }
+  while ((*save++ = *tok++) != '\0');
+
+  warnings = copy;
+
+  /* Tokenize the input list of warnings to set, compare them to
+     known warnings, and set the warning.  We purposely ignore unknown
+     warnings, and are thus forward compatible, users can attempt to
+     disable whaterver new warnings they know about, but we will only
+     disable those *we* known about.  */
+  while ((tok = strtok_r (warnings, ",", &save)) != NULL)
+    {
+      warnings = NULL;
+      if (strcmp (tok, "ascii") == 0)
+	warn_ascii = enabled;
+      else if (strcmp (tok, "intcurrsym") == 0)
+	warn_int_curr_symbol = enabled;
+    }
+
+  free (copy);
+}
 
 /* Handle program arguments.  */
 static error_t
@@ -345,6 +380,14 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case OPT_BIG_ENDIAN:
       set_big_endian (true);
+      break;
+    case OPT_NO_WARN:
+      /* Disable the warnings.  */
+      set_warnings (arg, false);
+      break;
+    case OPT_WARN:
+      /* Enable the warnings.  */
+      set_warnings (arg, true);
       break;
     case 'c':
       force_output = 1;

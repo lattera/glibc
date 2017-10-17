@@ -234,12 +234,17 @@ No definition for %s category found"), "LC_MONETARY");
 	  char symbol[4];
 	  strncpy (symbol, monetary->int_curr_symbol, 3);
 	  symbol[3] = '\0';
+	  /* A user may disable this waning for testing purposes or
+	     for building a locale with a 3 letter country code that
+	     was not yet supported in our ISO 4217 list.
+	     See the use of --no-warnings=intcurrsym.  */
 	  if (bsearch (symbol, valid_int_curr, NR_VALID_INT_CURR,
 		       sizeof (const char *),
-		       (comparison_fn_t) curr_strcmp) == NULL)
+		       (comparison_fn_t) curr_strcmp) == NULL
+	      && warn_int_curr_symbol)
 	    record_warning (_("\
 %s: value of field `int_curr_symbol' does \
-not correspond to a valid name in ISO 4217"),
+not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"),
 			    "LC_MONETARY");
 	}
     }

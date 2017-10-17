@@ -20,11 +20,9 @@
 #define _ICONV_PROG_H	1
 
 #include <stdio.h>
+
 #include <charmap.h>
-
-
-/* Nonzero if verbose ouput is wanted.  */
-extern int verbose;
+#include <record-status.h>
 
 /* If nonzero omit invalid character from output.  */
 extern int omit_invalid;
