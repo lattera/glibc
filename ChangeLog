@@ -1,3 +1,10 @@
+2017-10-17  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22019]
+	* localedata/locales/el_GR: Set n_cs_precedes to 0.
+	* localedata/locales/el_CY: copy "el_GR" because it is identical.
+	* stdlib/tst-strfmon_l.c: adapt test case.
+
 2017-10-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/float128-abi.h: New file.
