@@ -1,5 +1,18 @@
 2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* malloc/malloc.c (FASTCHUNKS_BIT): Remove.
+	(have_fastchunks): Remove.
+	(clear_fastchunks): Remove.
+	(set_fastchunks): Remove.
+	(malloc_state): Add have_fastchunks.
+	(malloc_init_state): Use have_fastchunks.
+	(do_check_malloc_state): Remove incorrect invariant checks.
+	(_int_malloc): Use have_fastchunks.
+	(_int_free): Likewise.
+	(malloc_consolidate): Likewise.
+
+2017-10-17  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* malloc/malloc.c (tcache_put): Inline.
 	(tcache_get): Inline.
 

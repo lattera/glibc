@@ -1604,27 +1604,6 @@ typedef struct malloc_chunk *mfastbinptr;
 #define FASTBIN_CONSOLIDATION_THRESHOLD  (65536UL)
 
 /*
-   Since the lowest 2 bits in max_fast don't matter in size comparisons,
-   they are used as flags.
- */
-
-/*
-   FASTCHUNKS_BIT held in max_fast indicates that there are probably
-   some fastbin chunks. It is set true on entering a chunk into any
-   fastbin, and cleared only in malloc_consolidate.
-
-   The truth value is inverted so that have_fastchunks will be true
-   upon startup (since statics are zero-filled), simplifying
-   initialization checks.
- */
-
-#define FASTCHUNKS_BIT        (1U)
-
-#define have_fastchunks(M)     (((M)->flags & FASTCHUNKS_BIT) == 0)
-#define clear_fastchunks(M)    catomic_or (&(M)->flags, FASTCHUNKS_BIT)
-#define set_fastchunks(M)      catomic_and (&(M)->flags, ~FASTCHUNKS_BIT)
-
-/*
    NONCONTIGUOUS_BIT indicates that MORECORE does not return contiguous
    regions.  Otherwise, contiguity is exploited in merging together,
    when possible, results from consecutive MORECORE calls.
@@ -1672,6 +1651,17 @@ get_max_fast (void)
    ----------- Internal state representation and initialization -----------
  */
 
+/*
+   have_fastchunks indicates that there are probably some fastbin chunks.
+   It is set true on entering a chunk into any fastbin, and cleared early in
+   malloc_consolidate.  The value is approximate since it may be set when there
+   are no fastbin chunks, or it may be clear even if there are fastbin chunks
+   available.  Given it's sole purpose is to reduce number of redundant calls to
+   malloc_consolidate, it does not affect correctness.  As a result we can safely
+   use relaxed atomic accesses.
+ */
+
+
 struct malloc_state
 {
   /* Serialize access.  */
@@ -1679,6 +1669,9 @@ struct malloc_state
 
   /* Flags (formerly in max_fast).  */
   int flags;
+
+  /* Set if the fastbin chunks contain recently inserted free blocks.  */
+  bool have_fastchunks;
 
   /* Fastbins */
   mfastbinptr fastbinsY[NFASTBINS];
@@ -1823,7 +1816,7 @@ malloc_init_state (mstate av)
   set_noncontiguous (av);
   if (av == &main_arena)
     set_max_fast (DEFAULT_MXFAST);
-  av->flags |= FASTCHUNKS_BIT;
+  atomic_store_relaxed (&av->have_fastchunks, false);
 
   av->top = initial_top (av);
 }
@@ -2178,11 +2171,6 @@ do_check_malloc_state (mstate av)
           p = p->fd;
         }
     }
-
-  if (total != 0)
-    assert (have_fastchunks (av));
-  else if (!have_fastchunks (av))
-    assert (total == 0);
 
   /* check normal bins */
   for (i = 1; i < NBINS; ++i)
@@ -3652,7 +3640,7 @@ _int_malloc (mstate av, size_t bytes)
   else
     {
       idx = largebin_index (nb);
-      if (have_fastchunks (av))
+      if (atomic_load_relaxed (&av->have_fastchunks))
         malloc_consolidate (av);
     }
 
@@ -4060,7 +4048,7 @@ _int_malloc (mstate av, size_t bytes)
 
       /* When we are using atomic ops to free fast chunks we can get
          here for all block sizes.  */
-      else if (have_fastchunks (av))
+      else if (atomic_load_relaxed (&av->have_fastchunks))
         {
           malloc_consolidate (av);
           /* restore original bin index */
@@ -4165,7 +4153,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
     free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
 
-    set_fastchunks(av);
+    atomic_store_relaxed (&av->have_fastchunks, true);
     unsigned int idx = fastbin_index(size);
     fb = &fastbin (av, idx);
 
@@ -4293,7 +4281,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     */
 
     if ((unsigned long)(size) >= FASTBIN_CONSOLIDATION_THRESHOLD) {
-      if (have_fastchunks(av))
+      if (atomic_load_relaxed (&av->have_fastchunks))
 	malloc_consolidate(av);
 
       if (av == &main_arena) {
@@ -4362,7 +4350,7 @@ static void malloc_consolidate(mstate av)
   */
 
   if (get_max_fast () != 0) {
-    clear_fastchunks(av);
+    atomic_store_relaxed (&av->have_fastchunks, false);
 
     unsorted_bin = unsorted_chunks(av);
 
