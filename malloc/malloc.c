@@ -1673,7 +1673,8 @@ struct malloc_state
   int flags;
 
   /* Set if the fastbin chunks contain recently inserted free blocks.  */
-  bool have_fastchunks;
+  /* Note this is a bool but not all targets support atomics on booleans.  */
+  int have_fastchunks;
 
   /* Fastbins */
   mfastbinptr fastbinsY[NFASTBINS];
