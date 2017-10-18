@@ -1,3 +1,8 @@
+2017-10-18  Renlin Li  <renlin.li@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address): Use
+	_DYNAMIC symbol to calculate load address.
+
 2017-10-18  Paul A. Clarke  <pc@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/fenv_private.h (_FPU_MASK_TRAPS_RN):

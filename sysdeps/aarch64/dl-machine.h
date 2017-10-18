@@ -51,40 +51,11 @@ elf_machine_load_address (void)
   /* To figure out the load address we use the definition that for any symbol:
      dynamic_addr(symbol) = static_addr(symbol) + load_addr
 
-     The choice of symbol is arbitrary. The static address we obtain
-     by constructing a non GOT reference to the symbol, the dynamic
-     address of the symbol we compute using adrp/add to compute the
-     symbol's address relative to the PC.
-     This depends on 32/16bit relocations being resolved at link time
-     and that the static address fits in the 32/16 bits.  */
+    _DYNAMIC sysmbol is used here as its link-time address stored in
+    the special unrelocated first GOT entry.  */
 
-  ElfW(Addr) static_addr;
-  ElfW(Addr) dynamic_addr;
-
-  asm ("					\n"
-"	adrp	%1, _dl_start;			\n"
-#ifdef __LP64__
-"	add	%1, %1, #:lo12:_dl_start	\n"
-#else
-"	add	%w1, %w1, #:lo12:_dl_start	\n"
-#endif
-"	ldr	%w0, 1f				\n"
-"	b	2f				\n"
-"1:						\n"
-#ifdef __LP64__
-"	.word	_dl_start			\n"
-#else
-# ifdef __AARCH64EB__
-"	.short  0                               \n"
-# endif
-"	.short  _dl_start                       \n"
-# ifndef __AARCH64EB__
-"	.short  0                               \n"
-# endif
-#endif
-"2:						\n"
-    : "=r" (static_addr),  "=r" (dynamic_addr));
-  return dynamic_addr - static_addr;
+    extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+    return (ElfW(Addr)) &_DYNAMIC - elf_machine_dynamic ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
