@@ -1,3 +1,33 @@
+2017-10-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128/Makeconfig: New file.
+	* sysdeps/ieee754/ldbl-128/bits/floatn.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/float128-abi.h: Likewise.
+	* sysdeps/generic/libm-alias-ldouble.h: Include <bits/floatn.h>.
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128]
+	(libm_alias_ldouble_other_r): Also create _Float128 alias.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-ldouble.h: Include
+	<bits/floatn.h>.
+	[__HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128]
+	(libm_alias_ldouble_other_r): Also create _Float128 alias.
+	* manual/math.texi (Mathematics): Document additional architecture
+	support for _Float128.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+
 2017-10-18  Renlin Li  <renlin.li@arm.com>
 
 	* sysdeps/aarch64/dl-machine.h (elf_machine_load_address): Use

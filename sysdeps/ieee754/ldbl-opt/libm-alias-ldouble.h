@@ -19,6 +19,7 @@
 #ifndef _LIBM_ALIAS_LDOUBLE_H
 #define _LIBM_ALIAS_LDOUBLE_H
 
+#include <bits/floatn.h>
 #include <math_ldbl_opt.h>
 #include <ldbl-compat-choose.h>
 
@@ -26,7 +27,12 @@
    that has internal name FROM ## l ## R and public names TO ## suffix
    ## R for each suffix of a supported _FloatN / _FloatNx
    floating-point type with the same format as long double.  */
-#define libm_alias_ldouble_other_r(from, to, r)
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
+# define libm_alias_ldouble_other_r(from, to, r)	\
+  weak_alias (from ## l ## r, to ## f128 ## r)
+#else
+# define libm_alias_ldouble_other_r(from, to, r)
+#endif
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_ldouble_other(from, to)	\
