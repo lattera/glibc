@@ -1,3 +1,11 @@
+2017-10-18  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #16777]
+	* localedata/locales/pl_PL (LC_MONETARY): Use U+202F as mon_thousands_sep
+	and improve readability by using more ASCII.
+	* localedata/locales/pl_PL (LC_NUMERIC): Use U+202F as thousands_sep
+	and improve readability by using more ASCII.
+
 2017-10-18  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (malloc_state): Use int for have_fastchunks since
