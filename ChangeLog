@@ -1,3 +1,11 @@
+2017-10-18  Paul A. Clarke  <pc@us.ibm.com>
+
+	* sysdeps/powerpc/fpu/fenv_private.h (_FPU_MASK_TRAPS_RN):
+	(_FPU_MASK_FRAC_INEX_RET_CC): Fix masks to more properly handle
+	summary bits.
+	(_FPU_MASK_RN): Expand _FPU_MASK_RN to 64bit hex.
+	(_FPU_MASK_NOT_RN_NI): Treat bit 52 (left-to-right) as reserved.
+
 2017-10-18  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #16777]

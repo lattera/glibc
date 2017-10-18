@@ -28,17 +28,16 @@
                       | _FPU_MASK_XM | _FPU_MASK_IM)
 
 /* Mask the rounding mode bits.  */
-#define _FPU_MASK_RN (~0x3)
+#define _FPU_MASK_RN 0xfffffffffffffffcLL
 
-/* Mask everything but the rounding moded and non-IEEE arithmetic flags.  */
-#define _FPU_MASK_NOT_RN_NI 0xffffffff00000007LL
+/* Mask everything but the rounding modes and non-IEEE arithmetic flags.  */
+#define _FPU_MASK_NOT_RN_NI 0xffffffff00000807LL
 
 /* Mask restore rounding mode and exception enabled.  */
-#define _FPU_MASK_TRAPS_RN 0xffffffff1fffff00LL
+#define _FPU_MASK_TRAPS_RN 0xffffffffffffff00LL
 
-/* Mask exception enable but fraction rounded/inexact and FP result/CC
-   bits.  */
-#define _FPU_MASK_FRAC_INEX_RET_CC 0xffffffff1ff80fff
+/* Mask FP result flags, preserve fraction rounded/inexact bits.  */
+#define _FPU_MASK_FRAC_INEX_RET_CC 0xfffffffffff80fffLL
 
 static __always_inline void
 __libc_feholdbits_ppc (fenv_t *envp, unsigned long long mask,
