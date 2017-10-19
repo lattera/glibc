@@ -1,3 +1,7 @@
+2017-10-19  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_free): Fix deadlock bug in consistency check.
+
 2017-10-19  Valery Reznic <valery_reznic@yahoo.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 

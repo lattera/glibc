@@ -4135,17 +4135,20 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
       {
+	bool fail = true;
 	/* We might not have a lock at this point and concurrent modifications
-	   of system_mem might have let to a false positive.  Redo the test
-	   after getting the lock.  */
-	if (!have_lock
-	    || ({ __libc_lock_lock (av->mutex);
-		  chunksize_nomask (chunk_at_offset (p, size)) <= 2 * SIZE_SZ
-		  || chunksize (chunk_at_offset (p, size)) >= av->system_mem;
-	        }))
+	   of system_mem might result in a false positive.  Redo the test after
+	   getting the lock.  */
+	if (!have_lock)
+	  {
+	    __libc_lock_lock (av->mutex);
+	    fail = (chunksize_nomask (chunk_at_offset (p, size)) <= 2 * SIZE_SZ
+		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem);
+	    __libc_lock_unlock (av->mutex);
+	  }
+
+	if (fail)
 	  malloc_printerr ("free(): invalid next size (fast)");
-	if (! have_lock)
-	  __libc_lock_unlock (av->mutex);
       }
 
     free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
