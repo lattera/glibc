@@ -753,7 +753,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 				  - offsetof (pthread_mutex_t,
 					      __data.__list.__next));
   pd->robust_head.list_op_pending = NULL;
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
+#if __PTHREAD_MUTEX_HAVE_PREV
   pd->robust_prev = &pd->robust_head;
 #endif
   pd->robust_head.list = &pd->robust_head;

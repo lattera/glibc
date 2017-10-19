@@ -297,7 +297,7 @@ __pthread_initialize_minimal_internal (void)
 
   /* Initialize the robust mutex data.  */
   {
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
+#if __PTHREAD_MUTEX_HAVE_PREV
     pd->robust_prev = &pd->robust_head;
 #endif
     pd->robust_head.list = &pd->robust_head;

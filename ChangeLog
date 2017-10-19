@@ -1,5 +1,72 @@
 2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #22298]
+	* nptl/allocatestack.c (allocate_stack): Check if
+	__PTHREAD_MUTEX_HAVE_PREV is non-zero, instead if
+	__PTHREAD_MUTEX_HAVE_PREV is defined.
+	* nptl/descr.h (pthread): Likewise.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
+	Likewise.
+	* nptl/pthread_create.c (START_THREAD_DEFN): Likewise.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+	* sysdeps/nptl/pthread.h (PTHREAD_MUTEX_INITIALIZER): Likewise.
+	* sysdeps/nptl/bits/thread-shared-types.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION): New
+	defines.
+	(__pthread_internal_list): Check __PTHREAD_MUTEX_USE_UNION instead
+	of __WORDSIZE for internal layout.
+	(__pthread_mutex_s): Check __PTHREAD_MUTEX_NUSERS_AFTER_KIND instead
+	of __WORDSIZE for internal __nusers layout and __PTHREAD_MUTEX_USE_UNION
+	instead of __WORDSIZE whether to use an union for __spins and __list
+	fields.
+	(__PTHREAD_MUTEX_HAVE_PREV): Define also for __PTHREAD_MUTEX_USE_UNION
+	case.
+	* sysdeps/aarch64/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION): New
+	defines.
+	* sysdeps/alpha/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/arm/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/hppa/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/ia64/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/m68k/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/microblaze/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/mips/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/nios2/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/powerpc/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/sh/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/sparc/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/tile/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+	* sysdeps/x86/nptl/bits/pthreadtypes-arch.h
+	(__PTHREAD_MUTEX_NUSERS_AFTER_KIND, __PTHREAD_MUTEX_USE_UNION):
+	Likewise.
+
 	* nptl/pthreadP.h (ASSERT_TYPE_SIZE, ASSERT_PTHREAD_INTERNAL_SIZE):
 	New macros.
 	* nptl/pthread_attr_init.c (__pthread_mutex_init): Add build time

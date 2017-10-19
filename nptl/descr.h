@@ -169,7 +169,7 @@ struct pthread
   pid_t pid_ununsed;
 
   /* List of robust mutexes the thread is holding.  */
-#ifdef __PTHREAD_MUTEX_HAVE_PREV
+#if __PTHREAD_MUTEX_HAVE_PREV
   void *robust_prev;
   struct robust_list_head robust_head;
 

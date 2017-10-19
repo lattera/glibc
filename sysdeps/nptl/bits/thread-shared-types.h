@@ -42,6 +42,25 @@
 				    the internal structure.
    __PTHREAD_MUTEX_LOCK_ELISION   - 1 if the architecture supports lock
 				    elision or 0 otherwise.
+   __PTHREAD_MUTEX_NUSERS_AFTER_KIND - control where to put __nusers.  The
+				       preferred value for new architectures
+				       is 0.
+   __PTHREAD_MUTEX_USE_UNION      - control whether internal __spins and
+				    __list will be place inside a union for
+				    linuxthreads compatibility.
+				    The preferred value for new architectures
+				    is 0.
+
+   For a new port the preferred values for the required defines are:
+
+   #define __PTHREAD_COMPAT_PADDING_MID
+   #define __PTHREAD_COMPAT_PADDING_END
+   #define __PTHREAD_MUTEX_LOCK_ELISION         0
+   #define __PTHREAD_MUTEX_NUSERS_AFTER_KIND    0
+   #define __PTHREAD_MUTEX_USE_UNION            0
+
+   __PTHREAD_MUTEX_LOCK_ELISION can be set to 1 if the hardware plans to
+   eventually support lock elision using transactional memory.
 
    The additional macro defines any constraint for the lock alignment
    inside the thread structures:
@@ -59,7 +78,7 @@
 
 /* Common definition of pthread_mutex_t. */
 
-#if __WORDSIZE == 64
+#if !__PTHREAD_MUTEX_USE_UNION
 typedef struct __pthread_internal_list
 {
   struct __pthread_internal_list *__prev;
@@ -74,7 +93,7 @@ typedef struct __pthread_internal_slist
 
 /* Lock elision support.  */
 #if __PTHREAD_MUTEX_LOCK_ELISION
-# if __WORDSIZE == 64
+# if !__PTHREAD_MUTEX_USE_UNION
 #  define __PTHREAD_SPINS_DATA	\
   short __spins;		\
   short __elision
@@ -101,24 +120,27 @@ struct __pthread_mutex_s
   int __lock __LOCK_ALIGNMENT;
   unsigned int __count;
   int __owner;
-#if __WORDSIZE == 64
+#if !__PTHREAD_MUTEX_NUSERS_AFTER_KIND
   unsigned int __nusers;
 #endif
   /* KIND must stay at this position in the structure to maintain
      binary compatibility with static initializers.  */
   int __kind;
   __PTHREAD_COMPAT_PADDING_MID
-#if __WORDSIZE == 64
+#if __PTHREAD_MUTEX_NUSERS_AFTER_KIND
+  unsigned int __nusers;
+#endif
+#if !__PTHREAD_MUTEX_USE_UNION
   __PTHREAD_SPINS_DATA;
   __pthread_list_t __list;
 # define __PTHREAD_MUTEX_HAVE_PREV      1
 #else
-  unsigned int __nusers;
   __extension__ union
   {
     __PTHREAD_SPINS_DATA;
     __pthread_slist_t __list;
   };
+# define __PTHREAD_MUTEX_HAVE_PREV      0
 #endif
   __PTHREAD_COMPAT_PADDING_END
 };

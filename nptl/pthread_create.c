@@ -518,7 +518,7 @@ START_THREAD_DEFN
 
 #ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */
-# ifdef __PTHREAD_MUTEX_HAVE_PREV
+# if __PTHREAD_MUTEX_HAVE_PREV
   void *robust = pd->robust_head.list;
 # else
   __pthread_slist_t *robust = pd->robust_list.__next;
@@ -536,7 +536,7 @@ START_THREAD_DEFN
 					 __list.__next));
 	  robust = *((void **) robust);
 
-# ifdef __PTHREAD_MUTEX_HAVE_PREV
+# if __PTHREAD_MUTEX_HAVE_PREV
 	  this->__list.__prev = NULL;
 # endif
 	  this->__list.__next = NULL;
