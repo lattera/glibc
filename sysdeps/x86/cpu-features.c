@@ -335,7 +335,6 @@ no_cpuid:
 #endif
 
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
-  GLRO(dl_platform) = NULL;
 #if !HAVE_TUNABLES && defined SHARED
   /* The glibc.tune.hwcap_mask tunable is initialized already, so no need to do
      this.  */
@@ -346,13 +345,15 @@ no_cpuid:
   GLRO(dl_hwcap) = HWCAP_X86_64;
   if (cpu_features->kind == arch_kind_intel)
     {
+      const char *platform = NULL;
+
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
 	  && CPU_FEATURES_CPU_P (cpu_features, AVX512CD))
 	{
 	  if (CPU_FEATURES_CPU_P (cpu_features, AVX512ER))
 	    {
 	      if (CPU_FEATURES_CPU_P (cpu_features, AVX512PF))
-		GLRO(dl_platform) = "xeon_phi";
+		platform = "xeon_phi";
 	    }
 	  else
 	    {
@@ -363,7 +364,7 @@ no_cpuid:
 	    }
 	}
 
-      if (GLRO(dl_platform) == NULL
+      if (platform == NULL
 	  && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
 	  && CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
 	  && CPU_FEATURES_CPU_P (cpu_features, BMI1)
@@ -371,7 +372,10 @@ no_cpuid:
 	  && CPU_FEATURES_CPU_P (cpu_features, LZCNT)
 	  && CPU_FEATURES_CPU_P (cpu_features, MOVBE)
 	  && CPU_FEATURES_CPU_P (cpu_features, POPCNT))
-	GLRO(dl_platform) = "haswell";
+	platform = "haswell";
+
+      if (platform != NULL)
+	GLRO(dl_platform) = platform;
     }
 #else
   GLRO(dl_hwcap) = 0;

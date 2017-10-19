@@ -1,3 +1,24 @@
+2017-10-19  Valery Reznic <valery_reznic@yahoo.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22299]
+	* sysdeps/x86/cpu-features.c (init_cpu_features): Don't set
+	GLRO(dl_platform) to NULL.
+	* sysdeps/x86_64/Makefile (tests): Add tst-platform-1.
+	(modules-names): Add tst-platformmod-1 and
+	x86_64/tst-platformmod-2.
+	(CFLAGS-tst-platform-1.c): New.
+	(CFLAGS-tst-platformmod-1.c): Likewise.
+	(CFLAGS-tst-platformmod-2.c): Likewise.
+	(LDFLAGS-tst-platformmod-2.so): Likewise.
+	($(objpfx)tst-platform-1): Likewise.
+	($(objpfx)tst-platform-1.out): Likewise.
+	(tst-platform-1-ENV): Likewise.
+	($(objpfx)x86_64/tst-platformmod-2.os): Likewise.
+	* sysdeps/x86_64/tst-platform-1.c: New file.
+	* sysdeps/x86_64/tst-platformmod-1.c: Likewise.
+	* sysdeps/x86_64/tst-platformmod-2.c: Likewise.
+
 2017-10-19  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #13994]

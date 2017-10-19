@@ -58,6 +58,21 @@ LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
 
 $(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
 
+ifneq (no,$(have-tunables))
+tests += tst-platform-1
+modules-names += tst-platformmod-1 x86_64/tst-platformmod-2
+CFLAGS-tst-platform-1.c = -mno-avx
+CFLAGS-tst-platformmod-1.c = -mno-avx
+CFLAGS-tst-platformmod-2.c = -mno-avx
+LDFLAGS-tst-platformmod-2.so = -Wl,-soname,tst-platformmod-2.so
+$(objpfx)tst-platform-1: $(objpfx)tst-platformmod-1.so
+$(objpfx)tst-platform-1.out: $(objpfx)x86_64/tst-platformmod-2.so
+# Turn off AVX512F_Usable and AVX2_Usable so that GLRO(dl_platform) is
+# always set to x86_64.
+tst-platform-1-ENV = LD_PRELOAD=$(objpfx)\$$PLATFORM/tst-platformmod-2.so \
+	GLIBC_TUNABLES=glibc.tune.hwcaps=-AVX512F_Usable,-AVX2_Usable
+endif
+
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 \
 	 tst-audit10 tst-sse tst-avx tst-avx512
 test-extras += tst-audit4-aux tst-audit10-aux \
@@ -141,3 +156,8 @@ do-tests-clean common-mostlyclean: tst-x86_64-1-clean
 .PHONY: tst-x86_64-1-clean
 tst-x86_64-1-clean:
 	-rm -rf $(objpfx)x86_64
+
+$(objpfx)x86_64/tst-platformmod-2.os: $(objpfx)tst-platformmod-2.os
+	$(make-target-directory)
+	rm -f $@
+	ln $< $@
