@@ -1,3 +1,7 @@
+2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerated.
+
 2017-10-19  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/ieee754/bits/floatn.h: New file.

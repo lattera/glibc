@@ -2058,10 +2058,10 @@ ldouble: 2
 
 Function: "j0_downward":
 double: 1
-float: 2
+float: 3
 float128: 4
 idouble: 1
-ifloat: 2
+ifloat: 3
 ifloat128: 4
 ildouble: 4
 ldouble: 4
