@@ -1,3 +1,10 @@
+2017-10-19  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #13994]
+	* locale/iso-639.def: Add Karbi.
+	* localedata/SUPPORTED: Add mjw_IN/UTF-8.
+	* localedata/locales/mjw_IN: New file.
+
 2017-10-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-128/Makeconfig: New file.
