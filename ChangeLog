@@ -1,3 +1,9 @@
+2017-10-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22322]
+	* sysdeps/mips/bits/long-double.h: Move to ....
+	* sysdeps/mips/ieee754/bits/long-double.h: ... here.
+
 2017-10-19  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (_int_free): Fix deadlock bug in consistency check.
