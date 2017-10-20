@@ -1,3 +1,13 @@
+2017-10-20  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22321]
+	sysconf: Fix missing definition of UIO_MAXIOV on Linux.
+	* sysdeps/posix/sysconf.c: Include <sys/uio.h>.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-sysconf-iov_max.
+	(tst-sysconf-iov_max): Link with tst-sysconf-iov_max-uapi.o.
+	* sysdeps/unix/sysv/linux/tst-sysconf-iov_max.c: New file.
+	* sysdeps/unix/sysv/linux/tst-sysconf-iov_max-uapi.c: Likewise.
+
 2017-10-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Regenerated.

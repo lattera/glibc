@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include <sys/sysinfo.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <regex.h>
 
 #define NEED_SPEC_ARRAY 0

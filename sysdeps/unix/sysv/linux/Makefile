@@ -50,7 +50,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/siginfo-arch.h bits/siginfo-consts-arch.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
-	 tst-quota tst-sync_file_range test-errno-linux
+	 tst-quota tst-sync_file_range test-errno-linux tst-sysconf-iov_max
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
 # macros).  The file syscall-names.list contains all possible system
@@ -94,6 +94,9 @@ $(objpfx)tst-syscall-list.out: \
   $(objpfx)tst-syscall-list-nr.list \
   $(objpfx)tst-syscall-list-sys.list
 	$(BASH) $^ $(AWK) > $@; $(evaluate-test)
+
+# Separate object file for access to the constant from the UAPI header.
+$(objpfx)tst-sysconf-iov_max: $(objpfx)tst-sysconf-iov_max-uapi.o
 
 endif # $(subdir) == misc
 
