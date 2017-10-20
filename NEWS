@@ -72,9 +72,10 @@ Security related changes:
   vulnerability; only trusted binaries must be examined using the ldd
   script.)
 
-  CVE-2017-15670: The glob function, when invoked with GLOB_TILDE, suffered
-  from a one-byte overflow during ~ operator processing (either on the stack
-  or the heap, depending on the length of the user name).
+  CVE-2017-15670: The glob function, when invoked with GLOB_TILDE,
+  suffered from a one-byte overflow during ~ operator processing (either
+  on the stack or the heap, depending on the length of the user name).
+  Reported by Tim Rühsen.
 
 The following bugs are resolved with this release:
 
