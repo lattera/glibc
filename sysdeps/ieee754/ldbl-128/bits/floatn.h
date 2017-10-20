@@ -77,4 +77,6 @@ typedef long double _Float128;
 
 #endif
 
+#include <bits/floatn-common.h>
+
 #endif /* _BITS_FLOATN_H */

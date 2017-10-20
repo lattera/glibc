@@ -1,3 +1,14 @@
+2017-10-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/floatn-common.h: New file.
+	* math/Makefile (headers): Add bits/floatn-common.h.
+	* bits/floatn.h: Include <bits/floatn-common.h>.
+	* sysdeps/ia64/bits/floatn.h: Likewise.
+	* sysdeps/ieee754/ldbl-128/bits/floatn.h: Likewise.
+	* sysdeps/mips/ieee754/bits/floatn.h: Likewise.
+	* sysdeps/powerpc/bits/floatn.h: Likewise.
+	* sysdeps/x86/bits/floatn.h: Likewise.
+
 2017-10-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* configure.ac (libc_cv_gcc_incompatbile_alias): New define:

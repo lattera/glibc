@@ -33,3 +33,5 @@
 /* Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.
    E.g.: #define __CFLOAT128 _Complex _Float128.  */
 #undef __CFLOAT128
+
+#include <bits/floatn-common.h>
