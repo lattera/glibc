@@ -1,5 +1,9 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Remove volatile.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	[BZ #18572]
 	* sysdeps/arm/dl-machine.h (elf_machine_lazy_rel): Do symbol binding
 	non-lazily for R_ARM_TLS_DESC.

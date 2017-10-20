@@ -464,8 +464,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	case R_ARM_TLS_DESC:
 	  {
-	    struct tlsdesc volatile *td =
-	      (struct tlsdesc volatile *)reloc_addr;
+	    struct tlsdesc *td = (struct tlsdesc *)reloc_addr;
 
 # ifndef RTLD_BOOTSTRAP
 	    if (! sym)
