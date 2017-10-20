@@ -1,5 +1,11 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	[BZ #18572]
+	* sysdeps/arm/dl-machine.h (elf_machine_lazy_rel): Do symbol binding
+	non-lazily for R_ARM_TLS_DESC.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	[BZ #17078]
 	* sysdeps/arm/dl-machine.h (elf_machine_rela): Remove the
 	R_ARM_TLS_DESC case.
