@@ -1,3 +1,9 @@
+2017-10-20  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #13605]
+	* localedata/SUPPORTED: Add shn_MM/UTF-8.
+	* localedata/locales/shn_MM: New file.
+
 2017-10-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22321]
