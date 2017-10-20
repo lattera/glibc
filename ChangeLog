@@ -1,5 +1,12 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	[BZ #17078]
+	* sysdeps/arm/dl-machine.h (elf_machine_rela): Remove the
+	R_ARM_TLS_DESC case.
+	(elf_machine_lazy_rel): Remove the prelink check.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/aarch64/dl-machine.h (elf_machine_runtime_setup): Remove
 	DT_TLSDESC_GOT initialization.
 	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_return_lazy): Remove.
