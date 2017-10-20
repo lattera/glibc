@@ -4159,24 +4159,34 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 
     /* Atomically link P to its fastbin: P->FD = *FB; *FB = P;  */
     mchunkptr old = *fb, old2;
-    unsigned int old_idx = ~0u;
-    do
+
+    if (SINGLE_THREAD_P)
       {
-	/* Check that the top of the bin is not the record we are going to add
-	   (i.e., double free).  */
+	/* Check that the top of the bin is not the record we are going to
+	   add (i.e., double free).  */
 	if (__builtin_expect (old == p, 0))
 	  malloc_printerr ("double free or corruption (fasttop)");
-	/* Check that size of fastbin chunk at the top is the same as
-	   size of the chunk that we are adding.  We can dereference OLD
-	   only if we have the lock, otherwise it might have already been
-	   deallocated.  See use of OLD_IDX below for the actual check.  */
-	if (have_lock && old != NULL)
-	  old_idx = fastbin_index(chunksize(old));
-	p->fd = old2 = old;
+	p->fd = old;
+	*fb = p;
       }
-    while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2)) != old2);
+    else
+      do
+	{
+	  /* Check that the top of the bin is not the record we are going to
+	     add (i.e., double free).  */
+	  if (__builtin_expect (old == p, 0))
+	    malloc_printerr ("double free or corruption (fasttop)");
+	  p->fd = old2 = old;
+	}
+      while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2))
+	     != old2);
 
-    if (have_lock && old != NULL && __builtin_expect (old_idx != idx, 0))
+    /* Check that size of fastbin chunk at the top is the same as
+       size of the chunk that we are adding.  We can dereference OLD
+       only if we have the lock, otherwise it might have already been
+       allocated again.  */
+    if (have_lock && old != NULL
+	&& __builtin_expect (fastbin_index (chunksize (old)) != idx, 0))
       malloc_printerr ("invalid fastbin entry (free)");
   }
 
@@ -4185,6 +4195,11 @@ _int_free (mstate av, mchunkptr p, int have_lock)
   */
 
   else if (!chunk_is_mmapped(p)) {
+
+    /* If we're single-threaded, don't lock the arena.  */
+    if (SINGLE_THREAD_P)
+      have_lock = true;
+
     if (!have_lock)
       __libc_lock_lock (av->mutex);
 

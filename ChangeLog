@@ -1,3 +1,7 @@
+2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* malloc/malloc.c (_int_free): Add SINGLE_THREAD_P fast paths.
+
 2017-10-20  Will Hawkins  <hawkinsw@borlaugic.com>
 
 	* resolv/Makefile [$(build-shared)$(have-thread-library) == yesyes]
