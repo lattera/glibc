@@ -1,3 +1,9 @@
+2017-10-20  Will Hawkins  <hawkinsw@borlaugic.com>
+
+	* resolv/Makefile [$(build-shared)$(have-thread-library) == yesyes]
+	(tests): Remove	$(objpfx)ga_test depdendency.
+	* resolv/ga_test.c: Remove file.
+
 2017-10-20  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #18812]

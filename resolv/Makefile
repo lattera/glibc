@@ -101,10 +101,6 @@ routines                += $(libnss_dns-routines) $(libresolv-routines)
 static-only-routines    += $(libnss_dns-routines) $(libresolv-routines)
 endif
 
-ifeq (yesyes,$(build-shared)$(have-thread-library))
-tests: $(objpfx)ga_test
-endif
-
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 tests-special += $(objpfx)mtrace-tst-leaks.out
@@ -133,8 +129,6 @@ $(objpfx)libnss_dns.so: $(objpfx)libresolv.so
 
 # The asynchronous name lookup code needs the thread library.
 $(objpfx)libanl.so: $(shared-thread-library)
-
-$(objpfx)ga_test: $(objpfx)libanl.so $(shared-thread-library)
 
 $(objpfx)tst-res_hconf_reorder: $(libdl) $(shared-thread-library)
 tst-res_hconf_reorder-ENV = RESOLV_REORDER=on
