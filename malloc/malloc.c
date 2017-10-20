@@ -243,6 +243,9 @@
 
 #include <malloc/malloc-internal.h>
 
+/* For SINGLE_THREAD_P.  */
+#include <sysdep-cancel.h>
+
 /*
   Debugging:
 

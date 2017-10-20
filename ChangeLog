@@ -1,5 +1,9 @@
 2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* malloc/malloc.c (sysdep-cancel.h): Add include.
+
+2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* malloc/malloc.c (_int_free): Add SINGLE_THREAD_P fast paths.
 
 2017-10-20  Will Hawkins  <hawkinsw@borlaugic.com>
