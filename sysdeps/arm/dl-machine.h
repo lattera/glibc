@@ -127,10 +127,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	got[2] = (Elf32_Addr) &_dl_runtime_resolve;
     }
 
-  if (l->l_info[ADDRIDX (DT_TLSDESC_GOT)] && lazy)
-    *(Elf32_Addr*)(D_PTR (l, l_info[ADDRIDX (DT_TLSDESC_GOT)]) + l->l_addr)
-      = (Elf32_Addr) &_dl_tlsdesc_lazy_resolver;
-
   return lazy;
 }
 

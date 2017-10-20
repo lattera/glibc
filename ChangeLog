@@ -1,5 +1,16 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): Remove
+	DT_TLSDESC_GOT initialization.
+	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_lazy_resolver): Remove.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+	* sysdeps/aarch64/dl-tlsdesc.h (_dl_tlsdesc_lazy_resolver): Remove.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+	* sysdeps/aarch64/tlsdesc.c (_dl_tlsdesc_lazy_resolver_fixup): Remove.
+	(_dl_tlsdesc_resolve_hold_fixup): Likewise.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/arm/dl-machine.h (elf_machine_rel): Remove volatile.
 
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
