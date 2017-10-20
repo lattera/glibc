@@ -1,3 +1,9 @@
+2017-10-20  Paul Eggert <eggert@cs.ucla.edu>
+
+	[BZ #22320]
+	CVE-2017-15670
+	* posix/glob.c (__glob): Fix one-byte overflow.
+
 2017-10-20  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (sysdep-cancel.h): Add include.

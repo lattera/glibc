@@ -790,7 +790,7 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 		  *p = '\0';
 		}
 	      else
-		*((char *) mempcpy (newp, dirname + 1, end_name - dirname))
+		*((char *) mempcpy (newp, dirname + 1, end_name - dirname - 1))
 		  = '\0';
 	      user_name = newp;
 	    }
