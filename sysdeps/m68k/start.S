@@ -76,7 +76,7 @@ _start:
 	pea (%a1)		/* Push address of the shared library
 				   termination function.  */
 
-#ifdef SHARED
+#ifdef PIC
 	/* Load PIC register.  */
 	LOAD_GOT (%a5)
 

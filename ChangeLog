@@ -1,3 +1,7 @@
+2017-10-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/m68k/start.S (_start): Check PIC instead of SHARED.
+
 2017-10-20  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #13605]
