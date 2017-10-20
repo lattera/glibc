@@ -1,5 +1,11 @@
 2017-10-20  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/m68k/dl-machine.h (elf_machine_load_address): Use
+	_dl_relocate_static_pie instead of _dl_start to compute load
+	address in static PIE.
+
+2017-10-20  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/m68k/start.S (_start): Check PIC instead of SHARED.
 
 2017-10-20  Mike FABIAN  <mfabian@redhat.com>

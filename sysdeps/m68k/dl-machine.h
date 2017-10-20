@@ -51,9 +51,15 @@ static inline Elf32_Addr
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
+#ifdef SHARED
   asm (PCREL_OP ("lea", "_dl_start", "%0", "%0", "%%pc") "\n\t"
        "sub.l _dl_start@GOT.w(%%a5), %0"
        : "=a" (addr));
+#else
+  asm (PCREL_OP ("lea", "_dl_relocate_static_pie", "%0", "%0", "%%pc") "\n\t"
+       "sub.l _dl_relocate_static_pie@GOT.w(%%a5), %0"
+       : "=a" (addr));
+#endif
   return addr;
 }
 
