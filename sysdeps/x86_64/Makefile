@@ -55,6 +55,10 @@ CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
 tests += tst-x86_64-1
 modules-names += x86_64/tst-x86_64mod-1
 LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
+ifneq (no,$(have-tunables))
+# Test the state size for XSAVE when XSAVEC is disabled.
+tst-x86_64-1-ENV = GLIBC_TUNABLES=glibc.tune.hwcaps=-XSAVEC_Usable
+endif
 
 $(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
 

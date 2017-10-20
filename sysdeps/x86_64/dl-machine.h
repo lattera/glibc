@@ -66,12 +66,9 @@ static inline int __attribute__ ((unused, always_inline))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve_sse (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_avx (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_avx_slow (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_avx_opt (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_avx512 (ElfW(Word)) attribute_hidden;
-  extern void _dl_runtime_resolve_avx512_opt (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_fxsave (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_xsave (ElfW(Word)) attribute_hidden;
+  extern void _dl_runtime_resolve_xsavec (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_sse (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx (ElfW(Word)) attribute_hidden;
   extern void _dl_runtime_profile_avx512 (ElfW(Word)) attribute_hidden;
@@ -120,29 +117,14 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	  /* This function will get called to fix up the GOT entry
 	     indicated by the offset on the stack, and then jump to
 	     the resolved address.  */
-	  if (HAS_ARCH_FEATURE (AVX512F_Usable))
-	    {
-	      if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_opt))
-		*(ElfW(Addr) *) (got + 2)
-		  = (ElfW(Addr)) &_dl_runtime_resolve_avx512_opt;
-	      else
-		*(ElfW(Addr) *) (got + 2)
-		  = (ElfW(Addr)) &_dl_runtime_resolve_avx512;
-	    }
-	  else if (HAS_ARCH_FEATURE (AVX_Usable))
-	    {
-	      if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_opt))
-		*(ElfW(Addr) *) (got + 2)
-		  = (ElfW(Addr)) &_dl_runtime_resolve_avx_opt;
-	      else if (HAS_ARCH_FEATURE (Use_dl_runtime_resolve_slow))
-		*(ElfW(Addr) *) (got + 2)
-		  = (ElfW(Addr)) &_dl_runtime_resolve_avx_slow;
-	      else
-		*(ElfW(Addr) *) (got + 2)
-		  = (ElfW(Addr)) &_dl_runtime_resolve_avx;
-	    }
+	  if (GLRO(dl_x86_cpu_features).xsave_state_size != 0)
+	    *(ElfW(Addr) *) (got + 2)
+	      = (HAS_ARCH_FEATURE (XSAVEC_Usable)
+		 ? (ElfW(Addr)) &_dl_runtime_resolve_xsavec
+		 : (ElfW(Addr)) &_dl_runtime_resolve_xsave);
 	  else
-	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_resolve_sse;
+	    *(ElfW(Addr) *) (got + 2)
+	      = (ElfW(Addr)) &_dl_runtime_resolve_fxsave;
 	}
     }
 

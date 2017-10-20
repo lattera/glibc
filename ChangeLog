@@ -1,3 +1,69 @@
+2017-10-20  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #21265]
+	* sysdeps/x86/cpu-features-offsets.sym (XSAVE_STATE_SIZE_OFFSET):
+	New.
+	* sysdeps/x86/cpu-features.c: Include <libc-pointer-arith.h>.
+	(get_common_indeces): Set xsave_state_size, xsave_state_full_size
+	and bit_arch_XSAVEC_Usable if needed.
+	(init_cpu_features): Remove bit_arch_Use_dl_runtime_resolve_slow
+	and bit_arch_Use_dl_runtime_resolve_opt.
+	* sysdeps/x86/cpu-features.h (bit_arch_Use_dl_runtime_resolve_opt):
+	Removed.
+	(bit_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(bit_arch_Prefer_No_AVX512): Updated.
+	(bit_arch_MathVec_Prefer_No_AVX512): Likewise.
+	(bit_arch_XSAVEC_Usable): New.
+	(STATE_SAVE_OFFSET): Likewise.
+	(STATE_SAVE_MASK): Likewise.
+	[__ASSEMBLER__]: Include <cpu-features-offsets.h>.
+	(cpu_features): Add xsave_state_size and xsave_state_full_size.
+	(index_arch_Use_dl_runtime_resolve_opt): Removed.
+	(index_arch_Use_dl_runtime_resolve_slow): Likewise.
+	(index_arch_XSAVEC_Usable): New.
+	* sysdeps/x86/cpu-tunables.c (TUNABLE_CALLBACK (set_hwcaps)):
+	Support XSAVEC_Usable.  Remove Use_dl_runtime_resolve_slow.
+	* sysdeps/x86_64/Makefile (tst-x86_64-1-ENV): New if tunables
+	is enabled.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup):
+	Replace _dl_runtime_resolve_sse, _dl_runtime_resolve_avx,
+	_dl_runtime_resolve_avx_slow, _dl_runtime_resolve_avx_opt,
+	_dl_runtime_resolve_avx512 and _dl_runtime_resolve_avx512_opt
+	with _dl_runtime_resolve_fxsave, _dl_runtime_resolve_xsave and
+	_dl_runtime_resolve_xsavec.
+	* sysdeps/x86_64/dl-trampoline.S (DL_RUNTIME_UNALIGNED_VEC_SIZE):
+	Removed.
+	(DL_RUNTIME_RESOLVE_REALIGN_STACK): Check STATE_SAVE_ALIGNMENT
+	instead of VEC_SIZE.
+	(REGISTER_SAVE_BND0): Removed.
+	(REGISTER_SAVE_BND1): Likewise.
+	(REGISTER_SAVE_BND3): Likewise.
+	(REGISTER_SAVE_RAX): Always defined to 0.
+	(VMOV): Removed.
+	(_dl_runtime_resolve_avx): Likewise.
+	(_dl_runtime_resolve_avx_slow): Likewise.
+	(_dl_runtime_resolve_avx_opt): Likewise.
+	(_dl_runtime_resolve_avx512): Likewise.
+	(_dl_runtime_resolve_avx512_opt): Likewise.
+	(_dl_runtime_resolve_sse): Likewise.
+	(_dl_runtime_resolve_sse_vex): Likewise.
+	(USE_FXSAVE): New.
+	(_dl_runtime_resolve_fxsave): Likewise.
+	(USE_XSAVE): Likewise.
+	(_dl_runtime_resolve_xsave): Likewise.
+	(USE_XSAVEC): Likewise.
+	(_dl_runtime_resolve_xsavec): Likewise.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve_avx512):
+	Removed.
+	(_dl_runtime_resolve_avx512_opt): Likewise.
+	(_dl_runtime_resolve_avx): Likewise.
+	(_dl_runtime_resolve_avx_opt): Likewise.
+	(_dl_runtime_resolve_sse): Likewise.
+	(_dl_runtime_resolve_sse_vex): Likewise.
+	(_dl_runtime_resolve_fxsave): New.
+	(_dl_runtime_resolve_xsave): Likewise.
+	(_dl_runtime_resolve_xsavec): Likewise.
+
 2017-10-20  Paul Eggert <eggert@cs.ucla.edu>
 
 	[BZ #22320]

@@ -37,10 +37,9 @@
 #define bit_arch_Prefer_No_VZEROUPPER		(1 << 17)
 #define bit_arch_Fast_Unaligned_Copy		(1 << 18)
 #define bit_arch_Prefer_ERMS			(1 << 19)
-#define bit_arch_Use_dl_runtime_resolve_opt	(1 << 20)
-#define bit_arch_Use_dl_runtime_resolve_slow	(1 << 21)
-#define bit_arch_Prefer_No_AVX512		(1 << 22)
-#define bit_arch_MathVec_Prefer_No_AVX512	(1 << 23)
+#define bit_arch_Prefer_No_AVX512		(1 << 20)
+#define bit_arch_MathVec_Prefer_No_AVX512	(1 << 21)
+#define bit_arch_XSAVEC_Usable			(1 << 22)
 
 /* CPUID Feature flags.  */
 
@@ -91,8 +90,18 @@
 /* The current maximum size of the feature integer bit array.  */
 #define FEATURE_INDEX_MAX 1
 
-#ifndef	__ASSEMBLER__
+/* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
+   space to preserve RCX, RDX, RSI, RDI, R8, R9 and RAX.  It must be
+   aligned to 16 bytes for fxsave and 64 bytes for xsave.  */
+#define STATE_SAVE_OFFSET (8 * 7 + 8)
 
+/* Save SSE, AVX, AVX512, mask and bound registers.  */
+#define STATE_SAVE_MASK \
+  ((1 << 1) | (1 << 2) | (1 << 3) | (1 << 5) | (1 << 6) | (1 << 7))
+
+#ifdef	__ASSEMBLER__
+# include <cpu-features-offsets.h>
+#else	/* __ASSEMBLER__ */
 enum
   {
     COMMON_CPUID_INDEX_1 = 0,
@@ -121,6 +130,18 @@ struct cpu_features
   } cpuid[COMMON_CPUID_INDEX_MAX];
   unsigned int family;
   unsigned int model;
+  /* The state size for XSAVEC or XSAVE.  The type must be unsigned long
+     int so that we use
+
+	sub xsave_state_size_offset(%rip) %RSP_LP
+
+     in _dl_runtime_resolve.  */
+  unsigned long int xsave_state_size;
+  /* The full state size for XSAVE when XSAVEC is disabled by
+
+     GLIBC_TUNABLES=glibc.tune.hwcaps=-XSAVEC_Usable
+   */
+  unsigned int xsave_state_full_size;
   unsigned int feature[FEATURE_INDEX_MAX];
   /* Data cache size for use in memory and string routines, typically
      L1 size.  */
@@ -237,10 +258,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_Prefer_No_VZEROUPPER FEATURE_INDEX_1
 # define index_arch_Fast_Unaligned_Copy	FEATURE_INDEX_1
 # define index_arch_Prefer_ERMS		FEATURE_INDEX_1
-# define index_arch_Use_dl_runtime_resolve_opt FEATURE_INDEX_1
-# define index_arch_Use_dl_runtime_resolve_slow FEATURE_INDEX_1
 # define index_arch_Prefer_No_AVX512	FEATURE_INDEX_1
 # define index_arch_MathVec_Prefer_No_AVX512 FEATURE_INDEX_1
+# define index_arch_XSAVEC_Usable	FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 

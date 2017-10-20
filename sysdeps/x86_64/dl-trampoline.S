@@ -34,41 +34,24 @@
 # define DL_STACK_ALIGNMENT 8
 #endif
 
-#ifndef DL_RUNTIME_UNALIGNED_VEC_SIZE
-/* The maximum size in bytes of unaligned vector load and store in the
-   dynamic linker.  Since SSE optimized memory/string functions with
-   aligned SSE register load and store are used in the dynamic linker,
-   we must set this to 8 so that _dl_runtime_resolve_sse will align the
-   stack before calling _dl_fixup.  */
-# define DL_RUNTIME_UNALIGNED_VEC_SIZE 8
-#endif
-
-/* True if _dl_runtime_resolve should align stack to VEC_SIZE bytes.  */
+/* True if _dl_runtime_resolve should align stack for STATE_SAVE or align
+   stack to 16 bytes before calling _dl_fixup.  */
 #define DL_RUNTIME_RESOLVE_REALIGN_STACK \
-  (VEC_SIZE > DL_STACK_ALIGNMENT \
-   && VEC_SIZE > DL_RUNTIME_UNALIGNED_VEC_SIZE)
-
-/* Align vector register save area to 16 bytes.  */
-#define REGISTER_SAVE_VEC_OFF	0
+  (STATE_SAVE_ALIGNMENT > DL_STACK_ALIGNMENT \
+   || 16 > DL_STACK_ALIGNMENT)
 
 /* Area on stack to save and restore registers used for parameter
    passing when calling _dl_fixup.  */
 #ifdef __ILP32__
-# define REGISTER_SAVE_RAX	(REGISTER_SAVE_VEC_OFF + VEC_SIZE * 8)
 # define PRESERVE_BND_REGS_PREFIX
 #else
-/* Align bound register save area to 16 bytes.  */
-# define REGISTER_SAVE_BND0	(REGISTER_SAVE_VEC_OFF + VEC_SIZE * 8)
-# define REGISTER_SAVE_BND1	(REGISTER_SAVE_BND0 + 16)
-# define REGISTER_SAVE_BND2	(REGISTER_SAVE_BND1 + 16)
-# define REGISTER_SAVE_BND3	(REGISTER_SAVE_BND2 + 16)
-# define REGISTER_SAVE_RAX	(REGISTER_SAVE_BND3 + 16)
 # ifdef HAVE_MPX_SUPPORT
 #  define PRESERVE_BND_REGS_PREFIX bnd
 # else
 #  define PRESERVE_BND_REGS_PREFIX .byte 0xf2
 # endif
 #endif
+#define REGISTER_SAVE_RAX	0
 #define REGISTER_SAVE_RCX	(REGISTER_SAVE_RAX + 8)
 #define REGISTER_SAVE_RDX	(REGISTER_SAVE_RCX + 8)
 #define REGISTER_SAVE_RSI	(REGISTER_SAVE_RDX + 8)
@@ -80,68 +63,56 @@
 
 #define VEC_SIZE		64
 #define VMOVA			vmovdqa64
-#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
-# define VMOV			vmovdqa64
-#else
-# define VMOV			vmovdqu64
-#endif
 #define VEC(i)			zmm##i
-#define _dl_runtime_resolve	_dl_runtime_resolve_avx512
 #define _dl_runtime_profile	_dl_runtime_profile_avx512
 #include "dl-trampoline.h"
-#undef _dl_runtime_resolve
 #undef _dl_runtime_profile
 #undef VEC
-#undef VMOV
 #undef VMOVA
 #undef VEC_SIZE
 
 #define VEC_SIZE		32
 #define VMOVA			vmovdqa
-#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
-# define VMOV			vmovdqa
-#else
-# define VMOV			vmovdqu
-#endif
 #define VEC(i)			ymm##i
-#define _dl_runtime_resolve	_dl_runtime_resolve_avx
-#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx_opt
 #define _dl_runtime_profile	_dl_runtime_profile_avx
 #include "dl-trampoline.h"
-#undef _dl_runtime_resolve
-#undef _dl_runtime_resolve_opt
 #undef _dl_runtime_profile
 #undef VEC
-#undef VMOV
 #undef VMOVA
 #undef VEC_SIZE
 
 /* movaps/movups is 1-byte shorter.  */
 #define VEC_SIZE		16
 #define VMOVA			movaps
-#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
-# define VMOV			movaps
-#else
-# define VMOV			movups
-#endif
 #define VEC(i)			xmm##i
-#define _dl_runtime_resolve	_dl_runtime_resolve_sse
 #define _dl_runtime_profile	_dl_runtime_profile_sse
 #undef RESTORE_AVX
 #include "dl-trampoline.h"
-#undef _dl_runtime_resolve
 #undef _dl_runtime_profile
-#undef VMOV
+#undef VEC
 #undef VMOVA
+#undef VEC_SIZE
 
-/* Used by _dl_runtime_resolve_avx_opt/_dl_runtime_resolve_avx512_opt
-   to preserve the full vector registers with zero upper bits.  */
-#define VMOVA			vmovdqa
-#if DL_RUNTIME_RESOLVE_REALIGN_STACK || VEC_SIZE <= DL_STACK_ALIGNMENT
-# define VMOV			vmovdqa
-#else
-# define VMOV			vmovdqu
-#endif
-#define _dl_runtime_resolve	_dl_runtime_resolve_sse_vex
-#define _dl_runtime_resolve_opt	_dl_runtime_resolve_avx512_opt
+#define USE_FXSAVE
+#define STATE_SAVE_ALIGNMENT	16
+#define _dl_runtime_resolve	_dl_runtime_resolve_fxsave
 #include "dl-trampoline.h"
+#undef _dl_runtime_resolve
+#undef USE_FXSAVE
+#undef STATE_SAVE_ALIGNMENT
+
+#define USE_XSAVE
+#define STATE_SAVE_ALIGNMENT	64
+#define _dl_runtime_resolve	_dl_runtime_resolve_xsave
+#include "dl-trampoline.h"
+#undef _dl_runtime_resolve
+#undef USE_XSAVE
+#undef STATE_SAVE_ALIGNMENT
+
+#define USE_XSAVEC
+#define STATE_SAVE_ALIGNMENT	64
+#define _dl_runtime_resolve	_dl_runtime_resolve_xsavec
+#include "dl-trampoline.h"
+#undef _dl_runtime_resolve
+#undef USE_XSAVEC
+#undef STATE_SAVE_ALIGNMENT

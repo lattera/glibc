@@ -242,6 +242,16 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 						Slow_SSE4_2, SSE4_2,
 						disable, 11);
 	  break;
+	case 13:
+	  if (disable)
+	    {
+	      /* Update xsave_state_size to XSAVE state size.  */
+	      cpu_features->xsave_state_size
+		= cpu_features->xsave_state_full_size;
+	      CHECK_GLIBC_IFUNC_ARCH_OFF (n, cpu_features,
+					  XSAVEC_Usable, 13);
+	    }
+	  break;
 	case 14:
 	  if (disable)
 	    {
@@ -315,13 +325,6 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      CHECK_GLIBC_IFUNC_ARCH_NEED_CPU_BOTH
 		(n, cpu_features, Prefer_PMINUB_for_stringop, SSE2,
 		 disable, 26);
-	    }
-	  break;
-	case 27:
-	    {
-	      CHECK_GLIBC_IFUNC_ARCH_BOTH (n, cpu_features,
-					   Use_dl_runtime_resolve_slow,
-					   disable, 27);
 	    }
 	  break;
 	}
