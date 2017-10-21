@@ -1,3 +1,11 @@
+2017-10-21  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/Makefile (tests): Add tst-glob-tilde.
+	(tests-special): Add tst-glob-tilde-mem.out
+	(tst-glob-tilde-ENV): Set MALLOC_TRACE.
+	(tst-glob-tilde-mem.out): Add mtrace check.
+	* posix/tst-glob-tilde.c: New file.
+
 2017-10-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/floatn-common.h: New file.
