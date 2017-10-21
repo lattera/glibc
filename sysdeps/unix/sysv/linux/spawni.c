@@ -374,12 +374,12 @@ __spawnix (pid_t * pid, const char *file,
       ec = args.err;
       if (ec > 0)
 	/* There still an unlikely case where the child is cancelled after
-	   setting args.err, due to a positive error value.  Also due a
+	   setting args.err, due to a positive error value.  Also there is
 	   possible pid reuse race (where the kernel allocated the same pid
-	   to unrelated process) we need not to undefinitely hang expecting
-	   an invalid pid.  In both cases an error is returned to the
-	   caller.  */
-	__waitpid (new_pid, NULL, WNOHANG);
+	   to an unrelated process).  Unfortunately due synchronization
+	   issues where the kernel might not have the process collected
+	   the waitpid below can not use WNOHANG.  */
+	__waitpid (new_pid, NULL, 0);
     }
   else
     ec = -new_pid;
