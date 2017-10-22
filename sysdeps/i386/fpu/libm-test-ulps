@@ -2300,8 +2300,10 @@ ldouble: 3
 
 Function: "log2":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 1
 ldouble: 1
