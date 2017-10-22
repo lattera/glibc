@@ -3965,6 +3965,7 @@
 	All uses removed.
 
 	[BZ #1062]
+	CVE-2017-15671
 	* posix/Makefile (routines): Add globfree, globfree64, and
 	glob_pattern_p.
 	* posix/flexmember.h: New file.
