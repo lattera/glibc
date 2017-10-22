@@ -2370,24 +2370,30 @@ ldouble: 1
 
 Function: "pow_downward":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
 
 Function: "pow_towardzero":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
 
 Function: "pow_upward":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
@@ -2577,30 +2583,30 @@ ldouble: 5
 
 Function: "tgamma_downward":
 double: 3
-float: 4
+float: 5
 float128: 5
 idouble: 3
-ifloat: 4
+ifloat: 5
 ifloat128: 5
 ildouble: 5
 ldouble: 5
 
 Function: "tgamma_towardzero":
 double: 4
-float: 4
+float: 5
 float128: 5
 idouble: 4
-ifloat: 4
+ifloat: 5
 ifloat128: 5
 ildouble: 5
 ldouble: 5
 
 Function: "tgamma_upward":
 double: 4
-float: 4
+float: 6
 float128: 4
 idouble: 4
-ifloat: 4
+ifloat: 6
 ifloat128: 4
 ildouble: 5
 ldouble: 5

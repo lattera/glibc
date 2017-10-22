@@ -1,5 +1,18 @@
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/fpu/e_powf.S: Removed.
+	* sysdeps/i386/fpu/e_powf_log2_data.c: Likewise.
+	* sysdeps/i386/fpu/w_powf.c: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Updated for generic e_powf.c.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add e_powf-sse2.
+	(CFLAGS-e_powf-sse2.c): New.
+	* sysdeps/i386/i686/fpu/multiarch/e_powf-sse2.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/e_powf.c: Likewise.
+
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/fpu/e_log2f.S: Removed.
 	* sysdeps/i386/fpu/e_log2f_data.c: Likewise.
 	* sysdeps/i386/fpu/w_log2f.c: Likewise.

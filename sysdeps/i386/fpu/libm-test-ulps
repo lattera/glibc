@@ -2370,24 +2370,30 @@ ldouble: 1
 
 Function: "pow_downward":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
 
 Function: "pow_towardzero":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
 
 Function: "pow_upward":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
