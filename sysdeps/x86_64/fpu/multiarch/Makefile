@@ -37,12 +37,14 @@ CFLAGS-slowpow-fma.c = -mfma -mavx2
 CFLAGS-s_sin-fma.c = -mfma -mavx2
 CFLAGS-s_tan-fma.c = -mfma -mavx2
 
-libm-sysdep_routines += e_exp2f-fma e_expf-fma e_log2f-fma e_logf-fma
+libm-sysdep_routines += e_exp2f-fma e_expf-fma e_log2f-fma e_logf-fma \
+			e_powf-fma
 
 CFLAGS-e_exp2f-fma.c = -mfma -mavx2
 CFLAGS-e_expf-fma.c = -mfma -mavx2
 CFLAGS-e_log2f-fma.c = -mfma -mavx2
 CFLAGS-e_logf-fma.c = -mfma -mavx2
+CFLAGS-e_powf-fma.c = -mfma -mavx2
 
 libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
 			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \
