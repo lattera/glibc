@@ -1,3 +1,9 @@
+2017-10-22  Paul Eggert <eggert@cs.ucla.edu>
+
+	[BZ #22332]
+	* posix/glob.c (__glob): Fix buffer overflow during GLOB_TILDE
+	unescaping.
+
 2017-10-21  Florian Weimer  <fweimer@redhat.com>
 
 	* posix/Makefile (tests): Add tst-glob-tilde.
