@@ -1,3 +1,25 @@
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/e_expf.S: Removed.
+	* sysdeps/x86_64/fpu/multiarch/e_expf-fma.S: Likewise.
+	* sysdeps/x86_64/fpu/w_expf.c: Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Updated for generic
+	e_expf.c.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (CFLAGS-e_expf-fma.c):
+	New.
+	* sysdeps/x86_64/fpu/multiarch/e_expf-fma.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_expf.c (__redirect_ieee754_expf):
+	Renamed to ...
+	(__redirect_expf): This.
+	(SYMBOL_NAME): Changed to expf.
+	(__ieee754_expf): Renamed to ...
+	(__expf): This.
+	(__GI___expf): This.
+	(__ieee754_expf): Add strong_alias.
+	(__expf_finite): Likewise.
+	(__expf): New.
+	Include <sysdeps/ieee754/flt-32/e_expf.c>.
+
 2017-10-22  Paul Eggert <eggert@cs.ucla.edu>
 
 	[BZ #22332]

@@ -37,8 +37,9 @@ CFLAGS-slowpow-fma.c = -mfma -mavx2
 CFLAGS-s_sin-fma.c = -mfma -mavx2
 CFLAGS-s_tan-fma.c = -mfma -mavx2
 
-# e_expf-fma.S implements both FMA and SSE2 versions of e_expf.
 libm-sysdep_routines += e_expf-fma
+
+CFLAGS-e_expf-fma.c = -mfma -mavx2
 
 libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
 			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \

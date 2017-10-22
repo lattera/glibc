@@ -1987,13 +1987,17 @@ ldouble: 1
 
 Function: "exp_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "exp_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 

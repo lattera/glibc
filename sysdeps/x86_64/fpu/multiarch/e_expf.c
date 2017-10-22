@@ -1,4 +1,4 @@
-/* Multiple versions of IEEE 754 expf.
+/* Multiple versions of expf.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-extern float __redirect_ieee754_expf (float);
+extern float __redirect_expf (float);
 
-#define SYMBOL_NAME ieee754_expf
+#define SYMBOL_NAME expf
 #include "ifunc-fma.h"
 
-libc_ifunc_redirected (__redirect_ieee754_expf, __ieee754_expf,
-		       IFUNC_SELECTOR ());
-strong_alias (__ieee754_expf, __expf_finite)
+libc_ifunc_redirected (__redirect_expf, __expf, IFUNC_SELECTOR ());
+
+#ifdef SHARED
+__hidden_ver1 (__expf, __GI___expf, __redirect_expf)
+  __attribute__ ((visibility ("hidden")));
+
+# include <shlib-compat.h>
+versioned_symbol (libm, __expf, expf, GLIBC_2_27);
+#else
+weak_alias (__expf, expf)
+#endif
+
+strong_alias (__expf, __ieee754_expf)
+strong_alias (__expf, __expf_finite)
+
+#define __expf __expf_sse2
+#include <sysdeps/ieee754/flt-32/e_expf.c>
