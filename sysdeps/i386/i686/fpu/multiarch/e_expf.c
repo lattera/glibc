@@ -1,4 +1,4 @@
-/* Multiple versions of expf
+/* Multiple versions of expf.
    Copyright (C) 2012-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <init-arch.h>
+extern float __redirect_expf (float);
 
-extern double __ieee754_expf_sse2 (double);
-extern double __ieee754_expf_ia32 (double);
+#define SYMBOL_NAME expf
+#include "ifunc-sse2.h"
 
-double __ieee754_expf (double);
-libm_ifunc (__ieee754_expf,
-	    HAS_CPU_FEATURE (SSE2)
-	    ? __ieee754_expf_sse2
-	    : __ieee754_expf_ia32);
+libc_ifunc_redirected (__redirect_expf, __expf, IFUNC_SELECTOR ());
 
-extern double __expf_finite_sse2 (double);
-extern double __expf_finite_ia32 (double);
+#ifdef SHARED
+__hidden_ver1 (__expf_ia32, __GI___expf, __redirect_expf)
+  __attribute__ ((visibility ("hidden")));
 
-double __expf_finite (double);
-libm_ifunc (__expf_finite,
-	    HAS_CPU_FEATURE (SSE2)
-	    ? __expf_finite_sse2
-	    : __expf_finite_ia32);
+# include <shlib-compat.h>
+versioned_symbol (libm, __expf, expf, GLIBC_2_27);
+#else
+weak_alias (__expf, expf)
+#endif
+
+strong_alias (__expf, __ieee754_expf)
+strong_alias (__expf, __expf_finite)
+
+#define __expf __expf_ia32
+#include <sysdeps/ieee754/flt-32/e_expf.c>

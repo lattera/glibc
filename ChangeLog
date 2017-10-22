@@ -1,5 +1,22 @@
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/fpu/e_exp2f_data.c: Removed.
+	* sysdeps/i386/fpu/e_expf.S: Likewise.
+	* sysdeps/i386/fpu/math_errf.c: Likewise.
+	* sysdeps/i386/fpu/w_expf.c: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-ia32.S: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.S: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/w_expf.c: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Updated for generic e_expf.c.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Remove e_expf-ia32.
+	(CFLAGS-e_expf-sse2.c): New.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf-sse2.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/e_expf.c: Rewritten.
+
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/e_expf.S: Removed.
 	* sysdeps/x86_64/fpu/multiarch/e_expf-fma.S: Likewise.
 	* sysdeps/x86_64/fpu/w_expf.c: Likewise.
