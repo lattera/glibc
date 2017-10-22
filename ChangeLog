@@ -1,6 +1,14 @@
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add e_log2f-fma.
+	(CFLAGS-e_log2f-fma.c): New.
+	* sysdeps/x86_64/fpu/multiarch/e_log2f-fma.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/e_log2f.c: Likewise.
+
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
 	Add e_logf-fma.
 	(CFLAGS-e_logf-fma.c): New.
 	* sysdeps/x86_64/fpu/multiarch/e_logf-fma.c: New file.
