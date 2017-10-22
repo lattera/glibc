@@ -1,3 +1,9 @@
+2017-10-23  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/power7/strncpy.S: Decrease FRAMESIZE.
+	Move LR save and frame setup/teardown and LR restore to
+	immediately around memset call.  Provide cfi.
+
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/e_powf.S: Removed.
