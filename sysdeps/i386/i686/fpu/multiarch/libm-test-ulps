@@ -2000,9 +2000,9 @@ ldouble: 4
 
 Function: "gamma_downward":
 double: 4
-float: 4
+float: 5
 idouble: 4
-ifloat: 4
+ifloat: 5
 ildouble: 7
 ldouble: 7
 
@@ -2186,10 +2186,10 @@ ldouble: 4
 
 Function: "lgamma_downward":
 double: 4
-float: 4
+float: 5
 float128: 8
 idouble: 4
-ifloat: 4
+ifloat: 5
 ifloat128: 8
 ildouble: 7
 ldouble: 7
@@ -2625,10 +2625,10 @@ ldouble: 5
 
 Function: "y0_towardzero":
 double: 2
-float: 2
+float: 3
 float128: 3
 idouble: 2
-ifloat: 2
+ifloat: 3
 ifloat128: 3
 ildouble: 5
 ldouble: 5

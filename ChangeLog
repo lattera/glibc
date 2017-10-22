@@ -1,5 +1,19 @@
 2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/fpu/e_logf.S: Removed.
+	* sysdeps/i386/fpu/e_logf_data.c: Likewise.
+	* sysdeps/i386/fpu/w_logf.c: Likewise.
+	* sysdeps/i386/i686/fpu/e_logf.S: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Updated for generic e_logf.c.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add e_logf-sse2.
+	(CFLAGS-e_logf-sse2.c): New.
+	* sysdeps/i386/i686/fpu/multiarch/e_logf-sse2.c: New file.
+	* sysdeps/i386/i686/fpu/multiarch/e_logf.c: Likewise.
+
+2017-10-22  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/fpu/e_exp2f.S: Removed.
 	* sysdeps/i386/fpu/w_exp2f.c: Likewise.
 	* sysdeps/i386/fpu/libm-test-ulps: Updated for generic e_exp2f.c.
