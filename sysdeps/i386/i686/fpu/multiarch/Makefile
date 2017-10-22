@@ -1,6 +1,7 @@
 ifeq ($(subdir),math)
-libm-sysdep_routines += e_expf-sse2 s_sinf-sse2 s_cosf-sse2 \
+libm-sysdep_routines += e_exp2f-sse2 e_expf-sse2 s_sinf-sse2 s_cosf-sse2 \
                         s_sincosf-sse2
 
+CFLAGS-e_exp2f-sse2.c = -msse2 -mfpmath=sse
 CFLAGS-e_expf-sse2.c = -msse2 -mfpmath=sse
 endif

@@ -1921,7 +1921,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "exp2_upward":
+float: 1
 float128: 2
+ifloat: 1
 ifloat128: 2
 ildouble: 1
 ldouble: 1
