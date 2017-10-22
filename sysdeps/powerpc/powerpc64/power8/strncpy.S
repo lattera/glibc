@@ -241,23 +241,18 @@ L(zero_pad_start_1):
 	/* Save the link register.  */
 	mflr	r0
 	std	r0,16(r1)
-	cfi_offset(lr, 16)
 
 	/* Create the stack frame.  */
 	stdu	r1,-FRAMESIZE(r1)
 	cfi_adjust_cfa_offset(FRAMESIZE)
+	cfi_offset(lr, 16)
 
 	bl	MEMSET
 #ifndef MEMSET_is_local
 	nop
 #endif
 
-	/* Restore the stack frame.  */
-	addi	r1,r1,FRAMESIZE
-	cfi_adjust_cfa_offset(-FRAMESIZE)
-	/* Restore the link register.  */
-	ld	r0,16(r1)
-	mtlr	r0
+	ld	r0,FRAMESIZE+16(r1)
 
 #ifndef USE_AS_STPNCPY
 	mr	r3,r30       /* Restore the return value of strncpy, i.e.:
@@ -266,12 +261,18 @@ L(zero_pad_start_1):
 #endif
 
 	/* Restore non-volatile registers and return.  */
-	ld	r26,-48(r1)
-	ld	r27,-40(r1)
-	ld	r28,-32(r1)
-	ld	r29,-24(r1)
-	ld	r30,-16(r1)
-	ld	r31,-8(r1)
+	ld	r26,FRAMESIZE-48(r1)
+	ld	r27,FRAMESIZE-40(r1)
+	ld	r28,FRAMESIZE-32(r1)
+	ld	r29,FRAMESIZE-24(r1)
+	ld	r30,FRAMESIZE-16(r1)
+	ld	r31,FRAMESIZE-8(r1)
+	/* Restore the stack frame.  */
+	addi	r1,r1,FRAMESIZE
+	cfi_adjust_cfa_offset(-FRAMESIZE)
+	/* Restore the link register.  */
+	mtlr	r0
+	cfi_restore(lr)
 	blr
 
 	/* The common case where [src]+16 will not cross a 4K page boundary.
