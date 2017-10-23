@@ -1,3 +1,8 @@
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* elf/tlsdeschtab.h (_dl_tls_resolve_early_return_p): Mark unused.
+	(_dl_tlsdesc_wake_up_held_fixups): Likewise.
+
 2017-11-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* wcsmbs/wchar.h [__HAVE_FLOAT16 && __USE_GNU] (wcstof16):

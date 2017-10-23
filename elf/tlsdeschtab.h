@@ -137,6 +137,7 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
    avoid introducing such dependencies.  */
 
 static int
+__attribute__ ((unused))
 _dl_tlsdesc_resolve_early_return_p (struct tlsdesc volatile *td, void *caller)
 {
   if (caller != atomic_load_relaxed (&td->entry))
@@ -155,6 +156,7 @@ _dl_tlsdesc_resolve_early_return_p (struct tlsdesc volatile *td, void *caller)
 }
 
 static void
+__attribute__ ((unused))
 _dl_tlsdesc_wake_up_held_fixups (void)
 {
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
