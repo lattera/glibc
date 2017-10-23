@@ -690,6 +690,12 @@ Inquire about the associativity of the Level 1 instruction cache.
 @standards{GNU, unistd.h}
 Inquire about the line length of the Level 1 instruction cache.
 
+On aarch64, the cache line size returned is the minimum instruction cache line
+size observable by userspace.  This is typically the same as the L1 icache
+size but on some cores it may not be so.  However, it is specified in the
+architecture that operations such as cache line invalidation are consistent
+with the size reported with this variable.
+
 @item _SC_LEVEL1_DCACHE_SIZE
 @standards{GNU, unistd.h}
 Inquire about the size of the Level 1 data cache.
@@ -701,6 +707,12 @@ Inquire about the associativity of the Level 1 data cache.
 @item _SC_LEVEL1_DCACHE_LINESIZE
 @standards{GNU, unistd.h}
 Inquire about the line length of the Level 1 data cache.
+
+On aarch64, the cache line size returned is the minimum data cache line size
+observable by userspace.  This is typically the same as the L1 dcache size but
+on some cores it may not be so.  However, it is specified in the architecture
+that operations such as cache line invalidation are consistent with the size
+reported with this variable.
 
 @item _SC_LEVEL2_CACHE_SIZE
 @standards{GNU, unistd.h}

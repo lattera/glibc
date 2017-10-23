@@ -1,5 +1,8 @@
 2017-10-23  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* manual/conf.texi (_SC_LEVEL1_DCACHE_LINESIZE,
+	_SC_LEVEL1_ICACHE_LINESIZE): Document aarch64 caveat.
+
 	* manual/conf.texi (_SC_LEVEL1_ICACHE_SIZE,
 	_SC_LEVEL1_ICACHE_ASSOC, _SC_LEVEL1_ICACHE_LINESIZE,
 	_SC_LEVEL1_DCACHE_SIZE, _SC_LEVEL1_DCACHE_ASSOC,
