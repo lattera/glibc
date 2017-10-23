@@ -1,3 +1,10 @@
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #20952]
+	* localedata/locales/yuw_PG: New file.
+	* localedata/SUPPORTED: Add yuw_PG/UTF-8.
+	* locale/iso-639.def: Add Yau (Uruwa).
+
 2017-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* malloc/malloc.c (_int_malloc): Add SINGLE_THREAD_P path.
