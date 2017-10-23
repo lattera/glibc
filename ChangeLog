@@ -1,3 +1,10 @@
+2017-10-23  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/tpi_PG (LC_MESSAGES): Fix yesexpr and noexpr
+	by adding the generic +1 and -0 as in all other locales.
+	* localedata/locales/tpi_PG (LC_TIME): Fix some typos in the month and
+	day names and make it more readable by using ASCII where possible.
+
 2017-10-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/fix-fp-int-compare-invalid.h
