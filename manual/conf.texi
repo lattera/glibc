@@ -678,6 +678,67 @@ Inquire about the number of available physical pages in the system.
 Inquire about the number of functions which can be registered as termination
 functions for @code{atexit}; @pxref{Cleanups on Exit}.
 
+@item _SC_LEVEL1_ICACHE_SIZE
+@standards{GNU, unistd.h}
+Inquire about the size of the Level 1 instruction cache.
+
+@item _SC_LEVEL1_ICACHE_ASSOC
+@standards{GNU, unistd.h}
+Inquire about the associativity of the Level 1 instruction cache.
+
+@item _SC_LEVEL1_ICACHE_LINESIZE
+@standards{GNU, unistd.h}
+Inquire about the line length of the Level 1 instruction cache.
+
+@item _SC_LEVEL1_DCACHE_SIZE
+@standards{GNU, unistd.h}
+Inquire about the size of the Level 1 data cache.
+
+@item _SC_LEVEL1_DCACHE_ASSOC
+@standards{GNU, unistd.h}
+Inquire about the associativity of the Level 1 data cache.
+
+@item _SC_LEVEL1_DCACHE_LINESIZE
+@standards{GNU, unistd.h}
+Inquire about the line length of the Level 1 data cache.
+
+@item _SC_LEVEL2_CACHE_SIZE
+@standards{GNU, unistd.h}
+Inquire about the size of the Level 2 cache.
+
+@item _SC_LEVEL2_CACHE_ASSOC
+@standards{GNU, unistd.h}
+Inquire about the associativity of the Level 2 cache.
+
+@item _SC_LEVEL2_CACHE_LINESIZE
+@standards{GNU, unistd.h}
+Inquire about the line length of the Level 2 cache.
+
+@item _SC_LEVEL3_CACHE_SIZE
+@standards{GNU, unistd.h}
+Inquire about the size of the Level 3 cache.
+
+@item _SC_LEVEL3_CACHE_ASSOC
+@standards{GNU, unistd.h}
+Inquire about the associativity of the Level 3 cache.
+
+@item _SC_LEVEL3_CACHE_LINESIZE
+@standards{GNU, unistd.h}
+Inquire about the line length of the Level 3 cache.
+
+@item _SC_LEVEL4_CACHE_SIZE
+@standards{GNU, unistd.h}
+Inquire about the size of the Level 4 cache.
+
+@item _SC_LEVEL4_CACHE_ASSOC
+@standards{GNU, unistd.h}
+Inquire about the associativity of the Level 4 cache.
+
+@item _SC_LEVEL4_CACHE_LINESIZE
+@standards{GNU, unistd.h}
+Inquire about the line length of the Level 4 cache.
+
+
 @item _SC_XOPEN_VERSION
 @standards{X/Open, unistd.h}
 Inquire about the parameter corresponding to @code{_XOPEN_VERSION}.

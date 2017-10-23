@@ -1,3 +1,15 @@
+2017-10-23  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* manual/conf.texi (_SC_LEVEL1_ICACHE_SIZE,
+	_SC_LEVEL1_ICACHE_ASSOC, _SC_LEVEL1_ICACHE_LINESIZE,
+	_SC_LEVEL1_DCACHE_SIZE, _SC_LEVEL1_DCACHE_ASSOC,
+	_SC_LEVEL1_DCACHE_LINESIZE, _SC_LEVEL2_CACHE_SIZE,
+	_SC_LEVEL2_CACHE_ASSOC, _SC_LEVEL2_CACHE_LINESIZE,
+	_SC_LEVEL3_CACHE_SIZE, _SC_LEVEL3_CACHE_ASSOC,
+	_SC_LEVEL3_CACHE_LINESIZE, _SC_LEVEL4_CACHE_SIZE,
+	_SC_LEVEL4_CACHE_ASSOC, _SC_LEVEL4_CACHE_LINESIZE): New
+	variables.
+
 2017-10-23  Michael Collison  <michael.collison@arm.com>
 
 	* sysdeps/aarch64/fpu/e_sqrt.c (ieee754_sqrt): Replace asm statements
