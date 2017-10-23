@@ -55,7 +55,8 @@
 	with __builtin_trunc.
 	* sysdeps/aarch64/fpu/s_truncf.c (__truncf): Replace asm statements
 	with __builtin_truncf.
-	* sysdeps/aarch64/fpu/Makefile: Build e_sqrt[f].c with -fno-math-errno.
+	* sysdeps/aarch64/fpu/Makefile: Build e_sqrt[f].c with -fno-math-errno,
+	and s_l[l]round[f].c too.
 
 2017-10-23  Alan Modra  <amodra@gmail.com>
 
