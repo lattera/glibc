@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC truncf
-#define INSN "frintz"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__truncf (float x)
+{
+  return __builtin_truncf (x);
+}
+
+weak_alias (__truncf, truncf)

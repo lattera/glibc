@@ -16,7 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC fmaf
-#define TYPE float
-#define REGS "s"
-#include <s_fma.c>
+#include <math.h>
+
+float
+__fmaf (float x, float y, float z)
+{
+  return __builtin_fmaf (x, y, z);
+}
+
+weak_alias (__fmaf, fmaf)

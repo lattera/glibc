@@ -21,8 +21,6 @@
 double
 __ieee754_sqrt (double d)
 {
-  double res;
-  asm ("fsqrt   %d0, %d1" : "=w" (res) : "w" (d));
-  return res;
+  return __builtin_sqrt (d);
 }
 strong_alias (__ieee754_sqrt, __sqrt_finite)

@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define	FUNC ceilf
-#define INSN "frintp"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__ceilf (float x)
+{
+  return __builtin_ceilf (x);
+}
+
+weak_alias (__ceilf, ceilf)

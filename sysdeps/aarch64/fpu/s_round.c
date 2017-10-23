@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC round
-#define INSN "frinta"
-#include <s_frint.c>
+#include <math.h>
+
+double
+__round (double x)
+{
+  return __builtin_round (x);
+}
+
+weak_alias (__round, round)

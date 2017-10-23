@@ -1,3 +1,62 @@
+2017-10-23  Michael Collison  <michael.collison@arm.com>
+
+	* sysdeps/aarch64/fpu/e_sqrt.c (ieee754_sqrt): Replace asm statements
+	with __builtin_sqrt.
+	* sysdeps/aarch64/fpu/e_sqrtf.c (ieee754_sqrtf): Replace asm statements
+	with __builtin_sqrtf.
+	* sysdeps/aarch64/fpu/s_ceil.c (__ceil): Replace asm statements
+	with __builtin_ceil.
+	* sysdeps/aarch64/fpu/s_ceilf.c (__ceilf): Replace asm statements
+	with __builtin_ceilf.
+	* sysdeps/aarch64/fpu/s_floor.c (__floor): Replace asm statements
+	with __builtin_floor.
+	* sysdeps/aarch64/fpu/s_floorf.c (__floorf): Replace asm statements
+	with __builtin_floorf.
+	* sysdeps/aarch64/fpu/s_fma.c (__fma): Replace asm statements
+	with __builtin_fma.
+	* sysdeps/aarch64/fpu/s_fmaf.c (__fmaf): Replace asm statements
+	with __builtin_fmaf.
+	* sysdeps/aarch64/fpu/s_fmax.c (__fmax): Replace asm statements
+	with __builtin_fmax.
+	* sysdeps/aarch64/fpu/s_fmaxf.c (__fmaxf): Replace asm statements
+	with __builtin_fmaxf.
+	* sysdeps/aarch64/fpu/s_fmin.c (__fmin): Replace asm statements
+	with __builtin_fmin.
+	* sysdeps/aarch64/fpu/s_fminf.c (__fminf): Replace asm statements
+	with __builtin_fminf.
+	* sysdeps/aarch64/fpu/s_frint.c: Delete file.
+	* sysdeps/aarch64/fpu/s_frintf.c: Delete file.
+	* sysdeps/aarch64/fpu/s_llrint.c (__llrint): Replace asm statements
+	with builtin_rint and conversion to int.
+	* sysdeps/aarch64/fpu/s_llrintf.c (__llrintf): Likewise.
+	* sysdeps/aarch64/fpu/s_llround.c (__llround): Replace asm statements
+	with builtin_llround.
+	* sysdeps/aarch64/fpu/s_llroundf.c (__llroundf): Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c (__lrint): Replace asm statements
+	with builtin_rint and conversion to long int.
+	* sysdeps/aarch64/fpu/s_lrintf.c (__lrintf): Likewise.
+	* sysdeps/aarch64/fpu/s_lround.c (__lround): Replace asm statements
+	with builtin_lround.
+	* sysdeps/aarch64/fpu/s_lroundf.c (__lroundf): Replace asm statements
+	with builtin_lroundf.
+	* sysdeps/aarch64/fpu/s_nearbyint.c (__nearbyint): Replace asm
+	statements with __builtin_nearbyint.
+	* sysdeps/aarch64/fpu/s_nearbyintf.c (__nearbyintf): Replace asm
+	statements with __builtin_nearbyintf.
+	* sysdeps/aarch64/fpu/s_rint.c (__rint): Replace asm statements
+	with __builtin_rint.
+	* sysdeps/aarch64/fpu/s_rintf.c (__rintf): Replace asm statements
+	with __builtin_rintf.
+	* sysdeps/aarch64/fpu/s_round.c (__round): Replace asm statements
+	with __builtin_round.
+	* sysdeps/aarch64/fpu/s_roundf.c (__roundf): Replace asm statements
+	with __builtin_roundf.
+	* sysdeps/aarch64/fpu/s_trunc.c (__trunc): Replace asm statements
+	with __builtin_trunc.
+	* sysdeps/aarch64/fpu/s_truncf.c (__truncf): Replace asm statements
+	with __builtin_truncf.
+	* sysdeps/aarch64/fpu/Makefile: Build e_sqrt[f].c with -fno-math-errno.
+
 2017-10-23  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strncpy.S: Move LR cfi.

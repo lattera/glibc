@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC rintf
-#define INSN "frintx"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__rintf (float x)
+{
+  return __builtin_rintf (x);
+}
+
+weak_alias (__rintf, rintf)

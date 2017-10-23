@@ -16,7 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC lroundf
-#define ITYPE float
-#define IREG_SIZE 32
-#include <s_lround.c>
+#include <math.h>
+
+long int
+__lroundf (float x)
+{
+  return __builtin_lroundf (x);
+}
+
+weak_alias (__lroundf, lroundf)

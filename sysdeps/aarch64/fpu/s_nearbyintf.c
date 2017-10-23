@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC nearbyintf
-#define INSN "frinti"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__nearbyintf (float x)
+{
+  return __builtin_nearbyintf (x);
+}
+
+weak_alias (__nearbyintf, nearbyintf)

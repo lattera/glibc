@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC floorf
-#define INSN "frintm"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__floorf (float x)
+{
+  return __builtin_floorf (x);
+}
+
+weak_alias (__floorf, floorf)

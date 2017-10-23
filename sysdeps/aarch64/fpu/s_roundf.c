@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC roundf
-#define INSN "frinta"
-#include <s_frintf.c>
+#include <math.h>
+
+float
+__roundf (float x)
+{
+  return __builtin_roundf (x);
+}
+
+weak_alias (__roundf, roundf)

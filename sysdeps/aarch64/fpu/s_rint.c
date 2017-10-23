@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC rint
-#define INSN "frintx"
-#include <s_frint.c>
+#include <math.h>
+
+double
+__rint (double x)
+{
+  return __builtin_rint (x);
+}
+
+weak_alias (__rint, rint)

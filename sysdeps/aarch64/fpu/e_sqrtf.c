@@ -21,8 +21,6 @@
 float
 __ieee754_sqrtf (float s)
 {
-  float res;
-  asm ("fsqrt   %s0, %s1" : "=w" (res) : "w" (s));
-  return res;
+  return __builtin_sqrtf (s);
 }
 strong_alias (__ieee754_sqrtf, __sqrtf_finite)

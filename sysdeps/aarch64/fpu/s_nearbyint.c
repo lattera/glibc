@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define	FUNC nearbyint
-#define INSN "frinti"
-#include <s_frint.c>
+#include <math.h>
+
+double
+__nearbyint (double x)
+{
+  return __builtin_nearbyint (x);
+}
+
+weak_alias (__nearbyint, nearbyint)

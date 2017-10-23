@@ -19,38 +19,17 @@
 #include <math.h>
 #include <get-rounding-mode.h>
 #include <stdint.h>
+#include <math_private.h>
 
-#ifndef FUNC
-# define FUNC lrint
-#endif
-
-#ifndef ITYPE
-# define ITYPE double
 # define IREG_SIZE 64
-#else
-# ifndef IREG_SIZE
-#  error IREG_SIZE not defined
-# endif
-#endif
 
-#ifndef OTYPE
-# define OTYPE long int
 # ifdef __ILP32__
 #  define OREG_SIZE 32
 # else
 #  define OREG_SIZE 64
 # endif
-#else
-# ifndef OREG_SIZE
-#  error OREG_SIZE not defined
-# endif
-#endif
 
-#if IREG_SIZE == 32
-# define IREGS "s"
-#else
 # define IREGS "d"
-#endif
 
 #if OREG_SIZE == 32
 # define OREGS "w"
@@ -58,15 +37,14 @@
 # define OREGS "x"
 #endif
 
-#define __CONCATX(a,b) __CONCAT(a,b)
 
-OTYPE
-__CONCATX(__,FUNC) (ITYPE x)
+long int
+__lrint (double x)
 {
-  OTYPE result;
-  ITYPE temp;
 
 #if IREG_SIZE == 64 && OREG_SIZE == 32
+  long int result;
+
   if (__builtin_fabs (x) > INT32_MAX)
     {
       /* Converting large values to a 32 bit int may cause the frintx/fcvtza
@@ -96,10 +74,14 @@ __CONCATX(__,FUNC) (ITYPE x)
       return result;
     }
 #endif
-  asm ( "frintx" "\t%" IREGS "1, %" IREGS "2\n\t"
-        "fcvtzs" "\t%" OREGS "0, %" IREGS "1"
-        : "=r" (result), "=w" (temp) : "w" (x) );
-  return result;
+
+  double r =  __builtin_rint (x);
+
+  /* Prevent gcc from calling lrint directly when compiled with
+     -fno-math-errno by inserting a barrier.  */
+
+  math_opt_barrier (r);
+  return r;
 }
 
-weak_alias (__CONCATX(__,FUNC), FUNC)
+weak_alias (__lrint, lrint)

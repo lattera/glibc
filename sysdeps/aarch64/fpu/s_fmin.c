@@ -18,32 +18,10 @@
 
 #include <math.h>
 
-#ifndef FUNC
-# define FUNC fmin
-#endif
-
-#ifndef INSN
-# define INSN "fminnm"
-#endif
-
-#ifndef TYPE
-# define TYPE double
-# define REGS "d"
-#else
-# ifndef REGS
-#  error REGS not defined
-# endif
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-TYPE
-__CONCATX(__,FUNC) (TYPE x, TYPE y)
+double
+__fmin (double x, double y)
 {
-  TYPE result;
-  asm ( INSN "\t%" REGS "0, %" REGS "1, %" REGS "2"
-        : "=w" (result) : "w" (x), "w" (y) );
-  return result;
+  return __builtin_fmin (x, y);
 }
 
-weak_alias (__CONCATX(__,FUNC), FUNC)
+weak_alias (__fmin, fmin)

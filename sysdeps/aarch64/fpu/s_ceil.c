@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define	FUNC ceil
-#define INSN "frintp"
-#include <s_frint.c>
+#include <math.h>
+
+double
+__ceil (double x)
+{
+  return __builtin_ceil (x);
+}
+
+weak_alias (__ceil, ceil)

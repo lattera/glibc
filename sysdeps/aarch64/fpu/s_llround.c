@@ -16,7 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC llround
-#define OTYPE long long int
-#define OREG_SIZE 64
-#include <s_lround.c>
+#include <math.h>
+
+long long int
+__llround (double x)
+{
+  return __builtin_llround (x);
+}
+
+weak_alias (__llround, llround)

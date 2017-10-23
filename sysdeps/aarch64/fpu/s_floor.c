@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC floor
-#define INSN "frintm"
-#include <s_frint.c>
+#include <math.h>
+
+double
+__floor (double x)
+{
+  return __builtin_floor (x);
+}
+
+weak_alias (__floor, floor)

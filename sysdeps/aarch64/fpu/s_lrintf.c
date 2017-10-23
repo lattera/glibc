@@ -16,7 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC lrintf
-#define ITYPE float
-#define IREG_SIZE 32
-#include <s_lrint.c>
+#include <math.h>
+#include <math_private.h>
+
+long int
+__lrintf (float x)
+{
+  float r = __builtin_rintf (x);
+
+  /* Prevent gcc from calling lrintf directly when compiled with
+     -fno-math-errno by inserting a barrier.  */
+
+  math_opt_barrier (r);
+  return r;
+}
+
+weak_alias (__lrintf, lrintf)

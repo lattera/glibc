@@ -18,53 +18,10 @@
 
 #include <math.h>
 
-#ifndef FUNC
-# define FUNC lround
-#endif
+long int
+__lround (double x)
+ {
+  return __builtin_lround (x);
+ }
 
-#ifndef ITYPE
-# define ITYPE double
-# define IREG_SIZE 64
-#else
-# ifndef IREG_SIZE
-#  error IREG_SIZE not defined
-# endif
-#endif
-
-#ifndef OTYPE
-# define OTYPE long int
-# ifdef __ILP32__
-#  define OREG_SIZE 32
-# else
-#  define OREG_SIZE 64
-# endif
-#else
-# ifndef OREG_SIZE
-#  error OREG_SIZE not defined
-# endif
-#endif
-
-#if IREG_SIZE == 32
-# define IREGS "s"
-#else
-# define IREGS "d"
-#endif
-
-#if OREG_SIZE == 32
-# define OREGS "w"
-#else
-# define OREGS "x"
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-OTYPE
-__CONCATX(__,FUNC) (ITYPE x)
-{
-  OTYPE result;
-  asm ( "fcvtas" "\t%" OREGS "0, %" IREGS "1"
-        : "=r" (result) : "w" (x) );
-  return result;
-}
-
-weak_alias (__CONCATX(__,FUNC), FUNC)
+weak_alias (__lround, lround)

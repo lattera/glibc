@@ -16,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC fmax
-#define INSN "fmaxnm"
-#include <fpu/s_fmin.c>
+#include <math.h>
+
+double
+__fmax (double x, double y)
+{
+  return __builtin_fmax (x, y);
+}
+
+weak_alias (__fmax, fmax)
