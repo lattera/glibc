@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #define __strncasecmp __strncasecmp_power8
 #undef weak_alias
 #define weak_alias(name, alias)

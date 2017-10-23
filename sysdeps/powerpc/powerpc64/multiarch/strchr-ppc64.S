@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #ifdef SHARED
 # define STRCHR __strchr_ppc
 

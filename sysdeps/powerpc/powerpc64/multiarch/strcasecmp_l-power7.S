@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #define __strcasecmp_l __strcasecmp_l_power7
 
 #undef weak_alias

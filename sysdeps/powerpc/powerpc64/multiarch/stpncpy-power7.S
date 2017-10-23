@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #define USE_AS_STPNCPY
 
 #define STPNCPY __stpncpy_power7

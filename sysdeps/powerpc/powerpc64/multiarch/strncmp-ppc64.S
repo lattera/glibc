@@ -15,8 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #if defined SHARED && IS_IN (libc)
 # define STRNCMP __strncmp_ppc
 

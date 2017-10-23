@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #define MEMSET __memset_power6
 
 #undef libc_hidden_builtin_def

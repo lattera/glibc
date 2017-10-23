@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
 #define RAWMEMCHR __rawmemchr_power7
 
 #include <sysdeps/powerpc/powerpc64/power7/rawmemchr.S>

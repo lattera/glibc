@@ -1,5 +1,109 @@
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-power8.S: Don't
+	include sysdep.h.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_finite-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memchr-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-a2.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-cell.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memmove-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/mempcpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memrchr-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memset-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/rawmemchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpcpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchr-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchrnul-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strchrnul-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power9.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strcspn-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strlen-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncase-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power4.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power9.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncpy-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strnlen-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strrchr-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strspn-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strstr-power7.S: Likewise.
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-ppc64.S: Don't
+	include sysdep.h and math_ldbl_opt.h.
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-power5+.S: Don't
+	include sysdep.h and math_ldbl_opt.h.  Include shlib-compat.h.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isinf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power5.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power6.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power6x.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power7.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power6x.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power6x.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round-ppc64.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc-power5+.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc-ppc64.S: Likewise.
+
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/strncase_l-power7.c: Include
 	string/strncase_l.c, not string/strncase.c.
 	(USE_IN_EXTENDED_LOCALE_MODEL): Don't define.
