@@ -1,3 +1,8 @@
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-ppc64.S (hidden_def):
+	Redefine only when SHARED.
+
 2017-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC)]:

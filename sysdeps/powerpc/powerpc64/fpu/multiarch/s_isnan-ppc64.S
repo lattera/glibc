@@ -28,8 +28,10 @@
 
 
 #define __isnan __isnan_ppc64
-#undef hidden_def
-#define hidden_def(name) \
-  .globl __GI___isnan ; .set __GI___isnan,__isnan_ppc64
+#ifdef SHARED
+ #undef hidden_def
+ #define hidden_def(name) \
+   .globl __GI___isnan ; .set __GI___isnan,__isnan_ppc64
+#endif
 
 #include <sysdeps/powerpc/powerpc64/fpu/s_isnan.S>
