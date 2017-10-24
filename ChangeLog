@@ -1,5 +1,12 @@
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strncase_l-power7.c: Include
+	string/strncase_l.c, not string/strncase.c.
+	(USE_IN_EXTENDED_LOCALE_MODEL): Don't define.
+	(libc_hidden_def): Redefine.
+
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S:
 	(__STRCMP, STRCMP, __strcasecmp_l): Define.
 	(__strcasecmp): Don't define.

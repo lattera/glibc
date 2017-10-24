@@ -18,8 +18,10 @@
 #include <string.h>
 
 #define __strncasecmp_l __strncasecmp_l_power7
-#define USE_IN_EXTENDED_LOCALE_MODEL    1
+
+#undef libc_hidden_def
+#define libc_hidden_def(name)
 
 extern __typeof (strncasecmp_l) __strncasecmp_l_power7 attribute_hidden;
 
-#include <string/strncase.c>
+#include <string/strncase_l.c>
