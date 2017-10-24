@@ -1,5 +1,13 @@
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/km_KH (LC_MESSAGES): Fix yestr and nostr.
+	The yesstr and nostr apparently	came from CLDR. And CLDR has a bug there:
+	these strings contain a U+17D6 (which somewhat looks like a colon)
+	instead of a real colon to separate the full words for “yes”
+	and “no” from the single letter responses.
+
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/ka_GE (LC_MESSAGES): Fix yesexp to make
 	it agree with CLDR (include the first letter of yesstr).
 	Also make it more readable by using ASCII where possible.
