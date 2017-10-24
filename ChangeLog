@@ -1,5 +1,10 @@
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Don't define
+	USE_AS_STPNCPY.
+
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_isnan-ppc64.S (hidden_def):
 	Redefine only when SHARED.
 

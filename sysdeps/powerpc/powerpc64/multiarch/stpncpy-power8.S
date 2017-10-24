@@ -18,8 +18,6 @@
 
 #include <sysdep.h>
 
-#define USE_AS_STPNCPY
-
 #define STPNCPY __stpncpy_power8
 
 #undef libc_hidden_builtin_def
