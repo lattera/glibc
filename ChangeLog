@@ -1,5 +1,14 @@
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/mr_IN (LC_MESSAGES): Fix yesstr and nostr
+	and improve yesexpr and noexpr. The yesstr and nostr apparently
+	came from CLDR. And CLDR has a bug there: these strings contain
+	a U+0903 (which looks like a colon) instead of a real colon
+	to separate the full words for “yes” and “no” from the single
+	letter responses.
+
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/bn_BD (LC_MESSAGES): Use only the first
 	letters of the full yesstr and nostr in yesexpr and noexpr.
 
