@@ -1,3 +1,8 @@
+2017-10-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/fix-fp-int-compare-invalid.h
+	(FIX_COMPARE_INVALID): Define to 0 if [__GNUC_PREREQ (8, 0)].
+
 2017-10-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/spawni.c (__spawnix): Use 0 instead of
