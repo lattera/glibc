@@ -1,5 +1,11 @@
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/ka_GE (LC_MESSAGES): Fix yesexp to make
+	it agree with CLDR (include the first letter of yesstr).
+	Also make it more readable by using ASCII where possible.
+
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/mr_IN (LC_MESSAGES): Fix yesstr and nostr
 	and improve yesexpr and noexpr. The yesstr and nostr apparently
 	came from CLDR. And CLDR has a bug there: these strings contain
