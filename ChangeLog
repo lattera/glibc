@@ -1,5 +1,9 @@
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Optimize.
+
+2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/arm/dl-machine.h (elf_machine_runtime_setup): Remove
 	DT_TLSDESC_GOT initialization.
 	* sysdeps/arm/dl-tlsdesc.S (_dl_tlsdesc_lazy_resolver): Remove.

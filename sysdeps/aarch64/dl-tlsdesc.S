@@ -142,23 +142,17 @@ _dl_tlsdesc_undefweak:
 	cfi_startproc
 	.align 2
 _dl_tlsdesc_dynamic:
-# define NSAVEXREGPAIRS 2
-	stp	x29, x30, [sp,#-(32+16*NSAVEXREGPAIRS)]!
-	cfi_adjust_cfa_offset (32+16*NSAVEXREGPAIRS)
-	cfi_rel_offset (x29, 0)
-	cfi_rel_offset (x30, 8)
-	mov	x29, sp
 	DELOUSE (0)
 
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */
-
-	stp	x1,  x2, [sp, #32+16*0]
-	stp	x3,  x4, [sp, #32+16*1]
-	cfi_rel_offset (x1, 32)
-	cfi_rel_offset (x2, 32+8)
-	cfi_rel_offset (x3, 32+16)
-	cfi_rel_offset (x4, 32+24)
+	stp	x1,  x2, [sp, #-32]!
+	stp	x3,  x4, [sp, #16]
+	cfi_adjust_cfa_offset (32)
+	cfi_rel_offset (x1, 0)
+	cfi_rel_offset (x2, 8)
+	cfi_rel_offset (x3, 16)
+	cfi_rel_offset (x4, 24)
 
 	mrs	x4, tpidr_el0
 	ldr	PTR_REG (1), [x0,#TLSDESC_ARG]
@@ -167,23 +161,18 @@ _dl_tlsdesc_dynamic:
 	ldr	PTR_REG (2), [x0,#DTV_COUNTER]
 	cmp	PTR_REG (3), PTR_REG (2)
 	b.hi	2f
-	ldr	PTR_REG (2), [x1,#TLSDESC_MODID]
+	/* Load r2 = td->tlsinfo.ti_module and r3 = td->tlsinfo.ti_offset.  */
+	ldp	PTR_REG (2), PTR_REG (3), [x1,#TLSDESC_MODID]
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (2), lsl #(PTR_LOG_SIZE + 1)
 	ldr	PTR_REG (0), [x0] /* Load val member of DTV entry.  */
 	cmp	PTR_REG (0), #TLS_DTV_UNALLOCATED
 	b.eq	2f
-	ldr	PTR_REG (1), [x1,#TLSDESC_MODOFF]
-	add	PTR_REG (0), PTR_REG (0), PTR_REG (1)
-	sub	PTR_REG (0), PTR_REG (0), PTR_REG (4)
+	sub	PTR_REG (3), PTR_REG (3), PTR_REG (4)
+	add	PTR_REG (0), PTR_REG (0), PTR_REG (3)
 1:
-	ldp	 x1,  x2, [sp, #32+16*0]
-	ldp	 x3,  x4, [sp, #32+16*1]
-
-	ldp	x29, x30, [sp], #(32+16*NSAVEXREGPAIRS)
-	cfi_adjust_cfa_offset (-32-16*NSAVEXREGPAIRS)
-	cfi_restore (x29)
-	cfi_restore (x30)
-# undef NSAVEXREGPAIRS
+	ldp	 x3,  x4, [sp, #16]
+	ldp	 x1,  x2, [sp], #32
+	cfi_adjust_cfa_offset (-32)
 	RET
 2:
 	/* This is the slow path. We need to call __tls_get_addr() which
@@ -191,29 +180,33 @@ _dl_tlsdesc_dynamic:
 	   callee will trash.  */
 
 	/* Save the remaining registers that we must treat as caller save.  */
-# define NSAVEXREGPAIRS 7
-	stp	 x5,  x6, [sp, #-16*NSAVEXREGPAIRS]!
+# define NSAVEXREGPAIRS 8
+	stp	x29, x30, [sp,#-16*NSAVEXREGPAIRS]!
 	cfi_adjust_cfa_offset (16*NSAVEXREGPAIRS)
-	stp	 x7,  x8, [sp, #16*1]
-	stp	 x9, x10, [sp, #16*2]
-	stp	x11, x12, [sp, #16*3]
-	stp	x13, x14, [sp, #16*4]
-	stp	x15, x16, [sp, #16*5]
-	stp	x17, x18, [sp, #16*6]
-	cfi_rel_offset (x5, 0)
-	cfi_rel_offset (x6, 8)
-	cfi_rel_offset (x7, 16)
-	cfi_rel_offset (x8, 16+8)
-	cfi_rel_offset (x9, 16*2)
-	cfi_rel_offset (x10, 16*2+8)
-	cfi_rel_offset (x11, 16*3)
-	cfi_rel_offset (x12, 16*3+8)
-	cfi_rel_offset (x13, 16*4)
-	cfi_rel_offset (x14, 16*4+8)
-	cfi_rel_offset (x15, 16*5)
-	cfi_rel_offset (x16, 16*5+8)
-	cfi_rel_offset (x17, 16*6)
-	cfi_rel_offset (x18, 16*6+8)
+	cfi_rel_offset (x29, 0)
+	cfi_rel_offset (x30, 8)
+	mov	x29, sp
+	stp	 x5,  x6, [sp, #16*1]
+	stp	 x7,  x8, [sp, #16*2]
+	stp	 x9, x10, [sp, #16*3]
+	stp	x11, x12, [sp, #16*4]
+	stp	x13, x14, [sp, #16*5]
+	stp	x15, x16, [sp, #16*6]
+	stp	x17, x18, [sp, #16*7]
+	cfi_rel_offset (x5, 16*1)
+	cfi_rel_offset (x6, 16*1+8)
+	cfi_rel_offset (x7, 16*2)
+	cfi_rel_offset (x8, 16*2+8)
+	cfi_rel_offset (x9, 16*3)
+	cfi_rel_offset (x10, 16*3+8)
+	cfi_rel_offset (x11, 16*4)
+	cfi_rel_offset (x12, 16*4+8)
+	cfi_rel_offset (x13, 16*5)
+	cfi_rel_offset (x14, 16*5+8)
+	cfi_rel_offset (x15, 16*6)
+	cfi_rel_offset (x16, 16*6+8)
+	cfi_rel_offset (x17, 16*7)
+	cfi_rel_offset (x18, 16*7+8)
 
 	SAVE_Q_REGISTERS
 
@@ -225,14 +218,18 @@ _dl_tlsdesc_dynamic:
 
 	RESTORE_Q_REGISTERS
 
-	ldp	 x7,  x8, [sp, #16*1]
-	ldp	 x9, x10, [sp, #16*2]
-	ldp	x11, x12, [sp, #16*3]
-	ldp	x13, x14, [sp, #16*4]
-	ldp	x15, x16, [sp, #16*5]
-	ldp	x17, x18, [sp, #16*6]
-	ldp	 x5,  x6, [sp], #16*NSAVEXREGPAIRS
+	ldp	 x5,  x6, [sp, #16*1]
+	ldp	 x7,  x8, [sp, #16*2]
+	ldp	 x9, x10, [sp, #16*3]
+	ldp	x11, x12, [sp, #16*4]
+	ldp	x13, x14, [sp, #16*5]
+	ldp	x15, x16, [sp, #16*6]
+	ldp	x17, x18, [sp, #16*7]
+
+	ldp	x29, x30, [sp], #16*NSAVEXREGPAIRS
 	cfi_adjust_cfa_offset (-16*NSAVEXREGPAIRS)
+	cfi_restore (x29)
+	cfi_restore (x30)
 	b	1b
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
