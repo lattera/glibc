@@ -3568,37 +3568,50 @@ _int_malloc (mstate av, size_t bytes)
     {
       idx = fastbin_index (nb);
       mfastbinptr *fb = &fastbin (av, idx);
-      mchunkptr pp = *fb;
-      REMOVE_FB (fb, victim, pp);
-      if (victim != 0)
-        {
-          if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
-	    malloc_printerr ("malloc(): memory corruption (fast)");
-          check_remalloced_chunk (av, victim, nb);
-#if USE_TCACHE
-	  /* While we're here, if we see other chunks of the same size,
-	     stash them in the tcache.  */
-	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache && tc_idx < mp_.tcache_bins)
-	    {
-	      mchunkptr tc_victim;
+      mchunkptr pp;
+      victim = *fb;
 
-	      /* While bin not empty and tcache not full, copy chunks over.  */
-	      while (tcache->counts[tc_idx] < mp_.tcache_count
-		     && (pp = *fb) != NULL)
+      if (victim != NULL)
+	{
+	  if (SINGLE_THREAD_P)
+	    *fb = victim->fd;
+	  else
+	    REMOVE_FB (fb, pp, victim);
+	  if (__glibc_likely (victim != NULL))
+	    {
+	      size_t victim_idx = fastbin_index (chunksize (victim));
+	      if (__builtin_expect (victim_idx != idx, 0))
+		malloc_printerr ("malloc(): memory corruption (fast)");
+	      check_remalloced_chunk (av, victim, nb);
+#if USE_TCACHE
+	      /* While we're here, if we see other chunks of the same size,
+		 stash them in the tcache.  */
+	      size_t tc_idx = csize2tidx (nb);
+	      if (tcache && tc_idx < mp_.tcache_bins)
 		{
-		  REMOVE_FB (fb, tc_victim, pp);
-		  if (tc_victim != 0)
+		  mchunkptr tc_victim;
+
+		  /* While bin not empty and tcache not full, copy chunks.  */
+		  while (tcache->counts[tc_idx] < mp_.tcache_count
+			 && (tc_victim = *fb) != NULL)
 		    {
+		      if (SINGLE_THREAD_P)
+			*fb = tc_victim->fd;
+		      else
+			{
+			  REMOVE_FB (fb, pp, tc_victim);
+			  if (__glibc_unlikely (tc_victim == NULL))
+			    break;
+			}
 		      tcache_put (tc_victim, tc_idx);
-	            }
+		    }
 		}
-	    }
 #endif
-          void *p = chunk2mem (victim);
-          alloc_perturb (p, bytes);
-          return p;
-        }
+	      void *p = chunk2mem (victim);
+	      alloc_perturb (p, bytes);
+	      return p;
+	    }
+	}
     }
 
   /*

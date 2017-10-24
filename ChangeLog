@@ -1,5 +1,9 @@
 2017-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* malloc/malloc.c (_int_malloc): Add SINGLE_THREAD_P path.
+
+2017-10-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* malloc/malloc.c (__libc_malloc): Add SINGLE_THREAD_P path.
 	(__libc_realloc): Likewise.
 	(_mid_memalign): Likewise.
