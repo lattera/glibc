@@ -1,5 +1,12 @@
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/an_ES (LC_MESSAGES): Add yesstr and nostr.
+	* localedata/locales/an_ES (LC_ADDRESS): Add lang_term and lang_lib.
+	* localedata/locales/an_ES: Make source more readable by using ASCII
+	where possible.
+
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #20952]
 	* localedata/locales/yuw_PG: New file.
 	* localedata/SUPPORTED: Add yuw_PG/UTF-8.
