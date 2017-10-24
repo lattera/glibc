@@ -3038,6 +3038,14 @@ __libc_malloc (size_t bytes)
   DIAG_POP_NEEDS_COMMENT;
 #endif
 
+  if (SINGLE_THREAD_P)
+    {
+      victim = _int_malloc (&main_arena, bytes);
+      assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
+	      &main_arena == arena_for_chunk (mem2chunk (victim)));
+      return victim;
+    }
+
   arena_get (ar_ptr, bytes);
 
   victim = _int_malloc (ar_ptr, bytes);
@@ -3194,6 +3202,15 @@ __libc_realloc (void *oldmem, size_t bytes)
       return newmem;
     }
 
+  if (SINGLE_THREAD_P)
+    {
+      newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
+      assert (!newp || chunk_is_mmapped (mem2chunk (newp)) ||
+	      ar_ptr == arena_for_chunk (mem2chunk (newp)));
+
+      return newp;
+    }
+
   __libc_lock_lock (ar_ptr->mutex);
 
   newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
@@ -3267,6 +3284,15 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       while (a < alignment)
         a <<= 1;
       alignment = a;
+    }
+
+  if (SINGLE_THREAD_P)
+    {
+      p = _int_memalign (&main_arena, alignment, bytes);
+      assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
+	      &main_arena == arena_for_chunk (mem2chunk (p)));
+
+      return p;
     }
 
   arena_get (ar_ptr, bytes + alignment + MINSIZE);
@@ -3361,7 +3387,11 @@ __libc_calloc (size_t n, size_t elem_size)
 
   MAYBE_INIT_TCACHE ();
 
-  arena_get (av, sz);
+  if (SINGLE_THREAD_P)
+    av = &main_arena;
+  else
+    arena_get (av, sz);
+
   if (av)
     {
       /* Check if we hand out the top chunk, in which case there may be no
@@ -3391,19 +3421,21 @@ __libc_calloc (size_t n, size_t elem_size)
     }
   mem = _int_malloc (av, sz);
 
-
   assert (!mem || chunk_is_mmapped (mem2chunk (mem)) ||
           av == arena_for_chunk (mem2chunk (mem)));
 
-  if (mem == 0 && av != NULL)
+  if (!SINGLE_THREAD_P)
     {
-      LIBC_PROBE (memory_calloc_retry, 1, sz);
-      av = arena_get_retry (av, sz);
-      mem = _int_malloc (av, sz);
-    }
+      if (mem == 0 && av != NULL)
+	{
+	  LIBC_PROBE (memory_calloc_retry, 1, sz);
+	  av = arena_get_retry (av, sz);
+	  mem = _int_malloc (av, sz);
+	}
 
-  if (av != NULL)
-    __libc_lock_unlock (av->mutex);
+      if (av != NULL)
+	__libc_lock_unlock (av->mutex);
+    }
 
   /* Allocation failed even after a retry.  */
   if (mem == 0)
