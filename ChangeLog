@@ -1,5 +1,10 @@
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/bn_BD (LC_MESSAGES): Use only the first
+	letters of the full yesstr and nostr in yesexpr and noexpr.
+
+2017-10-24  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/an_ES (LC_MESSAGES): Add yesstr and nostr.
 	* localedata/locales/an_ES (LC_ADDRESS): Add lang_term and lang_lib.
 	* localedata/locales/an_ES: Make source more readable by using ASCII
