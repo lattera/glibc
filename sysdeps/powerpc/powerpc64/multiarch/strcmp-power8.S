@@ -18,9 +18,11 @@
 
 #include <sysdep.h>
 
+#if IS_IN (libc)
 #define STRCMP __strcmp_power8
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
 #include <sysdeps/powerpc/powerpc64/power8/strcmp.S>
+#endif

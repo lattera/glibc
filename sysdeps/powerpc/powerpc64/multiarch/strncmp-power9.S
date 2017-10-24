@@ -17,9 +17,11 @@
 
 #include <sysdep.h>
 
+#if IS_IN (libc)
 #define STRNCMP __strncmp_power9
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
 #include <sysdeps/powerpc/powerpc64/power9/strncmp.S>
+#endif

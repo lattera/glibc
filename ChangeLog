@@ -1,5 +1,13 @@
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power8.S: Wrap in
+	IS_IN (libc).
+	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power9.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/strncmp-power9.S: Likewise.
+
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/stpncpy-power8.S: Don't define
 	USE_AS_STPNCPY.
 
