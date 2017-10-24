@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 
-#define __strcasecmp __strcasecmp_l_power7
+#define __strcasecmp_l __strcasecmp_l_power7
 
 #undef weak_alias
 #define weak_alias(name, alias)
@@ -27,5 +27,7 @@
 #define libc_hidden_builtin_def(name)
 
 #define USE_IN_EXTENDED_LOCALE_MODEL
+#define __STRCMP __strcasecmp_l
+#define STRCMP   strcasecmp_l
 
 #include <sysdeps/powerpc/powerpc64/power7/strcasecmp.S>

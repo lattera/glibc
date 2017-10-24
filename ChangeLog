@@ -1,5 +1,11 @@
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
+	* sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l-power7.S:
+	(__STRCMP, STRCMP, __strcasecmp_l): Define.
+	(__strcasecmp): Don't define.
+
+2017-10-31  Alan Modra  <amodra@gmail.com>
+
 	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power8.S: Wrap in
 	IS_IN (libc).
 	* sysdeps/powerpc/powerpc64/multiarch/strcmp-power9.S: Likewise.
