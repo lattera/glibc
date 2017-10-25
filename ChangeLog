@@ -1,5 +1,10 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/kab_DZ (LC_IDENTIFICATION): Add e-mail
+	of main contributor.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/zh_SG (LC_MESSAGES): Use copy "zh_CN"
 	instead of using English.
 

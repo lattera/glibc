@@ -10,12 +10,13 @@ escape_char /
 
 % Kabyle language locale for Algeria
 % Contributed by Yacine Bouklif <yacine2953-tansa1@yahoo.fr>
+% and Belkacem Mohammed <belkacem77@gmail.com>
 
 LC_IDENTIFICATION
 title      "Kabyle language locale for Algeria"
 source     ""
 contact    ""
-email      "bug-glibc-locales@gnu.org"
+email      "belkacem77@gmail.com"
 language   "Kabyle"
 territory  "Algeria"
 revision   "1.0"
