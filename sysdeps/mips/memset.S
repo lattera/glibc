@@ -370,7 +370,7 @@ L(skip_pref):
 	move	a2,t8
 
 /* Here we have dest word-aligned but less than 64-bytes or 128 bytes to go.
-   Check for a 32(64) byte chunk and copy if if there is one.  Otherwise
+   Check for a 32(64) byte chunk and copy if there is one.  Otherwise
    jump down to L(chk1w) to handle the tail end of the copy.  */
 L(chkw):
 	andi	t8,a2,NSIZEMASK	/* is there a 32-byte/64-byte chunk.  */

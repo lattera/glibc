@@ -42,7 +42,7 @@ ENTRY (_ZGVdN8vl4l4_sincosf_avx2)
         b) Calculate 2 polynomials for sin and cos:
            RS = X * ( A0 + X^2 * (A1 + x^2 * (A2 + x^2 * (A3))));
            RC = B0 + X^2 * (B1 + x^2 * (B2 + x^2 * (B3 + x^2 * (B4))));
-        c) Swap RS & RC if if first bit of obtained value after
+        c) Swap RS & RC if first bit of obtained value after
            Right Shifting is set to 1. Using And, Andnot & Or operations.
      3) Destination sign setting
         a) Set shifted destination sign using XOR operation:

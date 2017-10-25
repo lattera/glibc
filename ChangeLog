@@ -1,3 +1,16 @@
+2017-10-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/alloc_buffer.h: Replace "if if " with "if " in
+	comments.
+	* sysdeps/mips/memcpy.S: Likkewise.
+	* sysdeps/mips/memset.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf16_core_avx512.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf4_core_sse4.S:
+	Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_sincosf8_core_avx2.S:
+	Likewise.
+
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #15261]
