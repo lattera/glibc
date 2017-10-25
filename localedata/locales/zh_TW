@@ -134,8 +134,12 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY<U662F>]"
-noexpr  "^[-0nN<U4E0D><U5426>]"
+yesexpr "^[+1yY<UFF59><UFF39><U662F>]"
+noexpr  "^[-0nN<UFF4E><UFF2E><U4E0D><U5426>]"
+% 是
+yesstr  "<U662F>"
+% 不是
+nostr   "<U4E0D><U662F>"
 END LC_MESSAGES
 
 LC_PAPER

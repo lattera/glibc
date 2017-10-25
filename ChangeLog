@@ -1,5 +1,18 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #15261]
+	* localedata/locales/cmn_TW (LC_MESSAGES): Add fullwidth yYnN to
+	yesexpr and noexpr.
+	* localedata/locales/hak_TW (LC_MESSAGES): Likewise.
+	* localedata/locales/ko_KR (LC_MESSAGES): Likewise.
+	* localedata/locales/lzh_TW (LC_MESSAGES): Likewise.
+	* localedata/locales/nan_TW (LC_MESSAGES): Likewise.
+	* localedata/locales/zh_CN (LC_MESSAGES): Likewise.
+	* localedata/locales/zh_HK (LC_MESSAGES): Likewise.
+	* localedata/locales/zh_TW (LC_MESSAGES): Likewise.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/am_ET (LC_MESSAGES): Sync with CLDR.
 	* localedata/locales/az_AZ (LC_MESSAGES): Likewise.
 	* localedata/locales/el_GR (LC_MESSAGES): Likewise.

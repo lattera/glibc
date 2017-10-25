@@ -199,10 +199,10 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[+1yY是]
-yesexpr "^[+1yY<U662F>]"
-% ^[-0nN非]
-noexpr  "^[-0nN<U975E>]"
+% ^[+1yYｙＹ是]
+yesexpr "^[+1yY<UFF59><UFF39><U662F>]"
+% ^[-0nNｎＮ非]
+noexpr  "^[-0nN<UFF4E><UFF2E><U975E>]"
 END LC_MESSAGES
 
 LC_NAME
