@@ -1,5 +1,10 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/zh_SG (LC_MESSAGES): Use copy "zh_CN"
+	instead of using English.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/ug_CN (LC_MESSAGES): Fix noexpr and yesexpr
 	by including the first letters of nostr and yesexpr in the regexp.
 	Also make it more readable by using ASCII where possible.
