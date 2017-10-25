@@ -1,3 +1,8 @@
+2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
+
+	[BZ #21706]
+	* localedata/locales/br_FR (LC_MESSAGES): Fix nostr.
+
 2017-10-25  Carlos O'Donell  <carlos@redhat.com>
 
 	* locale/programs/record-status.h: Define globals, and function

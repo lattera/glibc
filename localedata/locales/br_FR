@@ -97,9 +97,9 @@ END LC_CTYPE
 
 LC_MESSAGES
 yesexpr "^[+1oOyY]"
-noexpr  "^[-0nN]"
+noexpr  "^[-0kKnN]"
 yesstr  "Ya"
-nostr   "Nann"
+nostr   "Ket"
 END LC_MESSAGES
 
 LC_MONETARY
