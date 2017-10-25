@@ -1,5 +1,10 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/ber_DZ (LC_MESSAGES): Use copy "kab_DZ",
+	it is the same according to  Belkacem Mohammed <belkacem77@gmail.com>.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/kab_DZ (LC_IDENTIFICATION): Add e-mail
 	of main contributor.
 
