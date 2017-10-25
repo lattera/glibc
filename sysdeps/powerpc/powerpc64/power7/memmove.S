@@ -92,63 +92,63 @@ L(aligned_copy):
 	srdi	12,r5,7
 	cmpdi	12,0
 	beq	L(aligned_tail)
-	lxvd2x	6,0,r4
-	lxvd2x	7,r4,6
+	lvx	6,0,r4
+	lvx	7,r4,6
 	mtctr	12
 	b	L(aligned_128loop)
 
 	.align  4
 L(aligned_128head):
 	/* for the 2nd + iteration of this loop. */
-	lxvd2x	6,0,r4
-	lxvd2x	7,r4,6
+	lvx	6,0,r4
+	lvx	7,r4,6
 L(aligned_128loop):
-	lxvd2x	8,r4,7
-	lxvd2x	9,r4,8
-	stxvd2x	6,0,r11
+	lvx	8,r4,7
+	lvx	9,r4,8
+	stvx	6,0,r11
 	addi	r4,r4,64
-	stxvd2x	7,r11,6
-	stxvd2x	8,r11,7
-	stxvd2x	9,r11,8
-	lxvd2x	6,0,r4
-	lxvd2x	7,r4,6
+	stvx	7,r11,6
+	stvx	8,r11,7
+	stvx	9,r11,8
+	lvx	6,0,r4
+	lvx	7,r4,6
 	addi	r11,r11,64
-	lxvd2x	8,r4,7
-	lxvd2x	9,r4,8
+	lvx	8,r4,7
+	lvx	9,r4,8
 	addi	r4,r4,64
-	stxvd2x	6,0,r11
-	stxvd2x	7,r11,6
-	stxvd2x	8,r11,7
-	stxvd2x	9,r11,8
+	stvx	6,0,r11
+	stvx	7,r11,6
+	stvx	8,r11,7
+	stvx	9,r11,8
 	addi	r11,r11,64
 	bdnz	L(aligned_128head)
 
 L(aligned_tail):
 	mtocrf	0x01,r5
 	bf	25,32f
-	lxvd2x	6,0,r4
-	lxvd2x	7,r4,6
-	lxvd2x	8,r4,7
-	lxvd2x	9,r4,8
+	lvx	6,0,r4
+	lvx	7,r4,6
+	lvx	8,r4,7
+	lvx	9,r4,8
 	addi	r4,r4,64
-	stxvd2x	6,0,r11
-	stxvd2x	7,r11,6
-	stxvd2x	8,r11,7
-	stxvd2x	9,r11,8
+	stvx	6,0,r11
+	stvx	7,r11,6
+	stvx	8,r11,7
+	stvx	9,r11,8
 	addi	r11,r11,64
 32:
 	bf	26,16f
-	lxvd2x	6,0,r4
-	lxvd2x	7,r4,6
+	lvx	6,0,r4
+	lvx	7,r4,6
 	addi	r4,r4,32
-	stxvd2x	6,0,r11
-	stxvd2x	7,r11,6
+	stvx	6,0,r11
+	stvx	7,r11,6
 	addi	r11,r11,32
 16:
 	bf	27,8f
-	lxvd2x	6,0,r4
+	lvx	6,0,r4
 	addi	r4,r4,16
-	stxvd2x	6,0,r11
+	stvx	6,0,r11
 	addi	r11,r11,16
 8:
 	bf	28,4f
@@ -488,63 +488,63 @@ L(aligned_copy_bwd):
 	srdi	r12,r5,7
 	cmpdi	r12,0
 	beq	L(aligned_tail_bwd)
-	lxvd2x	v6,r4,r6
-	lxvd2x	v7,r4,r7
+	lvx	v6,r4,r6
+	lvx	v7,r4,r7
 	mtctr	12
 	b	L(aligned_128loop_bwd)
 
 	.align  4
 L(aligned_128head_bwd):
 	/* for the 2nd + iteration of this loop. */
-	lxvd2x	v6,r4,r6
-	lxvd2x	v7,r4,r7
+	lvx	v6,r4,r6
+	lvx	v7,r4,r7
 L(aligned_128loop_bwd):
-	lxvd2x	v8,r4,r8
-	lxvd2x	v9,r4,r9
-	stxvd2x	v6,r11,r6
+	lvx	v8,r4,r8
+	lvx	v9,r4,r9
+	stvx	v6,r11,r6
 	subi	r4,r4,64
-	stxvd2x	v7,r11,r7
-	stxvd2x	v8,r11,r8
-	stxvd2x	v9,r11,r9
-	lxvd2x	v6,r4,r6
-	lxvd2x	v7,r4,7
+	stvx	v7,r11,r7
+	stvx	v8,r11,r8
+	stvx	v9,r11,r9
+	lvx	v6,r4,r6
+	lvx	v7,r4,7
 	subi	r11,r11,64
-	lxvd2x	v8,r4,r8
-	lxvd2x	v9,r4,r9
+	lvx	v8,r4,r8
+	lvx	v9,r4,r9
 	subi	r4,r4,64
-	stxvd2x	v6,r11,r6
-	stxvd2x	v7,r11,r7
-	stxvd2x	v8,r11,r8
-	stxvd2x	v9,r11,r9
+	stvx	v6,r11,r6
+	stvx	v7,r11,r7
+	stvx	v8,r11,r8
+	stvx	v9,r11,r9
 	subi	r11,r11,64
 	bdnz	L(aligned_128head_bwd)
 
 L(aligned_tail_bwd):
 	mtocrf	0x01,r5
 	bf	25,32f
-	lxvd2x	v6,r4,r6
-	lxvd2x	v7,r4,r7
-	lxvd2x	v8,r4,r8
-	lxvd2x	v9,r4,r9
+	lvx	v6,r4,r6
+	lvx	v7,r4,r7
+	lvx	v8,r4,r8
+	lvx	v9,r4,r9
 	subi	r4,r4,64
-	stxvd2x	v6,r11,r6
-	stxvd2x	v7,r11,r7
-	stxvd2x	v8,r11,r8
-	stxvd2x	v9,r11,r9
+	stvx	v6,r11,r6
+	stvx	v7,r11,r7
+	stvx	v8,r11,r8
+	stvx	v9,r11,r9
 	subi	r11,r11,64
 32:
 	bf	26,16f
-	lxvd2x	v6,r4,r6
-	lxvd2x	v7,r4,r7
+	lvx	v6,r4,r6
+	lvx	v7,r4,r7
 	subi	r4,r4,32
-	stxvd2x	v6,r11,r6
-	stxvd2x	v7,r11,r7
+	stvx	v6,r11,r6
+	stvx	v7,r11,r7
 	subi	r11,r11,32
 16:
 	bf	27,8f
-	lxvd2x	v6,r4,r6
+	lvx	v6,r4,r6
 	subi	r4,r4,16
-	stxvd2x	v6,r11,r6
+	stvx	v6,r11,r6
 	subi	r11,r11,16
 8:
 	bf	28,4f

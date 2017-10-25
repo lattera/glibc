@@ -1,3 +1,9 @@
+2017-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Replace
+	lxvd2x/stxvd2x with lvx/stvx.
+	* sysdeps/powerpc/powerpc64/power7/memmove.S: Likewise.
+
 2017-10-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/alloc_buffer.h: Replace "if if " with "if " in
