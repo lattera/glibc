@@ -1,5 +1,12 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/chr_US (LC_MESSAGES): In yesexpr and noexpr,
+	match also for the contents of yesstr and nostr. As the first letter
+	of yesstr and nostr is equal, checking only for the first letter
+	is not enough.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/ber_DZ (LC_MESSAGES): Use copy "kab_DZ",
 	it is the same according to  Belkacem Mohammed <belkacem77@gmail.com>.
 
