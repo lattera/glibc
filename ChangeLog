@@ -1,5 +1,12 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/hi_IN (LC_MESSAGES): In yesexpr and noexpr,
+	also check for the first characters of yesstr and nostr.
+	* localedata/locales/kn_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/ks_IN@devanagari (LC_MESSAGES): Likewise.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/cmn_TW (LC_MESSAGES): In yesexpr and noexpr,
 	also check for Chinese characters.
 
