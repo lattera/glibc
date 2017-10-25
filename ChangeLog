@@ -1,5 +1,11 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/ug_CN (LC_MESSAGES): Fix noexpr and yesexpr
+	by including the first letters of nostr and yesexpr in the regexp.
+	Also make it more readable by using ASCII where possible.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/te_IN (LC_MESSAGES): Fix noexpr by including
 	the first letter of nostr in the regexp. It agrees with CLDR now.
 	Also make it more readable by using ASCII where possible.
