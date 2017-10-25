@@ -1,5 +1,11 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/brx_IN (LC_MESSAGES): Fix yesexpr and noexpr
+	(Use first letters of yesstr and nostr correctly instead of using
+	full words).
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/ta_IN (LC_MESSAGES): Fix yesexpr and noexpr
 	(Use first letters of yesstr and nostr correctly).
 
