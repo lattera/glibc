@@ -63,7 +63,7 @@ END LC_CTYPE
 
 LC_MESSAGES
 yesexpr "^[+1yY<U03BD><U039D>]"
-noexpr  "^[-0nN<U03BF><U039F>]"
+noexpr  "^[-0nN<U03BF><U039F><U03CC><U038C>]"
 yesstr  "<U03BD><U03B1><U03B9>"
 nostr   "<U03CC><U03C7><U03B9>"
 END LC_MESSAGES

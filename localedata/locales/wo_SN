@@ -66,6 +66,8 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1wWyY]"
 noexpr  "^[-0dDnN]"
+yesstr  "waaw"
+nostr   "d<U00E9>edet"
 END LC_MESSAGES
 
 LC_MONETARY

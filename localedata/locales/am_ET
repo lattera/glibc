@@ -1462,8 +1462,8 @@ END LC_ADDRESS
 
 
 LC_MESSAGES
-yesexpr "^([+1yY]|<U12A0><U12CE><U1295>)"
-noexpr  "^([-0nN]|<U12A0><U12ED>)"
+yesexpr "^([+1yY<U12CE>]|<U12A0><U12CE><U1295>)"
+noexpr  "^([-0nN<U12ED>]|<U12A0><U12ED>)"
 yesstr  "<U12A0><U12CE><U1295>"
 nostr   "<U12A0><U12ED>"
 END LC_MESSAGES

@@ -209,9 +209,9 @@ LC_MESSAGES
 % yesexpr "^[+1Bb]" and noexpr  "^[-0YyNn]" make a response matching “^[Yy]”
 % accepted as *negative*. So the expressions below do work as they
 % should for Azeri.
-yesexpr "^[+1Bb]"
+yesexpr "^[+1bBhH]"
 noexpr  "^[-0YyNn]"
-yesstr  "b<U0259>li"
+yesstr  "h<U0259>"
 nostr   "yox"
 END LC_MESSAGES
 

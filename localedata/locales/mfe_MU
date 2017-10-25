@@ -100,10 +100,10 @@ END LC_TIME
 
 % http://wikitravel.org/en/User:LiangHH/Mauritian_Creole_phrasebook
 LC_MESSAGES
-yesexpr "^[+1yY]"
+yesexpr "^[+1yYwW]"
 noexpr  "^[-0nN]"
-yesstr  "yes"
-nostr   "no"
+yesstr  "Wi"
+nostr   "Non"
 END LC_MESSAGES
 
 LC_COLLATE

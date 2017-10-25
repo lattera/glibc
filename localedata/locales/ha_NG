@@ -219,8 +219,8 @@ END LC_TIME
 LC_MESSAGES
 yesexpr "^[+1TtiIYy]"
 noexpr  "^[-0bBaAnN]"
-yesstr  "Toh"
-nostr   "Babu"
+yesstr  "i"
+nostr   "a<U02BC>a"
 END LC_MESSAGES
 
 LC_PAPER

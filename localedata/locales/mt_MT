@@ -242,8 +242,8 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^[+1yY]"
-noexpr  "^[-0nN]"
+yesexpr "^[+1yYiI]"
+noexpr  "^[-0nNlL]"
 yesstr  "iva"
 nostr   "le"
 END LC_MESSAGES

@@ -227,8 +227,8 @@ reorder-end
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0414><U0434>]"
-noexpr  "^[-0nN<U041D><U043D>]"
+yesexpr "^[+1yY<U04D9><U04D8>]"
+noexpr  "^[-0nN<U044E><U042E>]"
 yesstr  "<U04D8><U0439><U0435>"
 nostr   "<U042E><U043A>"
 END LC_MESSAGES

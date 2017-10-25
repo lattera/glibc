@@ -74,8 +74,8 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "^[+1yY<U0423><U0434>]"
-noexpr  "^[-0nN<U0443><U043D>]"
+yesexpr "^[+1yY<U0443><U0423>]"
+noexpr  "^[-0nN<U043D><U041D>]"
 yesstr  "<U0443><U043E><U0439><U044B>"
 nostr   "<U043D><U04D5><U0439><U044B>"
 END LC_MESSAGES

@@ -1,5 +1,20 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/am_ET (LC_MESSAGES): Sync with CLDR.
+	* localedata/locales/az_AZ (LC_MESSAGES): Likewise.
+	* localedata/locales/el_GR (LC_MESSAGES): Likewise.
+	* localedata/locales/ha_NG (LC_MESSAGES): Likewise.
+	* localedata/locales/ln_CD (LC_MESSAGES): Likewise.
+	* localedata/locales/mfe_MU (LC_MESSAGES): Likewise.
+	* localedata/locales/ml_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/mt_MT (LC_MESSAGES): Likewise.
+	* localedata/locales/os_RU (LC_MESSAGES): Likewise.
+	* localedata/locales/tg_TJ (LC_MESSAGES): Likewise.
+	* localedata/locales/tt_RU (LC_MESSAGES): Likewise.
+	* localedata/locales/wo_SN (LC_MESSAGES): Likewise.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/aa_ET (LC_MESSAGES): Use ASCII as much
 	as possible for better readability of the source.
 	* localedata/locales/af_ZA (LC_MESSAGES): Likewise.

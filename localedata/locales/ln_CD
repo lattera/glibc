@@ -156,7 +156,7 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-yesexpr "^[yYiI<U025B><U0190>]"
+yesexpr "^[yYiI<U00ED><U00CD>]"
 noexpr  "^[nNtT]"
 yesstr  "<U00CD>yo"
 nostr   "T<U025B><U0302>"
