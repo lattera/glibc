@@ -1,3 +1,17 @@
+2017-10-25  Carlos O'Donell  <carlos@redhat.com>
+
+	* localedata/unicode-gen/Makefile (check_i18n): Rename to
+	check_i18n_ctype. Depend on i18n_ctype-report. Check i18n_ctype-report
+	file.
+	* localedata/locales/i18n_ctype: Regenerate.
+	* localedata/locales/tr_TR: Likewise.
+	* localedata/locales/translit_circle: Likewise.
+	* localedata/locales/translit_cjk_compat: Likewise.
+	* localedata/locales/translit_combining: Likewise.
+	* localedata/locales/translit_compat: Likewise.
+	* localedata/locales/translit_font: Likewise.
+	* localedata/locales/translit_fraction: Likewise.
+
 2017-10-25  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power7/memcpy.S: Replace

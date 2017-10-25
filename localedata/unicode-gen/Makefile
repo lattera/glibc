@@ -78,9 +78,9 @@ i18n_ctype-report: ctype_compatibility.py ctype_compatibility_test_cases.py
 	$(PYTHON3) ./ctype_compatibility.py -o ../locales/i18n_ctype \
 	  -n i18n_ctype -a -m > $@
 
-check-i18n: i18n-report
+check-i18n_ctype: i18n_ctype-report
 	@if grep '\(Missing\|Added\) [^0]\|^Number of errors[^=]* = [^0]' \
-		i18n-report; \
+		i18n_ctype-report; \
 	then echo manual verification required; false; else true; fi
 
 tr_TR: UnicodeData.txt DerivedCoreProperties.txt

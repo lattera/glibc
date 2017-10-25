@@ -8,25 +8,26 @@ comment_char %
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-%
 % The only purpose for this file is to provide the basic Unicode
 % LC_CTYPE information.  This way other locales that need this
 % information, but with different transliterations, can include it
 % directly.
-%
+
+% Generated automatically by gen_unicode_ctype.py for Unicode 10.0.0.
 
 LC_IDENTIFICATION
-title                 ""
-source                ""
-address               ""
-contact               ""
-email                 ""
-tel                   ""
-fax                   ""
-language              ""
-territory             ""
-revision              ""
-date                  "2017-10-11"
+title     "Unicode 10.0.0 FDCC-set"
+source    "UnicodeData.txt, DerivedCoreProperties.txt"
+address   ""
+contact   ""
+email     "bug-glibc-locales@gnu.org"
+tel       ""
+fax       ""
+language  ""
+territory "Earth"
+revision  "10.0.0"
+date      "2017-10-23"
+category  "unicode:2014";LC_CTYPE
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE
