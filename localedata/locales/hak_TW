@@ -164,10 +164,10 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[yY係]
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U4FC2><U005D>"
-% ^[nN毋]
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U6BCB><U005D>"
+% ^[+1yY係]
+yesexpr "^[+1yY<U4FC2>]"
+% ^[-0nN毋]
+noexpr  "^[-0nN<U6BCB>]"
 END LC_MESSAGES
 
 LC_NAME

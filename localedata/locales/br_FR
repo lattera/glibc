@@ -96,10 +96,10 @@ copy "en_DK"
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U006F><U004F><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U0059><U0061>"
-nostr   "<U004E><U0061><U006E><U006E>"
+yesexpr "^[+1oOyY]"
+noexpr  "^[-0nN]"
+yesstr  "Ya"
+nostr   "Nann"
 END LC_MESSAGES
 
 LC_MONETARY

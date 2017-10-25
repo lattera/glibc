@@ -162,10 +162,10 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0063><U0043><U005D>"
-yesstr  "<U0079><U0065><U0062><U006F>"
-nostr   "<U0063><U0068><U0061>"
+yesexpr "^[+1yY]"
+noexpr  "^[-0nNcC]"
+yesstr  "yebo"
+nostr   "cha"
 END LC_MESSAGES
 
 LC_PAPER

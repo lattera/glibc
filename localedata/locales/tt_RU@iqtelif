@@ -76,10 +76,10 @@ END LC_CTYPE
 
 LC_MESSAGES
 % TODO: No is "yuq"; is it OK that it corresponds with English "yes"?
-yesexpr "<U005E><U005B><U002B><U0031><U0045><U0065><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U0059><U0079><U004E><U006E><U005D>"
-yesstr  "<U0065><U0079><U00ED>"
-nostr   "<U0079><U0075><U0071>"
+yesexpr "^[+1Ee]"
+noexpr  "^[-0YyNn]"
+yesstr  "ey<U00ED>"
+nostr   "yuq"
 END LC_MESSAGES
 
 LC_MONETARY

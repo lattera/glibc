@@ -164,11 +164,11 @@ LC_MESSAGES
 
 % ^[yY].*
 % ^[nN].*
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesexpr "^[+1yY]"
+noexpr  "^[-0nN]"
 % http://www.pentecostisland.net/languages/bislama/englishtobislama.pdf
-yesstr "<U0059><U0065><U0073>"
-nostr  "<U004E><U006F>"
+yesstr "Yes"
+nostr  "No"
 END LC_MESSAGES
 
 

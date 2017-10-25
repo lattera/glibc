@@ -202,11 +202,17 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-% FIXME: No is "yox"; that conflicts with English "yes"... what to do .
-yesexpr "<U005E><U005B><U002B><U0031><U0042><U0062><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U0059><U0079><U004E><U006E><U005D>"
-yesstr  "<U0062><U0259><U006C><U0069>"
-nostr   "<U0079><U006F><U0078>"
+% No is "yox"; that conflicts with English "yes". The man page of
+% rpmatch says: “Regardless  of  the  locale, responses  matching  ^[Yy]  are
+% always accepted as affirmative, and those matching ^[Nn] are
+% always accepted as negative.”. But that is not quite right, actually
+% yesexpr "^[+1Bb]" and noexpr  "^[-0YyNn]" make a response matching “^[Yy]”
+% accepted as *negative*. So the expressions below do work as they
+% should for Azeri.
+yesexpr "^[+1Bb]"
+noexpr  "^[-0YyNn]"
+yesstr  "b<U0259>li"
+nostr   "yox"
 END LC_MESSAGES
 
 LC_MONETARY

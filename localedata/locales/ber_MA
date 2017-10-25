@@ -89,11 +89,12 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-% FIXME: yes/no
-yesexpr "<U005E><U005B><U002B><U0031><U0042><U0062><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U0059><U0079><U004E><U006E><U005D>"
-yesstr  "<U0062><U0259><U006C><U0069>"
-nostr   "<U0079><U006F><U0078>"
+% FIXME: yes/no. What we currently have here is exactly the same as in the az_AZ locale
+% which is a bit surprising. Is that really correct??
+yesexpr "^[+1Bb]"
+noexpr  "^[-0YyNn]"
+yesstr  "b<U0259>li"
+nostr   "yox"
 END LC_MESSAGES
 
 LC_MONETARY

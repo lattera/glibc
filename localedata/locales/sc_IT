@@ -64,12 +64,10 @@ reorder-end
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0065><U0045><U0061><U0041><U0073><U0053><U006F><U004F><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-% Yes -> eja
-yesstr  "<U0065><U006A><U0061>"
-% No -> nono
-nostr   "<U006E><U006F><U006E><U006F>"
+yesexpr "^[+1eEaAsSoOyY]"
+noexpr  "^[-0nN]"
+yesstr  "eja"
+nostr   "nono"
 END LC_MESSAGES
 
 LC_MONETARY

@@ -542,36 +542,32 @@ END LC_COLLATE
 
 
 LC_MESSAGES
-
-
-% WARNING: symbols "<U0059>" and "<U0043><U0079><U0072><U0069><U006C><U006C><U0069><U0063><U005F><U004E>" are placed at one key in Ukrainian keyboard
-% layout although the meaning is semantically opposite ("<U0059>" stands for "<U0059><U0065><U0073>"
-% while "<U0043><U0079><U0072><U0069><U006C><U006C><U0069><U0063><U005F><U004E>" stands for "<U004E><U006F>").
+% WARNING: symbols "Y" and "Cyrillic_N" are placed at one key in Ukrainian keyboard
+% layout although the meaning is semantically opposite ("Y" stands for "Yes"
+% while "Cyrillic_N" stands for "No").
 %
 % This problem may be dealt with by requiring at least two letters to be
 % entered in Ukrainian language.
 
 % A regular expression that describes possible yes-responses
-% "<U0079>", "<U0059>", "<U002B>", "<U0074><U0061>" or "<U0074><U0061><U006B>" in Cyrillic
-yesexpr "<U005E><U0028><U005B><U002B><U0031><U0059><U0079><U005D><U007C><U005B><U0422><U0442><U005D><U005B><U0410><U0430><U005D><U005B><U041A><U043A><U005D><U003F><U0029><U0024>"
+% "y", "Y", "+", "ta" or "tak" in Cyrillic
+yesexpr "^([+1Yy]|[<U0422><U0442>][<U0410><U0430>][<U041A><U043A>]?)$"
 
-% WARNING: symbols "<U004E>" and "<U0043><U0079><U0072><U0069><U006C><U006C><U0069><U0063><U005F><U0054>" are placed at one key in Ukrainian
-% keyboard layout although the meaning is semantically opposite ("<U004E>" stands for
-% "<U004E><U006F>" while "<U0043><U0079><U0072><U0069><U006C><U006C><U0069><U0063><U005F><U0054>" stands for "<U0059><U0065><U0073>").
+% WARNING: symbols "N" and "Cyrillic_T" are placed at one key in Ukrainian
+% keyboard layout although the meaning is semantically opposite ("N" stands for
+% "No" while "Cyrillic_T" stands for "Yes").
 %
 % We may require two Ukrainian letters as input to deal with this potential
 % problem.
 
 % A regular expression that describes possible no-responses.
-% "<U006E>", "<U004E>", "<U002D>" or word "<U006E><U0069>" in Cyrillic
-noexpr  "<U005E><U0028><U005B><U002D><U0030><U004E><U006E><U005D><U007C><U005B><U041D><U043D><U005D><U005B><U0406><U0456><U005D><U0029><U0024>"
-% "<U006E>" "<U004E>" "<U002D>" or word "<U006E><U0069>" in Cyrillic
+% "n", "N", "-" or word "ni" in Cyrillic
+noexpr  "^([-0Nn]|[<U041D><U043D>][<U0406><U0456>])$"
 
-
-% Output string for ``yes'' ("<U0074><U0061><U006B>").
+% Output string for ``yes'' ("tak").
 yesstr "<U0442><U0430><U043A>"
 
-% Output string for ``no'' ("<U006E><U0069>").
+% Output string for ``no'' ("ni").
 nostr "<U043D><U0456>"
 
 END LC_MESSAGES

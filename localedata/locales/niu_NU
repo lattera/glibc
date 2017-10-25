@@ -159,10 +159,10 @@ copy "en_NZ"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0113><U0112><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U0054><U0061><U006C><U0069><U0061>"
-nostr   "<U004E><U0061><U006B><U0061><U0069>"
+yesexpr "^[+1yY<U0113><U0112>]"
+noexpr  "^[-0nN]"
+yesstr  "Talia"
+nostr   "Nakai"
 END LC_MESSAGES
 
 LC_NAME

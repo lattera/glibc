@@ -2318,10 +2318,10 @@ END LC_CTYPE
 %% -------------------------
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0061><U0041><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U0061><U006E><U006F>"
-nostr   "<U006E><U0065>"
+yesexpr "^[+1aAyY]"
+noexpr  "^[-0nN]"
+yesstr  "ano"
+nostr   "ne"
 END LC_MESSAGES
 
 %% LC_MONETARY -- jde jen o peníze

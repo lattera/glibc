@@ -85,9 +85,9 @@ END LC_CTYPE
 
 LC_MESSAGES
 % This is "^[+1yY<HEH><BEH>]"
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0647><U0628><U005D>"
+yesexpr "^[+1yY<U0647><U0628>]"
 % This is "^[-0nN<YEH><KHEH>]"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U06CC><U062E><U005D>"
+noexpr  "^[-0nN<U06CC><U062E>]"
 % This is "Hen":
 yesstr  "<U0647><U0646>"
 % This is "Yox":

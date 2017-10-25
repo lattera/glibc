@@ -77,10 +77,10 @@ copy "cs_CZ"
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0061><U0041><U00E1><U00C1><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U00E1><U006E><U006F>"
-nostr   "<U006E><U0069><U0065>"
+yesexpr "^[+1aA<U00E1><U00C1>yY]"
+noexpr  "^[-0nN]"
+yesstr  "<U00E1>no"
+nostr   "nie"
 END LC_MESSAGES
 
 %% LC_MONETARY -- peniaze

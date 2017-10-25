@@ -63,10 +63,10 @@ translit_end
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0073><U0053><U0071><U0051><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U0061><U0041><U005D>"
-yesstr  "<U0071><U0075><U0065><U006D><U0061>"
-nostr   "<U0061><U0068><U006D><U006F>"
+yesexpr "^[+1sSqQyY]"
+noexpr  "^[-0nNaA]"
+yesstr  "quema"
+nostr   "ahmo"
 END LC_MESSAGES
 
 LC_MONETARY

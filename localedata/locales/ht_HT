@@ -154,10 +154,10 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0077><U0057><U006F><U004F><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U0057><U0069>"
-nostr   "<U004E><U006F><U006E>"
+yesexpr "^[+1wWoOyY]"
+noexpr  "^[-0nN]"
+yesstr  "Wi"
+nostr   "Non"
 END LC_MESSAGES
 
 LC_NAME

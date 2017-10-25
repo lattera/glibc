@@ -274,11 +274,10 @@ END LC_TIME
 LC_MESSAGES
 % Note: "No" is "yo‘q" which conflicts with English "yes".
 % This is why "jo‘q" & "jJ" is also accepted as "no".
-yesexpr "<U005E><U005B><U002B><U0031><U04B2><U04B3><U0048><U0068><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U0419><U0439><U004E><U006E><U0059>/
-<U0079><U004A><U006A><U005D>"
-yesstr  "<U0068><U0061>"
-nostr   "<U0079><U006F><U2018><U0071>"
+yesexpr "^[+1hH<U04B2><U04B3>]"
+noexpr  "^[-0nNyYjJ<U0419><U0439>]"
+yesstr  "ha"
+nostr   "yo<U2018>q"
 END LC_MESSAGES
 
 LC_PAPER

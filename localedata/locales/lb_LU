@@ -151,10 +151,10 @@ first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U006A><U004A><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
-yesstr  "<U006A><U006F>"
-nostr   "<U006E><U0065><U0065>"
+yesexpr "^[+1jJyY]"
+noexpr  "^[-0nN]"
+yesstr  "jo"
+nostr   "nee"
 END LC_MESSAGES
 
 LC_PAPER

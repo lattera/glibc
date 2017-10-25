@@ -771,9 +771,8 @@ END LC_TIME
 
 %%%%%%%%%%%%%
 LC_MESSAGES
-% FIXME These need support for the translated words
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U005D>"
+yesexpr "^[+1yY<U0B39>]"
+noexpr  "^[-0nN<U0B28>]"
 yesstr  "<U0B39><U0B01>"
 nostr   "<U0B28><U0B3E>"
 END LC_MESSAGES

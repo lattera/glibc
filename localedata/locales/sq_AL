@@ -299,10 +299,10 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "<U005E><U005B><U002B><U0031><U0079><U0059><U0070><U0050><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U006E><U004E><U006A><U004A><U005D>"
-yesstr  "<U0070><U006F>"
-nostr   "<U006A><U006F>"
+yesexpr "^[+1yYpP]"
+noexpr  "^[-0nNjJ]"
+yesstr  "po"
+nostr   "jo"
 END LC_MESSAGES
 
 
