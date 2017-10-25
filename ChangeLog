@@ -1,5 +1,10 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/ta_IN (LC_MESSAGES): Fix yesexpr and noexpr
+	(Use first letters of yesstr and nostr correctly).
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/hi_IN (LC_MESSAGES): In yesexpr and noexpr,
 	also check for the first characters of yesstr and nostr.
 	* localedata/locales/kn_IN (LC_MESSAGES): Likewise.
