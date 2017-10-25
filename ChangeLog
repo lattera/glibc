@@ -1,3 +1,9 @@
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/te_IN (LC_MESSAGES): Fix noexpr by including
+	the first letter of nostr in the regexp. It agrees with CLDR now.
+	Also make it more readable by using ASCII where possible.
+
 2017-10-24  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/locales/km_KH (LC_MESSAGES): Fix yestr and nostr.
