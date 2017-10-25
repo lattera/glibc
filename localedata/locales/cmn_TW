@@ -169,10 +169,8 @@ measurement 1
 END LC_MEASUREMENT
 
 LC_MESSAGES
-% ^[yY]
-yesexpr "<U005E><U005B><U0079><U0059><U005D>"
-% ^[nN]
-noexpr  "<U005E><U005B><U006E><U004E><U005D>"
+yesexpr "^[+1yY<U662F>]"
+noexpr  "^[-0nN<U4E0D><U5426>]"
 % 是
 yesstr  "<U662F>"
 % 不是

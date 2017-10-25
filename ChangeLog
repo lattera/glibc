@@ -1,5 +1,10 @@
 2017-10-25  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/cmn_TW (LC_MESSAGES): In yesexpr and noexpr,
+	also check for Chinese characters.
+
+2017-10-25  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/chr_US (LC_MESSAGES): In yesexpr and noexpr,
 	match also for the contents of yesstr and nostr. As the first letter
 	of yesstr and nostr is equal, checking only for the first letter
