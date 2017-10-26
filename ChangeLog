@@ -1,3 +1,18 @@
+2017-10-26  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__HAVE_FLOAT16 && __GLIBC_USE
+	(IEC_60559_TYPES_EXT)] (HUGE_VAL_F16): New macro.
+	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F32): Likewise.
+	[__HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F64): Likewise.
+	[__HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F32X): Likewise.
+	[__HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F64X): Likewise.
+	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(HUGE_VAL_F128X): Likewise.
+
 2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
 
 	* localedata/locales/br_FR (LC_IDENTIFICATON): Add

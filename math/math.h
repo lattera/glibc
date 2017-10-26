@@ -63,8 +63,26 @@ __BEGIN_DECLS
 #  define HUGE_VALL 1e10000L
 # endif
 #endif
+#if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F16 (__builtin_huge_valf16 ())
+#endif
+#if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F32 (__builtin_huge_valf32 ())
+#endif
+#if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F64 (__builtin_huge_valf64 ())
+#endif
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # define HUGE_VAL_F128 (__builtin_huge_valf128 ())
+#endif
+#if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F32X (__builtin_huge_valf32x ())
+#endif
+#if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F64X (__builtin_huge_valf64x ())
+#endif
+#if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define HUGE_VAL_F128X (__builtin_huge_valf128x ())
 #endif
 
 #ifdef __USE_ISOC99
