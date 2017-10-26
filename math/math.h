@@ -112,8 +112,26 @@ __BEGIN_DECLS
 #  define SNANL (__builtin_nansl (""))
 # endif
 #endif
+#if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF16 (__builtin_nansf16 (""))
+#endif
+#if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF32 (__builtin_nansf32 (""))
+#endif
+#if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF64 (__builtin_nansf64 (""))
+#endif
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # define SNANF128 (__builtin_nansf128 (""))
+#endif
+#if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF32X (__builtin_nansf32x (""))
+#endif
+#if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF64X (__builtin_nansf64x (""))
+#endif
+#if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define SNANF128X (__builtin_nansf128x (""))
 #endif
 
 /* Get __GLIBC_FLT_EVAL_METHOD.  */

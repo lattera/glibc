@@ -1,6 +1,19 @@
 2017-10-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__HAVE_FLOAT16 && __GLIBC_USE
+	(IEC_60559_TYPES_EXT)] (SNANF16): New macro.
+	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (SNANF32):
+	Likewise.
+	[__HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (SNANF64):
+	Likewise.
+	[__HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)] (SNANF32X):
+	Likewise.
+	[__HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)] (SNANF64X):
+	Likewise.
+	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(SNANF128X): Likewise.
+
+	* math/math.h [__HAVE_FLOAT16 && __GLIBC_USE
 	(IEC_60559_TYPES_EXT)] (HUGE_VAL_F16): New macro.
 	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
 	(HUGE_VAL_F32): Likewise.
