@@ -1,3 +1,9 @@
+2017-10-31  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* localedata/unicode-gen/gen_unicode_ctype.py (output_head):
+	category of LC_CTYPE set to "i18n:2012".
+	* localedata/locales/i18n_ctype: Regenerate.
+
 2017-01-31  Yury Norov  <ynorov@caviumnetworks.com>
 
 	* sysdeps/unix/sysv/linux/sigprocmask.c: Remove useless #ifdefs.

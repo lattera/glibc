@@ -182,7 +182,7 @@ def output_head(i18n_file, unicode_version, head=''):
         i18n_file.write('revision  "{:s}"\n'.format(unicode_version))
         i18n_file.write('date      "{:s}"\n'.format(
             time.strftime('%Y-%m-%d')))
-        i18n_file.write('category  "unicode:2014";LC_CTYPE\n')
+        i18n_file.write('category  "i18n:2012";LC_CTYPE\n')
         i18n_file.write('END LC_IDENTIFICATION\n')
         i18n_file.write('\n')
         i18n_file.write('LC_CTYPE\n')
