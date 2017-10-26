@@ -1,5 +1,11 @@
 2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
 
+	* localedata/locales/br_FR (LC_IDENTIFICATON): Add
+	Thierry Vignaud <thierry.vignaud@gmail.com> as the contact
+	for the br_FR locale.
+
+2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
+
 	[BZ #21706]
 	* localedata/locales/br_FR (LC_MESSAGES): Fix nostr.
 
