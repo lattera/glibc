@@ -363,8 +363,68 @@ extern long double __REDIRECT_NTH (nexttowardl,
 
 #endif	/* Use ISO C99.  */
 
-/* Include the file of declarations again, this time using `_Float128'
-   instead of `double' and appending f128 to each function name.  */
+/* Include the file of declarations for _FloatN and _FloatNx
+   types.  */
+
+#if __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)
+# ifndef _Mfloat16_
+#  define _Mfloat16_		_Float16
+# endif
+# define _Mdouble_		_Mfloat16_
+# define __MATH_PRECNAME(name,r) name##f16##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT16
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC).  */
+
+#if __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)
+# ifndef _Mfloat32_
+#  define _Mfloat32_		_Float32
+# endif
+# define _Mdouble_		_Mfloat32_
+# define __MATH_PRECNAME(name,r) name##f32##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT32
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC).  */
+
+#if __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)
+# ifndef _Mfloat64_
+#  define _Mfloat64_		_Float64
+# endif
+# define _Mdouble_		_Mfloat64_
+# define __MATH_PRECNAME(name,r) name##f64##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT64
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)
 # ifndef _Mfloat128_
@@ -384,7 +444,67 @@ extern long double __REDIRECT_NTH (nexttowardl,
 # undef __MATH_PRECNAME
 # undef __MATH_DECLARING_DOUBLE
 # undef __MATH_DECLARING_FLOATN
-#endif /* __HAVE_DISTINCT_FLOAT128.  */
+#endif /* __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !_LIBC).  */
+
+#if __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)
+# ifndef _Mfloat32x_
+#  define _Mfloat32x_		_Float32x
+# endif
+# define _Mdouble_		_Mfloat32x_
+# define __MATH_PRECNAME(name,r) name##f32x##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT32X
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC).  */
+
+#if __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)
+# ifndef _Mfloat64x_
+#  define _Mfloat64x_		_Float64x
+# endif
+# define _Mdouble_		_Mfloat64x_
+# define __MATH_PRECNAME(name,r) name##f64x##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT64X
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC).  */
+
+#if __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)
+# ifndef _Mfloat128x_
+#  define _Mfloat128x_		_Float128x
+# endif
+# define _Mdouble_		_Mfloat128x_
+# define __MATH_PRECNAME(name,r) name##f128x##r
+# define __MATH_DECLARING_DOUBLE  0
+# define __MATH_DECLARING_FLOATN  1
+# if __HAVE_DISTINCT_FLOAT128X
+#  include <bits/mathcalls-helper-functions.h>
+# endif
+# if __GLIBC_USE (IEC_60559_TYPES_EXT)
+#  include <bits/mathcalls.h>
+# endif
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef __MATH_DECLARING_DOUBLE
+# undef __MATH_DECLARING_FLOATN
+#endif /* __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC).  */
 
 #undef	__MATHDECL_1
 #undef	__MATHDECL

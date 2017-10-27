@@ -1,3 +1,14 @@
+2017-10-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC)]:
+	Include <bits/mathcalls-helper-functions.h> and <bits/mathcalls.h>
+	with appropriate macros defined and undefined.
+	[__HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC)]: Likewise.
+
 2017-10-27  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Regenerated for GCC 7 with
