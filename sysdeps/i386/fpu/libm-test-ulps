@@ -2679,30 +2679,30 @@ ldouble: 2
 
 Function: "y1_downward":
 double: 2
-float: 2
+float: 3
 float128: 4
 idouble: 2
-ifloat: 2
+ifloat: 3
 ifloat128: 4
 ildouble: 7
 ldouble: 7
 
 Function: "y1_towardzero":
 double: 2
-float: 2
+float: 3
 float128: 2
 idouble: 2
-ifloat: 2
+ifloat: 3
 ifloat128: 2
 ildouble: 5
 ldouble: 5
 
 Function: "y1_upward":
 double: 1
-float: 2
+float: 3
 float128: 5
 idouble: 1
-ifloat: 2
+ifloat: 3
 ifloat128: 5
 ildouble: 7
 ldouble: 7

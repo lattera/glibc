@@ -1,3 +1,8 @@
+2017-10-27  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Regenerated for GCC 7 with
+	"-O2 -march=i586".
+
 2017-10-27  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/locales/tt_RU (LC_MESSAGES): Start yesstr and nostr
