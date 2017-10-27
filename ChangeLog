@@ -1,3 +1,21 @@
+2017-10-27  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #15260]
+	* localedata/locales/doi_IN (LC_MESSAGES): Match only for the
+	first letters of yesstr and nostr in yesexpr and noexpr,
+	not for the full words.
+	* localedata/locales/hne_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/kok_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/mr_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/sat_IN (LC_MESSAGES): Likewise.
+	* localedata/locales/km_KH (LC_MESSAGES): Match also for the
+	first letters of yesstr and nostr in yesexpr and noexpr,
+	until now only English was matched in yesexpr and noexpr.
+	* localedata/locales/tl_PH (LC_MESSAGES): Use “copy "fil_PH"”
+	instead of “copy "en_US"”. CLDR has yesstr and nostr data for
+	fil but not for tl. As tl and fil are very similar, using fil
+	is probably better than using English.
+
 2017-10-27  Thierry Vignaud <thierry.vignaud@gmail.com>
 
 	[BZ #21706]

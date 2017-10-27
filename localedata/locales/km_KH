@@ -1000,8 +1000,8 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yY]"
-noexpr  "^[-0nN]"
+yesexpr "^[+1yY<U1794>]"
+noexpr  "^[-0nN<U1791>]"
 yesstr  "<U1794><U17B6><U1791><U002F><U1785><U17B6><U179F>"
 nostr   "<U1791><U17C1>"
 END LC_MESSAGES

@@ -136,8 +136,8 @@ END LC_TIME
 
 
 LC_MESSAGES
-yesexpr "^(<U0911><U0939>|[+1yY])"
-noexpr  "^(<U0928><U093E>|[-0nN])"
+yesexpr "^[+1yY<U0911>]"
+noexpr  "^[-0nN<U0928>]"
 yesstr  "<U0911><U0939>"
 nostr   "<U0928><U093E>"
 END LC_MESSAGES

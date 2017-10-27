@@ -143,7 +143,7 @@ week 7;19971130;1
 END LC_TIME
 
 LC_MESSAGES
-copy "en_US"
+copy "fil_PH"
 END LC_MESSAGES
 
 LC_PAPER
