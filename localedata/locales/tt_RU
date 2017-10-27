@@ -229,8 +229,8 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1yY<U04D9><U04D8>]"
 noexpr  "^[-0nN<U044E><U042E>]"
-yesstr  "<U04D8><U0439><U0435>"
-nostr   "<U042E><U043A>"
+yesstr  "<U04D9><U0439><U0435>"
+nostr   "<U044E><U043A>"
 END LC_MESSAGES
 
 LC_MONETARY

@@ -1,5 +1,10 @@
 2017-10-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/tt_RU (LC_MESSAGES): Start yesstr and nostr
+	with lowercase letters to make it agree with CLDR.
+
+2017-10-27  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #15260]
 	* localedata/locales/doi_IN (LC_MESSAGES): Match only for the
 	first letters of yesstr and nostr in yesexpr and noexpr,
