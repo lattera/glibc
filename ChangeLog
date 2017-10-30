@@ -1,5 +1,14 @@
 2017-10-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/math.h [__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC)]:
+	Include <bits/math-finite.h> with appropriate macros defined and
+	undefined.
+	[__HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC)]: Likewise.
+	[__HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC)]: Likewise.
+
 	* math/math.h [!_Mfloat_] (_Mfloat_): Do not define.
 	[!_Mlong_double_] (_Mlong_double_): Likewise.
 	[!_Mfloat16_] (_Mfloat16_): Likewise.
