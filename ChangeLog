@@ -1,3 +1,22 @@
+2017-10-30  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #13953]
+	* localedata/locales/km_KH: Use ASCII as much
+	as possible for better readability of the source and
+	remove useless comments.
+	* localedata/locales/km_KH (LC_TIME): Remove era stuff, it
+	was commented out and apparently wrong anyway because it was
+	using Lao characters. If Buddhist era should be used
+	for km_KH, a native speaker should write the correct formaat
+	for Khmer.
+	* localedata/locales/km_KH (LC_TIME): Add first_weekday 1
+	(According to CLDR, the first weekday for Cambodia is Sunday).
+	* localedata/locales/km_KH (LC_NAME): Remove name_mr and name_mrs
+	(These were using Lao characters which must be wrong. If we get
+	the correct data from a native speaker, we could add it back, until
+	then it is better not to have name_mr and name_mrs at all than
+	having it wrong).
+
 2017-10-27  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* locale/loadlocale.c: Correct size of

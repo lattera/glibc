@@ -9,15 +9,7 @@ escape_char /
 % otherwise be governed by that license.
 
 % Khmer Language Locale for Cambodia
-%
-% Name:         km_KH
 % Author:       Jens Herden
-% Contact:
-% E-mail:       jens@khmeros.info
-% Language:     Khmer
-% Territory:    Cambodia
-% Revision:     1.0
-% Date:         2005-03-15
 
 LC_IDENTIFICATION
 title      "Khmer locale for Cambodia"
@@ -895,16 +887,14 @@ order_end
 END LC_COLLATE
 
 LC_MONETARY
-
-int_curr_symbol      "<U004B><U0048><U0052><U0020>"
-
+int_curr_symbol      "KHR "
 % monetary unit: Riel
 currency_symbol      "<U17DB>"
-mon_decimal_point    "<U002E>"
-mon_thousands_sep    "<U002C>"
+mon_decimal_point    "."
+mon_thousands_sep    ","
 mon_grouping         3;3
 positive_sign        ""
-negative_sign        "<U002D>"
+negative_sign        "-"
 int_frac_digits       2
 frac_digits           2
 p_cs_precedes         0
@@ -921,13 +911,10 @@ int_p_sign_posn       1
 int_n_sign_posn       1
 END LC_MONETARY
 
-
 LC_NUMERIC
-
-decimal_point           "<U002E>"
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3
-
 END LC_NUMERIC
 
 LC_TIME
@@ -983,20 +970,10 @@ t_fmt    "%H:%M:%S"
 am_pm    "<U1796><U17D2><U179A><U17B9><U1780>";"<U179B><U17D2><U1784><U17B6><U1785>"
 
 % Appropriate 12-hour clock representation  "%I:%M:%S %p"
-%t_fmt_ampm  "%I<U003A>%M<U003A>%S<U0020>%p"
-
-% Era : Buddhist Era
-%era     "+:1:-543<U002F>01<U002F>01:+*:<U0E9E><U002E><U0EAA><U002E>:%EC<U0020>%Ey"
-%era_d_fmt       "%e<U0020>%b<U0020>%Ey"
-%era_t_fmt       "%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
-%era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8><U0020>%e<U0020>%B<U0020>%EC<U0020>%Ey<U002C><U0020>%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
-
-% Appropriate date representation (date(1))   "%a %e %b %Ey %H:%M:%S %Z"
-%date_fmt       "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
-%<U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
-%<U003A><U0025><U0053><U0020><U0025><U005A>"
+%t_fmt_ampm  "%I:%M:%S %p"
 
 week 7;19971130;1
+first_weekday 1
 END LC_TIME
 
 LC_MESSAGES
@@ -1011,11 +988,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0025><U006C>"
-int_select     "<U0030><U0030><U0031>"
-int_prefix     "<U0038><U0035><U0035>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt    "(%A)%l"
+int_select     "001"
+int_prefix     "855"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -1023,36 +999,24 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
-
-name_mr     "<U0E97>."
-name_mrs    "<U0E99>."
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
 %    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0072><U0025><U0074><U0025><U0065>/
-<U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
-<U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
-<U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
 % កម្ពុជា (Kampuchea)
 country_name "<U1780><U1798><U17D2><U1796><U17BB><U1787><U17B6>"
 %FIXME
 %country_post  ""
-country_ab2 "<U004B><U0048>"
-country_ab3 "<U004B><U0048><U004D>"
+country_ab2 "KH"
+country_ab3 "KHM"
 country_num 116
-country_car "<U004B><U0048>"
-%FIXME
-%country_isbn  ""
+country_car "KH"
+%country_isbn  "978-9924"
 % ភាសាខ្មែរ (Khmer)
 lang_name     "<U1781><U17D2><U1798><U17C2><U179A>"
-% km
-lang_ab       "<U006B><U006D>"
-% khm
-lang_term     "<U006B><U0068><U006D>"
-% khm
-lang_lib      "<U006B><U0068><U006D>"
+lang_ab       "km"
+lang_term     "khm"
+lang_lib      "khm"
 END LC_ADDRESS
