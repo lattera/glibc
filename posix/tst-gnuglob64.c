@@ -1,4 +1,4 @@
-/* Test glob with GLOB_ALTDIRFUNC.
+/* Test glob64 with GLOB_ALTDIRFUNC.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define GLOB_FUNC glob
-#define GLOB_TYPE glob_t
-#define GLOBFREE_FUNC globfree
-#define DIRENT_STRUCT dirent
-#define STAT_STRUCT stat
+#define GLOB_FUNC glob64
+#define GLOB_TYPE glob64_t
+#define GLOBFREE_FUNC globfree64
+#define DIRENT_STRUCT dirent64
+#define STAT_STRUCT stat64
 
 #include "tst-gnuglob-skeleton.c"

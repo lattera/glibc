@@ -1,3 +1,14 @@
+2017-10-30  Florian Weimer  <fweimer@redhat.com>
+
+	* posix/tst-gnuglob-skeleton.c: Renamed from tst-gnuglob.c.
+	Convert to support/test-driver.c.
+	(GLOB_FUNC, GLOB_TYPE, GLOBFREE_FUNC, DIRENT_STRUCT, STAT_STRUCT):
+	New macro parameters.
+	(PRINTF): Remove macro.  Use test_verbose conditionals instead.
+	* posix/tst-gnuglob.c: New file.
+	* posix/tst-gnuglob64.c: Likewise.
+	* posix/Makefile (tests): Add tst-gnuglob64.
+
 2017-10-30  Michal Ostrowski <ostrowski.michal@gmail.com>
 
 	[BZ #19485]

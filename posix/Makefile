@@ -70,7 +70,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-mmap tst-mmap-offset tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
 		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
-		   tst-gnuglob tst-regex bug-regex6 bug-regex7 \
+		   tst-gnuglob tst-gnuglob64 tst-regex bug-regex6 bug-regex7 \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
 		   bug-regex17 bug-regex18 bug-regex19 \
