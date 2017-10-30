@@ -1,3 +1,72 @@
+2017-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [__HAVE_FLOAT16 && __USE_GNU] (M_Ef16): New macro.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_LOG2Ef16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_LOG10Ef16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_LN2f16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_LN10f16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_PIf16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_PI_2f16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_PI_4f16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_1_PIf16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_2_PIf16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_2_SQRTPIf16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_SQRT2f16): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (M_SQRT1_2f16): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_Ef32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_LOG2Ef32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_LOG10Ef32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_LN2f32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_LN10f32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_PIf32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_PI_2f32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_PI_4f32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_1_PIf32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_2_PIf32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_2_SQRTPIf32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_SQRT2f32): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (M_SQRT1_2f32): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_Ef64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_LOG2Ef64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_LOG10Ef64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_LN2f64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_LN10f64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_PIf64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_PI_2f64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_PI_4f64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_1_PIf64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_2_PIf64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_2_SQRTPIf64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_SQRT2f64): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (M_SQRT1_2f64): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_Ef32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_LOG2Ef32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_LOG10Ef32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_LN2f32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_LN10f32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_PIf32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_PI_2f32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_PI_4f32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_1_PIf32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_2_PIf32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_2_SQRTPIf32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_SQRT2f32x): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (M_SQRT1_2f32x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_Ef64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_LOG2Ef64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_LOG10Ef64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_LN2f64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_LN10f64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_PIf64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_PI_2f64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_PI_4f64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_1_PIf64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_2_PIf64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_2_SQRTPIf64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_SQRT2f64x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (M_SQRT1_2f64x): Likewise.
+	[__HAVE_FLOAT128X && __USE_GNU]: Use #error.
+
 2017-10-30  Florian Weimer  <fweimer@redhat.com>
 
 	* elf/ldconfig.c (search_dir): Assume that _DIRENT_HAVE_D_TYPE is
