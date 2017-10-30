@@ -19,7 +19,6 @@
 #undef _LIBC
 #undef __LIBC_INTERNAL_MATH_INLINES
 #undef _GNU_SOURCE
-#undef _Mlong_double_
 
 #include <math.h>
 #include <stdio.h>

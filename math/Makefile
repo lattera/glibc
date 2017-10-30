@@ -561,10 +561,8 @@ math-CPPFLAGS += -D__NO_MATH_INLINES -D__LIBC_INTERNAL_MATH_INLINES
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
 # We won't compile the `long double' code at all.  Tell the `double' code
-# to define aliases for the `FUNCl' names.  To avoid type conflicts in
-# defining those aliases, tell <math.h> to declare the `FUNCl' names with
-# `double' instead of `long double'.
-math-CPPFLAGS += -DNO_LONG_DOUBLE -D_Mlong_double_=double
+# to define aliases for the `FUNCl' names.
+math-CPPFLAGS += -DNO_LONG_DOUBLE
 endif
 
 # These files quiet sNaNs in a way that is optimized away without

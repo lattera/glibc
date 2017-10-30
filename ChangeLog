@@ -1,3 +1,24 @@
+2017-10-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h [!_Mfloat_] (_Mfloat_): Do not define.
+	[!_Mlong_double_] (_Mlong_double_): Likewise.
+	[!_Mfloat16_] (_Mfloat16_): Likewise.
+	[!_Mfloat32_] (_Mfloat32_): Likewise.
+	[!_Mfloat64_] (_Mfloat64_): Likewise.
+	[!_Mfloat128_] (_Mfloat128_): Likewise.
+	[!_Mfloat32x_] (_Mfloat32x_): Likewise.
+	[!_Mfloat64x_] (_Mfloat64x_): Likewise.
+	[!_Mfloat128x_] (_Mfloat128x_): Likewise.
+	(_Mdouble_): Define without indirection through those macros.
+	* math/complex.h [!_Mfloat_] (_Mfloat_): Do not define.
+	[!_Mfloat128_] (_Mfloat128_): Likewise.
+	[_Mlong_double_] (_Mlong_double_): Likewise.
+	(_Mdouble_): Define without indirection through those macros.
+	* math/Makefile [$(long-double-fcts) != yes] (math-CPPFLAGS): Do
+	not add -D_Mlong_double_=double.
+	* include/math.h [_ISOMAC] (_Mlong_double_): Do not undefine.
+	* math/test-signgam-finite-c99.c (_Mlong_double_): Likewise.
+
 2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/libc-start.c: Add /* !SHARED */.

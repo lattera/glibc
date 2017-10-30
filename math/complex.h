@@ -83,10 +83,7 @@ __BEGIN_DECLS
 #undef	__MATH_PRECNAME
 
 /* Now the float versions.  */
-#ifndef _Mfloat_
-# define _Mfloat_		float
-#endif
-#define _Mdouble_ 		_Mfloat_
+#define _Mdouble_ 		float
 #define __MATH_PRECNAME(name)	name##f
 #include <bits/cmathcalls.h>
 #undef	_Mdouble_
@@ -94,15 +91,12 @@ __BEGIN_DECLS
 
 #if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
-# ifndef _Mfloat128_
-#  define _Mfloat128_		_Float128
-# endif
 /* GCC < 7 requires extra convincing to expose a complex float128 type.  */
 # ifdef __CFLOAT128
 #  undef _Mdouble_complex_
 #  define _Mdouble_complex_	__CFLOAT128
 # endif
-# define _Mdouble_		_Mfloat128_
+# define _Mdouble_		_Float128
 # define __MATH_PRECNAME(name)	name##f128
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
@@ -120,10 +114,7 @@ __BEGIN_DECLS
   extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
 # endif
 
-# ifndef _Mlong_double_
-#  define _Mlong_double_	long double
-# endif
-# define _Mdouble_ 		_Mlong_double_
+# define _Mdouble_ 		long double
 # define __MATH_PRECNAME(name)	name##l
 # include <bits/cmathcalls.h>
 #endif

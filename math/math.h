@@ -299,10 +299,7 @@ enum
 /* Include the file of declarations again, this time using `float'
    instead of `double' and appending f to each function name.  */
 
-# ifndef _Mfloat_
-#  define _Mfloat_		float
-# endif
-# define _Mdouble_		_Mfloat_
+# define _Mdouble_		float
 # define __MATH_PRECNAME(name,r) name##f##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  0
@@ -344,10 +341,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
-#  ifndef _Mlong_double_
-#   define _Mlong_double_	long double
-#  endif
-#  define _Mdouble_		_Mlong_double_
+#  define _Mdouble_		long double
 #  define __MATH_PRECNAME(name,r) name##l##r
 #  define __MATH_DECLARING_DOUBLE  0
 #  define __MATH_DECLARING_FLOATN  0
@@ -367,10 +361,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
    types.  */
 
 #if __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)
-# ifndef _Mfloat16_
-#  define _Mfloat16_		_Float16
-# endif
-# define _Mdouble_		_Mfloat16_
+# define _Mdouble_		_Float16
 # define __MATH_PRECNAME(name,r) name##f16##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -387,10 +378,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)
-# ifndef _Mfloat32_
-#  define _Mfloat32_		_Float32
-# endif
-# define _Mdouble_		_Mfloat32_
+# define _Mdouble_		_Float32
 # define __MATH_PRECNAME(name,r) name##f32##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -407,10 +395,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)
-# ifndef _Mfloat64_
-#  define _Mfloat64_		_Float64
-# endif
-# define _Mdouble_		_Mfloat64_
+# define _Mdouble_		_Float64
 # define __MATH_PRECNAME(name,r) name##f64##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -427,10 +412,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)
-# ifndef _Mfloat128_
-#  define _Mfloat128_		_Float128
-# endif
-# define _Mdouble_		_Mfloat128_
+# define _Mdouble_		_Float128
 # define __MATH_PRECNAME(name,r) name##f128##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -447,10 +429,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)
-# ifndef _Mfloat32x_
-#  define _Mfloat32x_		_Float32x
-# endif
-# define _Mdouble_		_Mfloat32x_
+# define _Mdouble_		_Float32x
 # define __MATH_PRECNAME(name,r) name##f32x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -467,10 +446,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)
-# ifndef _Mfloat64x_
-#  define _Mfloat64x_		_Float64x
-# endif
-# define _Mdouble_		_Mfloat64x_
+# define _Mdouble_		_Float64x
 # define __MATH_PRECNAME(name,r) name##f64x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
@@ -487,10 +463,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #endif /* __HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC).  */
 
 #if __HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)
-# ifndef _Mfloat128x_
-#  define _Mfloat128x_		_Float128x
-# endif
-# define _Mdouble_		_Mfloat128x_
+# define _Mdouble_		_Float128x
 # define __MATH_PRECNAME(name,r) name##f128x##r
 # define __MATH_DECLARING_DOUBLE  0
 # define __MATH_DECLARING_FLOATN  1
