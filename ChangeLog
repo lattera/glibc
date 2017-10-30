@@ -1,3 +1,14 @@
+2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22353]
+	* sysdeps/i386/i586/strcpy.S (STRCPY): Use conditional branches.
+	(1): Renamed to ...
+	(L(Src0)): This.
+	(L(Src1)): New.
+	(L(Src2)): Likewise.
+	(L(1)): Renamed to ...
+	(L(Src3)): This.
+
 2017-10-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math.h [__HAVE_FLOAT16 && __USE_GNU] (M_Ef16): New macro.

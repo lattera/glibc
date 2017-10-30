@@ -53,41 +53,35 @@ ENTRY (STRCPY)
 	cfi_rel_offset (ebx, 0)
 	andl	$3, %ecx
 
-#ifdef PIC
-	call	2f
-	cfi_adjust_cfa_offset (4)
-2:	popl	%edx
-	cfi_adjust_cfa_offset (-4)
-	/* 0xb is the distance between 2: and 1: but we avoid writing
-	   1f-2b because the assembler generates worse code.  */
-	leal	0xb(%edx,%ecx,8), %ecx
-#else
-	leal	1f(,%ecx,8), %ecx
-#endif
+	cmpb	$2, %cl
+	je	L(Src2)
+	ja	L(Src3)
+	cmpb	$1, %cl
+	je	L(Src1)
 
-	jmp	*%ecx
-
-	.align 8
-1:
+L(Src0):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
+L(Src1):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
+L(Src2):
 	orb	(%esi), %al
 	jz	L(end)
 	stosb
 	xorl	%eax, %eax
 	incl	%esi
 
-L(1):	movl	(%esi), %ecx
+L(Src3):
+	movl	(%esi), %ecx
 	leal	4(%esi),%esi
 
 	subl	%ecx, %eax
@@ -107,7 +101,7 @@ L(1):	movl	(%esi), %ecx
 	movl	%edx, (%edi)
 	leal	4(%edi),%edi
 
-	jmp	L(1)
+	jmp	L(Src3)
 
 L(3):	movl	%ecx, %edx
 
