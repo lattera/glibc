@@ -106,7 +106,7 @@ extern int ffs (int __i) __THROW __attribute_const__;
 
 /* The following two functions are non-standard but necessary for non-32 bit
    platforms.  */
-# ifdef	__USE_GNU
+# ifdef	__USE_MISC
 extern int ffsl (long int __l) __THROW __attribute_const__;
 __extension__ extern int ffsll (long long int __ll)
      __THROW __attribute_const__;

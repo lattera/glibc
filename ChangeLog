@@ -1,5 +1,10 @@
 2017-10-30  Florian Weimer  <fweimer@redhat.com>
 
+	* string/strings.h (ffsl, ffsll): Declare under __USE_MISC, not
+	just __USE_GNU.
+
+2017-10-30  Florian Weimer  <fweimer@redhat.com>
+
 	* posix/tst-gnuglob-skeleton.c: Renamed from tst-gnuglob.c.
 	Convert to support/test-driver.c.
 	(GLOB_FUNC, GLOB_TYPE, GLOBFREE_FUNC, DIRENT_STRUCT, STAT_STRUCT):
