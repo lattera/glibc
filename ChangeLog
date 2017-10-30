@@ -1,5 +1,9 @@
 2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/libc-start.c: Reformat.
+
+2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #22353]
 	* sysdeps/i386/i586/strcpy.S (STRCPY): Use conditional branches.
 	(1): Renamed to ...
