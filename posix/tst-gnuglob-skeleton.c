@@ -221,27 +221,16 @@ my_readdir (void *gdir)
 
   dir->d.d_ino = 1;		/* glob should not skip this entry.  */
 
-#ifdef _DIRENT_HAVE_D_TYPE
   dir->d.d_type = filesystem[dir->idx].type;
-#endif
 
   strcpy (dir->d.d_name, filesystem[dir->idx].name);
 
-#ifdef _DIRENT_HAVE_D_TYPE
   if (test_verbose > 0)
     printf ("info: my_readdir ({ level: %d, idx: %ld })"
 	    " = { d_ino: %lld, d_type: %d, d_name: \"%s\" }\n",
 	    dir->level, (long int) dir->idx,
 	    (long long) dir->d.d_ino, dir->d.d_type,
 	    dir->d.d_name);
-#else
-  if (test_verbose > 0)
-    printf ("info: my_readdir ({ level: %d, idx: %ld })"
-	    " = { d_ino: %lld, d_name: \"%s\" }\n",
-	    dir->level, (long int) dir->idx,
-	    (long long) dir->d.d_ino,
-	    dir->d.d_name);
-#endif
 
   ++dir->idx;
 

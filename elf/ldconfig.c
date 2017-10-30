@@ -710,25 +710,20 @@ search_dir (const struct dir_entry *entry)
   while ((direntry = readdir64 (dir)) != NULL)
     {
       int flag;
-#ifdef _DIRENT_HAVE_D_TYPE
       /* We only look at links and regular files.  */
       if (direntry->d_type != DT_UNKNOWN
 	  && direntry->d_type != DT_LNK
 	  && direntry->d_type != DT_REG
 	  && direntry->d_type != DT_DIR)
 	continue;
-#endif /* _DIRENT_HAVE_D_TYPE  */
       /* Does this file look like a shared library or is it a hwcap
 	 subdirectory?  The dynamic linker is also considered as
 	 shared library.  */
       if (((strncmp (direntry->d_name, "lib", 3) != 0
 	    && strncmp (direntry->d_name, "ld-", 3) != 0)
 	   || strstr (direntry->d_name, ".so") == NULL)
-	  && (
-#ifdef _DIRENT_HAVE_D_TYPE
-	      direntry->d_type == DT_REG ||
-#endif
-	      !is_hwcap_platform (direntry->d_name)))
+	  && (direntry->d_type == DT_REG
+	      || !is_hwcap_platform (direntry->d_name)))
 	continue;
 
       size_t len = strlen (direntry->d_name);
@@ -765,12 +760,10 @@ search_dir (const struct dir_entry *entry)
 	}
 
       struct stat64 lstat_buf;
-#ifdef _DIRENT_HAVE_D_TYPE
       /* We optimize and try to do the lstat call only if needed.  */
       if (direntry->d_type != DT_UNKNOWN)
 	lstat_buf.st_mode = DTTOIF (direntry->d_type);
       else
-#endif
 	if (__glibc_unlikely (lstat64 (real_file_name, &lstat_buf)))
 	  {
 	    error (0, errno, _("Cannot lstat %s"), file_name);
@@ -825,9 +818,6 @@ search_dir (const struct dir_entry *entry)
 	  new_entry->path = xstrdup (file_name);
 	  new_entry->flag = entry->flag;
 	  new_entry->next = NULL;
-#ifdef _DIRENT_HAVE_D_TYPE
-	  /* We have filled in lstat only #ifndef
-	     _DIRENT_HAVE_D_TYPE.  Fill it in if needed.  */
 	  if (!is_link
 	      && direntry->d_type != DT_UNKNOWN
 	      && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
@@ -837,7 +827,6 @@ search_dir (const struct dir_entry *entry)
 	      free (new_entry);
 	      continue;
 	    }
-#endif
 	  new_entry->ino = lstat_buf.st_ino;
 	  new_entry->dev = lstat_buf.st_dev;
 	  add_single_dir (new_entry, 0);
@@ -860,7 +849,6 @@ search_dir (const struct dir_entry *entry)
       else
 	real_name = real_file_name;
 
-#ifdef _DIRENT_HAVE_D_TYPE
       /* Call lstat64 if not done yet.  */
       if (!is_link
 	  && direntry->d_type != DT_UNKNOWN
@@ -869,7 +857,6 @@ search_dir (const struct dir_entry *entry)
 	  error (0, errno, _("Cannot lstat %s"), file_name);
 	  continue;
 	}
-#endif
 
       /* First search whether the auxiliary cache contains this
 	 library already and it's not changed.  */

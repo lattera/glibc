@@ -1,5 +1,20 @@
 2017-10-30  Florian Weimer  <fweimer@redhat.com>
 
+	* elf/ldconfig.c (search_dir): Assume that _DIRENT_HAVE_D_TYPE is
+	always defined.
+	* io/tst-mkdirat.c (do_test): Likewise.
+	* io/tst-mkfifoat.c (do_test): Likewise.
+	* io/tst-mknodat.c (do_test): Likewise.
+	* locale/programs/charmap-dir.c (charmap_readdir): Likewise.
+	* locale/programs/locale.c (select_dirs): Likewise.
+	* locale/programs/locarchive.c (add_locales_to_archive): Likewise.
+	* posix/bug-glob2.c (my_readdir): Likewise.
+	* posix/tst-dir.c (main): Likewise.
+	* posix/tst-glob_lstat_compat.c (my_readdir): Likewise.
+	* posix/tst-gnuglob-skeleton.c (my_readdir): Likewise.
+
+2017-10-30  Florian Weimer  <fweimer@redhat.com>
+
 	* string/strings.h (ffsl, ffsll): Declare under __USE_MISC, not
 	just __USE_GNU.
 

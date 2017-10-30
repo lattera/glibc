@@ -115,11 +115,9 @@ charmap_readdir (CHARMAP_DIR *cdir)
       stpcpy (stpcpy (cdir->pathname, cdir->directory), dirent->d_name);
       filename = cdir->pathname + cdir->directory_len;
 
-#ifdef _DIRENT_HAVE_D_TYPE
       if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
         mode = DTTOIF (dirent->d_type);
       else
-#endif
         {
           struct stat64 statbuf;
 

@@ -166,9 +166,7 @@ my_readdir (void *gdir)
 
   dir->d.d_ino = 1;		/* glob should not skip this entry.  */
 
-#ifdef _DIRENT_HAVE_D_TYPE
   dir->d.d_type = filesystem[dir->idx].type;
-#endif
 
   strcpy (dir->d.d_name, filesystem[dir->idx].name);
 

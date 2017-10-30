@@ -149,10 +149,8 @@ main (int argc, char *argv[])
 
   while ((d = readdir64 (dir1)) != NULL)
     {
-#ifdef _DIRENT_HAVE_D_TYPE
       if (d->d_type != DT_UNKNOWN && d->d_type != DT_REG)
 	continue;
-#endif
 
       if (d->d_ino == st2.st_ino)
 	{
@@ -234,10 +232,8 @@ main (int argc, char *argv[])
 
   while ((d = readdir64 (dir2)) != NULL)
     {
-#ifdef _DIRENT_HAVE_D_TYPE
       if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
 	continue;
-#endif
 
       if (d->d_ino == st2.st_ino)
 	{
@@ -327,10 +323,8 @@ main (int argc, char *argv[])
   rewinddir (dir1);
   while (readdir64_r (dir1, &direntbuf.d, &d) == 0 && d != NULL)
     {
-#ifdef _DIRENT_HAVE_D_TYPE
       if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
 	continue;
-#endif
 
       if (d->d_ino == st1.st_ino)
 	{
@@ -457,13 +451,11 @@ main (int argc, char *argv[])
 	  || strcmp (d->d_name, "..") == 0
 	  || strcmp (d->d_name, "another-dir") == 0)
 	{
-#ifdef _DIRENT_HAVE_D_TYPE
 	  if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
 	    {
 	      printf ("d_type for \"%s\" is wrong\n", d->d_name);
 	      result = 1;
 	    }
-#endif
 	  if (stat64 (d->d_name, &st3) < 0)
 	    {
 	      printf ("cannot stat \"%s\" is wrong\n", d->d_name);
@@ -477,13 +469,11 @@ main (int argc, char *argv[])
 	}
       else if (strcmp (d->d_name, "and-a-file") == 0)
 	{
-#ifdef _DIRENT_HAVE_D_TYPE
 	  if (d->d_type != DT_UNKNOWN && d->d_type != DT_REG)
 	    {
 	      printf ("d_type for \"%s\" is wrong\n", d->d_name);
 	      result = 1;
 	    }
-#endif
 	  if (stat64 (d->d_name, &st3) < 0)
 	    {
 	      printf ("cannot stat \"%s\" is wrong\n", d->d_name);

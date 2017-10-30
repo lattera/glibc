@@ -131,13 +131,11 @@ do_test (void)
     if (strcmp (d->d_name, "some-dir") == 0)
       {
 	has_some_dir = true;
-#ifdef _DIRENT_HAVE_D_TYPE
 	if (d->d_type != DT_UNKNOWN && d->d_type != DT_DIR)
 	  {
 	    puts ("d_type for some-dir wrong");
 	    return 1;
 	  }
-#endif
       }
     else if (strcmp (d->d_name, ".") != 0 && strcmp (d->d_name, "..") != 0)
       {

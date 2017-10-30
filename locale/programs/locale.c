@@ -316,11 +316,9 @@ select_dirs (const struct dirent *dirent)
     {
       mode_t mode = 0;
 
-#ifdef _DIRENT_HAVE_D_TYPE
       if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
 	mode = DTTOIF (dirent->d_type);
       else
-#endif
 	{
 	  struct stat64 st;
 	  char buf[sizeof (COMPLOCALEDIR)

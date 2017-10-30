@@ -1385,17 +1385,13 @@ add_locales_to_archive (size_t nlist, char *list[], bool replace)
 		     a directory we have to look at a file with the
 		     prefix "SYS_".  Otherwise we have found what we
 		     are looking for.  */
-#ifdef _DIRENT_HAVE_D_TYPE
 		  d_type = d->d_type;
 
 		  if (d_type != DT_REG)
-#endif
 		    {
 		      char fullname[fnamelen + 2 * strlen (d->d_name) + 7];
 
-#ifdef _DIRENT_HAVE_D_TYPE
 		      if (d_type == DT_UNKNOWN)
-#endif
 			{
 			  strcpy (stpcpy (stpcpy (fullname, fname), "/"),
 				  d->d_name);
