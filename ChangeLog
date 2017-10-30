@@ -1,3 +1,11 @@
+2017-10-30  Michal Ostrowski <ostrowski.michal@gmail.com>
+
+	[BZ #19485]
+	* localedata/locales/csb_PL (LC_TIME): Fix “abmon” for March
+	and use a better translation for March in “mon”.
+	* localedata/locales/csb_PL: Use more ASCII to improve the
+	readability of the source.
+
 2017-10-30  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #13953]
