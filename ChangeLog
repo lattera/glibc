@@ -1,5 +1,9 @@
 2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/libc-start.c: Add /* !SHARED */.
+
+2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/libc-start.c: Reformat.
 
 2017-10-30  H.J. Lu  <hongjiu.lu@intel.com>

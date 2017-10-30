@@ -24,5 +24,5 @@ extern struct cpu_features _dl_x86_cpu_features;
 
 # define ARCH_INIT_CPU_FEATURES() init_cpu_features (&_dl_x86_cpu_features)
 
-#endif
+#endif /* !SHARED */
 #include <csu/libc-start.c>
