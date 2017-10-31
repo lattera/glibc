@@ -1,3 +1,9 @@
+2017-10-31  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math.h
+	[__FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 32]
+	(__MATH_EVAL_FMT2): Define to add 0.0f.
+
 2017-10-31  Alan Modra  <amodra@gmail.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf-power8.S: Don't

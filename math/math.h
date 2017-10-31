@@ -1144,6 +1144,8 @@ iszero (__T __val)
 #  define __MATH_EVAL_FMT2(x, y) ((x) + (y) + 0.0L)
 # elif __FLT_EVAL_METHOD__ == 1 || __FLT_EVAL_METHOD__ > 32
 #  define __MATH_EVAL_FMT2(x, y) ((x) + (y) + 0.0)
+# elif __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 32
+#  define __MATH_EVAL_FMT2(x, y) ((x) + (y) + 0.0f)
 # else
 #  define __MATH_EVAL_FMT2(x, y) ((x) + (y))
 # endif
