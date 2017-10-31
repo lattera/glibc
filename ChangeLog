@@ -1,5 +1,10 @@
 2017-01-31  Yury Norov  <ynorov@caviumnetworks.com>
 
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Remove useless #ifdefs.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/ia64/sigpending.c: Remove file.
 	* sysdeps/unix/sysv/linux/s390/s390-64/sigpending.c: Likewise.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sigpending.c: Likewise.

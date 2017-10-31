@@ -31,25 +31,18 @@
 int
 __sigwaitinfo (const sigset_t *set, siginfo_t *info)
 {
-#ifdef SIGCANCEL
   sigset_t tmpset;
   if (set != NULL
       && (__builtin_expect (__sigismember (set, SIGCANCEL), 0)
-# ifdef SIGSETXID
-	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)
-# endif
-	  ))
+	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)))
     {
       /* Create a temporary mask without the bit for SIGCANCEL set.  */
       // We are not copying more than we have to.
       memcpy (&tmpset, set, _NSIG / 8);
       __sigdelset (&tmpset, SIGCANCEL);
-# ifdef SIGSETXID
       __sigdelset (&tmpset, SIGSETXID);
-# endif
       set = &tmpset;
     }
-#endif
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */

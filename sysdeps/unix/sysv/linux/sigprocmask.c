@@ -30,26 +30,19 @@
 int
 __sigprocmask (int how, const sigset_t *set, sigset_t *oset)
 {
-#ifdef SIGCANCEL
   sigset_t local_newmask;
 
   /* The only thing we have to make sure here is that SIGCANCEL and
      SIGSETXID are not blocked.  */
   if (set != NULL
       && (__builtin_expect (__sigismember (set, SIGCANCEL), 0)
-# ifdef SIGSETXID
-	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)
-# endif
-	  ))
+	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)))
     {
       local_newmask = *set;
       __sigdelset (&local_newmask, SIGCANCEL);
-# ifdef SIGSETXID
       __sigdelset (&local_newmask, SIGSETXID);
-# endif
       set = &local_newmask;
     }
-#endif
 
   return INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset, _NSIG / 8);
 }
