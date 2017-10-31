@@ -1,5 +1,19 @@
 2017-10-31  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/complex.h
+	[__HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (CMPLXF16):
+	New macro.
+	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (CMPLXF32):
+	Likewise.
+	[__HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (CMPLXF64):
+	Likewise.
+	[__HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(CMPLXF32X): Likewise.
+	[__HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(CMPLXF64X): Likewise.
+	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(CMPLXF128X): Likewise.
+
 	* math/math.h
 	[__FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 32]
 	(__MATH_EVAL_FMT2): Define to add 0.0f.

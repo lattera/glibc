@@ -59,8 +59,33 @@ __BEGIN_DECLS
 # define CMPLXL(x, y) __builtin_complex ((long double) (x), (long double) (y))
 #endif
 
+#if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF16(x, y) __builtin_complex ((_Float16) (x), (_Float16) (y))
+#endif
+
+#if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF32(x, y) __builtin_complex ((_Float32) (x), (_Float32) (y))
+#endif
+
+#if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF64(x, y) __builtin_complex ((_Float64) (x), (_Float64) (y))
+#endif
+
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # define CMPLXF128(x, y) __builtin_complex ((_Float128) (x), (_Float128) (y))
+#endif
+
+#if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF32X(x, y) __builtin_complex ((_Float32x) (x), (_Float32x) (y))
+#endif
+
+#if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF64X(x, y) __builtin_complex ((_Float64x) (x), (_Float64x) (y))
+#endif
+
+#if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# define CMPLXF128X(x, y)					\
+  __builtin_complex ((_Float128x) (x), (_Float128x) (y))
 #endif
 
 /* The file <bits/cmathcalls.h> contains the prototypes for all the
