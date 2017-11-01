@@ -1,3 +1,33 @@
+2017-11-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/sysdep.h: Include <sysdeps/x86/sysdep.h> instead
+	of <sysdeps/generic/sysdep.h>.
+	(ALIGNARG): Removed.
+	(ASM_SIZE_DIRECTIVE): Likewise.
+	(ENTRY): Likewise.
+	(END): Likewise.
+	(ENTRY_CHK): Likewise.
+	(END_CHK): Likewise.
+	(syscall_error): Likewise.
+	(mcount): Likewise.
+	(PSEUDO_END): Likewise.
+	(L): Likewise.
+	(atom_text_section): Likewise.
+	* sysdeps/x86/sysdep.h: New file.
+	* sysdeps/x86_64/sysdep.h: Include <sysdeps/x86/sysdep.h> instead
+	of <sysdeps/generic/sysdep.h>.
+	(ALIGNARG): Removed.
+	(ASM_SIZE_DIRECTIVE): Likewise.
+	(ENTRY): Likewise.
+	(END): Likewise.
+	(ENTRY_CHK): Likewise.
+	(END_CHK): Likewise.
+	(syscall_error): Likewise.
+	(mcount): Likewise.
+	(PSEUDO_END): Likewise.
+	(L): Likewise.
+	(atom_text_section): Likewise.
+
 2017-10-31  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* localedata/unicode-gen/gen_unicode_ctype.py (output_head):

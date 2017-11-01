@@ -19,7 +19,7 @@
 #ifndef _X86_64_SYSDEP_H
 #define _X86_64_SYSDEP_H 1
 
-#include <sysdeps/generic/sysdep.h>
+#include <sysdeps/x86/sysdep.h>
 
 #ifdef	__ASSEMBLER__
 
@@ -31,28 +31,6 @@
    from %rsp.  */
 #define cfi_offset_rel_rsp(regn, off)	.cfi_escape 0x10, regn, 0x4, 0x13, \
 					0x77, off & 0x7F | 0x80, off >> 7
-
-/* ELF uses byte-counts for .align, most others use log2 of count of bytes.  */
-#define ALIGNARG(log2) 1<<log2
-#define ASM_SIZE_DIRECTIVE(name) .size name,.-name;
-
-
-/* Define an entry point visible from C.  */
-#define	ENTRY(name)							      \
-  .globl C_SYMBOL_NAME(name);						      \
-  .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(4);							      \
-  C_LABEL(name)								      \
-  cfi_startproc;							      \
-  CALL_MCOUNT
-
-#undef	END
-#define END(name)							      \
-  cfi_endproc;								      \
-  ASM_SIZE_DIRECTIVE(name)
-
-#define ENTRY_CHK(name) ENTRY (name)
-#define END_CHK(name) END (name)
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
@@ -70,12 +48,6 @@
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
 
-/* Since C identifiers are not normally prefixed with an underscore
-   on this system, the asm identifier `syscall_error' intrudes on the
-   C name space.  Make sure we use an innocuous name.  */
-#define	syscall_error	__syscall_error
-#define mcount		_mcount
-
 #define	PSEUDO(name, syscall_name, args)				      \
 lose:									      \
   jmp JUMPTARGET(syscall_error)						      \
@@ -83,10 +55,6 @@ lose:									      \
   ENTRY (name)								      \
   DO_CALL (syscall_name, args);						      \
   jb lose
-
-#undef	PSEUDO_END
-#define	PSEUDO_END(name)						      \
-  END (name)
 
 #undef JUMPTARGET
 #ifdef SHARED
@@ -99,14 +67,6 @@ lose:									      \
 /* For static archives, branch to target directly.  */
 # define JUMPTARGET(name)	name
 #endif
-
-/* Local label name for asm code. */
-#ifndef L
-/* ELF-like local names start with `.L'.  */
-# define L(name)	.L##name
-#endif
-
-#define atom_text_section .section ".text.atom", "ax"
 
 /* Long and pointer size in bytes.  */
 #define LP_SIZE	8
