@@ -18,12 +18,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
-
-#include <nptl/pthreadP.h>
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-
-#ifdef __NR_rt_sigtimedwait
 
 int
 __sigtimedwait (const sigset_t *set, siginfo_t *info,
@@ -57,6 +52,3 @@ __sigtimedwait (const sigset_t *set, siginfo_t *info,
 }
 libc_hidden_def (__sigtimedwait)
 weak_alias (__sigtimedwait, sigtimedwait)
-#else
-# include <signal/sigtimedwait.c>
-#endif

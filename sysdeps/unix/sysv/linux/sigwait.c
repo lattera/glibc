@@ -15,86 +15,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <signal.h>
-#define __need_NULL
-#include <stddef.h>
-#include <string.h>
-
-#include <nptl/pthreadP.h>
 #include <sysdep-cancel.h>
-#include <sys/syscall.h>
-
-#ifdef __NR_rt_sigtimedwait
-
-/* Return any pending signal or wait for one for the given time.  */
-static int
-do_sigwait (const sigset_t *set, int *sig)
-{
-  int ret;
-
-  sigset_t tmpset;
-  if (set != NULL
-      && (__builtin_expect (__sigismember (set, SIGCANCEL), 0)
-	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)))
-    {
-      /* Create a temporary mask without the bit for SIGCANCEL set.  */
-      // We are not copying more than we have to.
-      memcpy (&tmpset, set, _NSIG / 8);
-      __sigdelset (&tmpset, SIGCANCEL);
-      __sigdelset (&tmpset, SIGSETXID);
-      set = &tmpset;
-    }
-
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-#ifdef INTERNAL_SYSCALL
-  INTERNAL_SYSCALL_DECL (err);
-  do
-    ret = INTERNAL_SYSCALL (rt_sigtimedwait, err, 4, set,
-			    NULL, NULL, _NSIG / 8);
-  while (INTERNAL_SYSCALL_ERROR_P (ret, err)
-	 && INTERNAL_SYSCALL_ERRNO (ret, err) == EINTR);
-  if (! INTERNAL_SYSCALL_ERROR_P (ret, err))
-    {
-      *sig = ret;
-      ret = 0;
-    }
-  else
-    ret = INTERNAL_SYSCALL_ERRNO (ret, err);
-#else
-  do
-    ret = INLINE_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL, _NSIG / 8);
-  while (ret == -1 && errno == EINTR);
-  if (ret != -1)
-    {
-      *sig = ret;
-      ret = 0;
-    }
-  else
-    ret = errno;
-#endif
-
-  return ret;
-}
 
 int
 __sigwait (const sigset_t *set, int *sig)
 {
-  if (SINGLE_THREAD_P)
-    return do_sigwait (set, sig);
-
-  int oldtype = LIBC_CANCEL_ASYNC ();
-
-  int result = do_sigwait (set, sig);
-
-  LIBC_CANCEL_RESET (oldtype);
-
-  return result;
+  siginfo_t si;
+  if (__sigtimedwait (set, &si, 0) < 0)
+    return -1;
+  *sig = si.si_signo;
+  return 0;
 }
 libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)
-#else
-# include <sysdeps/posix/sigwait.c>
-#endif
 strong_alias (__sigwait, __libc_sigwait)
+
+/* __sigtimedwait handles cancellation.  */
+LIBC_CANCEL_HANDLED ();
