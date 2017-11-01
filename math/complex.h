@@ -114,21 +114,6 @@ __BEGIN_DECLS
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
-#if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
-     && __GLIBC_USE (IEC_60559_TYPES_EXT)
-/* GCC < 7 requires extra convincing to expose a complex float128 type.  */
-# ifdef __CFLOAT128
-#  undef _Mdouble_complex_
-#  define _Mdouble_complex_	__CFLOAT128
-# endif
-# define _Mdouble_		_Float128
-# define __MATH_PRECNAME(name)	name##f128
-# include <bits/cmathcalls.h>
-# undef _Mdouble_
-# undef __MATH_PRECNAME
-# undef _Mdouble_complex_
-#endif
-
 /* And the long double versions.  It is non-critical to define them
    here unconditionally since `long double' is required in ISO C99.  */
 #if !(defined __NO_LONG_DOUBLE_MATH && defined _LIBC)	\
@@ -145,6 +130,19 @@ __BEGIN_DECLS
 #endif
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
+
+#if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT128
+# define _Mdouble_		_Float128
+# define __MATH_PRECNAME(name)	name##f128
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
 #undef	__MATHDECL_1
 #undef	__MATHDECL
 #undef	__MATHCALL

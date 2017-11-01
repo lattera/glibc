@@ -1,3 +1,11 @@
+2017-11-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/complex.h
+	[(__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Move conditional code after
+	that for long double.  Do not condition define and undefine of
+	_Mdouble_complex_ on [__CFLOAT128].
+
 2017-11-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/sysdep.h: Include <sysdeps/x86/sysdep.h> instead
