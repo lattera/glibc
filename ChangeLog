@@ -1,5 +1,7 @@
 2017-11-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* signal/sighold.c (sighold): Optimize implementation.
+
 	* sysdeps/unix/sysv/linux/sigqueue.c (__sigqueue): Asssume
 	__NR_rt_sigqueueinfo.
 
