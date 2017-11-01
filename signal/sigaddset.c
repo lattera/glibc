@@ -17,13 +17,14 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <sigsetops.h>
+#include <internal-signals.h>
 
 /* Add SIGNO to SET.  */
 int
 sigaddset (sigset_t *set, int signo)
 {
-  if (set == NULL || signo <= 0 || signo >= NSIG)
+  if (set == NULL || signo <= 0 || signo >= NSIG
+      || __is_internal_signal (signo))
     {
       __set_errno (EINVAL);
       return -1;

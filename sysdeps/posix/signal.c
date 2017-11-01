@@ -18,8 +18,8 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <string.h>	/* For the real memset prototype.  */
 #include <sigsetops.h>
+#include <internal-signals.h>
 
 sigset_t _sigintr attribute_hidden;		/* Set by siginterrupt.  */
 
@@ -31,7 +31,8 @@ __bsd_signal (int sig, __sighandler_t handler)
   struct sigaction act, oact;
 
   /* Check signal extents to protect __sigismember.  */
-  if (handler == SIG_ERR || sig < 1 || sig >= NSIG)
+  if (handler == SIG_ERR || sig < 1 || sig >= NSIG
+      || __is_internal_signal (sig))
     {
       __set_errno (EINVAL);
       return SIG_ERR;

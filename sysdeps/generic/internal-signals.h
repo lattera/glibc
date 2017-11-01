@@ -15,3 +15,39 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
+
+#ifndef __INTERNAL_SIGNALS_H
+# define __INTERNAL_SIGNALS_H
+
+static inline bool
+__is_internal_signal (int sig)
+{
+  return false;
+}
+
+static inline void
+__clear_internal_signals (sigset_t *set)
+{
+}
+
+static inline int
+__libc_signal_block_all (sigset_t *set)
+{
+  return 0;
+}
+
+static inline int
+__libc_signal_block_app (sigset_t *set)
+{
+  return 0;
+}
+
+/* Restore current process signal mask.  */
+static inline int
+__libc_signal_restore_set (const sigset_t *set)
+{
+  return 0;
+}
+
+
+#endif /* __INTERNAL_SIGNALS_H  */

@@ -1,3 +1,29 @@
+2018-04-03 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #22391]
+	* nptl/sigaction.c (__sigaction): Use __is_internal_signal to
+	check for internal nptl signals.
+	* nptl/sigaction.c (__sigaction): Likewise.
+	* signal/sigaddset.c (sigaddset): Likewise.
+	* signal/sigdelset.c (sigdelset): Likewise.
+	* sysdeps/posix/signal.c (__bsd_signal): Likewise.
+	* sysdeps/posix/sigset.c (sigset): Call and check sigaddset return
+	value.
+	* signal/sigfillset.c (sigfillset): User __clear_internal_signals
+	to filter out internal nptl signals.
+	* signal/tst-sigset.c (do_test): Check ech signal indidually and
+	also check realtime signals using standard macros.
+	* sysdeps/generic/internal-signals.h (__clear_internal_signals,
+	__is_internal_signal, __libc_signal_block_all,
+	__libc_signal_block_app, __libc_signal_restore_set): New functions.
+	* sysdeps/nptl/sigfillset.c: Remove file.
+	* sysdeps/unix/sysv/linux/internal-signals.h (__is_internal_signal):
+	Change return to bool.
+	(__clear_internal_signals): Remove SIGTIMER clean since it is
+	equal to SIGCANEL on Linux.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c (__sigtimedwait): Assume
+	signal set was constructed using standard functions.
+
 2018-04-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/if_index.c (__if_nametoindex): Always end

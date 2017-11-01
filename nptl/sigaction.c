@@ -16,22 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-
-/* This is no complete implementation.  The file is meant to be
-   included in the real implementation to provide the wrapper around
-   __libc_sigaction.  */
-
-#include <nptl/pthreadP.h>
-
-/* We use the libc implementation but we tell it to not allow
-   SIGCANCEL or SIGTIMER to be handled.  */
-#define LIBC_SIGACTION	1
-
+#include <internal-signals.h>
 
 int
 __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  if (__glibc_unlikely (sig == SIGCANCEL || sig == SIGSETXID))
+  if (sig <= 0 || sig >= NSIG || __is_internal_signal (sig))
     {
       __set_errno (EINVAL);
       return -1;

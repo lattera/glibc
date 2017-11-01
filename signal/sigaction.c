@@ -24,7 +24,7 @@
 int
 __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
-  if (sig <= 0 || sig >= NSIG)
+  if (sig <= 0 || sig >= NSIG || __is_internal_signal (sig))
     {
       __set_errno (EINVAL);
       return -1;

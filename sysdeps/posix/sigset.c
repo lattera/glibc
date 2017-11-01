@@ -31,15 +31,9 @@ sigset (int sig, __sighandler_t disp)
   sigset_t set;
   sigset_t oset;
 
-  /* Check signal extents to protect __sigismember.  */
-  if (disp == SIG_ERR || sig < 1 || sig >= NSIG)
-    {
-      __set_errno (EINVAL);
-      return SIG_ERR;
-    }
-
   __sigemptyset (&set);
-  __sigaddset (&set, sig);
+  if (sigaddset (&set, sig) < 0)
+    return SIG_ERR;
 
   if (disp == SIG_HOLD)
     {

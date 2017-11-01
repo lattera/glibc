@@ -21,6 +21,8 @@
 
 #include <signal.h>
 #include <sigsetops.h>
+#include <stdbool.h>
+#include <sysdep.h>
 
 /* The signal used for asynchronous cancelation.  */
 #define SIGCANCEL       __SIGRTMIN
@@ -37,7 +39,7 @@
 
 
 /* Return is sig is used internally.  */
-static inline int
+static inline bool
 __is_internal_signal (int sig)
 {
   return (sig == SIGCANCEL) || (sig == SIGSETXID);

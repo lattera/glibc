@@ -1,43 +1,85 @@
 /* Test sig*set functions.  */
 
 #include <signal.h>
-#include <stdio.h>
 
-#define TEST_FUNCTION do_test ()
+#include <support/check.h>
+
 static int
 do_test (void)
 {
-  int result = 0;
-  int sig = -1;
-
-#define TRY(call)							      \
-  if (call)								      \
-    {									      \
-      printf ("%s (sig = %d): %m\n", #call, sig);			      \
-      result = 1;							      \
-    }									      \
-  else
-
-
   sigset_t set;
-  TRY (sigemptyset (&set) != 0);
+  TEST_VERIFY (sigemptyset (&set) == 0);
 
-#ifdef SIGRTMAX
-  int max_sig = SIGRTMAX;
-#else
-  int max_sig = NSIG - 1;
+#define VERIFY(set, sig)			\
+  TEST_VERIFY (sigismember (&set, sig) == 0);	\
+  TEST_VERIFY (sigaddset (&set, sig) == 0);	\
+  TEST_VERIFY (sigismember (&set, sig) != 0);	\
+  TEST_VERIFY (sigdelset (&set, sig) == 0);	\
+  TEST_VERIFY (sigismember (&set, sig) == 0)
+
+  /* ISO C99 signals.  */
+  VERIFY (set, SIGINT);
+  VERIFY (set, SIGILL);
+  VERIFY (set, SIGABRT);
+  VERIFY (set, SIGFPE);
+  VERIFY (set, SIGSEGV);
+  VERIFY (set, SIGTERM);
+
+  /* Historical signals specified by POSIX. */
+  VERIFY (set, SIGHUP);
+  VERIFY (set, SIGQUIT);
+  VERIFY (set, SIGTRAP);
+  VERIFY (set, SIGKILL);
+  VERIFY (set, SIGBUS);
+  VERIFY (set, SIGSYS);
+  VERIFY (set, SIGPIPE);
+  VERIFY (set, SIGALRM);
+
+  /* New(er) POSIX signals (1003.1-2008, 1003.1-2013).  */
+  VERIFY (set, SIGURG);
+  VERIFY (set, SIGSTOP);
+  VERIFY (set, SIGTSTP);
+  VERIFY (set, SIGCONT);
+  VERIFY (set, SIGCHLD);
+  VERIFY (set, SIGTTIN);
+  VERIFY (set, SIGTTOU);
+  VERIFY (set, SIGPOLL);
+  VERIFY (set, SIGXCPU);
+  VERIFY (set, SIGXFSZ);
+  VERIFY (set, SIGVTALRM);
+  VERIFY (set, SIGPROF);
+  VERIFY (set, SIGUSR1);
+  VERIFY (set, SIGUSR2);
+
+  /* Nonstandard signals found in all modern POSIX systems
+     (including both BSD and Linux).  */
+  VERIFY (set, SIGWINCH);
+
+  /* Arch-specific signals.  */
+#ifdef SIGEMT
+  VERIFY (set, SIGEMT);
+#endif
+#ifdef SIGLOST
+  VERIFY (set, SIGLOST);
+#endif
+#ifdef SIGINFO
+  VERIFY (set, SIGINFO);
+#endif
+#ifdef SIGSTKFLT
+  VERIFY (set, SIGSTKFLT);
+#endif
+#ifdef SIGPWR
+  VERIFY (set, SIGPWR);
 #endif
 
-  for (sig = 1; sig <= max_sig; ++sig)
+  /* Read-time signals (POSIX.1b real-time extensions).  If they are
+     supported SIGRTMAX value is greater than SIGRTMIN.  */
+  for (int rtsig = SIGRTMIN; rtsig <= SIGRTMAX; rtsig++)
     {
-      TRY (sigismember (&set, sig) != 0);
-      TRY (sigaddset (&set, sig) != 0);
-      TRY (sigismember (&set, sig) == 0);
-      TRY (sigdelset (&set, sig) != 0);
-      TRY (sigismember (&set, sig) != 0);
+      VERIFY (set, rtsig);
     }
 
-  return result;
+  return 0;
 }
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

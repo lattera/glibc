@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
+#include <internal-signals.h>
 
 /* Set all signals in SET.  */
 int
@@ -31,14 +32,7 @@ sigfillset (sigset_t *set)
 
   memset (set, 0xff, sizeof (sigset_t));
 
-  /* If the implementation uses a cancellation signal don't set the bit.  */
-#ifdef SIGCANCEL
-  __sigdelset (set, SIGCANCEL);
-#endif
-  /* Likewise for the signal to implement setxid.  */
-#ifdef SIGSETXID
-  __sigdelset (set, SIGSETXID);
-#endif
+  __clear_internal_signals (set);
 
   return 0;
 }

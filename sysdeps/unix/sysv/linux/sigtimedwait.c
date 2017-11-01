@@ -24,21 +24,8 @@ int
 __sigtimedwait (const sigset_t *set, siginfo_t *info,
 		const struct timespec *timeout)
 {
-  sigset_t tmpset;
-  if (set != NULL
-      && (__builtin_expect (__sigismember (set, SIGCANCEL), 0)
-	  || __builtin_expect (__sigismember (set, SIGSETXID), 0)))
-    {
-      /* Create a temporary mask without the bit for SIGCANCEL set.  */
-      // We are not copying more than we have to.
-      memcpy (&tmpset, set, _NSIG / 8);
-      __sigdelset (&tmpset, SIGCANCEL);
-      __sigdelset (&tmpset, SIGSETXID);
-      set = &tmpset;
-    }
-
-    /* XXX The size argument hopefully will have to be changed to the
-       real size of the user-level sigset_t.  */
+  /* XXX The size argument hopefully will have to be changed to the
+     real size of the user-level sigset_t.  */
   int result = SYSCALL_CANCEL (rt_sigtimedwait, set, info, timeout, _NSIG / 8);
 
   /* The kernel generates a SI_TKILL code in si_code in case tkill is
