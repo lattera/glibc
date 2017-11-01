@@ -131,12 +131,84 @@ __BEGIN_DECLS
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 
+#if (__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT16
+# define _Mdouble_		_Float16
+# define __MATH_PRECNAME(name)	name##f16
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
+#if (__HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT32
+# define _Mdouble_		_Float32
+# define __MATH_PRECNAME(name)	name##f32
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
+#if (__HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT64
+# define _Mdouble_		_Float64
+# define __MATH_PRECNAME(name)	name##f64
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
 #if (__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !defined _LIBC)) \
      && __GLIBC_USE (IEC_60559_TYPES_EXT)
 # undef _Mdouble_complex_
 # define _Mdouble_complex_	__CFLOAT128
 # define _Mdouble_		_Float128
 # define __MATH_PRECNAME(name)	name##f128
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
+#if (__HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT32X
+# define _Mdouble_		_Float32x
+# define __MATH_PRECNAME(name)	name##f32x
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
+#if (__HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT64X
+# define _Mdouble_		_Float64x
+# define __MATH_PRECNAME(name)	name##f64x
+# include <bits/cmathcalls.h>
+# undef _Mdouble_
+# undef __MATH_PRECNAME
+# undef _Mdouble_complex_
+#endif
+
+#if (__HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !defined _LIBC)) \
+     && __GLIBC_USE (IEC_60559_TYPES_EXT)
+# undef _Mdouble_complex_
+# define _Mdouble_complex_	__CFLOAT128X
+# define _Mdouble_		_Float128x
+# define __MATH_PRECNAME(name)	name##f128x
 # include <bits/cmathcalls.h>
 # undef _Mdouble_
 # undef __MATH_PRECNAME

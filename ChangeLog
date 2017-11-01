@@ -1,6 +1,21 @@
 2017-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/complex.h
+	[(__HAVE_DISTINCT_FLOAT16 || (__HAVE_FLOAT16 && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Include <bits/cmathcalls.h>
+	with appropriate macros defined and undefined.
+	[(__HAVE_DISTINCT_FLOAT32 || (__HAVE_FLOAT32 && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+	[(__HAVE_DISTINCT_FLOAT64 || (__HAVE_FLOAT64 && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+	[(__HAVE_DISTINCT_FLOAT32X || (__HAVE_FLOAT32X && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+	[(__HAVE_DISTINCT_FLOAT64X || (__HAVE_FLOAT64X && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+	[(__HAVE_DISTINCT_FLOAT128X || (__HAVE_FLOAT128X && !_LIBC))
+	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+
+	* math/complex.h
 	[(__HAVE_DISTINCT_FLOAT128 || (__HAVE_FLOAT128 && !LIBC))
 	&& __GLIBC_USE (IEC_60559_TYPES_EXT)]: Move conditional code after
 	that for long double.  Do not condition define and undefine of
