@@ -1,3 +1,9 @@
+2017-11-02  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22382]
+	* localedata/locales/tpi_PG (LC_TIME): Fix syntax error.
+	* localedata/locales/tpi_PG: Add standard header.
+
 2017-11-02  Florian Weimer  <fweimer@redhat.com>
 
 	test-errno-linux: quotactl can fail with EPERM in containers.
