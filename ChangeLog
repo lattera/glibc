@@ -1,3 +1,10 @@
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22332]
+	* posix/tst-glob-tilde.c (do_noescape): New variable.
+	(one_test): Process it.
+	(do_test): Set do_noescape.  Add unescaping test case.
+
 2017-11-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/complex.h

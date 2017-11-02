@@ -1,4 +1,4 @@
-/* Check for GLOB_TIDLE heap allocation issues (bug 22320, bug 22325).
+/* Check for GLOB_TIDLE heap allocation issues (bugs 22320, 22325, 22332).
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -34,6 +34,9 @@ static int do_nocheck;
 /* Flag which indicates whether to pass the GLOB_MARK flag.  */
 static int do_mark;
 
+/* Flag which indicates whether to pass the GLOB_NOESCAPE flag.  */
+static int do_noescape;
+
 static void
 one_test (const char *prefix, const char *middle, const char *suffix)
 {
@@ -45,6 +48,8 @@ one_test (const char *prefix, const char *middle, const char *suffix)
     flags |= GLOB_NOCHECK;
   if (do_mark)
     flags |= GLOB_MARK;
+  if (do_noescape)
+    flags |= GLOB_NOESCAPE;
   glob_t gl;
   /* This glob call might result in crashes or memory leaks.  */
   if (glob (pattern, flags, NULL, &gl) == 0)
@@ -105,28 +110,30 @@ do_test (void)
   for (do_onlydir = 0; do_onlydir < 2; ++do_onlydir)
     for (do_nocheck = 0; do_nocheck < 2; ++do_nocheck)
       for (do_mark = 0; do_mark < 2; ++do_mark)
-        for (int base_idx = 0; base_sizes[base_idx] >= 0; ++base_idx)
-          {
-            for (int size_skew = -max_size_skew; size_skew <= max_size_skew;
-                 ++size_skew)
-              {
-                int size = base_sizes[base_idx] + size_skew;
-                if (size < 0)
-                  continue;
+	for (do_noescape = 0; do_noescape < 2; ++do_noescape)
+	  for (int base_idx = 0; base_sizes[base_idx] >= 0; ++base_idx)
+	    {
+	      for (int size_skew = -max_size_skew; size_skew <= max_size_skew;
+		   ++size_skew)
+		{
+		  int size = base_sizes[base_idx] + size_skew;
+		  if (size < 0)
+		    continue;
 
-                const char *user_name = repeating_string (size);
-                one_test ("~", user_name, "/a/b");
-              }
+		  const char *user_name = repeating_string (size);
+		  one_test ("~", user_name, "/a/b");
+		  one_test ("~", user_name, "x\\x\\x////x\\a");
+		}
 
-            const char *user_name = repeating_string (base_sizes[base_idx]);
-            one_test ("~", user_name, "");
-            one_test ("~", user_name, "/");
-            one_test ("~", user_name, "/a");
-            one_test ("~", user_name, "/*/*");
-            one_test ("~", user_name, "\\/");
-            one_test ("/~", user_name, "");
-            one_test ("*/~", user_name, "/a/b");
-          }
+	      const char *user_name = repeating_string (base_sizes[base_idx]);
+	      one_test ("~", user_name, "");
+	      one_test ("~", user_name, "/");
+	      one_test ("~", user_name, "/a");
+	      one_test ("~", user_name, "/*/*");
+	      one_test ("~", user_name, "\\/");
+	      one_test ("/~", user_name, "");
+	      one_test ("*/~", user_name, "/a/b");
+	    }
 
   free (repeat);
 
