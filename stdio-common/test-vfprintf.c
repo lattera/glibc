@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <locale.h>
 #include <mcheck.h>
 #include <stdint.h>
@@ -32,8 +33,6 @@ const char *locs[] =
 {
   "C", "de_DE.ISO-8859-1", "de_DE.UTF-8", "ja_JP.EUC-JP"
 };
-#define nlocs (sizeof (locs) / sizeof (locs[0]))
-
 
 char large[50000];
 
@@ -56,7 +55,7 @@ do_test (void)
     }
   unlink (buf);
 
-  for (i = 0; i < nlocs; ++i)
+  for (i = 0; i < array_length (locs); ++i)
     {
       FILE *fp;
       struct stat st;

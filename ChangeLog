@@ -1,5 +1,23 @@
 2017-11-02  Florian Weimer  <fweimer@redhat.com>
 
+	* stdio-common/bug16.c (do_test): Use array_length.
+	* stdio-common/errlist.c (_sys_nerr): Likewise.
+	* stdio-common/printf_fp.c (PRINTF_FP_FETCH): Likewise.
+	* stdio-common/printf_fphex.c (__printf_fphex): Use array_end.
+	* stdio-common/psiginfo.c (psiginfo): Use array_length.
+	* stdio-common/test-vfprintf.c (nlocs): Remove definition.
+	(do_test): Use array_length.
+	* stdio-common/tst-fphex.c (do_test): Use array_end, array_length.
+	* stdio-common/tst-long-dbl-fphex.c (do_test): Use array_length.
+	* stdio-common/tst-printf-round.c (do_test): Likewise.
+	* stdio-common/tst-swprintf.c (nbuf): Remove definition.
+	(CHECK): Use array_length.
+	* stdio-common/tstdiomisc.c (t3, F): Likewise.
+	* stdio-common/tstscanf.c (main): Likewise.
+	* stdio-common/vfprintf.c (process_string_arg): Likewise.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
 	Add array_length and array_end macros.
 	* include/array_length.h: New file.
 

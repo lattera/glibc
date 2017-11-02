@@ -21,6 +21,7 @@
 /* The gmp headers need some configuration frobs.  */
 #define HAVE_ALLOCA 1
 
+#include <array_length.h>
 #include <libioP.h>
 #include <alloca.h>
 #include <ctype.h>
@@ -371,8 +372,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
     else								\
       {									\
 	p.fracsize = __mpn_extract_##SUFFIX				\
-		     (fp_input,						\
-		      (sizeof (fp_input) / sizeof (fp_input[0])),	\
+		     (fp_input, array_length (fp_input),		\
 		      &p.exponent, &is_neg, VAR);			\
 	to_shift = 1 + p.fracsize * BITS_PER_MP_LIMB - MANT_DIG;	\
       }									\

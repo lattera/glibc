@@ -1,3 +1,4 @@
+#include <array_length.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,6 @@ static int
 do_test (void)
 {
   wchar_t buf[1000];
-#define nbuf (sizeof (buf) / sizeof (buf[0]))
   int result = 0;
   ssize_t n;
 
@@ -27,7 +27,7 @@ do_test (void)
     }
 
 #define CHECK(fmt, nexp, exp) \
-  n = swprintf (buf, nbuf, fmt, input);					      \
+  n = swprintf (buf, array_length (buf), fmt, input);			      \
   if (n != nexp)							      \
     {									      \
       printf ("swprintf (.., .., L\"%ls\", \"%ls\") return %d, not %d\n",     \

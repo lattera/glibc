@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #ifdef	BSD
 #include </usr/include/stdio.h>
 #else
@@ -154,7 +155,7 @@ main (int argc, char **argv)
       {
 	int count;
 
-	if (rounds++ >= sizeof (ok) / sizeof (ok[0]))
+	if (rounds++ >= array_length (ok))
 	  {
 	    fputs ("test failed!\n", stdout);
 	    result = 1;

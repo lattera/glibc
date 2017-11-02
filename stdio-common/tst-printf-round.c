@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <fenv.h>
 #include <stdio.h>
 #include <string.h>
@@ -167,7 +168,7 @@ do_test (void)
   int save_round_mode __attribute__ ((unused)) = fegetround ();
   int result = 0;
 
-  for (size_t i = 0; i < sizeof (dec_tests) / sizeof (dec_tests[0]); i++)
+  for (size_t i = 0; i < array_length (dec_tests); i++)
     {
       result |= test_dec_in_one_mode (dec_tests[i].d, dec_tests[i].fmt,
 				      dec_tests[i].rn, "default rounding mode");
@@ -197,7 +198,7 @@ do_test (void)
 #endif
     }
 
-  for (size_t i = 0; i < sizeof (hex_tests) / sizeof (hex_tests[0]); i++)
+  for (size_t i = 0; i < array_length (hex_tests); i++)
     {
       result |= test_hex_in_one_mode (hex_tests[i].d, hex_tests[i].fmt,
 				      hex_tests[i].rn, "default rounding mode");

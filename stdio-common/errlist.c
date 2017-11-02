@@ -15,8 +15,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <stddef.h>
-
 
 const char *const _sys_errlist[] =
   {
@@ -33,4 +33,4 @@ const char *const _sys_errlist[] =
     "Too many open files",	/* 10 = EMFILE */
   };
 
-const int _sys_nerr = sizeof (_sys_errlist) / sizeof (_sys_errlist[0]);
+const int _sys_nerr = array_length (_sys_errlist);

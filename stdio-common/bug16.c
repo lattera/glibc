@@ -1,3 +1,4 @@
+#include <array_length.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -19,7 +20,7 @@ do_test (void)
   char buf[100];
   int ret = 0;
 
-  for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
+  for (size_t i = 0; i < array_length (tests); ++i)
     {
       snprintf (buf, sizeof (buf), "%.0LA", tests[i].val);
 

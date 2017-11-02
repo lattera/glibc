@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <locale.h>
@@ -184,7 +185,7 @@ do_test (void)
 	break;
     }
 
-  for (i = 0; i < sizeof (int_tests) / sizeof (int_tests[0]); ++i)
+  for (i = 0; i < array_length (int_tests); ++i)
     {
       long dummy;
       int ret;
@@ -198,7 +199,7 @@ do_test (void)
 	}
     }
 
-  for (i = 0; i < sizeof (double_tests) / sizeof (double_tests[0]); ++i)
+  for (i = 0; i < array_length (double_tests); ++i)
     {
       double dummy;
       int ret;
@@ -212,7 +213,7 @@ do_test (void)
 	}
     }
 
-  for (i = 0; i < sizeof (double_tests2) / sizeof (double_tests2[0]); ++i)
+  for (i = 0; i < array_length (double_tests2); ++i)
     {
       double dummy;
       int ret;

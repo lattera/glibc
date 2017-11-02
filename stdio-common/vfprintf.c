@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <ctype.h>
 #include <limits.h>
 #include <printf.h>
@@ -995,11 +996,10 @@ static const uint8_t jump_table[] =
 	if (string == NULL)						      \
 	  {								      \
 	    /* Write "(null)" if there's space.  */			      \
-	    if (prec == -1						      \
-		|| prec >= (int) (sizeof (null) / sizeof (null[0])) - 1)      \
+	    if (prec == -1 || prec >= (int) array_length (null) - 1)          \
 	      {								      \
 		string = (CHAR_T *) null;				      \
-		len = (sizeof (null) / sizeof (null[0])) - 1;		      \
+		len = array_length (null) - 1;				      \
 	      }								      \
 	    else							      \
 	      {								      \

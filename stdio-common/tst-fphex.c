@@ -1,5 +1,6 @@
 /* Test program for %a printf formats.  */
 
+#include <array_length.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -49,12 +50,10 @@ do_test (void)
   const struct testcase *t;
   int result = 0;
 
-  for (t = testcases;
-       t < &testcases[sizeof testcases / sizeof testcases[0]];
-       ++t)
+  for (t = testcases; t < array_end (testcases); ++t)
     {
       CHAR_T buf[1024];
-      int n = SPRINT (buf, sizeof buf / sizeof (buf[0]), t->fmt, t->value);
+      int n = SPRINT (buf, array_length (buf), t->fmt, t->value);
       if (n != STR_LEN (t->expect) || STR_CMP (buf, t->expect) != 0)
 	{
 	  PRINT (L_("" S "\tExpected \"" S "\" (%Zu)\n\tGot      \""
