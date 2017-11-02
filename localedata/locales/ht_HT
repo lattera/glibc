@@ -66,75 +66,70 @@ END LC_COLLATE
 
 LC_TIME
 % janvye, fevriye, mas, avril, me, jen, jiyè, out, septanm, oktòb, novanm, desanm
-mon           "<U006A><U0061><U006E><U0076><U0079><U0065>";/
-     "<U0066><U0065><U0076><U0072><U0069><U0079><U0065>";/
-     "<U006D><U0061><U0073>";/
-     "<U0061><U0076><U0072><U0069><U006C>";/
-     "<U006D><U0065>";/
-     "<U006A><U0065><U006E>";/
-     "<U006A><U0069><U0079><U00E8>";/
-     "<U006F><U0075><U0074>";/
-     "<U0073><U0065><U0070><U0074><U0061><U006E><U006D>";/
-     "<U006F><U006B><U0074><U00F2><U0062>";/
-     "<U006E><U006F><U0076><U0061><U006E><U006D>";/
-     "<U0064><U0065><U0073><U0061><U006E><U006D>"
+mon           "janvye";/
+     "fevriye";/
+     "mas";/
+     "avril";/
+     "me";/
+     "jen";/
+     "jiy<U00E8>";/
+     "out";/
+     "septanm";/
+     "okt<U00F2>b";/
+     "novanm";/
+     "desanm"
 % jan, fev, mas, avr, me, jen, jiy, out, sep, okt, nov, des
-abmon         "<U006A><U0061><U006E>";/
-       "<U0066><U0065><U0076>";/
-       "<U006D><U0061><U0073>";/
-       "<U0061><U0076><U0072>";/
-       "<U006D><U0065>";/
-       "<U006A><U0065><U006E>";/
-       "<U006A><U0069><U0079>";/
-       "<U006F><U0075><U0074>";/
-       "<U0073><U0065><U0070>";/
-       "<U006F><U006B><U0074>";/
-       "<U006E><U006F><U0076>";/
-       "<U0064><U0065><U0073>"
+abmon         "jan";/
+       "fev";/
+       "mas";/
+       "avr";/
+       "me";/
+       "jen";/
+       "jiy";/
+       "out";/
+       "sep";/
+       "okt";/
+       "nov";/
+       "des"
 % dimanch, lendi, madi, mèkredi, jedi, vandredi, samdi
-day           "<U0064><U0069><U006D><U0061><U006E><U0063><U0068>";/
-     "<U006C><U0065><U006E><U0064><U0069>";/
-     "<U006D><U0061><U0064><U0069>";/
-     "<U006D><U00E8><U006B><U0072><U0065><U0064><U0069>";/
-     "<U006A><U0065><U0064><U0069>";/
-     "<U0076><U0061><U006E><U0064><U0072><U0065><U0064><U0069>";/
-     "<U0073><U0061><U006D><U0064><U0069>"
+day           "dimanch";/
+     "lendi";/
+     "madi";/
+     "m<U00E8>kredi";/
+     "jedi";/
+     "vandredi";/
+     "samdi"
 % dim, len, mad, mèk, jed, van, sam
-abday         "<U0064><U0069><U006D>";/
-       "<U006C><U0065><U006E>";/
-       "<U006D><U0061><U0064>";/
-       "<U006D><U00E8><U006B>";/
-       "<U006A><U0065><U0064>";/
-       "<U0076><U0061><U006E>";/
-       "<U0073><U0061><U006D>"
+abday         "dim";/
+       "len";/
+       "mad";/
+       "m<U00E8>k";/
+       "jed";/
+       "van";/
+       "sam"
 week 7;19971130;1
 first_weekday 2
-% %a %d %b %Y %T %Z
-d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-% %d/%m/%Y
-d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-% %T
-t_fmt         "<U0025><U0054>"
+d_t_fmt       "%a %d %b %Y %T %Z"
+d_fmt         "%d//%m//%Y"
+t_fmt         "%T"
 am_pm         "";""
 t_fmt_ampm    ""
 END LC_TIME
 
 LC_NUMERIC
-% ,
-decimal_point "<U002C>"
-%
+decimal_point ","
 thousands_sep "<U202F>"
 grouping      3
 END LC_NUMERIC
 
 LC_MONETARY
-int_curr_symbol           "<U0048><U0054><U0047><U0020>"
-currency_symbol           "<U0067>"
-mon_decimal_point         "<U002C>"
+int_curr_symbol           "HTG "
+currency_symbol           "g"
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -161,46 +156,29 @@ nostr   "Non"
 END LC_MESSAGES
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0052><U0025>/
-<U004E><U0025><U0025><U005A><U0020><U0025><U0074><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-% Ayiti
-country_name "<U0041><U0079><U0069><U0074><U0069>"
-% HT
-country_post "<U0048><U0054>"
-% HT
-country_ab2  "<U0048><U0054>"
-% HTI
-country_ab3  "<U0048><U0054><U0049>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %R%N%%Z %t%N%c%N"
+country_name "Ayiti"
+country_post "HT"
+country_ab2  "HT"
+country_ab3  "HTI"
 country_num  332
 country_isbn 99935
-% RH
-country_car  "<U0052><U0048>"
+country_car  "RH"
 %
 % Kreyòl ayisyen
-lang_name    "<U004B><U0072><U0065><U0079><U00F2><U006C><U0020><U0061><U0079><U0069><U0073><U0079><U0065><U006E>"
-% ht
-lang_ab      "<U0068><U0074>"
-% hat
-lang_term    "<U0068><U0061><U0074>"
-% hat
-lang_lib    "<U0068><U0061><U0074>"
+lang_name    "Krey<U00F2>l ayisyen"
+lang_ab      "ht"
+lang_term    "hat"
+lang_lib    "hat"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% +%c %a %l
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-% %a %l
-tel_dom_fmt "<U0025><U0061><U0020><U0025><U006C>"
-% 00
-int_select  "<U0030><U0030>"
-% 509
-int_prefix  "<U0035><U0030><U0039>"
+tel_int_fmt "+%c %a %l"
+tel_dom_fmt "%a %l"
+int_select  "00"
+int_prefix  "509"
 END LC_TELEPHONE

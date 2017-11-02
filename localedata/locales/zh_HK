@@ -55,13 +55,13 @@ LC_MONETARY
 % These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol       "<U0048><U004B><U0044><U0020>"
-currency_symbol       "<U0048><U004B><U0024>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
+int_curr_symbol       "HKD "
+currency_symbol       "HK$"
+mon_decimal_point     "."
+mon_thousands_sep     ","
 mon_grouping          3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       2
 frac_digits           2
 p_cs_precedes         1
@@ -77,8 +77,8 @@ END LC_MONETARY
 LC_NUMERIC
 % This is the POSIX Locale definition for the LC_NUMERIC  category.
 %
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
+decimal_point          "."
+thousands_sep          ","
 grouping               3
 %
 END LC_NUMERIC
@@ -104,12 +104,12 @@ day         "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
             "<U661F><U671F><U516D>"
 %
 % Abbreviated month names (%b)
-abmon       "<U0031><U6708>";"<U0032><U6708>";/
-            "<U0033><U6708>";"<U0034><U6708>";/
-            "<U0035><U6708>";"<U0036><U6708>";/
-            "<U0037><U6708>";"<U0038><U6708>";/
-            "<U0039><U6708>";"<U0031><U0030><U6708>";/
-            "<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+abmon       "1<U6708>";"2<U6708>";/
+            "3<U6708>";"4<U6708>";/
+            "5<U6708>";"6<U6708>";/
+            "7<U6708>";"8<U6708>";/
+            "9<U6708>";"10<U6708>";/
+            "11<U6708>";"12<U6708>"
 %
 % Full month names (%B)
 mon         "<U4E00><U6708>";"<U4E8C><U6708>";/
@@ -125,25 +125,20 @@ am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
 % Appropriate date and time representation
 % Update by Roger So <roger.so@sw-linux.com>
 % Changed %b to %m, by Anthony Fok <anthony@thizlinux.com>, Feb 2002
-d_t_fmt     "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5>/
-<U0020><U0025><U0041><U0020><U0025><U0048><U003A><U0025><U004D>/
-<U003A><U0025><U0053>"
+d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %A %H:%M:%S"
 %
 % Appropriate date representation
 % Changed %b to %m, by Anthony Fok <anthony@thizlinux.com>, Feb 2002
 % %Y年%m月%d日 %A
-d_fmt       "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064>/
-<U65E5><U0020><U0025><U0041>"
+d_fmt       "%Y<U5E74>%m<U6708>%d<U65E5> %A"
 %
 % Appropriate time representation
 % %I時%M分%S秒 %Z
-t_fmt       "<U0025><U0049><U6642><U0025><U004D><U5206><U0025><U0053>/
-<U79D2><U0020><U0025><U005A>"
+t_fmt       "%I<U6642>%M<U5206>%S<U79D2> %Z"
 %
 % Appropriate 12 h time representation (%r)
 % Update by Roger So <roger.so@sw-linux.com>
-t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U003A><U0025><U004D>/
-<U003A><U0025><U0053>"
+t_fmt_ampm  "%p %I:%M:%S"
 week 7;19971130;1
 END LC_TIME
 
@@ -165,10 +160,10 @@ LC_NAME
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_NAME category.
 %
-name_fmt    "<U0025><U0066><U0025><U0074><U0025><U0064><U0031>"
+name_fmt    "%f%t%d1"
 name_gen    "<U541B>"
 name_mr     "<U5148><U751F>"
-name_mrs    "<U592B><U4EBA><U002E>"
+name_mrs    "<U592B><U4EBA>."
 name_miss   "<U5C0F><U59D0>"
 name_ms     "<U5973><U58EB>"
 
@@ -178,25 +173,23 @@ END LC_NAME
 LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_ab2 "<U0048><U004B>"
-country_ab3 "<U0048><U004B><U0047>"
+postal_fmt  "%z%c%T%s%b%e%r"
+country_ab2 "HK"
+country_ab3 "HKG"
 country_num 344
-country_car "<U0048><U004B>"
-lang_ab		"<U007A><U0068>"
-lang_term	"<U007A><U0068><U006F>"
-lang_lib	"<U0063><U0068><U0069>"
+country_car "HK"
+lang_ab		"zh"
+lang_term	"zho"
+lang_lib	"chi"
 END LC_ADDRESS
 
 
 LC_TELEPHONE
 % This is the ISO_IEC TR14652 Locale definition for the
 %
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix  "<U0038><U0035><U0032>"
-int_select  "<U0030><U0030><U0031>"
+tel_int_fmt "+%c ;%a ;%l"
+int_prefix  "852"
+int_select  "001"
 END LC_TELEPHONE
 
 

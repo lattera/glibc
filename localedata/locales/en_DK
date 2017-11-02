@@ -63,13 +63,13 @@ copy "en_GB"
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol      "<U0044><U004B><U004B><U0020>"
-currency_symbol      "<U006B><U0072><U002E>"
-mon_decimal_point    "<U002C>"
-mon_thousands_sep    "<U002E>"
+int_curr_symbol      "DKK "
+currency_symbol      "kr."
+mon_decimal_point    ","
+mon_thousands_sep    "."
 mon_grouping         3;3
 positive_sign        ""
-negative_sign        "<U002D>"
+negative_sign        "-"
 int_frac_digits      2
 frac_digits          2
 p_cs_precedes        1
@@ -81,45 +81,42 @@ n_sign_posn          1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point        "<U002C>"
-thousands_sep        "<U002E>"
+decimal_point        ","
+thousands_sep        "."
 grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
-abday    "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";/
-	 "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";/
-	 "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";/
-	 "<U0053><U0061><U0074>"
-day      "<U0053><U0075><U006E><U0064><U0061><U0079>";/
-	 "<U004D><U006F><U006E><U0064><U0061><U0079>";/
-	 "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";/
-	 "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";/
-	 "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";/
-	 "<U0046><U0072><U0069><U0064><U0061><U0079>";/
-	 "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
-abmon    "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-	 "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-	 "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
-	 "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-	 "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
-	 "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
-mon      "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
-	 "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
-	 "<U004D><U0061><U0072><U0063><U0068>";/
-	 "<U0041><U0070><U0072><U0069><U006C>";/
-	 "<U004D><U0061><U0079>";/
-	 "<U004A><U0075><U006E><U0065>";/
-	 "<U004A><U0075><U006C><U0079>";/
-	 "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-	 "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-	 "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
-	 "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-	 "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+abday    "Sun";"Mon";"Tue";"Wed";"Thu";"Fri";"Sat"
+day      "Sunday";/
+	 "Monday";/
+	 "Tuesday";/
+	 "Wednesday";/
+	 "Thursday";/
+	 "Friday";/
+	 "Saturday"
+abmon    "Jan";"Feb";/
+	 "Mar";"Apr";/
+	 "May";"Jun";/
+	 "Jul";"Aug";/
+	 "Sep";"Oct";/
+	 "Nov";"Dec"
+mon      "January";/
+	 "February";/
+	 "March";/
+	 "April";/
+	 "May";/
+	 "June";/
+	 "July";/
+	 "August";/
+	 "September";/
+	 "October";/
+	 "November";/
+	 "December"
 % date formats following ISO 8601-1988
-d_t_fmt  "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064><U0054><U0025><U0054><U0020><U0025><U005A>"
-d_fmt    "<U0025><U0059><U002D><U0025><U006D><U002D><U0025><U0064>"
-t_fmt    "<U0025><U0054>"
+d_t_fmt  "%Y-%m-%dT%T %Z"
+d_fmt    "%Y-%m-%d"
+t_fmt    "%T"
 am_pm    "";""
 t_fmt_ampm  ""
 week    7;19971130;4
@@ -155,28 +152,18 @@ copy "da_DK"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0044><U0065><U006E><U006D><U0061><U0072><U006B>"
-country_ab2 "<U0044><U004B>"
-country_ab3 "<U0044><U004E><U004B>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Denmark"
+country_ab2 "DK"
+country_ab3 "DNK"
 country_num 208
-% DK
-country_car    "<U0044><U004B>"
-% English
-lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
-% en
-lang_ab      "<U0065><U006E>"
-% eng
-lang_term    "<U0065><U006E><U0067>"
-% eng
-lang_lib    "<U0065><U006E><U0067>"
+country_car    "DK"
+lang_name     "English"
+lang_ab      "en"
+lang_term    "eng"
+lang_lib    "eng"
 END LC_ADDRESS

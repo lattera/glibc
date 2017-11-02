@@ -69,16 +69,16 @@ END LC_COLLATE
 
 LC_MONETARY
 % MMK
-int_curr_symbol     "<U004D><U004D><U004B><U0020>"
+int_curr_symbol     "MMK "
 % Kyat in Burmese - it would be better to use this if Myanmar digits are used
 % currency_symbol         "<U1000><U103B><U1015><U103A>"
 % Ks
-currency_symbol "<U004B>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
+currency_symbol "K"
+mon_decimal_point     "."
+mon_thousands_sep     ","
 mon_grouping          3;3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       2
 frac_digits           2
 p_cs_precedes         0
@@ -96,8 +96,8 @@ LC_NUMERIC
 % These are generated based on XML base Locale defintion file
 % for IBM Class for Unicode.
 %
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
+decimal_point          "."
+thousands_sep          ","
 grouping               3;3
 %
 END LC_NUMERIC
@@ -155,15 +155,11 @@ mon         "<U1007><U1014><U103A><U1014><U101D><U102B><U101B><U102E>";/
 	    "<U1012><U102E><U1007><U1004><U103A><U1018><U102C>"
 
 am_pm       "<U1014><U1036><U1014><U1000><U103A>";"<U100A><U1014><U1031>"
-% %OC%Oy %b %Od %A %OI:%OM:%OS %Op %Z
-d_t_fmt     "<U0025><U004F><U0043><U0025><U004F><U0079><U0020><U0025><U0062><U0020><U0025><U004F><U0064><U0020><U0025><U0041><U0020><U0025><U004F><U0049><U003A><U0025><U004F><U004D><U003A><U0025><U004F><U0053><U0020><U0025><U004F><U0070><U0020><U0025><U005A>"
+d_t_fmt     "%OC%Oy %b %Od %A %OI:%OM:%OS %Op %Z"
 % Note: the use of %OC requires a patch to strftime_l.h
-% %OC%Oy %b %Od %A
-d_fmt       "<U0025><U004F><U0043><U0025><U004F><U0079><U0020><U0025><U0062><U0020><U0025><U004F><U0064><U0020><U0025><U0041>"
-% %OH:%OM:%OS %p
-t_fmt       "<U0025><U004F><U0049><U003A><U0025><U004F><U004D><U003A><U0025><U004F><U0053><U0020><U0025><U0070>"
-% %OI:%OM:%OS %p
-t_fmt_ampm  "<U0025><U004F><U0049><U003A><U0025><U004F><U004D><U003A><U0025><U004F><U0053><U0020><U0025><U0070>"
+d_fmt       "%OC%Oy %b %Od %A"
+t_fmt       "%OI:%OM:%OS %p"
+t_fmt_ampm  "%OI:%OM:%OS %p"
 
 alt_digits  "<U1040><U1040>";/
 		"<U1040><U1041>";/
@@ -287,18 +283,15 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-% +%c %a %l
-tel_int_fmt   "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-% %a %l
-tel_dom_fmt   "<U0025><U0061><U0020><U0025><U006C>"
-int_select    "<U0030>"
-int_prefix    "<U0039><U0035>"
+tel_int_fmt   "+%c %a %l"
+tel_dom_fmt   "%a %l"
+int_select    "0"
+int_prefix    "95"
 END LC_TELEPHONE
 
 LC_NAME
 %			[profession] Given_Name [middle_name] Family_Name
-% %p%t%g%t%m%t%f
-name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%p%t%g%t%m%t%f"
 name_gen	""
 % name_gen	"<U1026><U1038>"
 name_mr	"<U1026><U1038>"
@@ -309,16 +302,14 @@ name_miss   "<U1019>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt   "<U0025><U0061><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074><U0025><U0072><U0025><U0074><U0025><U0065><U0025><U0074><U0025><U0073><U0025><U004E><U0025><U0054><U0025><U0074><U0025><U007A><U0025><U004E><U0025><U0063><U0025><U004E>"
+postal_fmt   "%a%N%d%N%f%N%b%N%h%t%r%t%e%t%s%N%T%t%z%N%c%N"
 country_name   "<U1019><U103C><U1014><U103A><U1019><U102C>"
-country_post    "<U004D><U0079><U0061><U006E><U006D><U0061><U0072>"
-country_ab2     "<U004D><U004D>"
+country_post    "Myanmar"
+country_ab2     "MM"
 country_num 104
-country_car "<U004D><U0059><U0041>"
-lang_ab         "<U006D><U0079>"
+country_car "MYA"
+lang_ab         "my"
 lang_name       "<U1017><U1019><U102C>"
-% mya
-lang_term   "<U006D><U0079><U0061>"
-% bur
-lang_lib    "<U0062><U0075><U0072>"
+lang_term   "mya"
+lang_lib    "bur"
 END LC_ADDRESS

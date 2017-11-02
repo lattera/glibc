@@ -81,27 +81,24 @@ mon "<U0458><U0430><U043D><U0443><U0430><U0440><U0438>";/
 "<U043E><U043A><U0442><U043E><U043C><U0432><U0440><U0438>";/
 "<U043D><U043E><U0435><U043C><U0432><U0440><U0438>";/
 "<U0434><U0435><U043A><U0435><U043C><U0432><U0440><U0438>"
-d_t_fmt "<U0025><U0061><U002C><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt   "<U0025><U0054>"
+d_t_fmt "%a, %d %b %Y %T %Z"
+d_fmt   "%d.%m.%Y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
-date_fmt "<U0025><U0061><U002C><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+date_fmt "%a, %d %b %H:%M:%S %Z %Y"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
 
 LC_MONETARY
-int_curr_symbol           "<U004D><U004B><U0044><U0020>"
+int_curr_symbol           "MKD "
 currency_symbol           "<U0434><U0435><U043D>"
-mon_decimal_point         "<U002C>"
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -113,7 +110,7 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
+decimal_point             ","
 thousands_sep             "<U202F>"
 grouping                  3;3
 END LC_NUMERIC
@@ -126,40 +123,35 @@ nostr   "<U043D><U0435>"
 END LC_MESSAGES
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
-<U0025><U006C>"
-tel_dom_fmt     "<U0025><U0041><U0020><U0025><U006C>"
-int_prefix      "<U0033><U0038><U0039>"
-int_select      "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt     "%A %l"
+int_prefix      "389"
+int_select      "00"
 END LC_TELEPHONE
 
 LC_NAME
-name_fmt  "<U0025><U0067><U0025><U0074><U0025><U0066>"
-name_mr   "<U0433><U002D><U0434><U0438><U043D>"
-name_mrs  "<U0433><U002d><U0453><U0430>"
-name_miss "<U0433><U002d><U0453><U0438><U0446><U0430>"
-name_ms   "<U0433><U002d><U0453><U0430>"
+name_fmt  "%g%t%f"
+name_mr   "<U0433>-<U0434><U0438><U043D>"
+name_mrs  "<U0433>-<U0453><U0430>"
+name_miss "<U0433>-<U0453><U0438><U0446><U0430>"
+name_ms   "<U0433>-<U0453><U0430>"
 name_gen  "<U043f><U043e><U0447><U0438><U0442><U0443><U0432><U0430><U043d>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 country_name "<U041C><U0430><U043A><U0435><U0434><U043E><U043D><U0438><U0458><U0430>"
-country_post  "<U004d><U004b>"
-country_ab2 "<U004d><U004b>"
-country_ab3 "<U004d><U004b><U0044>"
-country_car "<U004d><U004b>"
+country_post  "MK"
+country_ab2 "MK"
+country_ab3 "MKD"
+country_car "MK"
 country_num 807
 country_isbn "9989"
 % македонски јазик
 lang_name    "<U043C><U0430><U043A><U0435><U0434><U043E><U043D><U0441><U043A><U0438>"
-lang_ab "<U006d><U006b>"
-lang_term "<U006d><U006b><U0064>"
-lang_lib "<U006d><U0061><U0063>"
+lang_ab "mk"
+lang_term "mkd"
+lang_lib "mac"
 END LC_ADDRESS
 
 LC_PAPER

@@ -88,13 +88,13 @@ END LC_MESSAGES
 
 LC_MONETARY
 
-int_curr_symbol		"<U0045><U0055><U0052><U0020>"
+int_curr_symbol		"EUR "
 currency_symbol		"<U20AC>"
-mon_decimal_point	"<U002C>"
+mon_decimal_point	","
 mon_thousands_sep	"<U202F>"
 mon_grouping      	3;3
 positive_sign		""
-negative_sign		"<U002D>"
+negative_sign		"-"
 int_frac_digits		2
 frac_digits		2
 p_cs_precedes		0
@@ -111,7 +111,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point		"<U002C>"
+decimal_point		","
 thousands_sep		"<U202F>"
 grouping		3;3
 
@@ -122,57 +122,57 @@ END LC_NUMERIC
 LC_TIME
 
 
-abday		"<U004E><U0065>";/
-		"<U0050><U006F>";/
-		"<U0055><U0074>";/
-		"<U0053><U0074>";/
-		"<U0160><U0074>";/
-		"<U0050><U0069>";/
-		"<U0053><U006F>"
+abday		"Ne";/
+		"Po";/
+		"Ut";/
+		"St";/
+		"<U0160>t";/
+		"Pi";/
+		"So"
 
-day		"<U004E><U0065><U0064><U0065><U013E><U0061>";/
-		"<U0050><U006F><U006E><U0064><U0065><U006C><U006F><U006B>";/
-		"<U0055><U0074><U006F><U0072><U006F><U006B>";/
-		"<U0053><U0074><U0072><U0065><U0064><U0061>";/
-		"<U0160><U0074><U0076><U0072><U0074><U006F><U006B>";/
-		"<U0050><U0069><U0061><U0074><U006F><U006B>";/
-		"<U0053><U006F><U0062><U006F><U0074><U0061>"
+day		"Nede<U013E>a";/
+		"Pondelok";/
+		"Utorok";/
+		"Streda";/
+		"<U0160>tvrtok";/
+		"Piatok";/
+		"Sobota"
 
-mon		"<U006A><U0061><U006E><U0075><U00E1><U0072>";/
-		"<U0066><U0065><U0062><U0072><U0075><U00E1><U0072>";/
-		"<U006D><U0061><U0072><U0065><U0063>";/
-		"<U0061><U0070><U0072><U00ED><U006C>";/
-		"<U006D><U00E1><U006A>";/
-		"<U006A><U00FA><U006E>";/
-		"<U006A><U00FA><U006C>";/
-		"<U0061><U0075><U0067><U0075><U0073><U0074>";/
-		"<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-		"<U006F><U006B><U0074><U00F3><U0062><U0065><U0072>";/
-		"<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-		"<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+mon		"janu<U00E1>r";/
+		"febru<U00E1>r";/
+		"marec";/
+		"apr<U00ED>l";/
+		"m<U00E1>j";/
+		"j<U00FA>n";/
+		"j<U00FA>l";/
+		"august";/
+		"september";/
+		"okt<U00F3>ber";/
+		"november";/
+		"december"
 
 % Hm - máme zaužívané skratky pre mesiace ?
 
-abmon		"<U006A><U0061><U006E>";/
-		"<U0066><U0065><U0062>";/
-		"<U006D><U0061><U0072>";/
-		"<U0061><U0070><U0072>";/
-		"<U006D><U00E1><U006A>";/
-		"<U006A><U00FA><U006E>";/
-		"<U006A><U00FA><U006C>";/
-		"<U0061><U0075><U0067>";/
-		"<U0073><U0065><U0070>";/
-		"<U006F><U006B><U0074>";/
-		"<U006E><U006F><U0076>";/
-		"<U0064><U0065><U0063>"
+abmon		"jan";/
+		"feb";/
+		"mar";/
+		"apr";/
+		"m<U00E1>j";/
+		"j<U00FA>n";/
+		"j<U00FA>l";/
+		"aug";/
+		"sep";/
+		"okt";/
+		"nov";/
+		"dec"
 
-d_t_fmt		"<U0025><U0061><U00A0><U0025><U0065><U002E><U00A0><U0025><U0042><U00A0><U0025><U0059><U002C><U00A0><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U00A0><U0025><U005A>"
+d_t_fmt		"%a<U00A0>%e.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
 
-d_fmt 		"<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
+d_fmt 		"%d.%m.%Y"
 
-t_fmt		"<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt		"%H:%M:%S"
 
-t_fmt_ampm	"<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt_ampm	"%I:%M:%S"
 
 am_pm   	"";""
 
@@ -189,10 +189,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0034><U0032><U0031>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "421"
+int_select     "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -200,27 +199,18 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0053><U006C><U006F><U0076><U0065><U006E><U0073><U006B><U006F>"
-country_ab2 "<U0053><U004B>"
-country_ab3 "<U0053><U0056><U004B>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Slovensko"
+country_ab2 "SK"
+country_ab3 "SVK"
 country_num 703
-% SK
-country_car    "<U0053><U004B>"
-lang_name   "<U0073><U006C><U006F><U0076><U0065><U006E><U010D><U0069><U006E><U0061>"
-% sk
-lang_ab      "<U0073><U006B>"
-% slk
-lang_term    "<U0073><U006C><U006B>"
-% slo
-lang_lib    "<U0073><U006C><U006F>"
+country_car    "SK"
+lang_name   "sloven<U010D>ina"
+lang_ab      "sk"
+lang_term    "slk"
+lang_lib    "slo"
 END LC_ADDRESS

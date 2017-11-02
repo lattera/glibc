@@ -47,71 +47,62 @@ END LC_COLLATE
 
 LC_TIME
 % Full month names
-% Ianuari, Fepuari, Mati, Aperila, Me, Iuni, Iulai, Auguso, Setema,
-% Oketopa, Novema, Tesema
 % http://samoan.manuatele.net/times.html
-mon	"<U0049><U0061><U006E><U0075><U0061><U0072><U0069>";/
-	"<U0046><U0065><U0070><U0075><U0061><U0072><U0069>";/
-	"<U004D><U0061><U0074><U0069>";/
-	"<U0041><U0070><U0065><U0072><U0069><U006C><U0061>";/
-	"<U004D><U0065>";/
-	"<U0049><U0075><U006E><U0069>";/
-	"<U0049><U0075><U006C><U0061><U0069>";/
-	"<U0041><U0075><U0067><U0075><U0073><U006F>";/
-	"<U0053><U0065><U0074><U0065><U006D><U0061>";/
-	"<U004F><U006B><U0065><U0074><U006F><U0070><U0061>";/
-	"<U004E><U006F><U0076><U0065><U006D><U0061>";/
-	"<U0054><U0065><U0073><U0065><U006D><U0061>"
+mon	"Ianuari";/
+	"Fepuari";/
+	"Mati";/
+	"Aperila";/
+	"Me";/
+	"Iuni";/
+	"Iulai";/
+	"Auguso";/
+	"Setema";/
+	"Oketopa";/
+	"Novema";/
+	"Tesema"
 
 % Abbreviated month names
-% Ian, Fep, Mat, Ape, Me, Iun, Iul, Aug, Set, Oke, Nov, Tes
-abmon	"<U0049><U0061><U006E>";/
-        "<U0046><U0065><U0070>";/
-        "<U004D><U0061><U0074>";/
-        "<U0041><U0070><U0065>";/
-        "<U004D><U0065>";/
-        "<U0049><U0075><U006E>";/
-        "<U0049><U0075><U006C>";/
-        "<U0041><U0075><U0067>";/
-        "<U0053><U0065><U0074>";/
-        "<U004F><U006B><U0065>";/
-        "<U004E><U006F><U0076>";/
-        "<U0054><U0065><U0073>"
+abmon	"Ian";/
+        "Fep";/
+        "Mat";/
+        "Ape";/
+        "Me";/
+        "Iun";/
+        "Iul";/
+        "Aug";/
+        "Set";/
+        "Oke";/
+        "Nov";/
+        "Tes"
 %
 % Full Weekday names
 % http://samoan.manuatele.net/times.html
-% Aso Sa, Aso Gafua, Aso Lua, Aso Lulu, Aso Tofi, Aso Faraile, Aso To'ana'i
-day	"<U0041><U0073><U006F><U0020><U0053><U0061>";/
-	"<U0041><U0073><U006F><U0020><U0047><U0061><U0066><U0075><U0061>";/
-	"<U0041><U0073><U006F><U0020><U004C><U0075><U0061>";/
-	"<U0041><U0073><U006F><U0020><U004C><U0075><U006C><U0075>";/
-	"<U0041><U0073><U006F><U0020><U0054><U006F><U0066><U0069>";/
-	"<U0041><U0073><U006F><U0020><U0046><U0061><U0072><U0061><U0069><U006C>";/
-	"<U0041><U0073><U006F><U0020><U0054><U006F><U0027><U0061><U006E><U0061><U0027><U0069>"
+day	"Aso Sa";/
+	"Aso Gafua";/
+	"Aso Lua";/
+	"Aso Lulu";/
+	"Aso Tofi";/
+	"Aso Farail";/
+	"Aso To'ana'i"
 %
 % Abbreviated Weekday names
-% Aso Sa, Aso Gaf, Aso Lua, Aso Lul, Aso Tof, Aso Far, Aso To'
-abday	"<U0041><U0073><U006F><U0020><U0053><U0061>";/
-        "<U0041><U0073><U006F><U0020><U0047><U0061><U0066>";/
-        "<U0041><U0073><U006F><U0020><U004C><U0075><U0061>";/
-        "<U0041><U0073><U006F><U0020><U004C><U0075><U006C>";/
-        "<U0041><U0073><U006F><U0020><U0054><U006F><U0066>";/
-        "<U0041><U0073><U006F><U0020><U0046><U0061><U0072>";/
-        "<U0041><U0073><U006F><U0020><U0054><U006F><U0027>"
+abday	"Aso Sa";/
+        "Aso Gaf";/
+        "Aso Lua";/
+        "Aso Lul";/
+        "Aso Tof";/
+        "Aso Far";/
+        "Aso To'"
 %
 % Appropriate date and time representation
-% %a %d %b %Y %T %Z
-d_t_fmt	"<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
-<U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt	"%a %d %b %Y %T %Z"
 %
 % Appropriate date representation
 % https://en.wikipedia.org/wiki/Date_and_time_notation_in_Australia
-% %d/%m/%Y
-d_fmt	"<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt	"%d//%m//%Y"
 %
 % Appropriate time representation
-% %r
-t_fmt	"<U0025><U0072>"
+t_fmt	"%r"
 %
 % am_pm and t_fmt_ampm - should be empty if using 24 hour time
 am_pm	"";""
@@ -119,25 +110,21 @@ t_fmt_ampm    ""
 END LC_TIME
 %
 LC_NUMERIC
-% .
-decimal_point "<U002E>"
-% ,
-thousands_sep "<U002C>"
+decimal_point "."
+thousands_sep ","
 grouping      3
 END LC_NUMERIC
 
 LC_MONETARY
 % https://en.wikipedia.org/wiki/ISO_4217
-% WST
-int_curr_symbol	"<U0057><U0053><U0054><U0020>"
+int_curr_symbol	"WST "
 % https://en.wikipedia.org/wiki/Samoan_t%C4%81l%C4%81
-% WS$
-currency_symbol		"<U0057><U0053><U0024>"
-mon_decimal_point	"<U002E>"
-mon_thousands_sep	"<U002C>"
+currency_symbol		"WS$"
+mon_decimal_point	"."
+mon_thousands_sep	","
 mon_grouping		3
 positive_sign		""
-negative_sign		"<U002D>"
+negative_sign		"-"
 int_frac_digits		2
 frac_digits		2
 p_cs_precedes		1
@@ -171,45 +158,29 @@ copy "en_US"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
-<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-% Samoa
-country_name "<U0053><U0061><U006D><U006F><U0061>"
-% %a %N   %f %N   %d %N   %b %N   %h %s %e %r %N   %T, %c  %N
-country_post "<U0025><U0061><U0020><U0025><U004E><U0020><U0020><U0020><U0025>/
-<U0066><U0020><U0025><U004E><U0020><U0020><U0020><U0025><U0064><U0020><U0025>/
-<U004E><U0020><U0020><U0020><U0025><U0062><U0020><U0025><U004E><U0020><U0020>/
-<U0020><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025>/
-<U0072><U0020><U0025><U004E><U0020><U0020><U0020><U0025><U0054><U002C><U0020>/
-<U0025><U0063><U0020><U0020><U0025><U004E>"
+postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
+country_name "Samoa"
+country_post "%a %N   %f %N   %d %N   %b %N   %h %s %e %/
+r %N   %T, %c  %N"
 % http://laendercode.net/en/2-letter-list.html
-% WS
-country_ab2  "<U0057><U0053>"
-% WSM
+country_ab2  "WS"
 % http://laendercode.net/en/countries.html
-country_ab3  "<U0057><U0053><U004D>"
+country_ab3  "WSM"
 % locale/iso-3166.def
 country_num 882
 % http://www.nationsonline.org/oneworld/international-calling-codes.htm
 % Gagana faʻa Sāmoa
-lang_name    "<U0047><U0061><U0067><U0061><U006E><U0061><U0020><U0066><U0061>/
-<U02BB><U0061><U0020><U0053><U0101><U006D><U006F><U0061>"
+lang_name    "Gagana fa<U02BB>a S<U0101>moa"
 % https://en.wikipedia.org/wiki/Samoan_language
 % ISO 639-1 sm, ISO 639-2 smo, ISO 639-3 smo
-lang_ab      "<U0073><U006D>"
-lang_term    "<U0073><U006D><U006F>"
-lang_lib     "<U0073><U006D><U006F>"
+lang_ab      "sm"
+lang_term    "smo"
+lang_lib     "smo"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% +%c %a %l
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-% 0
-int_select  "<U0030>"
+tel_int_fmt "+%c %a %l"
+int_select  "0"
 % https://en.wikipedia.org/wiki/Samoa
-% 685
-int_prefix  "<U0036><U0038><U0035>"
+int_prefix  "685"
 END LC_TELEPHONE

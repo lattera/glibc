@@ -2164,13 +2164,13 @@ translit_end
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol         "<U0049><U0053><U004B><U0020>"
-currency_symbol         "<U006B><U0072>"
-mon_decimal_point       "<U002C>"
-mon_thousands_sep       "<U002E>"
+int_curr_symbol         "ISK "
+currency_symbol         "kr"
+mon_decimal_point       ","
+mon_thousands_sep       "."
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<U002D>"
+negative_sign           "-"
 % *_frac_* must be checked
 int_frac_digits         0
 frac_digits             0
@@ -2183,45 +2183,45 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point           "<U002C>"
-thousands_sep           "<U002E>"
+decimal_point           ","
+thousands_sep           "."
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday "<U0073><U0075><U006E>";"<U006D><U00E1><U006E>";/
-      "<U00FE><U0072><U0069>";"<U006D><U0069><U00F0>";/
-      "<U0066><U0069><U006D>";"<U0066><U00F6><U0073>";/
-      "<U006C><U0061><U0075>"
-day   "<U0073><U0075><U006E><U006E><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U006D><U00E1><U006E><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U00FE><U0072><U0069><U00F0><U006A><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U006D><U0069><U00F0><U0076><U0069><U006B><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U0066><U0069><U006D><U006D><U0074><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U0066><U00F6><U0073><U0074><U0075><U0064><U0061><U0067><U0075><U0072>";/
-      "<U006C><U0061><U0075><U0067><U0061><U0072><U0064><U0061><U0067><U0075><U0072>"
-abmon "<U006A><U0061><U006E>";"<U0066><U0065><U0062>";/
-      "<U006D><U0061><U0072>";"<U0061><U0070><U0072>";/
-      "<U006D><U0061><U00ED>";"<U006A><U00FA><U006E>";/
-      "<U006A><U00FA><U006C>";"<U00E1><U0067><U00FA>";/
-      "<U0073><U0065><U0070>";"<U006F><U006B><U0074>";/
-      "<U006E><U00F3><U0076>";"<U0064><U0065><U0073>"
-mon   "<U006A><U0061><U006E><U00FA><U0061><U0072>";/
-      "<U0066><U0065><U0062><U0072><U00FA><U0061><U0072>";/
-      "<U006D><U0061><U0072><U0073>";/
-      "<U0061><U0070><U0072><U00ED><U006C>";/
-      "<U006D><U0061><U00ED>";/
-      "<U006A><U00FA><U006E><U00ED>";/
-      "<U006A><U00FA><U006C><U00ED>";/
-      "<U00E1><U0067><U00FA><U0073><U0074>";/
-      "<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-      "<U006F><U006B><U0074><U00F3><U0062><U0065><U0072>";/
-      "<U006E><U00F3><U0076><U0065><U006D><U0062><U0065><U0072>";/
-      "<U0064><U0065><U0073><U0065><U006D><U0062><U0065><U0072>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0065><U002E><U0025><U0062><U0020><U0025><U0059><U002C><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0061><U0020><U0025><U0065><U002E><U0025><U0062><U0020><U0025><U0059>"
-t_fmt   "<U0025><U0054>"
-am_pm   "<U0066><U0068>";"<U0065><U0068>"
+abday "sun";"m<U00E1>n";/
+      "<U00FE>ri";"mi<U00F0>";/
+      "fim";"f<U00F6>s";/
+      "lau"
+day   "sunnudagur";/
+      "m<U00E1>nudagur";/
+      "<U00FE>ri<U00F0>judagur";/
+      "mi<U00F0>vikudagur";/
+      "fimmtudagur";/
+      "f<U00F6>studagur";/
+      "laugardagur"
+abmon "jan";"feb";/
+      "mar";"apr";/
+      "ma<U00ED>";"j<U00FA>n";/
+      "j<U00FA>l";"<U00E1>g<U00FA>";/
+      "sep";"okt";/
+      "n<U00F3>v";"des"
+mon   "jan<U00FA>ar";/
+      "febr<U00FA>ar";/
+      "mars";/
+      "apr<U00ED>l";/
+      "ma<U00ED>";/
+      "j<U00FA>n<U00ED>";/
+      "j<U00FA>l<U00ED>";/
+      "<U00E1>g<U00FA>st";/
+      "september";/
+      "okt<U00F3>ber";/
+      "n<U00F3>vember";/
+      "desember"
+d_t_fmt "%a %e.%b %Y, %T %Z"
+d_fmt   "%a %e.%b %Y"
+t_fmt   "%T"
+am_pm   "fh";"eh"
 t_fmt_ampm ""
 week 7;19971130;4
 first_weekday 2
@@ -2239,10 +2239,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0033><U0035><U0034>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "354"
+int_select     "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -2250,28 +2249,19 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U00CD><U0073><U006C><U0061><U006E><U0064>"
-country_ab2 "<U0049><U0053>"
-country_ab3 "<U0049><U0053><U004C>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "<U00CD>sland"
+country_ab2 "IS"
+country_ab3 "ISL"
 country_num 352
-% IS
-country_car    "<U0049><U0053>"
+country_car    "IS"
 % íslenska
-lang_name    "<U00ED><U0073><U006C><U0065><U006E><U0073><U006B><U0061>"
-% is
-lang_ab      "<U0069><U0073>"
-% isl
-lang_term    "<U0069><U0073><U006C>"
-% ice
-lang_lib    "<U0069><U0063><U0065>"
+lang_name    "<U00ED>slenska"
+lang_ab      "is"
+lang_term    "isl"
+lang_lib    "ice"
 END LC_ADDRESS

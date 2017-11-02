@@ -51,13 +51,13 @@ LC_MONETARY
 % These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol           "<U004D><U004B><U0044><U0020>"
-currency_symbol           "<U0064><U0065><U006E>"
-mon_decimal_point         "<U002C>"
+int_curr_symbol           "MKD "
+currency_symbol           "den"
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -96,26 +96,18 @@ END LC_NAME
 
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U004D><U0061><U0071><U0065><U0064><U006F><U006E><U0069>"
-country_post  "<U004d><U004b>"
-country_ab2 "<U004d><U004b>"
-country_ab3 "<U004d><U004b><U0044>"
-country_car "<U004d><U004b>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Maqedoni"
+country_post  "MK"
+country_ab2 "MK"
+country_ab3 "MKD"
+country_car "MK"
 country_num 807
 country_isbn "9989"
-% shqip
-lang_name    "<U0073><U0068><U0071><U0069><U0070>"
-% sq
-lang_ab      "<U0073><U0071>"
-% sqi
-lang_term    "<U0073><U0071><U0069>"
-% alb
-lang_lib    "<U0061><U006C><U0062>"
+lang_name    "shqip"
+lang_ab      "sq"
+lang_term    "sqi"
+lang_lib    "alb"
 END LC_ADDRESS
 
 

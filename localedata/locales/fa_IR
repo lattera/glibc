@@ -271,13 +271,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol   "<U0049><U0052><U0052><U0020>"
+int_curr_symbol   "IRR "
 currency_symbol   "<U0631><U06CC><U0627><U0644>"
 mon_decimal_point "<U066B>"
 mon_thousands_sep "<U066C>"
 mon_grouping      3
 positive_sign     ""
-negative_sign     "<U002D>"
+negative_sign     "-"
 int_frac_digits   0
 frac_digits       0
 % The following positioning is based on Unicode 3.0 bidirectional algorithm,
@@ -299,8 +299,8 @@ int_n_sign_posn       1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point     "<U002E>"
-thousands_sep     "<U002C>"
+decimal_point     "."
+thousands_sep     ","
 grouping          3
 END LC_NUMERIC
 
@@ -402,41 +402,22 @@ am_pm   "";""
 t_fmt_ampm    ""
 %
 % Appropriate date representation (%x)
-%       "%Oy/%Om/%Od"
-d_fmt   "<U0025><U004F><U0079><U002F>/
-<U0025><U004F><U006D><U002F>/
-<U0025><U004F><U0064>"
+d_fmt   "%Oy//%Om//%Od"
 %
 % Appropriate time representation (%X)
-%       "%OH:%OM:%OS"
-t_fmt   "<U0025><U004F><U0048><U003A>/
-<U0025><U004F><U004D><U003A>/
-<U0025><U004F><U0053>"
+t_fmt   "%OH:%OM:%OS"
 %
 % FIXME: need to add "HAMZA ABOVE" after January, February, May, July when used
 % before a year
 %
 % Appropriate date and time representation (%c)
 %       "<RLE>%A %Oe %B %Oy<ARABIC COMMA> %OH:%OM:%OS<PDF>"
-d_t_fmt "<U202B><U0025><U0041><U0020>/
-<U0025><U004F><U0065><U0020>/
-<U0025><U0042><U0020>/
-<U0025><U004F><U0079><U060C><U0020>/
-<U0025><U004F><U0048><U003A>/
-<U0025><U004F><U004D><U003A>/
-<U0025><U004F><U0053><U202C>"
+d_t_fmt "<U202B>%A %Oe %B %Oy<U060C> %OH:%OM:%OS<U202C>"
 %
 % Appropriate date representation (date(1))
 %       "<RLE>%A %Oe %B %Oy<ARABIC COMMA> <SEEN><ALEF><AIN><TEH> %OH:%OM:%OS (%Z)<PDF>"
-date_fmt "<U202B><U0025><U0041><U0020>/
-<U0025><U004F><U0065><U0020>/
-<U0025><U0042><U0020>/
-<U0025><U004F><U0079><U060C><U0020>/
-<U0633><U0627><U0639><U062A><U0020>/
-<U0025><U004F><U0048><U003A>/
-<U0025><U004F><U004D><U003A>/
-<U0025><U004F><U0053><U0020>/
-<U0028><U0025><U005A><U0029><U202C>"
+date_fmt "<U202B>%A %Oe %B %Oy<U060C> <U0633><U0627><U0639><U062A> /
+%OH:%OM:%OS (%Z)<U202C>"
 week 7;19971130;1
 first_weekday 7
 cal_direction 3
@@ -460,34 +441,28 @@ name_miss   "<U062E><U0627><U0646><U0645>"
 name_ms     "<U062E><U0627><U0646><U0645>"
 name_mrs    "<U062E><U0627><U0646><U0645>"
 name_mr     "<U0622><U0642><U0627><U06CC>"
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0073><U0025><U0074>/
-<U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%s%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 country_name   "<U0627><U06CC><U0631><U0627><U0646>"
-country_ab2    "<U0049><U0052>"
-country_ab3    "<U0049><U0052><U004E>"
+country_ab2    "IR"
+country_ab3    "IRN"
 country_num    364
-country_car    "<U0049><U0052>"
+country_car    "IR"
 country_isbn   964
 lang_name      "<U0641><U0627><U0631><U0633><U06CC>"
-lang_ab        "<U0066><U0061>"
-lang_term      "<U0066><U0061><U0073>"
-lang_lib       "<U0070><U0065><U0072>"
+lang_ab        "fa"
+lang_term      "fas"
+lang_lib       "per"
 END LC_ADDRESS
 
 LC_TELEPHONE
-tel_int_fmt    "<U202A><U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
-<U0025><U006C><U202C>"
-tel_dom_fmt    "<U202A><U0025><U0041><U2012><U0025><U006C><U202C>"
-int_select     "<U0030><U0030>"
-int_prefix     "<U0039><U0038>"
+tel_int_fmt    "<U202A>+%c %a %l<U202C>"
+tel_dom_fmt    "<U202A>%A<U2012>%l<U202C>"
+int_select     "00"
+int_prefix     "98"
 END LC_TELEPHONE
 
 LC_MEASUREMENT

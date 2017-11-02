@@ -36,27 +36,19 @@ category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
-<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0054><U0020><U0025><U007A><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T %z%N%c%N"
 % "Canada" in Inuktitut: ᑲᓇᑕ (https://iu.wikipedia.org/wiki/%E1%91%B2%E1%93%87%E1%91%95)
 country_name "<U1472><U14C7><U1455>"
-country_post "<U0043><U0041>"
-country_ab2 "<U0043><U0041>"
-country_ab3 "<U0043><U0041><U004E>"
+country_post "CA"
+country_ab2 "CA"
+country_ab3 "CAN"
 country_num 124
-% CDN
-country_car    "<U0043><U0044><U004E>"
+country_car    "CDN"
 % FIXME country_isbn for Canada/inuktitut ?
 lang_name "<U1403><U14C4><U1483><U144E><U1450><U1466>"
-% iu
-lang_ab      "<U0069><U0075>"
-% iku
-lang_term    "<U0069><U006B><U0075>"
-% iku
-lang_lib     "<U0069><U006B><U0075>"
+lang_ab      "iu"
+lang_term    "iku"
+lang_lib     "iku"
 END LC_ADDRESS
 
 %%%%%%%%%%%%%
@@ -117,11 +109,11 @@ mon         "<U152E><U14C4><U140A><U14D5>";/
             "<U140A><U1466><U1450><U1559>";/
             "<U14C4><U1555><U1559>";/
             "<U144E><U14EF><U155D><U1559>"
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
-d_fmt       "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0072>"
-am_pm       "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+d_t_fmt     "%a %d %b %Y %r %Z"
+d_fmt       "%m//%d//%y"
+t_fmt       "%r"
+am_pm       "AM";"PM"
+t_fmt_ampm  "%I:%M:%S %p"
 week 7;19971130;1
 END LC_TIME
 

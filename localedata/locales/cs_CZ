@@ -2329,13 +2329,13 @@ END LC_MESSAGES
 
 LC_MONETARY
 
-int_curr_symbol		"<U0043><U005A><U004B><U0020>"
-currency_symbol		"<U004B><U010D>"
-mon_decimal_point	"<U002C>"
+int_curr_symbol		"CZK "
+currency_symbol		"K<U010D>"
+mon_decimal_point	","
 mon_thousands_sep	"<U202F>"
 mon_grouping      	3;3
 positive_sign		""
-negative_sign		"<U002D>"
+negative_sign		"-"
 int_frac_digits		2
 frac_digits		2
 p_cs_precedes		0
@@ -2352,7 +2352,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point		"<U002C>"
+decimal_point		","
 thousands_sep		"<U202F>"
 grouping		3;3
 
@@ -2362,94 +2362,94 @@ END LC_NUMERIC
 
 LC_TIME
 
-abday		"<U004E><U0065>";/
-		"<U0050><U006F>";/
-		"<U00DA><U0074>";/
-		"<U0053><U0074>";/
-		"<U010C><U0074>";/
-		"<U0050><U00E1>";/
-		"<U0053><U006F>"
+abday		"Ne";/
+		"Po";/
+		"<U00DA>t";/
+		"St";/
+		"<U010C>t";/
+		"P<U00E1>";/
+		"So"
 
-day		"<U004E><U0065><U0064><U011B><U006C><U0065>";/
-		"<U0050><U006F><U006E><U0064><U011B><U006C><U00ED>";/
-		"<U00DA><U0074><U0065><U0072><U00FD>";/
-		"<U0053><U0074><U0159><U0065><U0064><U0061>";/
-		"<U010C><U0074><U0076><U0072><U0074><U0065><U006B>";/
-		"<U0050><U00E1><U0074><U0065><U006B>";/
-		"<U0053><U006F><U0062><U006F><U0074><U0061>"
+day		"Ned<U011B>le";/
+		"Pond<U011B>l<U00ED>";/
+		"<U00DA>ter<U00FD>";/
+		"St<U0159>eda";/
+		"<U010C>tvrtek";/
+		"P<U00E1>tek";/
+		"Sobota"
 
-mon		"<U006C><U0065><U0064><U0065><U006E>";/
-		"<U00FA><U006E><U006F><U0072>";/
-		"<U0062><U0159><U0065><U007A><U0065><U006E>";/
-		"<U0064><U0075><U0062><U0065><U006E>";/
-		"<U006B><U0076><U011B><U0074><U0065><U006E>";/
-		"<U010D><U0065><U0072><U0076><U0065><U006E>";/
-		"<U010D><U0065><U0072><U0076><U0065><U006E><U0065><U0063>";/
-		"<U0073><U0072><U0070><U0065><U006E>";/
-		"<U007A><U00E1><U0159><U00ED>";/
-		"<U0159><U00ED><U006A><U0065><U006E>";/
-		"<U006C><U0069><U0073><U0074><U006F><U0070><U0061><U0064>";/
-		"<U0070><U0072><U006F><U0073><U0069><U006E><U0065><U0063>"
+mon		"leden";/
+		"<U00FA>nor";/
+		"b<U0159>ezen";/
+		"duben";/
+		"kv<U011B>ten";/
+		"<U010D>erven";/
+		"<U010D>ervenec";/
+		"srpen";/
+		"z<U00E1><U0159><U00ED>";/
+		"<U0159><U00ED>jen";/
+		"listopad";/
+		"prosinec"
 
 % Obávám se, že čeština žádné zkratky pro měsíce nezná :-)
 % Zkratky vytvořené podle pravidel zkracování, docela neobvyklé
-%abmon		"<U006C><U0065><U006E>";/
-%		"<U00FA><U006F><U0072>";/
-%		"<U0062><U0065><U006E>";/
-%		"<U0064><U0065><U006E>";/
-%		"<U006B><U0065><U006E>";/
-%		"<U010D><U0065><U006E>";/
-%		"<U010D><U0065><U0063>";/
-%		"<U0073><U0065><U006E>";/
-%		"<U007A><U0159><U00ED>";/
-%		"<U0159><U0065><U006E>";/
-%		"<U006C><U0061><U0064>";/
-%		"<U0070><U0065><U0063>"
+%abmon		"len";/
+%		"<U00FA>or";/
+%		"ben";/
+%		"den";/
+%		"ken";/
+%		"<U010D>en";/
+%		"<U010D>ec";/
+%		"sen";/
+%		"z<U0159><U00ED>";/
+%		"<U0159>en";/
+%		"lad";/
+%		"pec"
 
 % Asi trochu srozumitelnější. Algoritmus je jednoduchý.
 % vždy první tři písmena z názvu měsíce. Výjimka červen a červenec, kdy
 % se vezmou první dvě písmena a poslední (nebo také první písmeno
 % a dvě koncová).
-abmon		"<U006C><U0065><U0064>";/
-		"<U00FA><U006E><U006F>";/
-		"<U0062><U0159><U0065>";/
-		"<U0064><U0075><U0062>";/
-		"<U006B><U0076><U011B>";/
-		"<U010D><U0065><U006E>";/
-		"<U010D><U0065><U0063>";/
-		"<U0073><U0072><U0070>";/
-		"<U007A><U00E1><U0159>";/
-		"<U0159><U00ED><U006A>";/
-		"<U006C><U0069><U0073>";/
-		"<U0070><U0072><U006F>"
+abmon		"led";/
+		"<U00FA>no";/
+		"b<U0159>e";/
+		"dub";/
+		"kv<U011B>";/
+		"<U010D>en";/
+		"<U010D>ec";/
+		"srp";/
+		"z<U00E1><U0159>";/
+		"<U0159><U00ED>j";/
+		"lis";/
+		"pro"
 
 % Zde jsou zkratky doporučené poradnou Ústavu pro Jazyk Český.
 % Ano, vidíte správně, jsou to anglické zkratky. Myslím si, že nejsou
 % až tak zažité, aby se používaly. Pokud člověk nezná celé názvy měsíců,
 % těžko tyto zkratky odvozuje.
-%abmon		"<U004A><U0061><U006E>";/
-%		"<U0046><U0065><U0062>";/
-%		"<U004D><U0061><U0072>";/
-%		"<U0041><U0070><U0072>";/
-%		"<U004D><U0061><U0079>";/
-%		"<U004A><U0075><U006E>";/
-%		"<U004A><U0075><U006C>";/
-%		"<U0041><U0075><U0067>";/
-%		"<U0053><U0065><U0070>";/
-%		"<U004F><U0063><U0074>";/
-%		"<U004E><U006F><U0076>";/
-%		"<U0044><U0065><U0063>"
+%abmon		"Jan";/
+%		"Feb";/
+%		"Mar";/
+%		"Apr";/
+%		"May";/
+%		"Jun";/
+%		"Jul";/
+%		"Aug";/
+%		"Sep";/
+%		"Oct";/
+%		"Nov";/
+%		"Dec"
 
 week		7;19971130;4
 first_weekday	2
 
-d_t_fmt		"<U0025><U0061><U00A0><U0025><U002D><U0064><U002E><U00A0><U0025><U0042><U00A0><U0025><U0059><U002C><U00A0><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U00A0><U0025><U005A>"
+d_t_fmt		"%a<U00A0>%-d.<U00A0>%B<U00A0>%Y,<U00A0>%H:%M:%S<U00A0>%Z"
 
-d_fmt 		"<U0025><U002D><U0064><U002E><U0025><U002D><U006D><U002E><U0025><U0059>"
+d_fmt 		"%-d.%-m.%Y"
 
-t_fmt		"<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt		"%H:%M:%S"
 
-t_fmt_ampm	"<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt_ampm	"%I:%M:%S"
 
 am_pm   	"";""
 
@@ -2461,11 +2461,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-tel_dom_fmt    "<U0028><U0030><U0025><U0061><U0029><U0020><U0025><U006C>"
-int_select     "<U0030><U0030>"
-int_prefix     "<U0034><U0032><U0030>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt    "(0%a) %l"
+int_select     "00"
+int_prefix     "420"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -2473,29 +2472,24 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
-name_miss   "<U0053><U006C><U0065><U010D><U006E><U0061>"
-name_mr     "<U0050><U0061><U006E>"
-name_mrs    "<U0050><U0061><U006E><U00ED>"
-name_ms     "<U0050><U0061><U006E><U00ED>"
+name_fmt    "%d%t%g%t%m%t%f"
+name_miss   "Sle<U010D>na"
+name_mr     "Pan"
+name_mrs    "Pan<U00ED>"
+name_ms     "Pan<U00ED>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name  "<U010C><U0065><U0073><U006B><U00E1><U0020><U0072><U0065><U0070><U0075><U0062><U006C><U0069><U006B><U0061>"
-country_post  "<U0043><U005A>"
-country_ab2   "<U0043><U005A>"
-country_ab3   "<U0043><U005A><U0045>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name  "<U010C>esk<U00E1> republika"
+country_post  "CZ"
+country_ab2   "CZ"
+country_ab3   "CZE"
 country_num   203
-country_car   "<U0043><U005A>"
+country_car   "CZ"
 %country_isbn  ???
-lang_name     "<U010D><U0065><U0161><U0074><U0069><U006E><U0061>"
-lang_ab       "<U0063><U0073>"
-lang_term     "<U0063><U0065><U0073>"
-lang_lib      "<U0063><U007A><U0065>"
+lang_name     "<U010D>e<U0161>tina"
+lang_ab       "cs"
+lang_term     "ces"
+lang_lib      "cze"
 END LC_ADDRESS

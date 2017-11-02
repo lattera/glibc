@@ -117,16 +117,16 @@ noexpr  "^[-0nN]"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0052><U0055><U0042><U0020>"
+int_curr_symbol           "RUB "
 
 % "t." - short for tenke(, Chuvash name for rouble
 currency_symbol "<U20BD>"
 
-mon_decimal_point         "<U002E>"
+mon_decimal_point         "."
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -152,21 +152,21 @@ LC_TIME
 % ernekun (Friday) er
 % s<a(matkun (Saturday) s<m
 
-day 	"<U0076><U0079><U0072><U0073><U0061><U0072><U006E><U0069><U006B><U0075><U006E>";/
-	"<U0074><U0075><U006E><U0074><U0069><U006B><U0075><U006E>";/
-	"<U0079><U0074><U006C><U0061><U0072><U0069><U006B><U0075><U006E>";/
-	"<U006A><U0075><U006E><U006B><U0075><U006E>";/
-	"<U006B><U0115><U015F><U006E><U0065><U0072><U006E><U0069><U006B><U0075><U006E>";/
-	"<U0065><U0072><U006E><U0065><U006B><U0075><U006E>";/
-	"<U0161><U0103><U006D><U0061><U0074><U006B><U0075><U006E>"
+day 	"vyrsarnikun";/
+	"tuntikun";/
+	"ytlarikun";/
+	"junkun";/
+	"k<U0115><U015F>nernikun";/
+	"ernekun";/
+	"<U0161><U0103>matkun"
 
-abday   "<U0076><U0072>";/
-	"<U0074><U006E>";/
-	"<U0079><U0074>";/
-	"<U006A><U006E>";/
-	"<U006B><U015F>";/
-	"<U0065><U0072>";/
-	"<U0161><U006D>"
+abday   "vr";/
+	"tn";/
+	"yt";/
+	"jn";/
+	"k<U015F>";/
+	"er";/
+	"<U0161>m"
 
 % Month names:
 % ka(rlac (January) - short KA(R
@@ -182,34 +182,33 @@ abday   "<U0076><U0072>";/
 % cu:k (November) CU:K
 % ras<tav (December) RAS<
 
-mon     "<U006B><U0103><U0072><U006C><U0061><U0063>";/
-	"<U006E><U0061><U0072><U0103><U0073>";/
-	"<U0070><U0075><U0161>";/
-	"<U0061><U006B><U0061>";/
-	"<U015F><U0075>";/
-	"<U015F><U0115><U0072><U0074><U006D><U0065>";/
-	"<U0075><U0074><U0103>";/
-	"<U015F><U0075><U0072><U006C><U0061>";/
-	"<U0061><U0076><U0103><U006E>";/
-	"<U006A><U0075><U0070><U0061>";/
-	"<U0063><U00FC><U006B>";/
-	"<U0072><U0061><U0161><U0074><U0061><U0076>"
-abmon   "<U004B><U0102><U0052>";/
-	"<U004E><U0041><U0052>";/
-	"<U0050><U0055><U0160>";/
-	"<U0041><U004B><U0041>";/
-	"<U015E><U0055>";/
-	"<U015E><U0114><U0052>";/
-	"<U0055><U0054><U0102>";/
-	"<U015E><U0055><U0052>";/
-	"<U0041><U0056><U0102>";/
-	"<U004A><U0055><U0050>";/
-	"<U0043><U00DC><U004B>";/
-	"<U0052><U0041><U0160>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059><U0020><U0025><U0054>"
-d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt     "<U0025><U0054>"
+mon     "k<U0103>rlac";/
+	"nar<U0103>s";/
+	"pu<U0161>";/
+	"aka";/
+	"<U015F>u";/
+	"<U015F><U0115>rtme";/
+	"ut<U0103>";/
+	"<U015F>urla";/
+	"av<U0103>n";/
+	"jupa";/
+	"c<U00FC>k";/
+	"ra<U0161>tav"
+abmon   "K<U0102>R";/
+	"NAR";/
+	"PU<U0160>";/
+	"AKA";/
+	"<U015E>U";/
+	"<U015E><U0114>R";/
+	"UT<U0102>";/
+	"<U015E>UR";/
+	"AV<U0102>";/
+	"JUP";/
+	"C<U00DC>K";/
+	"RA<U0160>"
+d_t_fmt "%a %d %b %Y %T"
+d_fmt     "%d.%m.%Y"
+t_fmt     "%T"
 am_pm     "";""
 t_fmt_ampm ""
 week 7;19971130;1
@@ -233,22 +232,14 @@ copy "ru_RU"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_ab2 "<U0052><U0055>"
-country_ab3 "<U0052><U0055><U0053>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_ab2 "RU"
+country_ab3 "RUS"
 country_num 643
-% RUS
-country_car    "<U0052><U0055><U0053>"
+country_car    "RUS"
 % Чӑвашла
 lang_name    "<U0427><U04D1><U0432><U0430><U0448><U043B><U0430>"
-% cv
-lang_ab      "<U0063><U0076>"
-% chv
-lang_term    "<U0063><U0068><U0076>"
-% chv
-lang_lib     "<U0063><U0068><U0076>"
+lang_ab      "cv"
+lang_term    "chv"
+lang_lib     "chv"
 END LC_ADDRESS

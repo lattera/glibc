@@ -56,62 +56,57 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% ken, man, tus, lel, tas, pel, sat
-abday  "<U006B><U0065><U006E>";"<U006D><U0061><U006E>";/
-       "<U0074><U0075><U0073>";"<U006C><U0065><U006C>";/
-       "<U0074><U0061><U0073>";"<U0070><U0065><U006C>";/
-       "<U0073><U0061><U0074>"
-% kentuwei, manteke, tusteke, lelai, tasteke, pelaiteke, sateteke
-day    "<U006B><U0065><U006E><U0074><U0075><U0077><U0065><U0069>";/
-       "<U006D><U0061><U006E><U0074><U0065><U006B><U0065>";/
-       "<U0074><U0075><U0073><U0074><U0065><U006B><U0065>";/
-       "<U006C><U0065><U006C><U0061><U0069>";/
-       "<U0074><U0061><U0073><U0074><U0065><U006B><U0065>";/
-       "<U0070><U0065><U006C><U0061><U0069><U0074><U0065><U006B><U0065>";/
-       "<U0073><U0061><U0074><U0065><U0074><U0065><U006B><U0065>"
-% eni, chk, xam, kwe, tai, nip, lai, win, tah, puk, kun, mux
-abmon  "<U0065><U006E><U0069>";"<U0063><U0068><U006B>";/
-       "<U0078><U0061><U006D>";"<U006B><U0077><U0065>";/
-       "<U0074><U0061><U0069>";"<U006E><U0069><U0070>";/
-       "<U006C><U0061><U0069>";"<U0077><U0069><U006E>";/
-       "<U0074><U0061><U0068>";"<U0070><U0075><U006B>";/
-       "<U006B><U0075><U006E>";"<U006D><U0075><U0078>"
-% enikwsi, chkwali, xamokhwite, kwetayoxe, tainipen, kichinipen
-% lainipen, winaminke, kichitahkok, puksit, wini, muxkotae
-mon    "<U0065><U006E><U0069><U006B><U0077><U0073><U0069>";/
-       "<U0063><U0068><U006B><U0077><U0061><U006C><U0069>";/
-       "<U0078><U0061><U006D><U006F><U006B><U0068><U0077><U0069><U0074><U0065>";/
-       "<U006B><U0077><U0065><U0074><U0061><U0079><U006F><U0078><U0065>";/
-       "<U0074><U0061><U0069><U006E><U0069><U0070><U0065><U006E>";/
-       "<U006B><U0069><U0063><U0068><U0069><U006E><U0069><U0070><U0065><U006E>";/
-       "<U006C><U0061><U0069><U006E><U0069><U0070><U0065><U006E>";/
-       "<U0077><U0069><U006E><U0061><U006D><U0069><U006E><U006B><U0065>";/
-       "<U006B><U0069><U0063><U0068><U0069><U0074><U0061><U0068><U006B><U006F><U006B>";/
-       "<U0070><U0075><U006B><U0073><U0069><U0074>";/
-       "<U0077><U0069><U006E><U0069>";/
-       "<U006D><U0075><U0078><U006B><U006F><U0074><U0061><U0065>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt   "<U0025><U0054>"
+abday  "ken";"man";/
+       "tus";"lel";/
+       "tas";"pel";/
+       "sat"
+day    "kentuwei";/
+       "manteke";/
+       "tusteke";/
+       "lelai";/
+       "tasteke";/
+       "pelaiteke";/
+       "sateteke"
+abmon  "eni";"chk";/
+       "xam";"kwe";/
+       "tai";"nip";/
+       "lai";"win";/
+       "tah";"puk";/
+       "kun";"mux"
+mon    "enikwsi";/
+       "chkwali";/
+       "xamokhwite";/
+       "kwetayoxe";/
+       "tainipen";/
+       "kichinipen";/
+       "lainipen";/
+       "winaminke";/
+       "kichitahkok";/
+       "puksit";/
+       "wini";/
+       "muxkotae"
+d_t_fmt "%a %d %b %Y %T %Z"
+d_fmt   "%d//%m//%y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
 week 7;19971130;1
 END LC_TIME
 
 LC_NUMERIC
-decimal_point           "<U002E>"
+decimal_point           "."
 thousands_sep           "<U202F>"
 grouping                2;2;2;3
 END LC_NUMERIC
 
 LC_MONETARY
-int_curr_symbol         "<U0055><U0053><U0044><U0020>"
-currency_symbol         "<U0024>"
-mon_decimal_point       "<U002E>"
+int_curr_symbol         "USD "
+currency_symbol         "$"
+mon_decimal_point       "."
 mon_thousands_sep       "<U202F>"
 mon_grouping            3
 positive_sign           ""
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -132,30 +127,22 @@ copy "en_US"
 END LC_PAPER
 
 LC_NAME
-name_fmt "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0068>/
-<U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name  "<U0055><U0053><U0041>"
-country_post  "<U0055><U0053><U0041>"
-country_ab2   "<U0055><U0053>"
-country_ab3   "<U0055><U0053><U0041>"
+postal_fmt    "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
+country_name  "USA"
+country_post  "USA"
+country_ab2   "US"
+country_ab3   "USA"
 country_num   840
-% USA
-country_car   "<U0055><U0053><U0041>"
+country_car   "USA"
 country_isbn  0
 % lang_name     ""
 % lang_ab       ""
-% unm
-lang_term    "<U0075><U006E><U006D>"
-% unm
-lang_lib    "<U0075><U006E><U006D>"
+lang_term    "unm"
+lang_lib    "unm"
 END LC_ADDRESS
 
 LC_TELEPHONE

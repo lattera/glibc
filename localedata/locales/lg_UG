@@ -67,18 +67,12 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<U0055><U0047><U0058><U0020>"
-% International currency symbol "UGX"
-%
-currency_symbol         "<U0055><U0053><U0068>"
+int_curr_symbol         "UGX "
+currency_symbol         "USh"
 % Local currency symbol "/-"
 %
-mon_decimal_point       "<U002E>"
-% Sign for a monetary decimal point "."
-%
-mon_thousands_sep       "<U002C>"
-% Sign for thousands separator in money ","
-%
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 % For money there are three numbers to the between each
 % pair of thousands separators, e.g. "123,456,786"
@@ -86,7 +80,7 @@ mon_grouping            3;3
 positive_sign           ""
 % No sign in front of positive money values.
 %
-negative_sign           "<U002D>"
+negative_sign           "-"
 % "-" in front of negative money values.
 %
 int_frac_digits         2
@@ -124,10 +118,10 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point           "<U002E>"
+decimal_point           "."
 % For normal numbers, the decomal point is a "."
 %
-thousands_sep           "<U002C>"
+thousands_sep           ","
 % For normal numbers, the thousands separator is a ","
 %
 grouping                3;3
@@ -137,50 +131,50 @@ grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "<U0053><U0061><U0062>";"<U0042><U0061><U006C>";/
-            "<U004C><U0077><U0032>";"<U004C><U0077><U0033>";/
-            "<U004C><U0077><U0034>";"<U004C><U0077><U0035>";/
-            "<U004C><U0077><U0036>"
+abday       "Sab";"Bal";/
+            "Lw2";"Lw3";/
+            "Lw4";"Lw5";/
+            "Lw6"
 % The abbreviations for the week days - Sab, Bal, Lw2, Lw3, Lw4,
 %                                      Lw5, Lw6
 %
-day         "<U0053><U0061><U0062><U0069><U0069><U0074><U0069>";/
-            "<U0042><U0061><U006C><U0061><U007A><U0061>";/
-            "<U004C><U0077><U0061><U006B><U0075><U0062><U0069><U0072><U0069>";/
-            "<U004C><U0077><U0061><U006B><U0075><U0073><U0061><U0074><U0075>";/
-            "<U004C><U0077><U0061><U006B><U0075><U006E><U0061>";/
-            "<U004C><U0077><U0061><U006B><U0075><U0074><U0061><U0061><U006E><U006F>";/
-            "<U004C><U0077><U0061><U006D><U0075><U006B><U0061><U0061><U0067><U0061>"
+day         "Sabiiti";/
+            "Balaza";/
+            "Lwakubiri";/
+            "Lwakusatu";/
+            "Lwakuna";/
+            "Lwakutaano";/
+            "Lwamukaaga"
 % The full names of the week days - Sabiiti, Balaza, Lwakubiri, Lwakusatu, Lwakuna
 %                                   Lwakutaano, Lwamukaaga.
 %
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0072>";"<U0041><U0070><U0075>";/
-            "<U004D><U0061><U0061>";"<U004A><U0075><U0075>";/
-            "<U004A><U0075><U006C>";"<U0041><U0067><U0075>";/
-            "<U0053><U0065><U0062>";"<U004F><U006B><U0069>";/
-            "<U004E><U006F><U0076>";"<U0044><U0065><U0073>"
+abmon       "Jan";"Feb";/
+            "Mar";"Apu";/
+            "Maa";"Juu";/
+            "Jul";"Agu";/
+            "Seb";"Oki";/
+            "Nov";"Des"
 % The abbreviations for the months - Jan, Feb, Mar, Apu, Maa,
 %                                    Juu, Jul, Agu, Seb, Oki,
 %                                    Nov, Des
 %
-mon         "<U004A><U0061><U006E><U0077><U0061><U006C><U0069><U0079><U006F>";/
-            "<U0046><U0065><U0062><U0077><U0061><U006C><U0069><U0079><U006F>";/
-            "<U004D><U0061><U0072><U0069><U0073><U0069>";/
-            "<U0041><U0070><U0075><U006C><U0069>";/
-            "<U004D><U0061><U0061><U0079><U0069>";/
-            "<U004A><U0075><U0075><U006E><U0069>";/
-            "<U004A><U0075><U006C><U0061><U0061><U0079><U0069>";/
-            "<U0041><U0067><U0075><U0073><U0069><U0074><U006F>";/
-            "<U0053><U0065><U0062><U0075><U0074><U0074><U0065><U006D><U0062><U0061>";/
-            "<U004F><U006B><U0069><U0074><U006F><U0062><U0062><U0061>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-            "<U0044><U0065><U0073><U0065><U006D><U0062><U0061>"
+mon         "Janwaliyo";/
+            "Febwaliyo";/
+            "Marisi";/
+            "Apuli";/
+            "Maayi";/
+            "Juuni";/
+            "Julaayi";/
+            "Agusito";/
+            "Sebuttemba";/
+            "Okitobba";/
+            "Novemba";/
+            "Desemba"
 % The full names of the months - Janwaliyo, Febwaliyo, Marisi, Apuli, Maayi,
 %                                    Juuni, Julaayi, Agusito, Sebuttemba,
 %                                    Okitobba, Novemba, Desemba
 %
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt     "%a %d %b %Y %T %Z"
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
 % "%a" (weekday name),
 % "%d" (day of month as a decimal number),
@@ -189,11 +183,11 @@ d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U00
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
 %
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
+d_fmt   "%d//%m//%y"
 % Date representation to be referenced by the "%x" field % descriptor -
 % "%d/%m/%y", day/month/year as decimal numbers (01/01/00 to 31/12/99).
 %
-t_fmt       "<U0025><U0054>"
+t_fmt       "%T"
 % Time representation to be referenced by the "%X" field descriptor -
 % "%T" (24-hour clock time in format HH:MM:SS)
 %
@@ -227,19 +221,18 @@ LC_TELEPHONE
 % "+country code",
 % "area code without the prefix (often 0)",
 % "local number".
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
+tel_int_fmt    "+%c %a %l"
 
 % Representation of telephone number for domestic use -
 % "%a %l", which is
 % "area code, local number".
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
+tel_dom_fmt    "%a %l"
 
 % Digits used in Uganda to dial international - "000".
-int_select   "<U0030><U0030><U0030>"
+int_select   "000"
 
 % International prefix for Uganda - "256"
-int_prefix     "<U0032><U0035><U0036>"
+int_prefix     "256"
 
 END LC_TELEPHONE
 
@@ -248,8 +241,7 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 % Format for addressing a person.
 % "%d%t%g%t%m%t%f"
 % "Salutation",
@@ -260,34 +252,30 @@ name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 % "Empty string, or <Space>",
 % "Clan names"
 %
-name_miss   "<U004D><U006C><U0061>"
+name_miss   "Mla"
 % Salutation for unmarried females - "Mla"
 %
-name_mr     "<U004D><U0077>"
+name_mr     "Mw"
 % Salutation for males - "Mw"
 %
-name_mrs    "<U004D><U006C><U0061>"
+name_mrs    "Mla"
 % Salutation for married females - "Mla"
 %
-name_ms     "<U004D><U006C><U0061>"
+name_ms     "Mla"
 % Salutation valid for all females - "Mla"
 END LC_NAME
 
 LC_ADDRESS
-country_name "<U0059><U0075><U0067><U0061><U006E><U0064><U0061>"
+country_name "Yuganda"
 % Country name in Luganda - "Yuganda"
 %
-country_post "<U0055><U0047>"
+country_post "UG"
 % Abbreviated country postal name - "UG"
 %
-country_ab2 "<U0055><U0047>"
+country_ab2 "UG"
 % ISO 3166 two letter country abbreviation - "UG"
 %
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % Representation of postal addresses (minus the addressee's name) in Uganda.
 % "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N", which gives -
 % "firm name",
@@ -312,16 +300,11 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 % "country designation for the <country_post> keyword",
 % "end of line
 %
-country_ab3 "<U0055><U0047><U0041>"
+country_ab3 "UGA"
 country_num 800
-% EAU
-country_car    "<U0045><U0041><U0055>"
-% Oluganda
-lang_name    "<U004C><U0075><U0067><U0061><U006E><U0064><U0061>"
-% lg
-lang_ab      "<U006C><U0067>"
-% lug
-lang_term    "<U006C><U0075><U0067>"
-% lug
-lang_lib    "<U006C><U0075><U0067>"
+country_car    "EAU"
+lang_name    "Luganda"
+lang_ab      "lg"
+lang_term    "lug"
+lang_lib    "lug"
 END LC_ADDRESS

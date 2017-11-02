@@ -114,24 +114,16 @@ am_pm   "<U092A><U0942><U0930><U094D><U0935><U093E><U0939><U094D><U0928>";/
         "<U0905><U092A><U0930><U093E><U0939><U094D><U0928>"
 %
 % Appropriate date and time representation
-% %A %d %b %Y%I:%M:%S  %Z
-d_t_fmt "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A>/
-<U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+d_t_fmt "%A %d %b %Y %I:%M:%S %p %Z"
 %
 % Appropriate date representation
-% %A %d %b %Y
-d_fmt   "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059>"
+d_fmt   "%A %d %b %Y"
 %
 % Appropriate time representation
-% %I:%M:%S  %Z
-t_fmt   "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
-<U0020><U0020><U0025><U005A>"
+t_fmt   "%I:%M:%S  %Z"
 %
 % Appropriate 12 h time representation (%r)
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
-<U0020><U0025><U0070><U0020><U0025><U005A>"
+t_fmt_ampm  "%I:%M:%S %p %Z"
 week 7;19971130;1
 END LC_TIME
 
@@ -152,20 +144,16 @@ END LC_NAME
 
 
 LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
+postal_fmt  "%z%c%T%s%b%e%r"
 country_name "<U092D><U093E><U0930><U0924>"
-country_ab2 "<U0049><U004E>"
-country_ab3 "<U0049><U004E><U0044>"
+country_ab2 "IN"
+country_ab3 "IND"
 country_num 356
-% IND
-country_car    "<U0049><U004E><U0044>"
+country_car "IND"
 % मैथिली
 lang_name    "<U092E><U0948><U0925><U093F><U0932><U0940>"
-% mai
-lang_term    "<U006D><U0061><U0069>"
-% mai
-lang_lib    "<U006D><U0061><U0069>"
+lang_term    "mai"
+lang_lib    "mai"
 END LC_ADDRESS
 
 

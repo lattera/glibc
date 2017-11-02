@@ -58,18 +58,14 @@ END LC_COLLATE
 
 % FIXME
 LC_MONETARY
-% "NGN "
-int_curr_symbol         "<U004E><U0047><U004E><U0020>"
+int_curr_symbol         "NGN "
 % "₦"
 currency_symbol         "<U20A6>"
-% "."
-mon_decimal_point       "<U002E>"
-% ","
-mon_thousands_sep       "<U002C>"
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 positive_sign           ""
-% "-"
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -82,55 +78,45 @@ END LC_MONETARY
 
 % FIXME
 LC_NUMERIC
-% "."
-decimal_point           "<U002E>"
-% ","
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
 % abday - The abbreviations for the week days:
-% - Sun, Mon, Tue, Wed, Thu, Fri, Sat
-abday       "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";/
-            "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";/
-            "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";/
-            "<U0053><U0061><U0074>"
+abday       "Sun";"Mon";"Tue";"Wed";"Thu";"Fri";"Sat"
 
 % day - The full names of the week days:
-% - Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
-            "<U004D><U006F><U006E><U0064><U0061><U0079>";/
-            "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";/
-            "<U0046><U0072><U0069><U0064><U0061><U0079>";/
-            "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
+day         "Sunday";/
+            "Monday";/
+            "Tuesday";/
+            "Wednesday";/
+            "Thursday";/
+            "Friday";/
+            "Saturday"
 
 % abmon - The abbreviations for the months
-% - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-            "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-            "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
+abmon       "Jan";"Feb";/
+            "Mar";"Apr";/
+            "May";"Jun";/
+            "Jul";"Aug";/
+            "Sep";"Oct";/
+            "Nov";"Dec"
 
 % mon - The full names of the months -
-% - January, February, March, April, May, June
-%   July, August, September, October, November, December
-mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
-            "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
-            "<U004D><U0061><U0072><U0063><U0068>";/
-            "<U0041><U0070><U0072><U0069><U006C>";/
-            "<U004D><U0061><U0079>";/
-            "<U004A><U0075><U006E><U0065>";/
-            "<U004A><U0075><U006C><U0079>";/
-            "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-            "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-            "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+mon         "January";/
+            "February";/
+            "March";/
+            "April";/
+            "May";/
+            "June";/
+            "July";/
+            "August";/
+            "September";/
+            "October";/
+            "November";/
+            "December"
 
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
 %
@@ -140,15 +126,15 @@ mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt     "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt       "%d//%m//%Y"
 
 % Time representation to be referenced by the "%X" field descriptor -
 % "%T" (24-hour clock time in format HH:MM:SS)
-t_fmt       "<U0025><U0054>"
+t_fmt       "%T"
 
 % Define representation of ante meridiem and post meridiem strings -
 % The "" mean default to "AM" and "PM".
@@ -172,26 +158,21 @@ END LC_PAPER
 % FIXME
 LC_TELEPHONE
 % Representation of telephone number for international use -
-% "+%c %a %l", which is
 % "+%c - country code",
 % "%a - area code without the prefix (often 0)",
 % "%l local number".
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
+tel_int_fmt    "+%c %a %l"
 
 % Represntation of telephone number for domestic use -
-% "(%A) %l", which is
 % %A - area code with national prefix
 % %l - local number".
-tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
+tel_dom_fmt    "(%A) %l"
 
 % Prefix for making international calls
-% "009"
-int_select     "<U0030><U0030><U0039>"
+int_select     "009"
 
 % International dialing code
-% "234"
-int_prefix     "<U0032><U0033><U0034>"
+int_prefix     "234"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -229,27 +210,19 @@ LC_ADDRESS
 % "end of line",
 % "country designation for the <country_post> keyword",
 % "end of line
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-% Country name in English - "Nigeria"
-country_name  "<U004E><U0069><U0067><U0065><U0072><U0069><U0061>"
-
-% Language name in English - "English"
-lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
+country_name  "Nigeria"
+lang_name     "English"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
 % "NG"?
-%country_post   "<U004E><U0047>"
+%country_post   "NG"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/Distsigns_Sept2003.pdf
-% "WAN"
-country_car   "<U0057><U0041><U004E>"
+country_car   "WAN"
 
 % ISO 2108
 % http://www.isbn-international.org/
@@ -258,18 +231,14 @@ country_isbn  978
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% en
-lang_ab      "<U0065><U006E>"
-% eng
-lang_term    "<U0065><U006E><U0067>"
-% eng
-lang_lib    "<U0065><U006E><U0067>"
+lang_ab      "en"
+lang_term    "eng"
+lang_lib    "eng"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% "NG", "NGA"
-country_ab2   "<U004E><U0047>"
-country_ab3   "<U004E><U0047><U0041>"
+country_ab2   "NG"
+country_ab3   "NGA"
 country_num   566
 
 END LC_ADDRESS

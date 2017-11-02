@@ -60,13 +60,13 @@ END LC_COLLATE
 
 LC_MONETARY
 % MVR
-int_curr_symbol "<U004D><U0056><U0052><U0020>"
-currency_symbol "<U0783><U002E>"
-mon_decimal_point "<U002E>"
-mon_thousands_sep "<U002C>"
+int_curr_symbol "MVR "
+currency_symbol "<U0783>."
+mon_decimal_point "."
+mon_thousands_sep ","
 mon_grouping  3;3
 positive_sign ""
-negative_sign "<U002D>"
+negative_sign "-"
 int_frac_digits 2
 frac_digits 2
 p_cs_precedes 1
@@ -78,8 +78,8 @@ n_sign_posn 1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point "<U002E>"
-thousands_sep "<U002C>"
+decimal_point "."
+thousands_sep ","
 grouping 3;3
 END LC_NUMERIC
 
@@ -127,14 +127,14 @@ mon	"<U0796><U07AC><U0782><U07AA><U0787><U07A6><U0783><U07A9>";/
 	"<U0791><U07A8><U0790><U07AC><U0782><U07B0><U0784><U07A6><U0783>"
 
 % Date Time Format
-d_t_fmt "<U0025><U005A><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0025><U0061>"
+d_t_fmt "%Z %H:%M:%S %Y %b %d %a"
 
 % date Format. I have put this in reverse order to try to get the date
 % in R->L order
-d_fmt "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt "%d//%m//%Y"
 
 % time format
-t_fmt "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%H:%M:%S"
 
 %<U0635> stands for <U0635><U0628><U062D>
 %<U0634> stands for <U0634><U0627><U0645>
@@ -142,7 +142,7 @@ t_fmt "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
 am_pm "<U0789><U0786>";"<U0789><U078A>"
 
 % time format in 12 hour clock
-t_fmt_ampm "<U0025><U0050><U0020><U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt_ampm "%P %I:%M:%S"
 
 % display columns right to left ?
 cal_direction	3
@@ -160,11 +160,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
-int_select     "<U0030><U0030>"
-int_prefix     "<U0039><U0036><U0030>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt    "%a %l"
+int_select     "00"
+int_prefix     "960"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -172,29 +171,21 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%%z %T%N%c%N"
 % https://dv.wikipedia.org/wiki/%DE%8B%DE%A8%DE%88%DE%AC%DE%80%DE%A8%DE%83%DE%A7%DE%87%DE%B0%DE%96%DE%AC : ދިވެހިރާއްޖެ
 country_name "<U078B><U07A8><U0788><U07AC><U0780><U07A8><U0783><U07A7><U0787><U07B0><U0796><U07AC>"
 country_ab2 "MV"
 country_ab3 "MDV"
 country_num 462
-country_car "<U004D><U0056>"
+country_car "MV"
 % lang_name FIXME
 % Cannot represent Dhivehi in Thaana script
 % http://en.wikipedia.org/wiki/Maldivian_language
-% dv
-lang_ab      "<U0064><U0076>"
-% div
-lang_term    "<U0064><U0069><U0076>"
-% div
-lang_lib    "<U0064><U0069><U0076>"
+lang_ab      "dv"
+lang_term    "div"
+lang_lib    "div"
 END LC_ADDRESS

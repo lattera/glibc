@@ -149,13 +149,13 @@ reorder-end
 END LC_COLLATE
 
 LC_TIME
-abday	"<U06CC><U002E>";/
-	"<U062F><U002E>";/
-	"<U0633><U002E>";/
-	"<U0686><U002E>";/
-	"<U067E><U002E>";/
-	"<U062C><U002E>";/
-	"<U0634><U002E>"
+abday	"<U06CC>.";/
+	"<U062F>.";/
+	"<U0633>.";/
+	"<U0686>.";/
+	"<U067E>.";/
+	"<U062C>.";/
+	"<U0634>."
 day	"<U06CC><U06A9><U0634><U0646><U0628><U0647>";/
 	"<U062F><U0648><U0634><U0646><U0628><U0647>";/
 	"<U0633><U0647><U200C><U0634><U0646><U0628><U0647>";/
@@ -187,17 +187,11 @@ mon	"<U062C><U0646><U0648><U0631><U064A>";/
 	"<U0627><U06A9><U062A><U0648><U0628><U0631>";/
 	"<U0646><U0648><U0645><U0628><U0631>";/
 	"<U062F><U0633><U0645><U0628><U0631>"
-d_t_fmt	"<U0025><U0041><U0020><U062F><U0020><U0025><U0059>/
-<U0020><U062F><U0020><U0025><U0042><U0020><U0025><U0065><U060C>/
-<U0020><U0025><U005A><U0020><U0025><U0048><U003A><U0025><U004D>/
-<U003A><U0025><U0053>"
-d_fmt	"<U062F><U0020><U0025><U0059><U0020><U062F><U0020>/
-<U0025><U0042><U0020><U0025><U0065>"
-t_fmt	"<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
-am_pm	"<U063A><U002E><U0645><U002E>";/
-	"<U063A><U002E><U0648><U002E>"
-t_fmt_ampm	"<U202B><U0025><U0049><U003A><U0025><U004D><U003A>/
-<U0025><U0053><U0020><U0025><U0070><U202C>"
+d_t_fmt	"%A <U062F> %Y <U062F> %B %e<U060C> %Z %H:%M:%S"
+d_fmt	"<U062F> %Y <U062F> %B %e"
+t_fmt	"%H:%M:%S"
+am_pm	"<U063A>.<U0645>.";"<U063A>.<U0648>."
+t_fmt_ampm	"<U202B>%I:%M:%S %p<U202C>"
 week 7;19971130;1
 first_weekday	7
 first_workday	7
@@ -211,13 +205,13 @@ grouping	3
 END LC_NUMERIC
 
 LC_MONETARY
-int_curr_symbol	"<U0041><U0046><U004E><U0020>"
+int_curr_symbol	"AFN "
 currency_symbol	"<U060B>"
 mon_decimal_point	"<U066B>"
 mon_thousands_sep	"<U066C>"
 mon_grouping	3
 positive_sign	""
-negative_sign	"<U002D>"
+negative_sign	"-"
 int_frac_digits	0
 frac_digits	0
 p_cs_precedes	0
@@ -244,42 +238,36 @@ copy "i18n"
 END LC_PAPER
 
 LC_NAME
-name_fmt	"<U0025><U0073><U0025><U0074><U0025><U0070><U0025>/
-<U0074><U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt	"%s%t%p%t%g%t%m%t%f"
 name_gen	"" % No general salutation for all persons in Pashto.
 name_mr	"<U069A><U0627><U063A><U0644><U06D0>"
-name_mrs	"<U0628><U064A><U0020><U0628><U064A>"
-name_miss	"<U0628><U064A><U0020><U0628><U064A>"
-name_ms	"<U0628><U064A><U0020><U0628><U064A>"
+name_mrs	"<U0628><U064A> <U0628><U064A>"
+name_miss	"<U0628><U064A> <U0628><U064A>"
+name_ms	"<U0628><U064A> <U0628><U064A>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt	"<U0025><U0061><U0025><U004E><U0025><U0066><U0025>/
-<U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025>/
-<U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072>/
-<U0025><U004E><U0025><U0043><U002D><U0025><U007A><U0020><U0025><U0054>/
-<U0025><U004E><U0025><U0063><U0025><U004E>"
+postal_fmt	"%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N"
 country_name	"<U0627><U0641><U063A><U0627><U0646>/
 <U0633><U062A><U0627><U0646>"
-country_post	"<U0041><U0046>"
-country_ab2	"<U0041><U0046>"
-country_ab3	"<U0041><U0046><U0047>"
+country_post	"AF"
+country_ab2	"AF"
+country_ab3	"AFG"
 country_num	004
-country_car	"<U0041><U0046><U0047>"
+country_car	"AFG"
 
 %country_isbn	"" % Unfortunately not yet assigned :-(
 % Since to date there is no ISBN agency working in Afghanistan.
 
 lang_name	"<U067E><U069A><U062A><U0648>"
-lang_ab	"<U0070><U0073>"
-lang_term	"<U0070><U0075><U0073>"
-lang_lib	"<U0070><U0075><U0073>"
+lang_ab	"ps"
+lang_term	"pus"
+lang_lib	"pus"
 END LC_ADDRESS
 
 LC_TELEPHONE
-tel_int_fmt	"<U002B><U0025><U0063><U0020><U0025><U0061><U0020>/
-<U0025><U006C>"
-tel_dom_fmt	"<U0025><U0041><U2012><U0025><U006C>"
-int_select	"<U0030><U0030>"
-int_prefix	"<U0039><U0033>"
+tel_int_fmt	"+%c %a %l"
+tel_dom_fmt	"%A<U2012>%l"
+int_select	"00"
+int_prefix	"93"
 END LC_TELEPHONE

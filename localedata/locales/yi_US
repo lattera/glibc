@@ -40,25 +40,19 @@ END LC_IDENTIFICATION
 
 
 LC_ADDRESS
-postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
-<U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
-<U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-country_name "<U05E4><U05BF><U05D0><U05B7><U05E8><U05D0><U05D9><U05D9><U05E0><U05D9><U05D2><U05D8><U05E2><U0020><U05E9><U05D8><U05D0><U05B7><U05D8><U05DF>"
+postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
+country_name "<U05E4><U05BF><U05D0><U05B7><U05E8><U05D0><U05D9><U05D9><U05E0><U05D9><U05D2><U05D8><U05E2> <U05E9><U05D8><U05D0><U05B7><U05D8><U05DF>"
 country_post "USA"
 country_ab2 "US"
 country_ab3 "USA"
 country_num 840
-% USA
-country_car   "<U0055><U0053><U0041>"
+country_car   "USA"
 % FIXME Check which isbn for Yiddish in USA
 country_isbn "0"
 lang_name "<U05D9><U05D9><U05B4><U05D3><U05D9><U05E9>"
-% yi
-lang_ab      "<U0079><U0069>"
-% yid
-lang_term    "<U0079><U0069><U0064>"
-% yid
-lang_lib     "<U0079><U0069><U0064>"
+lang_ab      "yi"
+lang_term    "yid"
+lang_lib     "yid"
 END LC_ADDRESS
 
 LC_CTYPE
@@ -69,9 +63,9 @@ include "translit_combining";""
 
 % if digraphs are not available (this is the case with iso-8859-8)
 % then use the single letters
-<U05F0> "<U05D5><U05D5>";"<U0077><U0077>"
-<U05F1> "<U05D5><U05D9>";"<U0077><U006A>"
-<U05F2> "<U05D9><U05D9>";"<U006A><U006A>"
+<U05F0> "<U05D5><U05D5>";"ww"
+<U05F1> "<U05D5><U05D9>";"wj"
+<U05F2> "<U05D9><U05D9>";"jj"
 translit_end
 
 END LC_CTYPE
@@ -123,13 +117,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol   "<U0055><U0053><U0044><U0020>"
-currency_symbol   "<U0024>"
-mon_decimal_point "<U002E>"
-mon_thousands_sep "<U002C>"
+int_curr_symbol   "USD "
+currency_symbol   "$"
+mon_decimal_point "."
+mon_thousands_sep ","
 mon_grouping      3;3
 positive_sign     ""
-negative_sign     "<U002D>"
+negative_sign     "-"
 int_frac_digits   2
 frac_digits       2
 p_cs_precedes     1
@@ -157,8 +151,8 @@ copy "en_US"
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U05D6><U05D5><U05E0><U0027>";"<U05DE><U05D0><U05B8><U05E0><U0027>";"<U05D3><U05D9><U05E0><U0027>";/
-        "<U05DE><U05D9><U05D8><U0027>";"<U05D3><U05D0><U05B8><U05E0><U0027>";"<U05E4><U05BF><U05E8><U05F2><U05B7><U0027>";/
+abday   "<U05D6><U05D5><U05E0>'";"<U05DE><U05D0><U05B8><U05E0>'";"<U05D3><U05D9><U05E0>'";/
+        "<U05DE><U05D9><U05D8>'";"<U05D3><U05D0><U05B8><U05E0>'";"<U05E4><U05BF><U05E8><U05F2><U05B7>'";/
 	"<U05E9><U05D1><U05EA>"
 day     "<U05D6><U05D5><U05E0><U05D8><U05D9><U05E7>";/
         "<U05DE><U05D0><U05B8><U05E0><U05D8><U05D9><U05E7>";/
@@ -181,15 +175,15 @@ mon     "<U05D9><U05D0><U05B7><U05E0><U05D5><U05D0><U05B7><U05E8>";/
         "<U05D3><U05E2><U05E6><U05E2><U05DE><U05D1><U05E2><U05E8>"
 abmon   "<U05D9><U05D0><U05B7><U05E0>";"<U05E4><U05BF><U05E2><U05D1>";/
         "<U05DE><U05D0><U05B7><U05E8>";"<U05D0><U05B7><U05E4><U05BC><U05E8>";/
-        "<U05DE><U05F2><U05B7><U0020>";"<U05D9><U05D5><U05E0>";/
+        "<U05DE><U05F2><U05B7> ";"<U05D9><U05D5><U05E0>";/
         "<U05D9><U05D5><U05DC>";"<U05D0><U05F1><U05D2>";/
         "<U05E1><U05E2><U05E4><U05BC>";"<U05D0><U05B8><U05E7><U05D8>";/
         "<U05E0><U05D0><U05B8><U05F0>";"<U05D3><U05E2><U05E6>"
-d_t_fmt "<U0025><U005A><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0025><U0061>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
-am_pm   "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0050>"
+d_t_fmt "%Z %H:%M:%S %Y %b %d %a"
+d_fmt   "%d//%m//%y"
+t_fmt   "%H:%M:%S"
+am_pm   "AM";"PM"
+t_fmt_ampm  "%I:%M:%S %P"
 cal_direction	3
 week 7;19971130;1
 END LC_TIME

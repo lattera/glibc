@@ -105,23 +105,18 @@ LC_ADDRESS
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name  "<U0045><U0072><U0065><U0074><U0072><U0069><U0061>"
-country_post  "<U0045><U0052><U0049>"
-country_ab2   "<U0045><U0052>"
-country_ab3   "<U0045><U0052><U0049>"
+postal_fmt    "%z%c%T%s%b%e%r"
+country_name  "Eretria"
+country_post  "ERI"
+country_ab2   "ER"
+country_ab3   "ERI"
 country_num   232
-% ER
-country_car  "<U0045><U0052>"
+country_car   "ER"
 % country_isbn  unknown, Need ISO 2108
-lang_name     "<U0051><U0061><U0066><U0061><U0072>"
-% aa
-lang_ab       "<U0061><U0061>"
-% aar
-lang_term     "<U0061><U0061><U0072>"
-% aar
-lang_lib      "<U0061><U0061><U0072>"
+lang_name     "Qafar"
+lang_ab       "aa"
+lang_term     "aar"
+lang_lib      "aar"
 %
 END LC_ADDRESS
 
@@ -135,12 +130,11 @@ LC_NAME
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_NAME category.
 %
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
-name_mr     "<U0054><U006F><U006F><U0062><U006F><U006B><U006F><U0079><U0074><U0061>"
-name_mrs    "<U0047><U0069><U0073><U0074><U0069>"
-name_miss   "<U004D><U0061><U0071><U0061><U006E><U0078><U0061>"
+name_mr     "Toobokoyta"
+name_mrs    "Gisti"
+name_miss   "Maqanxa"
 name_ms     ""
 %
 END LC_NAME
@@ -150,85 +144,66 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 %
-abday    "<U0041><U0063><U0061>";/
-         "<U0045><U0074><U006C>";/
-         "<U0054><U0061><U006C>";/
-         "<U0041><U0072><U0062>";/
-         "<U004B><U0061><U006D>";/
-         "<U0047><U0075><U006D>";/
-         "<U0053><U0061><U0062>"
+abday    "Aca";"Etl";"Tal";"Arb";"Kam";"Gum";"Sab"
 %
 % Full weekday names (%A)
 %
-day      "<U0041><U0063><U0061><U0061><U0064><U0061>";/
-         "<U0045><U0074><U006C><U0065><U0065><U006E><U0069>";/
-         "<U0054><U0061><U006C><U0061><U0061><U0074><U0061>";/
-         "<U0041><U0072><U0062><U0061><U0071><U0061>";/
-         "<U004B><U0061><U006D><U0069><U0069><U0073><U0069>";/
-         "<U0047><U0075><U006D><U0071><U0061><U0074><U0061>";/
-         "<U0053><U0061><U0062><U0074><U0069>"
+day      "Acaada";/
+         "Etleeni";/
+         "Talaata";/
+         "Arbaqa";/
+         "Kamiisi";/
+         "Gumqata";/
+         "Sabti"
 %
 % Abbreviated month names (%b)
 %
-abmon    "<U0051><U0075><U006E>";/
-         "<U004E><U0061><U0068>";/
-         "<U0043><U0069><U0067>";/
-         "<U0041><U0067><U0064>";/
-         "<U0043><U0061><U0078>";/
-         "<U0051><U0061><U0073>";/
-         "<U0051><U0061><U0064>";/
-         "<U004C><U0065><U0071>";/
-         "<U0057><U0061><U0079>";/
-         "<U0044><U0069><U0074>";/
-         "<U0058><U0069><U006D>";/
-         "<U004B><U0061><U0078>"
+abmon    "Qun";/
+         "Nah";/
+         "Cig";/
+         "Agd";/
+         "Cax";/
+         "Qas";/
+         "Qad";/
+         "Leq";/
+         "Way";/
+         "Dit";/
+         "Xim";/
+         "Kax"
 %
 % Full month names (%B)
 %
-mon      "<U0051><U0075><U006E><U0078><U0061><U0020><U0047><U0061><U0072><U0061><U0062><U006C><U0075>";/
-         "<U004E><U0061><U0068><U0061><U0072><U0073><U0069><U0020><U004B><U0075><U0064><U006F>";/
-         "<U0043><U0069><U0067><U0067><U0069><U006C><U0074><U0061><U0020><U004B><U0075><U0064><U006F>";/
-         "<U0041><U0067><U0064><U0061><U0020><U0042><U0061><U0078><U0069><U0073><U0073><U006F>";/
-         "<U0043><U0061><U0078><U0061><U0068><U0020><U0041><U006C><U0073><U0061>";/
-         "<U0051><U0061><U0073><U0061><U0020><U0044><U0069><U0072><U0072><U0069>";/
-         "<U0051><U0061><U0064><U006F><U0020><U0044><U0069><U0072><U0072><U0069>";/
-         "<U004C><U0065><U0071><U0065><U0065><U006E><U0069>";/
-         "<U0057><U0061><U0079><U0073><U0075>";/
-         "<U0044><U0069><U0074><U0065><U006C><U0069>";/
-         "<U0058><U0069><U006D><U006F><U006C><U0069>";/
-         "<U004B><U0061><U0078><U0078><U0061><U0020><U0047><U0061><U0072><U0061><U0062><U006C><U0075>"
+mon      "Qunxa Garablu";/
+         "Naharsi Kudo";/
+         "Ciggilta Kudo";/
+         "Agda Baxisso";/
+         "Caxah Alsa";/
+         "Qasa Dirri";/
+         "Qado Dirri";/
+         "Leqeeni";/
+         "Waysu";/
+         "Diteli";/
+         "Ximoli";/
+         "Kaxxa Garablu"
 %
 % Equivalent of AM PM
 %
-am_pm    "<U0073><U0061><U0061><U006B><U0075>";/
-         "<U0063><U0061><U0072><U0072><U0061>"
+am_pm    "saaku";"carra"
 %
 % Appropriate date representation (%x)
-%	"%d/%m/%Y"
-%
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
-%	"%l:%M:%S"
-%
-t_fmt "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%l:%M:%S"
 %
 % Appropriate AM/PM time representation (%r)
-%	"%X %p"
-%
-t_fmt_ampm "<U0025><U0058><U0020><U0025><U0070>"
+t_fmt_ampm "%X %p"
 %
 % Appropriate date and time representation (%c)
-%	"%A, %B %e, %Y %r %Z
-%
-d_t_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
+d_t_fmt    "%A, %B %e, %Y %r %Z"
 %
 % Appropriate date representation (date(1))
-%	"%A, %b %e, %r %Z %Y"
-%
-date_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0072><U0020><U0025><U005A><U0020><U0025><U0059>"
+date_fmt    "%A, %B %e, %r %Z %Y"
 %
 week 7;19971130;1
 first_weekday 2

@@ -49,19 +49,18 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% Januari, Februari, Machi, Epreo, Mei, Juni, Julai, Ogasti, Septemba, Oktoba, Novemba, Disemba
-mon  "<U004A><U0061><U006E><U0075><U0061><U0072><U0069>";/
-     "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
-     "<U004D><U0061><U0063><U0068><U0069>";/
-     "<U0045><U0070><U0072><U0065><U006F>";/
-     "<U004D><U0065><U0069>";/
-     "<U004A><U0075><U006E><U0069>";/
-     "<U004A><U0075><U006C><U0061><U0069>";/
-     "<U004F><U0067><U0061><U0073><U0074><U0069>";/
-     "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-     "<U004F><U006B><U0074><U006F><U0062><U0061>";/
-     "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-     "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+mon  "Januari";/
+     "Februari";/
+     "Machi";/
+     "Epreo";/
+     "Mei";/
+     "Juni";/
+     "Julai";/
+     "Ogasti";/
+     "Septemba";/
+     "Oktoba";/
+     "Novemba";/
+     "Disemba"
 abmon  "Jan";/
        "Feb";/
        "Mac";/
@@ -74,59 +73,44 @@ abmon  "Jan";/
        "Okt";/
        "Nov";/
        "Dis"
-% Pa Mulungu, Palichimo, Palichibuli, Palichitatu, Palichine, Palichisano, Pachibelushi
-day  "<U0050><U0061><U0020><U004D><U0075><U006C><U0075><U006E><U0067><U0075>";/
-     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U006D><U006F>";/
-     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0062><U0075><U006C><U0069>";/
-     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0074><U0061><U0074><U0075>";/
-     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U006E><U0065>";/
-     "<U0050><U0061><U006C><U0069><U0063><U0068><U0069><U0073><U0061><U006E><U006F>";/
-     "<U0050><U0061><U0063><U0068><U0069><U0062><U0065><U006C><U0075><U0073><U0068><U0069>"
-% Sun, Mon, Tue, Wed, Thu, Fri, Sat
-abday  "<U0053><U0075><U006E>";/
-       "<U004D><U006F><U006E>";/
-       "<U0054><U0075><U0065>";/
-       "<U0057><U0065><U0064>";/
-       "<U0054><U0068><U0075>";/
-       "<U0046><U0072><U0069>";/
-       "<U0053><U0061><U0074>"
+day  "Pa Mulungu";/
+     "Palichimo";/
+     "Palichibuli";/
+     "Palichitatu";/
+     "Palichine";/
+     "Palichisano";/
+     "Pachibelushi"
+abday  "Sun";/
+       "Mon";/
+       "Tue";/
+       "Wed";/
+       "Thu";/
+       "Fri";/
+       "Sat"
 week 7;19971130;1
 first_weekday 2
-% %a %d %b %Y %R %Z
-d_t_fmt  "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020>/
-<U0025><U0052><U0020><U0025><U005A>"
-% %m/%d/%Y
-d_fmt  "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
+d_t_fmt  "%a %d %b %Y %R %Z"
+d_fmt  "%m//%d//%Y"
 % %T (HH:MM:SS)
-t_fmt  "<U0025><U0054>"
-% uluchelo, akasuba
-am_pm  "<U0075><U006C><U0075><U0063><U0068><U0065><U006C><U006F>";/
-       "<U0061><U006B><U0061><U0073><U0075><U0062><U0061>"
-% %I:%M:%S %p
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+t_fmt  "%T"
+am_pm  "uluchelo";"akasuba"
+t_fmt_ampm  "%I:%M:%S %p"
 END LC_TIME
 
 LC_NUMERIC
-% .
-decimal_point  "<U002E>"
-% ,
-thousands_sep  "<U002C>"
+decimal_point  "."
+thousands_sep  ","
 grouping  3
 END LC_NUMERIC
 
 LC_MONETARY
-% K
-currency_symbol  "<U004B>"
-% ZMW
-int_curr_symbol  "<U005A><U004D><U0057><U0020>"
-% .
-mon_decimal_point  "<U002E>"
-% ,
-mon_thousands_sep  "<U002C>"
+currency_symbol  "K"
+int_curr_symbol  "ZMW "
+mon_decimal_point  "."
+mon_thousands_sep  ","
 mon_grouping  3
 positive_sign  ""
-% -
-negative_sign  "<U002D>"
+negative_sign  "-"
 frac_digits      2
 int_frac_digits  2
 p_cs_precedes   1
@@ -153,50 +137,30 @@ nostr   "Awe"
 END LC_MESSAGES
 
 LC_NAME
-% %p%t%d1%g%t%M%f
-name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0064><U0031><U0025><U0067><U0025><U0074><U0025><U004D><U0025><U0066>"
-% Ba
-name_gen  "<U0042><U0061>"
-% Ba
-name_miss "<U0042><U0061>"
-% Ba
-name_mr   "<U0042><U0061>"
-% Bana
-name_mrs  "<U0042><U0061><U006E><U0061>"
-% Ba
-name_ms   "<U0042><U0061>"
+name_fmt  "%p%t%d1%g%t%M%f"
+name_gen  "Ba"
+name_miss "Ba"
+name_mr   "Ba"
+name_mrs  "Bana"
+name_ms   "Ba"
 END LC_NAME
 
 LC_ADDRESS
-% %a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N
-postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0065><U0020>/
-<U0025><U0068><U0025><U004E><U0025><U0062><U0020><U0025><U0073><U0025><U004E><U0025><U007A>/
-<U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% Zambia
-country_name  "<U005A><U0061><U006D><U0062><U0069><U0061>"
-% ZM
-country_post  "<U005A><U004D>"
-% ZM
-country_ab2   "<U005A><U004D>"
-% ZMB
-country_ab3   "<U005A><U004D><U0042>"
+postal_fmt  "%a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N"
+country_name  "Zambia"
+country_post  "ZM"
+country_ab2   "ZM"
+country_ab3   "ZMB"
 country_num   894
-% Z
-country_car  "<U005A>"
-lang_name     "<U0049><U0063><U0068><U0069><U0062><U0065><U006D><U0062><U0061>"
-% bem
-lang_term    "<U0062><U0065><U006D>"
-% bem
-lang_lib    "<U0062><U0065><U006D>"
+country_car   "Z"
+lang_name     "Ichibemba"
+lang_term    "bem"
+lang_lib    "bem"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% +%c %A %l
-tel_int_fmt  "<U002B><U0025><U0063><U0020><U0025><U0041><U0020><U0025><U006C>"
-% %A %l
-tel_dom_fmt  "<U0025><U0041><U0020><U0025><U006C>"
-% 00
-int_select  "<U0030><U0030>"
-% 260
-int_prefix  "<U0032><U0036><U0030>"
+tel_int_fmt  "+%c %A %l"
+tel_dom_fmt  "%A %l"
+int_select  "00"
+int_prefix  "260"
 END LC_TELEPHONE

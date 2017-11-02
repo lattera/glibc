@@ -85,24 +85,16 @@ copy "ca_ES"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0049><U0074><U00E0><U006C><U0069><U0061>"
-country_ab2 "<U0049><U0054>"
-country_ab3 "<U0049><U0054><U0041>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "It<U00E0>lia"
+country_ab2 "IT"
+country_ab3 "ITA"
 country_num 380
-% I
-country_car    "<U0049>"
+country_car    "I"
 country_isbn "978-88,979-12"
 % català
-lang_name    "<U0063><U0061><U0074><U0061><U006C><U00E0>"
-% ca
-lang_ab      "<U0063><U0061>"
-% cat
-lang_term    "<U0063><U0061><U0074>"
-% cat
-lang_lib    "<U0063><U0061><U0074>"
+lang_name    "catal<U00E0>"
+lang_ab      "ca"
+lang_term    "cat"
+lang_lib    "cat"
 END LC_ADDRESS

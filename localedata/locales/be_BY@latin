@@ -59,49 +59,48 @@ noexpr  "^[-0Nn]"
 END LC_MESSAGES
 
 LC_TIME
-abday   "<U004E><U0069><U0061>";/
-        "<U0050><U0061><U006E>";/
-        "<U0041><U016D><U0074>";/
-        "<U0053><U0069><U0065>";/
-        "<U010C><U0061><U0107>";/
-        "<U0050><U0069><U0061>";/
-        "<U0053><U0075><U0062>"
-day     "<U004E><U0069><U0061><U0064><U007A><U0069><U0065><U006C><U0061>";/
-        "<U0050><U0061><U006E><U0069><U0061><U0064><U007A><U0069><U0065><U0142><U0061><U006B>";/
-	"<U0041><U016D><U0074><U006F><U0072><U0061><U006B>";/
-        "<U0053><U0069><U0065><U0072><U0061><U0064><U0061>";/
-        "<U010C><U0061><U0107><U0076><U0069><U0065><U0072>";/
-        "<U0050><U0069><U0061><U0074><U006E><U0069><U0063><U0061>";/
-        "<U0053><U0075><U0062><U006F><U0074><U0061>"
-abmon	"<U0053><U0074><U0075>";/
-	"<U004C><U0075><U0074>";/
-        "<U0053><U0061><U006B>";/
-        "<U004B><U0072><U0061>";/
-        "<U004D><U0061><U006A>";/
-        "<U010C><U0065><U0072>";/
-        "<U004C><U0069><U0070>";/
-        "<U017D><U006E><U0069>";/
-        "<U0056><U0069><U0065>";/
-        "<U004B><U0061><U0073>";/
-        "<U004C><U0069><U0073>";/
-	"<U015A><U006E><U0069>"
-mon     "<U0053><U0074><U0075><U0064><U007A><U0069><U0065><U0144>";/
-	"<U004C><U0075><U0074><U0079>";/
-	"<U0053><U0061><U006B><U0061><U0076><U0069><U006B>";/
-	"<U004B><U0072><U0061><U0073><U0061><U0076><U0069><U006B>";/
-	"<U004D><U0061><U006A>";/
-	"<U010C><U0065><U0072><U0076><U0069><U0065><U0144>";/
-	"<U004C><U0069><U0070><U0069><U0065><U0144>";/
-	"<U017D><U006E><U0069><U0076><U0069><U0065><U0144>";/
-	"<U0056><U0069><U0065><U0072><U0061><U0073><U0069><U0065><U0144>";/
-	"<U004B><U0061><U0073><U0074><U0072><U0079><U010D><U006E><U0069><U006B>";/
-	"<U004C><U0069><U0073><U0074><U0061><U0070><U0061><U0064>";/
-	"<U015A><U006E><U0069><U0065><U017E><U0061><U0144>"
+abday   "Nia";/
+        "Pan";/
+        "A<U016D>t";/
+        "Sie";/
+        "<U010C>a<U0107>";/
+        "Pia";/
+        "Sub"
+day     "Niadziela";/
+        "Paniadzie<U0142>ak";/
+        "A<U016D>torak";/
+        "Sierada";/
+        "<U010C>a<U0107>vier";/
+        "Piatnica";/
+        "Subota"
+abmon   "Stu";/
+        "Lut";/
+        "Sak";/
+        "Kra";/
+        "Maj";/
+        "<U010C>er";/
+        "Lip";/
+        "<U017D>ni";/
+        "Vie";/
+        "Kas";/
+        "Lis";/
+        "<U015A>ni"
+mon     "Studzie<U0144>";/
+	"Luty";/
+	"Sakavik";/
+	"Krasavik";/
+	"Maj";/
+	"<U010C>ervie<U0144>";/
+	"Lipie<U0144>";/
+	"<U017D>nivie<U0144>";/
+	"Vierasie<U0144>";/
+	"Kastry<U010D>nik";/
+	"Listapad";/
+	"<U015A>nie<U017E>a<U0144>"
 am_pm     "";""
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059><U0020><U0025><U0054>"
-d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt     "<U0025><U0054>"
+d_t_fmt "%a %d %b %Y %T"
+d_fmt     "%d.%m.%Y"
+t_fmt     "%T"
 t_fmt_ampm ""
 week 7;19971130;1
 first_weekday 2
@@ -112,13 +111,13 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol           "<U0042><U0059><U0052><U0020>"
-currency_symbol           "<U0052><U0075><U0062>"
-mon_decimal_point         "<U002E>"
+int_curr_symbol           "BYR "
+currency_symbol           "Rub"
+mon_decimal_point         "."
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -138,26 +137,17 @@ copy "be_BY"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % https://en.wikipedia.org/wiki/Belarus: "Belarusian: Беларусь, Belaruś or Bełaruś"
 country_name "Bie<U0142>aru<U015B>"
-country_ab2 "<U0042><U0059>"
-country_ab3 "<U0042><U004C><U0052>"
+country_ab2 "BY"
+country_ab3 "BLR"
 country_num 112
-% BY
-country_car    "<U0042><U0059>"
-% byelaruskaya mova
-lang_name    "<U0062><U0079><U0065><U006C><U0061><U0072><U0075><U0073><U006B><U0061><U0079><U0061><U0020><U006D><U006F><U0076><U0061>"
-% be
-lang_ab      "<U0062><U0065>"
-% bel
-lang_term    "<U0062><U0065><U006C>"
-% bel
-lang_lib    "<U0062><U0065><U006C>"
+country_car    "BY"
+lang_name    "byelaruskaya mova"
+lang_ab      "be"
+lang_term    "bel"
+lang_lib    "bel"
 END LC_ADDRESS
 
 LC_TELEPHONE

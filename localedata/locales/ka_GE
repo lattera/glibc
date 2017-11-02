@@ -36,25 +36,19 @@ category "i18n:2012";LC_MONETARY
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
-<U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
-<U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
 country_name "<U10E1><U10D0><U10E5><U10D0><U10E0><U10D7><U10D5><U10D4><U10DA><U10DD>"
 % country_post "GE" for Georgia ?
 country_ab2 "GE"
 country_ab3 "GEO"
 country_num 268
-% GE
-country_car    "<U0047><U0045>"
+country_car "GE"
 country_isbn "99928"
 % ქართული
 lang_name    "<U10E5><U10D0><U10E0><U10D7><U10E3><U10DA><U10D8>"
-% ka
-lang_ab      "<U006B><U0061>"
-% kat
-lang_term    "<U006B><U0061><U0074>"
-% geo
-lang_lib     "<U0067><U0065><U006F>"
+lang_ab      "ka"
+lang_term    "kat"
+lang_lib     "geo"
 END LC_ADDRESS
 
 LC_COLLATE
@@ -66,13 +60,13 @@ copy "en_DK"
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol      "<U0047><U0045><U004C><U0020>"
+int_curr_symbol      "GEL "
 currency_symbol      "<U20BE>"
-mon_decimal_point    "<U002C>"
-mon_thousands_sep    "<U002E>"
+mon_decimal_point    ","
+mon_thousands_sep    "."
 mon_grouping         3;3
 positive_sign        ""
-negative_sign        "<U002D>"
+negative_sign        "-"
 int_frac_digits      2
 frac_digits          2
 p_cs_precedes        1
@@ -84,8 +78,8 @@ n_sign_posn          1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point        "<U002C>"
-thousands_sep        "<U002E>"
+decimal_point        ","
+thousands_sep        "."
 grouping             3;3
 END LC_NUMERIC
 
@@ -134,9 +128,9 @@ mon	/
 "<U10D3><U10D4><U10D9><U10D4><U10DB><U10D1><U10D4><U10E0><U10D8>"
 
 %"%Y ÜÊÈÑ %d %B"
-d_t_fmt  "<U0025><U0059><U0020><U10EC><U10DA><U10D8><U10E1><U0020><U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt    "<U0025><U006D><U002F><U0025><U0064><U002F><U0025><U0059>"
-t_fmt    "<U0025><U0054>"
+d_t_fmt  "%Y <U10EC><U10DA><U10D8><U10E1> %d %B, %T %Z"
+d_fmt    "%m//%d//%Y"
+t_fmt    "%T"
 am_pm    "";""
 t_fmt_ampm  ""
 week 7;19971130;1
@@ -159,10 +153,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+tel_int_fmt "+%c %a %l"
 % FIXME Find tel_dom_fmt
-int_select "<U0038><U007E><U0031><U0030>"
-int_prefix "<U0039><U0039><U0035>"
+int_select "8~10"
+int_prefix "995"
 END LC_TELEPHONE
 
 LC_NAME

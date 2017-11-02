@@ -59,13 +59,13 @@ copy "sr_RS"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol           "<U0052><U0053><U0044><U0020>"
-currency_symbol           "<U0064><U0069><U006E>"
-mon_decimal_point         "<U002C>"
-mon_thousands_sep         "<U002E>"
+int_curr_symbol           "RSD "
+currency_symbol           "din"
+mon_decimal_point         ","
+mon_thousands_sep         "."
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           0
 frac_digits               0
 p_cs_precedes             1
@@ -81,46 +81,42 @@ copy "sr_RS"
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U006E><U0065><U0064>";"<U0070><U006F><U006E>";/
-        "<U0075><U0074><U006F>";"<U0073><U0072><U0065>";/
-        "<U010D><U0065><U0074>";"<U0070><U0065><U0074>";/
-        "<U0073><U0075><U0062>"
-day     "<U006E><U0065><U0064><U0065><U006C><U006A><U0061>";/
-        "<U0070><U006F><U006E><U0065><U0064><U0065><U006C><U006A><U0061><U006B>";/
-        "<U0075><U0074><U006F><U0072><U0061><U006B>";/
-        "<U0073><U0072><U0065><U0064><U0061>";/
-        "<U010D><U0065><U0074><U0076><U0072><U0074><U0061><U006B>";/
-        "<U0070><U0065><U0074><U0061><U006B>";/
-        "<U0073><U0075><U0062><U006F><U0074><U0061>"
-abmon   "<U006A><U0061><U006E>";"<U0066><U0065><U0062>";/
-        "<U006D><U0061><U0072>";"<U0061><U0070><U0072>";/
-        "<U006D><U0061><U006A>";"<U006A><U0075><U006E>";/
-        "<U006A><U0075><U006C>";"<U0061><U0076><U0067>";/
-        "<U0073><U0065><U0070>";"<U006F><U006B><U0074>";/
-        "<U006E><U006F><U0076>";"<U0064><U0065><U0063>"
-mon     "<U006A><U0061><U006E><U0075><U0061><U0072>";/
-        "<U0066><U0065><U0062><U0072><U0075><U0061><U0072>";/
-        "<U006D><U0061><U0072><U0074>";/
-        "<U0061><U0070><U0072><U0069><U006C>";/
-        "<U006D><U0061><U006A>";/
-        "<U006A><U0075><U006E>";/
-        "<U006A><U0075><U006C>";/
-        "<U0061><U0076><U0067><U0075><U0073><U0074>";/
-        "<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0061><U0072>";/
-        "<U006F><U006B><U0074><U006F><U0062><U0061><U0072>";/
-        "<U006E><U006F><U0076><U0065><U006D><U0062><U0061><U0072>";/
-        "<U0064><U0065><U0063><U0065><U006D><U0062><U0061><U0072>"
+abday   "ned";"pon";/
+        "uto";"sre";/
+        "<U010D>et";"pet";/
+        "sub"
+day     "nedelja";/
+        "ponedeljak";/
+        "utorak";/
+        "sreda";/
+        "<U010D>etvrtak";/
+        "petak";/
+        "subota"
+abmon   "jan";"feb";/
+        "mar";"apr";/
+        "maj";"jun";/
+        "jul";"avg";/
+        "sep";"okt";/
+        "nov";"dec"
+mon     "januar";/
+        "februar";/
+        "mart";/
+        "april";/
+        "maj";/
+        "jun";/
+        "jul";/
+        "avgust";/
+        "septembar";/
+        "oktobar";/
+        "novembar";/
+        "decembar"
 
-d_t_fmt "<U0025><U0041><U002C><U0020><U0025><U0064><U002E><U0020>/
-<U0025><U0042><U0020><U0025><U0059><U002E><U0020><U0025><U0054>/
-<U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059><U002E>"
-t_fmt   "<U0025><U0054>"
+d_t_fmt "%A, %d. %B %Y. %T %Z"
+d_fmt   "%d.%m.%Y."
+t_fmt   "%T"
 am_pm   "";""
-t_fmt_ampm "<U0025><U0054>"
-date_fmt  "<U0025><U0061><U002c><U0020><U0025><U0065><U002E><U0020>/
-<U0025><U0062><U0020><U0025><U0059><U002E><U0020><U0020><U0025><U0048>/
-<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+t_fmt_ampm "%T"
+date_fmt  "%a, %e. %b %Y.  %H:%M:%S %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -137,34 +133,27 @@ copy "sr_RS"
 END LC_PAPER
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
-name_mr     "<U0067><U002D><U0064><U0069><U006E>"
-name_mrs    "<U0067><U002D><U0111><U0061>"
-name_miss   "<U0067><U002D><U0111><U0069><U0063><U0061>"
-name_ms     "<U0067><U002D><U0111><U0061>"
+name_mr     "g-din"
+name_mrs    "g-<U0111>a"
+name_miss   "g-<U0111>ica"
+name_ms     "g-<U0111>a"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_ab2   "<U0052><U0053>"
-country_ab3   "<U0053><U0052><U0042>"
-country_post  "<U0052><U0053>"
-country_name "<U0053><U0072><U0062><U0069><U006A><U0061>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_ab2   "RS"
+country_ab3   "SRB"
+country_post  "RS"
+country_name "Srbija"
 country_num   688
-country_car   "<U0053><U0052><U0042>"
+country_car   "SRB"
 country_isbn  86
-lang_name     "<U0073><U0072><U0070><U0073><U006B><U0069>"
-% srp
-lang_term     "<U0073><U0072><U0070>"
-% srp
-lang_lib      "<U0073><U0072><U0070>"
-lang_ab	      "<U0073><U0072>"
+lang_name     "srpski"
+lang_term     "srp"
+lang_lib      "srp"
+lang_ab	      "sr"
 END LC_ADDRESS
 
 LC_TELEPHONE

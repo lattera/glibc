@@ -47,97 +47,84 @@ LC_TIME
 % http://www.weltec.ac.nz/Portals/0/pasifika/A4card_tonga_2014%20(3).pdf
 % http://scriptsource.org/cms/scripts/page.php?item_id=entry_detail&uid=ux3sxwufev
 % Full month names (%B)
-mon  "<U0053><U0101><U006E><U0075><U0061><U006C><U0069>";/
-     "<U0046><U0113><U0070><U0075><U0065><U006C><U0069>";/
-     "<U004D><U0061><U02BB><U0061><U0073><U0069>";/
-     "<U02BB><U0045><U0070><U0065><U006C><U0065><U006C><U0069>";/
-     "<U004D><U0113>";/
-     "<U0053><U0075><U006E><U0065>";/
-     "<U0053><U0069><U0075><U006C><U0061><U0069>";/
-     "<U02BB><U0041><U006F><U006B><U006F><U0073><U0069>";/
-     "<U0053><U0065><U0070><U0069><U0074><U0065><U006D><U0061>";/
-     "<U02BB><U004F><U006B><U0061><U0074><U006F><U0070><U0061>";/
-     "<U004E><U014D><U0076><U0065><U006D><U0061>";/
-     "<U0054><U012B><U0073><U0065><U006D><U0061>"
+mon  "S<U0101>nuali";/
+     "F<U0113>pueli";/
+     "Ma<U02BB>asi";/
+     "<U02BB>Epeleli";/
+     "M<U0113>";/
+     "Sune";/
+     "Siulai";/
+     "<U02BB>Aokosi";/
+     "Sepitema";/
+     "<U02BB>Okatopa";/
+     "N<U014D>vema";/
+     "T<U012B>sema"
 % Abbreviated month names (%b)
-abmon  "<U0053><U0101><U006E>";/
-       "<U0046><U0113><U0070>";/
-       "<U004D><U0061><U02BB><U0061>";/
-       "<U02BB><U0045><U0070><U0065>";/
-       "<U004D><U0113>";/
-       "<U0053><U0075><U006E>";/
-       "<U0053><U0069><U0075>";/
-       "<U02BB><U0041><U006F><U006B>";/
-       "<U0053><U0065><U0070>";/
-       "<U02BB><U004F><U006B><U0061>";/
-       "<U004E><U014D><U0076>";/
-       "<U0054><U012B><U0073>"
+abmon  "S<U0101>n";/
+       "F<U0113>p";/
+       "Ma<U02BB>a";/
+       "<U02BB>Epe";/
+       "M<U0113>";/
+       "Sun";/
+       "Siu";/
+       "<U02BB>Aok";/
+       "Sep";/
+       "<U02BB>Oka";/
+       "N<U014D>v";/
+       "T<U012B>s"
 % http://www.weltec.ac.nz/Portals/0/pasifika/A4card_tonga_2014%20(3).pdf
 % http://scriptsource.org/cms/scripts/page.php?item_id=entry_detail&uid=ux3sxwufev
 % Full weekday names (%A)
-day  "<U0053><U0101><U0070><U0061><U0074><U0065>";/
-     "<U004D><U014D><U006E><U0069><U0074><U0065>";/
-     "<U0054><U016B><U0073><U0069><U0074><U0065>";/
-     "<U0050><U0075><U006C><U0065><U006C><U0075><U006C><U0075>";/
-     "<U0054><U0075><U02BB><U0061><U0070><U0075><U006C><U0065><U006C><U0075><U006C><U0075>";/
-     "<U0046><U0061><U006C><U0061><U0069><U0074><U0065>";/
-     "<U0054><U006F><U006B><U006F><U006E><U0061><U006B><U0069>"
+day  "S<U0101>pate";/
+     "M<U014D>nite";/
+     "T<U016B>site";/
+     "Pulelulu";/
+     "Tu<U02BB>apulelulu";/
+     "Falaite";/
+     "Tokonaki"
 % Abbreviated weekday names (%a)
-abday  "<U0053><U0101><U0070>";/
-       "<U004D><U014D><U006E>";/
-       "<U0054><U016B><U0073>";/
-       "<U0050><U0075><U006C>";/
-       "<U0054><U0075><U02BB><U0061>";/
-       "<U0046><U0061><U006C>";/
-       "<U0054><U006F><U006B>"
+abday  "S<U0101>p";/
+       "M<U014D>n";/
+       "T<U016B>s";/
+       "Pul";/
+       "Tu<U02BB>a";/
+       "Fal";/
+       "Tok"
 % Equivalent of AM PM
 % hengihengi, efiafi
-am_pm  "<U0068><U0065><U006E><U0067><U0069><U0068><U0065><U006E><U0067><U0069>";/
-       "<U0065><U0066><U0069><U0061><U0066><U0069>"
+am_pm  "hengihengi";"efiafi"
 
 %
 % Appropriate date and time representation
-% %A %d %b %Y%I:%M:%S %Z
-d_t_fmt     "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062>/
-<U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A>/
-<U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+d_t_fmt     "%A %d %b %Y %I:%M:%S %p %Z"
 %
 % Appropriate date representation
-% %A %d %b %Y
-d_fmt       "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059>"
+d_fmt       "%A %d %b %Y"
 %
 % Appropriate time representation
-% %I:%M:%S  %Z
-t_fmt       "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+t_fmt       "%I:%M:%S %Z"
 %
 % Appropriate 12 h time representation (%r)
 % %I:%M:%S %p %Z
-t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+t_fmt_ampm "%I:%M:%S %p %Z"
 END LC_TIME
 %
 LC_NUMERIC
-% .
-decimal_point "<U002E>"
-% ,
-thousands_sep "<U002C>"
+decimal_point "."
+thousands_sep ","
 grouping      3
 END LC_NUMERIC
 
 % https://en.wikipedia.org/wiki/Tonga
 % https://en.wikipedia.org/wiki/Tongan_pa%CA%BBanga
 LC_MONETARY
-% T$
-currency_symbol    "<U0054><U0024>"
-% TOP
-int_curr_symbol    "<U0054><U004F><U0050><U0020>"
-% .
-mon_decimal_point  "<U002E>"
-% ,
-mon_thousands_sep  "<U002C>"
+currency_symbol    "T$"
+int_curr_symbol    "TOP "
+mon_decimal_point  "."
+mon_thousands_sep  ","
 mon_grouping       3
 positive_sign      ""
-% -
-negative_sign      "<U002D>"
+negative_sign      "-"
 frac_digits        2
 int_frac_digits    2
 p_cs_precedes      1
@@ -171,35 +158,27 @@ END LC_NAME
 
 LC_ADDRESS
 % https://www.grcdi.nl/gsb/tonga.html
-% %a%b%s%c
-postal_fmt   "<U0025><U0061><U0025><U0062><U0025><U0073><U0025><U0063>"
-% Tonga
-country_name "<U0054><U006F><U006E><U0067><U0061>"
+postal_fmt   "%a%b%s%c"
+country_name "Tonga"
 % No code
 country_post ""
 % http://laendercode.net/en/2-letter-list.html
-% TO
-country_ab2  "<U0054><U004F>"
-% TON
+country_ab2  "TO"
 % http://laendercode.net/en/countries.html
-country_ab3  "<U0054><U004F><U004E>"
-country_car  "<U0054><U004F><U004E>"
+country_ab3  "TON"
+country_car  "TON"
 country_num 776
 % Tongan
-lang_name    "<U0054><U006F><U006E><U0067><U0061><U000A>"
+lang_name    "Tonga<U000A>"
 % https://en.wikipedia.org/wiki/Tongan_language
-% to
-lang_ab      "<U0074><U006F>"
-lang_term    "<U0074><U006F><U006E>"
-lang_lib     "<U0074><U006F><U006E>"
+lang_ab      "to"
+lang_term    "ton"
+lang_lib     "ton"
 END LC_ADDRESS
 
 LC_TELEPHONE
 % https://www.howtocallabroad.com/tonga/
-% +%c %l
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U006C>"
-% 00
-int_select  "<U0030><U0030>"
-% 676
-int_prefix  "<U0036><U0037><U0036>"
+tel_int_fmt "+%c %l"
+int_select  "00"
+int_prefix  "676"
 END LC_TELEPHONE

@@ -65,59 +65,49 @@ END LC_COLLATE
 % LC_TIME: Use Quechua transliteration of Spanish day and month names
 
 LC_TIME
-% iniru, phiwriru, marsu, awril, mayu, huniyu, huliyu, agustu,siptiyimri, uktuwri, nuwiyimri, tisiyimri
-mon           "<U0069><U006E><U0069><U0072><U0075>";/
-     "<U0070><U0068><U0069><U0077><U0072><U0069><U0072><U0075>";/
-     "<U006D><U0061><U0072><U0073><U0075>";/
-     "<U0061><U0077><U0072><U0069><U006C>";/
-     "<U006D><U0061><U0079><U0075>";/
-     "<U0068><U0075><U006E><U0069><U0079><U0075>";/
-     "<U0068><U0075><U006C><U0069><U0079><U0075>";/
-     "<U0061><U0067><U0075><U0073><U0074><U0075>";/
-     "<U0073><U0069><U0070><U0074><U0069><U0079><U0069><U006D><U0072><U0069>";/
-     "<U0075><U006B><U0074><U0075><U0077><U0072><U0069>";/
-     "<U006E><U0075><U0077><U0069><U0079><U0069><U006D><U0072><U0069>";/
-     "<U0074><U0069><U0073><U0069><U0079><U0069><U006D><U0072><U0069>"
-% ini, phi, mar, awr, may, hun, hul, agu, sip, ukt, nuw, tis
-abmon         "<U0069><U006E><U0069>";/
-       "<U0070><U0068><U0069>";/
-       "<U006D><U0061><U0072>";/
-       "<U0061><U0077><U0072>";/
-       "<U006D><U0061><U0079>";/
-       "<U0068><U0075><U006E>";/
-       "<U0068><U0075><U006C>";/
-       "<U0061><U0067><U0075>";/
-       "<U0073><U0069><U0070>";/
-       "<U0075><U006B><U0074>";/
-       "<U006E><U0075><U0077>";/
-       "<U0074><U0069><U0073>"
-% tuminku, lunis, martis, miyirkulis, juywis, wiyirnis, sawatu
-day           "<U0074><U0075><U006D><U0069><U006E><U006B><U0075>";/
-     "<U006C><U0075><U006E><U0069><U0073>";/
-     "<U006D><U0061><U0072><U0074><U0069><U0073>";/
-     "<U006D><U0069><U0079><U0069><U0072><U006B><U0075><U006C><U0069><U0073>";/
-     "<U006A><U0075><U0079><U0077><U0069><U0073>";/
-     "<U0077><U0069><U0079><U0069><U0072><U006E><U0069><U0073>";/
-     "<U0073><U0061><U0077><U0061><U0074><U0075>"
-% tum, lun, mar, miy, juy, wiy, saw
-abday         "<U0074><U0075><U006D>";/
-       "<U006C><U0075><U006E>";/
-       "<U006D><U0061><U0072>";/
-       "<U006D><U0069><U0079>";/
-       "<U006A><U0075><U0079>";/
-       "<U0077><U0069><U0079>";/
-       "<U0073><U0061><U0077>"
-% %a %d %b %Y %T %Z
-d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-% %d/%m/%y
-d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-% %I:%M:%S %p
-t_fmt         "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-% AM, PM
-am_pm         "<U0041><U004D>";/
-       "<U0050><U004D>"
-% %I:%M:%S %p
-t_fmt_ampm    "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+mon           "iniru";/
+     "phiwriru";/
+     "marsu";/
+     "awril";/
+     "mayu";/
+     "huniyu";/
+     "huliyu";/
+     "agustu";/
+     "siptiyimri";/
+     "uktuwri";/
+     "nuwiyimri";/
+     "tisiyimri"
+abmon         "ini";/
+       "phi";/
+       "mar";/
+       "awr";/
+       "may";/
+       "hun";/
+       "hul";/
+       "agu";/
+       "sip";/
+       "ukt";/
+       "nuw";/
+       "tis"
+day           "tuminku";/
+     "lunis";/
+     "martis";/
+     "miyirkulis";/
+     "juywis";/
+     "wiyirnis";/
+     "sawatu"
+abday         "tum";/
+       "lun";/
+       "mar";/
+       "miy";/
+       "juy";/
+       "wiy";/
+       "saw"
+d_t_fmt       "%a %d %b %Y %T %Z"
+d_fmt         "%d//%m//%y"
+t_fmt         "%I:%M:%S %p"
+am_pm         "AM";"PM"
+t_fmt_ampm    "%I:%M:%S %p"
 week 7;19971130;1
 END LC_TIME
 
@@ -149,22 +139,14 @@ copy "es_PE"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_ab2   "<U0050><U0045>"
-country_ab3   "<U0050><U0045><U0052>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_ab2   "PE"
+country_ab3   "PER"
 country_num   604
-% PE
-country_car    "<U0050><U0045>"
-% Quechua (Cusco)
-lang_name    "<U0051><U0075><U0065><U0063><U0068><U0075><U0061><U0020><U0028><U0043><U0075><U0073><U0063><U006F><U0029>"
-% quz
-lang_term    "<U0071><U0075><U007A>"
-% quz
-lang_lib    "<U0071><U0075><U007A>"
+country_car   "PE"
+lang_name    "Quechua (Cusco)"
+lang_term    "quz"
+lang_lib    "quz"
 END LC_ADDRESS
 
 LC_TELEPHONE

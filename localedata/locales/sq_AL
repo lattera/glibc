@@ -200,13 +200,13 @@ LC_MONETARY
 % These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol       "<U0041><U004C><U004C><U0020>"
-currency_symbol       "<U004C>"
-mon_decimal_point     "<U002C>"
-mon_thousands_sep     "<U002E>"
+int_curr_symbol       "ALL "
+currency_symbol       "L"
+mon_decimal_point     ","
+mon_thousands_sep     "."
 mon_grouping          3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       3
 frac_digits           3
 p_cs_precedes         1
@@ -222,8 +222,8 @@ END LC_MONETARY
 LC_NUMERIC
 % This is the POSIX Locale definition for the LC_NUMERIC  category.
 %
-decimal_point          "<U002C>"
-thousands_sep          "<U002E>"
+decimal_point          ","
+thousands_sep          "."
 grouping               3
 %
 END LC_NUMERIC
@@ -235,64 +235,55 @@ LC_TIME
 % for IBM Class for Unicode/Java
 %
 % Abbreviated weekday names (%a)
-abday       "<U0044><U0069><U0065>";"<U0048><U00EB><U006E>";/
-	    "<U004D><U0061><U0072>";"<U004D><U00EB><U0072>";/
-	    "<U0045><U006E><U006A>";"<U0050><U0072><U0065>";/
-	    "<U0053><U0068><U0074>"
+abday       "Die";"H<U00EB>n";/
+	    "Mar";"M<U00EB>r";/
+	    "Enj";"Pre";"Sht"
 %
 % Full weekday names (%A)
-day         "<U0065><U0020><U0064><U0069><U0065><U006C>";/
-	    "<U0065><U0020><U0068><U00EB><U006E><U00EB>";/
-	    "<U0065><U0020><U006D><U0061><U0072><U0074><U00EB>";/
-	    "<U0065><U0020><U006D><U00EB><U0072><U006B><U0075><U0072>/
-<U00EB>";/
-	    "<U0065><U0020><U0065><U006E><U006A><U0074><U0065>";/
-	    "<U0065><U0020><U0070><U0072><U0065><U006D><U0074><U0065>";/
-	    "<U0065><U0020><U0073><U0068><U0074><U0075><U006E><U00EB>"
+day         "e diel";/
+	    "e h<U00EB>n<U00EB>";/
+	    "e mart<U00EB>";/
+	    "e m<U00EB>rkur<U00EB>";/
+	    "e enjte";/
+	    "e premte";/
+	    "e shtun<U00EB>"
 %
 % Abbreviated month names (%b)
-abmon       "<U004A><U0061><U006E>";"<U0053><U0068><U006B>";/
-	    "<U004D><U0061><U0072>";"<U0050><U0072><U0069>";/
-	    "<U004D><U0061><U006A>";"<U0051><U0065><U0072>";/
-	    "<U004B><U006F><U0072>";"<U0047><U0073><U0068>";/
-	    "<U0053><U0068><U0074>";"<U0054><U0065><U0074>";/
-	    "<U004E><U00EB><U006E>";"<U0044><U0068><U006A>"
+abmon       "Jan";"Shk";/
+	    "Mar";"Pri";/
+	    "Maj";"Qer";/
+	    "Kor";"Gsh";/
+	    "Sht";"Tet";/
+	    "N<U00EB>n";"Dhj"
 %
 % Full month names (%B)
-mon         "<U006A><U0061><U006E><U0061><U0072>";/
-	    "<U0073><U0068><U006B><U0075><U0072><U0074>";/
-	    "<U006D><U0061><U0072><U0073>";/
-	    "<U0070><U0072><U0069><U006C><U006C>";/
-	    "<U006D><U0061><U006A>";/
-	    "<U0071><U0065><U0072><U0073><U0068><U006F><U0072>";/
-	    "<U006B><U006F><U0072><U0072><U0069><U006B>";/
-	    "<U0067><U0075><U0073><U0068><U0074>";/
-	    "<U0073><U0068><U0074><U0061><U0074><U006F><U0072>";/
-	    "<U0074><U0065><U0074><U006F><U0072>";/
-	    "<U006E><U00EB><U006E><U0074><U006F><U0072>";/
-	    "<U0064><U0068><U006A><U0065><U0074><U006F><U0072>"
+mon         "janar";/
+	    "shkurt";/
+	    "mars";/
+	    "prill";/
+	    "maj";/
+	    "qershor";/
+	    "korrik";/
+	    "gusht";/
+	    "shtator";/
+	    "tetor";/
+	    "n<U00EB>ntor";/
+	    "dhjetor"
 %
 % Equivalent of AM PM
-am_pm       "<U0050><U0044>";"<U004D><U0044>"
+am_pm       "PD";"MD"
 %
 % Appropriate date and time representation
-% %Y-%b-%d%I.%M.%S. %Z
-d_t_fmt     "<U0025><U0059><U002D><U0025><U0062><U002D><U0025><U0064>/
-<U0020><U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053><U002E>/
-<U0025><U0070><U0020><U0025><U005A>"
+d_t_fmt     "%Y-%b-%d %I.%M.%S.%p %Z"
 %
 % Appropriate date representation
-% %Y-%b-%d
-d_fmt       "<U0025><U0059><U002D><U0025><U0062><U002D><U0025><U0064>"
+d_fmt       "%Y-%b-%d"
 %
 % Appropriate time representation
-% %I.%M.%S. %Z
-t_fmt       "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053>/
-<U002E><U0020><U0025><U005A>"
+t_fmt       "%I.%M.%S. %Z"
 %
 % Appropriate 12 h time representation (%r)
-t_fmt_ampm  "<U0025><U0049><U002E><U0025><U004D><U002E><U0025><U0053>/
-<U002E><U0025><U0070><U0020><U0025><U005A>"
+t_fmt_ampm  "%I.%M.%S.%p %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -315,13 +306,12 @@ LC_NAME
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_NAME category.
 %
-name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
-<U0025><U0067>"
+name_fmt    "%p%t%f%t%g"
 name_gen    ""
-name_mr     "<U005A><U002E>"
-name_mrs    "<U005A><U006E><U006A><U002E>"
-name_miss   "<U005A><U0073><U0068><U002E>"
-name_ms     "<U005A><U006E><U006A><U002E>"
+name_mr     "Z."
+name_mrs    "Znj."
+name_miss   "Zsh."
+name_ms     "Znj."
 
 END LC_NAME
 
@@ -329,32 +319,25 @@ END LC_NAME
 LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name "<U0053><U0068><U0071><U0069><U0070><U00EB><U0072><U0069>"
-country_ab2 "<U0041><U004C>"
-country_ab3 "<U0041><U004C><U0042>"
+postal_fmt  "%z%c%T%s%b%e%r"
+country_name "Shqip<U00EB>ri"
+country_ab2 "AL"
+country_ab3 "ALB"
 country_num 008
-% AL
-country_car    "<U0041><U004C>"
-% shqip
-lang_name    "<U0073><U0068><U0071><U0069><U0070>"
-% sq
-lang_ab      "<U0073><U0071>"
-% sqi
-lang_term    "<U0073><U0071><U0069>"
-% alb
-lang_lib    "<U0061><U006C><U0062>"
+country_car    "AL"
+lang_name    "shqip"
+lang_ab      "sq"
+lang_term    "sqi"
+lang_lib    "alb"
 END LC_ADDRESS
 
 
 LC_TELEPHONE
 % This is the ISO_IEC TR14652 Locale definition for the
 %
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix     "<U0033><U0035><U0035>"
-int_select     "<U0030><U0030>"
+tel_int_fmt "+%c ;%a ;%l"
+int_prefix     "355"
+int_select     "00"
 
 END LC_TELEPHONE
 

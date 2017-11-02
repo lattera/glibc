@@ -54,56 +54,44 @@ END LC_COLLATE
 
 LC_TIME
 % Am Faoilleach, An Gearran, Am Màrt, An Giblean, An Cèitean, An t-Ògmhios, An t-Iuchar, An Lùnastal, An t-Sultain, An Dàmhair, An t-Samhain, An Dùbhlachd
-mon           "<U0041><U006D><U0020><U0046><U0061><U006F><U0069><U006C><U006C><U0065><U0061><U0063><U0068>";/
-     "<U0041><U006E><U0020><U0047><U0065><U0061><U0072><U0072><U0061><U006E>";/
-     "<U0041><U006D><U0020><U004D><U00E0><U0072><U0074>";/
-     "<U0041><U006E><U0020><U0047><U0069><U0062><U006C><U0065><U0061><U006E>";/
-     "<U0041><U006E><U0020><U0043><U00E8><U0069><U0074><U0065><U0061><U006E>";/
-     "<U0041><U006E><U0020><U0074><U002D><U00D2><U0067><U006D><U0068><U0069><U006F><U0073>";/
-     "<U0041><U006E><U0020><U0074><U002D><U0049><U0075><U0063><U0068><U0061><U0072>";/
-     "<U0041><U006E><U0020><U004C><U00F9><U006E><U0061><U0073><U0074><U0061><U006C>";/
-     "<U0041><U006E><U0020><U0074><U002D><U0053><U0075><U006C><U0074><U0061><U0069><U006E>";/
-     "<U0041><U006E><U0020><U0044><U00E0><U006D><U0068><U0061><U0069><U0072>";/
-     "<U0041><U006E><U0020><U0074><U002D><U0053><U0061><U006D><U0068><U0061><U0069><U006E>";/
-     "<U0041><U006E><U0020><U0044><U00F9><U0062><U0068><U006C><U0061><U0063><U0068><U0064>"
+mon           "Am Faoilleach";/
+     "An Gearran";/
+     "Am M<U00E0>rt";/
+     "An Giblean";/
+     "An C<U00E8>itean";/
+     "An t-<U00D2>gmhios";/
+     "An t-Iuchar";/
+     "An L<U00F9>nastal";/
+     "An t-Sultain";/
+     "An D<U00E0>mhair";/
+     "An t-Samhain";/
+     "An D<U00F9>bhlachd"
 % Faoi, Gearr, Màrt, Gibl, Mhàrt, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
-abmon         "<U0046><U0061><U006F><U0069>";/
-       "<U0047><U0065><U0061><U0072><U0072>";/
-       "<U004D><U00E0><U0072><U0074>";/
-       "<U0047><U0069><U0062><U006C>";/
-       "<U004D><U0068><U00E0><U0072><U0074>";/
-       "<U00D2><U0067><U006D><U0068>";/
-       "<U0049><U0075><U0063><U0068>";/
-       "<U004C><U00F9><U006E><U0061>";/
-       "<U0053><U0075><U006C><U0074>";/
-       "<U0044><U00E0><U006D><U0068>";/
-       "<U0053><U0061><U006D><U0068>";/
-       "<U0044><U00F9><U0062><U0068>"
+abmon         "Faoi";/
+       "Gearr";/
+       "M<U00E0>rt";/
+       "Gibl";/
+       "Mh<U00E0>rt";/
+       "<U00D2>gmh";/
+       "Iuch";/
+       "L<U00F9>na";/
+       "Sult";/
+       "D<U00E0>mh";/
+       "Samh";/
+       "D<U00F9>bh"
 % DiDòmhnaich, DiLuain, DiMàirt, DiCiadain, DiarDaoin, DihAoine, DiSathairne
-day           "<U0044><U0069><U0044><U00F2><U006D><U0068><U006E><U0061><U0069><U0063><U0068>";/
-     "<U0044><U0069><U004C><U0075><U0061><U0069><U006E>";/
-     "<U0044><U0069><U004D><U00E0><U0069><U0072><U0074>";/
-     "<U0044><U0069><U0043><U0069><U0061><U0064><U0061><U0069><U006E>";/
-     "<U0044><U0069><U0061><U0072><U0044><U0061><U006F><U0069><U006E>";/
-     "<U0044><U0069><U0068><U0041><U006F><U0069><U006E><U0065>";/
-     "<U0044><U0069><U0053><U0061><U0074><U0068><U0061><U0069><U0072><U006E><U0065>"
-% DiD, DiL, DiM, DiC, Dia, Dih, DiS
-abday         "<U0044><U0069><U0044>";/
-       "<U0044><U0069><U004C>";/
-       "<U0044><U0069><U004D>";/
-       "<U0044><U0069><U0043>";/
-       "<U0044><U0069><U0061>";/
-       "<U0044><U0069><U0068>";/
-       "<U0044><U0069><U0053>"
-% %a %d %b %Y %T %Z
-d_t_fmt       "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-% %d/%m/%y
-d_fmt         "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-% %r
-t_fmt         "<U0025><U0072>"
-% m, f
-am_pm         "<U006D>";/
-       "<U0066>"
+day           "DiD<U00F2>mhnaich";/
+     "DiLuain";/
+     "DiM<U00E0>irt";/
+     "DiCiadain";/
+     "DiarDaoin";/
+     "DihAoine";/
+     "DiSathairne"
+abday         "DiD";"DiL";"DiM";"DiC";"Dia";"Dih";"DiS"
+d_t_fmt       "%a %d %b %Y %T %Z"
+d_fmt         "%d//%m//%y"
+t_fmt         "%r"
+am_pm         "m";"f"
 t_fmt_ampm    ""
 week 7;19971130;4
 first_weekday 2
@@ -137,25 +125,18 @@ copy "en_GB"
 END LC_NAME
 
 LC_ADDRESS
-% %f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%S%N%c%N
-postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0053><U0025><U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0041><U006E><U0020><U0052><U00EC><U006F><U0067><U0068><U0061><U0063><U0068><U0064><U0020><U0041><U006F><U006E><U0061><U0069><U0063><U0068><U0074><U0065>"
-% GB
-country_ab2  "<U0047><U0042>"
-% GBR
-country_ab3  "<U0047><U0042><U0052>"
+postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%S%N%c%N"
+country_name "An R<U00EC>oghachd Aonaichte"
+country_ab2  "GB"
+country_ab3  "GBR"
 country_num  826
-% GB
-country_car  "<U0047><U0042>"
+country_car  "GB"
 country_isbn 0
 % Gàidhlig
-lang_name    "<U0047><U00E0><U0069><U0064><U0068><U006C><U0069><U0067>"
-% gd
-lang_ab      "<U0067><U0064>"
-% gla
-lang_term    "<U0067><U006C><U0061>"
-% gla
-lang_lib     "<U0067><U006C><U0061>"
+lang_name    "G<U00E0>idhlig"
+lang_ab      "gd"
+lang_term    "gla"
+lang_lib     "gla"
 END LC_ADDRESS
 
 LC_TELEPHONE

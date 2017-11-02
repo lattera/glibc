@@ -47,51 +47,43 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-mon  "<U004A><U0061><U006E><U0075><U0061><U0072><U0069>";/
-     "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
-     "<U004D><U0061><U0063><U0068><U0069>";/
-     "<U0041><U0070><U0072><U0069><U006C><U0069>";/
-     "<U004D><U0065><U0069>";/
-     "<U004A><U0075><U006E><U0069>";/
-     "<U004A><U0075><U006C><U0061><U0069>";/
-     "<U0041><U0067><U006F><U0073><U0074><U0069>";/
-     "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-     "<U004F><U006B><U0074><U006F><U0062><U0061>";/
-     "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-     "<U0044><U0065><U0073><U0065><U006D><U0062><U0061>"
-abmon  "<U004A><U0061><U006E>";/
-       "<U0046><U0065><U0062>";/
-       "<U004D><U0061><U0063>";/
-       "<U0041><U0070><U0072>";/
-       "<U004D><U0065><U0069>";/
-       "<U004A><U0075><U006E>";/
-       "<U004A><U0075><U006C>";/
-       "<U0041><U0067><U006F>";/
-       "<U0053><U0065><U0070>";/
-       "<U004F><U006B><U0074>";/
-       "<U004E><U006F><U0076>";/
-       "<U0044><U0065><U0073>"
-day  "<U004A><U0075><U006D><U0061><U0070><U0069><U006C><U0069>";/
-     "<U004A><U0075><U006D><U0061><U0074><U0061><U0074><U0075>";/
-     "<U004A><U0075><U006D><U0061><U006E><U006E><U0065>";/
-     "<U004A><U0075><U006D><U0061><U0074><U0061><U006E><U006F>";/
-     "<U0041><U006C><U0068><U0061><U006D><U0069><U0073><U0069>";/
-     "<U0049><U006A><U0075><U006D><U0061><U0061>";/
-     "<U004A><U0075><U006D><U0061><U006D><U006F><U0073><U0069>"
-abday  "<U004A><U0032>";/
-       "<U004A><U0033>";/
-       "<U004A><U0034>";/
-       "<U004A><U0035>";/
-       "<U0041><U006C><U0068>";/
-       "<U0049><U006A>";/
-       "<U004A><U0031>"
-d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0049>/
-<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
-d_fmt  "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-t_fmt  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-am_pm  "<U0061><U0073><U0075><U0062><U0075><U0068><U0069>";/
-       "<U0061><U006C><U0061><U0073><U0069><U0072><U0069>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+mon  "Januari";/
+     "Februari";/
+     "Machi";/
+     "Aprili";/
+     "Mei";/
+     "Juni";/
+     "Julai";/
+     "Agosti";/
+     "Septemba";/
+     "Oktoba";/
+     "Novemba";/
+     "Desemba"
+abmon  "Jan";/
+       "Feb";/
+       "Mac";/
+       "Apr";/
+       "Mei";/
+       "Jun";/
+       "Jul";/
+       "Ago";/
+       "Sep";/
+       "Okt";/
+       "Nov";/
+       "Des"
+day  "Jumapili";/
+     "Jumatatu";/
+     "Jumanne";/
+     "Jumatano";/
+     "Alhamisi";/
+     "Ijumaa";/
+     "Jumamosi"
+abday  "J2";"J3";"J4";"J5";"Alh";"Ij";"J1"
+d_t_fmt  "%e %B %Y %I:%M:%S %p %Z"
+d_fmt  "%d//%m//%Y"
+t_fmt  "%I:%M:%S %p"
+am_pm  "asubuhi";"alasiri"
+t_fmt_ampm  "%I:%M:%S %p"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -101,18 +93,13 @@ copy "sw_KE"
 END LC_NUMERIC
 
 LC_MONETARY
-% TSh
-currency_symbol  "<U0054><U0053><U0068>"
-% TZS
-int_curr_symbol  "<U0054><U005A><U0053><U0020>"
-% .
-mon_decimal_point  "<U002E>"
-% ,
-mon_thousands_sep  "<U002C>"
+currency_symbol  "TSh"
+int_curr_symbol  "TZS "
+mon_decimal_point  "."
+mon_thousands_sep  ","
 mon_grouping  3
 positive_sign  ""
-% -
-negative_sign  "<U002D>"
+negative_sign  "-"
 frac_digits  2
 int_frac_digits  2
 p_cs_precedes  1
@@ -140,39 +127,22 @@ copy "sw_KE"
 END LC_NAME
 
 LC_ADDRESS
-% %a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N
-postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E>/
-<U0025><U0062><U0025><U004E><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025>/
-<U0072><U0025><U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025><U004E>/
-<U0025><U0063><U0025><U004E>"
-% Tanzania
-country_name  "<U0054><U0061><U006E><U007A><U0061><U006E><U0069><U0061>"
-% TZ
-country_post  "<U0054><U005A>"
-% TZ
-country_ab2   "<U0054><U005A>"
-% TZA
-country_ab3   "<U0054><U005A><U0041>"
+postal_fmt  "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
+country_name  "Tanzania"
+country_post  "TZ"
+country_ab2   "TZ"
+country_ab3   "TZA"
 country_num   834
-% EAT
-country_car  "<U0045><U0041><U0054>"
-% Kiswahili
-lang_name     "<U004B><U0069><U0073><U0077><U0061><U0068><U0069><U006C><U0069>"
-% sw
-lang_ab      "<U0073><U0077>"
-% swa
-lang_term    "<U0073><U0077><U0061>"
-% swa
-lang_lib     "<U0073><U0077><U0061>"
+country_car  "EAT"
+lang_name     "Kiswahili"
+lang_ab      "sw"
+lang_term    "swa"
+lang_lib     "swa"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% %c %a %l
-tel_int_fmt  "<U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-% %A %l
-tel_dom_fmt  "<U0025><U0041><U0020><U0025><U006C>"
-% 000
-int_select   "<U0030><U0030><U0030>"
-% 255
-int_prefix   "<U0032><U0035><U0035>"
+tel_int_fmt  "%c %a %l"
+tel_dom_fmt  "%A %l"
+int_select   "000"
+int_prefix   "255"
 END LC_TELEPHONE

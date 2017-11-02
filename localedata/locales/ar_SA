@@ -270,13 +270,13 @@ END LC_COLLATE
 % Set up the LC_MONETARY category
 
 LC_MONETARY
-int_curr_symbol	"<U0053><U0041><U0052><U0020>"
-currency_symbol	"<U0631><U002E><U0633>"
-mon_decimal_point	"<U002E>"
+int_curr_symbol	"SAR "
+currency_symbol	"<U0631>.<U0633>"
+mon_decimal_point	"."
 mon_thousands_sep	""
 mon_grouping	-1
 positive_sign	""
-negative_sign	"<U002D>"
+negative_sign	"-"
 int_frac_digits	2
 frac_digits	2
 p_cs_precedes	0
@@ -291,23 +291,17 @@ END LC_MONETARY
 % Set up the LC_NUMERIC category
 
 LC_NUMERIC
-decimal_point	"<U002E>"
+decimal_point	"."
 thousands_sep	""
 grouping	-1
 END LC_NUMERIC
 
 
-% Set up the LC_TIME category
-% d_t_fmt	"%A %e %B %Y  %k:%M:%S"
-% d_fmt	"%A %e %B %Y"
-% t_fmt	"%k:%M:%S"
-% t_fmt_ampm	"%k:%M:%S"
-
 LC_TIME
-d_t_fmt	"<U0025><U0041><U0020><U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0020><U0025><U006B><U003A><U0025><U004D><U003A><U0025><U0053>"
-d_fmt	"<U0025><U0041><U0020><U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059>"
-t_fmt	"<U0025><U006B><U003A><U0025><U004D><U003A><U0025><U0053>"
-t_fmt_ampm	"<U0025><U006B><U003A><U0025><U004D><U003A><U0025><U0053>"
+d_t_fmt	"%A %e %B %Y  %k:%M:%S"
+d_fmt	"%A %e %B %Y"
+t_fmt	"%k:%M:%S"
+t_fmt_ampm	"%k:%M:%S"
 day	"<U0627><U0644><U0623><U062D><U062F>"; /
 	"<U0627><U0644><U0625><U062B><U0646><U064A><U0646>"; /
 	"<U0627><U0644><U062B><U0644><U0627><U062B><U0627><U0621>"; /
@@ -362,11 +356,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0039><U0036><U0036>"
-% 00
-int_select  "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "966"
+int_select  "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -374,27 +366,18 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0627><U0644><U0645><U0645><U0644><U0643><U0629><U0020><U0627><U0644><U0639><U0631><U0628><U064A><U0629><U0020><U0627><U0644><U0633><U0639><U0648><U062F><U064A><U0629>"
-country_ab2 "<U0053><U0041>"
-country_ab3 "<U0053><U0041><U0055>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "<U0627><U0644><U0645><U0645><U0644><U0643><U0629> <U0627><U0644><U0639><U0631><U0628><U064A><U0629> <U0627><U0644><U0633><U0639><U0648><U062F><U064A><U0629>"
+country_ab2 "SA"
+country_ab3 "SAU"
 country_num 682
-% KSA
-country_car    "<U004B><U0053><U0041>"
+country_car  "KSA"
 lang_name    "<U0627><U0644><U0639><U0631><U0628><U064A><U0629>"
-% ar
-lang_ab      "<U0061><U0072>"
-% ara
-lang_term    "<U0061><U0072><U0061>"
-% ara
-lang_lib    "<U0061><U0072><U0061>"
+lang_ab      "ar"
+lang_term    "ara"
+lang_lib    "ara"
 END LC_ADDRESS

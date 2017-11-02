@@ -275,20 +275,18 @@ mon   "<U064A><U0627><U0646><U06CB><U0627><U0631>";/
       "<U062F><U06D0><U0643><U0627><U0628><U0649><U0631>"
 
 % %a، %d-%m-%Y، %T (w، dd-mm-YYYY، HH:MM:SS) (قىسقا ھەپتە، 31-12-2012، 23:08:59)
-d_t_fmt  "<U0025><U0061><U060C><U0020><U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0059>/
-<U060C><U0020><U0025><U0054>"
+d_t_fmt  "%a<U060C> %d-%m-%Y<U060C> %T"
 
 % %a، %d-%m-%Y (w، dd-mm-YYYY) (قىسقا ھەپتە، 31-12-2012)
-d_fmt    "<U0025><U0061><U060C><U0020><U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0059>"
+d_fmt    "%a<U060C> %d-%m-%Y"
 
 % %T (HH:MM:SS)
-t_fmt    "<U0025><U0054>"
+t_fmt    "%T"
 
 am_pm    "";""
 
 % %a، %d-%m-%Y، %T (w، dd-mm-YYYY، HH:MM:SS) (قىسقا ھەپتە، 31-12-2012، 23:08:59)
-date_fmt "<U0025><U0061><U060C><U0020><U0025><U0064><U002D><U0025><U006D><U002D><U0025><U0059>/
-<U060C><U0020><U0025><U0054>"
+date_fmt "%a<U060C> %d-%m-%Y<U060C> %T"
 
 week 7;19971130;1
 END LC_TIME
@@ -313,22 +311,15 @@ copy "zh_CN"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt	"<U0025><U0063><U0025><U004E><U0025>/
-<U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025>/
-<U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0062><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0061>/
-<U0025><U004E>"
+postal_fmt	"%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
 country_name "<U062C><U06C7><U06AD><U06AF><U0648>"
 %country_post	"FIXME"
-country_ab2	"<U0043><U004E>"
-country_ab3	"<U0043><U0048><U004E>"
+country_ab2	"CN"
+country_ab3	"CHN"
 country_num	156
-country_car "<U0043><U0048><U004E>"
+country_car "CHN"
 country_isbn	7
-% ug
-lang_ab      "<U0075><U0067>"
-% uig
-lang_term    "<U0075><U0069><U0067>"
-% uig
-lang_lib    "<U0075><U0069><U0067>"
+lang_ab      "ug"
+lang_term    "uig"
+lang_lib    "uig"
 END LC_ADDRESS

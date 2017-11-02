@@ -36,23 +36,19 @@ category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_post  "<U0044>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_post  "D"
 % country_name taken from CLDR: Düütschland
 country_name  "D<U00FC><U00FC>tschland"
-country_ab2   "<U0044><U0045>"
-country_ab3   "<U0044><U0045><U0055>"
-country_car   "<U0044>"
+country_ab2   "DE"
+country_ab3   "DEU"
+country_car   "D"
 country_num 276
 country_isbn "3"
-lang_name "<U004E><U0065><U0064><U0064><U0065><U0072><U0073><U0061><U0073><U0073><U0069><U0073><U0063><U0068>"
+lang_name "Neddersassisch"
 %lang_ab
-lang_term "<U006E><U0064><U0073>"
-lang_lib "<U006E><U0064><U0073>"
+lang_term "nds"
+lang_lib "nds"
 END LC_ADDRESS
 
 LC_COLLATE
@@ -95,38 +91,38 @@ copy "de_DE"
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U0053><U0064><U0061><U0067>";"<U004D><U0061><U0061><U006E>";/
-        "<U0044><U0069><U006E><U0067>";"<U004D><U0069><U0067><U0067>";/
-        "<U0044><U0075><U006E><U006E>";"<U0046><U0072><U0065><U0065>";/
-        "<U0053><U0076><U0064><U002E>"
-day     "<U0053><U00FC><U006E><U006E><U0064><U0061><U0067>";/
-        "<U004D><U0061><U0061><U006E><U0064><U0061><U0067>";/
-        "<U0044><U0069><U006E><U0067><U0073><U0064><U0061><U0067>";/
-        "<U004D><U0069><U0064><U0064><U0065><U0077><U0065><U0065><U006B>";/
-        "<U0044><U0075><U006E><U006E><U0065><U0072><U0073><U0064><U0061><U0067>";/
-        "<U0046><U0072><U0065><U0065><U0064><U0061><U0067>";/
-        "<U0053><U00FC><U006E><U006E><U0061><U0076><U0065><U006E><U0064>"
-abmon   "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-        "<U004D><U00E4><U0072>";"<U0041><U0070><U0072>";/
-        "<U004D><U0061><U0069>";"<U004A><U0075><U006E>";/
-        "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-        "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
-        "<U004E><U006F><U0076>";"<U0044><U0065><U007A>"
-mon     "<U004A><U0061><U006E><U006E><U0075><U0061><U0061><U0072>";/
-        "<U0046><U0065><U0062><U0065><U0072><U0077><U0061><U0061><U0072>";/
-        "<U004D><U00E4><U0072><U007A>";/
-        "<U0041><U0070><U0072><U0069><U006C>";/
-        "<U004D><U0061><U0069>";/
-        "<U004A><U0075><U006E><U0069>";/
-        "<U004A><U0075><U006C><U0069>";/
-        "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-        "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-        "<U004F><U006B><U0074><U006F><U0062><U0065><U0072>";/
-        "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-        "<U0044><U0065><U007A><U0065><U006D><U0062><U0065><U0072>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U002E><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt   "<U0025><U0054>"
+abday   "Sdag";"Maan";/
+        "Ding";"Migg";/
+        "Dunn";"Free";/
+        "Svd."
+day     "S<U00FC>nndag";/
+        "Maandag";/
+        "Dingsdag";/
+        "Middeweek";/
+        "Dunnersdag";/
+        "Freedag";/
+        "S<U00FC>nnavend"
+abmon   "Jan";"Feb";/
+        "M<U00E4>r";"Apr";/
+        "Mai";"Jun";/
+        "Jul";"Aug";/
+        "Sep";"Okt";/
+        "Nov";"Dez"
+mon     "Jannuaar";/
+        "Feberwaar";/
+        "M<U00E4>rz";/
+        "April";/
+        "Mai";/
+        "Juni";/
+        "Juli";/
+        "August";/
+        "September";/
+        "Oktober";/
+        "November";/
+        "Dezember"
+d_t_fmt "%a %d. %b %Y %T %Z"
+d_fmt   "%d.%m.%Y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
 week	7;19971130;4

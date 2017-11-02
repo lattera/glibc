@@ -377,55 +377,55 @@ END LC_TELEPHONE
 
 LC_TIME
 % Àìkú, Ajé, Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ẹtì, Àbámẹ́ta
-abday       "<U00C0><U00EC><U006B><U00FA>";/
-            "<U0041><U006A><U00E9>";/
-            "<U00CC><U0073><U1EB9><U0301><U0067><U0075><U006E>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0072><U00FA>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0062><U1ECD>";/
-            "<U1EB8><U0074><U00EC>";/
-            "<U00C0><U0062><U00E1><U006D><U1EB9><U0301><U0074><U0061>"
+abday       "<U00C0><U00EC>k<U00FA>";/
+            "Aj<U00E9>";/
+            "<U00CC>s<U1EB9><U0301>gun";/
+            "<U1ECC>j<U1ECD><U0301>r<U00FA>";/
+            "<U1ECC>j<U1ECD><U0301>b<U1ECD>";/
+            "<U1EB8>t<U00EC>";/
+            "<U00C0>b<U00E1>m<U1EB9><U0301>ta"
 % Ọjọ́ Àìkú, Ọjọ́ Ajé, Ọjọ́ Ìsẹ́gun, Ọjọ́rú, Ọjọ́bọ, Ọjọ́ Ẹtì, Ọjọ́ Àbámẹ́ta
-day         "<U1ECC><U006A><U1ECD><U0301><U0020><U00C0><U00EC><U006B><U00FA>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0020><U0041><U006A><U00E9>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0020><U00CC><U0073><U1EB9><U0301><U0067><U0075><U006E>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0072><U00FA>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0062><U1ECD>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0020><U1EB8><U0074><U00EC>";/
-            "<U1ECC><U006A><U1ECD><U0301><U0020><U00C0><U0062><U00E1><U006D><U1EB9><U0301><U0074><U0061>"
+day         "<U1ECC>j<U1ECD><U0301> <U00C0><U00EC>k<U00FA>";/
+            "<U1ECC>j<U1ECD><U0301> Aj<U00E9>";/
+            "<U1ECC>j<U1ECD><U0301> <U00CC>s<U1EB9><U0301>gun";/
+            "<U1ECC>j<U1ECD><U0301>r<U00FA>";/
+            "<U1ECC>j<U1ECD><U0301>b<U1ECD>";/
+            "<U1ECC>j<U1ECD><U0301> <U1EB8>t<U00EC>";/
+            "<U1ECC>j<U1ECD><U0301> <U00C0>b<U00E1>m<U1EB9><U0301>ta"
 % Ṣẹ́rẹ́, Èrèlè, Ẹrẹ̀nà, Ìgbé, Ẹ̀bibi, Òkúdu,
 % Agẹmọ, Ògún, Owewe, Ọ̀wàrà, Bélú, Ọ̀pẹ̀
-abmon       "<U1E62><U1EB9><U0301><U0072><U1EB9><U0301>";/
-            "<U00C8><U0072><U00E8><U006C><U00E8>";/
-            "<U1EB8><U0072><U1EB9><U0300><U006E><U00E0>";/
-            "<U00CC><U0067><U0062><U00E9>";/
-            "<U1EB8><U0300><U0062><U0069><U0062><U0069>";/
-            "<U00D2><U006B><U00FA><U0064><U0075>";/
-            "<U0041><U0067><U1EB9><U006D><U1ECD>";/
-            "<U00D2><U0067><U00FA><U006E>";/
-            "<U004F><U0077><U0065><U0077><U0065>";/
-            "<U1ECC><U0300><U0077><U00E0><U0072><U00E0>";/
-            "<U0042><U00E9><U006C><U00FA>";/
-            "<U1ECC><U0300><U0070><U1EB9><U0300>"
+abmon       "<U1E62><U1EB9><U0301>r<U1EB9><U0301>";/
+            "<U00C8>r<U00E8>l<U00E8>";/
+            "<U1EB8>r<U1EB9><U0300>n<U00E0>";/
+            "<U00CC>gb<U00E9>";/
+            "<U1EB8><U0300>bibi";/
+            "<U00D2>k<U00FA>du";/
+            "Ag<U1EB9>m<U1ECD>";/
+            "<U00D2>g<U00FA>n";/
+            "Owewe";/
+            "<U1ECC><U0300>w<U00E0>r<U00E0>";/
+            "B<U00E9>l<U00FA>";/
+            "<U1ECC><U0300>p<U1EB9><U0300>"
 % Oṣù Ṣẹ́rẹ́, Oṣù Èrèlè, Oṣù Ẹrẹ̀nà, Oṣù Ìgbé, Oṣù Ẹ̀bibi, Oṣù Òkúdu,
 % Oṣù Agẹmọ, Oṣù Ògún, Oṣù Owewe, Oṣù Ọ̀wàrà, Oṣù Bélú, Oṣù Ọ̀pẹ̀
-mon         "<U004F><U1E63><U00F9><U0020><U1E62><U1EB9><U0301><U0072><U1EB9><U0301>";/
-            "<U004F><U1E63><U00F9><U0020><U00C8><U0072><U00E8><U006C><U00E8>";/
-            "<U004F><U1E63><U00F9><U0020><U1EB8><U0072><U1EB9><U0300><U006E><U00E0>";/
-            "<U004F><U1E63><U00F9><U0020><U00CC><U0067><U0062><U00E9>";/
-            "<U004F><U1E63><U00F9><U0020><U1EB8><U0300><U0062><U0069><U0062><U0069>";/
-            "<U004F><U1E63><U00F9><U0020><U00D2><U006B><U00FA><U0064><U0075>";/
-            "<U004F><U1E63><U00F9><U0020><U0041><U0067><U1EB9><U006D><U1ECD>";/
-            "<U004F><U1E63><U00F9><U0020><U00D2><U0067><U00FA><U006E>";/
-            "<U004F><U1E63><U00F9><U0020><U004F><U0077><U0065><U0077><U0065>";/
-            "<U004F><U1E63><U00F9><U0020><U1ECC><U0300><U0077><U00E0><U0072><U00E0>";/
-            "<U004F><U1E63><U00F9><U0020><U0042><U00E9><U006C><U00FA>";/
-            "<U004F><U1E63><U00F9><U0020><U1ECC><U0300><U0070><U1EB9><U0300>"
+mon         "O<U1E63><U00F9> <U1E62><U1EB9><U0301>r<U1EB9><U0301>";/
+            "O<U1E63><U00F9> <U00C8>r<U00E8>l<U00E8>";/
+            "O<U1E63><U00F9> <U1EB8>r<U1EB9><U0300>n<U00E0>";/
+            "O<U1E63><U00F9> <U00CC>gb<U00E9>";/
+            "O<U1E63><U00F9> <U1EB8><U0300>bibi";/
+            "O<U1E63><U00F9> <U00D2>k<U00FA>du";/
+            "O<U1E63><U00F9> Ag<U1EB9>m<U1ECD>";/
+            "O<U1E63><U00F9> <U00D2>g<U00FA>n";/
+            "O<U1E63><U00F9> Owewe";/
+            "O<U1E63><U00F9> <U1ECC><U0300>w<U00E0>r<U00E0>";/
+            "O<U1E63><U00F9> B<U00E9>l<U00FA>";/
+            "O<U1E63><U00F9> <U1ECC><U0300>p<U1EB9><U0300>"
 % ọjọ́ %a, %d oṣù %b ọdún %Y %T %Z
-d_t_fmt     "<U1ECD><U006A><U1ECD><U0301><U0020><U0025><U0061><U002C><U0020><U0025><U0064><U0020><U006F><U1E63><U00F9><U0020><U0025><U0062><U0020><U1ECD><U0064><U00FA><U006E><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0072>"
-am_pm       "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+d_t_fmt     "<U1ECD>j<U1ECD><U0301> %a, %d o<U1E63><U00F9> %b <U1ECD>d<U00FA>n %Y %T %Z"
+d_fmt       "%d//%m//%y"
+t_fmt       "%r"
+am_pm       "AM";"PM"
+t_fmt_ampm  "%I:%M:%S %p"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -477,26 +477,21 @@ LC_ADDRESS
 % "end of line",
 % "country designation for the <country_post> keyword",
 % "end of line
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-country_name "<U004F><U0072><U00ED><U006C><U1EB9><U0301><U00E8><U0064><U0065><U0020><U004E><U00E0><U00EC><U006A><U00ED><U0072><U00ED><U00E0>"
+country_name "Or<U00ED>l<U1EB9><U0301><U00E8>de N<U00E0><U00EC>j<U00ED>r<U00ED><U00E0>"
 
 % Language name in Yoruba - "Yorùbá"
-lang_name     "<U00C8><U0064><U00E8><U0020><U0059><U006F><U0072><U00F9><U0062><U00E1>"
+lang_name     "<U00C8>d<U00E8> Yor<U00F9>b<U00E1>"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
 % "NG"?
-%country_post   "<U004E><U0047>"
+%country_post   "NG"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/Distsigns_Sept2003.pdf
-% "WAN"
-country_car   "<U0057><U0041><U004E>"
+country_car   "WAN"
 
 % ISO 2108
 % http://www.isbn-international.org/
@@ -505,16 +500,14 @@ country_isbn  978
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% "yo", "yor"
-lang_ab       "<U0079><U006F>"
-lang_term     "<U0079><U006F><U0072>"
-lang_lib      "<U0079><U006F><U0072>"
+lang_ab       "yo"
+lang_term     "yor"
+lang_lib      "yor"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% "NG", "NGA"
-country_ab2   "<U004E><U0047>"
-country_ab3   "<U004E><U0047><U0041>"
+country_ab2   "NG"
+country_ab3   "NGA"
 country_num   566
 
 END LC_ADDRESS

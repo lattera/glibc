@@ -67,13 +67,13 @@ noexpr  "^[-0nN<U0423><U0443>]"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U0052><U0055><U0042><U0020>"
+int_curr_symbol           "RUB "
 currency_symbol           "<U20BD>"
-mon_decimal_point         "<U002E>"
+mon_decimal_point         "."
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -127,12 +127,12 @@ abmon   "<U0428><U0440><U043A>";/
 	"<U0428><U044B><U0436>";/
 	"<U041A><U043B><U043C>";/
 	"<U0422><U0435><U043B>"
-d_t_fmt "<U0025><U0041><U0020><U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064><U0020><U0025><U0054>"
-d_fmt     "<U0025><U0059><U002E><U0025><U006D><U002E><U0025><U0064>"
-t_fmt     "<U0025><U0054>"
+d_t_fmt "%A %Y %B %d %T"
+d_fmt     "%Y.%m.%d"
+t_fmt     "%T"
 am_pm     "";""
 t_fmt_ampm ""
-date_fmt       "<U0025><U0041><U0020><U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+date_fmt       "%A %Y %B %d %H:%M:%S %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -150,23 +150,15 @@ copy "ru_RU"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_ab2 "<U0052><U0055>"
-country_ab3 "<U0052><U0055><U0053>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_ab2 "RU"
+country_ab3 "RUS"
 country_num 643
-% RUS
-country_car    "<U0052><U0055><U0053>"
-% mhr
-lang_term    "<U006D><U0068><U0072>"
-% mhr
-lang_lib    "<U006D><U0068><U0072>"
+country_car    "RUS"
+lang_term    "mhr"
+lang_lib    "mhr"
 END LC_ADDRESS

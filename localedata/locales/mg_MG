@@ -71,13 +71,13 @@ nostr   "Tsia"
 END LC_MESSAGES
 
 LC_MONETARY
-int_curr_symbol           "<U004D><U0047><U0041><U0020>"
-currency_symbol           "<U0041><U0072>"
-mon_decimal_point         "<U002C>"
+int_curr_symbol           "MGA "
+currency_symbol           "Ar"
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -89,54 +89,44 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
+decimal_point             ","
 thousands_sep             ""
 grouping                  0;0
 END LC_NUMERIC
 
 LC_TIME
-% Abbrev. days: lah,lat,tal,lar,lak,zom,sab
-% Abbrev. days: lhd,lts, tlt,lrb,lkm,zom,sab
-abday   "<U006C><U0068><U0064>";"<U006C><U0074><U0073>";/
-        "<U0074><U006C><U0074>";"<U006C><U0072><U0062>";/
-        "<U006C><U006B><U006D>";"<U007A><U006F><U006D>";/
-        "<U0073><U0061><U0062>"
-% days in Malagasy:
-% alahady,alatsinainy,talata,alarobia,alakamisy,zoma,asabotsy
-% Sunday, Monday....
-day     "<U0061><U006C><U0061><U0068><U0061><U0064><U0079>";/
-        "<U0061><U006C><U0061><U0074><U0073><U0069><U006E><U0061><U0069><U006E><U0079>";/
-        "<U0074><U0061><U006C><U0061><U0074><U0061>";/
-        "<U0061><U006C><U0061><U0072><U006F><U0062><U0069><U0061>";/
-        "<U0061><U006C><U0061><U006B><U0061><U006D><U0069><U0073><U0079>";/
-        "<U007A><U006F><U006D><U0061>";/
-        "<U0073><U0061><U0062><U006F><U0074><U0073><U0079>"
-% Janoary, Febroary, Martsa, Aprily, Mey, Jona, Jolay, Aogositra,
-% Septambra, Oktobra, Novambra, Desambra
-abmon   "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-        "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-        "<U004D><U0065><U0079>";"<U004A><U006F><U006E>";/
-        "<U004A><U006F><U006C>";"<U0041><U006F><U0067>";/
-        "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
-        "<U004E><U006F><U0076>";"<U0044><U0065><U0073>"
-mon     "<U004A><U0061><U006E><U006F><U0061><U0072><U0079>";/
-        "<U0046><U0065><U0062><U0072><U006F><U0061><U0072><U0079>";/
-        "<U004D><U0061><U0072><U0074><U0073><U0061>";/
-        "<U0041><U0070><U0072><U0069><U006C><U0079>";/
-        "<U004D><U0065><U0079>";/
-        "<U004A><U006F><U006E><U0061>";/
-        "<U004A><U006F><U006C><U0061><U0079>";/
-        "<U0041><U006F><U0067><U006F><U0073><U0069><U0074><U0072><U0061>";/
-        "<U0053><U0065><U0070><U0074><U0061><U006D><U0062><U0072><U0061>";/
-        "<U004F><U006B><U0074><U006F><U0062><U0072><U0061>";/
-        "<U004E><U006F><U0076><U0061><U006D><U0062><U0072><U0061>";/
-        "<U0044><U0065><U0073><U0061><U006D><U0062><U0072><U0061>"
-% %a %d %b %Y %T %Z
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-% %d.%m.%Y
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-% %T
-t_fmt   "<U0025><U0054>"
+abday   "lhd";"lts";/
+        "tlt";"lrb";/
+        "lkm";"zom";/
+        "sab"
+day     "alahady";/
+        "alatsinainy";/
+        "talata";/
+        "alarobia";/
+        "alakamisy";/
+        "zoma";/
+        "sabotsy"
+abmon   "Jan";"Feb";/
+        "Mar";"Apr";/
+        "Mey";"Jon";/
+        "Jol";"Aog";/
+        "Sep";"Okt";/
+        "Nov";"Des"
+mon     "Janoary";/
+        "Febroary";/
+        "Martsa";/
+        "Aprily";/
+        "Mey";/
+        "Jona";/
+        "Jolay";/
+        "Aogositra";/
+        "Septambra";/
+        "Oktobra";/
+        "Novambra";/
+        "Desambra"
+d_t_fmt "%a %d %b %Y %T %Z"
+d_fmt   "%d.%m.%Y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
 week 7;19971130;1
@@ -148,15 +138,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-% +%C %a %l
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-% %a %l
-tel_dom_fmt    "<U0025><U0061><U0020><U0025><U006C>"
-% 261
-int_prefix     "<U0032><U0036><U0031>"
-% 00
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt    "%a %l"
+int_prefix     "261"
+int_select     "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -164,30 +149,18 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-% %d%t%g%t%m%t%f
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-% %f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U004D><U0061><U0064><U0061><U0067><U0061><U0073><U0069><U006B><U0061><U0072><U0061>"
-country_ab2 "<U004D><U0047>"
-country_ab3 "<U004D><U0044><U0047>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Madagasikara"
+country_ab2 "MG"
+country_ab3 "MDG"
 country_num 450
-% RM
-country_car  "<U0052><U004D>"
-% Malagasy
-lang_name    "<U004D><U0061><U006C><U0061><U0067><U0061><U0073><U0079>"
-% mg
-lang_ab      "<U006D><U0067>"
-% mlg
-lang_term    "<U006D><U006C><U0067>"
-% mlg
-lang_lib    "<U006D><U006C><U0067>"
+country_car "RM"
+lang_name    "Malagasy"
+lang_ab      "mg"
+lang_term    "mlg"
+lang_lib    "mlg"
 END LC_ADDRESS

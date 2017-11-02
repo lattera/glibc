@@ -178,13 +178,13 @@ LC_MONETARY
 % These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol       "<U0044><U005A><U0044><U0020>"
-currency_symbol       "<U062F><U002E><U062C><U002E>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
+int_curr_symbol       "DZD "
+currency_symbol       "<U062F>.<U062C>."
+mon_decimal_point     "."
+mon_thousands_sep     ","
 mon_grouping          3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       3
 frac_digits           3
 p_cs_precedes         1
@@ -200,55 +200,55 @@ END LC_MONETARY
 LC_NUMERIC
 % This is the POSIX Locale definition for the LC_NUMERIC  category.
 %
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
+decimal_point          "."
+thousands_sep          ","
 grouping               3
 %
 END LC_NUMERIC
 
 % FIXME
 LC_TIME
-day     "<U0062><U0061><U007A><U0061><U0072><U0020><U0067><U00FC><U006E><U00FC>";/
-        "<U0062><U0069><U0072><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U0069><U006B><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U00FC><U00E7><U00FC><U006E><U0063><U00FC><U0020><U0067><U00FC><U006E>";/
-        "<U0064><U00F6><U0072><U0064><U00FC><U006E><U0063><U00FC><U0020><U0067><U00FC><U006E>";/
-        "<U0062><U0065><U015F><U0069><U006E><U0063><U0069><U0020><U0067><U00FC><U006E>";/
-        "<U0061><U006C><U0074><U0131><U006E><U0063><U0131><U0020><U0067><U00FC><U006E>"
-abday   "<U0062><U0061><U007A>";/
-        "<U0062><U0069><U0072>";/
-        "<U0069><U006B><U0069>";/
+day     "bazar g<U00FC>n<U00FC>";/
+        "birinci g<U00FC>n";/
+        "ikinci g<U00FC>n";/
+        "<U00FC><U00E7><U00FC>nc<U00FC> g<U00FC>n";/
+        "d<U00F6>rd<U00FC>nc<U00FC> g<U00FC>n";/
+        "be<U015F>inci g<U00FC>n";/
+        "alt<U0131>nc<U0131> g<U00FC>n"
+abday   "baz";/
+        "bir";/
+        "iki";/
         "<U00FC><U00E7><U00FC>";/
-        "<U0064><U00F6><U0072>";/
-        "<U0062><U0065><U015F>";/
-        "<U0061><U006C><U0074>"
-mon     "<U0079><U0061><U006E><U0076><U0061><U0072>";/
-        "<U0066><U0065><U0076><U0072><U0061><U006C>";/
-        "<U006D><U0061><U0072><U0074>";/
-        "<U0061><U0070><U0072><U0065><U006C>";/
-        "<U006D><U0061><U0079>";/
-        "<U0069><U0079><U0075><U006E>";/
-        "<U0069><U0079><U0075><U006C>";/
-        "<U0061><U0076><U0071><U0075><U0073><U0074>";/
-        "<U0073><U0065><U006E><U0074><U0079><U0061><U0062><U0072>";/
-        "<U006F><U006B><U0074><U0079><U0061><U0062><U0072>";/
-        "<U006E><U006F><U0079><U0061><U0062><U0072>";/
-        "<U0064><U0065><U006B><U0061><U0062><U0072>"
-abmon   "<U0059><U0061><U006E>";/
-        "<U0046><U0065><U0076>";/
-        "<U004D><U0061><U0072>";/
-        "<U0041><U0070><U0072>";/
-        "<U004D><U0061><U0079>";/
-        "<U0130><U0079><U006E>";/
-        "<U0130><U0079><U006C>";/
-        "<U0041><U0076><U0071>";/
-        "<U0053><U0065><U006E>";/
-        "<U004F><U006B><U0074>";/
-        "<U004E><U006F><U0079>";/
-        "<U0044><U0065><U006B>"
-d_t_fmt "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0054>"
-d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt     "<U0025><U0054>"
+        "d<U00F6>r";/
+        "be<U015F>";/
+        "alt"
+mon     "yanvar";/
+        "fevral";/
+        "mart";/
+        "aprel";/
+        "may";/
+        "iyun";/
+        "iyul";/
+        "avqust";/
+        "sentyabr";/
+        "oktyabr";/
+        "noyabr";/
+        "dekabr"
+abmon   "Yan";/
+        "Fev";/
+        "Mar";/
+        "Apr";/
+        "May";/
+        "<U0130>yn";/
+        "<U0130>yl";/
+        "Avq";/
+        "Sen";/
+        "Okt";/
+        "Noy";/
+        "Dek"
+d_t_fmt "%A, %d %B %Y %T"
+d_fmt     "%d.%m.%Y"
+t_fmt     "%T"
 am_pm     "";""
 t_fmt_ampm ""
 week 7;19971130;1
@@ -268,13 +268,12 @@ LC_NAME
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_NAME category.
 %
-name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
-<U0025><U0067>"
-name_gen    "<U002D><U0073><U0061><U006E>"
-name_mr     "<U004D><U0072><U002E>"
-name_mrs    "<U004D><U0072><U0073><U002E>"
-name_miss   "<U004D><U0069><U0073><U0073><U002E>"
-name_ms     "<U004D><U0073><U002E>"
+name_fmt    "%p%t%f%t%g"
+name_gen    "-san"
+name_mr     "Mr."
+name_mrs    "Mrs."
+name_miss   "Miss."
+name_ms     "Ms."
 
 END LC_NAME
 
@@ -282,21 +281,18 @@ END LC_NAME
 LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
+postal_fmt  "%z%c%T%s%b%e%r"
 %country_post ""
-country_ab2 "<U0044><U005A>"
-country_ab3 "<U0044><U005A><U0041>"
+country_ab2 "DZ"
+country_ab3 "DZA"
 country_num 012
 %country_isbn ""
-% DZ
-country_car  "<U0044><U005A>"
+country_car  "DZ"
 % ⵜⴰⵎⴰⵣⵉⵖⵜ
 lang_name "<U2D5C><U2D30><U2D4E><U2D30><U2D49><U2D56><U2D5C>"
 %lang_ab
-lang_term "<U0062><U0065><U0072>"
-lang_lib "<U0062><U0065><U0072>"
-
+lang_term "ber"
+lang_lib "ber"
 
 END LC_ADDRESS
 
@@ -304,8 +300,7 @@ END LC_ADDRESS
 LC_TELEPHONE
 % This is the ISO_IEC TR14652 Locale definition for the
 %
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix  "<U0032><U0031><U0033>"
-int_select  "<U0030><U0030>"
+tel_int_fmt "+%c ;%a ;%l"
+int_prefix  "213"
+int_select  "00"
 END LC_TELEPHONE

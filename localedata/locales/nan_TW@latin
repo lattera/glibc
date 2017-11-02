@@ -95,51 +95,45 @@ copy "zh_TW"
 END LC_NUMERIC
 
 LC_TIME
-abday   "<U006C><U0070>";/
-	"<U0070><U0031>";/
-	"<U0070><U0032>";/
-	"<U0070><U0033>";/
-	"<U0070><U0034>";/
-	"<U0070><U0035>";/
-	"<U0070><U0036>"
-day     "<U006C><U00E9><U002D><U0070><U00E0><U0069><U002D><U006A><U0069><U030D><U0074>";/
-        "<U0070><U00E0><U0069><U002D><U0069><U0074>";/
-        "<U0070><U00E0><U0069><U002D><U006A><U012B>";/
-        "<U0070><U00E0><U0069><U002D><U0073><U0061><U207F>";/
-        "<U0070><U00E0><U0069><U002D><U0073><U00EC>";/
-        "<U0070><U00E0><U0069><U002D><U0067><U014D><U0358>";/
-        "<U0070><U00E0><U0069><U002D><U006C><U0061><U030D><U006B>"
-abmon   "<U0031><U0067>";/
-	"<U0032><U0067>";/
-	"<U0033><U0067>";/
-	"<U0034><U0067>";/
-	"<U0035><U0067>";/
-	"<U0036><U0067>";/
-	"<U0037><U0067>";/
-	"<U0038><U0067>";/
-	"<U0039><U0067>";/
-	"<U0031><U0030><U0067>";/
-	"<U0031><U0031><U0067>";/
-	"<U0031><U0032><U0067>"
-mon     "<U0031><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0032><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0033><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0034><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0035><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0036><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0037><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0038><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0039><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0031><U0030><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0031><U0031><U0067><U006F><U0065><U030D><U0068>";/
-	"<U0031><U0032><U0067><U006F><U0065><U030D><U0068>"
+abday   "lp";"p1";"p2";"p3";"p4";"p5";"p6"
+day     "l<U00E9>-p<U00E0>i-ji<U030D>t";/
+        "p<U00E0>i-it";/
+        "p<U00E0>i-j<U012B>";/
+        "p<U00E0>i-sa<U207F>";/
+        "p<U00E0>i-s<U00EC>";/
+        "p<U00E0>i-g<U014D><U0358>";/
+        "p<U00E0>i-la<U030D>k"
+abmon   "1g";/
+	"2g";/
+	"3g";/
+	"4g";/
+	"5g";/
+	"6g";/
+	"7g";/
+	"8g";/
+	"9g";/
+	"10g";/
+	"11g";/
+	"12g"
+mon     "1goe<U030D>h";/
+	"2goe<U030D>h";/
+	"3goe<U030D>h";/
+	"4goe<U030D>h";/
+	"5goe<U030D>h";/
+	"6goe<U030D>h";/
+	"7goe<U030D>h";/
+	"8goe<U030D>h";/
+	"9goe<U030D>h";/
+	"10goe<U030D>h";/
+	"11goe<U030D>h";/
+	"12goe<U030D>h"
 %
-d_t_fmt    "<U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0028><U0025><U0061><U0029><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0046>"
-t_fmt       "<U0025><U0072>"
-am_pm       "<U0074><U00E9><U006E><U0067><U002D><U0070><U006F><U0358>";"<U0113><U002D><U0070><U006F><U0358>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-date_fmt    "<U0025><U0059><U0020><U0025><U0062><U0020><U0025><U0064><U0020><U0028><U0025><U0061><U0029><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+d_t_fmt    "%Y %b %d (%a) %H:%M:%S %Z"
+d_fmt       "%F"
+t_fmt       "%r"
+am_pm       "t<U00E9>ng-po<U0358>";"<U0113>-po<U0358>"
+t_fmt_ampm  "%I:%M:%S %p"
+date_fmt    "%Y %b %d (%a) %H:%M:%S %Z"
 week 7;19971130;1
 END LC_TIME
 
@@ -160,37 +154,28 @@ END LC_MEASUREMENT
 
 LC_NAME
 %FIXME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
-name_miss   "<U006B><U006F><U0358><U002D><U006E><U0069><U00FB>"
-name_mr     "<U0073><U0069><U0061><U006E><U002D><U0073><U0069><U207F>"
-name_mrs    "<U006C><U00FA><U002D><U0073><U016B>"
-name_ms     "<U0073><U0069><U00F3><U002D><U0063><U0068><U0069><U00E1>"
+name_fmt    "%d%t%g%t%m%t%f"
+name_miss   "ko<U0358>-ni<U00FB>"
+name_mr     "sian-si<U207F>"
+name_mrs    "l<U00FA>-s<U016B>"
+name_ms     "si<U00F3>-chi<U00E1>"
 END LC_NAME
 
 LC_ADDRESS
-% postal_fmt: "%f%N%a%N%d%N%b%N%r %e %h %s%N%z %T%N%c%N"
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0072>/
-<U0020><U0025><U0065><U0020><U0025><U0068><U0020><U0025><U0073><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%r %e %h %s%N%z %T%N%c%N"
 % Reference:	http://www.un.org/Depts/unsd/methods/m49alpha.htm
 %		http://www.isbn.spk-berlin.de/html/prefix.htm
-% country_ab2:	TW
-% country_ab3:	TWN
-% country_isbn:	957
-country_name	"<U0054><U00E2><U0069><U002D><U006F><U00E2><U006E>"
-country_post	"<U0054><U0057>"
-country_ab2	"<U0054><U0057>"
-country_ab3	"<U0054><U0057><U004E>"
+country_name	"T<U00E2>i-o<U00E2>n"
+country_post	"TW"
+country_ab2	"TW"
+country_ab3	"TWN"
 country_num	158
-country_car "<U0052><U0043>"
+country_car "RC"
 country_isbn	957
 %lang_name "Bân-lâm-gú, Hō-ló-oē"
-lang_name "<U0042><U00E2><U006E><U002D><U006C><U00E2><U006D><U002D><U0067><U00FA><U002C><U0020><U0048><U014D><U002D><U006C><U00F3><U002D><U006F><U0113>"
-lang_term "<U006E><U0061><U006E>"
-lang_lib "<U006E><U0061><U006E>"
+lang_name "B<U00E2>n-l<U00E2>m-g<U00FA>, H<U014D>-l<U00F3>-o<U0113>"
+lang_term "nan"
+lang_lib "nan"
 END LC_ADDRESS
 
 LC_TELEPHONE

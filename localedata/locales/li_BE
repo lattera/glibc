@@ -36,24 +36,20 @@ category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % https://li.wiktionary.org/wiki/B%C3%A8lsj "Bèlsj"
-country_name  "<U0042><U00E8><U006C><U0073><U006A>"
-country_post  "<U0042>"
-country_ab2   "<U0042><U0045>"
-country_ab3   "<U0042><U0045><U004C>"
-country_car   "<U0042>"
+country_name  "B<U00E8>lsj"
+country_post  "B"
+country_ab2   "BE"
+country_ab3   "BEL"
+country_car   "B"
 country_num 056
 %FIXME country_isbn "2"
 % Lèmbörgs
-lang_name    "<U004C><U00E8><U006D><U0062><U00F6><U0072><U0067><U0073>"
-lang_ab "<U006C><U0069>"
-lang_term "<U006C><U0069><U006D>"
-lang_lib "<U006C><U0069><U006D>"
+lang_name    "L<U00E8>mb<U00F6>rgs"
+lang_ab "li"
+lang_term "lim"
+lang_lib "lim"
 END LC_ADDRESS
 
 LC_COLLATE

@@ -56,13 +56,13 @@ LC_MONETARY
 % These are generated based on XML base Locale definition file
 % for IBM Class for Unicode/Java
 %
-int_curr_symbol       "<U004E><U0050><U0052><U0020>"
+int_curr_symbol       "NPR "
 currency_symbol       "<U0930><U0942>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
+mon_decimal_point     "."
+mon_thousands_sep     ","
 mon_grouping          3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       2
 frac_digits           2
 p_cs_precedes         1
@@ -78,8 +78,8 @@ END LC_MONETARY
 LC_NUMERIC
 % This is the POSIX Locale definition for the LC_NUMERIC  category.
 %
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
+decimal_point          "."
+thousands_sep          ","
 grouping               3
 %
 END LC_NUMERIC
@@ -126,14 +126,10 @@ mon         "<U091C><U0928><U0935><U0930><U0940>";/
             "<U0921><U093F><U0938><U0947><U092E><U094D><U092C><U0930>"
 am_pm       "<U092A><U0942><U0930><U094D><U0935><U093E><U0939><U094D><U0928>";/
             "<U0905><U092A><U0930><U093E><U0939><U094D><U0928>"
-d_t_fmt     "<U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064>/
-<U0020><U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U0070>"
-d_fmt       "<U0025><U0059><U0020><U0025><U0042><U0020><U0025><U0064>/
-<U0020><U0025><U0041>"
-t_fmt       "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053>/
-<U0020><U0025><U0070>"
+d_t_fmt     "%Y %B %d %I:%M:%S %p"
+d_fmt       "%Y %B %d %A"
+t_fmt       "%H:%M:%S"
+t_fmt_ampm  "%I:%M:%S %p"
 week 7;19971130;1
 END LC_TIME
 
@@ -152,8 +148,7 @@ END LC_PAPER
 
 
 LC_NAME
-name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U0074><U0025>/
-<U006D><U0025><U0074><U0025><U0066>"
+name_fmt  "%p%t%g%t%m%t%f"
 name_gen  "<U091C><U094D><U092F><U0942>"
 name_mr   "<U0936><U094D><U0930><U0940><U092E><U093E><U0928><U094D>"
 name_mrs  "<U0936><U094D><U0930><U0940><U092E><U0924><U0940>"
@@ -162,30 +157,24 @@ END LC_NAME
 
 
 LC_ADDRESS
-postal_fmt	 "<U0025><U0066><U0025><U004E><U0025><U0068><U0025><U0073>/
-<U0025><U004E><U0025><U0054>"
+postal_fmt	 "%f%N%h%s%N%T"
 country_name "<U0928><U0947><U092A><U093E><U0932>"
-country_ab2 "<U004E><U0050>"
-country_ab3 "<U004E><U0050><U004C>"
+country_ab2 "NP"
+country_ab3 "NPL"
 country_num 524
-% NEP
-country_car    "<U004E><U0045><U0050>"
+country_car    "NEP"
 % नेपाली
 lang_name    "<U0928><U0947><U092A><U093E><U0932><U0940>"
-% ne
-lang_ab      "<U006E><U0065>"
-% nep
-lang_term    "<U006E><U0065><U0070>"
-% nep
-lang_lib    "<U006E><U0065><U0070>"
+lang_ab      "ne"
+lang_term    "nep"
+lang_lib    "nep"
 END LC_ADDRESS
 
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0025><U0074><U0025>/
-<U006C>"
-int_prefix     "<U0039><U0037><U0037>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a%t%l"
+int_prefix     "977"
+int_select     "00"
 END LC_TELEPHONE
 
 

@@ -73,13 +73,13 @@ abmon         "<U044F><U043D><U0432>";/
        "<U043D><U043E><U044F>";/
        "<U0434><U0435><U043A>"
 % КӀиранан де, Оршотан де, Шинарин де, Кхаарин де, Еарин де, ПӀераскан де, Шот де
-day           "<U041A><U04C0><U0438><U0440><U0430><U043D><U0430><U043D><U0020><U0434><U0435>";/
-     "<U041E><U0440><U0448><U043E><U0442><U0430><U043D><U0020><U0434><U0435>";/
-     "<U0428><U0438><U043D><U0430><U0440><U0438><U043D><U0020><U0434><U0435>";/
-     "<U041A><U0445><U0430><U0430><U0440><U0438><U043D><U0020><U0434><U0435>";/
-     "<U0415><U0430><U0440><U0438><U043D><U0020><U0434><U0435>";/
-     "<U041F><U04C0><U0435><U0440><U0430><U0441><U043A><U0430><U043D><U0020><U0434><U0435>";/
-     "<U0428><U043E><U0442><U0020><U0434><U0435>"
+day           "<U041A><U04C0><U0438><U0440><U0430><U043D><U0430><U043D> <U0434><U0435>";/
+     "<U041E><U0440><U0448><U043E><U0442><U0430><U043D> <U0434><U0435>";/
+     "<U0428><U0438><U043D><U0430><U0440><U0438><U043D> <U0434><U0435>";/
+     "<U041A><U0445><U0430><U0430><U0440><U0438><U043D> <U0434><U0435>";/
+     "<U0415><U0430><U0440><U0438><U043D> <U0434><U0435>";/
+     "<U041F><U04C0><U0435><U0440><U0430><U0441><U043A><U0430><U043D> <U0434><U0435>";/
+     "<U0428><U043E><U0442> <U0434><U0435>"
 % КӀ, Ор, Ши, Кх, Еа, ПӀ, Шо
 abday         "<U041A><U04C0>";/
        "<U041E><U0440>";/
@@ -88,12 +88,9 @@ abday         "<U041A><U04C0>";/
        "<U0415><U0430>";/
        "<U041F><U04C0>";/
        "<U0428><U043E>"
-% %Y %d %b %a %T
-d_t_fmt       "<U0025><U0059><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0061><U0020><U0025><U0054>"
-% %Y.%d.%m
-d_fmt         "<U0025><U0059><U002E><U0025><U0064><U002E><U0025><U006D>"
-% %T
-t_fmt         "<U0025><U0054>"
+d_t_fmt       "%Y %d %b %a %T"
+d_fmt         "%Y.%d.%m"
+t_fmt         "%T"
 %
 am_pm         "";""
 t_fmt_ampm    ""
@@ -106,15 +103,13 @@ copy "ru_RU"
 END LC_NUMERIC
 
 LC_MONETARY
-% RUB
-int_curr_symbol    "<U0052><U0055><U0042><U0020>"
+int_curr_symbol    "RUB "
 currency_symbol    "<U20BD>"
-% .
-mon_decimal_point  "<U002E>"
+mon_decimal_point  "."
 mon_thousands_sep  "<U202F>"
 mon_grouping       3;3
 positive_sign      ""
-negative_sign      "<U002D>"
+negative_sign      "-"
 frac_digits        2
 int_frac_digits    2
 p_cs_precedes      0
@@ -139,34 +134,24 @@ noexpr  "^[-0nN<U041C><U043C>]"
 END LC_MESSAGES
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-% %f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N
-postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 country_name "<U0420><U043E><U0441><U0441><U0438>"
-% RU
-country_ab2  "<U0052><U0055>"
-% RUS
-country_ab3  "<U0052><U0055><U0053>"
+country_ab2  "RU"
+country_ab3  "RUS"
 country_num  643
-% RUS
-country_car  "<U0052><U0055><U0053>"
+country_car  "RUS"
 % нохчийн мотт
 lang_name    "<U043D><U043E><U0445><U0447><U0438><U0439><U043D>"
-% ce
-lang_ab      "<U0063><U0065>"
-% che
-lang_term    "<U0063><U0068><U0065>"
+lang_ab      "ce"
+lang_term    "che"
 END LC_ADDRESS
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-% 0~10
-int_select  "<U0030><U007E><U0031><U0030>"
-% 7
-int_prefix  "<U0037>"
+tel_int_fmt    "+%c %a %l"
+int_select  "0~10"
+int_prefix  "7"
 END LC_TELEPHONE

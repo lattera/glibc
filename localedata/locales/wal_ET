@@ -103,19 +103,17 @@ LC_ADDRESS
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
+postal_fmt    "%z%c%T%s%b%e%r"
 country_name  "<U12A2><U1275><U12EE><U1335><U12EB>"
-country_post  "<U0045><U0054><U0048>"
-country_ab2   "<U0045><U0054>"
-country_ab3   "<U0045><U0054><U0048>"
+country_post  "ETH"
+country_ab2   "ET"
+country_ab3   "ETH"
 country_num   231   % 210 found in at least one ISO 3166 doc
-% ETH
-country_car    "<U0045><U0054><U0048>"
+country_car    "ETH"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U12C8><U120B><U12ED><U1273><U1271>"
-lang_term     "<U0077><U0061><U006C>"
-lang_lib      "<U0077><U0061><U006C>"
+lang_term     "wal"
+lang_lib      "wal"
 END LC_ADDRESS
 
 
@@ -128,8 +126,7 @@ LC_NAME
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_NAME category.
 %
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
 name_mr     "<U121A><U1232><U12EB>"
 name_mrs    "<U12AC><U1273><U12CB>"
@@ -172,8 +169,8 @@ abmon    "<U1303><U1295><U12E9>";/
 	 "<U134C><U1265><U1229>";/
 	 "<U121B><U122D><U127D>";/
 	 "<U12A4><U1355><U1228>";/
-	 "<U121C><U12ED><U0020>";/
-	 "<U1301><U1295><U0020>";/
+	 "<U121C><U12ED> ";/
+	 "<U1301><U1295> ";/
 	 "<U1301><U120B><U12ED>";/
 	 "<U12A6><U1308><U1235>";/
 	 "<U1234><U1355><U1274>";/
@@ -201,37 +198,28 @@ mon      "<U1303><U1295><U12E9><U12C8><U122A>";/
 % also <U130B><U120B><U1233>
 % also <U12A1><U1218><U122D><U1232>
 %
-am_pm    "<U121B><U1208><U12F6>";/
-	 "<U1243><U121B>"
+am_pm    "<U121B><U1208><U12F6>";"<U1243><U121B>"
 %
 % Appropriate date representation (%x)
-%	"%d/%m/%Y"
 %
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
-%	"%l:%M:%S"
 %
-t_fmt "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%l:%M:%S"
 %
 % Appropriate AM/PM time representation (%r)
-%	"%X %p"
 %
-t_fmt_ampm "<U0025><U0058><U0020><U0025><U0070>"
+t_fmt_ampm "%X %p"
 %
 % Appropriate date and time representation (%c)
 %	"%A፣ %B %e ጋላሳ  %Y %r %Z
 %
-d_t_fmt    "<U0025><U0041><U1363><U0020><U0025><U0042><U0020><U0025><U0065>/
-<U0020><U130B><U120B><U1233>/
-<U0020><U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
+d_t_fmt    "%A<U1363> %B %e <U130B><U120B><U1233> %Y %r %Z"
 %
 % Appropriate date representation (date(1))
 %	"%A፣ %B %e ጋላሳ %r %Z %Y ግ/ላ
 %
-date_fmt    "<U0025><U0041><U1363><U0020><U0025><U0042><U0020><U0025><U0065>/
-<U0020><U130B><U120B><U1233>/
-<U0020><U0025><U0072><U0020><U0025><U005A><U0020><U0025><U0059>/
-<U0020><U130D><U002F><U120B>"
+date_fmt    "%A<U1363> %B %e <U130B><U120B><U1233> %r %Z %Y <U130D>//<U120B>"
 week 7;19971130;1
 END LC_TIME

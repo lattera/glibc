@@ -83,50 +83,45 @@ END LC_NUMERIC
 
 LC_TIME
 
-% abday - The abbreviations for the week days:
-% - Son, Mvu, Bil, Tha, Ne, Hla, Gqi
-abday       "<U0053><U006F><U006E>";"<U004D><U0076><U0075>";/
-            "<U0042><U0069><U006C>";"<U0054><U0068><U0061>";/
-            "<U004E><U0065>";"<U0048><U006C><U0061>";/
-            "<U0047><U0071><U0069>"
+% abday - The abbreviations for the week days
+abday       "Son";"Mvu";/
+            "Bil";"Tha";/
+            "Ne";"Hla";/
+            "Gqi"
 
-% day - The full names of the week days:
-% - uSonto, uMvulo, uLesibili, lesithathu, uLesine, ngoLesihlanu, umGqibelo
-day         "<U0075><U0053><U006F><U006E><U0074><U006F>";/
-            "<U0075><U004D><U0076><U0075><U006C><U006F>";/
-            "<U0075><U004C><U0065><U0073><U0069><U0062><U0069><U006C><U0069>";/
-            "<U006C><U0065><U0073><U0069><U0074><U0068><U0061><U0074><U0068><U0075>";/
-            "<U0075><U004C><U0065><U0073><U0069><U006E><U0065>";/
-            "<U006E><U0067><U006F><U004C><U0065><U0073><U0069><U0068><U006C><U0061><U006E><U0075>";/
-            "<U0075><U006D><U0047><U0071><U0069><U0062><U0065><U006C><U006F>"
+% day - The full names of the week days
+day         "uSonto";/
+            "uMvulo";/
+            "uLesibili";/
+            "lesithathu";/
+            "uLesine";/
+            "ngoLesihlanu";/
+            "umGqibelo"
 
 % abmon - The abbreviations for the months
-% - Jan, Feb, Mat, Apr, Mey, Jun, Jul, Arh, Sep, Okt, Usi, Dis
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0074>";"<U0041><U0070><U0072>";/
-            "<U004D><U0065><U0079>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0072><U0068>";/
-            "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
-            "<U0055><U0073><U0069>";"<U0044><U0069><U0073>"
+abmon       "Jan";"Feb";/
+            "Mat";"Apr";/
+            "Mey";"Jun";/
+            "Jul";"Arh";/
+            "Sep";"Okt";/
+            "Usi";"Dis"
 
-% mon - The full names of the months -
-% - Janabari, uFeberbari, uMatjhi, u-Apreli, Meyi, Juni
-%   Julayi, Arhostosi, Septemba, Oktoba, Usinyikhaba, Disemba
-mon         "<U004A><U0061><U006E><U0061><U0062><U0061><U0072><U0069>";/
-            "<U0075><U0046><U0065><U0062><U0065><U0072><U0062><U0061><U0072><U0069>";/
-            "<U0075><U004D><U0061><U0074><U006A><U0068><U0069>";/
-            "<U0075><U002D><U0041><U0070><U0072><U0065><U006C><U0069>";/
-            "<U004D><U0065><U0079><U0069>";/
-            "<U004A><U0075><U006E><U0069>";/
-            "<U004A><U0075><U006C><U0061><U0079><U0069>";/
-            "<U0041><U0072><U0068><U006F><U0073><U0074><U006F><U0073><U0069>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-            "<U004F><U006B><U0074><U006F><U0062><U0061>";/
-            "<U0055><U0073><U0069><U006E><U0079><U0069><U006B><U0068><U0061><U0062><U0061>";/
-            "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+% mon - The full names of the months
+mon         "Janabari";/
+            "uFeberbari";/
+            "uMatjhi";/
+            "u-Apreli";/
+            "Meyi";/
+            "Juni";/
+            "Julayi";/
+            "Arhostosi";/
+            "Septemba";/
+            "Oktoba";/
+            "Usinyikhaba";/
+            "Disemba"
 
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
-d_t_fmt     "<U0025><U0061><U0020><U0025><U002D><U0065><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt     "%a %-e %b %Y %T %Z"
 %
 % "%a" (short weekday name),
 % "%-e" (day of month as a decimal number),
@@ -136,11 +131,11 @@ d_t_fmt     "<U0025><U0061><U0020><U0025><U002D><U0065><U0020><U0025><U0062><U00
 % "%Z" (Time zone name)
 
 % Date representation to be referenced by the "%x" field descriptor -
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d//%m//%Y"
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
 
 % Time representation to be referenced by the "%X" field descriptor -
-t_fmt       "<U0025><U0054>"
+t_fmt       "%T"
 % "%T" (24-hour clock time in format HH:MM:SS)
 
 % Define representation of ante meridiem and post meridiem strings -
@@ -153,9 +148,7 @@ t_fmt_ampm  ""
 
 % Date representation not described in ISO/IEC 14652. Comes out as -
 % "%a %b %-e %H:%M:%S %Z %Y" which is default "date" command output
-date_fmt "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U002D><U0065>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+date_fmt "%a %b %-e %H:%M:%S %Z %Y"
 %
 % %a - abbreviated weekday name,
 % %b - abreviated month name,
@@ -188,9 +181,7 @@ END LC_MEASUREMENT
 
 LC_NAME
 % Format for addressing a person.
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
-% "%d%t%g%t%m%t%f"
+name_fmt    "%d%t%g%t%m%t%f"
 % "Salutation",
 % "Empty string, or <Space>",
 % "First given name",
@@ -218,41 +209,33 @@ name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
 END LC_NAME
 
 LC_ADDRESS
-% Country name in Southern Ndebele - "iSewula Afrika"
-country_name "<U0069><U0053><U0065><U0077><U0075><U006C><U0061><U0020><U0041><U0066><U0072><U0069><U006B><U0061>"
+% Country name in Southern Ndebele
+country_name "iSewula Afrika"
 
-% Abbreviated country postal name - "ZA"
-country_post "<U005A><U0041>"
+% Abbreviated country postal name
+country_post "ZA"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
-% ZA
-country_car   "<U005A><U0041>"
+country_car   "ZA"
 
 % FIXME define the following correctly
 % country_isbn ""
 % https://en.wikipedia.org/wiki/ISO_3166-1_numeric
 country_num 710
 
-% Language name in Southern Ndebele - "IsiNdebele"
-lang_name "<U0049><U0073><U0069><U004E><U0064><U0065><U0062><U0065><U006C><U0065>"
+% Language name in Southern Ndebele
+lang_name "IsiNdebele"
 
 % ISO 639 two and three letter language names
 % see http://www.loc.gov/standards/iso639-2/englangn.html
-% nr
-lang_ab   "<U006E><U0072>"
-% nbl
-lang_term "<U006E><U0062><U006C>"
-% nbl
-lang_lib "<U006E><U0062><U006C>"
+lang_ab   "nr"
+lang_term "nbl"
+lang_lib "nbl"
 
 % Representation of postal addresses (minus the addressee's name) in South
 % Africa. (Ignored for now)
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N", which gives -
 % "firm name",
 % "end of line",
@@ -279,8 +262,6 @@ postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% ZA
-country_ab2   "<U005A><U0041>"
-% ZAF
-country_ab3   "<U005A><U0041><U0046>"
+country_ab2   "ZA"
+country_ab3   "ZAF"
 END LC_ADDRESS

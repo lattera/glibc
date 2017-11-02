@@ -78,42 +78,39 @@ LC_TIME
 % Days of week in Asturian
 % llunes, martes, miércoles, xueves, vienres, sábadu, domingu
 % llu, mar, mié, xue, vie, sáb, dom
-abday   "<U0064><U006F><U006D>";"<U006C><U006C><U0075>";/
-        "<U006D><U0061><U0072>";"<U006D><U0069><U00E9>";/
-        "<U0078><U0075><U0065>";"<U0076><U0069><U0065>";/
-        "<U0073><U00E1><U0062>"
-day     "<U0064><U006F><U006D><U0069><U006E><U0067><U0075>";/
-        "<U006C><U006C><U0075><U006E><U0065><U0073>";/
-        "<U006D><U0061><U0072><U0074><U0065><U0073>";/
-        "<U006D><U0069><U00E9><U0072><U0063><U006F><U006C><U0065><U0073>";/
-        "<U0078><U0075><U0065><U0076><U0065><U0073>";/
-        "<U0076><U0069><U0065><U006E><U0072><U0065><U0073>";/
-        "<U0073><U00E1><U0062><U0061><U0064><U0075>"
+abday   "dom";"llu";"mar";"mi<U00E9>";"xue";"vie";"s<U00E1>b"
+day     "domingu";/
+        "llunes";/
+        "martes";/
+        "mi<U00E9>rcoles";/
+        "xueves";/
+        "vienres";/
+        "s<U00E1>badu"
 % Month names in Asturian
 % xineru, febreru, marzu, abril, mayu, xunu, xunetu, agostu, setiembre,
 % ochobre, payares, avientu
 % Abbreviated form of xunetu is "xnt"
-abmon   "<U0078><U0069><U006E>";"<U0066><U0065><U0062>";/
-        "<U006D><U0061><U0072>";"<U0061><U0062><U0072>";/
-        "<U006D><U0061><U0079>";"<U0078><U0075><U006E>";/
-        "<U0078><U006E><U0074>";"<U0061><U0067><U006F>";/
-        "<U0073><U0065><U0074>";"<U006F><U0063><U0068>";/
-        "<U0070><U0061><U0079>";"<U0061><U0076><U0069>"
-mon     "<U0078><U0069><U006E><U0065><U0072><U0075>";/
-        "<U0066><U0065><U0062><U0072><U0065><U0072><U0075>";/
-        "<U006D><U0061><U0072><U007A><U0075>";/
-        "<U0061><U0062><U0072><U0069><U006C>";/
-        "<U006D><U0061><U0079><U0075>";/
-        "<U0078><U0075><U006E><U0075>";/
-        "<U0078><U0075><U006E><U0065><U0074><U0075>";/
-        "<U0061><U0067><U006F><U0073><U0074><U0075>";/
-        "<U0073><U0065><U0074><U0069><U0065><U006D><U0062><U0072><U0065>";/
-        "<U006F><U0063><U0068><U006F><U0062><U0072><U0065>";/
-        "<U0070><U0061><U0079><U0061><U0072><U0065><U0073>";/
-        "<U0061><U0076><U0069><U0065><U006E><U0074><U0075>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt   "<U0025><U0054>"
+abmon   "xin";"feb";/
+        "mar";"abr";/
+        "may";"xun";/
+        "xnt";"ago";/
+        "set";"och";/
+        "pay";"avi"
+mon     "xineru";/
+        "febreru";/
+        "marzu";/
+        "abril";/
+        "mayu";/
+        "xunu";/
+        "xunetu";/
+        "agostu";/
+        "setiembre";/
+        "ochobre";/
+        "payares";/
+        "avientu"
+d_t_fmt "%a %d %b %Y %T %Z"
+d_fmt   "%d//%m//%y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
 week 7;19971130;4
@@ -137,21 +134,13 @@ copy "es_ES"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0045><U0073><U0070><U0061><U00F1><U0061>"
-country_ab2   "<U0045><U0053>"
-country_ab3   "<U0045><U0053><U0050>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Espa<U00F1>a"
+country_ab2   "ES"
+country_ab3   "ESP"
 country_num   724
-% E
-country_car    "<U0045>"
-% asturianu
-lang_name    "<U0061><U0073><U0074><U0075><U0072><U0069><U0061><U006E><U0075>"
-% ast
-lang_term    "<U0061><U0073><U0074>"
-% ast
-lang_lib    "<U0061><U0073><U0074>"
+country_car   "E"
+lang_name    "asturianu"
+lang_term    "ast"
+lang_lib    "ast"
 END LC_ADDRESS

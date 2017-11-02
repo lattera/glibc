@@ -78,20 +78,20 @@ day         "<U661F><U671F><U65E5>";"<U661F><U671F><U4E00>";/
             "<U661F><U671F><U516D>"
 %
 % Abbreviated month names (%b)
-abmon       "<U0031><U6708>";"<U0032><U6708>";/
-            "<U0033><U6708>";"<U0034><U6708>";/
-            "<U0035><U6708>";"<U0036><U6708>";/
-            "<U0037><U6708>";"<U0038><U6708>";/
-            "<U0039><U6708>";"<U0031><U0030><U6708>";/
-            "<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+abmon       "1<U6708>";"2<U6708>";/
+            "3<U6708>";"4<U6708>";/
+            "5<U6708>";"6<U6708>";/
+            "7<U6708>";"8<U6708>";/
+            "9<U6708>";"10<U6708>";/
+            "11<U6708>";"12<U6708>"
 %
 % Full month names (%B)
-mon         "<U0031><U6708>";"<U0032><U6708>";/
-            "<U0033><U6708>";"<U0034><U6708>";/
-            "<U0035><U6708>";"<U0036><U6708>";/
-            "<U0037><U6708>";"<U0038><U6708>";/
-            "<U0039><U6708>";"<U0031><U0030><U6708>";/
-            "<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+mon         "1<U6708>";"2<U6708>";/
+            "3<U6708>";"4<U6708>";/
+            "5<U6708>";"6<U6708>";/
+            "7<U6708>";"8<U6708>";/
+            "9<U6708>";"10<U6708>";/
+            "11<U6708>";"12<U6708>"
 %
 % Equivalent of AM PM
 % 上午;下午
@@ -99,30 +99,23 @@ am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
 %
 % Appropriate date and time representation
 % %Y年%m月%d日 %A %H點%M分%S秒
-d_t_fmt     "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064>/
-<U65E5><U0020><U0025><U0041><U0020><U0025><U0048><U9EDE><U0025><U004D>/
-<U5206><U0025><U0053><U79D2>"
+d_t_fmt     "%Y<U5E74>%m<U6708>%d<U65E5> %A %H<U9EDE>%M<U5206>%S<U79D2>"
 %
 % Appropriate date representation
 % %Y年%m月%d日 %A
-d_fmt       "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064>/
-<U65E5><U0020><U0025><U0041>"
+d_fmt       "%Y<U5E74>%m<U6708>%d<U65E5> %A"
 %
 % Appropriate time representation
 % %H點%M分%S秒
-t_fmt       "<U0025><U0048><U9EDE><U0025><U004D><U5206><U0025><U0053>/
-<U79D2>"
+t_fmt       "%H<U9EDE>%M<U5206>%S<U79D2>"
 %
 % Appropriate 12 h time representation
 % %p%I點%M分%S秒
-t_fmt_ampm  "<U0025><U0070><U0025><U0049><U9EDE><U0025><U004D><U5206>/
-<U0025><U0053><U79D2>"
+t_fmt_ampm  "%p%I<U9EDE>%M<U5206>%S<U79D2>"
 %
 % Appropriate date representation (date(1))
 % %Y年 %b %e日 %A %H:%M:%S %Z
-date_fmt       "<U0025><U0059><U5E74><U0020><U0025><U0062><U0020>/
-<U0025><U0065><U65E5><U0020><U0025><U0041><U0020><U0025><U0048>/
-<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+date_fmt       "%Y<U5E74> %b %e<U65E5> %A %H:%M:%S %Z"
 %  FIXME: found in CLDR
 week 7;19971130;1
 END LC_TIME
@@ -150,20 +143,16 @@ LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
 % postal_fmt: "%c%T%s%h%N%b%e%r%N%f%N%d%N%a"
-postal_fmt  "<U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0068>/
-<U0025><U004E><U0025><U0062><U0025><U0065><U0025><U0072><U0025><U004E>/
-<U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0061>"
+postal_fmt  "%c%T%s%h%N%b%e%r%N%f%N%d%N%a"
 country_name "<U4E2D><U83EF><U4EBA><U6C11><U5171><U548C><U570B><U9999><U6E2F><U7279><U5225><U884C><U653F><U5340>"
-country_ab2 "<U0048><U004B>"
-country_ab3 "<U0048><U004B><U0047>"
+country_ab2 "HK"
+country_ab3 "HKG"
 country_num 344
-country_car "<U0048><U004B>"
+country_car "HK"
 country_isbn 962
 lang_name "<U7CB5><U8A9E>"
-% yue
-lang_term    "<U0079><U0075><U0065>"
-% yue
-lang_lib    "<U0079><U0075><U0065>"
+lang_term    "yue"
+lang_lib    "yue"
 END LC_ADDRESS
 
 

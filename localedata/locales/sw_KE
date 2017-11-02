@@ -51,61 +51,44 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-% Januari, Februari, Machi, Aprili, Mei, Juni, Julai, Agosti, Septemba, Oktoba, Novemba, Desemba
-mon  "<U004A><U0061><U006E><U0075><U0061><U0072><U0069>";/
-     "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
-     "<U004D><U0061><U0063><U0068><U0069>";/
-     "<U0041><U0070><U0072><U0069><U006C><U0069>";/
-     "<U004D><U0065><U0069>";/
-     "<U004A><U0075><U006E><U0069>";/
-     "<U004A><U0075><U006C><U0061><U0069>";/
-     "<U0041><U0067><U006F><U0073><U0074><U0069>";/
-     "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-     "<U004F><U006B><U0074><U006F><U0062><U0061>";/
-     "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-     "<U0044><U0065><U0073><U0065><U006D><U0062><U0061>"
-% Jan, Feb, Mac, Apr, Mei, Jun, Jul, Ago, Sep, Okt, Nov, Des
-abmon  "<U004A><U0061><U006E>";/
-       "<U0046><U0065><U0062>";/
-       "<U004D><U0061><U0063>";/
-       "<U0041><U0070><U0072>";/
-       "<U004D><U0065><U0069>";/
-       "<U004A><U0075><U006E>";/
-       "<U004A><U0075><U006C>";/
-       "<U0041><U0067><U006F>";/
-       "<U0053><U0065><U0070>";/
-       "<U004F><U006B><U0074>";/
-       "<U004E><U006F><U0076>";/
-       "<U0044><U0065><U0073>"
-% Jumapili, Jumatatu, Jumanne, Jumatano, Alhamisi, Ijumaa, Jumamosi
-day  "<U004A><U0075><U006D><U0061><U0070><U0069><U006C><U0069>";/
-     "<U004A><U0075><U006D><U0061><U0074><U0061><U0074><U0075>";/
-     "<U004A><U0075><U006D><U0061><U006E><U006E><U0065>";/
-     "<U004A><U0075><U006D><U0061><U0074><U0061><U006E><U006F>";/
-     "<U0041><U006C><U0068><U0061><U006D><U0069><U0073><U0069>";/
-     "<U0049><U006A><U0075><U006D><U0061><U0061>";/
-     "<U004A><U0075><U006D><U0061><U006D><U006F><U0073><U0069>"
-% J2, J3, J4, J5, Alh, Ij, J1
-abday  "<U004A><U0032>";/
-       "<U004A><U0033>";/
-       "<U004A><U0034>";/
-       "<U004A><U0035>";/
-       "<U0041><U006C><U0068>";/
-       "<U0049><U006A>";/
-       "<U004A><U0031>"
+mon  "Januari";/
+     "Februari";/
+     "Machi";/
+     "Aprili";/
+     "Mei";/
+     "Juni";/
+     "Julai";/
+     "Agosti";/
+     "Septemba";/
+     "Oktoba";/
+     "Novemba";/
+     "Desemba"
+abmon  "Jan";/
+       "Feb";/
+       "Mac";/
+       "Apr";/
+       "Mei";/
+       "Jun";/
+       "Jul";/
+       "Ago";/
+       "Sep";/
+       "Okt";/
+       "Nov";/
+       "Des"
+day  "Jumapili";/
+     "Jumatatu";/
+     "Jumanne";/
+     "Jumatano";/
+     "Alhamisi";/
+     "Ijumaa";/
+     "Jumamosi"
+abday  "J2";"J3";"J4";"J5";"Alh";"Ij";"J1"
 week 7;19971130;1
-% %e %B %Y %I:%M:%S %p %Z
-d_t_fmt  "<U0025><U0065><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0049>/
-<U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
-% %d/%m/%Y
-d_fmt  "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-% %I:%M:%S %p
-t_fmt  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
-% asubuhi, alasiri
-am_pm  "<U0061><U0073><U0075><U0062><U0075><U0068><U0069>";/
-       "<U0061><U006C><U0061><U0073><U0069><U0072><U0069>"
-% %I:%M:%S %p
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+d_t_fmt  "%e %B %Y %I:%M:%S %p %Z"
+d_fmt  "%d//%m//%Y"
+t_fmt  "%I:%M:%S %p"
+am_pm  "asubuhi";"alasiri"
+t_fmt_ampm  "%I:%M:%S %p"
 END LC_TIME
 
 LC_NUMERIC
@@ -132,48 +115,28 @@ nostr   "Hapana"
 END LC_MESSAGES
 
 LC_NAME
-% %p%t%g%m%t%f
-name_fmt  "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U006D><U0025><U0074><U0025><U0066>"
-% Bw.
-name_mr  "<U0042><U0077><U002E>"
-% Bi.
-name_ms  "<U0042><U0069><U002E>"
+name_fmt  "%p%t%g%m%t%f"
+name_mr  "Bw."
+name_ms  "Bi."
 END LC_NAME
 
 LC_ADDRESS
-% %a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N
-postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E>/
-<U0025><U0062><U0025><U004E><U0025><U0068><U0020><U0025><U0073><U0020><U0025><U0065><U0020><U0025>/
-<U0072><U0025><U004E><U0025><U0054><U002C><U0020><U0025><U0053><U0020><U0025><U007A><U0025><U004E>/
-<U0025><U0063><U0025><U004E>"
-% Kenya
-country_name  "<U004B><U0065><U006E><U0079><U0061>"
-% KE
-country_post  "<U004B><U0045>"
-% KE
-country_ab2   "<U004B><U0045>"
-% KEN
-country_ab3   "<U004B><U0045><U004E>"
+postal_fmt  "%a%N%f%N%d%N%b%N%h %s %e %r%N%T, %S %z%N%c%N"
+country_name  "Kenya"
+country_post  "KE"
+country_ab2   "KE"
+country_ab3   "KEN"
 country_num   404
-% EAK
-country_car  "<U0045><U0041><U004B>"
-% Kiswahili
-lang_name     "<U004B><U0069><U0073><U0077><U0061><U0068><U0069><U006C><U0069>"
-% sw
-lang_ab      "<U0073><U0077>"
-% swa
-lang_term    "<U0073><U0077><U0061>"
-% swa
-lang_lib     "<U0073><U0077><U0061>"
+country_car  "EAK"
+lang_name     "Kiswahili"
+lang_ab      "sw"
+lang_term    "swa"
+lang_lib     "swa"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% %c %a %l
-tel_int_fmt  "<U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-% %A %l
-tel_dom_fmt  "<U0025><U0041><U0020><U0025><U006C>"
-% 000
-int_select   "<U0030><U0030><U0030>"
-% 254
-int_prefix   "<U0032><U0035><U0034>"
+tel_int_fmt  "%c %a %l"
+tel_dom_fmt  "%A %l"
+int_select   "000"
+int_prefix   "254"
 END LC_TELEPHONE

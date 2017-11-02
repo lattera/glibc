@@ -208,13 +208,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<U0055><U005A><U0053><U0020>"
-currency_symbol         "<U0073><U006F><U02BB><U006D>"
-mon_decimal_point       "<U002E>"
-mon_thousands_sep       "<U002C>"
+int_curr_symbol         "UZS "
+currency_symbol         "so<U02BB>m"
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -226,47 +226,47 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point           "<U002E>"
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
-abday       "<U0059><U0061><U006B>";"<U0044><U0075>";/
-            "<U0053><U0065>";"<U0043><U0068><U006F>";/
-            "<U0050><U0061><U0079>";"<U004A><U0075>";/
-            "<U0053><U0068><U0061>"
-day         "<U0059><U0061><U006B><U0073><U0068><U0061><U006E><U0062><U0061>";/
-            "<U0044><U0075><U0073><U0068><U0061><U006E><U0062><U0061>";/
-            "<U0053><U0065><U0073><U0068><U0061><U006E><U0062><U0061>";/
-            "<U0043><U0068><U006F><U0072><U0073><U0068><U0061><U006E><U0062><U0061>";/
-            "<U0050><U0061><U0079><U0073><U0068><U0061><U006E><U0062><U0061>";/
-            "<U004A><U0075><U006D><U0061>";/
-            "<U0053><U0068><U0061><U006E><U0062><U0061>"
-abmon       "<U0059><U0061><U006E>";"<U0046><U0065><U0076>";/
-            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-            "<U004D><U0061><U0079>";"<U0049><U0079><U006E>";/
-            "<U0049><U0079><U006C>";"<U0041><U0076><U0067>";/
-            "<U0053><U0065><U006E>";"<U004F><U006B><U0074>";/
-            "<U004E><U006F><U0079>";"<U0044><U0065><U006B>"
-mon         "<U0059><U0061><U006E><U0076><U0061><U0072>";/
-            "<U0046><U0065><U0076><U0072><U0061><U006C>";/
-            "<U004D><U0061><U0072><U0074>";/
-            "<U0041><U0070><U0072><U0065><U006C>";/
-            "<U004D><U0061><U0079>";/
-            "<U0049><U0079><U0075><U006E>";/
-            "<U0049><U0079><U0075><U006C>";/
-            "<U0041><U0076><U0067><U0075><U0073><U0074>";/
-            "<U0053><U0065><U006E><U0074><U0061><U0062><U0072>";/
-            "<U004F><U006B><U0074><U0061><U0062><U0072>";/
-            "<U004E><U006F><U0079><U0061><U0062><U0072>";/
-            "<U0044><U0065><U006B><U0061><U0062><U0072>"
-d_t_fmt  "<U0025><U0054><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0079><U0069><U006C><U002C><U0020><U0025><U0041>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0054>"
+abday       "Yak";"Du";/
+            "Se";"Cho";/
+            "Pay";"Ju";/
+            "Sha"
+day         "Yakshanba";/
+            "Dushanba";/
+            "Seshanba";/
+            "Chorshanba";/
+            "Payshanba";/
+            "Juma";/
+            "Shanba"
+abmon       "Yan";"Fev";/
+            "Mar";"Apr";/
+            "May";"Iyn";/
+            "Iyl";"Avg";/
+            "Sen";"Okt";/
+            "Noy";"Dek"
+mon         "Yanvar";/
+            "Fevral";/
+            "Mart";/
+            "Aprel";/
+            "May";/
+            "Iyun";/
+            "Iyul";/
+            "Avgust";/
+            "Sentabr";/
+            "Oktabr";/
+            "Noyabr";/
+            "Dekabr"
+d_t_fmt  "%T, %d %B, %Y yil, %A"
+d_fmt       "%d//%m//%y"
+t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
-date_fmt    "<U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0079><U0069><U006C><U002C><U0020><U0025><U0041>"
+date_fmt    "%d %B, %Y yil, %A"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -286,10 +286,9 @@ END LC_PAPER
 
 LC_TELEPHONE
 % FIXME: todo
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0039><U0039><U0038>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "998"
+int_select     "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -297,8 +296,7 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0066><U0025><U0074>/
-<U0025><U0067><U0025><U0074><U0025><U006D>"
+name_fmt    "%d%t%f%t%g%t%m"
 name_gen    "Hurmatli"
 name_mr     "Janob"
 name_mrs    "Xonim"
@@ -312,25 +310,17 @@ LC_ADDRESS
 % format: %C%N%S%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
 % but %S seems not recognized yet ? so %C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
 % is used.
-postal_fmt    "<U0025><U0043><U0025><U004E>/
-<U0025><U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0025>/
-<U004E><U0025><U0066><U0025><U004E><U0025><U0062><U0025><U004E><U0025>/
-<U0064><U0025><U004E><U0025><U0065><U0020><U0025><U0072><U0025><U004E>/
-<U0025><U0061><U0025><U004E><U0025><U007A>"
-country_name "<U004F><U02BB><U007A><U0062><U0065><U006B><U0069><U0073><U0074><U006F><U006E>"
+postal_fmt    "%C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z"
+country_name "O<U02BB>zbekiston"
 country_post "UZ" % ??
 country_ab2  "UZ"
 country_ab3  "UZB"
 country_num  860
 % FIXME: ISBN number?
 %country_isbn ""
-% UZ
-country_car    "<U0055><U005A>"
-lang_name   "<U006F><U2018><U007A><U0062><U0065><U006B>"
-% uz
-lang_ab      "<U0075><U007A>"
-% uzb
-lang_term    "<U0075><U007A><U0062>"
-% uzb
-lang_lib     "<U0075><U007A><U0062>"
+country_car   "UZ"
+lang_name   "o<U2018>zbek"
+lang_ab      "uz"
+lang_term    "uzb"
+lang_lib     "uzb"
 END LC_ADDRESS

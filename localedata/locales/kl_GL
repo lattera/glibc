@@ -70,38 +70,38 @@ copy "da_DK"
 END LC_NUMERIC
 
 LC_TIME
-abday    "<U0073><U0061><U0062>";"<U0061><U0074><U0061>";/
-         "<U006D><U0061><U0072>";"<U0070><U0069><U006E>";/
-         "<U0073><U0069><U0073>";"<U0074><U0061><U006C>";/
-         "<U0061><U0072><U0066>"
-day      "<U0073><U0061><U0062><U0061><U0061><U0074>";/
-         "<U0061><U0074><U0061><U0061><U0073><U0069><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>";/
-         "<U006D><U0061><U0072><U006C><U0075><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>";/
-         "<U0070><U0069><U006E><U0067><U0061><U0073><U0075><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>";/
-         "<U0073><U0069><U0073><U0061><U006D><U0061><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>";/
-         "<U0074><U0061><U006C><U006C><U0069><U006D><U0061><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>";/
-         "<U0061><U0072><U0066><U0069><U006E><U0069><U006E><U006E><U0067><U006F><U0072><U006E><U0065><U0071>"
-abmon    "<U006A><U0061><U006E>";"<U0066><U0065><U0062>";/
-         "<U006D><U0061><U0072>";"<U0061><U0070><U0072>";/
-         "<U006D><U0061><U006A>";"<U006A><U0075><U006E>";/
-         "<U006A><U0075><U006C>";"<U0061><U0075><U0067>";/
-         "<U0073><U0065><U0070>";"<U006F><U006B><U0074>";/
-         "<U006E><U006F><U0076>";"<U0064><U0065><U0063>"
-mon      "<U006A><U0061><U006E><U0075><U0061><U0072><U0069>";/
-         "<U0066><U0065><U0062><U0072><U0075><U0061><U0072><U0069>";/
-         "<U006D><U0061><U0072><U0074><U0073><U0069>";/
-         "<U0061><U0070><U0072><U0069><U006C><U0069>";/
-         "<U006D><U0061><U006A><U0069>";/
-         "<U006A><U0075><U006E><U0069>";/
-         "<U006A><U0075><U006C><U0069>";/
-         "<U0061><U0075><U0067><U0075><U0073><U0074><U0075><U0073><U0069>";/
-         "<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072><U0069>";/
-         "<U006F><U006B><U0074><U006F><U0062><U0065><U0072><U0069>";/
-         "<U006E><U006F><U0076><U0065><U006D><U0062><U0065><U0072><U0069>";/
-         "<U0064><U0065><U0063><U0065><U006D><U0062><U0065><U0072><U0069>"
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059>"
-t_fmt       "<U0025><U0054>"
+abday    "sab";"ata";/
+         "mar";"pin";/
+         "sis";"tal";/
+         "arf"
+day      "sabaat";/
+         "ataasinngorneq";/
+         "marlunngorneq";/
+         "pingasunngorneq";/
+         "sisamanngorneq";/
+         "tallimanngorneq";/
+         "arfininngorneq"
+abmon    "jan";"feb";/
+         "mar";"apr";/
+         "maj";"jun";/
+         "jul";"aug";/
+         "sep";"okt";/
+         "nov";"dec"
+mon      "januari";/
+         "februari";/
+         "martsi";/
+         "aprili";/
+         "maji";/
+         "juni";/
+         "juli";/
+         "augustusi";/
+         "septemberi";/
+         "oktoberi";/
+         "novemberi";/
+         "decemberi"
+d_t_fmt     "%a %d %b %Y %T %Z"
+d_fmt       "%d %b %Y"
+t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
 week 7;19971130;1
@@ -120,10 +120,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0032><U0039><U0039>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "299"
+int_select     "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -131,27 +130,18 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U004B><U0061><U006C><U0061><U0061><U006C><U006C><U0069><U0074><U0020><U004E><U0075><U006E><U0061><U0061><U0074>"
-country_ab2 "<U0047><U004C>"
-country_ab3 "<U0047><U0052><U004C>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Kalaallit Nunaat"
+country_ab2 "GL"
+country_ab3 "GRL"
 country_num 304
-country_car "<U004B><U004E>"
-% Kalaallisut
-lang_name    "<U006B><U0061><U006C><U0061><U0061><U006C><U006C><U0069><U0073><U0075><U0074>"
-% kl
-lang_ab      "<U006B><U006C>"
-% kal
-lang_term    "<U006B><U0061><U006C>"
-% kal
-lang_lib    "<U006B><U0061><U006C>"
+country_car "KN"
+lang_name    "kalaallisut"
+lang_ab      "kl"
+lang_term    "kal"
+lang_lib    "kal"
 END LC_ADDRESS

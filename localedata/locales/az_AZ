@@ -216,14 +216,13 @@ nostr   "yox"
 END LC_MESSAGES
 
 LC_MONETARY
-% AZN
-int_curr_symbol           "<U0041><U005A><U004E><U0020>"
+int_curr_symbol           "AZN "
 currency_symbol           "<U20BC>"
-mon_decimal_point         "<U002E>"
+mon_decimal_point         "."
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -235,53 +234,53 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
-thousands_sep             "<U002E>"
+decimal_point             ","
+thousands_sep             "."
 grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-day     "<U0062><U0061><U007A><U0061><U0072><U0020><U0067><U00FC><U006E><U00FC>";/
-        "<U0062><U0061><U007A><U0061><U0072><U0020><U0065><U0072><U0074><U0259><U0073><U0069>";/
-        "<U00E7><U0259><U0072><U015F><U0259><U006E><U0062><U0259><U0020><U0061><U0078><U015F><U0061><U006D><U0131>";/
-        "<U00E7><U0259><U0072><U015F><U0259><U006E><U0062><U0259>";/
-        "<U0063><U00FC><U006D><U0259><U0020><U0061><U0078><U015F><U0061><U006D><U0131>";/
-        "<U0063><U00FC><U006D><U0259>";/
-        "<U015F><U0259><U006E><U0062><U0259>"
-abday   "<U0062><U0061><U007A>";/
-        "<U0062><U0065><U0072>";/
-        "<U00E7><U0061><U0078>";/
-        "<U00E7><U0259><U0072>";/
-        "<U0063><U0061><U0078>";/
-        "<U0063><U00FC><U006D>";/
-        "<U015F><U006E><U0062>"
-mon     "<U0079><U0061><U006E><U0076><U0061><U0072>";/
-        "<U0066><U0065><U0076><U0072><U0061><U006C>";/
-        "<U006D><U0061><U0072><U0074>";/
-        "<U0061><U0070><U0072><U0065><U006C>";/
-        "<U006D><U0061><U0079>";/
-        "<U0069><U0079><U0075><U006E>";/
-        "<U0069><U0079><U0075><U006C>";/
-        "<U0061><U0076><U0071><U0075><U0073><U0074>";/
-        "<U0073><U0065><U006E><U0074><U0079><U0061><U0062><U0072>";/
-        "<U006F><U006B><U0074><U0079><U0061><U0062><U0072>";/
-        "<U006E><U006F><U0079><U0061><U0062><U0072>";/
-        "<U0064><U0065><U006B><U0061><U0062><U0072>"
-abmon   "<U0059><U0061><U006E>";/
-        "<U0046><U0065><U0076>";/
-        "<U004D><U0061><U0072>";/
-        "<U0041><U0070><U0072>";/
-        "<U004D><U0061><U0079>";/
-        "<U0130><U0079><U006E>";/
-        "<U0130><U0079><U006C>";/
-        "<U0041><U0076><U0071>";/
-        "<U0053><U0065><U006E>";/
-        "<U004F><U006B><U0074>";/
-        "<U004E><U006F><U0079>";/
-        "<U0044><U0065><U006B>"
-d_t_fmt "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0054>"
-d_fmt     "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt     "<U0025><U0054>"
+day     "bazar g<U00FC>n<U00FC>";/
+        "bazar ert<U0259>si";/
+        "<U00E7><U0259>r<U015F><U0259>nb<U0259> ax<U015F>am<U0131>";/
+        "<U00E7><U0259>r<U015F><U0259>nb<U0259>";/
+        "c<U00FC>m<U0259> ax<U015F>am<U0131>";/
+        "c<U00FC>m<U0259>";/
+        "<U015F><U0259>nb<U0259>"
+abday   "baz";/
+        "ber";/
+        "<U00E7>ax";/
+        "<U00E7><U0259>r";/
+        "cax";/
+        "c<U00FC>m";/
+        "<U015F>nb"
+mon     "yanvar";/
+        "fevral";/
+        "mart";/
+        "aprel";/
+        "may";/
+        "iyun";/
+        "iyul";/
+        "avqust";/
+        "sentyabr";/
+        "oktyabr";/
+        "noyabr";/
+        "dekabr"
+abmon   "Yan";/
+        "Fev";/
+        "Mar";/
+        "Apr";/
+        "May";/
+        "<U0130>yn";/
+        "<U0130>yl";/
+        "Avq";/
+        "Sen";/
+        "Okt";/
+        "Noy";/
+        "Dek"
+d_t_fmt "%A, %d %B %Y %T"
+d_fmt     "%d.%m.%Y"
+t_fmt     "%T"
 am_pm     "";""
 t_fmt_ampm ""
 week 7;19971130;1
@@ -299,21 +298,16 @@ END LC_MEASUREMENT
 LC_ADDRESS
 % FIXME
 postal_fmt "???"
-country_name "<U0041><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E>"
-country_ab2 "<U0041><U005A>"
-country_ab3 "<U0041><U005A><U0045>"
+country_name "Az<U0259>rbaycan"
+country_ab2 "AZ"
+country_ab3 "AZE"
 country_num 031
-% AZ
-country_car    "<U0041><U005A>"
+country_car    "AZ"
 % Azərbaycanca
-lang_name    "<U0061><U007A><U0259><U0072><U0062><U0061><U0079><U0063><U0061><U006E><U0020><U0064><U0069><U006C><U0069>"
-
-% az
-lang_ab      "<U0061><U007A>"
-% aze
-lang_term    "<U0061><U007A><U0065>"
-% aze
-lang_lib    "<U0061><U007A><U0065>"
+lang_name    "az<U0259>rbaycan dili"
+lang_ab      "az"
+lang_term    "aze"
+lang_lib    "aze"
 END LC_ADDRESS
 
 LC_TELEPHONE

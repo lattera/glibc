@@ -85,10 +85,10 @@ mon         "<U0B9C><U0BA9><U0BB5><U0BB0><U0BBF>";"<U0BAA><U0BBF><U0BAA><U0BCD><
             "<U0B9A><U0BC6><U0BAA><U0BCD><U0B9F><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B85><U0B95><U0BCD><U0B9F><U0BCB><U0BAA><U0BB0><U0BCD>";/
             "<U0BA8><U0BB5><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>";"<U0B9F><U0BBF><U0B9A><U0BAE><U0BCD><U0BAA><U0BB0><U0BCD>"
 am_pm       "<U0B95><U0BBE><U0BB2><U0BC8>";"<U0BAE><U0BBE><U0BB2><U0BC8>"
-d_t_fmt     "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059>"
-t_fmt       "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0020><U0025><U005A>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070><U0020><U0025><U005A>"
+d_t_fmt     "%A %d %B %Y %I:%M:%S %p %Z"
+d_fmt       "%A %d %B %Y"
+t_fmt       "%I:%M:%S  %Z"
+t_fmt_ampm  "%I:%M:%S %p %Z"
 
 week 7;19971130;1
 first_weekday 2
@@ -112,18 +112,14 @@ END LC_NAME
 
 LC_ADDRESS
 
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073><U0025><U0062><U0025><U0065><U0025><U0072>"
+postal_fmt  "%z%c%T%s%b%e%r"
 country_name "<U0B87><U0BB2><U0B99><U0BCD><U0B95><U0BC8>"
-country_ab2 "<U004C><U004B>"
-country_ab3 "<U004C><U004B><U0041>"
+country_ab2 "LK"
+country_ab3 "LKA"
 country_num 144
-% CL
-country_car  "<U0043><U004C>"
+country_car "CL"
 lang_name   "<U0BA4><U0BAE><U0BBF><U0BB4><U0BCD>"
-% ta
-lang_ab      "<U0074><U0061>"
-% tam
-lang_term    "<U0074><U0061><U006D>"
-% tam
-lang_lib    "<U0074><U0061><U006D>"
+lang_ab      "ta"
+lang_term    "tam"
+lang_lib    "tam"
 END LC_ADDRESS

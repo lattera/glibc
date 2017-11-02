@@ -64,13 +64,13 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<U0047><U0042><U0050><U0020>"
+int_curr_symbol         "GBP "
 currency_symbol         "<U00A3>"
-mon_decimal_point       "<U002E>"
-mon_thousands_sep       "<U002C>"
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -82,53 +82,53 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point           "<U002E>"
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
 
-abday       "<U004A><U0065><U0064>";"<U004A><U0065><U006C>";/
-            "<U004A><U0065><U006D>";"<U004A><U0065><U0072><U0063>";/
-            "<U004A><U0065><U0072><U0064>";"<U004A><U0065><U0068>";/
-            "<U004A><U0065><U0073>"
-day         "<U004A><U0065><U0064><U006F><U006F><U006E><U0065><U0065>";/
-            "<U004A><U0065><U006C><U0068><U0065><U0069><U006E>";/
-            "<U004A><U0065><U006D><U0061><U0079><U0072><U0074>";/
-            "<U004A><U0065><U0072><U0063><U0065><U0061><U006E>";/
-            "<U004A><U0065><U0072><U0064><U0065><U0069><U006E>";/
-            "<U004A><U0065><U0068><U0065><U0069><U006E><U0065><U0079>";/
-            "<U004A><U0065><U0073><U0061><U0072><U006E>"
-mon	    "<U004A><U0065><U0072><U0072><U0065><U0079><U002D><U0067><U0065><U0075><U0072><U0065><U0065>";/
-	    "<U0054><U006F><U0073><U0068><U0069><U0061><U0067><U0068><U0074><U002D><U0061><U0072><U0072><U0065><U0065>";/
-	    "<U004D><U0061><U0079><U0072><U006E><U0074>";/
-	    "<U0041><U0076><U0065><U0072><U0069><U006C>";/
-	    "<U0042><U006F><U0061><U006C><U0064><U0079><U006E>";/
-	    "<U004D><U0065><U0061><U006E><U002D><U0073><U006F><U0075><U0072><U0065><U0065>";/
-	    "<U004A><U0065><U0072><U0072><U0065><U0079><U002D><U0073><U006F><U0075><U0072><U0065><U0065>";/
-	    "<U004C><U0075><U0061><U006E><U0069><U0073><U0074><U0079><U006E>";/
-	    "<U004D><U0065><U0061><U006E><U002D><U0066><U006F><U0075><U0079><U0069><U0072>";/
-	    "<U004A><U0065><U0072><U0072><U0065><U0079><U002D><U0066><U006F><U0075><U0079><U0069><U0072>";/
-	    "<U004D><U0065><U0065><U0020><U0048><U006F><U0075><U006E><U0065><U0079>";/
-	    "<U004D><U0065><U0065><U0020><U006E><U0079><U0020><U004E><U006F><U006C><U006C><U0069><U0063><U006B>"
-abmon       "<U004A><U002D><U0067><U0075><U0065><U0072>";/
-	    "<U0054><U002D><U0061><U0072><U0072><U0065><U0065>";/
-            "<U004D><U0061><U0079><U0072><U006E><U0074>";/
-	    "<U0041><U0076><U0072><U0072><U0069><U006C>";/
-            "<U0042><U006F><U0061><U006C><U0064><U0079><U006E>";/
-	    "<U004D><U002D><U0073><U006F><U0075><U0072><U0065><U0065>";/
-            "<U004A><U002D><U0073><U006F><U0075><U0072><U0065><U0065>";/
-	    "<U004C><U0075><U0061><U006E><U0069><U0073><U0074><U0079><U006E>";/
-	    "<U004D><U002D><U0066><U006F><U0075><U0079><U0069><U0072>";/
-            "<U004A><U002D><U0066><U006F><U0075><U0079><U0069><U0072>";/
-            "<U004D><U002E><U0048><U006F><U0075><U006E><U0065><U0079>";/
-            "<U004D><U002E><U004E><U006F><U006C><U006C><U0069><U0063><U006B>"
+abday       "Jed";"Jel";/
+            "Jem";"Jerc";/
+            "Jerd";"Jeh";/
+            "Jes"
+day         "Jedoonee";/
+            "Jelhein";/
+            "Jemayrt";/
+            "Jercean";/
+            "Jerdein";/
+            "Jeheiney";/
+            "Jesarn"
+mon	    "Jerrey-geuree";/
+	    "Toshiaght-arree";/
+	    "Mayrnt";/
+	    "Averil";/
+	    "Boaldyn";/
+	    "Mean-souree";/
+	    "Jerrey-souree";/
+	    "Luanistyn";/
+	    "Mean-fouyir";/
+	    "Jerrey-fouyir";/
+	    "Mee Houney";/
+	    "Mee ny Nollick"
+abmon       "J-guer";/
+	    "T-arree";/
+            "Mayrnt";/
+	    "Avrril";/
+            "Boaldyn";/
+	    "M-souree";/
+            "J-souree";/
+	    "Luanistyn";/
+	    "M-fouyir";/
+            "J-fouyir";/
+            "M.Houney";/
+            "M.Nollick"
 
 
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0054>"
+d_t_fmt     "%a %d %b %Y %T %Z"
+d_fmt       "%d//%m//%y"
+t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
 week 7;19971130;4
@@ -145,11 +145,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0034><U0034>"
-% 00
-int_select  "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "44"
+int_select  "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -157,27 +155,18 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0052><U0079><U0077><U0076><U0061><U006E><U0065><U0074><U0068><U0020><U0055><U006E><U0079><U0073>"
-country_ab2 "<U0047><U0042>"
-country_ab3 "<U0047><U0042><U0052>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Rywvaneth Unys"
+country_ab2 "GB"
+country_ab3 "GBR"
 country_num 826
-% GB
-country_car    "<U0047><U0042>"
-lang_name   "<U0047><U0061><U0065><U006C><U0067>"
-% gv
-lang_ab      "<U0067><U0076>"
-% glv
-lang_term    "<U0067><U006C><U0076>"
-% glv
-lang_lib    "<U0067><U006C><U0076>"
+country_car "GB"
+lang_name   "Gaelg"
+lang_ab      "gv"
+lang_term    "glv"
+lang_lib    "glv"
 END LC_ADDRESS

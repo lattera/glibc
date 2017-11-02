@@ -370,46 +370,45 @@ END LC_TELEPHONE
 
 LC_TIME
 % sọn, mọn, tuz, wen, tọs, fra, sat
-abday       "<U0073><U1ECD><U006E>";"<U006D><U1ECD><U006E>";/
-            "<U0074><U0075><U007A>";"<U0077><U0065><U006E>";/
-            "<U0074><U1ECD><U0073>";"<U0066><U0072><U0061>";/
-            "<U0073><U0061><U0074>"
+abday       "s<U1ECD>n";"m<U1ECD>n";/
+            "tuz";"wen";/
+            "t<U1ECD>s";"fra";/
+            "sat"
 % sọnde, mọnde, tuzde, wenzde, tọsde, fraịde, satọde
-day         "<U0073><U1ECD><U006E><U0064><U0065>";/
-            "<U006D><U1ECD><U006E><U0064><U0065>";/
-            "<U0074><U0075><U007A><U0064><U0065>";/
-            "<U0077><U0065><U006E><U007A><U0064><U0065>";/
-            "<U0074><U1ECD><U0073><U0064><U0065>";/
-            "<U0066><U0072><U0061><U1ECB><U0064><U0065>";/
-            "<U0073><U0061><U0074><U1ECD><U0064><U0065>"
+day         "s<U1ECD>nde";/
+            "m<U1ECD>nde";/
+            "tuzde";/
+            "wenzde";/
+            "t<U1ECD>sde";/
+            "fra<U1ECB>de";/
+            "sat<U1ECD>de"
 % Jen, Feb, Maa, Epr, Mee, Juu, Jul, Ọgọ, Sep, Ọkt, Nov, Dis
-abmon       "<U004A><U0065><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0061>";"<U0045><U0070><U0072>";/
-            "<U004D><U0065><U0065>";"<U004A><U0075><U0075>";/
-            "<U004A><U0075><U006C>";"<U1ECC><U0067><U1ECD>";/
-            "<U0053><U0065><U0070>";"<U1ECC><U006B><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0069><U0073>"
+abmon       "Jen";"Feb";/
+            "Maa";"Epr";/
+            "Mee";"Juu";/
+            "Jul";"<U1ECC>g<U1ECD>";/
+            "Sep";"<U1ECC>kt";/
+            "Nov";"Dis"
 % Jenụwarị, Febrụwarị, Maachị, Eprel, Mee, Juun,
 % Julaị, Ọgọọst, Septemba, Ọktoba, Novemba, Disemba
-mon         "<U004A><U0065><U006E><U1EE5><U0077><U0061><U0072><U1ECB>";/
-            "<U0046><U0065><U0062><U0072><U1EE5><U0077><U0061><U0072><U1ECB>";/
-            "<U004D><U0061><U0061><U0063><U0068><U1ECB>";/
-            "<U0045><U0070><U0072><U0065><U006C>";/
-            "<U004D><U0065><U0065>";/
-            "<U004A><U0075><U0075><U006E>";/
-            "<U004A><U0075><U006C><U0061><U1ECB>";/
-            "<U1ECC><U0067><U1ECD><U1ECD><U0073><U0074>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0061>";/
-            "<U1ECC><U006B><U0074><U006F><U0062><U0061>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0061>";/
-            "<U0044><U0069><U0073><U0065><U006D><U0062><U0061>"
+mon         "Jen<U1EE5>war<U1ECB>";/
+            "Febr<U1EE5>war<U1ECB>";/
+            "Maach<U1ECB>";/
+            "Eprel";/
+            "Mee";/
+            "Juun";/
+            "Jula<U1ECB>";/
+            "<U1ECC>g<U1ECD><U1ECD>st";/
+            "Septemba";/
+            "<U1ECC>ktoba";/
+            "Novemba";/
+            "Disemba"
 % FIXME
-% %A, %d %B %Y %T %Z
-d_t_fmt     "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0072>"
-am_pm       "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+d_t_fmt     "%A, %d %B %Y %T %Z"
+d_fmt       "%d//%m//%y"
+t_fmt       "%r"
+am_pm       "AM";"PM"
+t_fmt_ampm  "%I:%M:%S %p"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -461,27 +460,22 @@ LC_ADDRESS
 % "end of line",
 % "country designation for the <country_post> keyword",
 % "end of line
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
 % Country name in Igbo - "Nigeria"
-country_name  "<U004E><U0069><U0067><U0065><U0072><U0069><U0061>"
+country_name  "Nigeria"
 
 % Language name in Igbo - "Igbo"
-lang_name     "<U0049><U0067><U0062><U006F>"
+lang_name     "Igbo"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
 % "NG"?
-%country_post   "<U004E><U0047>"
+%country_post   "NG"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/Distsigns_Sept2003.pdf
-% "WAN"
-country_car   "<U0057><U0041><U004E>"
+country_car   "WAN"
 
 % ISO 2108
 % http://www.isbn-international.org/
@@ -490,18 +484,14 @@ country_isbn  978
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% ig
-lang_ab      "<U0069><U0067>"
-% ibo
-lang_term    "<U0069><U0062><U006F>"
-% ibo
-lang_lib     "<U0069><U0062><U006F>"
+lang_ab      "ig"
+lang_term    "ibo"
+lang_lib     "ibo"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% "NG", "NGA"
-country_ab2   "<U004E><U0047>"
-country_ab3   "<U004E><U0047><U0041>"
+country_ab2   "NG"
+country_ab3   "NGA"
 country_num   566
 
 END LC_ADDRESS

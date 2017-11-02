@@ -49,43 +49,38 @@ copy "iso14651_t1"
 END LC_COLLATE
 
 LC_TIME
-abday       "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";/
-            "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";/
-            "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";/
-            "<U0053><U0061><U0074>"
-day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
-            "<U004D><U006F><U006E><U0064><U0061><U0079>";/
-            "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";/
-            "<U0046><U0072><U0069><U0064><U0061><U0079>";/
-            "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-            "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-            "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
-mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
-            "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
-            "<U004D><U0061><U0072><U0063><U0068>";/
-            "<U0041><U0070><U0072><U0069><U006C>";/
-            "<U004D><U0061><U0079>";/
-            "<U004A><U0075><U006E><U0065>";/
-            "<U004A><U0075><U006C><U0079>";/
-            "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-            "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-            "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0054>"
-am_pm       "<U0061><U006D>";"<U0070><U006D>"
-t_fmt_ampm  "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0050><U0020><U0025><U005A>"
-date_fmt    "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U005A><U0020><U0025><U0059>"
+abday       "Sun";"Mon";"Tue";"Wed";"Thu";"Fri";"Sat"
+day         "Sunday";/
+            "Monday";/
+            "Tuesday";/
+            "Wednesday";/
+            "Thursday";/
+            "Friday";/
+            "Saturday"
+abmon       "Jan";"Feb";/
+            "Mar";"Apr";/
+            "May";"Jun";/
+            "Jul";"Aug";/
+            "Sep";"Oct";/
+            "Nov";"Dec"
+mon         "January";/
+            "February";/
+            "March";/
+            "April";/
+            "May";/
+            "June";/
+            "July";/
+            "August";/
+            "September";/
+            "October";/
+            "November";/
+            "December"
+d_t_fmt     "%a %d %b %Y %T %Z"
+d_fmt       "%d//%m//%y"
+t_fmt       "%T"
+am_pm       "am";"pm"
+t_fmt_ampm  "%l:%M:%S %P %Z"
+date_fmt    "%a %e %b %H:%M:%S %Z %Y"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -115,29 +110,17 @@ copy "en_GB"
 END LC_NAME
 
 LC_ADDRESS
-% %a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N
-postal_fmt  "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0065><U0020>/
-<U0025><U0068><U0025><U004E><U0025><U0062><U0020><U0025><U0073><U0025><U004E><U0025><U007A>/
-<U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-% Zambia
-country_name  "<U005A><U0061><U006D><U0062><U0069><U0061>"
-% ZM
-country_post  "<U005A><U004D>"
-% ZM
-country_ab2   "<U005A><U004D>"
-% ZMB
-country_ab3   "<U005A><U004D><U0042>"
+postal_fmt  "%a%N%f%N%e %h%N%b %s%N%z%N%T%N%c%N"
+country_name  "Zambia"
+country_post  "ZM"
+country_ab2   "ZM"
+country_ab3   "ZMB"
 country_num   894
-% Z
-country_car  "<U005A>"
-% English
-lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
-% en
-lang_ab      "<U0065><U006E>"
-% eng
-lang_term    "<U0065><U006E><U0067>"
-% eng
-lang_lib    "<U0065><U006E><U0067>"
+country_car  "Z"
+lang_name     "English"
+lang_ab      "en"
+lang_term    "eng"
+lang_lib    "eng"
 END LC_ADDRESS
 
 LC_TELEPHONE

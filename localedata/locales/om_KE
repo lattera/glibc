@@ -73,29 +73,29 @@ copy "iso14651_t1"
 %
 collating-symbol  <CAP-MIN>
 collating-symbol  <ch-qubee>
-collating-element <CH> from "<U0043><U0048>"
-collating-element <Ch> from "<U0043><U0068>"
-collating-element <ch> from "<U0063><U0068>"
+collating-element <CH> from "CH"
+collating-element <Ch> from "Ch"
+collating-element <ch> from "ch"
 collating-symbol  <dh-qubee>
-collating-element <DH> from "<U0044><U0048>"
-collating-element <Dh> from "<U0044><U0068>"
-collating-element <dh> from "<U0064><U0068>"
+collating-element <DH> from "DH"
+collating-element <Dh> from "Dh"
+collating-element <dh> from "dh"
 collating-symbol  <kh-qubee>
-collating-element <KH> from "<U004B><U0048>"
-collating-element <Kh> from "<U004B><U0068>"
-collating-element <kh> from "<U006B><U0068>"
+collating-element <KH> from "KH"
+collating-element <Kh> from "Kh"
+collating-element <kh> from "kh"
 collating-symbol  <ny-qubee>
-collating-element <NY> from "<U004E><U0059>"
-collating-element <Ny> from "<U004E><U0079>"
-collating-element <ny> from "<U006E><U0079>"
+collating-element <NY> from "NY"
+collating-element <Ny> from "Ny"
+collating-element <ny> from "ny"
 collating-symbol  <ph-qubee>
-collating-element <PH> from "<U0050><U0048>"
-collating-element <Ph> from "<U0050><U0068>"
-collating-element <ph> from "<U0070><U0068>"
+collating-element <PH> from "PH"
+collating-element <Ph> from "Ph"
+collating-element <ph> from "ph"
 collating-symbol  <sh-qubee>
-collating-element <SH> from "<U0053><U0048>"
-collating-element <Sh> from "<U0053><U0068>"
-collating-element <sh> from "<U0073><U0068>"
+collating-element <SH> from "SH"
+collating-element <Sh> from "Sh"
+collating-element <sh> from "sh"
 
 reorder-after <MIN>
 <CAP-MIN>
@@ -155,13 +155,13 @@ END LC_MEASUREMENT
 
 LC_MONETARY
 %
-int_curr_symbol       "<U004B><U0045><U0053><U0020>"
-currency_symbol       "<U004B><U0073><U0068>"
-mon_decimal_point     "<U002E>"
-mon_thousands_sep     "<U002C>"
+int_curr_symbol       "KES "
+currency_symbol       "Ksh"
+mon_decimal_point     "."
+mon_thousands_sep     ","
 mon_grouping          3;3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       2
 frac_digits           2
 p_cs_precedes         1
@@ -178,8 +178,8 @@ LC_NUMERIC
 %
 % This is the POSIX Locale definition for the LC_NUMERIC category.
 %
-decimal_point          "<U002E>"
-thousands_sep          "<U002C>"
+decimal_point          "."
+thousands_sep          ","
 grouping               3;3
 %
 END LC_NUMERIC
@@ -194,11 +194,10 @@ LC_TELEPHONE
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_TELEPHONE category.
 %
-tel_dom_fmt    "<U0025><U0061><U002D><U0025><U006C>"
-tel_int_fmt    "<U0025><U0063><U002D><U0025><U0061><U002D><U0025><U006C>"
-int_prefix     "<U0032><U0035><U0034>"
-% 000
-int_select   "<U0030><U0030><U0030>"
+tel_dom_fmt    "%a-%l"
+tel_int_fmt    "%c-%a-%l"
+int_prefix     "254"
+int_select   "000"
 %
 END LC_TELEPHONE
 
@@ -228,20 +227,18 @@ LC_ADDRESS
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name  "<U004B><U0065><U0065><U006E><U0069><U0079><U0061><U0061>"
-country_post  "<U004B><U0045><U004E>"
-country_ab2   "<U004B><U0045>"
-country_ab3   "<U004B><U0045><U004E>"
+postal_fmt    "%z%c%T%s%b%e%r"
+country_name  "Keeniyaa"
+country_post  "KEN"
+country_ab2   "KE"
+country_ab3   "KEN"
 country_num   404
-% EAK
-country_car    "<U0045><U0041><U004B>"
+country_car   "EAK"
 % country_isbn  unknown, Need ISO 2108
-lang_name     "<U004F><U0072><U006F><U006D><U006F><U006F>"
-lang_ab       "<U006F><U006D>"
-lang_term     "<U006F><U0072><U006D>"
-lang_lib      "<U006F><U0072><U006D>"
+lang_name     "Oromoo"
+lang_ab       "om"
+lang_term     "orm"
+lang_lib      "orm"
 %
 END LC_ADDRESS
 

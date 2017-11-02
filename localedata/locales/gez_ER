@@ -103,23 +103,20 @@ LC_ADDRESS
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
+postal_fmt    "%z%c%T%s%b%e%r"
 country_name  "<U12A4><U122D><U1275><U122B>"
-country_post  "<U0045><U0052><U0049>"
-country_ab2   "<U0045><U0052>"
-country_ab3   "<U0045><U0052><U0049>"
+country_post  "ERI"
+country_ab2   "ER"
+country_ab3   "ERI"
 country_num   232
-% ER
-country_car    "<U0045><U0052>"
+country_car   "ER"
 % country_isbn  unknown, Need ISO 2108
 lang_name     "<U130D><U12D5><U12DD>"
-% gez
-lang_term     "<U0067><U0065><U007A>"
+lang_term     "gez"
 %
 % Petter Reinholdtsen reports uncommenting the below breaks compilation
 %
-%lang_lib      "<U0067><U0065><U007A>"
+%lang_lib      "gez"
 %
 END LC_ADDRESS
 
@@ -190,34 +187,28 @@ mon      "<U1320><U1210><U1228>";/
 am_pm   "<U133D><U1263><U1215>";"<U121D><U1234><U1275>"
 %
 % Appropriate date representation (%x)
-%	"%d/%m/%Y"
 %
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
-%	"%l:%M:%S"
 %
-t_fmt "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%l:%M:%S"
 %
 % Appropriate AM/PM time representation (%r)
-%	"%X %p"
 %
-t_fmt_ampm "<U0025><U0058><U1361><U0025><U0070>"
+t_fmt_ampm "%X<U1361>%p"
 %
 % Appropriate date and time representation (%c)
 %	"%A፥%B፡%e፡መዓልት፡%Y፡%r፡%Z"
 %
-d_t_fmt    "<U0025><U0041><U1365><U0025><U0042><U1361><U0025><U0065>/
-<U1361><U1218><U12D3><U120D><U1275>/
-<U1361><U0025><U0059><U1361><U0025><U0072><U1361><U0025><U005A>"
+d_t_fmt    "%A<U1365>%B<U1361>%e<U1361><U1218><U12D3><U120D><U1275>/
+<U1361>%Y<U1361>%r<U1361>%Z"
 %
 % Appropriate date representation (date(1))
 %	"%A፥%B፡%e፡መዓልት፡%r፡%Z፡%Y፡ዓ/ም
 %
-date_fmt    "<U0025><U0041><U1365><U0025><U0042><U1361><U0025><U0065>/
-<U1361><U1218><U12D3><U120D><U1275>/
-<U1361><U0025><U0072><U1361><U0025><U005A><U1361><U0025><U0059>/
-<U1361><U12D3><U002F><U121D>"
+date_fmt    "%A<U1365>%B<U1361>%e<U1361><U1218><U12D3><U120D><U1275>/
+<U1361>%r<U1361>%Z<U1361>%Y<U1361><U12D3>//<U121D>"
 %
 week 7;19971130;1
 first_weekday 2

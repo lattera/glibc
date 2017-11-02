@@ -75,16 +75,16 @@ mon           "<U4E00><U6708>";/
      "<U5341><U4E00><U6708>";/
      "<U5341><U4E8C><U6708>"
 %  一 ,  二 ,  三 ,  四 ,  五 ,  六 ,  七 ,  八 ,  九 ,  十 , 十一, 十二
-abmon         "<U0020><U4E00><U0020>";/
-       "<U0020><U4E8C><U0020>";/
-       "<U0020><U4E09><U0020>";/
-       "<U0020><U56DB><U0020>";/
-       "<U0020><U4E94><U0020>";/
-       "<U0020><U516D><U0020>";/
-       "<U0020><U4E03><U0020>";/
-       "<U0020><U516B><U0020>";/
-       "<U0020><U4E5D><U0020>";/
-       "<U0020><U5341><U0020>";/
+abmon         " <U4E00> ";/
+       " <U4E8C> ";/
+       " <U4E09> ";/
+       " <U56DB> ";/
+       " <U4E94> ";/
+       " <U516D> ";/
+       " <U4E03> ";/
+       " <U516B> ";/
+       " <U4E5D> ";/
+       " <U5341> ";/
        "<U5341><U4E00>";/
        "<U5341><U4E8C>"
 % 週日, 週一, 週二, 週三, 週四, 週五, 週六
@@ -104,18 +104,17 @@ abday         "<U65E5>";/
        "<U4E94>";/
        "<U516D>"
 % %OC%Oy年%B%Od日 (%A) %OH時%OM分%OS秒
-d_t_fmt       "<U0025><U004F><U0043><U0025><U004F><U0079><U5E74><U0025><U0042><U0025><U004F><U0064><U65E5><U0020><U0028><U0025><U0041><U0029><U0020><U0025><U004F><U0048><U6642><U0025><U004F><U004D><U5206><U0025><U004F><U0053><U79D2>"
+d_t_fmt       "%OC%Oy<U5E74>%B%Od<U65E5> (%A) %OH<U6642>%OM<U5206>%OS<U79D2>"
 % %OC%Oy年%B%Od日
-d_fmt         "<U0025><U004F><U0043><U0025><U004F><U0079><U5E74><U0025><U0042><U0025><U004F><U0064><U65E5>"
+d_fmt         "%OC%Oy<U5E74>%B%Od<U65E5>"
 % %OH時%OM分%OS秒
-t_fmt         "<U0025><U004F><U0048><U6642><U0025><U004F><U004D><U5206><U0025><U004F><U0053><U79D2>"
+t_fmt         "%OH<U6642>%OM<U5206>%OS<U79D2>"
 % 朝, 暮
-am_pm         "<U671D>";/
-       "<U66AE>"
+am_pm         "<U671D>";"<U66AE>"
 % %p %OI時%OM分%OS秒
-t_fmt_ampm    "<U0025><U0070><U0020><U0025><U004F><U0049><U6642><U0025><U004F><U004D><U5206><U0025><U004F><U0053><U79D2>"
+t_fmt_ampm    "%p %OI<U6642>%OM<U5206>%OS<U79D2>"
 % 公曆 %C%Oy年 %B %Oe日 %A %OH時%OM分%OS秒
-date_fmt      "<U516C><U66C6><U0020><U0025><U0043><U0025><U004F><U0079><U5E74><U0020><U0025><U0042><U0020><U0025><U004F><U0065><U65E5><U0020><U0025><U0041><U0020><U0025><U004F><U0048><U6642><U0025><U004F><U004D><U5206><U0025><U004F><U0053><U79D2>"
+date_fmt      "<U516C><U66C6> %C%Oy<U5E74> %B %Oe<U65E5> %A %OH<U6642>%OM<U5206>%OS<U79D2>"
 % 〇, 一, 二, 三, 四, 五, 六, 七, 八, 九, 十, 十一, 十二, 十三, 十四, 十五, 十六, 十七, 十八, 十九, 廿, 廿一, 廿二, 廿三, 廿四, 廿五, 廿六, 廿七, 廿八, 廿九, 卅, 卅一
 alt_digits    "<U3007>";/
             "<U4E00>";/
@@ -154,26 +153,19 @@ week 7;19971130;1
 END LC_TIME
 
 LC_NUMERIC
-% .
-decimal_point "<U002E>"
-% ,
-thousands_sep "<U002C>"
+decimal_point "."
+thousands_sep ","
 grouping      4
 END LC_NUMERIC
 
 LC_MONETARY
-% NT$
-currency_symbol    "<U004E><U0054><U0024>"
-% TWD
-int_curr_symbol    "<U0054><U0057><U0044><U0020>"
-% .
-mon_decimal_point  "<U002E>"
-% ,
-mon_thousands_sep  "<U002C>"
+currency_symbol    "NT$"
+int_curr_symbol    "TWD "
+mon_decimal_point  "."
+mon_thousands_sep  ","
 mon_grouping       4
 positive_sign      ""
-% -
-negative_sign      "<U002D>"
+negative_sign      "-"
 frac_digits        2
 int_frac_digits    2
 p_cs_precedes      1
@@ -206,8 +198,7 @@ noexpr  "^[-0nN<UFF4E><UFF2E><U975E>]"
 END LC_MESSAGES
 
 LC_NAME
-% %f%d%t%g
-name_fmt  "<U0025><U0066><U0025><U0064><U0025><U0074><U0025><U0067>"
+name_fmt  "%f%d%t%g"
 % 君
 name_gen  "<U541B>"
 % 女
@@ -221,34 +212,24 @@ name_ms   "<U5A18>"
 END LC_NAME
 
 LC_ADDRESS
-% %c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N
-postal_fmt   "<U0025><U0063><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>"
+postal_fmt   "%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
 % 中華民國
 country_name "<U4E2D><U83EF><U6C11><U570B>"
-% TW
-country_post "<U0054><U0057>"
-% TW
-country_ab2  "<U0054><U0057>"
-% TWN
-country_ab3  "<U0054><U0057><U004E>"
+country_post "TW"
+country_ab2  "TW"
+country_ab3  "TWN"
 country_num  158
-country_car "<U0052><U0043>"
+country_car "RC"
 country_isbn 957
 % 漢語文言
 lang_name    "<U6F22><U8A9E><U6587><U8A00>"
-% lzh
-lang_term    "<U006C><U007A><U0068>"
-% lzh
-lang_lib     "<U006C><U007A><U0068>"
+lang_term    "lzh"
+lang_lib     "lzh"
 END LC_ADDRESS
 
 LC_TELEPHONE
-% +%c-%a-%l
-tel_int_fmt "<U002B><U0025><U0063><U002D><U0025><U0061><U002D><U0025><U006C>"
-% %A-%l
-tel_dom_fmt "<U0025><U0041><U002D><U0025><U006C>"
-% 00
-int_select  "<U0030><U0030>"
-% 886
-int_prefix  "<U0038><U0038><U0036>"
+tel_int_fmt "+%c-%a-%l"
+tel_dom_fmt "%A-%l"
+int_select  "00"
+int_prefix  "886"
 END LC_TELEPHONE

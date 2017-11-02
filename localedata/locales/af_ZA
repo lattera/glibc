@@ -87,46 +87,35 @@ END LC_NUMERIC
 
 LC_TIME
 % abday - The abbreviations for the week days:
-% - So, Ma, Di, Wo, Do, Vr, Sa
-abday       "<U0053><U006F>";"<U004D><U0061>";/
-            "<U0044><U0069>";"<U0057><U006F>";/
-            "<U0044><U006F>";"<U0056><U0072>";/
-            "<U0053><U0061>"
+abday       "So";"Ma";"Di";"Wo";"Do";"Vr";"Sa"
 
 % day - The full names of the week days:
 % Sondag, Maandag, Dinsdag, Woensdag, Donderdag, Vrydag, Saterdag
-day         "<U0053><U006F><U006E><U0064><U0061><U0067>";/
-            "<U004D><U0061><U0061><U006E><U0064><U0061><U0067>";/
-            "<U0044><U0069><U006E><U0073><U0064><U0061><U0067>";/
-            "<U0057><U006F><U0065><U006E><U0073><U0064><U0061><U0067>";/
-            "<U0044><U006F><U006E><U0064><U0065><U0072><U0064><U0061><U0067>";/
-            "<U0056><U0072><U0079><U0064><U0061><U0067>";/
-            "<U0053><U0061><U0074><U0065><U0072><U0064><U0061><U0067>"
+day         "Sondag";/
+            "Maandag";/
+            "Dinsdag";/
+            "Woensdag";/
+            "Donderdag";/
+            "Vrydag";/
+            "Saterdag"
 
 % abmon - The abbreviations for the months
-% - Jan, Feb, Mrt, Apr, Mei, Jun, Jul, Aug, Sep, Okt, Nov, Des
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0072><U0074>";"<U0041><U0070><U0072>";/
-            "<U004D><U0065><U0069>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-            "<U0053><U0065><U0070>";"<U004F><U006B><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0065><U0073>"
+abmon       "Jan";"Feb";"Mrt";"Apr";"Mei";"Jun";/
+            "Jul";"Aug";"Sep";"Okt";"Nov";"Des"
 
 % mon - The full names of the months -
-% Januarie, Februarie, Maart, April, Mei, Junie
-% Julie, Augustus, September, Oktober, November, Desember
-mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0069><U0065>";/
-            "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0069><U0065>";/
-            "<U004D><U0061><U0061><U0072><U0074>";/
-            "<U0041><U0070><U0072><U0069><U006C>";/
-            "<U004D><U0065><U0069>";/
-            "<U004A><U0075><U006E><U0069><U0065>";/
-            "<U004A><U0075><U006C><U0069><U0065>";/
-            "<U0041><U0075><U0067><U0075><U0073><U0074><U0075><U0073>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-            "<U004F><U006B><U0074><U006F><U0062><U0065><U0072>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-            "<U0044><U0065><U0073><U0065><U006D><U0062><U0065><U0072>"
+mon         "Januarie";/
+            "Februarie";/
+            "Maart";/
+            "April";/
+            "Mei";/
+            "Junie";/
+            "Julie";/
+            "Augustus";/
+            "September";/
+            "Oktober";/
+            "November";/
+            "Desember"
 
 % Abbreviated date and time representation to be referenced by the "%c" field descriptor -
 %
@@ -136,19 +125,19 @@ mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0069><U0065>";/
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt     "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt       "%d//%m//%Y"
 
 % Time representation to be referenced by the "%X" field descriptor -
 % "%T" (24-hour clock time in format HH:MM:SS)
-t_fmt       "<U0025><U0054>"
+t_fmt       "%T"
 
 % Define representation of ante meridian and post maritime strings -
 % The "" mean 'default to "AM" and "PM".
-am_pm       "<U0056><U004D>";"<U004E><U004D>"
+am_pm       "VM";"NM"
 
 % Define time representation in 12-hour format with "am_pm", to be referenced by the "%r"
 % The "" means that this format is not supported.
@@ -186,28 +175,22 @@ LC_NAME
 % "Middle names",
 % "Empty string, or <Space>",
 % "Clan names"
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 
 % General salutation for any sex
-% (no term)
 name_gen    ""
 
 % Salutation for unmarried females
-% "mej"
-name_miss   "<U006D><U0065><U006A>"
+name_miss   "mej"
 
 % Salutation for males
-% "mnr"
-name_mr     "<U006D><U006E><U0072>"
+name_mr     "mnr"
 
 % Salutation for married females
-% "mev"
-name_mrs    "<U006D><U0065><U0076>"
+name_mrs    "mev"
 
 % Salutation valid for all females
-% "me"
-name_ms     "<U006D><U0065>"
+name_ms     "me"
 END LC_NAME
 
 LC_ADDRESS
@@ -236,28 +219,21 @@ LC_ADDRESS
 % "end of line",
 % "country designation for the <country_post> keyword",
 % "end of line
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-% Country name in Afrikaans - "Suid-Afrika"
-country_name  "<U0053><U0075><U0069><U0064><U002D>/
-<U0041><U0066><U0072><U0069><U006B><U0061>"
+% Country name in Afrikaans
+country_name  "Suid-Afrika"
 
-% Language name in Afrikaans - "Afrikaans"
-lang_name     "<U0041><U0066><U0072><U0069><U006B><U0061><U0061><U006E><U0073>"
+% Language name in Afrikaans
+lang_name     "Afrikaans"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
-% "ZA"
-country_post   "<U005A><U0041>"
+country_post   "ZA"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
-% "ZA"
-country_car   "<U005A><U0041>"
+country_car   "ZA"
 
 % ISO 2108
 % http://www.isbn-international.org/html/prefix/prefa.htm
@@ -266,17 +242,14 @@ country_isbn  0
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englangn.html
-% af
-lang_ab      "<U0061><U0066>"
-% afr
-lang_term    "<U0061><U0066><U0072>"
-% afr
-lang_lib     "<U0061><U0066><U0072>"
+lang_ab      "af"
+lang_term    "afr"
+lang_lib     "afr"
 
 % ISO 3166 country number and 2 and 3 letter abbreviations
 % http://www.unicode.org/onlinedat/countries.html
 % "ZA", "ZAF"
-country_ab2   "<U005A><U0041>"
-country_ab3   "<U005A><U0041><U0046>"
+country_ab2   "ZA"
+country_ab3   "ZAF"
 country_num   710
 END LC_ADDRESS

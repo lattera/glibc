@@ -610,15 +610,15 @@ END LC_COLLATE
 
 LC_MONETARY
 
-int_curr_symbol      "<U004C><U0041><U004B><U0020>"
+int_curr_symbol      "LAK "
 
 % monetary unit: Kip
 currency_symbol      "<U20AD>"
-mon_decimal_point    "<U002E>"
-mon_thousands_sep    "<U002C>"
+mon_decimal_point    "."
+mon_thousands_sep    ","
 mon_grouping         3;3
 positive_sign        ""
-negative_sign        "<U002D>"
+negative_sign        "-"
 int_frac_digits      2
 frac_digits          2
 p_cs_precedes        1
@@ -632,17 +632,17 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point           "<U002E>"
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3
 
 END LC_NUMERIC
 
 LC_TIME
 
-abday   "<U0EAD><U0EB2><U002E>";"<U0E88><U002E>";"<U0E84><U002E>";/
-        "<U0E9E><U002E>";"<U0E9E><U0EAB><U002E>";"<U0EAA><U002E>";/
-        "<U0EAA><U002E>"
+abday   "<U0EAD><U0EB2>.";"<U0E88>.";"<U0E84>.";/
+        "<U0E9E>.";"<U0E9E><U0EAB>.";"<U0EAA>.";/
+        "<U0EAA>."
 day     "<U0EAD><U0EB2><U0E97><U0EB4><U0E94>";/
         "<U0E88><U0EB1><U0E99>";/
         "<U0EAD><U0EB1><U0E87><U0E84><U0EB2><U0E99>";/
@@ -650,18 +650,18 @@ day     "<U0EAD><U0EB2><U0E97><U0EB4><U0E94>";/
         "<U0E9E><U0EB0><U0EAB><U0EB1><U0E94>";/
         "<U0EAA><U0EB8><U0E81>";/
         "<U0EC0><U0EAA><U0EBB><U0EB2>"
-abmon   "<U0EA1><U002E><U0E81><U002E>";/
-        "<U0E81><U002E><U0E9E><U002E>";/
-        "<U0EA1><U002E><U0E99><U002E>";/
-        "<U0EA1><U002E><U0EAA><U002E>";/
-        "<U0E9E><U002E><U0E9E><U002E>";/
-        "<U0EA1><U0EB4><U002E><U0E96><U002E>";/
-        "<U0E81><U002E><U0EA5><U002E>";/
-        "<U0EAA><U002E><U0EAB><U002E>";/
-        "<U0E81><U002E><U0E8D><U002E>";/
-        "<U0E95><U002E><U0EA5><U002E>";/
-        "<U0E9E><U002E><U0E88><U002E>";/
-        "<U0E97><U002E><U0EA7><U002E>"
+abmon   "<U0EA1>.<U0E81>.";/
+        "<U0E81>.<U0E9E>.";/
+        "<U0EA1>.<U0E99>.";/
+        "<U0EA1>.<U0EAA>.";/
+        "<U0E9E>.<U0E9E>.";/
+        "<U0EA1><U0EB4>.<U0E96>.";/
+        "<U0E81>.<U0EA5>.";/
+        "<U0EAA>.<U0EAB>.";/
+        "<U0E81>.<U0E8D>.";/
+        "<U0E95>.<U0EA5>.";/
+        "<U0E9E>.<U0E88>.";/
+        "<U0E97>.<U0EA7>."
 mon     "<U0EA1><U0EB1><U0E87><U0E81><U0EAD><U0E99>";/
         "<U0E81><U0EB8><U0EA1><U0E9E><U0EB2>";/
         "<U0EA1><U0EB5><U0E99><U0EB2>";/
@@ -674,25 +674,23 @@ mon     "<U0EA1><U0EB1><U0E87><U0E81><U0EAD><U0E99>";/
         "<U0E95><U0EB8><U0EA5><U0EB2>";/
         "<U0E9E><U0EB0><U0E88><U0EB4><U0E81>";/
         "<U0E97><U0EB1><U0E99><U0EA7><U0EB2>"
-% Appropriate date & time representation  "%a %e %b %Ey, %H:%M:%S"
-d_t_fmt "%a<U0020>%e<U0020>%b<U0020>%Ey<U002C><U0020>%H<U003A>%M<U003A>%S"
-% Appropriate date representation  "%d/%m/%Ey"
-d_fmt   "%d<U002F>%m<U002F>%Ey"
-% Appropriate time representation  "%H:%M:%S"
-t_fmt   "%H<U003A>%M<U003A>%S"
+% Appropriate date & time representation
+d_t_fmt "%a %e %b %Ey, %H:%M:%S"
+% Appropriate date representation
+d_fmt   "%d//%m//%Ey"
+% Appropriate time representation
+t_fmt   "%H:%M:%S"
 % AM/PM signs
-am_pm   "<U0041><U004D>";"<U0050><U004D>"
-% Appropriate 12-hour clock representation  "%I:%M:%S %p"
-t_fmt_ampm  "%I<U003A>%M<U003A>%S<U0020>%p"
+am_pm   "AM";"PM"
+% Appropriate 12-hour clock representation
+t_fmt_ampm  "%I:%M:%S %p"
 % Era : Buddhist Era
-era     "+:1:-543<U002F>01<U002F>01:+*:<U0E9E><U002E><U0EAA><U002E>:%EC<U0020>%Ey"
-era_d_fmt       "%e<U0020>%b<U0020>%Ey"
-era_t_fmt       "%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
-era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8><U0020>%e<U0020>%B<U0020>%EC<U0020>%Ey<U002C><U0020>%H<U002E>%M<U002E>%S<U0020><U0E99><U002E>"
-% Appropriate date representation (date(1))   "%a %e %b %Ey %H:%M:%S %Z"
-date_fmt       "<U0025><U0061><U0020><U0025><U0065><U0020><U0025><U0062>/
-<U0020><U0025><U0045><U0079><U0020><U0025><U0048><U003A><U0025><U004D>/
-<U003A><U0025><U0053><U0020><U0025><U005A>"
+era     "+:1:-543//01//01:+*:<U0E9E>.<U0EAA>.:%EC %Ey"
+era_d_fmt       "%e %b %Ey"
+era_t_fmt       "%H.%M.%S <U0E99>."
+era_d_t_fmt     "<U0EA7><U0EB1><U0E99>%A<U0E97><U0EB5><U0EC8> %e %B %EC %Ey, %H.%M.%S <U0E99>."
+% Appropriate date representation (date(1))
+date_fmt       "%a %e %b %Ey %H:%M:%S %Z"
 week 7;19971130;1
 END LC_TIME
 
@@ -715,11 +713,10 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0025><U006C>"
-int_select     "<U0030><U0030><U0031>"
-int_prefix     "<U0038><U0035><U0036>"
+tel_int_fmt    "+%c %a %l"
+tel_dom_fmt    "(%A)%l"
+int_select     "001"
+int_prefix     "856"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -727,31 +724,25 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 
 name_mr     "<U0E97>."
 name_mrs    "<U0E99>."
 END LC_NAME
 
 LC_ADDRESS
-%    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0072><U0025><U0074><U0025><U0065>/
-<U0025><U0074><U0025><U0062><U0025><U004E><U0025><U0068><U0025><U0074>/
-<U0025><U0073><U0025><U004E><U0025><U0054><U0025><U004E><U0025><U0053>/
-<U0025><U004E><U0025><U007A><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%r%t%e%t%b%N%h%t%s%N%T%N%S%N%z%c%N"
 country_name  "<U0EA5><U0EB2><U0EA7>"
 %FIXME
 %country_post  ""
-country_ab2   "<U004C><U0041>"
-country_ab3   "<U004C><U0041><U004F>"
+country_ab2   "LA"
+country_ab3   "LAO"
 country_num   418
-country_car   "<U004C><U0041><U004F>"
+country_car   "LAO"
 %FIXME
 %country_isbn  ""
 lang_name     "<U0EA5><U0EB2><U0EA7>"
-lang_ab       "<U006C><U006F>"
-lang_term     "<U006C><U0061><U006F>"
-lang_lib      "<U006C><U0061><U006F>"
+lang_ab       "lo"
+lang_term     "lao"
+lang_lib      "lao"
 END LC_ADDRESS

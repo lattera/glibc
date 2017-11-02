@@ -72,71 +72,62 @@ reorder-end
 END LC_COLLATE
 
 LC_TIME
-abday   "<U006D><U0031><U002E>";/
-        "<U006D><U0032><U002E>";/
-        "<U006D><U0033><U002E>";/
-        "<U006D><U0034><U002E>";/
-        "<U006D><U0035><U002E>";/
-        "<U006D><U0036><U002E>";/
-        "<U006D><U0037><U002E>"
-day     "<U004C><U006F><U006D><U00ED><U006E><U0067><U006F>";/
-        "<U004D><U006F><U0073><U00E1><U006C><U00E1><U0020><U006D><U0254><U030C><U006B><U0254><U0301>";/
-        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0062><U0061><U006C><U00E9>";/
-        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0073><U00E1><U0074><U006F>";/
-        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U006E><U0065><U0069>";/
-        "<U004D><U0069><U0073><U00E1><U006C><U00E1><U0020><U006D><U00ED><U0074><U00E1><U006E><U006F>";/
-        "<U004D><U0070><U0254><U0301><U0073><U0254>"
-abmon   "<U0079><U0061><U006E>";/
-        "<U0066><U0062><U006C>";/
-        "<U006D><U0073><U0069>";/
-        "<U0061><U0070><U006C>";/
-        "<U006D><U0061><U0069>";/
-        "<U0079><U0075><U006E>";/
-        "<U0079><U0075><U006C>";/
-        "<U0061><U0067><U0074>";/
-        "<U0073><U0074><U0062>";/
-        "<U0254><U0074><U0062>";/
-        "<U006E><U0076><U0062>";/
-        "<U0064><U0073><U0062>"
-mon     "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U0079><U0061><U006D><U0062><U006F>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U00ED><U0062><U0061><U006C><U00E9>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U00ED><U0073><U00E1><U0074><U006F>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U00ED><U006E><U0065><U0069>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U00ED><U0074><U00E1><U006E><U006F>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U006F><U0074><U00F3><U0062><U00E1>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006E><U0073><U0061><U006D><U0062><U006F>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006D><U0077><U0061><U006D><U0062><U0065>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U006C><U0069><U0062><U0077><U0061>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U007A><U00F3><U006D><U0069>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U007A><U00F3><U006D><U0069><U0020><U006E><U0061><U0020><U006D><U0254><U030C><U006B><U0254><U0301>";/
-        "<U0073><U00E1><U006E><U007A><U00E1><U0020><U0079><U0061><U0020><U007A><U00F3><U006D><U0069><U0020><U006E><U0061><U0020><U006D><U00ED><U0062><U0061><U006C><U00E9>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
-<U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-t_fmt   "<U0025><U0054>"
+abday   "m1.";"m2.";"m3.";"m4.";"m5.";"m6.";"m7."
+day     "Lom<U00ED>ngo";/
+        "Mos<U00E1>l<U00E1> m<U0254><U030C>k<U0254><U0301>";/
+        "Mis<U00E1>l<U00E1> m<U00ED>bal<U00E9>";/
+        "Mis<U00E1>l<U00E1> m<U00ED>s<U00E1>to";/
+        "Mis<U00E1>l<U00E1> m<U00ED>nei";/
+        "Mis<U00E1>l<U00E1> m<U00ED>t<U00E1>no";/
+        "Mp<U0254><U0301>s<U0254>"
+abmon   "yan";/
+        "fbl";/
+        "msi";/
+        "apl";/
+        "mai";/
+        "yun";/
+        "yul";/
+        "agt";/
+        "stb";/
+        "<U0254>tb";/
+        "nvb";/
+        "dsb"
+mon     "s<U00E1>nz<U00E1> ya yambo";/
+        "s<U00E1>nz<U00E1> ya m<U00ED>bal<U00E9>";/
+        "s<U00E1>nz<U00E1> ya m<U00ED>s<U00E1>to";/
+        "s<U00E1>nz<U00E1> ya m<U00ED>nei";/
+        "s<U00E1>nz<U00E1> ya m<U00ED>t<U00E1>no";/
+        "s<U00E1>nz<U00E1> ya mot<U00F3>b<U00E1>";/
+        "s<U00E1>nz<U00E1> ya nsambo";/
+        "s<U00E1>nz<U00E1> ya mwambe";/
+        "s<U00E1>nz<U00E1> ya libwa";/
+        "s<U00E1>nz<U00E1> ya z<U00F3>mi";/
+        "s<U00E1>nz<U00E1> ya z<U00F3>mi na m<U0254><U030C>k<U0254><U0301>";/
+        "s<U00E1>nz<U00E1> ya z<U00F3>mi na m<U00ED>bal<U00E9>"
+d_t_fmt "%a %d %b %Y %T %Z"
+d_fmt   "%d//%m//%Y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
-date_fmt "<U0025><U0041><U0020><U0025><U002D><U0065><U0020><U0025><U0042>/
-<U0020><U0025><U0059><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A>/
-<U0025><U0053><U0020><U0028><U0055><U0054><U0043><U0025><U007A><U0029>"
+date_fmt "%A %-e %B %Y, %H:%M:%S (UTC%z)"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
 
 LC_NUMERIC
-decimal_point "<U002C>"
+decimal_point ","
 thousands_sep ""
 grouping      3
 END LC_NUMERIC
 
 LC_MONETARY
-currency_symbol    "<U0046><U0043>"
-int_curr_symbol    "<U0043><U0044><U0046><U0020>"
-mon_decimal_point  "<U002C>"
-mon_thousands_sep  "<U002E>"
+currency_symbol    "FC"
+int_curr_symbol    "CDF "
+mon_decimal_point  ","
+mon_thousands_sep  "."
 mon_grouping       3
 positive_sign      ""
-negative_sign      "<U002D>"
+negative_sign      "-"
 frac_digits        2
 int_frac_digits    2
 p_cs_precedes      0
@@ -163,39 +154,32 @@ nostr   "T<U025B><U0302>"
 END LC_MESSAGES
 
 LC_NAME
-name_fmt  "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074><U0025>/
-<U006D><U0025><U0074><U0025><U0066><U0025><U006D>"
-name_gen  "<U004D><U0062><U0254><U0301><U0074><U025B>"
-name_miss "<U004D><U0061><U006D><U00E1>"
-name_mr   "<U0054><U0061><U0074><U00E1>"
-name_mrs  "<U004D><U0061><U006D><U00E1>"
-name_ms   "<U004D><U0061><U006D><U00E1>"
+name_fmt  "%d%t%g%t%m%t%f%m"
+name_gen  "Mb<U0254><U0301>t<U025B>"
+name_miss "Mam<U00E1>"
+name_mr   "Tat<U00E1>"
+name_mrs  "Mam<U00E1>"
+name_ms   "Mam<U00E1>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt   "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E><U0025>/
-<U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073><U0020><U0025>/
-<U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025><U004E><U0025><U007A>/
-<U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0052><U0065><U0070><U0069><U0062><U0069><U006B><U0069><U0020>/
-<U0064><U0065><U006D><U006F><U006B><U0072><U0061><U0074><U0069><U006B><U0069>/
-<U0020><U0079><U0061><U0020><U004B><U006F><U006E><U0067><U00F3>"
-country_post "<U0043><U0044>"
-country_ab2  "<U0043><U0044>"
-country_ab3  "<U0043><U004F><U0044>"
+postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Repibiki demokratiki ya Kong<U00F3>"
+country_post "CD"
+country_ab2  "CD"
+country_ab3  "COD"
 country_num  180
-country_car  "<U0043><U0047><U004F>"
+country_car  "CGO"
 country_isbn 2
-lang_name    "<U006C><U0069><U006E><U0067><U00E1><U006C><U0061>"
-lang_ab      "<U006C><U006E>"
-lang_term    "<U006C><U0069><U006E>"
-lang_lib     "<U006C><U0069><U006E>"
+lang_name    "ling<U00E1>la"
+lang_ab      "ln"
+lang_term    "lin"
+lang_lib     "lin"
 END LC_ADDRESS
 
 LC_TELEPHONE
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0025><U0074><U0025>/
-<U006C>"
-tel_dom_fmt "<U0025><U0061><U0020><U0025><U006C>"
-int_select  "<U0030><U0030>"
-int_prefix  "<U0032><U0034><U0033>"
+tel_int_fmt "+%c %a%t%l"
+tel_dom_fmt "%a %l"
+int_select  "00"
+int_prefix  "243"
 END LC_TELEPHONE

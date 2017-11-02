@@ -159,19 +159,19 @@ END LC_MESSAGES
 LC_MONETARY
 % Since the 1st of July 2005, the new currency is the ROmanian New leu
 % the symbol is RON and 1 RON = 10000 ROL (old ROmanian Leu)...
-int_curr_symbol           "<U0052><U004F><U004E><U0020>"
+int_curr_symbol           "RON "
 % but representing counted coins is made in the same way as before.
-currency_symbol           "<U004C><U0065><U0069>"
+currency_symbol           "Lei"
 % decimal point is comma
-mon_decimal_point         "<U002C>"
+mon_decimal_point         ","
 % the separation of digits is made in groups of three
 % and the separator between the groups is the full stop (dot)
-mon_thousands_sep         "<U002E>"
+mon_thousands_sep         "."
 mon_grouping              3;3
 % the positive sign is not usualy represented
 positive_sign             ""
 % while the negative one is
-negative_sign             "<U002D>"
+negative_sign             "-"
 % usualy one will display only two digits after the decimal point
 int_frac_digits           2
 frac_digits               2
@@ -187,18 +187,17 @@ END LC_MONETARY
 LC_NUMERIC
 % same rules as for monetary apply for regular figures:
 % decimal point is comma
-decimal_point             "<U002C>"
+decimal_point             ","
 % and the separator between groups is full stop
-thousands_sep             "<U002E>"
+thousands_sep             "."
 % the separation of figures is made in groups of three
 grouping                  3;3
 END LC_NUMERIC
 
 
 LC_TIME
-% abbreviated day names are (starting from Monday): Lu Ma Mi Jo Vi Sb Du
-abday   "<U0044><U0075>";"<U004C><U0075>";"<U004D><U0061>";"<U004D><U0069>";/
-        "<U004A><U006F>";"<U0056><U0069>";"<U0053><U0062>"
+% abbreviated day names
+abday   "Du";"Lu";"Ma";"Mi";"Jo";"Vi";"Sb"
 %
 % Because in 1992 the Romanian Academy stated that within words the
 % writing of the letter i> (i circumflex - U00EE) should be replaced
@@ -210,64 +209,53 @@ abday   "<U0044><U0075>";"<U004C><U0075>";"<U004D><U0061>";"<U004D><U0069>";/
 % duminic<abreve>, luni, mar<tcomma>i,
 % miercuri, joi, vineri,
 % s<acircumflex>mb<abreve>t<abreve>
-day     "<U0064><U0075><U006D><U0069><U006E><U0069><U0063><U0103>";/
-        "<U006C><U0075><U006E><U0069>";/
-        "<U006D><U0061><U0072><U021B><U0069>";/
-        "<U006D><U0069><U0065><U0072><U0063><U0075><U0072><U0069>";/
-        "<U006A><U006F><U0069>";/
-        "<U0076><U0069><U006E><U0065><U0072><U0069>";/
-        "<U0073><U00E2><U006D><U0062><U0103><U0074><U0103>"
+day     "duminic<U0103>";/
+        "luni";/
+        "mar<U021B>i";/
+        "miercuri";/
+        "joi";/
+        "vineri";/
+        "s<U00E2>mb<U0103>t<U0103>"
 %
 % All month abbreviations are composed of the first three letters of the full
 % Romanian names of the months, except for November, whose abbreviation comes
 % from the Latin month name, thus the abbreviation is "nov"
 %
 % Month names are not capitalized:
-% ian feb mar apr mai iun iul aug sep oct nov dec
-abmon   "<U0069><U0061><U006E>";"<U0066><U0065><U0062>";/
-        "<U006D><U0061><U0072>";"<U0061><U0070><U0072>";/
-        "<U006D><U0061><U0069>";"<U0069><U0075><U006E>";/
-        "<U0069><U0075><U006C>";"<U0061><U0075><U0067>";/
-        "<U0073><U0065><U0070>";"<U006F><U0063><U0074>";/
-        "<U006E><U006F><U0076>";"<U0064><U0065><U0063>"
+abmon   "ian";"feb";/
+        "mar";"apr";/
+        "mai";"iun";/
+        "iul";"aug";/
+        "sep";"oct";/
+        "nov";"dec"
 %
 % Month names are _not_ capitalized in Romanian:
-% ianuarie februarie martie
-% aprilie mai iunie
-% iulie august septembrie
-% octombrie noiembrie decembrie
-mon     "<U0069><U0061><U006E><U0075><U0061><U0072><U0069><U0065>";/
-        "<U0066><U0065><U0062><U0072><U0075><U0061><U0072><U0069><U0065>";/
-        "<U006D><U0061><U0072><U0074><U0069><U0065>";/
-        "<U0061><U0070><U0072><U0069><U006C><U0069><U0065>";/
-        "<U006D><U0061><U0069>";/
-        "<U0069><U0075><U006E><U0069><U0065>";/
-        "<U0069><U0075><U006C><U0069><U0065>";/
-        "<U0061><U0075><U0067><U0075><U0073><U0074>";/
-        "<U0073><U0065><U0070><U0074><U0065><U006D><U0062><U0072><U0069><U0065>";/
-        "<U006F><U0063><U0074><U006F><U006D><U0062><U0072><U0069><U0065>";/
-        "<U006E><U006F><U0069><U0065><U006D><U0062><U0072><U0069><U0065>";/
-        "<U0064><U0065><U0063><U0065><U006D><U0062><U0072><U0069><U0065>"
+mon     "ianuarie";/
+        "februarie";/
+        "martie";/
+        "aprilie";/
+        "mai";/
+        "iunie";/
+        "iulie";/
+        "august";/
+        "septembrie";/
+        "octombrie";/
+        "noiembrie";/
+        "decembrie"
 % Appropriate date and time representation (%c)
 % Romania uses daylight saving and the names of the time zones are
 % not widely known nor used
-%	"%a %d %b %Y %T %z"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020>/
-<U0025><U0059><U0020><U0025><U0054><U0020><U0025><U007A>"
+d_t_fmt "%a %d %b %Y %T %z"
 %
 % Appropriate date representation (%x)
-%	"%d.%m.%Y"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
+d_fmt   "%d.%m.%Y"
 % 24 hour format is used,
-t_fmt   "<U0025><U0054>"
+t_fmt   "%T"
 %  thus no am/pm markers are defined/used
 am_pm   "";""
 % also am/pm hour display format is not used
 t_fmt_ampm ""
-% %A %-e %B %Y, %H:%M:%S %z
-date_fmt       "<U0025><U0041><U0020><U0025><U002D><U0065><U0020><U0025><U0042>/
-<U0020><U0025><U0059><U002C><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020>/
-<U0025><U007A>"
+date_fmt       "%A %-e %B %Y, %H:%M:%S %z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -279,10 +267,9 @@ END LC_PAPER
 
 
 LC_TELEPHONE
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
-int_prefix     "<U0034><U0030>"
-int_select     "<U0030><U0030>"
+tel_int_fmt    "+%c %a %l"
+int_prefix     "40"
+int_select     "00"
 END LC_TELEPHONE
 
 
@@ -318,15 +305,10 @@ LC_NAME
 % The current tendency is to use the first form, while the second is the most
 % popular form, it is widespread and widely known.
 % Now we stick to the traditional/old/second form: %d%t%s%t%f%t%g%t%m
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0073><U0025>/
-<U0074><U0025><U0066><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D>"
-% Dl.
-name_mr     "<U0044><U006C><U002E>"
-% D-na.
-name_mrs    "<U0044><U002D><U006E><U0061><U002E>"
-% D-ra.
-name_miss     "<U0044><U002D><U0072><U0061><U002E>"
+name_fmt    "%d%t%s%t%f%t%g%t%m"
+name_mr     "Dl."
+name_mrs    "D-na."
+name_miss     "D-ra."
 END LC_NAME
 
 LC_ADDRESS
@@ -358,30 +340,24 @@ LC_ADDRESS
 % %n%N%f%N%a%d%N%s%t%h%N%b%t%e%t%r%N%l%z%t%T%N%S%t%c%N
 % implemented form:
 % %f%N%a%d%N%s%t%h%N%b%t%e%t%r%N%z%t%T%N%S%t%c%N
-postal_fmt    "<U0025><U0066>/
-<U0025><U004E><U0025><U0061><U0025><U0064><U0025><U004E>/
-<U0025><U0073><U0025><U0074><U0025><U0068><U0025><U004E>/
-<U0025><U0062><U0025><U0074><U0025><U0065><U0025><U0074>/
-<U0025><U0072><U0025><U004E><U0025><U007A>/
-<U0025><U0074><U0025><U0054><U0025><U004E><U0025><U0053>/
-<U0025><U0074><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%d%N%s%t%h%N%b%t%e%t%r%N%z%t%T%N%S%t%c%N"
 % Country names are capitalized: Roma>nia
-country_name "<U0052><U006F><U006D><U00E2><U006E><U0069><U0061>"
-country_ab2 "<U0052><U004F>"
-country_ab3 "<U0052><U004F><U0055>"
+country_name "Rom<U00E2>nia"
+country_ab2 "RO"
+country_ab3 "ROU"
 country_num 642
-country_car "<U0052><U004F>"
+country_car "RO"
 % ISBN code is 973
 % see: http://homepages.cwi.nl/~dik/english/codes/isbn.html
 % and other sources
 country_isbn 973
 % FIXME: is it really RO?
-country_post "<U0052><U004F>"
+country_post "RO"
 % language names are not capitalized in Romanian ( roma>na( )
-lang_name "<U0072><U006F><U006D><U00E2><U006E><U0103>"
-lang_ab "<U0072><U006F>"
+lang_name "rom<U00E2>n<U0103>"
+lang_ab "ro"
 % set the terminology code to "ron" as defined in iso639-2
-lang_term "<U0072><U006F><U006E>"
+lang_term "ron"
 % set the bibliographic code to "rum" as defined in iso639-2
-lang_lib "<U0072><U0075><U006D>"
+lang_lib "rum"
 END LC_ADDRESS

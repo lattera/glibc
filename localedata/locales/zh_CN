@@ -75,13 +75,13 @@ END LC_COLLATE
 
 
 LC_MONETARY
-int_curr_symbol           "<U0043><U004E><U0059><U0020>"
+int_curr_symbol           "CNY "
 currency_symbol           "<UFFE5>"
-mon_decimal_point         "<U002E>"
-mon_thousands_sep         "<U002C>"
+mon_decimal_point         "."
+mon_thousands_sep         ","
 mon_grouping              3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             1
@@ -99,8 +99,8 @@ int_n_sign_posn           1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002E>"
-thousands_sep             "<U002C>"
+decimal_point             "."
+thousands_sep             ","
 grouping                  3
 END LC_NUMERIC
 
@@ -115,33 +115,29 @@ day 	"<U661F><U671F><U65E5>";/
 	"<U661F><U671F><U4E94>";/
 	"<U661F><U671F><U516D>"
 
-abmon	"<U0031><U6708>";"<U0032><U6708>";/
-	"<U0033><U6708>";"<U0034><U6708>";/
-	"<U0035><U6708>";"<U0036><U6708>";/
-	"<U0037><U6708>";"<U0038><U6708>";/
-	"<U0039><U6708>";"<U0031><U0030><U6708>";/
-	"<U0031><U0031><U6708>";"<U0031><U0032><U6708>"
+abmon	"1<U6708>";"2<U6708>";/
+	"3<U6708>";"4<U6708>";/
+	"5<U6708>";"6<U6708>";/
+	"7<U6708>";"8<U6708>";/
+	"9<U6708>";"10<U6708>";/
+	"11<U6708>";"12<U6708>"
 
 mon	"<U4E00><U6708>";"<U4E8C><U6708>";"<U4E09><U6708>";/
 	"<U56DB><U6708>";"<U4E94><U6708>";"<U516D><U6708>";/
 	"<U4E03><U6708>";"<U516B><U6708>";"<U4E5D><U6708>";/
 	"<U5341><U6708>";"<U5341><U4E00><U6708>";"<U5341><U4E8C><U6708>"
 
-d_t_fmt "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5><U0020>/
-<U0025><U0041><U0020><U0025><U0048><U65F6><U0025><U004D><U5206><U0025>/
-<U0053><U79D2>"
+d_t_fmt "%Y<U5E74>%m<U6708>%d<U65E5> %A %H<U65F6>%M<U5206>%S<U79D2>"
 
-d_fmt   "<U0025><U0059><U5E74><U0025><U006D><U6708><U0025><U0064><U65E5>"
+d_fmt   "%Y<U5E74>%m<U6708>%d<U65E5>"
 
-t_fmt   "<U0025><U0048><U65F6><U0025><U004D><U5206><U0025><U0053><U79D2>"
+t_fmt   "%H<U65F6>%M<U5206>%S<U79D2>"
 
 am_pm   "<U4E0A><U5348>";"<U4E0B><U5348>"
 
-t_fmt_ampm "<U0025><U0070><U0020><U0025><U0049><U65F6><U0025><U004D><U5206><U0025><U0053><U79D2>"
+t_fmt_ampm "%p %I<U65F6>%M<U5206>%S<U79D2>"
 
-date_fmt       "<U0025><U0059><U5E74><U0020><U0025><U006D><U6708><U0020>/
-<U0025><U0064><U65E5><U0020><U0025><U0041><U0020><U0025><U0048><U003A>/
-<U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A>"
+date_fmt       "%Y<U5E74> %m<U6708> %d<U65E5> %A %H:%M:%S %Z"
 week 7;19971130;1
 END LC_TIME
 
@@ -157,14 +153,14 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt	"<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
-tel_dom_fmt	"<U0030><U0025><U0061><U0020><U0025><U006C>"
-int_select	"<U0030><U0030>"
-int_prefix	"<U0038><U0036>"
+tel_int_fmt	"+%c %a %l"
+tel_dom_fmt	"0%a %l"
+int_select	"00"
+int_prefix	"86"
 END LC_TELEPHONE
 
 LC_NAME
-name_fmt	"<U0025><U0066><U0025><U0074><U0025><U0067><U0025><U0074><U0025><U0064>"
+name_fmt	"%f%t%g%t%d"
 name_gen	""
 name_miss	"<U5C0F><U59D0>"
 name_mr		"<U5148><U751F>"
@@ -173,22 +169,18 @@ name_ms		"<U5973><U58EB>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt	"<U0025><U0063><U0025><U004E><U0025>/
-<U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0020><U0025>/
-<U0065><U0020><U0025><U0072><U0025><U004E><U0025><U0062><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0061>/
-<U0025><U004E>"
+postal_fmt	"%c%N%T%N%s %h %e %r%N%b%N%d%N%f%N%a%N"
 country_name	"<U4E2D><U534E><U4EBA><U6C11><U5171><U548C><U56FD>"
 %country_post	"FIXME"
-country_ab2	"<U0043><U004E>"
-country_ab3	"<U0043><U0048><U004E>"
+country_ab2	"CN"
+country_ab3	"CHN"
 country_num	156
-country_car "<U0043><U0048><U004E>"
+country_car "CHN"
 country_isbn	7
 lang_name	"<U4E2D><U6587>"
-lang_ab		"<U007A><U0068>"
-lang_term	"<U007A><U0068><U006F>"
-lang_lib	"<U0063><U0068><U0069>"
+lang_ab		"zh"
+lang_term	"zho"
+lang_lib	"chi"
 END LC_ADDRESS
 
 LC_MEASUREMENT

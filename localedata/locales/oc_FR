@@ -35,9 +35,7 @@ category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt "<U0025><U0064><U0025><U004E><U0025><U0066><U0025><U004E><U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E>/
-<U0025><U0073><U0020><U0025><U0068><U0020><U0035><U0065><U0020><U0025><U0072><U0025><U004E>/
-<U0025><U0043><U0025><U007A><U0020><U0025><U0054><U0025><U004E><U0025><U0063><U0025><U004E>"
+postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
 % https://oc.wikipedia.org/wiki/Fran%C3%A7a França
 country_name "Fran<U00E7>a"
 country_post "F"
@@ -45,15 +43,11 @@ country_ab2 "FR"
 country_ab3 "FRA"
 country_num 250
 country_isbn "979-10"
-country_car "<U0046>"
-% Occitan
-lang_name    "<U004F><U0063><U0063><U0069><U0074><U0061><U006E>"
-% oc
-lang_ab      "<U006F><U0063>"
-% oci
-lang_term    "<U006F><U0063><U0069>"
-% oci
-lang_lib     "<U006F><U0063><U0069>"
+country_car "F"
+lang_name    "Occitan"
+lang_ab      "oc"
+lang_term    "oci"
+lang_lib     "oci"
 END LC_ADDRESS
 
 LC_CTYPE
@@ -93,38 +87,38 @@ copy "fr_FR"
 END LC_TELEPHONE
 
 LC_TIME
-abday   "<U0064><U0069><U006D>";"<U006C><U0075><U006E>";/
-        "<U006D><U0061><U0072>";"<U006D><U0065><U0063>";/
-        "<U006A><U00F2><U0075>";"<U0076><U0065><U006E>";/
-        "<U0073><U0061><U0062>"
-day     "<U0064><U0069><U006D><U0065><U006E><U0067><U0065>";/
-        "<U0064><U0069><U006C><U0075><U006E><U0073>";/
-        "<U0064><U0069><U006D><U0061><U0072><U0073>";/
-        "<U0064><U0069><U006D><U0065><U0063><U0072><U0065><U0073>";/
-        "<U0064><U0069><U006A><U00F3><U0075><U0073>";/
-        "<U0064><U0069><U0076><U0065><U006E><U0064><U0072><U0065><U0073>";/
-        "<U0064><U0069><U0073><U0061><U0062><U0074><U0065>"
-abmon   "<U0067><U0065><U006E>";"<U0066><U0065><U0062>";/
-        "<U006D><U0061><U0072>";"<U0061><U0062><U0072>";/
-        "<U006D><U0061><U0069>";"<U006A><U0075><U006E>";/
-        "<U006A><U0075><U006C>";"<U0061><U0067><U006F>";/
-        "<U0073><U0065><U0074>";"<U006F><U0063><U0074>";/
-        "<U006E><U006F><U0076>";"<U0064><U0065><U0063>"
-mon     "<U0067><U0065><U006E><U0069><U00E8><U0072>";/
-        "<U0066><U0065><U0062><U0072><U0069><U00E8><U0072>";/
-        "<U006D><U0061><U0072><U00E7>";/
-        "<U0061><U0062><U0072><U0069><U0061><U006C>";/
-        "<U006D><U0061><U0069>";/
-        "<U006A><U0075><U006E><U0068>";/
-        "<U006A><U0075><U006C><U0068><U0065><U0074>";/
-        "<U0061><U0067><U006F><U0073><U0074>";/
-        "<U0073><U0065><U0074><U0065><U006D><U0062><U0072><U0065>";/
-        "<U006F><U0063><U0074><U006F><U0062><U0072><U0065>";/
-        "<U006E><U006F><U0076><U0065><U006D><U0062><U0072><U0065>";/
-        "<U0064><U0065><U0063><U0065><U006D><U0062><U0072><U0065>"
-d_t_fmt "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt   "<U0025><U0064><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt   "<U0025><U0054>"
+abday   "dim";"lun";/
+        "mar";"mec";/
+        "j<U00F2>u";"ven";/
+        "sab"
+day     "dimenge";/
+        "diluns";/
+        "dimars";/
+        "dimecres";/
+        "dij<U00F3>us";/
+        "divendres";/
+        "disabte"
+abmon   "gen";"feb";/
+        "mar";"abr";/
+        "mai";"jun";/
+        "jul";"ago";/
+        "set";"oct";/
+        "nov";"dec"
+mon     "geni<U00E8>r";/
+        "febri<U00E8>r";/
+        "mar<U00E7>";/
+        "abrial";/
+        "mai";/
+        "junh";/
+        "julhet";/
+        "agost";/
+        "setembre";/
+        "octobre";/
+        "novembre";/
+        "decembre"
+d_t_fmt "%a %d %b %Y %T %Z"
+d_fmt   "%d.%m.%Y"
+t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
 week 7;19971130;4

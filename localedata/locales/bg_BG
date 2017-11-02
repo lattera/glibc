@@ -162,13 +162,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol           "<U0042><U0047><U004E><U0020>"
-currency_symbol           "<U043B><U0432><U002E>"
-mon_decimal_point         "<U002C>"
+int_curr_symbol           "BGN "
+currency_symbol           "<U043B><U0432>."
+mon_decimal_point         ","
 mon_thousands_sep         "<U202F>"
 mon_grouping              3;3
 positive_sign             ""
-negative_sign             "<U002D>"
+negative_sign             "-"
 int_frac_digits           2
 frac_digits               2
 p_cs_precedes             0
@@ -180,18 +180,17 @@ n_sign_posn               1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point             "<U002C>"
+decimal_point             ","
 thousands_sep             ""
 grouping                  3;3
 END LC_NUMERIC
 
 LC_TIME
-d_t_fmt    "<U0025><U0078><U0020><U0028><U0025><U0061><U0029><U0020>/
-<U0025><U0058><U0020><U0025><U005A>"
-d_fmt      "<U0025><U0065><U002E><U0025><U006D><U002E><U0025><U0059>"
-t_fmt      "<U0025><U006B><U003A><U0025><U004D><U003A><U0025><U0053>"
+d_t_fmt    "%x (%a) %X %Z"
+d_fmt      "%e.%m.%Y"
+t_fmt      "%k:%M:%S"
 am_pm      "";""
-t_fmt_ampm "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt_ampm "%l:%M:%S"
 %
 week 7;19971130;4
 first_weekday 2
@@ -248,39 +247,34 @@ copy "i18n"
 END LC_PAPER
 
 LC_NAME
-name_fmt  "<U0025><U0073><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
-name_mr   "<U0433><U002D><U0434><U0438><U043D>"
-name_ms   "<U0433><U002D><U0436><U0430>"
-name_mrs  "<U0433><U002D><U0436><U0430>"
-name_miss "<U0433><U002D><U0436><U0438><U0446><U0430>"
+name_fmt  "%s%t%g%t%m%t%f"
+name_mr   "<U0433>-<U0434><U0438><U043D>"
+name_ms   "<U0433>-<U0436><U0430>"
+name_mrs  "<U0433>-<U0436><U0430>"
+name_miss "<U0433>-<U0436><U0438><U0446><U0430>"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U004E><U0025><U0068><U002C><U0020><U0025><U0065><U002C><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%sN%h, %e, %r%N%z %T%N%c%N"
 country_name "<U0411><U044A><U043B><U0433><U0430><U0440><U0438><U044F>"
-country_post "<U0042><U0047>"
-country_ab2  "<U0042><U0047>"
-country_ab3  "<U0042><U0047><U0052>"
+country_post "BG"
+country_ab2  "BG"
+country_ab3  "BGR"
 country_num   100
-country_car  "<U0042><U0047>"
+country_car  "BG"
 country_isbn  954
 % български език
 lang_name    "<U0431><U044A><U043B><U0433><U0430><U0440><U0441><U043A><U0438>"
-lang_ab      "<U0062><U0067>"
-lang_term    "<U0062><U0075><U006C>"
-lang_lib    "<U0062><U0075><U006C>"
+lang_ab      "bg"
+lang_term    "bul"
+lang_lib    "bul"
 END LC_ADDRESS
 
 LC_TELEPHONE
-tel_int_fmt "<U0028><U002B><U0025><U0063><U0020><U0025><U0061><U0029><U0020><U0025><U006C>"
-tel_dom_fmt "<U0028><U0030><U0025><U0061><U0029><U0020><U0025><U006C>"
-int_prefix  "<U0033><U0035><U0039>"
-int_select  "<U0030><U0030>"
+tel_int_fmt "(+%c %a) %l"
+tel_dom_fmt "(0%a) %l"
+int_prefix  "359"
+int_select  "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT

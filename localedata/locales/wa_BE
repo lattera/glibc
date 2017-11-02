@@ -36,26 +36,18 @@ category "i18n:2012";LC_NAME
 END LC_IDENTIFICATION
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
-country_name "<U0042><U0065><U006C><U006A><U0069><U006B><U0065>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+country_name "Beljike"
 country_post "B"
 country_ab2 "BE"
 country_ab3 "BEL"
 country_num 056
 country_isbn "2"
-% B
-country_car  "<U0042>"
-lang_name "<U0057><U0061><U006C><U006F><U006E>"
-% wa
-lang_ab      "<U0077><U0061>"
-% wln
-lang_term    "<U0077><U006C><U006E>"
-% wln
-lang_lib     "<U0077><U006C><U006E>"
+country_car  "B"
+lang_name "Walon"
+lang_ab      "wa"
+lang_term    "wln"
+lang_lib     "wln"
 END LC_ADDRESS
 
 LC_CTYPE
@@ -64,8 +56,8 @@ translit_start
 include "translit_combining";""
 
 % A-bole -> A-circonflecse -> AU
-<U00C5> "<U0041><U030A>";"<U0041>";"<U0041><U0055>"
-<U00E5> "<U0061><U030A>";"<U0061>";"<U0061><U0075>"
+<U00C5> "A<U030A>";"A";"AU"
+<U00E5> "a<U030A>";"a";"au"
 
 translit_end
 END LC_CTYPE
@@ -112,35 +104,35 @@ END LC_TELEPHONE
 % Po les rascoutis, on a metou "djn" po djun, et "djl" po djulete.
 
 LC_TIME
-abday   "<U0064><U0069><U006D>";"<U006C><U006F><U006E>";/
-        "<U006D><U00E5><U0072>";"<U006D><U0069><U0065>";/
-        "<U0064><U006A><U0075>";"<U0076><U00E9><U006E>";/
-        "<U0073><U0065><U006D>"
-day     "<U0064><U0069><U006D><U0065><U0067><U006E><U0065>";/
-        "<U006C><U006F><U006E><U0064><U0069>";/
-        "<U006D><U00E5><U0072><U0064><U0069>";/
-        "<U006D><U0069><U0065><U0072><U006B><U0069><U0064><U0069>";/
-        "<U0064><U006A><U0075><U0064><U0069>";/
-        "<U0076><U00E9><U006E><U0072><U0064><U0069>";/
-        "<U0073><U0065><U006D><U0064><U0069>"
-abmon   "<U0064><U006A><U0061>";"<U0066><U0065><U0076>";/
-        "<U006D><U00E5><U0073>";"<U0061><U0076><U0072>";/
-        "<U006D><U0061><U0079>";"<U0064><U006A><U006E>";/
-        "<U0064><U006A><U006C>";"<U0061><U0077><U006F>";/
-        "<U0073><U0065><U0074>";"<U006F><U0063><U0074>";/
-        "<U006E><U00F4><U0076>";"<U0064><U0065><U0063>"
-mon     "<U0064><U006A><U0061><U006E><U0076><U00EE>";/
-        "<U0066><U0065><U0076><U0072><U00EE>";/
-        "<U006D><U00E5><U0073><U0073>";/
-        "<U0061><U0076><U0072><U0069>";/
-        "<U006D><U0061><U0079>";/
-        "<U0064><U006A><U0075><U006E>";/
-        "<U0064><U006A><U0075><U006C><U0065><U0074><U0065>";/
-        "<U0061><U0077><U006F><U0075><U0073><U0073><U0065>";/
-        "<U0073><U0065><U0074><U0069><U006D><U0062><U0065>";/
-        "<U006F><U0063><U0074><U00F4><U0062><U0065>";/
-        "<U006E><U00F4><U0076><U0069><U006D><U0062><U0065>";/
-        "<U0064><U0065><U0063><U0069><U006D><U0062><U0065>"
+abday   "dim";"lon";/
+        "m<U00E5>r";"mie";/
+        "dju";"v<U00E9>n";/
+        "sem"
+day     "dimegne";/
+        "londi";/
+        "m<U00E5>rdi";/
+        "mierkidi";/
+        "djudi";/
+        "v<U00E9>nrdi";/
+        "semdi"
+abmon   "dja";"fev";/
+        "m<U00E5>s";"avr";/
+        "may";"djn";/
+        "djl";"awo";/
+        "set";"oct";/
+        "n<U00F4>v";"dec"
+mon     "djanv<U00EE>";/
+        "fevr<U00EE>";/
+        "m<U00E5>ss";/
+        "avri";/
+        "may";/
+        "djun";/
+        "djulete";/
+        "awousse";/
+        "setimbe";/
+        "oct<U00F4>be";/
+        "n<U00F4>vimbe";/
+        "decimbe"
 % Pol cogne des dates (li longue cogne), c' est on pô målåjhey, ca i fåt
 % stitchî on "di" ou on "d'" pa dvant li no do moes. Donk:
 % "Li prumî" ou "Li 1 di djanvî 1999"
@@ -160,18 +152,18 @@ mon     "<U0064><U006A><U0061><U006E><U0076><U00EE>";/
 %
 % Neni :-(
 
-d_t_fmt "<U004C><U0069><U0020><U0025><U0041><U0020><U0025><U0064><U0020><U0064><U0069><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt "Li %A %d di %B %Y %T %Z"
 % Chal, ça va
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-t_fmt   "<U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>"
-am_pm   "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm "<U0025><U0049><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U0070>"
+d_fmt   "%d//%m//%Y"
+t_fmt   "%H:%M:%S"
+am_pm   "AM";"PM"
+t_fmt_ampm "%I:%M:%S %p"
 week 7;19971130;4
 first_weekday 2
 END LC_TIME
 
 LC_NAME
-name_fmt "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074><U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt "%d%t%g%t%m%t%f"
 name_gen ""
 name_mr "M."
 name_mrs "Mme"

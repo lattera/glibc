@@ -89,22 +89,13 @@ END LC_COLLATE
 LC_MONETARY
 % ISO 4217 Currency and fund codes
 % http://www.bsi-global.com/Technical+Information/Publications/_Publications/tig90.xalter
-% "ZAR "
-int_curr_symbol         "<U005A><U0041><U0052><U0020>"
-
-% "R"
-currency_symbol         "<U0052>"
-
-% "."
-mon_decimal_point       "<U002E>"
-
-% ","
-mon_thousands_sep       "<U002C>"
+int_curr_symbol         "ZAR "
+currency_symbol         "R"
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 positive_sign           ""
-
-% "-"
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -116,56 +107,45 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-% "."
-decimal_point           "<U002E>"
-
-% ","
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3;3
 END LC_NUMERIC
 
 LC_TIME
 % abday - The abbreviations for the week days:
-% - Sun, Mon, Tue, Wed, Thu, Fri, Sat
-abday       "<U0053><U0075><U006E>";"<U004D><U006F><U006E>";/
-            "<U0054><U0075><U0065>";"<U0057><U0065><U0064>";/
-            "<U0054><U0068><U0075>";"<U0046><U0072><U0069>";/
-            "<U0053><U0061><U0074>"
+abday       "Sun";"Mon";"Tue";"Wed";"Thu";"Fri";"Sat"
 
-% day - The full names of the week days:
-% - Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-day         "<U0053><U0075><U006E><U0064><U0061><U0079>";/
-            "<U004D><U006F><U006E><U0064><U0061><U0079>";/
-            "<U0054><U0075><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0057><U0065><U0064><U006E><U0065><U0073><U0064><U0061><U0079>";/
-            "<U0054><U0068><U0075><U0072><U0073><U0064><U0061><U0079>";/
-            "<U0046><U0072><U0069><U0064><U0061><U0079>";/
-            "<U0053><U0061><U0074><U0075><U0072><U0064><U0061><U0079>"
+% day - The full names of the week days
+day         "Sunday";/
+            "Monday";/
+            "Tuesday";/
+            "Wednesday";/
+            "Thursday";/
+            "Friday";/
+            "Saturday"
 
 % abmon - The abbreviations for the months
-% - Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
-abmon       "<U004A><U0061><U006E>";"<U0046><U0065><U0062>";/
-            "<U004D><U0061><U0072>";"<U0041><U0070><U0072>";/
-            "<U004D><U0061><U0079>";"<U004A><U0075><U006E>";/
-            "<U004A><U0075><U006C>";"<U0041><U0075><U0067>";/
-            "<U0053><U0065><U0070>";"<U004F><U0063><U0074>";/
-            "<U004E><U006F><U0076>";"<U0044><U0065><U0063>"
+abmon       "Jan";"Feb";/
+            "Mar";"Apr";/
+            "May";"Jun";/
+            "Jul";"Aug";/
+            "Sep";"Oct";/
+            "Nov";"Dec"
 
-% mon - The full names of the months -
-% - January, February, March, April, May, June
-%   July, August, September, October, November, December
-mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
-            "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
-            "<U004D><U0061><U0072><U0063><U0068>";/
-            "<U0041><U0070><U0072><U0069><U006C>";/
-            "<U004D><U0061><U0079>";/
-            "<U004A><U0075><U006E><U0065>";/
-            "<U004A><U0075><U006C><U0079>";/
-            "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-            "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-            "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
-            "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-            "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+% mon - The full names of the months
+mon         "January";/
+            "February";/
+            "March";/
+            "April";/
+            "May";/
+            "June";/
+            "July";/
+            "August";/
+            "September";/
+            "October";/
+            "November";/
+            "December"
 
 % Abreviated date and time representation to be referenced by the "%c" field descriptor -
 %
@@ -175,15 +155,15 @@ mon         "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
 % "%Y" (year with century as a decimal number),
 % "%T" (24-hour clock time in format HH:MM:SS),
 % "%Z" (Time zone name)
-d_t_fmt     "<U0025><U0061><U0020><U0025><U0064><U0020><U0025><U0062><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+d_t_fmt     "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % "%d/%m/%Y", day/month/year as decimal numbers (01/01/2000).
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt       "%d//%m//%Y"
 
 % Time representation to be referenced by the "%X" field descriptor -
 % "%T" (24-hour clock time in format HH:MM:SS)
-t_fmt       "<U0025><U0054>"
+t_fmt       "%T"
 
 % Define representation of ante meridiem and post meridiem strings -
 % The "" mean default to "AM" and "PM".
@@ -209,22 +189,19 @@ LC_TELEPHONE
 % "+%c - country code",
 % "%a - area code without the prefix (often 0)",
 % "%l local number".
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025>/
-<U006C>"
+tel_int_fmt    "+%c %a %l"
 
 % Representation of telephone number for domestic use -
 % "(%A) %l", which is
 % %A - area code with national prefix
 % %l - local number".
-tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
+tel_dom_fmt    "(%A) %l"
 
 % Prefix for making international calls
-% "00"
-int_select     "<U0030><U0030>"
+int_select     "00"
 
 % International dialing code
-% "27"
-int_prefix     "<U0032><U0037>"
+int_prefix     "27"
 
 END LC_TELEPHONE
 
@@ -243,28 +220,23 @@ LC_NAME
 % "Middle names",
 % "Empty string, or <Space>",
 % "Clan names"
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 
 % General salutation for any sex
 % (no term)
 name_gen    ""
 
 % Salutation for unmarried females
-% "Miss"
-name_miss   "<U004D><U0069><U0073><U0073>"
+name_miss   "Miss"
 
 % Salutation for males
-% "Mr"
-name_mr     "<U004D><U0072>"
+name_mr     "Mr"
 
 % Salutation for married females
-% "Mrs"
-name_mrs    "<U004D><U0072><U0073>"
+name_mrs    "Mrs"
 
 % Salutation valid for all females
-% "Ms"
-name_ms     "<U004D><U0073>"
+name_ms     "Ms"
 END LC_NAME
 
 LC_ADDRESS
@@ -293,28 +265,21 @@ LC_ADDRESS
 % "end of line",
 % "country designation for the <country_post> keyword",
 % "end of line
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 
-% Country name in English - "South Africa"
-country_name  "<U0053><U006F><U0075><U0074><U0068><U0020>/
-<U0041><U0066><U0072><U0069><U0063><U0061>"
+% Country name in English
+country_name  "South Africa"
 
-% Language name in English - "English"
-lang_name     "<U0045><U006E><U0067><U006C><U0069><U0073><U0068>"
+% Language name in English
+lang_name     "English"
 
 % CEPT MAILCODES are suggested
 % Alternatively use the code found on your countries postal item tracking number
-% "ZA"
-country_post   "<U005A><U0041>"
+country_post   "ZA"
 
 % UN Geneve 1949:68 Distinguishing signs of vehicles in international traffic
 % http://www.unece.org/trans/conventn/disting-signs-5-2001.pdf
-% "ZA"
-country_car   "<U005A><U0041>"
+country_car   "ZA"
 
 % ISO 2108
 % http://www.isbn-international.org/html/prefix/prefa.htm
@@ -323,18 +288,14 @@ country_isbn  0
 % ISO 639 language abbreviations:
 % 639-1 2 letter, 639-2 3 letter terminology
 % http://www.loc.gov/standards/iso639-2/englagn.html
-% en
-lang_ab      "<U0065><U006E>"
-% eng
-lang_term    "<U0065><U006E><U0067>"
-% eng
-lang_lib    "<U0065><U006E><U0067>"
+lang_ab      "en"
+lang_term    "eng"
+lang_lib    "eng"
 
 % ISO 3166 country number and 2 and 3 letter abreviations
 % http://www.unicode.org/onlinedat/countries.html
-% "ZA", "ZAF"
-country_ab2   "<U005A><U0041>"
-country_ab3   "<U005A><U0041><U0046>"
+country_ab2   "ZA"
+country_ab3   "ZAF"
 country_num   710
 
 END LC_ADDRESS

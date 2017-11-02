@@ -6105,13 +6105,13 @@ END LC_CTYPE
 
 LC_MONETARY
 
-int_curr_symbol		"<U004B><U0052><U0057><U0020>"
+int_curr_symbol		"KRW "
 currency_symbol		"<U20A9>"
-mon_decimal_point	"<U002E>"
-mon_thousands_sep	"<U002C>"
+mon_decimal_point	"."
+mon_thousands_sep	","
 mon_grouping		3;3
 positive_sign		""
-negative_sign		"<U002D>"
+negative_sign		"-"
 int_frac_digits		0
 frac_digits		0
 p_cs_precedes		1
@@ -6130,8 +6130,8 @@ END LC_MONETARY
 
 LC_NUMERIC
 
-decimal_point		"<U002E>"
-thousands_sep		"<U002C>"
+decimal_point		"."
+thousands_sep		","
 grouping		3;3
 
 END LC_NUMERIC
@@ -6152,33 +6152,30 @@ day      "<UC77C><UC694><UC77C>";/
 
 % (%b) "%mWEOL" where %m is space-filled instead of zero-filled
 
-abmon    "<U0020><U0031><UC6D4>";"<U0020><U0032><UC6D4>";/
-         "<U0020><U0033><UC6D4>";"<U0020><U0034><UC6D4>";/
-         "<U0020><U0035><UC6D4>";"<U0020><U0036><UC6D4>";/
-         "<U0020><U0037><UC6D4>";"<U0020><U0038><UC6D4>";/
-         "<U0020><U0039><UC6D4>";"<U0031><U0030><UC6D4>";/
-         "<U0031><U0031><UC6D4>";"<U0031><U0032><UC6D4>"
+abmon    " 1<UC6D4>";" 2<UC6D4>";/
+         " 3<UC6D4>";" 4<UC6D4>";/
+         " 5<UC6D4>";" 6<UC6D4>";/
+         " 7<UC6D4>";" 8<UC6D4>";/
+         " 9<UC6D4>";"10<UC6D4>";/
+         "11<UC6D4>";"12<UC6D4>"
 
-mon      "<U0031><UC6D4>";"<U0032><UC6D4>";/
-         "<U0033><UC6D4>";"<U0034><UC6D4>";/
-         "<U0035><UC6D4>";"<U0036><UC6D4>";/
-         "<U0037><UC6D4>";"<U0038><UC6D4>";/
-         "<U0039><UC6D4>";"<U0031><U0030><UC6D4>";/
-         "<U0031><U0031><UC6D4>";"<U0031><U0032><UC6D4>"
+mon      "1<UC6D4>";"2<UC6D4>";/
+         "3<UC6D4>";"4<UC6D4>";/
+         "5<UC6D4>";"6<UC6D4>";/
+         "7<UC6D4>";"8<UC6D4>";/
+         "9<UC6D4>";"10<UC6D4>";/
+         "11<UC6D4>";"12<UC6D4>"
 
 % Appropriate date and time representation (%c)
-% "%x (%a) %r"
-d_t_fmt "<U0025><U0078><U0020><U0028><U0025><U0061><U0029><U0020><U0025><U0072>"
+d_t_fmt "%x (%a) %r"
 
 % Appropriate date representation (%x)
 % "%Y<NYEON> %m<WEOL> %d<IL>
-d_fmt /
-"<U0025><U0059><UB144><U0020><U0025><U006D><UC6D4><U0020><U0025><U0064><UC77C>"
-%d_fmt	"<U0025><U0059><UB144><U0020><U0025><U006D><UC6D4><U0020><U0025><U0065><UC77C>"
+d_fmt "%Y<UB144> %m<UC6D4> %d<UC77C>"
 
 % Appropriate time representation (%X)
 %  "%H<SI> %M<BUN> %S<CHO>"
-t_fmt    "<U0025><U0048><UC2DC><U0020><U0025><U004D><UBD84><U0020><U0025><U0053><UCD08>"
+t_fmt    "%H<UC2DC> %M<UBD84> %S<UCD08>"
 
 % Strings for AM/PM (%p)
 % "<O><JEON>";"<O><HU>"
@@ -6186,14 +6183,10 @@ am_pm	"<UC624><UC804>";"<UC624><UD6C4>"
 
 % Appropriate AM/PM time representation (%r)
 %  "%p %H<SI> %M<BUN> %S<CHO>"
-t_fmt_ampm "<U0025><U0070><U0020><U0025><U0049><UC2DC><U0020><U0025><U004D><UBD84><U0020><U0025><U0053><UCD08>"
+t_fmt_ampm "%p %I<UC2DC> %M<UBD84> %S<UCD08>"
 
-% Appropriate date representation (date(1))  "%Y. %m. %d. (%a) %H:%M:%S %Z"
-date_fmt  /
-"<U0025><U0059><U002E><U0020><U0025><U006D><U002E><U0020><U0025><U0064><U002E>/
-<U0020><U0028><U0025><U0061><U0029>/
-<U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053>/
-<U0020><U0025><U005A>"
+% Appropriate date representation (date(1))
+date_fmt  "%Y. %m. %d. (%a) %H:%M:%S %Z"
 
 week 7;19971130;1
 END LC_TIME
@@ -6210,17 +6203,16 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-% "+%c %a %l"
-tel_int_fmt "<U002B><U0025><U0063><U0020><U0025><U0061><U0020><U0025><U006C>"
+tel_int_fmt "+%c %a %l"
 % Alternative form:  "+%c (0)%a-%l"
 
 %    "(%A) %l"  : (areacode) local_number
-tel_dom_fmt    "<U0028><U0025><U0041><U0029><U0020><U0025><U006C>"
+tel_dom_fmt    "(%A) %l"
 %    Alternative form :
 %    "%A-%l"  : areacode-local_number
-%tel_dom_fmt    "<U0025><U0041><U002D><U0020><U0025><U006C>"
-int_prefix     "<U0038><U0032>"
-int_select     "<U0030><U0030><U0031>"
+%tel_dom_fmt    "%A- %l"
+int_prefix     "82"
+int_select     "001"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -6228,29 +6220,20 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 country_name "<UB300><UD55C><UBBFC><UAD6D>"
-country_ab2 "<U004B><U0052>"
-country_ab3 "<U004B><U004F><U0052>"
+country_ab2 "KR"
+country_ab3 "KOR"
 country_num 410
 country_isbn "979-11,978-89"
-% ROK
-country_car    "<U0052><U004F><U004B>"
+country_car    "ROK"
 % 한국말
 lang_name    "<UD55C><UAD6D><UC5B4>"
-% ko
-lang_ab      "<U006B><U006F>"
-% kor
-lang_term    "<U006B><U006F><U0072>"
-% kor
-lang_lib    "<U006B><U006F><U0072>"
+lang_ab      "ko"
+lang_term    "kor"
+lang_lib    "kor"
 END LC_ADDRESS

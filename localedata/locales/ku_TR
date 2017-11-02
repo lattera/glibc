@@ -119,44 +119,42 @@ copy "tr_TR"
 END LC_NUMERIC
 
 LC_TIME
-abday       "<U0079><U00EA><U006B>";"<U0064><U0075><U0073>";/
-            "<U0073><U00EA><U0073>";"<U00E7><U0061><U0072>";/
-            "<U0070><U00EA><U006E>";"<U00EE><U006E><U00EE>";/
-            "<U0073><U0065><U0070>"
-day         "<U0079><U00EA><U006B><U0073><U00EA><U006D>";/
-            "<U0064><U0075><U0073><U00EA><U006D>";/
-            "<U0073><U00EA><U0073><U00EA><U006D>";/
-            "<U00E7><U0061><U0072><U0073><U00EA><U006D>";/
-            "<U0070><U00EA><U006E><U0063><U0073><U00EA><U006D>";/
-            "<U00EE><U006E><U00EE>";/
-            "<U0073><U0065><U0070><U0074>"
-abmon       "<U00C7><U0069><U006C>";"<U0053><U0069><U0062>";/
-            "<U0041><U0064><U0061>";"<U004E><U00EE><U0073>";/
-            "<U0047><U0075><U006C>";"<U0048><U0065><U007A>";/
-            "<U0054><U00EE><U0072>";"<U0054><U0065><U0062>";/
-            "<U00CE><U006C><U006F>";"<U0043><U006F><U0074>";/
-            "<U004D><U0069><U006A>";"<U004B><U0061><U006E>"
-mon         "<U00C7><U0069><U006C><U0065>";/
-            "<U0053><U0069><U0062><U0061><U0074>";/
-            "<U0041><U0064><U0061><U0072>";/
-            "<U004E><U00EE><U0073><U0061><U006E>";/
-            "<U0047><U0075><U006C><U0061><U006E>";/
-            "<U0048><U0065><U007A><U00EE><U0072><U0061><U006E>";/
-            "<U0054><U00EE><U0072><U006D><U0065><U0068>";/
-            "<U0054><U0065><U0062><U0061><U0078>";/
-            "<U00CE><U006C><U006F><U006E>";/
-            "<U0043><U006F><U0074><U006D><U0065><U0068>";/
-            "<U004D><U0069><U006A><U0064><U0061><U0072>";/
-            "<U004B><U0061><U006E><U00FB><U006E>"
-% format: %A %d %B %Y %T %Z
-d_t_fmt  "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-% format: %d/%m/%Y
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-t_fmt       "<U0025><U0054>"
+abday       "y<U00EA>k";"dus";/
+            "s<U00EA>s";"<U00E7>ar";/
+            "p<U00EA>n";"<U00EE>n<U00EE>";/
+            "sep"
+day         "y<U00EA>ks<U00EA>m";/
+            "dus<U00EA>m";/
+            "s<U00EA>s<U00EA>m";/
+            "<U00E7>ars<U00EA>m";/
+            "p<U00EA>ncs<U00EA>m";/
+            "<U00EE>n<U00EE>";/
+            "sept"
+abmon       "<U00C7>il";"Sib";/
+            "Ada";"N<U00EE>s";/
+            "Gul";"Hez";/
+            "T<U00EE>r";"Teb";/
+            "<U00CE>lo";"Cot";/
+            "Mij";"Kan"
+mon         "<U00C7>ile";/
+            "Sibat";/
+            "Adar";/
+            "N<U00EE>san";/
+            "Gulan";/
+            "Hez<U00EE>ran";/
+            "T<U00EE>rmeh";/
+            "Tebax";/
+            "<U00CE>lon";/
+            "Cotmeh";/
+            "Mijdar";/
+            "Kan<U00FB>n"
+d_t_fmt  "%A %d %B %Y %T %Z"
+d_fmt   "%d//%m//%Y"
+t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
 % format: %A %d %B %Y
-date_fmt  "<U0025><U0041><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U0025><U0059>"
+date_fmt  "%A %d %B %Y"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -181,42 +179,29 @@ copy "tr_TR"
 END LC_MEASUREMENT
 
 LC_NAME
-% format: %d%t%g%t%m%t%f
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 % TODO
 % Sayın
-name_gen    "<U0053><U0061><U0079><U0131><U006E>"
-% "M."
-name_mr     "<U004D><U002E>"
-% "Jne"
-name_mrs    "<U004A><U006E><U0065>"
-name_ms     "<U004A><U006E><U0065>"
+name_gen    "Say<U0131>n"
+name_mr     "M."
+name_mrs    "Jne"
+name_ms     "Jne"
 % "Kc,k"
-name_miss   "<U004B><U00E7><U006B>"
+name_miss   "K<U00E7>k"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "<U0025><U0066><U0025><U004E><U0025><U0061><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 % TODO
-country_name	"<U0054><U0075><U0072><U006B><U0065><U0079>"
+country_name "Turkey"
 country_post "TR"
 country_ab2  "TR"
 country_ab3  "TUR"
 country_num  792
 country_isbn 975
-% TR
-country_car    "<U0054><U0052>"
-% "kurdi"
-lang_name   "<U006B><U0075><U0072><U0064><U0069>"
-% ku
-lang_ab      "<U006B><U0075>"
-% kur
-lang_term    "<U006B><U0075><U0072>"
-% kur
-lang_lib     "<U006B><U0075><U0072>"
+country_car    "TR"
+lang_name   "kurdi"
+lang_ab      "ku"
+lang_term    "kur"
+lang_lib     "kur"
 END LC_ADDRESS

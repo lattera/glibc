@@ -198,13 +198,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol         "<U0055><U005A><U0053><U0020>"
+int_curr_symbol         "UZS "
 currency_symbol         "<U0441><U045E><U043C>"
-mon_decimal_point       "<U002E>"
-mon_thousands_sep       "<U002C>"
+mon_decimal_point       "."
+mon_thousands_sep       ","
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<U002D>"
+negative_sign           "-"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1
@@ -216,8 +216,8 @@ n_sign_posn             1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point           "<U002E>"
-thousands_sep           "<U002C>"
+decimal_point           "."
+thousands_sep           ","
 grouping                3;3
 END LC_NUMERIC
 
@@ -260,12 +260,12 @@ mon     "<U042F><U043D><U0432><U0430><U0440>";/
         "<U041E><U043A><U0442><U044F><U0431><U0440>";/
         "<U041D><U043E><U044F><U0431><U0440>";/
         "<U0414><U0435><U043A><U0430><U0431><U0440>"
-d_t_fmt "<U0025><U0054><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0439><U0438><U043B><U002C><U0020><U0025><U0041>"
-d_fmt       "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0079>"
-t_fmt       "<U0025><U0054>"
+d_t_fmt "%T, %d %B, %Y <U0439><U0438><U043B>, %A"
+d_fmt       "%d//%m//%y"
+t_fmt       "%T"
 am_pm       "";""
 t_fmt_ampm  ""
-date_fmt    "<U0025><U0064><U0020><U0025><U0042><U002C><U0020><U0025><U0059><U0020><U0439><U0438><U043B><U002C><U0020><U0025><U0041>"
+date_fmt    "%d %B, %Y <U0439><U0438><U043B>, %A"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -292,8 +292,7 @@ copy "uz_UZ"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0066><U0025><U0074>/
-<U0025><U0067><U0025><U0074><U0025><U006D>"
+name_fmt    "%d%t%f%t%g%t%m"
 name_gen    "<U04B2><U0443><U0440><U043C><U0430><U0442><U043B><U0438>"
 name_mr     "<U0416><U0430><U043D><U043E><U0431>"
 name_mrs    "<U0425><U043E><U043D><U0438><U043C>"
@@ -307,24 +306,17 @@ LC_ADDRESS
 % format: %C%N%S%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
 % but %S seems not recognized yet ? so %C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z
 % is used.
-postal_fmt    "<U0025><U0043><U0025><U004E>/
-<U0025><U0054><U0025><U004E><U0025><U0073><U0020><U0025><U0068><U0025>/
-<U004E><U0025><U0066><U0025><U004E><U0025><U0062><U0025><U004E><U0025>/
-<U0064><U0025><U004E><U0025><U0065><U0020><U0025><U0072><U0025><U004E>/
-<U0025><U0061><U0025><U004E><U0025><U007A>"
+postal_fmt    "%C%N%T%N%s %h%N%f%N%b%N%d%N%e %r%N%a%N%z"
 country_name "<U040E><U0437><U0431><U0435><U043A><U0438><U0441><U0442><U043E><U043D>"
-country_post "<U0055><U005A>" % ??
-country_ab2  "<U0055><U005A>"
-country_ab3  "<U0055><U005A><U0042>"
+country_post "UZ" % ??
+country_ab2  "UZ"
+country_ab3  "UZB"
 country_num  860
 % FIXME: ISBN number?
 %country_isbn ""
-country_car "<U0055><U005A>"
+country_car "UZ"
 lang_name   "<U040E><U0437><U0431><U0435><U043A><U0447><U0430>"
-% uz
-lang_ab      "<U0075><U007A>"
-% uzb
-lang_term    "<U0075><U007A><U0062>"
-% uzb
-lang_lib     "<U0075><U007A><U0062>"
+lang_ab      "uz"
+lang_term    "uzb"
+lang_lib     "uzb"
 END LC_ADDRESS

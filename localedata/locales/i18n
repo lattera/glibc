@@ -303,13 +303,13 @@ LC_MONETARY
 % This is the 14652 i18n fdcc-set definition for
 % the LC_MONETARY category.
 %
-int_curr_symbol     "<U0058><U0044><U0052><U0020>"
+int_curr_symbol     "XDR "
 currency_symbol     "<U00A4>"
-mon_decimal_point   "<U002C>"
+mon_decimal_point   ","
 mon_thousands_sep   ""
 mon_grouping        -1
 positive_sign       ""
-negative_sign       "<U002D>"
+negative_sign       "-"
 int_frac_digits     -1
 frac_digits         -1
 p_cs_precedes       -1
@@ -325,7 +325,7 @@ LC_NUMERIC
 % This is the 14652 i18n fdcc-set definition for
 % the LC_NUMERIC category.
 %
-decimal_point   "<U002C>"
+decimal_point   ","
 thousands_sep   ""
 grouping        -1
 %
@@ -336,40 +336,35 @@ LC_TIME
 % the LC_TIME category.
 %
 % Weekday and week numbering according to ISO 8601
-abday   "<U0031>";"<U0032>";"<U0033>";"<U0034>";"<U0035>";"<U0036>";"<U0037>"
-day     "<U0031>";"<U0032>";"<U0033>";"<U0034>";"<U0035>";"<U0036>";"<U0037>"
+abday   "1";"2";"3";"4";"5";"6";"7"
+day     "1";"2";"3";"4";"5";"6";"7"
 week    7;19971201;4
 first_weekday	1
 first_workday	1
-abmon   "<U0030><U0031>";"<U0030><U0032>";"<U0030><U0033>";"<U0030><U0034>";/
-        "<U0030><U0035>";"<U0030><U0036>";"<U0030><U0037>";"<U0030><U0038>";/
-        "<U0030><U0039>";"<U0031><U0030>";"<U0031><U0031>";"<U0031><U0032>"
-mon     "<U0030><U0031>";"<U0030><U0032>";"<U0030><U0033>";"<U0030><U0034>";/
-        "<U0030><U0035>";"<U0030><U0036>";"<U0030><U0037>";"<U0030><U0038>";/
-        "<U0030><U0039>";"<U0031><U0030>";"<U0031><U0031>";"<U0031><U0032>"
+abmon   "01";"02";"03";"04";"05";"06";"07";"08";"09";"10";"11";"12"
+mon     "01";"02";"03";"04";"05";"06";"07";"08";"09";"10";"11";"12"
 am_pm   "";""
 % Date formats following ISO 8601
 % Appropriate date and time representation (%c)
-%       "%F %T"
-d_t_fmt "<U0025><U0046><U0020><U0025><U0054>"
+d_t_fmt "%F %T"
 %
-% Appropriate date representation (%x)   "%F"
-d_fmt   "<U0025><U0046>"
+% Appropriate date representation (%x)
+d_fmt   "%F"
 %
-% Appropriate time representation (%X)   "%T"
-t_fmt   "<U0025><U0054>"
+% Appropriate time representation (%X)
+t_fmt   "%T"
 t_fmt_ampm ""
 %
-% Appropriate date representation (date(1))   "%a %b %e %H:%M:%S %Z %Y"
-date_fmt       "<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065><U0020><U0025><U0048><U003A><U0025><U004D><U003A><U0025><U0053><U0020><U0025><U005A><U0020><U0025><U0059>"
+% Appropriate date representation (date(1))
+date_fmt       "%a %b %e %H:%M:%S %Z %Y"
 END LC_TIME
 
 LC_MESSAGES
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_MESSAGES category.
 %
-yesexpr "<U005E><U005B><U002B><U0031><U005D>"
-noexpr  "<U005E><U005B><U002D><U0030><U005D>"
+yesexpr "^[+1]"
+noexpr  "^[-0]"
 END LC_MESSAGES
 
 LC_PAPER
@@ -384,8 +379,7 @@ LC_NAME
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_NAME category.
 %
-name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%p%t%g%t%m%t%f"
 END LC_NAME
 
 
@@ -393,19 +387,14 @@ LC_ADDRESS
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U0061><U0025><U004E><U0025><U0066><U0025><U004E>/
-<U0025><U0064><U0025><U004E><U0025><U0062><U0025><U004E><U0025><U0073>/
-<U0020><U0025><U0068><U0020><U0025><U0065><U0020><U0025><U0072><U0025>/
-<U004E><U0025><U0043><U002D><U0025><U007A><U0020><U0025><U0054><U0025>/
-<U004E><U0025><U0063><U0025><U004E>"
+postal_fmt    "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N"
 END LC_ADDRESS
 
 LC_TELEPHONE
 % This is the ISO/IEC 14652 "i18n" definition for
 % the LC_TELEPHONE category.
 %
-tel_int_fmt    "<U002B><U0025><U0063><U0020><U0025><U0061><U0025><U0074><U0025>/
-<U006C>"
+tel_int_fmt    "+%c %a%t%l"
 END LC_TELEPHONE
 
 LC_MEASUREMENT

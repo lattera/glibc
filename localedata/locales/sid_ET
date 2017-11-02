@@ -106,19 +106,17 @@ LC_ADDRESS
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_ADDRESS category.
 %
-postal_fmt    "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name  "<U0049><U0074><U0069><U0079><U006F><U006F><U0070><U0068><U0069><U0079><U0061>"
-country_post  "<U0045><U0054><U0048>"
-country_ab2   "<U0045><U0054>"
-country_ab3   "<U0045><U0054><U0048>"
+postal_fmt    "%z%c%T%s%b%e%r"
+country_name  "Itiyoophiya"
+country_post  "ETH"
+country_ab2   "ET"
+country_ab3   "ETH"
 country_num   231   % 210 found in at least one ISO 3166 doc
-% ETH
-country_car   "<U0045><U0054><U0048>"
+country_car   "ETH"
 % country_isbn  unknown, Need ISO 2108
-lang_name     "<U0053><U0069><U0064><U0061><U0061><U006D><U0075><U0020><U0041><U0066><U006F>"
-lang_term     "<U0073><U0069><U0064>"
-lang_lib      "<U0073><U0069><U0064>"
+lang_name     "Sidaamu Afo"
+lang_term     "sid"
+lang_lib      "sid"
 %
 END LC_ADDRESS
 
@@ -132,12 +130,11 @@ LC_NAME
 %
 % This is the ISO_IEC TR14652 Locale definition for the LC_NAME category.
 %
-name_fmt    "<U0025><U0064><U0025><U0074><U0025><U0067><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0066>"
+name_fmt    "%d%t%g%t%m%t%f"
 name_gen    ""
-name_mr     "<U004B><U0061><U006C><U0061><U0061>"
-name_mrs    "<U0044><U0075><U006B><U006B><U006F>"
-name_miss   "<U0042><U0065><U0065><U0074><U006F>"
+name_mr     "Kalaa"
+name_mrs    "Dukko"
+name_miss   "Beeto"
 name_ms     ""
 %
 END LC_NAME
@@ -147,84 +144,76 @@ LC_TIME
 %
 % Abbreviated weekday names (%a)
 %
-abday    "<U0053><U0061><U006D>";/
-         "<U0053><U0061><U006E>";/
-         "<U004D><U0061><U006B>";/
-         "<U0052><U006F><U0077>";/
-         "<U0048><U0061><U006D>";/
-         "<U0041><U0072><U0062>";/
-         "<U0051><U0069><U0064>"
+abday    "Sam";/
+         "San";/
+         "Mak";/
+         "Row";/
+         "Ham";/
+         "Arb";/
+         "Qid"
 %
 % Full weekday names (%A)
 %
-day      "<U0053><U0061><U006D><U0062><U0061><U0074><U0061>";/
-         "<U0053><U0061><U006E><U0079><U006F>";/
-         "<U004D><U0061><U0061><U006B><U0069><U0073><U0061><U006E><U0079><U006F>";/
-         "<U0052><U006F><U006F><U0077><U0065>";/
-         "<U0048><U0061><U006D><U0075><U0073><U0065>";/
-         "<U0041><U0072><U0062><U0065>";/
-         "<U0051><U0069><U0064><U0061><U0061><U006D><U0065>"
+day      "Sambata";/
+         "Sanyo";/
+         "Maakisanyo";/
+         "Roowe";/
+         "Hamuse";/
+         "Arbe";/
+         "Qidaame"
 %
 % Abbreviated month names (%b)
 %
-abmon    "<U004A><U0061><U006E>";/
-         "<U0046><U0065><U0062>";/
-         "<U004D><U0061><U0072>";/
-         "<U0041><U0070><U0072>";/
-         "<U004D><U0061><U0079>";/
-         "<U004A><U0075><U006E>";/
-         "<U004A><U0075><U006C>";/
-         "<U0041><U0075><U0067>";/
-         "<U0053><U0065><U0070>";/
-         "<U004F><U0063><U0074>";/
-         "<U004E><U006F><U0076>";/
-         "<U0044><U0065><U0063>"
+abmon    "Jan";/
+         "Feb";/
+         "Mar";/
+         "Apr";/
+         "May";/
+         "Jun";/
+         "Jul";/
+         "Aug";/
+         "Sep";/
+         "Oct";/
+         "Nov";/
+         "Dec"
 %
 % Full month names (%B)
 %
-mon      "<U004A><U0061><U006E><U0075><U0061><U0072><U0079>";/
-         "<U0046><U0065><U0062><U0072><U0075><U0061><U0072><U0079>";/
-         "<U004D><U0061><U0072><U0063><U0068>";/
-         "<U0041><U0070><U0072><U0069><U006C>";/
-         "<U004D><U0061><U0079>";/
-         "<U004A><U0075><U006E><U0065>";/
-         "<U004A><U0075><U006C><U0079>";/
-         "<U0041><U0075><U0067><U0075><U0073><U0074>";/
-         "<U0053><U0065><U0070><U0074><U0065><U006D><U0062><U0065><U0072>";/
-         "<U004F><U0063><U0074><U006F><U0062><U0065><U0072>";/
-         "<U004E><U006F><U0076><U0065><U006D><U0062><U0065><U0072>";/
-         "<U0044><U0065><U0063><U0065><U006D><U0062><U0065><U0072>"
+mon      "January";/
+         "February";/
+         "March";/
+         "April";/
+         "May";/
+         "June";/
+         "July";/
+         "August";/
+         "September";/
+         "October";/
+         "November";/
+         "December"
 %
 % Equivalent of AM PM
 %
-am_pm    "<U0073><U006F><U006F><U0064><U006F>";/
-         "<U0068><U0061><U0077><U0077><U0061><U0072><U006F>"
+am_pm    "soodo";"hawwaro"
 %
 % Appropriate date representation (%x)
-%	"%d/%m/%Y"
 %
-d_fmt   "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
+d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
-%	"%l:%M:%S"
 %
-t_fmt "<U0025><U006C><U003A><U0025><U004D><U003A><U0025><U0053>"
+t_fmt "%l:%M:%S"
 %
 % Appropriate AM/PM time representation (%r)
-%	"%X %p"
 %
-t_fmt_ampm "<U0025><U0058><U0020><U0025><U0070>"
+t_fmt_ampm "%X %p"
 %
 % Appropriate date and time representation (%c)
-%	"%A, %B %e, %Y %r %Z
 %
-d_t_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0059><U0020><U0025><U0072><U0020><U0025><U005A>"
+d_t_fmt    "%A, %B %e, %Y %r %Z"
 %
 % Appropriate date representation (date(1))
-%	"%A, %b %e, %r %Z %Y"
 %
-date_fmt    "<U0025><U0041><U002C><U0020><U0025><U0042><U0020><U0025><U0065><U002C>/
-<U0020><U0025><U0072><U0020><U0025><U005A><U0020><U0025><U0059>"
+date_fmt    "%A, %B %e, %r %Z %Y"
 week 7;19971130;1
 END LC_TIME

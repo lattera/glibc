@@ -228,13 +228,13 @@ reorder-end
 END LC_COLLATE
 
 LC_MONETARY
-int_curr_symbol       "<U0056><U004E><U0044><U0020>"
+int_curr_symbol       "VND "
 currency_symbol       "<U20AB>"
-mon_decimal_point     "<U002C>"
-mon_thousands_sep     "<U002E>"
+mon_decimal_point     ","
+mon_thousands_sep     "."
 mon_grouping          3;3
 positive_sign         ""
-negative_sign         "<U002D>"
+negative_sign         "-"
 int_frac_digits       0
 frac_digits           0
 p_cs_precedes         0
@@ -246,56 +246,50 @@ n_sign_posn           1
 END LC_MONETARY
 
 LC_NUMERIC
-decimal_point        "<U002C>"
-thousands_sep        "<U002E>"
+decimal_point        ","
+thousands_sep        "."
 grouping             3;3
 END LC_NUMERIC
 
 LC_TIME
-abday    "<U0043><U004E>";/
-         "<U0054><U0032>";/
-         "<U0054><U0033>";/
-         "<U0054><U0034>";/
-         "<U0054><U0035>";/
-         "<U0054><U0036>";/
-         "<U0054><U0037>"
-day      "<U0043><U0068><U1EE7><U0020><U006E><U0068><U1EAD><U0074>";/
-         "<U0054><U0068><U1EE9><U0020><U0068><U0061><U0069>";/
-         "<U0054><U0068><U1EE9><U0020><U0062><U0061>";/
-         "<U0054><U0068><U1EE9><U0020><U0074><U01B0>";/
-         "<U0054><U0068><U1EE9><U0020><U006E><U0103><U006D>";/
-         "<U0054><U0068><U1EE9><U0020><U0073><U00E1><U0075>";/
-         "<U0054><U0068><U1EE9><U0020><U0062><U1EA3><U0079>"
-abmon    "<U0054><U0068><U0067><U0020><U0031>";/
-         "<U0054><U0068><U0067><U0020><U0032>";/
-         "<U0054><U0068><U0067><U0020><U0033>";/
-         "<U0054><U0068><U0067><U0020><U0034>";/
-         "<U0054><U0068><U0067><U0020><U0035>";/
-         "<U0054><U0068><U0067><U0020><U0036>";/
-         "<U0054><U0068><U0067><U0020><U0037>";/
-         "<U0054><U0068><U0067><U0020><U0038>";/
-         "<U0054><U0068><U0067><U0020><U0039>";/
-         "<U0054><U0068><U0067><U0020><U0031><U0030>";/
-         "<U0054><U0068><U0067><U0020><U0031><U0031>";/
-         "<U0054><U0068><U0067><U0020><U0031><U0032>"
-mon      "<U0054><U0068><U00E1><U006E><U0067><U0020><U0031>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0032>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0033>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0034>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0035>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0036>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0037>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0038>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0039>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0031><U0030>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0031><U0031>";/
-         "<U0054><U0068><U00E1><U006E><U0067><U0020><U0031><U0032>"
-d_t_fmt  "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U004E><U0103><U006D><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
-d_fmt    "<U0025><U0064><U002F><U0025><U006D><U002F><U0025><U0059>"
-t_fmt    "<U0025><U0054>"
-am_pm    "<U0041><U004D>";"<U0050><U004D>"
-t_fmt_ampm  "<U0025><U0049><U003A><U0025><U004D><U0020><U0025><U0070>"
-date_fmt  "<U0025><U0041><U002C><U0020><U0025><U0064><U0020><U0025><U0042><U0020><U006E><U0103><U006D><U0020><U0025><U0059><U0020><U0025><U0054><U0020><U0025><U005A>"
+abday    "CN";"T2";"T3";"T4";"T5";"T6";"T7"
+day      "Ch<U1EE7> nh<U1EAD>t";/
+         "Th<U1EE9> hai";/
+         "Th<U1EE9> ba";/
+         "Th<U1EE9> t<U01B0>";/
+         "Th<U1EE9> n<U0103>m";/
+         "Th<U1EE9> s<U00E1>u";/
+         "Th<U1EE9> b<U1EA3>y"
+abmon    "Thg 1";/
+         "Thg 2";/
+         "Thg 3";/
+         "Thg 4";/
+         "Thg 5";/
+         "Thg 6";/
+         "Thg 7";/
+         "Thg 8";/
+         "Thg 9";/
+         "Thg 10";/
+         "Thg 11";/
+         "Thg 12"
+mon      "Th<U00E1>ng 1";/
+         "Th<U00E1>ng 2";/
+         "Th<U00E1>ng 3";/
+         "Th<U00E1>ng 4";/
+         "Th<U00E1>ng 5";/
+         "Th<U00E1>ng 6";/
+         "Th<U00E1>ng 7";/
+         "Th<U00E1>ng 8";/
+         "Th<U00E1>ng 9";/
+         "Th<U00E1>ng 10";/
+         "Th<U00E1>ng 11";/
+         "Th<U00E1>ng 12"
+d_t_fmt  "%A, %d %B N<U0103>m %Y %T %Z"
+d_fmt    "%d//%m//%Y"
+t_fmt    "%T"
+am_pm    "AM";"PM"
+t_fmt_ampm  "%I:%M %p"
+date_fmt  "%A, %d %B n<U0103>m %Y %T %Z"
 week 7;19971130;1
 first_weekday 2
 END LC_TIME
@@ -315,12 +309,11 @@ LC_NAME
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_NAME category.
 %
-name_fmt    "<U0025><U0070><U0025><U0074><U0025><U0066><U0025><U0074>/
-<U0025><U006D><U0025><U0074><U0025><U0067>"
+name_fmt    "%p%t%f%t%m%t%g"
 name_gen    ""
-name_mr     "<U00D4><U002E>"
-name_mrs    "<U0042><U002E>"
-name_miss   "<U0043><U002E>"
+name_mr     "<U00D4>."
+name_mrs    "B."
+name_miss   "C."
 name_ms     ""
 
 END LC_NAME
@@ -329,32 +322,26 @@ END LC_NAME
 LC_ADDRESS
 % This is the ISO_IEC TR14652 Locale definition for the
 % LC_ADDRESS
-postal_fmt  "<U0025><U007A><U0025><U0063><U0025><U0054><U0025><U0073>/
-<U0025><U0062><U0025><U0065><U0025><U0072>"
-country_name "<U0056><U0069><U1EC7><U0074><U0020><U004E><U0061><U006D>"
-lang_name "<U0054><U0069><U1EBF><U006E><U0067><U0020><U0056><U0069><U1EC7><U0074>"
+postal_fmt  "%z%c%T%s%b%e%r"
+country_name "Vi<U1EC7>t Nam"
+lang_name "Ti<U1EBF>ng Vi<U1EC7>t"
 
-country_ab2 "<U0056><U004E>"
-country_ab3 "<U0056><U004E><U004D>"
+country_ab2 "VN"
+country_ab3 "VNM"
 country_num 704
-% VN
-country_car    "<U0056><U004E>"
-% vi
-lang_ab      "<U0076><U0069>"
-% vie
-lang_term    "<U0076><U0069><U0065>"
-% vie
-lang_lib    "<U0076><U0069><U0065>"
+country_car    "VN"
+lang_ab      "vi"
+lang_term    "vie"
+lang_lib    "vie"
 END LC_ADDRESS
 
 
 LC_TELEPHONE
 % This is the ISO_IEC TR14652 Locale definition for the
 %
-tel_int_fmt "<U002B><U0025><U0063><U0020><U003B><U0025><U0061><U0020>/
-<U003B><U0025><U006C>"
-int_prefix  "<U0038><U0034>"
-int_select  "<U0030><U0030>"
+tel_int_fmt "+%c ;%a ;%l"
+int_prefix  "84"
+int_select  "00"
 
 END LC_TELEPHONE
 
