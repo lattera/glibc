@@ -1,3 +1,30 @@
+2018-04-05 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/aarch64/sigaction.c: Use default Linux version
+	as base implementation.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h: Add include guards,
+	remove unrequired definitions and update comments.
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/kernel_sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel_sigaction: Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/kernel_sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Add STUB, SET_SA_RESTORER,
+	and RESET_SA_RESTORER hooks.
+
 2018-04-05  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

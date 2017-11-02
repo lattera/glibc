@@ -22,11 +22,19 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-/* The difference here is that the sigaction structure used in the
-   kernel is not the same as we use in the libc.  Therefore we must
-   translate it here.  */
+/* New ports should not define the obsolete SA_RESTORER, however some
+   architecture requires for compat mode and/or due old ABI.  */
 #include <kernel_sigaction.h>
 
+#ifndef SA_RESTORER
+# define SET_SA_RESTORER(kact, act)
+# define RESET_SA_RESTORER(act, kact)
+#endif
+
+/* SPARC passes the restore function as an argument to rt_sigaction.  */
+#ifndef STUB
+# define STUB(act)
+#endif
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
@@ -42,25 +50,21 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       kact.k_sa_handler = act->sa_handler;
       memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
       kact.sa_flags = act->sa_flags;
-#ifdef HAVE_SA_RESTORER
-      kact.sa_restorer = act->sa_restorer;
-#endif
+      SET_SA_RESTORER (&kact, act);
     }
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  result = INLINE_SYSCALL (rt_sigaction, 4, sig,
-			   act ? &kact : NULL,
-			   oact ? &koact : NULL, _NSIG / 8);
+  result = INLINE_SYSCALL_CALL (rt_sigaction, sig,
+				act ? &kact : NULL,
+				oact ? &koact : NULL, STUB(act) _NSIG / 8);
 
   if (oact && result >= 0)
     {
       oact->sa_handler = koact.k_sa_handler;
       memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
       oact->sa_flags = koact.sa_flags;
-#ifdef HAVE_SA_RESTORER
-      oact->sa_restorer = koact.sa_restorer;
-#endif
+      RESET_SA_RESTORER (oact, &koact);
     }
   return result;
 }

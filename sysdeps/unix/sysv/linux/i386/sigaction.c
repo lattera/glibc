@@ -16,79 +16,30 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <errno.h>
-#include <stddef.h>
 #include <signal.h>
-#include <string.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
 #include <ldsodefs.h>
 
-/* The difference here is that the sigaction structure used in the
-   kernel is not the same as we use in the libc.  Therefore we must
-   translate it here.  */
-#include <kernel_sigaction.h>
-
-/* We do not globally define the SA_RESTORER flag so do it here.  */
 #define SA_RESTORER 0x04000000
 
-
-/* Using the hidden attribute here does not change the code but it
-   helps to avoid warnings.  */
-#ifdef __NR_rt_sigaction
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
-#endif
 extern void restore (void) asm ("__restore") attribute_hidden;
 
-/* If ACT is not NULL, change the action for SIG to *ACT.
-   If OACT is not NULL, put the old action for SIG in *OACT.  */
-int
-__libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
-{
-  int result;
+#define SET_SA_RESTORER(kact, act)				\
+  ({								\
+     if (GLRO(dl_sysinfo_dso) == NULL)				\
+       {							\
+	 (kact)->sa_flags |= SA_RESTORER;			\
+         (kact)->sa_restorer = (((act)->sa_flags & SA_SIGINFO)	\
+			       ? &restore_rt : &restore);	\
+       }							\
+     else							\
+       (kact)->sa_restorer = NULL;				\
+  })
 
-  struct kernel_sigaction kact, koact;
+#define RESET_SA_RESTORER(act, kact) \
+  (act)->sa_restorer = (kact)->sa_restorer
 
-  if (act)
-    {
-      kact.k_sa_handler = act->sa_handler;
-      kact.sa_flags = act->sa_flags;
-      memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-
-      if (GLRO(dl_sysinfo_dso) == NULL)
-	{
-	  kact.sa_flags |= SA_RESTORER;
-
-	  kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
-			      ? &restore_rt : &restore);
-	}
-      else
-	kact.sa_restorer = NULL;
-    }
-
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  INTERNAL_SYSCALL_DECL (err);
-  result = INTERNAL_SYSCALL (rt_sigaction, err, 4,
-			     sig, act ? &kact : NULL,
-			     oact ? &koact : NULL, _NSIG / 8);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-     return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
-								       err));
-  else if (oact && result >= 0)
-    {
-      oact->sa_handler = koact.k_sa_handler;
-      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
-      oact->sa_flags = koact.sa_flags;
-      oact->sa_restorer = koact.sa_restorer;
-    }
-  return result;
-}
-libc_hidden_def (__libc_sigaction)
-
-#include <nptl/sigaction.c>
+#include <sysdeps/unix/sysv/linux/sigaction.c>
 
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to
@@ -109,10 +60,8 @@ asm						\
    "	int  $0x80"				\
    );
 
-#ifdef __NR_rt_sigaction
 /* The return code for realtime-signals.  */
 RESTORE (restore_rt, __NR_rt_sigreturn)
-#endif
 
 /* For the boring old signals.  */
 #undef RESTORE2

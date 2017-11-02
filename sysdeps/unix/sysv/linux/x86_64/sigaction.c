@@ -16,65 +16,20 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <errno.h>
-#include <stddef.h>
 #include <signal.h>
-#include <string.h>
-
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-/* The difference here is that the sigaction structure used in the
-   kernel is not the same as we use in the libc.  Therefore we must
-   translate it here.  */
+#define SA_RESTORER 0x04000000
 #include <kernel_sigaction.h>
 
-#include "ucontext_i.h"
-
-/* We do not globally define the SA_RESTORER flag so do it here.  */
-#define SA_RESTORER 0x04000000
-
-/* Using the hidden attribute here does not change the code but it
-   helps to avoid warnings.  */
 extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 
+#define SET_SA_RESTORER(kact, act)			\
+  (kact)->sa_flags = (act)->sa_flags | SA_RESTORER;	\
+  (kact)->sa_restorer = &restore_rt
 
-/* If ACT is not NULL, change the action for SIG to *ACT.
-   If OACT is not NULL, put the old action for SIG in *OACT.  */
-int
-__libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
-{
-  int result;
-  struct kernel_sigaction kact, koact;
+#define RESET_SA_RESTORER(act, kact) 			\
+  (act)->sa_restorer = (kact)->sa_restorer
 
-  if (act)
-    {
-      kact.k_sa_handler = act->sa_handler;
-      memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-      kact.sa_flags = act->sa_flags | SA_RESTORER;
-
-      kact.sa_restorer = &restore_rt;
-    }
-
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  result = INLINE_SYSCALL (rt_sigaction, 4,
-			   sig, act ? &kact : NULL,
-			   oact ? &koact : NULL, _NSIG / 8);
-  if (oact && result >= 0)
-    {
-      oact->sa_handler = koact.k_sa_handler;
-      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
-      oact->sa_flags = koact.sa_flags;
-      oact->sa_restorer = koact.sa_restorer;
-    }
-  return result;
-}
-libc_hidden_def (__libc_sigaction)
-
-#include <nptl/sigaction.c>
-
+#include <sysdeps/unix/sysv/linux/sigaction.c>
 
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to
@@ -92,6 +47,8 @@ libc_hidden_def (__libc_sigaction)
    We do not restore cs - it's only stored as two bytes here so that's
    a bit tricky.  We don't use the gas cfi directives, so that we can
    reliably add .cfi_signal_frame.  */
+
+#include "ucontext_i.h"
 
 #define do_cfa_expr						\
   "	.byte 0x0f\n"		/* DW_CFA_def_cfa_expression */	\
