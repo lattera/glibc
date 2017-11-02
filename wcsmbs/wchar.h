@@ -385,10 +385,41 @@ extern long double wcstold (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
 #endif /* C99 */
 
-/* Likewise for `_Float128' when support is enabled.  */
+/* Likewise for `_FloatN' and `_FloatNx' when support is enabled.  */
+
+#if __HAVE_FLOAT16 && defined __USE_GNU
+extern _Float16 wcstof16 (const wchar_t *__restrict __nptr,
+			  wchar_t **__restrict __endptr) __THROW;
+#endif
+
+#if __HAVE_FLOAT32 && defined __USE_GNU
+extern _Float32 wcstof32 (const wchar_t *__restrict __nptr,
+			  wchar_t **__restrict __endptr) __THROW;
+#endif
+
+#if __HAVE_FLOAT64 && defined __USE_GNU
+extern _Float64 wcstof64 (const wchar_t *__restrict __nptr,
+			  wchar_t **__restrict __endptr) __THROW;
+#endif
+
 #if __HAVE_FLOAT128 && defined __USE_GNU
 extern _Float128 wcstof128 (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
+#endif
+
+#if __HAVE_FLOAT32X && defined __USE_GNU
+extern _Float32x wcstof32x (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr) __THROW;
+#endif
+
+#if __HAVE_FLOAT64X && defined __USE_GNU
+extern _Float64x wcstof64x (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr) __THROW;
+#endif
+
+#if __HAVE_FLOAT128X && defined __USE_GNU
+extern _Float128x wcstof128x (const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr) __THROW;
 #endif
 
 
@@ -470,10 +501,46 @@ extern long double wcstold_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      locale_t __loc) __THROW;
 
+# if __HAVE_FLOAT16
+extern _Float16 wcstof16_l (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr,
+			    locale_t __loc) __THROW;
+# endif
+
+# if __HAVE_FLOAT32
+extern _Float32 wcstof32_l (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr,
+			    locale_t __loc) __THROW;
+# endif
+
+# if __HAVE_FLOAT64
+extern _Float64 wcstof64_l (const wchar_t *__restrict __nptr,
+			    wchar_t **__restrict __endptr,
+			    locale_t __loc) __THROW;
+# endif
+
 # if __HAVE_FLOAT128
 extern _Float128 wcstof128_l (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr,
 			      locale_t __loc) __THROW;
+# endif
+
+# if __HAVE_FLOAT32X
+extern _Float32x wcstof32x_l (const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      locale_t __loc) __THROW;
+# endif
+
+# if __HAVE_FLOAT64X
+extern _Float64x wcstof64x_l (const wchar_t *__restrict __nptr,
+			      wchar_t **__restrict __endptr,
+			      locale_t __loc) __THROW;
+# endif
+
+# if __HAVE_FLOAT128X
+extern _Float128x wcstof128x_l (const wchar_t *__restrict __nptr,
+				wchar_t **__restrict __endptr,
+				locale_t __loc) __THROW;
 # endif
 #endif	/* use GNU */
 

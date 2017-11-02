@@ -1,3 +1,19 @@
+2017-11-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* wcsmbs/wchar.h [__HAVE_FLOAT16 && __USE_GNU] (wcstof16):
+	Declare.
+	[__HAVE_FLOAT32 && __USE_GNU] (wcstof32): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (wcstof64): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (wcstof32x): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (wcstof64x): Likewise.
+	[__HAVE_FLOAT128X && __USE_GNU] (wcstof128x): Likewise.
+	[__HAVE_FLOAT16 && __USE_GNU] (wcstof16_l): Likewise.
+	[__HAVE_FLOAT32 && __USE_GNU] (wcstof32_l): Likewise.
+	[__HAVE_FLOAT64 && __USE_GNU] (wcstof64_l): Likewise.
+	[__HAVE_FLOAT32X && __USE_GNU] (wcstof32x_l): Likewise.
+	[__HAVE_FLOAT64X && __USE_GNU] (wcstof64x_l): Likewise.
+	[__HAVE_FLOAT128X && __USE_GNU] (wcstof128x_l): Likewise.
+
 2017-11-02  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22382]
