@@ -18,11 +18,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <mqueue.h>
 #include <sched.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -67,13 +69,34 @@
    Some tests assume "/bin/sh" names a file that exists and is not a
    directory.  */
 
-#define test_wrp_rv(rtype, prtype, experr, syscall, ...)	\
+/* Evalutes to the arguments in a list initializer which can be used
+   as a single macro argument.  */
+#define LIST(...) { __VA_ARGS__ }
+
+/* This macro is necessary to forward the output of LIST as a macro
+   argument.  */
+#define LIST_FORWARD(...) __VA_ARGS__
+
+/* Return true if CODE is contained in the array [CODES, CODES +
+   COUNT].  */
+static bool
+check_error_in_list (int code, int *codes, size_t count)
+{
+  for (size_t i = 0; i < count; ++i)
+    if (codes[i] == code)
+      return true;
+  return false;
+}
+
+#define test_wrp_rv(rtype, prtype, experr_list, syscall, ...)	\
   (__extension__ ({						\
     errno = 0xdead;						\
+    int experr[] = experr_list;					\
     rtype ret = syscall (__VA_ARGS__);				\
     int err = errno;						\
     int fail;							\
-    if ((ret == (rtype) -1) && (err == experr))			\
+    if ((ret == (rtype) -1)					\
+	&& check_error_in_list (err, experr, array_length (experr))) \
       fail = 0;							\
     else							\
       {								\
@@ -83,44 +106,19 @@
 		  " (return "prtype")\n", ret);			\
         else if (err == 0xdead)					\
           puts ("FAIL: " #syscall ": didn't update errno");	\
-        else if (err != experr)					\
+	else							\
           printf ("FAIL: " #syscall				\
-		  ": errno is: %d (%s) expected: %d (%s)\n",	\
-		  err, strerror (err), experr, strerror (experr));\
+		  ": errno is: %d (%s) expected one of %s\n",	\
+		  err, strerror (err), #experr_list);		\
       }								\
     fail;							\
   }))
 
-#define test_wrp_rv2(rtype, prtype, experr1, experr2, syscall, ...) 	\
-  (__extension__ ({							\
-    errno = 0xdead;							\
-    rtype ret = syscall (__VA_ARGS__);					\
-    int err = errno;							\
-    int fail;								\
-    if ((ret == (rtype) -1) && ((err == experr1) || (err == experr2)))	\
-      fail = 0;								\
-    else								\
-      {									\
-        fail = 1;							\
-        if (ret != (rtype) -1)						\
-          printf ("FAIL: " #syscall ": didn't fail as expected"		\
-		  " (return "prtype")\n", ret);				\
-        else if (err == 0xdead)						\
-          puts ("FAIL: " #syscall ": didn't update errno");		\
-        else if (err != experr1 && err != experr2)			\
-          printf ("FAIL: " #syscall					\
-		  ": errno is: %d (%s) expected: %d (%s) or %d (%s)\n",	\
-		  err, strerror (err), experr1, strerror (experr1),	\
-		  experr2, strerror (experr2));				\
-      }									\
-    fail;								\
-  }))
-
 #define test_wrp(experr, syscall, ...)				\
-  test_wrp_rv(int, "%d", experr, syscall, __VA_ARGS__)
+  test_wrp_rv(int, "%d", LIST (experr), syscall, __VA_ARGS__)
 
-#define test_wrp2(experr1, experr2, syscall, ...)		\
-  test_wrp_rv2(int, "%d", experr1, experr2, syscall, __VA_ARGS__)
+#define test_wrp2(experr, syscall, ...)		\
+  test_wrp_rv(int, "%d", LIST_FORWARD (experr), syscall, __VA_ARGS__)
 
 static int
 do_test (void)
@@ -150,19 +148,21 @@ do_test (void)
   /* Linux v3.8 (676a0675c) removed the test to check at least one valid
      bit in flags (to return EINVAL).  It was later added back in v3.9
      (04df32fa1).  */
-  fails |= test_wrp2 (EINVAL, EBADF, inotify_add_watch, -1, "/", 0);
+  fails |= test_wrp2 (LIST (EINVAL, EBADF), inotify_add_watch, -1, "/", 0);
   fails |= test_wrp (EINVAL, mincore, (void *) -1, 0, vec);
   /* mlock fails if the result of the addition addr+len was less than addr
      (which indicates final address overflow), however on 32 bits binaries
      running on 64 bits kernels, internal syscall address check won't result
      in an invalid address and thus syscalls fails later in vma
      allocation.  */
-  fails |= test_wrp2 (EINVAL, ENOMEM, mlock, (void *) -1, 1);
+  fails |= test_wrp2 (LIST (EINVAL, ENOMEM), mlock, (void *) -1, 1);
   fails |= test_wrp (EINVAL, nanosleep, &ts, &ts);
   fails |= test_wrp (EINVAL, poll, &pollfd, -1, 0);
-  /* quotactl returns ENOSYS for kernels not configured with CONFIG_QUOTA.  */
-  fails |= test_wrp2 (ENODEV, ENOSYS, quotactl, Q_GETINFO, NULL, -1,
-                     (caddr_t) &dqblk);
+  /* quotactl returns ENOSYS for kernels not configured with
+     CONFIG_QUOTA, and may return EPERM if called within certain types
+     of containers.  */
+  fails |= test_wrp2 (LIST (ENODEV, ENOSYS, EPERM),
+		      quotactl, Q_GETINFO, NULL, -1, (caddr_t) &dqblk);
   fails |= test_wrp (EINVAL, sched_getparam, -1, &sch_param);
   fails |= test_wrp (EINVAL, sched_getscheduler, -1);
   fails |= test_wrp (EINVAL, sched_get_priority_max, -1);

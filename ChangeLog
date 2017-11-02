@@ -1,5 +1,17 @@
 2017-11-02  Florian Weimer  <fweimer@redhat.com>
 
+	test-errno-linux: quotactl can fail with EPERM in containers.
+	* sysdeps/unix/sysv/linux/test-errno-linux.c
+	(LIST, LIST_FORWARD): New macros.
+	(check_error_in_list): New function.
+	(test_wrp_rv): Accept list of permitted error codes.
+	(test_wrp_rv2): Remove.
+	(test_wrp): Call test_wrp_rv with list of error codes.
+	(test_wrp2): Accept list of error codes.
+	(do_test): Adjust.  Allow EPERM for quotactl.
+
+2017-11-02  Florian Weimer  <fweimer@redhat.com>
+
 	* stdio-common/bug16.c (do_test): Use array_length.
 	* stdio-common/errlist.c (_sys_nerr): Likewise.
 	* stdio-common/printf_fp.c (PRINTF_FP_FETCH): Likewise.
