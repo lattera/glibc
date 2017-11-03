@@ -1,3 +1,7 @@
+2017-11-03  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/unix/sysv/linux/aarch64/sysconf.c: New file.
+
 2017-11-03  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Optimize.
