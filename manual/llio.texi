@@ -3478,6 +3478,34 @@ If set, the file will be created if it doesn't already exist.
 If both @code{O_CREAT} and @code{O_EXCL} are set, then @code{open} fails
 if the specified file already exists.  This is guaranteed to never
 clobber an existing file.
+
+The @code{O_EXCL} flag has a special meaning in combination with
+@code{O_TMPFILE}; see below.
+@end deftypevr
+
+@deftypevr Macro int O_TMPFILE
+@standards{GNU, fcntl.h}
+If this flag is specified, functions in the @code{open} family create an
+unnamed temporary file.  In this case, the pathname argument to the
+@code{open} family of functions (@pxref{Opening and Closing Files}) is
+interpreted as the directory in which the temporary file is created
+(thus determining the file system which provides the storage for the
+file).  The @code{O_TMPFILE} flag must be combined with @code{O_WRONLY}
+or @code{O_RDWR}, and the @var{mode} argument is required.
+
+The temporary file can later be given a name using @code{linkat},
+turning it into a regular file.  This allows the atomic creation of a
+file with the specific file attributes (mode and extended attributes)
+and file contents.  If, for security reasons, it is not desirable that a
+name can be given to the file, the @code{O_EXCL} flag can be specified
+along with @code{O_TMPFILE}.
+
+Not all kernels support this open flag.  If this flag is unsupported, an
+attempt to create an unnamed temporary file fails with an error of
+@code{EINVAL}.  If the underlying file system does not support the
+@code{O_TMPFILE} flag, an @code{EOPNOTSUPP} error is the result.
+
+The @code{O_TMPFILE} flag is a GNU extension.
 @end deftypevr
 
 @deftypevr Macro int O_NONBLOCK
