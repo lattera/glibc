@@ -1,3 +1,9 @@
+2017-11-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/posix/sigpause.c (do_sigpause): Remove.
+	(__sigpause): Rely on __sigsuspend to implement single thread
+	optimization.  Add LIBC_CANCEL_HANDLED for cancellation marking.
+
 2017-11-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
