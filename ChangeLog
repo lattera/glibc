@@ -1,3 +1,8 @@
+2017-11-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* po/de.po: Update translations.
+	* po/ru.po: Likewise.
+
 2017-11-03  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/filesys.texi (Hard Links): Document linkat.

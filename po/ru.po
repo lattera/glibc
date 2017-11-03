@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.25.90\n"
 "POT-Creation-Date: 2017-07-25 12:32+0530\n"
-"PO-Revision-Date: 2017-07-26 19:37+0300\n"
+"PO-Revision-Date: 2017-10-28 08:39+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
 "Language: ru\n"
@@ -1134,7 +1134,7 @@ msgstr "Невозможно отобразить в память файл %s.\n
 #: elf/readlib.c:169
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
-msgstr "%s не является ELF-файлом — у него в начале неправильные волшебные байты.\n"
+msgstr "%s не является файлом в формате ELF — неправильная сигнатура в начале.\n"
 
 #: elf/sln.c:76
 #, c-format

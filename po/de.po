@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.25.90\n"
 "POT-Creation-Date: 2017-07-25 12:32+0530\n"
-"PO-Revision-Date: 2017-07-25 22:09+0200\n"
+"PO-Revision-Date: 2017-11-02 15:52+0100\n"
 "Last-Translator: Jochen Hein <jochen@jochen.org>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "Language: de\n"
@@ -6700,7 +6700,7 @@ msgstr "Falscher Medien-Typ"
 
 #: sysdeps/gnu/errlist.c:1407
 msgid "Required key not available"
-msgstr "Der notwendige Schlüssek ist nicht verfügbar"
+msgstr "Der notwendige Schlüssel ist nicht verfügbar"
 
 #: sysdeps/gnu/errlist.c:1415
 msgid "Key has expired"
