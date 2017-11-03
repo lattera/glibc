@@ -20,10 +20,14 @@ $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat64x%$(suf)): CFLAGS += 
 CFLAGS-libm-test-support-float128.c += -mfloat128
 CFLAGS-libm-test-support-float64x.c += -mfloat128
 CFLAGS-test-math-iscanonical.cc += -mfloat128
+CFLAGS-test-math-iseqsig.cc += -mfloat128
 CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
-$(objpfx)test-float128% $(objpfx)test-ifloat128% \
-$(objpfx)test-float64x% $(objpfx)test-ifloat64x% $(objpfx)test-math-iszero: \
+$(foreach test, \
+	  test-float128% test-ifloat128% test-float64x% test-ifloat64x% \
+	  test-math-iscanonical test-math-iseqsig test-math-issignaling \
+	  test-math-iszero, \
+	  $(objpfx)$(test)): \
   gnulib-tests += $(f128-loader-link)
 endif
 

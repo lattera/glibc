@@ -220,7 +220,7 @@ tests-static += atest-exp atest-sincos atest-exp2
 
 ifneq (,$(CXX))
 tests += test-math-isinff test-math-iszero test-math-issignaling \
-	 test-math-iscanonical test-math-cxx11
+	 test-math-iscanonical test-math-cxx11 test-math-iseqsig
 endif
 
 ifneq (no,$(PERL))

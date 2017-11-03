@@ -1182,8 +1182,76 @@ iszero (__T __val)
 
 /* Return X == Y but raising "invalid" and setting errno if X or Y is
    a NaN.  */
-# define iseqsig(x, y) \
-  __MATH_TG (__MATH_EVAL_FMT2 (x, y), __iseqsig, ((x), (y)))
+# if !defined __cplusplus || (__cplusplus < 201103L && !defined __GNUC__)
+#  define iseqsig(x, y) \
+   __MATH_TG (__MATH_EVAL_FMT2 (x, y), __iseqsig, ((x), (y)))
+# else
+/* In C++ mode, __MATH_TG cannot be used, because it relies on
+   __builtin_types_compatible_p, which is a C-only builtin.  Moreover,
+   the comparison macros from ISO C take two floating-point arguments,
+   which need not have the same type.  Choosing what underlying function
+   to call requires evaluating the formats of the arguments, then
+   selecting which is wider.  The macro __MATH_EVAL_FMT2 provides this
+   information, however, only the type of the macro expansion is
+   relevant (actually evaluating the expression would be incorrect).
+   Thus, the type is used as a template parameter for __iseqsig_type,
+   which calls the appropriate underlying function.  */
+extern "C++" {
+template<typename> struct __iseqsig_type;
+
+template<> struct __iseqsig_type<float>
+{
+  static int __call (float __x, float __y) throw ()
+  {
+    return __iseqsigf (__x, __y);
+  }
+};
+
+template<> struct __iseqsig_type<double>
+{
+  static int __call (double __x, double __y) throw ()
+  {
+    return __iseqsig (__x, __y);
+  }
+};
+
+template<> struct __iseqsig_type<long double>
+{
+  static int __call (double __x, double __y) throw ()
+  {
+#  ifndef __NO_LONG_DOUBLE_MATH
+    return __iseqsigl (__x, __y);
+#  else
+    return __iseqsig (__x, __y);
+#  endif
+  }
+};
+
+#  if __HAVE_DISTINCT_FLOAT128
+template<> struct __iseqsig_type<_Float128>
+{
+  static int __call (_Float128 __x, _Float128 __y) throw ()
+  {
+    return __iseqsigf128 (__x, __y);
+  }
+};
+#  endif
+
+template<typename _T1, typename _T2>
+inline int
+iseqsig (_T1 __x, _T2 __y) throw ()
+{
+#  if __cplusplus >= 201103L
+  typedef decltype (__MATH_EVAL_FMT2 (__x, __y)) _T3;
+#  else
+  typedef __typeof (__MATH_EVAL_FMT2 (__x, __y)) _T3;
+#  endif
+  return __iseqsig_type<_T3>::__call (__x, __y);
+}
+
+} /* extern "C++" */
+# endif /* __cplusplus */
+
 #endif
 
 __END_DECLS
