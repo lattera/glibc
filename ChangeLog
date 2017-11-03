@@ -1,3 +1,37 @@
+2017-11-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/stdlib.h
+	[__HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (strtof16):
+	Declare.
+	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (strtof32):
+	Likewise.
+	[__HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)] (strtof64):
+	Likewise.
+	[__HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strtof32x): Likewise.
+	[__HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strtof64x): Likewise.
+	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strtof128x): Likewise.
+	[__HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf16): Likewise.
+	[__HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf32): Likewise.
+	[__HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf64): Likewise.
+	[__HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf32x): Likewise.
+	[__HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf64x): Likewise.
+	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
+	(strfromf128x): Likewise.
+	[__USE_GNU && __HAVE_FLOAT16] (strtof16_l): Likewise.
+	[__USE_GNU && __HAVE_FLOAT32] (strtof32_l): Likewise.
+	[__USE_GNU && __HAVE_FLOAT64] (strtof64_l): Likewise.
+	[__USE_GNU && __HAVE_FLOAT32X] (strtof32x_l): Likewise.
+	[__USE_GNU && __HAVE_FLOAT64X] (strtof64x_l): Likewise.
+	[__USE_GNU && __HAVE_FLOAT128X] (strtof128x_l): Likewise.
+
 2017-11-03  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/unix/sysv/linux/aarch64/sysconf.c: New file.

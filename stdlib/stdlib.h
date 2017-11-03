@@ -128,10 +128,47 @@ extern long double strtold (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 #endif
 
+/* Likewise for '_FloatN' and '_FloatNx'.  */
+
+#if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float16 strtof16 (const char *__restrict __nptr,
+			  char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
+#if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float32 strtof32 (const char *__restrict __nptr,
+			  char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
+#if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float64 strtof64 (const char *__restrict __nptr,
+			  char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
-/* Likewise for the '_Float128' format  */
 extern _Float128 strtof128 (const char *__restrict __nptr,
-		      char **__restrict __endptr)
+			    char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
+#if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float32x strtof32x (const char *__restrict __nptr,
+			    char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
+#if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float64x strtof64x (const char *__restrict __nptr,
+			    char **__restrict __endptr)
+     __THROW __nonnull ((1));
+#endif
+
+#if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern _Float128x strtof128x (const char *__restrict __nptr,
+			      char **__restrict __endptr)
      __THROW __nonnull ((1));
 #endif
 
@@ -185,9 +222,45 @@ extern int strfroml (char *__dest, size_t __size, const char *__format,
      __THROW __nonnull ((3));
 #endif
 
+#if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf16 (char *__dest, size_t __size, const char * __format,
+		       _Float16 __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf32 (char *__dest, size_t __size, const char * __format,
+		       _Float32 __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf64 (char *__dest, size_t __size, const char * __format,
+		       _Float64 __f)
+     __THROW __nonnull ((3));
+#endif
+
 #if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
 extern int strfromf128 (char *__dest, size_t __size, const char * __format,
 			_Float128 __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf32x (char *__dest, size_t __size, const char * __format,
+			_Float32x __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf64x (char *__dest, size_t __size, const char * __format,
+			_Float64x __f)
+     __THROW __nonnull ((3));
+#endif
+
+#if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+extern int strfromf128x (char *__dest, size_t __size, const char * __format,
+			 _Float128x __f)
      __THROW __nonnull ((3));
 #endif
 
@@ -232,10 +305,52 @@ extern long double strtold_l (const char *__restrict __nptr,
 			      locale_t __loc)
      __THROW __nonnull ((1, 3));
 
+# if __HAVE_FLOAT16
+extern _Float16 strtof16_l (const char *__restrict __nptr,
+			    char **__restrict __endptr,
+			    locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
+# if __HAVE_FLOAT32
+extern _Float32 strtof32_l (const char *__restrict __nptr,
+			    char **__restrict __endptr,
+			    locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
+# if __HAVE_FLOAT64
+extern _Float64 strtof64_l (const char *__restrict __nptr,
+			    char **__restrict __endptr,
+			    locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
 # if __HAVE_FLOAT128
 extern _Float128 strtof128_l (const char *__restrict __nptr,
 			      char **__restrict __endptr,
 			      locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
+# if __HAVE_FLOAT32X
+extern _Float32x strtof32x_l (const char *__restrict __nptr,
+			      char **__restrict __endptr,
+			      locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
+# if __HAVE_FLOAT64X
+extern _Float64x strtof64x_l (const char *__restrict __nptr,
+			      char **__restrict __endptr,
+			      locale_t __loc)
+     __THROW __nonnull ((1, 3));
+# endif
+
+# if __HAVE_FLOAT128X
+extern _Float128x strtof128x_l (const char *__restrict __nptr,
+				char **__restrict __endptr,
+				locale_t __loc)
      __THROW __nonnull ((1, 3));
 # endif
 #endif /* GNU */
