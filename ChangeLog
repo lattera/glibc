@@ -1,3 +1,7 @@
+2017-11-03  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/filesys.texi (Hard Links): Document linkat.
+
 2017-11-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/tgmath.h [__HAVE_DISTINCT_FLOAT16

@@ -1205,6 +1205,35 @@ A hardware error occurred while trying to read or write the to filesystem.
 @end table
 @end deftypefun
 
+@deftypefun int linkat (int oldfd, const char *@var{oldname}, int newfd, const char *@var{newname}, int flags)
+@standards{POSIX.1, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+The @code{linkat} function is analogous to the @code{link} function,
+except that it identifies its source and target using a combination of a
+file descriptor (referring to a directory) and a pathname.  If a
+pathnames is not absolute, it is resolved relative to the corresponding
+file descriptor.  The special file descriptor @code{AT_FDCWD} denotes
+the current directory.
+
+The @var{flags} argument is a combination of the following flags:
+
+@table @code
+@item AT_SYMLINK_FOLLOW
+If the source path identified by @var{oldfd} and @var{oldname} is a
+symbolic link, @code{linkat} follows the symbolic link and creates a
+link to its target.  If the flag is not set, a link for the symbolic
+link itself is created; this is not supported by all file systems and
+@code{linkat} can fail in this case.
+
+@item AT_EMPTY_PATH
+If this flag is specified, @var{oldname} can be an empty string.  In
+this case, a new link to the file denoted by the descriptor @var{oldfd}
+is created, which may have been opened with @code{O_PATH} or
+@code{O_TMPFILE}.  This flag is a GNU extension.
+@end table
+@end deftypefun
+
 @node Symbolic Links
 @section Symbolic Links
 @cindex soft link
@@ -3515,7 +3544,6 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c fchownat
 @c futimesat
 @c fstatat (there's a commented-out safety assessment for this one)
-@c linkat
 @c mkdirat
 @c mkfifoat
 @c name_to_handle_at
