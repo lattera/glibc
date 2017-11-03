@@ -115,18 +115,45 @@
 			     __real_integer_type (__typeof__ (+(expr))), \
 			     __complex_integer_type (__typeof__ (+(expr))))
 
+# if (__HAVE_DISTINCT_FLOAT16			\
+      || __HAVE_DISTINCT_FLOAT32		\
+      || __HAVE_DISTINCT_FLOAT64		\
+      || __HAVE_DISTINCT_FLOAT32X		\
+      || __HAVE_DISTINCT_FLOAT64X		\
+      || __HAVE_DISTINCT_FLOAT128X)
+#  error "Unsupported _FloatN or _FloatNx types for <tgmath.h>."
+# endif
+
 /* Expand to text that checks if ARG_COMB has type _Float128, and if
    so calls the appropriately suffixed FCT (which may include a cast),
    or FCT and CFCT for complex functions, with arguments ARG_CALL.  */
 # if __HAVE_DISTINCT_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
-#  define __TGMATH_F128(arg_comb, fct, arg_call) \
+#  if (!__HAVE_FLOAT64X				\
+       || __HAVE_FLOAT64X_LONG_DOUBLE		\
+       || !__HAVE_FLOATN_NOT_TYPEDEF)
+#   define __TGMATH_F128(arg_comb, fct, arg_call)			\
   __builtin_types_compatible_p (__typeof (+(arg_comb)), _Float128)	\
   ? fct ## f128 arg_call :
-#  define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)			\
+#   define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
   __builtin_types_compatible_p (__typeof (+__real__ (arg_comb)), _Float128) \
   ? (__expr_is_real (arg_comb)						\
      ? fct ## f128 arg_call						\
      : cfct ## f128 arg_call) :
+#  else
+/* _Float64x is a distinct type at the C language level, which must be
+   handled like _Float128.  */
+#   define __TGMATH_F128(arg_comb, fct, arg_call)			\
+  (__builtin_types_compatible_p (__typeof (+(arg_comb)), _Float128)	\
+   || __builtin_types_compatible_p (__typeof (+(arg_comb)), _Float64x)) \
+  ? fct ## f128 arg_call :
+#   define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
+  (__builtin_types_compatible_p (__typeof (+__real__ (arg_comb)), _Float128) \
+   || __builtin_types_compatible_p (__typeof (+__real__ (arg_comb)),	\
+				    _Float64x))				\
+  ? (__expr_is_real (arg_comb)						\
+     ? fct ## f128 arg_call						\
+     : cfct ## f128 arg_call) :
+#  endif
 # else
 #  define __TGMATH_F128(arg_comb, fct, arg_call) /* Nothing.  */
 #  define __TGMATH_CF128(arg_comb, fct, cfct, arg_call) /* Nothing.  */
