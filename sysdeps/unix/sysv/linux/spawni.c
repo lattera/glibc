@@ -144,7 +144,7 @@ __spawni_child (void *arguments)
 	}
       else if (sigismember (&hset, sig))
 	{
-	  if (__nptl_is_internal_signal (sig))
+	  if (__is_internal_signal (sig))
 	    sa.sa_handler = SIG_IGN;
 	  else
 	    {

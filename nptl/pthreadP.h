@@ -32,7 +32,7 @@
 #include <atomic.h>
 #include <kernel-features.h>
 #include <errno.h>
-#include <nptl-signals.h>
+#include <internal-signals.h>
 
 
 /* Atomic operations on TLS memory.  */

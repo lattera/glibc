@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <nptl-signals.h>
+#include <internal-signals.h>
 
 int
 raise (int sig)

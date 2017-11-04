@@ -1,3 +1,19 @@
+2018-02-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/nptl/nptl-signals.h: Move to ...
+	* sysdeps/generic/internal-signals.h: ... here.  Adjust internal
+	comments.
+	* sysdeps/unix/sysv/linux/internal-signals.h: Add include guards.
+	(__nptl_is_internal_signal): Rename to __is_internal_signal and remove
+	unnecessary check for SIGTIMER.
+	(__nptl_clear_internal_signals): Rename to __clear_internal_signals and
+	remove unnecessary removal of SIGTIMER.
+	* sysdeps/unix/sysv/linux/raise.c: Adjust nptl-signal.h to
+	include-signals.h rename.
+	* nptl/pthreadP.h: Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni_child): Call
+	__is_internal_signal instead of __nptl_is_internal_signal.
+
 2018-02-22  Andrew Waterman <andrew@sifive.com>
 
 	* sysdeps/riscv/rvd/s_fmax.c (__fmax): Handle sNaNs correctly.
