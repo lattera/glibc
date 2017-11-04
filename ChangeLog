@@ -1,3 +1,8 @@
+2017-11-04  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/tpi_PG (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+
 2017-11-04  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/llio.texi (Open-time Flags): Document O_TMPFILE.
