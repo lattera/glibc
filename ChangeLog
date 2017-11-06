@@ -1,5 +1,7 @@
 2017-11-15  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* signal/sigrelse.c (sigrelse): Optimize implementation.
+
 	* sysdeps/posix/sigpause.c (do_sigpause): Remove.
 	(__sigpause): Rely on __sigsuspend to implement single thread
 	optimization.  Add LIBC_CANCEL_HANDLED for cancellation marking.

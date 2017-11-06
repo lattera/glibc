@@ -26,14 +26,8 @@ sigrelse (int sig)
 {
   sigset_t set;
 
-  /* Retrieve current signal set.  */
-  if (__sigprocmask (SIG_SETMASK, NULL, &set) < 0)
+  sigemptyset (&set);
+  if (sigaddset (&set, sig) < 0)
     return -1;
-
-  /* Remove the specified signal.  */
-  if (sigdelset (&set, sig) < 0)
-    return -1;
-
-  /* Set the new mask.  */
-  return __sigprocmask (SIG_SETMASK, &set, NULL);
+  return __sigprocmask (SIG_UNBLOCK, &set, NULL);
 }
