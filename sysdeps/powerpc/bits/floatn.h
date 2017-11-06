@@ -20,12 +20,13 @@
 #define _BITS_FLOATN_H
 
 #include <features.h>
+#include <bits/long-double.h>
 
 /* Defined to 1 if the current compiler invocation provides a
    floating-point type with the IEEE 754 binary128 format, and this glibc
    includes corresponding *f128 interfaces for it.  */
 #if defined _ARCH_PWR8 && defined __LITTLE_ENDIAN__ && (_CALL_ELF == 2) \
-    && defined __FLOAT128__
+    && defined __FLOAT128__ && !defined __NO_LONG_DOUBLE_MATH
 # define __HAVE_FLOAT128 1
 #else
 # define __HAVE_FLOAT128 0
