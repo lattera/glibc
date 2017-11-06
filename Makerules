@@ -1079,12 +1079,21 @@ rm -f $@.new
 $(SHELL) $(..)scripts/rellns-sh $< $@.new
 mv -f $@.new $@
 endef
+define make-link-multidir
+$(patsubst %/,cd %,$(objpfx)); \
+  $(LN_S) . $(multidir) 2> /dev/null; \
+  test -L $(multidir)
+endef
 else
 # If we have no symbolic links don't bother with rellns-sh.
 define make-link
 rm -f $@.new
 $(LN_S) $< $@.new
 mv -f $@.new $@
+endef
+define make-link-multidir
+$(make-target-directory)
+ln -f $(objpfx)/$(@F) $@
 endef
 endif
 

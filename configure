@@ -594,6 +594,7 @@ mach_interface_list
 DEFINES
 static_nss
 profile
+libc_cv_multidir
 libc_cv_pie_default
 libc_cv_pic_default
 shared
@@ -6696,6 +6697,11 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pie_default" >&5
 $as_echo "$libc_cv_pie_default" >&6; }
+
+
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
 
 
 

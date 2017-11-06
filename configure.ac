@@ -1783,6 +1783,11 @@ fi
 rm -f conftest.*])
 AC_SUBST(libc_cv_pie_default)
 
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
+AC_SUBST(libc_cv_multidir)
+
 AC_SUBST(profile)
 AC_SUBST(static_nss)
 

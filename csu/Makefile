@@ -77,6 +77,11 @@ crtstuff = crti crtn
 install-lib += $(crtstuff:=.o)
 extra-objs += $(crtstuff:=.o)
 
+ifneq ($(multidir),.)
+multilib-extra-objs = $(addprefix $(multidir)/, $(install-lib))
+extra-objs += $(multilib-extra-objs)
+endif
+
 extra-objs += abi-note.o init.o
 asm-CPPFLAGS += -I$(objpfx).
 
@@ -147,3 +152,8 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
+
+ifneq ($(multidir),.)
+$(addprefix $(objpfx)$(multidir)/, $(install-lib)): $(addprefix $(objpfx), $(install-lib))
+	$(make-link-multidir)
+endif

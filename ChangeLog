@@ -1,3 +1,15 @@
+2017-11-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22362]
+	* Makerules (make-link-multidir): New.
+	* config.make.in (multidir): New.
+	* configure.ac (libc_cv_multidir): New.  AC_SUBST.
+	* configure: Regenerated.
+	* csu/Makefile [$(multidir) != .](multilib-extra-objs): New.
+	[$(multidir) != .](extra-objs): Add $(multilib-extra-objs).
+	[$(multidir) != .]($(addprefix $(objpfx)$(multidir)/, $(install-lib))):
+	New target.
+
 2017-11-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22402]
