@@ -91,7 +91,7 @@ abday "Ace";/
 % Appropriate date and time representation
 d_t_fmt        "%a %d %b %Y %T %Z"
 % Appropriate date representation
-d_fmt         "%d/%m/%Y"
+d_fmt         "%d//%m//%Y"
 % Appropriate time representation
 t_fmt         "%T"
 % Appropriate 12 h time representation

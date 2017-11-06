@@ -1,3 +1,13 @@
+2017-11-07  Claude Paroz <claude@2xlibre.net>
+
+	[BZ #22403]
+	* localedata/locales/an_ES (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+	* localedata/locales/kab_DZ (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+	* localedata/locales/om_ET (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+
 2017-11-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #22298]

@@ -214,7 +214,7 @@ mon      "Amajjii";/
 am_pm    "WD";"WB"
 %
 % Appropriate date representation (%x)
-d_fmt   "%d/%m/%Y"
+d_fmt   "%d//%m//%Y"
 %
 % Appropriate time representation (%X)
 t_fmt "%l:%M:%S"
