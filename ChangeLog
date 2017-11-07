@@ -1,3 +1,11 @@
+2017-11-07  Florian Weimer  <fweimer@redhat.com>
+
+	* bits/mman-linux.h: Move ...
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h: ... here.  Update
+	comment.
+	* sysdeps/unix/sysv/linux/bits/Makefile (sysdep_headers): Remove
+	outdated comment.
+
 2017-11-07  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S (STRNLEN):

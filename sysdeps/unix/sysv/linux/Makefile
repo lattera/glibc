@@ -28,13 +28,6 @@ CFLAGS-open_by_handle_at.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sync_file_range.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
-# Note that bits/mman-linux.h is listed here though the file lives in the
-# top-level bits/ subdirectory instead of here in sysdeps/.../linux/bits/.
-# That is just so that other (non-Linux) configurations for whom the
-# bits/mman-linux.h definitions work well do not have to duplicate the
-# contents of the file.  The file must still be listed in sysdep_headers
-# here and in any non-Linux configuration that uses it; other
-# configurations will not install the file.
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/klog.h \
 		  sys/user.h sys/prctl.h \
