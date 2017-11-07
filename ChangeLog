@@ -1,3 +1,7 @@
+2017-11-07  Andreas Schwab  <schwab@suse.de>
+
+	* nptl/Makefile (tests-internal): Remove tst-typesizes.
+
 2017-11-07  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22403]
