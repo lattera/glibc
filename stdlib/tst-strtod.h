@@ -23,14 +23,57 @@
 
 #include <bits/floatn.h>
 
+#define F16 __f16 ()
+#define F32 __f32 ()
+#define F64 __f64 ()
 #define F128 __f128 ()
+#define F32X __f32x ()
+#define F64X __f64x ()
+#define F128X __f128x ()
 
-/* Test strfromf128 and strtof128 on all platforms that provide them,
-   whether or not the type _Float128 is ABI-distinct from long double.  */
+/* Test strfromfN and strtofN on all platforms that provide them,
+   whether or not the type _FloatN is ABI-distinct from other types;
+   likewise _FloatNx functions.  */
+#if __HAVE_FLOAT16
+# define IF_FLOAT16(x) x
+#else
+# define IF_FLOAT16(x)
+#endif
+
+#if __HAVE_FLOAT32
+# define IF_FLOAT32(x) x
+#else
+# define IF_FLOAT32(x)
+#endif
+
+#if __HAVE_FLOAT64
+# define IF_FLOAT64(x) x
+#else
+# define IF_FLOAT64(x)
+#endif
+
 #if __HAVE_FLOAT128
 # define IF_FLOAT128(x) x
 #else
 # define IF_FLOAT128(x)
+#endif
+
+#if __HAVE_FLOAT32X
+# define IF_FLOAT32X(x) x
+#else
+# define IF_FLOAT32X(x)
+#endif
+
+#if __HAVE_FLOAT64X
+# define IF_FLOAT64X(x) x
+#else
+# define IF_FLOAT64X(x)
+#endif
+
+#if __HAVE_FLOAT128X
+# define IF_FLOAT128X(x) x
+#else
+# define IF_FLOAT128X(x)
 #endif
 
 /* Provide an extra parameter expansion for mfunc.  */
@@ -41,8 +84,20 @@
   mfunc (  f,       float, strfromf, f, f, ##__VA_ARGS__)		      \
   mfunc (  d,      double, strfromd,  ,  , ##__VA_ARGS__)		      \
   mfunc ( ld, long double, strfroml, L, l, ##__VA_ARGS__)		      \
+  IF_FLOAT16 (MMFUNC							      \
+   (mfunc, f16, _Float16, strfromf16, F16, f16, ##__VA_ARGS__))		      \
+  IF_FLOAT32 (MMFUNC							      \
+   (mfunc, f32, _Float32, strfromf32, F32, f32, ##__VA_ARGS__))		      \
+  IF_FLOAT64 (MMFUNC							      \
+   (mfunc, f64, _Float64, strfromf64, F64, f64, ##__VA_ARGS__))		      \
   IF_FLOAT128 (MMFUNC							      \
-   (mfunc, f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))
+   (mfunc, f128, _Float128, strfromf128, F128, f128, ##__VA_ARGS__))	      \
+  IF_FLOAT32X (MMFUNC							      \
+   (mfunc, f32x, _Float32x, strfromf32x, F32X, f32x, ##__VA_ARGS__))	      \
+  IF_FLOAT64X (MMFUNC							      \
+   (mfunc, f64x, _Float64x, strfromf64x, F64X, f64x, ##__VA_ARGS__))	      \
+  IF_FLOAT128X (MMFUNC							      \
+   (mfunc, f128x, _Float128x, strfromf128x, F128X, f128x, ##__VA_ARGS__))
 /* The arguments to the generated macros are:
    FSUF - Function suffix
    FTYPE - float type
@@ -53,14 +108,20 @@
 
 
 
-#define STRTOD_TEST_FOREACH(mfunc, ...)			\
-({							\
-   int result = 0;					\
-   result |= mfunc ## f  (__VA_ARGS__);			\
-   result |= mfunc ## d  (__VA_ARGS__);			\
-   result |= mfunc ## ld (__VA_ARGS__);			\
-   IF_FLOAT128 (result |= mfunc ## f128 (__VA_ARGS__));	\
-   result;						\
+#define STRTOD_TEST_FOREACH(mfunc, ...)				\
+({								\
+   int result = 0;						\
+   result |= mfunc ## f  (__VA_ARGS__);				\
+   result |= mfunc ## d  (__VA_ARGS__);				\
+   result |= mfunc ## ld (__VA_ARGS__);				\
+   IF_FLOAT16 (result |= mfunc ## f16 (__VA_ARGS__));		\
+   IF_FLOAT32 (result |= mfunc ## f32 (__VA_ARGS__));		\
+   IF_FLOAT64 (result |= mfunc ## f64 (__VA_ARGS__));		\
+   IF_FLOAT128 (result |= mfunc ## f128 (__VA_ARGS__));		\
+   IF_FLOAT32X (result |= mfunc ## f32x (__VA_ARGS__));		\
+   IF_FLOAT64X (result |= mfunc ## f64x (__VA_ARGS__));		\
+   IF_FLOAT128X (result |= mfunc ## f128x (__VA_ARGS__));	\
+   result;							\
 })
 
 

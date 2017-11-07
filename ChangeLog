@@ -1,3 +1,25 @@
+2017-11-07  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/tst-strtod.h (F16): New macro.
+	(F32): Likewise.
+	(F64): Likewise.
+	(F32X): Likewise.
+	(F64X): Likewise.
+	(F128X): Likewise.
+	(IF_FLOAT16): Likewise.
+	(IF_FLOAT32): Likewise.
+	(IF_FLOAT64): Likewise.
+	(IF_FLOAT32X): Likewise.
+	(IF_FLOAT64X): Likewise.
+	(IF_FLOAT128X): Likewise.
+	(GEN_TEST_STRTOD_FOREACH): Conditionally call macros for _Float16,
+	_Float32, _Float64, _Float32x, _Float64x and _Float128x.
+	(STRTOD_TEST_FOREACH): Likewise.
+	* stdlib/tst-strtod-round-skeleton.c (CHOOSE_f32): New macro.
+	(CHOOSE_f64): Likewise.
+	(CHOOSE_f32x): Likewise.
+	(CHOOSE_f64x): Likewise.
+
 2017-11-07  Andreas Schwab  <schwab@suse.de>
 
 	* nptl/Makefile (tests-internal): Remove tst-typesizes.
