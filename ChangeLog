@@ -1,3 +1,8 @@
+2017-11-07  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/multiarch/strcasestr-power8.S (STRNLEN):
+	Redefine STRNLEN as __strnlen_power8.
+
 2017-11-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* signal/sighold.c (sighold): Optimize implementation.

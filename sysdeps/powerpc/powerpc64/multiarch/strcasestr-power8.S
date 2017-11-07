@@ -26,7 +26,7 @@
 /* strlen is used to calculate len of r4.  */
 #define STRLEN __strlen_power8
 /* strnlen is used to check if len of r3 is more than r4.  */
-#define STRNLEN __strnlen_power7
+#define STRNLEN __strnlen_power8
 /* strchr is used to check if first char of r4 is present in r3.  */
 #define STRCHR __strchr_power8
 
