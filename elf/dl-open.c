@@ -311,7 +311,7 @@ dl_open_worker (void *a)
   /* Sort the objects by dependency for the relocation process.  This
      allows IFUNC relocations to work and it also means copy
      relocation of dependencies are if necessary overwritten.  */
-  size_t nmaps = 0;
+  unsigned int nmaps = 0;
   struct link_map *l = new;
   do
     {
@@ -330,62 +330,11 @@ dl_open_worker (void *a)
       l = l->l_next;
     }
   while (l != NULL);
-  if (nmaps > 1)
-    {
-      uint16_t seen[nmaps];
-      memset (seen, '\0', sizeof (seen));
-      size_t i = 0;
-      while (1)
-	{
-	  ++seen[i];
-	  struct link_map *thisp = maps[i];
-
-	  /* Find the last object in the list for which the current one is
-	     a dependency and move the current object behind the object
-	     with the dependency.  */
-	  size_t k = nmaps - 1;
-	  while (k > i)
-	    {
-	      struct link_map **runp = maps[k]->l_initfini;
-	      if (runp != NULL)
-		/* Look through the dependencies of the object.  */
-		while (*runp != NULL)
-		  if (__glibc_unlikely (*runp++ == thisp))
-		    {
-		      /* Move the current object to the back past the last
-			 object with it as the dependency.  */
-		      memmove (&maps[i], &maps[i + 1],
-			       (k - i) * sizeof (maps[0]));
-		      maps[k] = thisp;
-
-		      if (seen[i + 1] > nmaps - i)
-			{
-			  ++i;
-			  goto next_clear;
-			}
-
-		      uint16_t this_seen = seen[i];
-		      memmove (&seen[i], &seen[i + 1],
-			       (k - i) * sizeof (seen[0]));
-		      seen[k] = this_seen;
-
-		      goto next;
-		    }
-
-	      --k;
-	    }
-
-	  if (++i == nmaps)
-	    break;
-	next_clear:
-	  memset (&seen[i], 0, (nmaps - i) * sizeof (seen[0]));
-	next:;
-	}
-    }
+  _dl_sort_maps (maps, nmaps, NULL, false);
 
   int relocation_in_progress = 0;
 
-  for (size_t i = nmaps; i-- > 0; )
+  for (unsigned int i = nmaps; i-- > 0; )
     {
       l = maps[i];
 

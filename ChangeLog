@@ -1,3 +1,16 @@
+2017-11-27  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (dl-routines): Add dl-sort-maps.
+	* elf/dl-sort-maps.c: New file.
+	* sysdeps/generic/ldsodefs.h (_dl_sort_fini): Don't declare.
+	(_dl_sort_maps): Declare.
+	* elf/dl-fini.c (_dl_sort_fini): Remove.
+	(_dl_fini): Use _dl_sort_maps instead of _dl_sort_fini.
+	* elf/dl-close.c (_dl_close_worker): Likewise.
+	* elf/dl-deps.c (_dl_map_object_deps): Use _dl_sort_maps instead of
+	open-coding it.
+	* elf/dl-open.c (dl_open_worker): Likewise.
+
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/float128/s_fromfpf128.c (fromfpf128): Define

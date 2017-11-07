@@ -585,62 +585,9 @@ Filters not supported with LD_TRACE_PRELINKING"));
      itself will always be initialize last.  */
   memcpy (l_initfini, map->l_searchlist.r_list,
 	  nlist * sizeof (struct link_map *));
-  if (__glibc_likely (nlist > 1))
-    {
-      /* We can skip looking for the binary itself which is at the front
-	 of the search list.  */
-      i = 1;
-      uint16_t seen[nlist];
-      memset (seen, 0, nlist * sizeof (seen[0]));
-      while (1)
-	{
-	  /* Keep track of which object we looked at this round.  */
-	  ++seen[i];
-	  struct link_map *thisp = l_initfini[i];
-
-	  /* Find the last object in the list for which the current one is
-	     a dependency and move the current object behind the object
-	     with the dependency.  */
-	  unsigned int k = nlist - 1;
-	  while (k > i)
-	    {
-	      struct link_map **runp = l_initfini[k]->l_initfini;
-	      if (runp != NULL)
-		/* Look through the dependencies of the object.  */
-		while (*runp != NULL)
-		  if (__glibc_unlikely (*runp++ == thisp))
-		    {
-		      /* Move the current object to the back past the last
-			 object with it as the dependency.  */
-		      memmove (&l_initfini[i], &l_initfini[i + 1],
-			       (k - i) * sizeof (l_initfini[0]));
-		      l_initfini[k] = thisp;
-
-		      if (seen[i + 1] > nlist - i)
-			{
-			  ++i;
-			  goto next_clear;
-			}
-
-		      uint16_t this_seen = seen[i];
-		      memmove (&seen[i], &seen[i + 1],
-			       (k - i) * sizeof (seen[0]));
-		      seen[k] = this_seen;
-
-		      goto next;
-		    }
-
-	      --k;
-	    }
-
-	  if (++i == nlist)
-	    break;
-	next_clear:
-	  memset (&seen[i], 0, (nlist - i) * sizeof (seen[0]));
-
-	next:;
-	}
-    }
+  /* We can skip looking for the binary itself which is at the front of
+     the search list.  */
+  _dl_sort_maps (&l_initfini[1], nlist - 1, NULL, false);
 
   /* Terminate the list of dependencies.  */
   l_initfini[nlist] = NULL;

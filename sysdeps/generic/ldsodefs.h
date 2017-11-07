@@ -960,8 +960,8 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 extern void _dl_fini (void) attribute_hidden;
 
 /* Sort array MAPS according to dependencies of the contained objects.  */
-extern void _dl_sort_fini (struct link_map **maps, size_t nmaps, char *used,
-			   Lmid_t ns) attribute_hidden;
+extern void _dl_sort_maps (struct link_map **maps, unsigned int nmaps,
+			   char *used, bool for_fini) attribute_hidden;
 
 /* The dynamic linker calls this function before and having changing
    any shared object mappings.  The `r_state' member of `struct r_debug'
