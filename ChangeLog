@@ -1,3 +1,11 @@
+2017-11-07  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22403]
+	* localedata/locales/mfe_MU (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+	* localedata/locales/miq_NI (LC_TIME): Fix wrong d_fmt, / needs
+	to be escaped.
+
 2017-11-07  Claude Paroz <claude@2xlibre.net>
 
 	[BZ #22403]

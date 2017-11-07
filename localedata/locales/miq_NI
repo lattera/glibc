@@ -116,7 +116,7 @@ d_t_fmt "%a %d %b %Y %T %Z"
 
 % Date representation to be referenced by the "%x" field descriptor -
 % day/month/year as decimal numbers (01/01/2000).
-d_fmt "%d/%m/%y"
+d_fmt "%d//%m//%y"
 
 % Time representation to be referenced by the "%X" field descriptor -
 % 24-hour clock time in format HH:MM:SS
