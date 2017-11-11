@@ -1,5 +1,11 @@
 2017-11-11  Florian Weimer  <fweimer@redhat.com>
 
+	* resolv/tst-res_hnok.c: New file.
+	* resolv/Makefile (tests): Add tst-res_hnok.
+	(tst-res_hnok): Link against libresolv.
+
+2017-11-11  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/tst-resolv-network.c: Use test framework instead explicit
 	main function.
 

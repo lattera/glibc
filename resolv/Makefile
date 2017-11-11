@@ -47,6 +47,7 @@ tests += \
   tst-ns_name \
   tst-ns_name_compress \
   tst-res_hconf_reorder \
+  tst-res_hnok \
   tst-res_use_inet6 \
   tst-resolv-basic \
   tst-resolv-edns \
@@ -172,6 +173,7 @@ $(objpfx)tst-resolv-canonname: \
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name.out: tst-ns_name.data
 $(objpfx)tst-ns_name_compress: $(objpfx)libresolv.so
+$(objpfx)tst-res_hnok: $(objpfx)libresolv.so
 
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.
