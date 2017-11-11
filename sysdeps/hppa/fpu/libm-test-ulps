@@ -697,9 +697,9 @@ ldouble: 1
 
 Function: Real part of "clog10_downward":
 double: 5
-float: 4
+float: 5
 idouble: 5
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "clog10_downward":
 double: 3
