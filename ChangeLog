@@ -1,5 +1,11 @@
 2017-11-11  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22413]
+	* resolv/ns_name.c (ns_name_pton): Treat trailing backslash as error.
+	* resolv/tst-ns_name_pton.c (tests): Add trailing backslash tests.
+
+2017-11-11  Florian Weimer  <fweimer@redhat.com>
+
 	* resolv/tst-ns_name_pton.c: New file.
 	* resolv/Makefile (tests): Add tst-ns_name_pton.
 	(tst-ns_name_pton): Link against libresolv.

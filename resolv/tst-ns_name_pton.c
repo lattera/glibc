@@ -127,6 +127,13 @@ static const struct test_case tests[] =
       "\377\377", NULL, },
     { STRING63OCT "." STRING63OCT "." STRING63OCT "." STRING60OCT
       "\377\377\377", NULL, },
+    { "\\", NULL, },
+    { "\\\\", "\\\\", false },
+    { "\\\\.", "\\\\", true },
+    { "\\\\\\", NULL, },
+    { "a\\", NULL, },
+    { "a.\\", NULL, },
+    { "a.b\\", NULL, },
   };
 
 static int

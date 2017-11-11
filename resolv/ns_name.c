@@ -222,6 +222,11 @@ ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
 		}
 		*bp++ = (u_char)c;
 	}
+	if (escaped) {
+		/* Trailing backslash.  */
+		__set_errno (EMSGSIZE);
+		return -1;
+	}
 	c = (bp - label - 1);
 	if ((c & NS_CMPRSFLGS) != 0) {		/*%< Label too big. */
 		__set_errno (EMSGSIZE);
