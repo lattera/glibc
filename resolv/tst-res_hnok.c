@@ -51,19 +51,31 @@ static const struct test_case tests[] =
   {
     { "", allok },
     { ".", allok },
+    { "..", 0 },
     { "www", allnomailok },
+    { "www.", allnomailok },
     { "example", allnomailok },
     { "example.com", allok },
     { "www.example.com", allok },
     { "www.example.com.", allok },
+    { "www-.example.com.", allok },
+    { "www.-example.com.", allok },
     { "*.example.com", dnok | mailok | ownok },
     { "-v", dnok },
     { "-v.example.com", mailok | dnok },
     { "**.example.com", dnok | mailok },
+    { "www.example.com\\", 0 },
     { STRING63, allnomailok },
+    { STRING63 ".", allnomailok },
+    { STRING63 "\\.", 0 },
+    { STRING63 "z", 0 },
     { STRING63 ".example.com", allok },
     { STRING63 "." STRING63 "." STRING63 "." STRING60 "z", allok },
+    { STRING63 "." STRING63 "." STRING63 "." STRING60 "z.", allok },
+    { STRING63 "." STRING63 "." STRING63 "." STRING60 "zz", 0 },
+    { STRING63 "." STRING63 "." STRING63 "." STRING60 "zzz", 0 },
     { "hostmaster@mail.example.com", dnok | mailok },
+    { "hostmaster\\@mail.example.com", dnok | mailok },
     { "with whitespace", 0 },
     { "with\twhitespace", 0 },
     { "with\nwhitespace", 0 },
@@ -116,6 +128,12 @@ one_char (const char *prefix, const char *accepted, const char *suffix,
     }
 }
 
+#define LETTERSDIGITS \
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+#define PRINTABLE \
+  "!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~"
+
 static int
 do_test (void)
 {
@@ -131,20 +149,18 @@ do_test (void)
     }
 
   one_char
-    ("", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.",
-     "", "res_hnok", res_hnok);
+    ("", LETTERSDIGITS "._", "", "res_hnok", res_hnok);
   one_char
     ("middle",
-     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_",
+     LETTERSDIGITS ".-_\\", /* "middle\\suffix" == "middlesuffix", so good.  */
      "suffix", "res_hnok", res_hnok);
   one_char
     ("middle",
-     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_"
-     "!\"#$%&'()*+,/:;<=>?@[\\]^`{|}~",
+     LETTERSDIGITS ".-_" PRINTABLE,
      "suffix.example", "res_mailok", res_mailok);
   one_char
     ("mailbox.middle",
-     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_",
+     LETTERSDIGITS ".-_\\",
      "suffix.example", "res_mailok", res_mailok);
 
   return 0;

@@ -60,6 +60,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   glibc has been removed.  The --enable-add-ons configure option is now
   ignored.
 
+* The res_hnok, res_dnok, res_mailok and res_ownok functions now check that
+  the specified string can be parsed as a domain name.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

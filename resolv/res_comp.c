@@ -1,3 +1,21 @@
+/* Domain name processing functions.
+   Copyright (C) 1995-2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
 /*
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
@@ -121,110 +139,118 @@ dn_skipname(const u_char *ptr, const u_char *eom) {
 }
 libresolv_hidden_def (dn_skipname)
 
-/*
- * Verify that a domain name uses an acceptable character set.
- */
+/* Return true if the string consists of printable ASCII characters
+   only.  */
+static bool
+printable_string (const char *dn)
+{
+  while (true)
+    {
+      char ch = *dn;
+      if (ch == '\0')
+	return true;
+      if (ch <= ' ' || ch > '~')
+	return false;
+      ++dn;
+    }
+}
 
-/*
- * Note the conspicuous absence of ctype macros in these definitions.  On
- * non-ASCII hosts, we can't depend on string literals or ctype macros to
- * tell us anything about network-format data.  The rest of the BIND system
- * is not careful about this, but for some reason, we're doing it right here.
- */
-#define PERIOD 0x2e
-#define	hyphenchar(c) ((c) == 0x2d)
-#define	underscorechar(c) ((c) == 0x5f)
-#define bslashchar(c) ((c) == 0x5c)
-#define periodchar(c) ((c) == PERIOD)
-#define asterchar(c) ((c) == 0x2a)
-#define alphachar(c) (((c) >= 0x41 && (c) <= 0x5a) \
-		   || ((c) >= 0x61 && (c) <= 0x7a))
-#define digitchar(c) ((c) >= 0x30 && (c) <= 0x39)
-
-#define borderchar(c) (alphachar(c) || digitchar(c))
-#define middlechar(c) (borderchar(c) || hyphenchar(c) || underscorechar(c))
-#define	domainchar(c) ((c) > 0x20 && (c) < 0x7f)
-
-int
-res_hnok(const char *dn) {
-	int pch = PERIOD, ch = *dn++;
-
-	while (ch != '\0') {
-		int nch = *dn++;
-
-		if (periodchar(ch)) {
-			(void)NULL;
-		} else if (periodchar(pch)) {
-			if (!borderchar(ch))
-				return (0);
-		} else if (periodchar(nch) || nch == '\0') {
-			if (!borderchar(ch))
-				return (0);
-		} else {
-			if (!middlechar(ch))
-				return (0);
-		}
-		pch = ch, ch = nch;
+/* Return true if DN points to a name consisting only of [0-9a-zA-Z_-]
+   characters.  DN must be in DNS wire format, without
+   compression.  */
+static bool
+binary_hnok (const unsigned char *dn)
+{
+  while (true)
+    {
+      size_t label_length = *dn;
+      if (label_length == 0)
+	break;
+      ++dn;
+      const unsigned char *label_end = dn + label_length;
+      do
+	{
+	  unsigned char ch = *dn;
+	  if (!(('0' <= ch && ch <= '9')
+		|| ('A' <= ch && ch <= 'Z')
+		|| ('a' <= ch && ch <= 'z')
+		|| ch == '-' || ch == '_'))
+	    return false;
+	  ++dn;
 	}
-	return (1);
+      while (dn < label_end);
+    }
+  return true;
+}
+
+/* Return true if the binary domain name has a first labels which
+   starts with '-'.  */
+static inline bool
+binary_leading_dash (const unsigned char *dn)
+{
+  return dn[0] > 0 && dn[1] == '-';
+}
+
+/* Return 1 if res_hnok is a valid host name.  Labels must only
+   contain [0-9a-zA-Z_-] characters, and the name must not start with
+   a '-'.  The latter is to avoid confusion with program options.  */
+int
+res_hnok (const char *dn)
+{
+  unsigned char buf[NS_MAXCDNAME];
+  if (!printable_string (dn)
+      || ns_name_pton (dn, buf, sizeof (buf)) < 0
+      || binary_leading_dash (buf))
+    return 0;
+  return binary_hnok (buf);
 }
 libresolv_hidden_def (res_hnok)
 
-/*
- * hostname-like (A, MX, WKS) owners can have "*" as their first label
- * but must otherwise be as a host name.
- */
+/* Hostname-like (A, MX, WKS) owners can have "*" as their first label
+   but must otherwise be as a host name.  */
 int
-res_ownok(const char *dn) {
-	if (asterchar(dn[0])) {
-		if (periodchar(dn[1]))
-			return (res_hnok(dn+2));
-		if (dn[1] == '\0')
-			return (1);
-	}
-	return (res_hnok(dn));
+res_ownok (const char *dn)
+{
+  unsigned char buf[NS_MAXCDNAME];
+  if (!printable_string (dn)
+      || ns_name_pton (dn, buf, sizeof (buf)) < 0
+      || binary_leading_dash (buf))
+    return 0;
+  if (buf[0] == 1 && buf [1] == '*')
+    /* Skip over the leading "*." part.  */
+    return binary_hnok (buf + 2);
+  else
+    return binary_hnok (buf);
 }
 
-/*
- * SOA RNAMEs and RP RNAMEs can have any printable character in their first
- * label, but the rest of the name has to look like a host name.
- */
+/* SOA RNAMEs and RP RNAMEs can have any byte in their first label,
+   but the rest of the name has to look like a host name.  */
 int
-res_mailok(const char *dn) {
-	int ch, escaped = 0;
-
-	/* "." is a valid missing representation */
-	if (*dn == '\0')
-		return (1);
-
-	/* otherwise <label>.<hostname> */
-	while ((ch = *dn++) != '\0') {
-		if (!domainchar(ch))
-			return (0);
-		if (!escaped && periodchar(ch))
-			break;
-		if (escaped)
-			escaped = 0;
-		else if (bslashchar(ch))
-			escaped = 1;
-	}
-	if (periodchar(ch))
-		return (res_hnok(dn));
-	return (0);
+res_mailok (const char *dn)
+{
+  unsigned char buf[NS_MAXCDNAME];
+  if (!printable_string (dn)
+      || ns_name_pton (dn, buf, sizeof (buf)) < 0)
+    return 0;
+  unsigned char label_length = buf[0];
+  /* "." is a valid missing representation */
+  if (label_length == 0)
+    return 1;
+  /* Skip over the first label.  */
+  unsigned char *tail = buf + 1 + label_length;
+  if (*tail == 0)
+    /* More than one label is required (except for ".").  */
+    return 0;
+  return binary_hnok (tail);
 }
 
-/*
- * This function is quite liberal, since RFC 1034's character sets are only
- * recommendations.
- */
+/* Return 1 if DN is a syntactically valid domain name.  Empty names
+   are accepted.  */
 int
-res_dnok(const char *dn) {
-	int ch;
-
-	while ((ch = *dn++) != '\0')
-		if (!domainchar(ch))
-			return (0);
-	return (1);
+res_dnok (const char *dn)
+{
+  unsigned char buf[NS_MAXCDNAME];
+  return printable_string (dn) && ns_name_pton (dn, buf, sizeof (buf)) >= 0;
 }
 libresolv_hidden_def (res_dnok)
 

@@ -1,5 +1,20 @@
 2017-11-11  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22409]
+	[BZ #22412]
+	* resolv/res_comp.c (printable_string, binary_hnok)
+	(binary_leading_dash): New functions.
+	(res_hnok): Reimplement using these functions and ns_name_pton.
+	(res_ownok): Likewise.
+	(res_mailok): Reimplement using printable_string, ns_name_pton and
+	binary_hnok.
+	(res_dnok): Reimplement using printable_string and ns_name_pton.
+	* resolv/tst-res_hnok.c (tests): Add additional tests.
+	(LETTERDIGITS, PRINTABLE): Define.
+	(do_test): Adjust one_char results.
+
+2017-11-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22413]
 	* resolv/ns_name.c (ns_name_pton): Treat trailing backslash as error.
 	* resolv/tst-ns_name_pton.c (tests): Add trailing backslash tests.
