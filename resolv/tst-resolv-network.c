@@ -214,8 +214,8 @@ check_long_name (void)
   free (mem.buffer);
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct resolv_test *obj = resolv_test_start
     ((struct resolv_redirect_config)
@@ -296,4 +296,8 @@ main (void)
   check_long_name ();
 
   resolv_test_end (obj);
+
+  return 0;
 }
+
+#include <support/test-driver.c>

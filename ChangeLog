@@ -1,3 +1,8 @@
+2017-11-11  Florian Weimer  <fweimer@redhat.com>
+
+	* resolv/tst-resolv-network.c: Use test framework instead explicit
+	main function.
+
 2017-11-09  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/setjmp.h [!_ISOMAC]: Include <stddef.h> and
