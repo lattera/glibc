@@ -109,19 +109,22 @@ libsupport-routines = \
   xpthread_once \
   xpthread_rwlock_init \
   xpthread_rwlock_rdlock \
-  xpthread_rwlock_wrlock \
   xpthread_rwlock_unlock \
+  xpthread_rwlock_wrlock \
   xpthread_rwlockattr_init \
   xpthread_rwlockattr_setkind_np \
   xpthread_sigmask \
   xpthread_spin_lock \
   xpthread_spin_unlock \
+  xreadlink \
   xrealloc \
   xrecvfrom \
   xsendto \
   xsetsockopt \
   xsocket \
   xstrdup \
+  xstrndup \
+  xunlink \
   xwaitpid \
   xwrite \
 
@@ -138,6 +141,7 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_record_failure \
+  tst-xreadlink \
 
 ifeq ($(run-built-tests),yes)
 tests-special = \

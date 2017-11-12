@@ -1,3 +1,15 @@
+2017-11-12  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support.h (xstrndup): Declare.
+	* support/xunistd.h (xunlink, xreadlink): Declare.
+	* support/temp_file.h (support_create_temp_directory): Declare.
+	* support/temp_file.c (support_create_temp_directory): New function.
+	* support/support_chroot.c (support_chroot_create): Use it.
+	* support/xreadlink.c: New file.
+	* support/xstrndup.c: Likewise.
+	* support/xunlink.c: Likewise.
+	* support/tst-xreadlink.c: Likewise.
+
 2017-11-11  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update clog10_downward ulps.

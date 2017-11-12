@@ -68,6 +68,7 @@ void *xrealloc (void *p, size_t n);
 char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
+char *xstrndup (const char *, size_t);
 
 __END_DECLS
 

@@ -38,6 +38,11 @@ int xopen (const char *path, int flags, mode_t);
 void xstat (const char *path, struct stat64 *);
 void xmkdir (const char *path, mode_t);
 void xchroot (const char *path);
+void xunlink (const char *path);
+
+/* Read the link at PATH.  The caller should free the returned string
+   with free.  */
+char *xreadlink (const char *path);
 
 /* Close the file descriptor.  Ignore EINTR errors, but terminate the
    process on other errors.  */

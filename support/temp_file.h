@@ -32,6 +32,11 @@ void add_temp_file (const char *name);
    *FILENAME.  */
 int create_temp_file (const char *base, char **filename);
 
+/* Create a temporary directory and schedule it for deletion.  BASE
+   must end with the six characters "XXXXXX".  Return the name of the
+   temporary directory.  The caller should free the string.  */
+char *support_create_temp_directory (const char *base);
+
 __END_DECLS
 
 #endif /* SUPPORT_TEMP_FILE_H */
