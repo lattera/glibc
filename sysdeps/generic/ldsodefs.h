@@ -373,6 +373,13 @@ struct rtld_global
   EXTERN void (*_dl_rtld_unlock_recursive) (void *);
 #endif
 
+  /* Get architecture specific definitions.  */
+#define PROCINFO_DECL
+#ifndef PROCINFO_CLASS
+# define PROCINFO_CLASS EXTERN
+#endif
+#include <dl-procruntime.c>
+
   /* If loading a shared object requires that we make the stack executable
      when it was not, we do it by calling this function.
      It returns an errno code or zero on success.  */
@@ -529,10 +536,6 @@ struct rtld_global_ro
 #endif
 
   /* Get architecture specific definitions.  */
-#define PROCINFO_DECL
-#ifndef PROCINFO_CLASS
-# define PROCINFO_CLASS EXTERN
-#endif
 #include <dl-procinfo.c>
 
   /* Names of shared object for which the RPATH should be ignored.  */

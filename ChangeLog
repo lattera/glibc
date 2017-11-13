@@ -1,3 +1,12 @@
+2017-11-13  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-support.c: Include <dl-procruntime.c>.
+	* include/link.h: Include <link_map.h>.
+	* sysdeps/generic/dl-procruntime.c: New file.
+	* sysdeps/generic/link_map.h: Likewise.
+	* sysdeps/generic/ldsodefs.h: Include <dl-procruntime.c> in
+	the writable ld.so namespace.
+
 2017-11-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	timezone: pacify GCC -Wstringop-truncation

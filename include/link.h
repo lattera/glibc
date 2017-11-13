@@ -203,6 +203,8 @@ struct link_map
 				       freed, ie. not allocated with
 				       the dummy malloc in ld.so.  */
 
+#include <link_map.h>
+
     /* Collected information about own RPATH directories.  */
     struct r_search_path_struct l_rpath_dirs;
 

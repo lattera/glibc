@@ -126,6 +126,7 @@ int _dl_starting_up = 1;
 void *_dl_random;
 
 /* Get architecture specific initializer.  */
+#include <dl-procruntime.c>
 #include <dl-procinfo.c>
 
 /* Initial value of the CPU clock.  */
