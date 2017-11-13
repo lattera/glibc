@@ -1949,7 +1949,7 @@ writezone(const char *const name, const char *const string, char version)
 		}
 #define DO(field)	fwrite(tzh.field, sizeof tzh.field, 1, fp)
 		tzh = tzh0;
-		strncpy(tzh.tzh_magic, TZ_MAGIC, sizeof tzh.tzh_magic);
+		memcpy(tzh.tzh_magic, TZ_MAGIC, sizeof tzh.tzh_magic);
 		tzh.tzh_version[0] = version;
 		convert(thistypecnt, tzh.tzh_ttisgmtcnt);
 		convert(thistypecnt, tzh.tzh_ttisstdcnt);
