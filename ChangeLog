@@ -16,6 +16,9 @@
 
 2017-11-12  Florian Weimer  <fweimer@redhat.com>
 
+	* support/Makefile (libsupport-routines): Add xreadlink, xstrndup,
+	tst-xreadlink.
+	(tests): Add tst-xreadlink.
 	* support/support.h (xstrndup): Declare.
 	* support/xunistd.h (xunlink, xreadlink): Declare.
 	* support/temp_file.h (support_create_temp_directory): Declare.
