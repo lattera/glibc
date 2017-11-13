@@ -1,3 +1,11 @@
+2017-11-13  Florian Weimer  <fweimer@redhat.com>
+
+	* support/next_to_fault.h, support/next_to_fault.c: New files.
+	* support/Makefile (libsupport-routines): Add next_to_fault.
+	* resolv/tst-inet_pton.c (struct next_to_fault)
+	(next_to_fault_allocate, next_to_fault_free): Remove.
+	(run_one_test): Switch to <support/next_to_fault.h> interfaces.
+
 2017-11-13  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-support.c: Include <dl-procruntime.c>.

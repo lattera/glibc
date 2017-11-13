@@ -32,6 +32,7 @@ libsupport-routines = \
   check_netent \
   delayed_exit \
   ignore_stderr \
+  next_to_fault \
   oom_error \
   resolv_test \
   set_fortify_handler \

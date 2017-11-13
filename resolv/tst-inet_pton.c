@@ -22,56 +22,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <support/check.h>
+#include <support/next_to_fault.h>
 #include <support/xunistd.h>
-#include <sys/mman.h>
-#include <sys/param.h>
 #include <unistd.h>
-
-/* Memory region created by next_to_fault_allocate.  */
-struct next_to_fault
-{
-  /* The user data.  */
-  char *buffer;
-  size_t length;
-
-  /* The entire allocated region.  */
-  void *region_start;
-  size_t region_size;
-};
-
-/* Allocate a buffer of SIZE bytes just before a page which is mapped
-   with PROT_NONE (so that overrunning the buffer will cause a
-   fault).  */
-static struct next_to_fault
-next_to_fault_allocate (size_t size)
-{
-  long page_size = sysconf (_SC_PAGE_SIZE);
-  TEST_VERIFY_EXIT (page_size > 0);
-  struct next_to_fault result;
-  result.region_size = roundup (size, page_size) + page_size;
-  TEST_VERIFY_EXIT (size + page_size > size);
-  TEST_VERIFY_EXIT (result.region_size > size);
-  result.region_start
-    = xmmap (NULL, result.region_size, PROT_READ | PROT_WRITE,
-             MAP_PRIVATE | MAP_ANONYMOUS, -1);
-  /* Unmap the page after the allocation.  */
-  xmprotect (result.region_start + (result.region_size - page_size),
-             page_size, PROT_NONE);
-  /* Align the allocation within the region so that it ends just
-     before the PROT_NONE page.  */
-  result.buffer = result.region_start + result.region_size - page_size - size;
-  result.length = size;
-  return result;
-}
-
-/* Deallocate the memory region allocated by
-   next_to_fault_allocate.  */
-static void
-next_to_fault_free (struct next_to_fault *ntf)
-{
-  xmunmap (ntf->region_start, ntf->region_size);
-  *ntf = (struct next_to_fault) { NULL, };
-}
 
 struct test_case
 {
@@ -139,12 +92,13 @@ run_one_test (const struct test_case *t)
 {
   size_t test_len = strlen (t->input);
 
-  struct next_to_fault ntf_out4 = next_to_fault_allocate (4);
-  struct next_to_fault ntf_out6 = next_to_fault_allocate (16);
+  struct support_next_to_fault ntf_out4 = support_next_to_fault_allocate (4);
+  struct support_next_to_fault ntf_out6 = support_next_to_fault_allocate (16);
 
   /* inet_pton requires NUL termination.  */
   {
-    struct next_to_fault ntf_in = next_to_fault_allocate (test_len + 1);
+    struct support_next_to_fault ntf_in
+      = support_next_to_fault_allocate (test_len + 1);
     memcpy (ntf_in.buffer, t->input, test_len + 1);
     memset (ntf_out4.buffer, 0, 4);
     check_result ("inet_pton", t, AF_INET, ntf_out4.buffer,
@@ -152,12 +106,13 @@ run_one_test (const struct test_case *t)
     memset (ntf_out6.buffer, 0, 16);
     check_result ("inet_pton", t, AF_INET6, ntf_out6.buffer,
                   inet_pton (AF_INET6, ntf_in.buffer, ntf_out6.buffer));
-    next_to_fault_free (&ntf_in);
+    support_next_to_fault_free (&ntf_in);
   }
 
   /* __inet_pton_length does not require NUL termination.  */
   {
-    struct next_to_fault ntf_in = next_to_fault_allocate (test_len);
+    struct support_next_to_fault ntf_in
+      = support_next_to_fault_allocate (test_len);
     memcpy (ntf_in.buffer, t->input, test_len);
     memset (ntf_out4.buffer, 0, 4);
     check_result ("__inet_pton_length", t, AF_INET, ntf_out4.buffer,
@@ -167,11 +122,11 @@ run_one_test (const struct test_case *t)
     check_result ("__inet_pton_length", t, AF_INET6, ntf_out6.buffer,
                   __inet_pton_length (AF_INET6, ntf_in.buffer, ntf_in.length,
                                       ntf_out6.buffer));
-    next_to_fault_free (&ntf_in);
+    support_next_to_fault_free (&ntf_in);
   }
 
-  next_to_fault_free (&ntf_out4);
-  next_to_fault_free (&ntf_out6);
+  support_next_to_fault_free (&ntf_out4);
+  support_next_to_fault_free (&ntf_out6);
 }
 
 /* The test cases were manually crafted and the set enhanced with
