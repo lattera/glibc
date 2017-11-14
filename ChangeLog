@@ -1,3 +1,8 @@
+2017-11-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/bug-strncat1.c: Include <libc-diag.h>.
+	(main): Disable -Wstringop-truncation for strncat call for GCC 8.
+
 2017-11-13  Claude Paroz <claude@2xlibre.net>
 
 	[BZ #22387]
