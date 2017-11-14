@@ -49,7 +49,7 @@ include ../Rules
 
 ifeq ($(run-built-tests),yes)
 LOCALES := de_DE.ISO-8859-1 en_US.ISO-8859-1 ja_JP.EUC-JP fr_FR.UTF-8 \
-	   pl_PL.UTF-8
+	   es_ES.UTF-8 pl_PL.UTF-8 ru_RU.UTF-8
 include ../gen-locales.mk
 
 $(objpfx)tst-ftime_l.out: $(gen-locales)

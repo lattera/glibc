@@ -74,7 +74,8 @@ enum
   DAY_7,			/* Saturday */
 #define DAY_7			DAY_7
 
-  /* Abbreviated month names.  */
+  /* Abbreviated month names, in the grammatical form used when the month
+     is a part of a complete date.  */
   ABMON_1,			/* Jan */
 #define ABMON_1			ABMON_1
   ABMON_2,
@@ -176,7 +177,8 @@ enum
   _NL_WDAY_6,		/* Friday */
   _NL_WDAY_7,		/* Saturday */
 
-  /* Abbreviated month names.  */
+  /* Abbreviated month names, in the grammatical form used when the month
+     is a part of a complete date.  */
   _NL_WABMON_1,		/* Jan */
   _NL_WABMON_2,
   _NL_WABMON_3,
@@ -276,6 +278,36 @@ enum
   _NL_WALTMON_10,
   _NL_WALTMON_11,
   _NL_WALTMON_12,
+
+  /* Abbreviated month names, in the grammatical form used when the month
+     is named by itself.  */
+  _NL_ABALTMON_1,			/* Jan */
+  _NL_ABALTMON_2,
+  _NL_ABALTMON_3,
+  _NL_ABALTMON_4,
+  _NL_ABALTMON_5,
+  _NL_ABALTMON_6,
+  _NL_ABALTMON_7,
+  _NL_ABALTMON_8,
+  _NL_ABALTMON_9,
+  _NL_ABALTMON_10,
+  _NL_ABALTMON_11,
+  _NL_ABALTMON_12,
+
+  /* Abbreviated month names, in the grammatical form used when the month
+     is named by itself.  */
+  _NL_WABALTMON_1,			/* Jan */
+  _NL_WABALTMON_2,
+  _NL_WABALTMON_3,
+  _NL_WABALTMON_4,
+  _NL_WABALTMON_5,
+  _NL_WABALTMON_6,
+  _NL_WABALTMON_7,
+  _NL_WABALTMON_8,
+  _NL_WABALTMON_9,
+  _NL_WABALTMON_10,
+  _NL_WABALTMON_11,
+  _NL_WABALTMON_12,
 
   _NL_NUM_LC_TIME,	/* Number of indices in LC_TIME category.  */
 

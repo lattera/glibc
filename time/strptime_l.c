@@ -126,6 +126,8 @@ extern const struct __locale_data _nl_C_LC_TIME attribute_hidden;
 # define ab_month_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ABMON_1)].string)
 # define alt_month_name \
   (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (ALTMON_1)].string)
+# define ab_alt_month_name \
+  (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (_NL_ABALTMON_1)].string)
 # define HERE_D_T_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (D_T_FMT)].string)
 # define HERE_D_FMT (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (D_FMT)].string)
 # define HERE_AM_STR (_nl_C_LC_TIME.values[_NL_ITEM_INDEX (AM_STR)].string)
@@ -437,6 +439,18 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 				     alt_month_name[cnt]))
 			decided_longest = loc;
 		    }
+		  trp = rp;
+		  if (match_string (_NL_CURRENT (LC_TIME, _NL_ABALTMON_1 + cnt),
+				    trp)
+		      && trp > rp_longest)
+		    {
+		      rp_longest = trp;
+		      cnt_longest = cnt;
+		      if (s.decided == not
+			  && strcmp (_NL_CURRENT (LC_TIME, _NL_ABALTMON_1 + cnt),
+				     alt_month_name[cnt]))
+			decided_longest = loc;
+		    }
 #endif
 		}
 #endif
@@ -447,6 +461,8 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 			  && trp > rp_longest)
 #ifdef _LIBC
 		      || ((trp = rp, match_string (alt_month_name[cnt], trp))
+			  && trp > rp_longest)
+		      || ((trp = rp, match_string (ab_alt_month_name[cnt], trp))
 			  && trp > rp_longest)
 #endif
 	      ))
@@ -1035,7 +1051,9 @@ __strptime_internal (const char *rp, const char *fmt, struct tm *tmp,
 	case 'O':
 	  switch (*fmt++)
 	    {
+	    case 'b':
 	    case 'B':
+	    case 'h':
 	      /* Match month name.  Reprocess as plain 'B'.  */
 	      fmt--;
 	      goto start_over;

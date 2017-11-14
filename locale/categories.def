@@ -249,8 +249,10 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_DATE_FMT,                "date_fmt",            opt, string)
   DEFINE_ELEMENT (_NL_W_DATE_FMT,           "wide-date_fmt",       opt, wstring)
   DEFINE_ELEMENT (_NL_TIME_CODESET,	    "time-codeset",	   std, string)
-  DEFINE_ELEMENT (ALTMON_1,       "alt_mon",       opt, stringarray, 12, 12)
-  DEFINE_ELEMENT (_NL_WALTMON_1,  "wide-alt_mon",  opt, wstringarray, 12, 12)
+  DEFINE_ELEMENT (ALTMON_1,        "alt_mon",         opt, stringarray,  12, 12)
+  DEFINE_ELEMENT (_NL_WALTMON_1,   "wide-alt_mon",    opt, wstringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_ABALTMON_1,  "ab_alt_mon",      opt, stringarray,  12, 12)
+  DEFINE_ELEMENT (_NL_WABALTMON_1, "wide-ab_alt_mon", opt, wstringarray, 12, 12)
   ), NO_POSTLOAD)
 
 

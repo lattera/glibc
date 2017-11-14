@@ -30,7 +30,7 @@ const struct __locale_data _nl_C_LC_TIME attribute_hidden =
   { NULL, },			/* no cached data */
   UNDELETABLE,
   0,
-  135,
+  159,
   {
     { .string = "Sun" },
     { .string = "Mon" },
@@ -166,6 +166,30 @@ const struct __locale_data _nl_C_LC_TIME attribute_hidden =
     { .wstr = (const uint32_t *) L"September" },
     { .wstr = (const uint32_t *) L"October" },
     { .wstr = (const uint32_t *) L"November" },
-    { .wstr = (const uint32_t *) L"December" }
+    { .wstr = (const uint32_t *) L"December" },
+    { .string = "Jan" },
+    { .string = "Feb" },
+    { .string = "Mar" },
+    { .string = "Apr" },
+    { .string = "May" },
+    { .string = "Jun" },
+    { .string = "Jul" },
+    { .string = "Aug" },
+    { .string = "Sep" },
+    { .string = "Oct" },
+    { .string = "Nov" },
+    { .string = "Dec" },
+    { .wstr = (const uint32_t *) L"Jan" },
+    { .wstr = (const uint32_t *) L"Feb" },
+    { .wstr = (const uint32_t *) L"Mar" },
+    { .wstr = (const uint32_t *) L"Apr" },
+    { .wstr = (const uint32_t *) L"May" },
+    { .wstr = (const uint32_t *) L"Jun" },
+    { .wstr = (const uint32_t *) L"Jul" },
+    { .wstr = (const uint32_t *) L"Aug" },
+    { .wstr = (const uint32_t *) L"Sep" },
+    { .wstr = (const uint32_t *) L"Oct" },
+    { .wstr = (const uint32_t *) L"Nov" },
+    { .wstr = (const uint32_t *) L"Dec" }
   }
 };
