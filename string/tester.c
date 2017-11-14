@@ -264,8 +264,15 @@ test_stpncpy (void)
 {
   it = "stpncpy";
   memset (one, 'x', sizeof (one));
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (8, 0)
+  /* GCC 8 warns about stpncpy truncating output; this is deliberately
+     tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
   check (stpncpy (one, "abc", 2) == one + 2, 1);
   check (stpncpy (one, "abc", 3) == one + 3, 2);
+  DIAG_POP_NEEDS_COMMENT;
   check (stpncpy (one, "abc", 4) == one + 3, 3);
   check (one[3] == '\0' && one[4] == 'x', 4);
   check (stpncpy (one, "abcd", 5) == one + 4, 5);
@@ -420,13 +427,27 @@ test_strncat (void)
   equal (one, "cd", 9);
 
   (void) strcpy (one, "ab");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (8, 0)
+  /* GCC 8 warns about strncat truncating output; this is deliberately
+     tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
   (void) strncat (one, "cdef", 2);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcd", 10);			/* Count-limited. */
 
   (void) strncat (one, "gh", 0);
   equal (one, "abcd", 11);			/* Zero count. */
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 8 warns about strncat bound equal to source length; this is
+     deliberately tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-overflow=");
+#endif
   (void) strncat (one, "gh", 2);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abcdgh", 12);		/* Count and length equal. */
 
   DIAG_PUSH_NEEDS_COMMENT;
@@ -523,11 +544,25 @@ test_strncpy (void)
   equal (one, "abc", 2);			/* Did the copy go right? */
 
   (void) strcpy (one, "abcdefgh");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (8, 0)
+  /* GCC 8 warns about strncpy truncating output; this is deliberately
+     tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
   (void) strncpy (one, "xyz", 2);
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xycdefgh", 3);			/* Copy cut by count. */
 
   (void) strcpy (one, "abcdefgh");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (8, 0)
+  /* GCC 8 warns about strncpy truncating output; this is deliberately
+     tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
   (void) strncpy (one, "xyz", 3);		/* Copy cut just before NUL. */
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "xyzdefgh", 4);
 
   (void) strcpy (one, "abcdefgh");
@@ -542,7 +577,14 @@ test_strncpy (void)
   equal (one+5, "fgh", 9);
 
   (void) strcpy (one, "abc");
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (8, 0)
+  /* GCC 8 warns about strncpy truncating output; this is deliberately
+     tested here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
+#endif
   (void) strncpy (one, "xyz", 0);		/* Zero-length copy. */
+  DIAG_POP_NEEDS_COMMENT;
   equal (one, "abc", 10);
 
   (void) strncpy (one, "", 2);		/* Zero-length source. */
@@ -1151,8 +1193,8 @@ test_memcmp (void)
     {
       char *a = one + i;
       char *b = two + i;
-      strncpy(a, "--------11112222", 16);
-      strncpy(b, "--------33334444", 16);
+      memcpy(a, "--------11112222", 16);
+      memcpy(b, "--------33334444", 16);
       check(memcmp(b, a, 16) > 0, cnt++);
       check(memcmp(a, b, 16) < 0, cnt++);
     }
