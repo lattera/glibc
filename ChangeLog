@@ -1,3 +1,37 @@
+2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
+	* locale/C-time.c (_nl_C_LC_TIME): Add alternative month names,
+	define them as the same as primary full month names explicitly.
+	* locale/categories.def (LC_TIME): Add alt_mon and wide-alt_mon.
+	* locale/langinfo.h (__ALTMON_1, __ALTMON_2, __ALTMON_3, __ALTMON_4,
+	__ALTMON_5, __ALTMON_6, __ALTMON_7, __ALTMON_8, __ALTMON_9, __ALTMON_10,
+	__ALTMON_11, __ALTMON_12, _NL_WALTMON_1, _NL_WALTMON_2, _NL_WALTMON_3,
+	_NL_WALTMON_4, _NL_WALTMON_5, _NL_WALTMON_6, _NL_WALTMON_7,
+	_NL_WALTMON_8, _NL_WALTMON_9, _NL_WALTMON_10, _NL_WALTMON_11,
+	_NL_WALTMON_12): New enum constants.
+	[__USE_GNU] (ALTMON_1, ALTMON_2, ALTMON_3, ALTMON_4, ALTMON_5, ALTMON_6,
+	ALTMON_7, ALTMON_8, ALTMON_9, ALTMON_10, ALTMON_11, ALTMON_12): New
+	macros.
+	* locale/programs/ld-time.c (struct locale_time_t): Add alt_mon,
+	walt_mon, and alt_mon_defined members.
+	(time_output): Output alt_mon and walt_mon members.
+	(time_read): Read them, initialize them as copies of mon and wmon
+	respectively if they are missing, initialize alt_mon_defined.
+	* locale/programs/locfile-kw.gperf (alt_mon): Define.
+	* locale/programs/locfile-kw.h: Regenerate.
+	* locale/programs/locfile-token.h (tok_alt_mon): New enum constant.
+	* localedata/tst-langinfo.c (map): Add tests for the new constants
+	ALTMON_1 .. ALTMON_12.
+	* time/Makefile [$(run-built-tests) = yes] (LOCALES): Add fr_FR.UTF-8
+	and pl_PL.UTF-8.
+	* time/strftime_l.c (f_altmonth): New macro.
+	(__strftime_internal): Handle %OB format.
+	* time/strptime_l.c [_LIBC] (alt_month_name): New macro.
+	(__strptime_internal): Handle %OB format.
+	* time/tst-strptime.c (day_tests): Add tests to parse different forms
+	of month names including the new %OB format specifier.
+
 2018-01-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #22685]

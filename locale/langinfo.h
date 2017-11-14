@@ -100,7 +100,8 @@ enum
   ABMON_12,
 #define ABMON_12		ABMON_12
 
-  /* Long month names.  */
+  /* Long month names, in the grammatical form used when the month
+     is a part of a complete date.  */
   MON_1,			/* January */
 #define MON_1			MON_1
   MON_2,
@@ -189,7 +190,8 @@ enum
   _NL_WABMON_11,
   _NL_WABMON_12,
 
-  /* Long month names.  */
+  /* Long month names, in the grammatical form used when the month
+     is a part of a complete date.  */
   _NL_WMON_1,		/* January */
   _NL_WMON_2,
   _NL_WMON_3,
@@ -230,6 +232,50 @@ enum
   _NL_W_DATE_FMT,
 
   _NL_TIME_CODESET,
+
+  /* Long month names, in the grammatical form used when the month
+     is named by itself.  */
+  __ALTMON_1,			/* January */
+  __ALTMON_2,
+  __ALTMON_3,
+  __ALTMON_4,
+  __ALTMON_5,
+  __ALTMON_6,
+  __ALTMON_7,
+  __ALTMON_8,
+  __ALTMON_9,
+  __ALTMON_10,
+  __ALTMON_11,
+  __ALTMON_12,
+#ifdef __USE_GNU
+# define ALTMON_1		__ALTMON_1
+# define ALTMON_2		__ALTMON_2
+# define ALTMON_3		__ALTMON_3
+# define ALTMON_4		__ALTMON_4
+# define ALTMON_5		__ALTMON_5
+# define ALTMON_6		__ALTMON_6
+# define ALTMON_7		__ALTMON_7
+# define ALTMON_8		__ALTMON_8
+# define ALTMON_9		__ALTMON_9
+# define ALTMON_10		__ALTMON_10
+# define ALTMON_11		__ALTMON_11
+# define ALTMON_12		__ALTMON_12
+#endif
+
+  /* Long month names, in the grammatical form used when the month
+     is named by itself.  */
+  _NL_WALTMON_1,			/* January */
+  _NL_WALTMON_2,
+  _NL_WALTMON_3,
+  _NL_WALTMON_4,
+  _NL_WALTMON_5,
+  _NL_WALTMON_6,
+  _NL_WALTMON_7,
+  _NL_WALTMON_8,
+  _NL_WALTMON_9,
+  _NL_WALTMON_10,
+  _NL_WALTMON_11,
+  _NL_WALTMON_12,
 
   _NL_NUM_LC_TIME,	/* Number of indices in LC_TIME category.  */
 
