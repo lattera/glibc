@@ -109,6 +109,11 @@ The @var{filedes} is not associated with a terminal.
 @item ERANGE
 The buffer length @var{len} is too small to store the string to be
 returned.
+
+@item ENODEV
+The @var{filedes} is associated with a terminal device that is a slave
+pseudo-terminal, but the file name associated with that device could
+not be determined.  This is a GNU extension.
 @end table
 @end deftypefun
 
