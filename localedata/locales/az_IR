@@ -1,18 +1,15 @@
 comment_char %
-escape_char  /
-%
+escape_char /
+
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
 % South Azerbaijani Language Locale for Iran
-% Source:
-% Contact: Mousa Moradi
-% Email: <mousamk@gmail.com>
-% Language: az
-% Territory: IR
-% Revision: 0.2
-% Date: 2014-05-02
-% Application: general
-% Users: general
-% Distribution and use is free, also
-% for commercial purposes.
+% Contributed by Mousa Moradi <mousamk@gmail.com>
 
 % FIXME: Azerbaijani O in the arabic script which should have a circle above WAW,
 % was not found in the unicode table, so we're using the simple WAW and the Sukun

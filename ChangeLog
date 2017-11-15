@@ -1,3 +1,7 @@
+2017-11-15  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/az_IR: Add standard copyright header.
+
 2017-11-15  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22439]
