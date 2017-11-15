@@ -5455,6 +5455,15 @@ __malloc_info (int options, FILE *fp)
 	  avail += sizes[NFASTBINS - 1 + i].total;
 	}
 
+      size_t heap_size = 0;
+      size_t heap_mprotect_size = 0;
+      if (ar_ptr != &main_arena)
+	{
+	  heap_info *heap = heap_for_ptr (top (ar_ptr));
+	  heap_size = heap->size;
+	  heap_mprotect_size = heap->mprotect_size;
+	}
+
       __libc_lock_unlock (ar_ptr->mutex);
 
       total_nfastblocks += nfastblocks;
@@ -5488,13 +5497,12 @@ __malloc_info (int options, FILE *fp)
 
       if (ar_ptr != &main_arena)
 	{
-	  heap_info *heap = heap_for_ptr (top (ar_ptr));
 	  fprintf (fp,
 		   "<aspace type=\"total\" size=\"%zu\"/>\n"
 		   "<aspace type=\"mprotect\" size=\"%zu\"/>\n",
-		   heap->size, heap->mprotect_size);
-	  total_aspace += heap->size;
-	  total_aspace_mprotect += heap->mprotect_size;
+		   heap_size, heap_mprotect_size);
+	  total_aspace += heap_size;
+	  total_aspace_mprotect += heap_mprotect_size;
 	}
       else
 	{
