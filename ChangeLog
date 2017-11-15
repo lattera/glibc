@@ -1,5 +1,8 @@
 2017-11-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_ZEROCOPY): New enum
+	constant and macro.
+
 	* sysdeps/unix/sysv/linux/bits/mman-linux.h
 	[__USE_MISC] (MADV_WIPEONFORK): New macro.
 	[__USE_MISC] (MADV_KEEPONFORK): Likewise.

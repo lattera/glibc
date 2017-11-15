@@ -237,6 +237,8 @@ enum
 #define MSG_WAITFORONE	MSG_WAITFORONE
     MSG_BATCH		= 0x40000, /* sendmmsg: more messages coming.  */
 #define MSG_BATCH	MSG_BATCH
+    MSG_ZEROCOPY	= 0x4000000, /* Use user data in kernel path.  */
+#define MSG_ZEROCOPY	MSG_ZEROCOPY
     MSG_FASTOPEN	= 0x20000000, /* Send data in TCP SYN.  */
 #define MSG_FASTOPEN	MSG_FASTOPEN
 
