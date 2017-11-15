@@ -1,3 +1,58 @@
+2017-11-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21660]
+	* math/tgmath.h (__HAVE_BUILTIN_TGMATH): New macro.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F16_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F32_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F64_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F128_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F32X_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F64X_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TG_F128X_ARG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_FUNCS): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_RCFUNCS): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_1): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_2): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_2STD): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_3): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_1C): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_2C): Likewise.
+	(__tgml): Make conditional on [!__HAVE_BUILTIN_TGMATH].
+	(__floating_type): Likewise.
+	(__real_integer_type): Likewise.
+	(__complex_integer_type): Likewise.
+	(__expr_is_real): Likewise.
+	(__tgmath_real_type_sub): Likewise.
+	(__tgmath_real_type): Likewise.
+	(__tgmath_complex_type_sub): Likewise.
+	(__tgmath_complex_type): Likewise.
+	(__TGMATH_F128): Likewise.
+	(__TGMATH_CF128): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_UNARY_REAL_ONLY): Define using
+	new macros.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_UNARY_REAL_RET_ONLY): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_FIRST_REAL_ONLY):
+	Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_FIRST_REAL_STD_ONLY):
+	Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_REAL_ONLY): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_REAL_STD_ONLY): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_REAL_RET_ONLY): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY):
+	Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_TERNARY_REAL_ONLY): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_TERNARY_FIRST_REAL_RET_ONLY):
+	Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_UNARY_REAL_IMAG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_UNARY_IMAG): Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_UNARY_REAL_IMAG_RET_REAL):
+	Likewise.
+	[__HAVE_BUILTIN_TGMATH] (__TGMATH_BINARY_REAL_IMAG): Likewise.
+	(__TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME): New macro.
+	(carg): Use __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME.
+	(cimag): Likewise.
+	(creal): Likewise.
+
 2017-11-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tester.c (test_stpncpy): Disable -Wstringop-truncation

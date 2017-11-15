@@ -31,22 +31,76 @@
 #include <complex.h>
 
 
-/* Since `complex' is currently not really implemented in most C compilers
-   and if it is implemented, the implementations differ.  This makes it
-   quite difficult to write a generic implementation of this header.  We
-   do not try this for now and instead concentrate only on GNU CC.  Once
-   we have more information support for other compilers might follow.  */
+/* There are two variant implementations of type-generic macros in
+   this file: one for GCC 8 and later, using __builtin_tgmath and
+   where each macro expands each of its arguments only once, and one
+   for older GCC, using other compiler extensions but with macros
+   expanding their arguments many times (so resulting in exponential
+   blowup of the size of expansions when calls to such macros are
+   nested inside arguments to such macros).  */
+
+#define __HAVE_BUILTIN_TGMATH __GNUC_PREREQ (8, 0)
 
 #if __GNUC_PREREQ (2, 7)
 
-# ifdef __NO_LONG_DOUBLE_MATH
-#  define __tgml(fct) fct
-# else
-#  define __tgml(fct) fct ## l
-# endif
+# if __HAVE_BUILTIN_TGMATH
 
-/* This is ugly but unless gcc gets appropriate builtins we have to do
-   something like this.  Don't ask how it works.  */
+#  if __HAVE_FLOAT16 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F16_ARG(X) X ## f16,
+#  else
+#   define __TG_F16_ARG(X)
+#  endif
+#  if __HAVE_FLOAT32 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F32_ARG(X) X ## f32,
+#  else
+#   define __TG_F32_ARG(X)
+#  endif
+#  if __HAVE_FLOAT64 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F64_ARG(X) X ## f64,
+#  else
+#   define __TG_F64_ARG(X)
+#  endif
+#  if __HAVE_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F128_ARG(X) X ## f128,
+#  else
+#   define __TG_F128_ARG(X)
+#  endif
+#  if __HAVE_FLOAT32X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F32X_ARG(X) X ## f32x,
+#  else
+#   define __TG_F32X_ARG(X)
+#  endif
+#  if __HAVE_FLOAT64X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F64X_ARG(X) X ## f64x,
+#  else
+#   define __TG_F64X_ARG(X)
+#  endif
+#  if __HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   define __TG_F128X_ARG(X) X ## f128x,
+#  else
+#   define __TG_F128X_ARG(X)
+#  endif
+
+#  define __TGMATH_FUNCS(X) X ## f, X, X ## l,				\
+    __TG_F16_ARG (X) __TG_F32_ARG (X) __TG_F64_ARG (X) __TG_F128_ARG (X) \
+    __TG_F32X_ARG (X) __TG_F64X_ARG (X) __TG_F128X_ARG (X)
+#  define __TGMATH_RCFUNCS(F, C) __TGMATH_FUNCS (F) __TGMATH_FUNCS (C)
+#  define __TGMATH_1(F, X) __builtin_tgmath (__TGMATH_FUNCS (F) (X))
+#  define __TGMATH_2(F, X, Y) __builtin_tgmath (__TGMATH_FUNCS (F) (X), (Y))
+#  define __TGMATH_2STD(F, X, Y) __builtin_tgmath (F ## f, F, F ## l, (X), (Y))
+#  define __TGMATH_3(F, X, Y, Z) __builtin_tgmath (__TGMATH_FUNCS (F)	\
+						   (X), (Y), (Z))
+#  define __TGMATH_1C(F, C, X) __builtin_tgmath (__TGMATH_RCFUNCS (F, C) (X))
+#  define __TGMATH_2C(F, C, X, Y) __builtin_tgmath (__TGMATH_RCFUNCS (F, C) \
+						    (X), (Y))
+
+# else /* !__HAVE_BUILTIN_TGMATH.  */
+
+#  ifdef __NO_LONG_DOUBLE_MATH
+#   define __tgml(fct) fct
+#  else
+#   define __tgml(fct) fct ## l
+#  endif
 
 /* __floating_type expands to 1 if TYPE is a floating type (including
    complex floating types), 0 if TYPE is an integer type (including
@@ -56,48 +110,48 @@
    constant expressions.  All these macros can assume their argument
    has an arithmetic type (not vector, decimal floating-point or
    fixed-point), valid to pass to tgmath.h macros.  */
-# if __GNUC_PREREQ (3, 1)
+#  if __GNUC_PREREQ (3, 1)
 /* __builtin_classify_type expands to an integer constant expression
    in GCC 3.1 and later.  Default conversions applied to the argument
    of __builtin_classify_type mean it always returns 1 for real
    integer types rather than ever returning different values for
    character, boolean or enumerated types.  */
-#  define __floating_type(type)				\
+#   define __floating_type(type)				\
   (__builtin_classify_type (__real__ ((type) 0)) == 8)
-#  define __real_integer_type(type)		\
+#   define __real_integer_type(type)		\
   (__builtin_classify_type ((type) 0) == 1)
-#  define __complex_integer_type(type)				\
+#   define __complex_integer_type(type)				\
   (__builtin_classify_type ((type) 0) == 9			\
    && __builtin_classify_type (__real__ ((type) 0)) == 1)
-# else
+#  else
 /* GCC versions predating __builtin_classify_type are also looser on
    what counts as an integer constant expression.  */
-#  define __floating_type(type) (((type) 1.25) != 1)
-#  define __real_integer_type(type) (((type) (1.25 + _Complex_I)) == 1)
-#  define __complex_integer_type(type)			\
+#   define __floating_type(type) (((type) 1.25) != 1)
+#   define __real_integer_type(type) (((type) (1.25 + _Complex_I)) == 1)
+#   define __complex_integer_type(type)			\
   (((type) (1.25 + _Complex_I)) == (1 + _Complex_I))
-# endif
+#  endif
 
 /* Whether an expression (of arithmetic type) has a real type.  */
-# define __expr_is_real(E) (__builtin_classify_type (E) != 9)
+#  define __expr_is_real(E) (__builtin_classify_type (E) != 9)
 
 /* The tgmath real type for T, where E is 0 if T is an integer type
    and 1 for a floating type.  If T has a complex type, it is
    unspecified whether the return type is real or complex (but it has
    the correct corresponding real type).  */
-# define __tgmath_real_type_sub(T, E) \
+#  define __tgmath_real_type_sub(T, E) \
   __typeof__ (*(0 ? (__typeof__ (0 ? (double *) 0 : (void *) (E))) 0	      \
 		  : (__typeof__ (0 ? (T *) 0 : (void *) (!(E)))) 0))
 
 /* The tgmath real type of EXPR.  */
-# define __tgmath_real_type(expr) \
+#  define __tgmath_real_type(expr) \
   __tgmath_real_type_sub (__typeof__ ((__typeof__ (+(expr))) 0),	      \
 			  __floating_type (__typeof__ (+(expr))))
 
 /* The tgmath complex type for T, where E1 is 1 if T has a floating
    type and 0 otherwise, E2 is 1 if T has a real integer type and 0
    otherwise, and E3 is 1 if T has a complex type and 0 otherwise.  */
-# define __tgmath_complex_type_sub(T, E1, E2, E3)			\
+#  define __tgmath_complex_type_sub(T, E1, E2, E3)			\
   __typeof__ (*(0							\
 		? (__typeof__ (0 ? (T *) 0 : (void *) (!(E1)))) 0	\
 		: (__typeof__ (0					\
@@ -109,61 +163,94 @@
 					      : (void *) (!(E3)))) 0)) 0))
 
 /* The tgmath complex type of EXPR.  */
-# define __tgmath_complex_type(expr)					\
+#  define __tgmath_complex_type(expr)					\
   __tgmath_complex_type_sub (__typeof__ ((__typeof__ (+(expr))) 0),	\
 			     __floating_type (__typeof__ (+(expr))),	\
 			     __real_integer_type (__typeof__ (+(expr))), \
 			     __complex_integer_type (__typeof__ (+(expr))))
 
-# if (__HAVE_DISTINCT_FLOAT16			\
+#  if (__HAVE_DISTINCT_FLOAT16			\
       || __HAVE_DISTINCT_FLOAT32		\
       || __HAVE_DISTINCT_FLOAT64		\
       || __HAVE_DISTINCT_FLOAT32X		\
       || __HAVE_DISTINCT_FLOAT64X		\
       || __HAVE_DISTINCT_FLOAT128X)
-#  error "Unsupported _FloatN or _FloatNx types for <tgmath.h>."
-# endif
+#   error "Unsupported _FloatN or _FloatNx types for <tgmath.h>."
+#  endif
 
 /* Expand to text that checks if ARG_COMB has type _Float128, and if
    so calls the appropriately suffixed FCT (which may include a cast),
    or FCT and CFCT for complex functions, with arguments ARG_CALL.  */
-# if __HAVE_DISTINCT_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
-#  if (!__HAVE_FLOAT64X				\
+#  if __HAVE_DISTINCT_FLOAT128 && __GLIBC_USE (IEC_60559_TYPES_EXT)
+#   if (!__HAVE_FLOAT64X			\
        || __HAVE_FLOAT64X_LONG_DOUBLE		\
        || !__HAVE_FLOATN_NOT_TYPEDEF)
-#   define __TGMATH_F128(arg_comb, fct, arg_call)			\
+#    define __TGMATH_F128(arg_comb, fct, arg_call)			\
   __builtin_types_compatible_p (__typeof (+(arg_comb)), _Float128)	\
   ? fct ## f128 arg_call :
-#   define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
+#    define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
   __builtin_types_compatible_p (__typeof (+__real__ (arg_comb)), _Float128) \
   ? (__expr_is_real (arg_comb)						\
      ? fct ## f128 arg_call						\
      : cfct ## f128 arg_call) :
-#  else
+#   else
 /* _Float64x is a distinct type at the C language level, which must be
    handled like _Float128.  */
-#   define __TGMATH_F128(arg_comb, fct, arg_call)			\
+#    define __TGMATH_F128(arg_comb, fct, arg_call)			\
   (__builtin_types_compatible_p (__typeof (+(arg_comb)), _Float128)	\
    || __builtin_types_compatible_p (__typeof (+(arg_comb)), _Float64x)) \
   ? fct ## f128 arg_call :
-#   define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
+#    define __TGMATH_CF128(arg_comb, fct, cfct, arg_call)		\
   (__builtin_types_compatible_p (__typeof (+__real__ (arg_comb)), _Float128) \
    || __builtin_types_compatible_p (__typeof (+__real__ (arg_comb)),	\
 				    _Float64x))				\
   ? (__expr_is_real (arg_comb)						\
      ? fct ## f128 arg_call						\
      : cfct ## f128 arg_call) :
+#   endif
+#  else
+#   define __TGMATH_F128(arg_comb, fct, arg_call) /* Nothing.  */
+#   define __TGMATH_CF128(arg_comb, fct, cfct, arg_call) /* Nothing.  */
 #  endif
-# else
-#  define __TGMATH_F128(arg_comb, fct, arg_call) /* Nothing.  */
-#  define __TGMATH_CF128(arg_comb, fct, cfct, arg_call) /* Nothing.  */
-# endif
 
+# endif /* !__HAVE_BUILTIN_TGMATH.  */
 
 /* We have two kinds of generic macros: to support functions which are
    only defined on real valued parameters and those which are defined
    for complex functions as well.  */
-# define __TGMATH_UNARY_REAL_ONLY(Val, Fct) \
+# if __HAVE_BUILTIN_TGMATH
+
+#  define __TGMATH_UNARY_REAL_ONLY(Val, Fct) __TGMATH_1 (Fct, (Val))
+#  define __TGMATH_UNARY_REAL_RET_ONLY(Val, Fct) __TGMATH_1 (Fct, (Val))
+#  define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct)	\
+  __TGMATH_2 (Fct, (Val1), (Val2))
+#  define __TGMATH_BINARY_FIRST_REAL_STD_ONLY(Val1, Val2, Fct)	\
+  __TGMATH_2STD (Fct, (Val1), (Val2))
+#  define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct)	\
+  __TGMATH_2 (Fct, (Val1), (Val2))
+#  define __TGMATH_BINARY_REAL_STD_ONLY(Val1, Val2, Fct)	\
+  __TGMATH_2STD (Fct, (Val1), (Val2))
+#  define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct)	\
+  __TGMATH_2 (Fct, (Val1), (Val2))
+#  define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
+  __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
+#  define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct)	\
+  __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
+#  define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct)	\
+  __TGMATH_3 (Fct, (Val1), (Val2), (Val3))
+#  define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct)	\
+  __TGMATH_1C (Fct, Cfct, (Val))
+#  define __TGMATH_UNARY_IMAG(Val, Cfct) __TGMATH_1 (Cfct, (Val))
+#  define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct)	\
+  __TGMATH_1C (Fct, Cfct, (Val))
+#  define __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME(Val, Cfct)	\
+  __TGMATH_1 (Cfct, (Val))
+#  define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct)	\
+  __TGMATH_2C (Fct, Cfct, (Val1), (Val2))
+
+# else /* !__HAVE_BUILTIN_TGMATH.  */
+
+#  define __TGMATH_UNARY_REAL_ONLY(Val, Fct)				\
   (__extension__ ((sizeof (+(Val)) == sizeof (double)			      \
 		      || __builtin_classify_type (Val) != 8)		      \
 		     ? (__tgmath_real_type (Val)) Fct (Val)		      \
@@ -173,7 +260,7 @@
 				      (Val))				      \
 		     (__tgmath_real_type (Val)) __tgml(Fct) (Val)))
 
-# define __TGMATH_UNARY_REAL_RET_ONLY(Val, Fct) \
+#  define __TGMATH_UNARY_REAL_RET_ONLY(Val, Fct) \
      (__extension__ ((sizeof (+(Val)) == sizeof (double)		      \
 		      || __builtin_classify_type (Val) != 8)		      \
 		     ? Fct (Val)					      \
@@ -182,7 +269,7 @@
 		     : __TGMATH_F128 ((Val), Fct, (Val))		      \
 		     __tgml(Fct) (Val)))
 
-# define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
+#  define __TGMATH_BINARY_FIRST_REAL_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof (+(Val1)) == sizeof (double)		      \
 		      || __builtin_classify_type (Val1) != 8)		      \
 		     ? (__tgmath_real_type (Val1)) Fct (Val1, Val2)	      \
@@ -192,7 +279,7 @@
 				    (Val1, Val2))			      \
 		     (__tgmath_real_type (Val1)) __tgml(Fct) (Val1, Val2)))
 
-# define __TGMATH_BINARY_FIRST_REAL_STD_ONLY(Val1, Val2, Fct) \
+#  define __TGMATH_BINARY_FIRST_REAL_STD_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof (+(Val1)) == sizeof (double)		      \
 		      || __builtin_classify_type (Val1) != 8)		      \
 		     ? (__tgmath_real_type (Val1)) Fct (Val1, Val2)	      \
@@ -200,7 +287,7 @@
 		     ? (__tgmath_real_type (Val1)) Fct##f (Val1, Val2)	      \
 		     : (__tgmath_real_type (Val1)) __tgml(Fct) (Val1, Val2)))
 
-# define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
+#  define __TGMATH_BINARY_REAL_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2),			      \
@@ -222,7 +309,7 @@
 				   + (__tgmath_real_type (Val2)) 0))	      \
 		       Fct##f (Val1, Val2)))
 
-# define __TGMATH_BINARY_REAL_STD_ONLY(Val1, Val2, Fct) \
+#  define __TGMATH_BINARY_REAL_STD_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? (__typeof ((__tgmath_real_type (Val1)) 0		      \
@@ -239,7 +326,7 @@
 				   + (__tgmath_real_type (Val2)) 0))	      \
 		       Fct##f (Val1, Val2)))
 
-# define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct) \
+#  define __TGMATH_BINARY_REAL_RET_ONLY(Val1, Val2, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2), Fct, (Val1, Val2))     \
@@ -251,7 +338,7 @@
 		     ? Fct (Val1, Val2)					      \
 		     : Fct##f (Val1, Val2)))
 
-# define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
+#  define __TGMATH_TERNARY_FIRST_SECOND_REAL_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type ((Val1) + (Val2)) == 8)      \
 		     ? __TGMATH_F128 ((Val1) + (Val2),			      \
@@ -273,7 +360,7 @@
 				   + (__tgmath_real_type (Val2)) 0))	      \
 		       Fct##f (Val1, Val2, Val3)))
 
-# define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
+#  define __TGMATH_TERNARY_REAL_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ((sizeof ((Val1) + (Val2) + (Val3)) > sizeof (double)     \
 		      && __builtin_classify_type ((Val1) + (Val2) + (Val3))   \
 			 == 8)						      \
@@ -302,7 +389,7 @@
 				   + (__tgmath_real_type (Val3)) 0))	      \
 		       Fct##f (Val1, Val2, Val3)))
 
-# define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct) \
+#  define __TGMATH_TERNARY_FIRST_REAL_RET_ONLY(Val1, Val2, Val3, Fct) \
      (__extension__ ((sizeof (+(Val1)) == sizeof (double)		\
 		      || __builtin_classify_type (Val1) != 8)		\
 		     ? Fct (Val1, Val2, Val3)				\
@@ -313,7 +400,7 @@
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
-# define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
+#  define __TGMATH_UNARY_REAL_IMAG(Val, Fct, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
 		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
 		     ? (__expr_is_real (Val)				      \
@@ -331,7 +418,7 @@
 		      ? (__tgmath_complex_type (Val)) __tgml(Fct) (Val)	      \
 		      : (__tgmath_complex_type (Val)) __tgml(Cfct) (Val))))
 
-# define __TGMATH_UNARY_IMAG(Val, Cfct) \
+#  define __TGMATH_UNARY_IMAG(Val, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
 		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
 		     ? (__typeof__ ((__tgmath_real_type (Val)) 0	      \
@@ -348,7 +435,7 @@
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
-# define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct) \
+#  define __TGMATH_UNARY_REAL_IMAG_RET_REAL(Val, Fct, Cfct) \
      (__extension__ ((sizeof (+__real__ (Val)) == sizeof (double)	      \
 		      || __builtin_classify_type (__real__ (Val)) != 8)	      \
 		     ? (__expr_is_real (Val)				      \
@@ -375,10 +462,12 @@
 		      __tgml(Fct) (Val)					      \
 		      : (__typeof__ (__real__ (__tgmath_real_type (Val)) 0))  \
 		      __tgml(Cfct) (Val))))
+#  define __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME(Val, Cfct)	\
+  __TGMATH_UNARY_REAL_IMAG_RET_REAL ((Val), Cfct, Cfct)
 
 /* XXX This definition has to be changed as soon as the compiler understands
    the imaginary keyword.  */
-# define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
+#  define __TGMATH_BINARY_REAL_IMAG(Val1, Val2, Fct, Cfct) \
      (__extension__ ((sizeof (__real__ (Val1)				      \
 			      + __real__ (Val2)) > sizeof (double)	      \
 		      && __builtin_classify_type (__real__ (Val1)	      \
@@ -418,6 +507,7 @@
 			: (__typeof ((__tgmath_complex_type (Val1)) 0	      \
 				   + (__tgmath_complex_type (Val2)) 0))	      \
 			  Cfct##f (Val1, Val2))))
+# endif /* !__HAVE_BUILTIN_TGMATH.  */
 #else
 # error "Unsupported compiler; you cannot use <tgmath.h>"
 #endif
@@ -654,7 +744,7 @@
 /* Absolute value, conjugates, and projection.  */
 
 /* Argument value of Z.  */
-#define carg(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, carg, carg)
+#define carg(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME (Val, carg)
 
 /* Complex conjugate of Z.  */
 #define conj(Val) __TGMATH_UNARY_IMAG (Val, conj)
@@ -666,9 +756,9 @@
 /* Decomposing complex values.  */
 
 /* Imaginary part of Z.  */
-#define cimag(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, cimag, cimag)
+#define cimag(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME (Val, cimag)
 
 /* Real part of Z.  */
-#define creal(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL (Val, creal, creal)
+#define creal(Val) __TGMATH_UNARY_REAL_IMAG_RET_REAL_SAME (Val, creal)
 
 #endif /* tgmath.h */
