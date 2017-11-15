@@ -43,7 +43,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/siginfo-arch.h bits/siginfo-consts-arch.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
-	 tst-quota tst-sync_file_range test-errno-linux tst-sysconf-iov_max
+	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
+	 test-errno-linux
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
 # macros).  The file syscall-names.list contains all possible system

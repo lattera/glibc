@@ -1,6 +1,10 @@
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
 
 	[BZ #22145]
+	* sysdeps/unix/sysv/linux/tst-ttyname.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile: Add tst-ttyname to tests.
+
+	[BZ #22145]
 	* sysdeps/unix/sysv/linux/ttyname.c (ttyname):
 	Defer is_pty check until end of the function.
 	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
