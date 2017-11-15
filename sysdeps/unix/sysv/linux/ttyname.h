@@ -21,7 +21,8 @@
 #include <sys/stat.h>
 
 /* Return true if this is a UNIX98 pty device, as defined in
-   linux/Documentation/devices.txt.  */
+   linux/Documentation/devices.txt (on linux < 4.10) or
+   linux/Documentation/admin-guide/devices.txt (on linux >= 4.10).  */
 static inline int
 is_pty (struct stat64 *sb)
 {
