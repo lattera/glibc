@@ -63,6 +63,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The res_hnok, res_dnok, res_mailok and res_ownok functions now check that
   the specified string can be parsed as a domain name.
 
+* In the malloc_info output, the <heap> element may contain another <aspace>
+  element, "subheaps", which contains the number of sub-heaps.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

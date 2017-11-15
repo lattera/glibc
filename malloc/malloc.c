@@ -5457,11 +5457,19 @@ __malloc_info (int options, FILE *fp)
 
       size_t heap_size = 0;
       size_t heap_mprotect_size = 0;
+      size_t heap_count = 0;
       if (ar_ptr != &main_arena)
 	{
+	  /* Iterate over the arena heaps from back to front.  */
 	  heap_info *heap = heap_for_ptr (top (ar_ptr));
-	  heap_size = heap->size;
-	  heap_mprotect_size = heap->mprotect_size;
+	  do
+	    {
+	      heap_size += heap->size;
+	      heap_mprotect_size += heap->mprotect_size;
+	      heap = heap->prev;
+	      ++heap_count;
+	    }
+	  while (heap != NULL);
 	}
 
       __libc_lock_unlock (ar_ptr->mutex);
@@ -5499,8 +5507,9 @@ __malloc_info (int options, FILE *fp)
 	{
 	  fprintf (fp,
 		   "<aspace type=\"total\" size=\"%zu\"/>\n"
-		   "<aspace type=\"mprotect\" size=\"%zu\"/>\n",
-		   heap_size, heap_mprotect_size);
+		   "<aspace type=\"mprotect\" size=\"%zu\"/>\n"
+		   "<aspace type=\"subheaps\" size=\"%zu\"/>\n",
+		   heap_size, heap_mprotect_size, heap_count);
 	  total_aspace += heap_size;
 	  total_aspace_mprotect += heap_mprotect_size;
 	}

@@ -1,5 +1,11 @@
 2017-11-15  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22439]
+	* malloc/malloc.c (__malloc_info): Count all heaps in an arena,
+	not just the top one.  Output a new "subheaps" statistic.
+
+2017-11-15  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22408]
 	* malloc/malloc.c (__malloc_info): Obtain arena heap statistics
 	under the per-arena lock.
