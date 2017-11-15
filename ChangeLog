@@ -1,3 +1,9 @@
+2017-11-15  Steve Ellcey  <sellcey@cavium.com>
+
+	[BZ #22442]
+	* sysdeps/unix/sysv/linux/if_index.c (__if_nametoindex):
+	Check if ifname is too long.
+
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
 
 	* sysdeps/unix/sysv/linux/epoll_wait.c: Include <sysdep-cancel.h>.
