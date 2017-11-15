@@ -138,7 +138,7 @@ first_weekday 2
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "^[+1yYkKx<U10D9>]"
+yesexpr "^[+1yYkKxX<U10D9>]"
 noexpr  "^[-0nNaA<U10D0>]"
 yesstr  "<U10D9><U10D8>"
 nostr   "<U10D0><U10E0><U10D0>"

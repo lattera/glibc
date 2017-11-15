@@ -1,5 +1,10 @@
 2017-11-15  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/ka_GE (LC_MESSAGES): Add “X” back to yesexpr,
+	was accidentally lost.
+
+2017-11-15  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/az_IR: Add standard copyright header.
 
 2017-11-15  Florian Weimer  <fweimer@redhat.com>
