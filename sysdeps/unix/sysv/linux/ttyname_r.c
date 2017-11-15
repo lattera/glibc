@@ -95,6 +95,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   char procname[30];
   struct stat64 st, st1;
   int dostat = 0;
+  int doispty = 0;
   int save = errno;
 
   /* Test for the absolute minimal size.  This makes life easier inside
@@ -149,14 +150,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 	  && is_mytty (&st, &st1))
 	return 0;
 
-      /* If the link doesn't exist, then it points to a device in another
-       * namespace.
-       */
-      if (is_pty (&st))
-	{
-	  __set_errno (ENODEV);
-	  return ENODEV;
-	}
+      doispty = 1;
     }
 
   /* Prepare the result buffer.  */
@@ -188,6 +182,16 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       dostat = 1;
       ret = getttyname_r (buf, buflen, &st,
 			  save, &dostat);
+    }
+
+  if (ret && doispty && is_pty (&st))
+    {
+      /* We failed to figure out the TTY's name, but we can at least
+         signal that we did verify that it really is a PTY slave.
+         This happens when we have inherited the file descriptor from
+         a different mount namespace.  */
+      __set_errno (ENODEV);
+      return ENODEV;
     }
 
   return ret;

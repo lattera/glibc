@@ -1,6 +1,11 @@
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
 
 	[BZ #22145]
+	* sysdeps/unix/sysv/linux/ttyname.c (ttyname):
+	Defer is_pty check until end of the function.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (__ttyname_r): Likewise.
+
+	[BZ #22145]
 	* sysdeps/unix/sysv/linux/ttyname.h (is_mytty): New function.
 	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Call is_mytty.
 	(ttyname): Likewise.

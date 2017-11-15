@@ -115,6 +115,7 @@ ttyname (int fd)
   char procname[30];
   struct stat64 st, st1;
   int dostat = 0;
+  int doispty = 0;
   char *name;
   int save = errno;
   struct termios term;
@@ -165,13 +166,7 @@ ttyname (int fd)
 	  && is_mytty (&st, &st1))
 	return ttyname_buf;
 
-      /* If the link doesn't exist, then it points to a device in another
-	 namespace. */
-      if (is_pty (&st))
-	{
-	  __set_errno (ENODEV);
-	  return NULL;
-	}
+      doispty = 1;
     }
 
   if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
@@ -193,6 +188,16 @@ ttyname (int fd)
     {
       dostat = 1;
       name = getttyname ("/dev", &st, save, &dostat);
+    }
+
+  if (!name && doispty && is_pty (&st))
+    {
+      /* We failed to figure out the TTY's name, but we can at least
+         signal that we did verify that it really is a PTY slave.
+         This happens when we have inherited the file descriptor from
+         a different mount namespace.  */
+      __set_errno (ENODEV);
+      return NULL;
     }
 
   return name;
