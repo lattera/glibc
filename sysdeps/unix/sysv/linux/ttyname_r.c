@@ -31,12 +31,12 @@
 #include "ttyname.h"
 
 static int getttyname_r (char *buf, size_t buflen,
-			 dev_t mydev, ino64_t myino, int save,
+			 const struct stat64 *mytty, int save,
 			 int *dostat);
 
 static int
 attribute_compat_text_section
-getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
+getttyname_r (char *buf, size_t buflen, const struct stat64 *mytty,
 	      int save, int *dostat)
 {
   struct stat64 st;
@@ -52,7 +52,7 @@ getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
     }
 
   while ((d = __readdir64 (dirstream)) != NULL)
-    if ((d->d_fileno == myino || *dostat)
+    if ((d->d_fileno == mytty->st_ino || *dostat)
 	&& strcmp (d->d_name, "stdin")
 	&& strcmp (d->d_name, "stdout")
 	&& strcmp (d->d_name, "stderr"))
@@ -72,12 +72,7 @@ getttyname_r (char *buf, size_t buflen, dev_t mydev, ino64_t myino,
 	cp[0] = '\0';
 
 	if (__xstat64 (_STAT_VER, buf, &st) == 0
-#ifdef _STATBUF_ST_RDEV
-	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
-#else
-	    && d->d_fileno == myino && st.st_dev == mydev
-#endif
-	   )
+	    && is_mytty (mytty, &st))
 	  {
 	    (void) __closedir (dirstream);
 	    __set_errno (save);
@@ -151,12 +146,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
       /* Verify readlink result, fall back on iterating through devices.  */
       if (buf[0] == '/'
 	  && __xstat64 (_STAT_VER, buf, &st1) == 0
-#ifdef _STATBUF_ST_RDEV
-	  && S_ISCHR (st1.st_mode)
-	  && st1.st_rdev == st.st_rdev
-#endif
-	  && st1.st_ino == st.st_ino
-	  && st1.st_dev == st.st_dev)
+	  && is_mytty (&st, &st1))
 	return 0;
 
       /* If the link doesn't exist, then it points to a device in another
@@ -175,13 +165,8 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 
   if (__xstat64 (_STAT_VER, buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
-#ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, &st, save,
 			  &dostat);
-#else
-      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
-			  &dostat);
-#endif
     }
   else
     {
@@ -193,26 +178,16 @@ __ttyname_r (int fd, char *buf, size_t buflen)
     {
       buf[sizeof ("/dev/") - 1] = '\0';
       buflen += sizeof ("pts/") - 1;
-#ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino, save,
+      ret = getttyname_r (buf, buflen, &st, save,
 			  &dostat);
-#else
-      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino, save,
-			  &dostat);
-#endif
     }
 
   if (ret && dostat != -1)
     {
       buf[sizeof ("/dev/") - 1] = '\0';
       dostat = 1;
-#ifdef _STATBUF_ST_RDEV
-      ret = getttyname_r (buf, buflen, st.st_rdev, st.st_ino,
+      ret = getttyname_r (buf, buflen, &st,
 			  save, &dostat);
-#else
-      ret = getttyname_r (buf, buflen, st.st_dev, st.st_ino,
-			  save, &dostat);
-#endif
     }
 
   return ret;

@@ -34,3 +34,15 @@ is_pty (struct stat64 *sb)
   return false;
 #endif
 }
+
+static inline bool
+is_mytty (const struct stat64 *mytty, const struct stat64 *maybe)
+{
+  return (maybe->st_ino == mytty->st_ino
+	  && maybe->st_dev == mytty->st_dev
+#ifdef _STATBUF_ST_RDEV
+	  && S_ISCHR (maybe->st_mode)
+	  && maybe->st_rdev == mytty->st_rdev
+#endif
+	  );
+}

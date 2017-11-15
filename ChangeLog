@@ -1,5 +1,12 @@
 2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
 
+	[BZ #22145]
+	* sysdeps/unix/sysv/linux/ttyname.h (is_mytty): New function.
+	* sysdeps/unix/sysv/linux/ttyname.c (getttyname): Call is_mytty.
+	(ttyname): Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c (getttyname_r): Likewise.
+	(__ttyname_r): Likewise.
+
 	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Change return type from
 	int to bool.
 
