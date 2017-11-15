@@ -1,3 +1,7 @@
+2017-11-15  Luke Shumaker  <lukeshu@parabola.nu>
+
+	* sysdeps/unix/sysv/linux/epoll_wait.c: Include <sysdep-cancel.h>.
+
 2017-11-15  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/locales/ka_GE (LC_MESSAGES): Add “X” back to yesexpr,

@@ -21,6 +21,8 @@
 #include <sys/types.h>
 #include <sys/epoll.h>
 
+#include <sysdep-cancel.h>
+
 int
 epoll_wait (int epfd, struct epoll_event *events, int maxevents, int timeout)
 {
