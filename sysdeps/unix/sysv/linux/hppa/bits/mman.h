@@ -99,6 +99,8 @@
 # define MADV_DONTDUMP	 69	/* Explicity exclude from the core dump,
 				   overrides the coredump filter bits */
 # define MADV_DODUMP	 70	/* Clear the MADV_NODUMP flag */
+# define MADV_WIPEONFORK 71	/* Zero memory on fork, child only.  */
+# define MADV_KEEPONFORK 72	/* Undo MADV_WIPEONFORK.  */
 #endif
 
 /* The POSIX people had to invent similar names for the same things.  */
