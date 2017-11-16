@@ -1,5 +1,5 @@
 /* Derived from the test case in
-   http://sourceware.org/bugzilla/show_bug.cgi?id=838.  */
+   https://sourceware.org/bugzilla/show_bug.cgi?id=838.  */
 #include <assert.h>
 #include <errno.h>
 #include <stdio.h>

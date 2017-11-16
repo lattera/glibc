@@ -1,3 +1,22 @@
+2017-11-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* INSTALL: Update sourceware link to https.
+	* NEWS: Likewise.
+	* configure: Likewise.
+	* configure.ac: Likewise.
+	* crypt/md5test-giant.c: Likewise.
+	* dlfcn/bug-atexit1.c: Likewise.
+	* dlfcn/bug-atexit2.c: Likewise.
+	* localedata/README: Likewise.
+	* malloc/tst-mallocfork.c: Likewise.
+	* manual/install.texi: Likewise.
+	* nptl/tst-pthread-getattr.c: Likewise.
+	* stdio-common/tst-fgets.c: Likewise.
+	* stdio-common/tst-fwrite.c: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Likewise.
+	* wcsmbs/tst-mbrtowc2.c: Likewise.
+
 2017-11-15  Martin Sebor  <msebor@redhat.com>
 
 	* misc/sys/cdefs.h (__attribute_nonstring__): New macro.

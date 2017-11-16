@@ -276,7 +276,7 @@ ENTRY(memcpy)
 #ifdef USE_NEON
 	/* These need an extra layer of macro just to work around a
 	   bug in the assembler's parser when an operand starts with
-	   a {...}.  http://sourceware.org/bugzilla/show_bug.cgi?id=15647
+	   a {...}.  https://sourceware.org/bugzilla/show_bug.cgi?id=15647
 	   tracks that bug; it was not fixed as of binutils-2.23.2.  */
 	.macro neon_load_d0 reg
 	vld1.8	{d0}, [\reg]!

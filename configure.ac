@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Note we do not use AC_PREREQ here!  See aclocal.m4 for what we use instead.
-AC_INIT([GNU C Library], [(see version.h)], [http://sourceware.org/bugzilla/], [glibc])
+AC_INIT([GNU C Library], [(see version.h)], [https://sourceware.org/bugzilla/], [glibc])
 AC_CONFIG_SRCDIR([include/features.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([scripts])
@@ -19,7 +19,7 @@ AC_DEFUN([_AC_INCLUDES_DEFAULT_REQUIREMENTS],
 
 # We require GCC, and by default use its preprocessor.  Override AC_PROG_CPP
 # here to work around the Autoconf issue discussed in
-# <http://sourceware.org/ml/libc-alpha/2013-01/msg00721.html>.
+# <https://sourceware.org/ml/libc-alpha/2013-01/msg00721.html>.
 AC_DEFUN([AC_PROG_CPP],
 [AC_REQUIRE([AC_PROG_CC])dnl
 AC_ARG_VAR([CPP],      [C preprocessor])dnl
@@ -36,7 +36,7 @@ AC_SUBST(CPP)dnl
 
 # We require GCC.  Override _AC_PROG_CC_C89 here to work around the Autoconf
 # issue discussed in
-# <http://sourceware.org/ml/libc-alpha/2013-01/msg00757.html>.
+# <https://sourceware.org/ml/libc-alpha/2013-01/msg00757.html>.
 AC_DEFUN([_AC_PROG_CC_C89], [[$1]])
 
 dnl This is here so we can set $subdirs directly based on configure fragments.

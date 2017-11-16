@@ -1,5 +1,5 @@
 /* Derived from a test case in
-   http://sourceware.org/bugzilla/show_bug.cgi?id=1158.  */
+   https://sourceware.org/bugzilla/show_bug.cgi?id=1158.  */
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <stdio.h>

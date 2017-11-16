@@ -1,5 +1,5 @@
 /* Derived from the test case in
-   http://sourceware.org/bugzilla/show_bug.cgi?id=1078.  */
+   https://sourceware.org/bugzilla/show_bug.cgi?id=1078.  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

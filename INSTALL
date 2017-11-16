@@ -2,7 +2,7 @@ Installing the GNU C Library
 ****************************
 
 Before you do anything else, you should read the FAQ at
-<http://sourceware.org/glibc/wiki/FAQ>.  It answers common questions and
+<https://sourceware.org/glibc/wiki/FAQ>.  It answers common questions and
 describes problems you may experience with compilation and installation.
 
    You will need recent versions of several GNU tools: definitely GCC
@@ -541,7 +541,7 @@ remain unfixed for all eternity, if not longer.
    It is a good idea to verify that the problem has not already been
 reported.  Bugs are documented in two places: The file 'BUGS' describes
 a number of well known bugs and the central GNU C Library bug tracking
-system has a WWW interface at <http://sourceware.org/bugzilla/>.  The
+system has a WWW interface at <https://sourceware.org/bugzilla/>.  The
 WWW interface gives you access to open and closed reports.  A closed
 report normally includes a patch or a hint on solving the problem.
 

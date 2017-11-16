@@ -42,7 +42,7 @@ especially in the section describing the `setlocale' function.
 
 All problems should be reported using
 
-  http://sourceware.org/bugzilla/
+  https://sourceware.org/bugzilla/
 
 
 One more note: the `POSIX' locale definition is not meant to be used

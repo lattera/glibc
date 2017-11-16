@@ -1,5 +1,5 @@
 /* Derived from the test case in
-   http://sourceware.org/bugzilla/show_bug.cgi?id=713.  */
+   https://sourceware.org/bugzilla/show_bug.cgi?id=713.  */
 #include <stdio.h>
 
 static int

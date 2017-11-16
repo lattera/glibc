@@ -9,7 +9,7 @@
 @appendix Installing @theglibc{}
 
 Before you do anything else, you should read the FAQ at
-@url{http://sourceware.org/glibc/wiki/FAQ}.  It answers common
+@url{https://sourceware.org/glibc/wiki/FAQ}.  It answers common
 questions and describes problems you may experience with compilation
 and installation.
 
@@ -613,7 +613,7 @@ reported.  Bugs are documented in two places: The file @file{BUGS}
 describes a number of well known bugs and the central @glibcadj{}
 bug tracking system has a
 WWW interface at
-@url{http://sourceware.org/bugzilla/}.  The WWW
+@url{https://sourceware.org/bugzilla/}.  The WWW
 interface gives you access to open and closed reports.  A closed report
 normally includes a patch or a hint on solving the problem.
 

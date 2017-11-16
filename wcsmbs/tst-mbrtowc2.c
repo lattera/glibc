@@ -1,4 +1,5 @@
-/* Derived from the test case in http://sourceware.org/bugzilla/show_bug.cgi?id=714 */
+/* Derived from the test case in
+   https://sourceware.org/bugzilla/show_bug.cgi?id=714  */
 #include <locale.h>
 #include <stdio.h>
 #include <string.h>

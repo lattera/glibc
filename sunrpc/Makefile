@@ -173,7 +173,7 @@ cross-rpcgen-objs := $(addprefix $(objpfx)cross-,$(rpcgen-objs))
 
 # When generic makefile support for build system programs is
 # available, it should replace this code.  See
-# <http://sourceware.org/bugzilla/show_bug.cgi?id=14087>.
+# <https://sourceware.org/bugzilla/show_bug.cgi?id=14087>.
 $(cross-rpcgen-objs): $(objpfx)cross-%.o: %.c $(before-compile)
 	$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) $< \
 		$(OUTPUT_OPTION) $(native-compile-mkdep-flags) -c
