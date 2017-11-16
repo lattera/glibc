@@ -2,8 +2,9 @@ Installing the GNU C Library
 ****************************
 
 Before you do anything else, you should read the FAQ at
-<https://sourceware.org/glibc/wiki/FAQ>.  It answers common questions and
-describes problems you may experience with compilation and installation.
+<https://sourceware.org/glibc/wiki/FAQ>.  It answers common questions
+and describes problems you may experience with compilation and
+installation.
 
    You will need recent versions of several GNU tools: definitely GCC
 and GNU Make, and possibly others.  *Note Tools for Compilation::,

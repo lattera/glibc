@@ -1,8 +1,8 @@
 2017-11-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
-	* INSTALL: Update sourceware link to https.
-	* NEWS: Likewise.
-	* configure: Likewise.
+	* INSTALL: Fix botched up regeneration.
+
+	* NEWS: Update sourceare link to https.
 	* configure.ac: Likewise.
 	* crypt/md5test-giant.c: Likewise.
 	* dlfcn/bug-atexit1.c: Likewise.
@@ -16,6 +16,8 @@
 	* sunrpc/Makefile: Likewise.
 	* sysdeps/arm/armv7/multiarch/memcpy_impl.S: Likewise.
 	* wcsmbs/tst-mbrtowc2.c: Likewise.
+	* configure: Regenerate.
+	* INSTALL: Regenerate.
 
 2017-11-15  Martin Sebor  <msebor@redhat.com>
 
