@@ -1,5 +1,7 @@
 2017-11-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_RAWIP): New macro.
+
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
 	version to 4.14.
 
