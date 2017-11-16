@@ -407,6 +407,15 @@
 # endif
 #endif
 
+#if __GNUC_PREREQ (8, 0)
+/* Describes a char array whose address can safely be passed as the first
+   argument to strncpy and strncat, as the char array is not necessarily
+   a NUL-terminated string.  */
+# define __attribute_nonstring__ __attribute__ ((__nonstring__))
+#else
+# define __attribute_nonstring__
+#endif
+
 #if (!defined _Static_assert && !defined __cplusplus \
      && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
      && (!__GNUC_PREREQ (4, 6) || defined __STRICT_ANSI__))
