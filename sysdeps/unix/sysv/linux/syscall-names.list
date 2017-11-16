@@ -22,8 +22,8 @@
 # names are only used if the installed kernel headers also provide
 # them.
 
-# The list of system calls is current as of Linux 4.13.
-kernel 4.13
+# The list of system calls is current as of Linux 4.14.
+kernel 4.14
 
 FAST_atomic_update
 FAST_cmpxchg

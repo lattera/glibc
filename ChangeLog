@@ -1,3 +1,8 @@
+2017-11-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.14.
+
 2017-11-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* INSTALL: Fix botched up regeneration.
