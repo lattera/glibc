@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
         .section .rodata
@@ -226,4 +227,4 @@ ENTRY(__cbrtl)
 	fadd	%st
 	ret
 END(__cbrtl)
-weak_alias (__cbrtl, cbrtl)
+libm_alias_ldouble (__cbrt, cbrt)

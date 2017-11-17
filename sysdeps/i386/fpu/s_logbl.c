@@ -4,6 +4,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <math_private.h>
 
 long double
@@ -16,4 +17,4 @@ __logbl (long double x)
   return res;
 }
 
-weak_alias (__logbl, logbl)
+libm_alias_ldouble (__logb, logb)

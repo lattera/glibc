@@ -1,5 +1,48 @@
 2017-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/i386/fpu/e_expl.S: Include <libm-alias-ldouble.h>.
+	[USE_AS_EXPM1L] (expm1l): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_asinhl.S: Include <libm-alias-ldouble.h>.
+	(asinhl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_atanl.c: Include <libm-alias-ldouble.h>.
+	(atanl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_cbrtl.S: Include <libm-alias-ldouble.h>.
+	(cbrtl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_ceill.S: Include <libm-alias-ldouble.h>.
+	(ceill): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_copysignl.S: Include <libm-alias-ldouble.h>.
+	(copysignl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_fabsl.S: Include <libm-alias-ldouble.h>.
+	(fabsl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_floorl.S: Include <libm-alias-ldouble.h>.
+	(floorl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_fmaxl.S: Include <libm-alias-ldouble.h>.
+	(fmaxl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_fminl.S: Include <libm-alias-ldouble.h>.
+	(fminl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_frexpl.S: Include <libm-alias-ldouble.h>.
+	(frexpl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_llrintl.S: Include <libm-alias-ldouble.h>.
+	(llrintl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_logbl.c: Include <libm-alias-ldouble.h>.
+	(logbl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_lrintl.S: Include <libm-alias-ldouble.h>.
+	(lrintl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_nearbyintl.S: Include <libm-alias-ldouble.h>.
+	(nearbyintl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_nextafterl.c: Include <libm-alias-ldouble.h>.
+	(nextafterl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_remquol.S: Include <libm-alias-ldouble.h>.
+	(remquol): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_rintl.c: Include <libm-alias-ldouble.h>.
+	(rintl): Define using libm_alias_ldouble.
+	* sysdeps/i386/fpu/s_truncl.S: Include <libm-alias-ldouble.h>.
+	(truncl): Define using libm_alias_ldouble.
+	* sysdeps/i386/i686/fpu/s_fmaxl.S: Include <libm-alias-ldouble.h>.
+	(fmaxl): Define using libm_alias_ldouble.
+	* sysdeps/i386/i686/fpu/s_fminl.S: Include <libm-alias-ldouble.h>.
+	(fminl): Define using libm_alias_ldouble.
+
 	* bits/floatn-common.h [!__ASSEMBLER]: Disable everything related
 	to C syntax instead of availability and properties of types.
 	* bits/floatn.h [!__ASSEMBLER]: Likewise.

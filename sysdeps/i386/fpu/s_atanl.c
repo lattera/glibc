@@ -6,6 +6,7 @@
  */
 
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 
 long double
 __atanl (long double x)
@@ -19,4 +20,4 @@ __atanl (long double x)
   return res;
 }
 
-weak_alias (__atanl, atanl)
+libm_alias_ldouble (__atan, atan)

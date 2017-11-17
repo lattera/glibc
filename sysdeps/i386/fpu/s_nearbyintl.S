@@ -4,6 +4,7 @@
  */
 /* Adapted for use as nearbyint by Ulrich Drepper <drepper@cygnus.com>.  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 ENTRY(__nearbyintl)
@@ -20,4 +21,4 @@ ENTRY(__nearbyintl)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__nearbyintl)
-weak_alias (__nearbyintl, nearbyintl)
+libm_alias_ldouble (__nearbyint, nearbyint)

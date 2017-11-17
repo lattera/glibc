@@ -4,6 +4,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 RCSID("$NetBSD: $")
@@ -37,4 +38,4 @@ ENTRY(__ceill)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__ceill)
-weak_alias (__ceill, ceill)
+libm_alias_ldouble (__ceil, ceil)

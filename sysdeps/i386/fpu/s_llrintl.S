@@ -18,6 +18,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-ldouble.h>
 #include <sysdep.h>
 
 	.text
@@ -33,4 +34,4 @@ ENTRY(__llrintl)
 	cfi_adjust_cfa_offset (-4)
 	ret
 END(__llrintl)
-weak_alias (__llrintl, llrintl)
+libm_alias_ldouble (__llrint, llrint)

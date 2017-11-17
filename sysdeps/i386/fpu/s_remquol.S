@@ -4,6 +4,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 #define PARMS	4		/* no space for saved regs */
@@ -42,4 +43,4 @@ ENTRY (__remquol)
 
 	ret
 END (__remquol)
-weak_alias (__remquol, remquol)
+libm_alias_ldouble (__remquo, remquo)

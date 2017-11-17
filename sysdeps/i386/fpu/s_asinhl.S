@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 	.section .rodata
@@ -141,4 +142,4 @@ ENTRY(__asinhl)
 	fchs
 4:	ret
 END(__asinhl)
-weak_alias (__asinhl, asinhl)
+libm_alias_ldouble (__asinh, asinh)

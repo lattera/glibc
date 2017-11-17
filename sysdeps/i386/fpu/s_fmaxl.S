@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-ldouble.h>
 #include <sysdep.h>
 
 	.text
@@ -68,4 +69,4 @@ ENTRY(__fmaxl)
 	faddp
 	ret
 END(__fmaxl)
-weak_alias (__fmaxl, fmaxl)
+libm_alias_ldouble (__fmax, fmax)
