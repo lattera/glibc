@@ -1,3 +1,14 @@
+2017-11-21  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #15537]
+	* localedata/locales/lv_LV (LC_COLLATE): Fix collation by
+	using “copy "iso14651_t1"” and then implementing the
+	collation rules for lv from CLDR on top of that.
+	* Makefile: Add lv_LV.UTF-8 to test-input and to the list
+	of locales to be built for testing.
+	* lv_LV.UTF-8.in: New file with test data to test the Latvian
+	sorting.
+
 2017-11-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h
