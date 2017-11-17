@@ -1,3 +1,14 @@
+2017-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* bits/floatn-common.h [!__ASSEMBLER]: Disable everything related
+	to C syntax instead of availability and properties of types.
+	* bits/floatn.h [!__ASSEMBLER]: Likewise.
+	* sysdeps/ia64/bits/floatn.h [!__ASSEMBLER]: Likewise.
+	* sysdeps/ieee754/ldbl-128/bits/floatn.h [!__ASSEMBLER]: Likewise.
+	* sysdeps/mips/ieee754/bits/floatn.h [!__ASSEMBLER]: Likewise.
+	* sysdeps/powerpc/bits/floatn.h [!__ASSEMBLER]: Likewise.
+	* sysdeps/x86/bits/floatn.h [!__ASSEMBLER]: Likewise.
+
 2017-11-17  Florian Weimer  <fweimer@redhat.com>
 
 	support_become_root: Enable file creation in namespaces.

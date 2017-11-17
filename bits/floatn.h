@@ -25,13 +25,17 @@
    from the default float, double and long double types in this glibc.  */
 #define __HAVE_DISTINCT_FLOAT128 0
 
+#ifndef __ASSEMBLER__
+
 /* Defined to concatenate the literal suffix to be used with _Float128
    types, if __HAVE_FLOAT128 is 1.
    E.g.: #define __f128(x) x##f128.  */
-#undef __f128
+# undef __f128
 
 /* Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.
    E.g.: #define __CFLOAT128 _Complex _Float128.  */
-#undef __CFLOAT128
+# undef __CFLOAT128
+
+#endif /* !__ASSEMBLER__.  */
 
 #include <bits/floatn-common.h>
