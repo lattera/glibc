@@ -860,10 +860,10 @@ ldouble: 3
 Function: "cbrt_upward":
 double: 5
 float: 1
-float128: 1
+float128: 2
 idouble: 5
 ifloat: 1
-ifloat128: 1
+ifloat128: 2
 ildouble: 2
 ldouble: 2
 
