@@ -45,7 +45,7 @@
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else
-PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][10]
+PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][15]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -61,7 +61,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][10]
     "", "", "", "",
     "", "", "", "",
     "", "", "", "",
-    "", "", "", "",
+    "", "", "", "htm-no-suspend",
     "scv", "darn", "ieee128", "arch_3_00",
     "htm-nosc", "vcrypto", "tar", "isel",
     "ebb", "dscr", "htm", "arch_2_07",

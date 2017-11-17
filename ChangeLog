@@ -1,3 +1,10 @@
+2017-11-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/bits/hwcap.h (PPC_FEATURE2_HTM_NO_SUSPEND): New
+	macro.
+	* sysdeps/powerpc/dl-procinfo.c (_dl_powerpc_cap_flags): Add
+	htm-no-suspend.
+
 2017-11-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/fpu/e_expl.S: Include <libm-alias-ldouble.h>.

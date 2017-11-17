@@ -72,3 +72,5 @@
 						 128-bit */
 #define PPC_FEATURE2_DARN	   0x00200000 /* darn instruction.  */
 #define PPC_FEATURE2_SCV	   0x00100000 /* scv syscall.  */
+#define PPC_FEATURE2_HTM_NO_SUSPEND  0x00080000 /* TM without suspended
+						   state.  */
