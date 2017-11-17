@@ -1,3 +1,8 @@
+2017-11-17  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_DCPOP): New
+	macro.
+
 2017-11-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/aarch64/fpu/Makefile (CFLAGS-s_fmax.c, CFLAGS-s_fmaxf.c,
