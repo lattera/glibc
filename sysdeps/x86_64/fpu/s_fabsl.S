@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-ldouble.h>
 
        .text
 ENTRY(__fabsl)
@@ -24,4 +25,4 @@ ENTRY(__fabsl)
        fabs
        ret
 END(__fabsl)
-weak_alias (__fabsl, fabsl)
+libm_alias_ldouble (__fabs, fabs)

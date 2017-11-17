@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-ldouble.h>
 
 	.text
 ENTRY(__lrintl)
@@ -27,4 +28,4 @@ ENTRY(__lrintl)
 	movl	-4(%rsp),%eax
 	ret
 END(__lrintl)
-weak_alias (__lrintl, lrintl)
+libm_alias_ldouble (__lrint, lrint)

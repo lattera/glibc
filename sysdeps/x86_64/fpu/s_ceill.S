@@ -5,6 +5,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 
@@ -33,4 +34,4 @@ ENTRY(__ceill)
 
 	ret
 END (__ceill)
-weak_alias (__ceill, ceill)
+libm_alias_ldouble (__ceil, ceil)

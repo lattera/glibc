@@ -5,6 +5,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 RCSID("$NetBSD: $")
@@ -19,4 +20,4 @@ ENTRY(__copysignl)
 	fldt	8(%rsp)
 	ret
 END (__copysignl)
-weak_alias (__copysignl, copysignl)
+libm_alias_ldouble (__copysign, copysign)

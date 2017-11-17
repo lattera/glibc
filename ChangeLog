@@ -1,5 +1,32 @@
 2017-11-17  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/e_expl.S: Include <libm-alias-ldouble.h>.
+	[USE_AS_EXPM1L] (expm1l): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_ceill.S: Include <libm-alias-ldouble.h>.
+	(ceill): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_copysignl.S: Include
+	<libm-alias-ldouble.h>.
+	(copysignl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_fabsl.S: Include <libm-alias-ldouble.h>.
+	(fabsl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_floorl.S: Include <libm-alias-ldouble.h>.
+	(floorl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_fmaxl.S: Include <libm-alias-ldouble.h>.
+	(fmaxl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_fminl.S: Include <libm-alias-ldouble.h>.
+	(fminl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_llrintl.S: Include <libm-alias-ldouble.h>.
+	(llrintl): Define using libm_alias_ldouble.
+	(lrintl): Likewise.
+	* sysdeps/x86_64/fpu/s_nearbyintl.S: Include
+	<libm-alias-ldouble.h>.
+	(nearbyintl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/fpu/s_truncl.S: Include <libm-alias-ldouble.h>.
+	(truncl): Define using libm_alias_ldouble.
+	* sysdeps/x86_64/x32/fpu/s_lrintl.S: Include
+	<libm-alias-ldouble.h>.
+	(lrintl): Define using libm_alias_ldouble.
+
 	* sysdeps/i386/fpu/e_expl.S: Include <libm-alias-ldouble.h>.
 	[USE_AS_EXPM1L] (expm1l): Define using libm_alias_ldouble.
 	* sysdeps/i386/fpu/s_asinhl.S: Include <libm-alias-ldouble.h>.

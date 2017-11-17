@@ -22,6 +22,7 @@
  * -- moshier@na-net.ornl.gov
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 #include <x86_64-math-asm.h>
 
@@ -213,7 +214,7 @@ ENTRY(IEEE754_EXPL)
 END(IEEE754_EXPL)
 #ifdef USE_AS_EXPM1L
 libm_hidden_def (__expm1l)
-weak_alias (__expm1l, expm1l)
+libm_alias_ldouble (__expm1, expm1)
 #else
 strong_alias (IEEE754_EXPL, EXPL_FINITE)
 #endif

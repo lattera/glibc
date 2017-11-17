@@ -5,6 +5,7 @@
  * Public domain.
  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 ENTRY(__floorl)
@@ -32,4 +33,4 @@ ENTRY(__floorl)
 
 	ret
 END (__floorl)
-weak_alias (__floorl, floorl)
+libm_alias_ldouble (__floor, floor)

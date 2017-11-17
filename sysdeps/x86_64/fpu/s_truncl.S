@@ -17,6 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-ldouble.h>
 #include <machine/asm.h>
 
 ENTRY(__truncl)
@@ -33,4 +34,4 @@ ENTRY(__truncl)
 	fldenv	-28(%rsp)
 	ret
 END(__truncl)
-weak_alias (__truncl, truncl)
+libm_alias_ldouble (__trunc, trunc)
