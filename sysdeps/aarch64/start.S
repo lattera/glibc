@@ -60,7 +60,8 @@ _start:
 	/* Setup stack limit in argument register */
 	mov	x6, sp
 
-#ifdef SHARED
+#ifdef PIC
+# ifdef SHARED
         adrp    x0, :got:main
 	ldr     PTR_REG (0), [x0, #:got_lo12:main]
 
@@ -69,6 +70,14 @@ _start:
 
         adrp    x4, :got:__libc_csu_fini
 	ldr     PTR_REG (4), [x4, #:got_lo12:__libc_csu_fini]
+# else
+	adrp	x0, main
+	add	x0, x0, :lo12:main
+	adrp	x3, __libc_csu_init
+	add	x3, x3, :lo12:__libc_csu_init
+	adrp	x4, __libc_csu_fini
+	add	x4, x4, :lo12:__libc_csu_fini
+# endif
 #else
 	/* Set up the other arguments in registers */
 	MOVL (0, main)
