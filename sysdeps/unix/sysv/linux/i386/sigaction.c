@@ -42,7 +42,6 @@ extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 #endif
 extern void restore (void) asm ("__restore") attribute_hidden;
 
-
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
@@ -65,6 +64,8 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	  kact.sa_restorer = ((act->sa_flags & SA_SIGINFO)
 			      ? &restore_rt : &restore);
 	}
+      else
+	kact.sa_restorer = NULL;
     }
 
   /* XXX The size argument hopefully will have to be changed to the

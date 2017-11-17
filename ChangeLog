@@ -1,3 +1,11 @@
+2018-03-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #21269]
+	* sysdeps/unix/sysv/linux/i386/Makefile (tests): Add tst-bz21269.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (SET_SA_RESTORER): Clear
+	sa_restorer for vDSO case.
+	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c: New file.
+
 2018-03-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/check-installed-headers.sh: Ignore Hurd and Mach headers.
