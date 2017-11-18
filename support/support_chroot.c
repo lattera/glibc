@@ -45,12 +45,7 @@ struct support_chroot *
 support_chroot_create (struct support_chroot_configuration conf)
 {
   struct support_chroot *chroot = xmalloc (sizeof (*chroot));
-
-  {
-    char *template = xasprintf ("%s/tst-resolv-res_init-XXXXXX", test_dir);
-    chroot->path_chroot = support_create_temp_directory (template);
-    free (template);
-  }
+  chroot->path_chroot = support_create_temp_directory ("tst-resolv-res_init-");
 
   /* Create the /etc directory in the chroot environment.  */
   char *path_etc = xasprintf ("%s/etc", chroot->path_chroot);

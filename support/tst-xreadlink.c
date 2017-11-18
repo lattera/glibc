@@ -29,7 +29,7 @@
 static int
 do_test (void)
 {
-  char *dir = support_create_temp_directory ("/tmp/tst-xreadlink-XXXXXX");
+  char *dir = support_create_temp_directory ("tst-xreadlink-");
   char *symlink_name = xasprintf ("%s/symlink", dir);
   add_temp_file (symlink_name);
 

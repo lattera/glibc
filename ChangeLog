@@ -1,3 +1,12 @@
+2017-11-18  Florian Weimer  <fweimer@redhat.com>
+
+	* support/temp_file.c (support_create_temp_directory): Use
+	test_dir and do not rely on the presence of the XXXXXX suffix.
+	* support/temp_file.h (support_create_temp_directory): Update
+	comment.
+	* support/tst-xreadlink.c (do_test): Adjust.
+	* support/support_chroot.c (support_chroot_create): Likewise.
+
 2017-11-17  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/bits/hwcap.h (PPC_FEATURE2_HTM_NO_SUSPEND): New

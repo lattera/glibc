@@ -89,14 +89,14 @@ create_temp_file (const char *base, char **filename)
 char *
 support_create_temp_directory (const char *base)
 {
-  char *base_copy = xstrdup (base);
-  if (mkdtemp (base_copy) == NULL)
+  char *path = xasprintf ("%s/%sXXXXXX", test_dir, base);
+  if (mkdtemp (path) == NULL)
     {
-      printf ("error: mkdtemp (\"%s\"): %m", base);
+      printf ("error: mkdtemp (\"%s\"): %m", path);
       exit (1);
     }
-  add_temp_file (base_copy);
-  return base_copy;
+  add_temp_file (path);
+  return path;
 }
 
 /* Helper functions called by the test skeleton follow.  */
