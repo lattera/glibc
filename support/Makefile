@@ -42,6 +42,7 @@ libsupport-routines = \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_enter_mount_namespace \
   support_enter_network_namespace \
   support_format_address_family \
   support_format_addrinfo \

@@ -51,6 +51,11 @@ bool support_can_chroot (void);
    has sufficient privileges.  */
 bool support_enter_network_namespace (void);
 
+/* Enter a mount namespace and mark / as private (not shared).  If
+   this function returns true, mount operations in this process will
+   not affect the host system afterwards.  */
+bool support_enter_mount_namespace (void);
+
 /* Return true if support_enter_network_namespace managed to enter a
    UTS namespace.  */
 bool support_in_uts_namespace (void);
