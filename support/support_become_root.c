@@ -52,7 +52,7 @@ setup_uid_gid_mapping (uid_t original_uid, gid_t original_gid)
   xclose (fd);
 
   /* Linux 3.19 introduced the setgroups file.  We need write "deny" to this
-   * file otherwise writing to gid_map will fail with EPERM.  */
+     file otherwise writing to gid_map will fail with EPERM.  */
   fd = open64 ("/proc/self/setgroups", O_WRONLY, 0);
   if (fd < 0)
     {

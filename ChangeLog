@@ -1,5 +1,8 @@
 2017-11-18  Christian Brauner <christian.brauner@ubuntu.com>
 
+	* support/support_become_root.c (setup_uid_gid_mapping): Fix comment
+	style.
+
 	* support/support_become_root.c (setup_uid_gid_mapping): Don't fail
 	when /proc/<pid>/setgroups does not exist.
 
