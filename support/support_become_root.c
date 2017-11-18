@@ -18,6 +18,7 @@
 
 #include <support/namespace.h>
 
+#include <errno.h>
 #include <fcntl.h>
 #include <sched.h>
 #include <stdio.h>
@@ -50,11 +51,21 @@ setup_uid_gid_mapping (uid_t original_uid, gid_t original_gid)
   xwrite (fd, buf, ret);
   xclose (fd);
 
-  /* Disable setgroups before mapping groups, otherwise that would
-     fail with EPERM.  */
-  fd = xopen ("/proc/self/setgroups", O_WRONLY, 0);
-  xwrite (fd, "deny\n", strlen ("deny\n"));
-  xclose (fd);
+  /* Linux 3.19 introduced the setgroups file.  We need write "deny" to this
+   * file otherwise writing to gid_map will fail with EPERM.  */
+  fd = open64 ("/proc/self/setgroups", O_WRONLY, 0);
+  if (fd < 0)
+    {
+      if (errno != ENOENT)
+        FAIL_EXIT1 ("open64 (\"/proc/self/setgroups\", 0x%x, 0%o): %m",
+                    O_WRONLY, 0);
+      /* This kernel doesn't expose the setgroups file so simply move on.  */
+    }
+  else
+    {
+      xwrite (fd, "deny\n", strlen ("deny\n"));
+      xclose (fd);
+    }
 
   /* Now map our own GID, like we did for the user ID.  */
   fd = xopen ("/proc/self/gid_map", O_WRONLY, 0);
