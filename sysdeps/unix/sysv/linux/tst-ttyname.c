@@ -78,65 +78,6 @@ proc_fd_readlink (const char *linkname)
   return target;
 }
 
-static void
-become_root_in_mount_ns (void)
-{
-  uid_t orig_uid = getuid ();
-  gid_t orig_gid = getgid ();
-
-  support_become_root ();
-
-  if (unshare (CLONE_NEWNS) < 0)
-    FAIL_UNSUPPORTED ("could not enter new mount namespace");
-
-  /* support_become_root might have put us in a new user namespace;
-     most filesystems (including tmpfs) don't allow file or directory
-     creation from a user namespace unless uid and gid maps are set,
-     even if we have root privileges in the namespace (failing with
-     EOVERFLOW, since the uid overflows the empty (0-length) uid map).
-
-     Also, stat always reports that uid and gid maps are empty, so we
-     have to try actually reading from them to check if they are
-     empty.  */
-  int fd;
-
-  if ((fd = open ("/proc/self/uid_map", O_RDWR, 0)) >= 0)
-    {
-      char buf;
-      if (read (fd, &buf, 1) == 0)
-	{
-	  char *str = xasprintf ("0 %ld 1\n", (long)orig_uid);
-	  if (write (fd, str, strlen (str)) < 0)
-	    FAIL_EXIT1 ("write (uid_map, \"%s\"): %m", str);
-	  free (str);
-	}
-      xclose (fd);
-    }
-
-  /* Setting the gid map has the additional complexity that we have to
-     first turn off setgroups.  */
-  if ((fd = open ("/proc/self/setgroups", O_WRONLY, 0)) >= 0)
-    {
-      const char *str = "deny";
-      if (write (fd, str, strlen (str)) < 0)
-	FAIL_EXIT1 ("write (setroups, \"%s\"): %m", str);
-      xclose (fd);
-    }
-
-  if ((fd = open ("/proc/self/gid_map", O_RDWR, 0)) >= 0)
-    {
-      char buf;
-      if (read (fd, &buf, 1) == 0)
-	{
-	  char *str = xasprintf ("0 %ld 1\n", (long)orig_gid);
-	  if (write (fd, str, strlen (str)) < 0)
-	    FAIL_EXIT1 ("write (gid_map, \"%s\"): %m", str);
-	  free (str);
-	}
-      xclose (fd);
-    }
-}
-
 /* plain ttyname runner */
 
 struct result
@@ -328,7 +269,8 @@ do_in_chroot_1 (int (*cb)(const char *, int))
     {
       xclose (master);
 
-      become_root_in_mount_ns ();
+      if (!support_enter_mount_namespace ())
+	FAIL_UNSUPPORTED ("could not enter new mount namespace");
 
       VERIFY (mount ("tmpfs", chrootdir, "tmpfs", 0, "mode=755") == 0);
       VERIFY (chdir (chrootdir) == 0);
@@ -395,7 +337,8 @@ do_in_chroot_2 (int (*cb)(const char *, int))
       xclose (pid_pipe[0]);
       xclose (exit_pipe[1]);
 
-      become_root_in_mount_ns ();
+      if (!support_enter_mount_namespace ())
+	FAIL_UNSUPPORTED ("could not enter new mount namespace");
 
       int slave = xopen (slavename, O_RDWR, 0);
       if (!doit (slave, "basic smoketest",
@@ -611,6 +554,8 @@ run_chroot_tests (const char *slavename, int slave)
 static int
 do_test (void)
 {
+  support_become_root ();
+
   int ret1 = do_in_chroot_1 (run_chroot_tests);
   if (ret1 == EXIT_UNSUPPORTED)
     return ret1;

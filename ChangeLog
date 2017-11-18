@@ -1,5 +1,13 @@
 2017-11-18  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/unix/sysv/linux/tst-ttyname.c
+	(become_root_in_mount_ns): Remove.
+	(do_in_chroot_1): Call support_enter_mount_namespace.
+	(do_in_chroot_2): Likewise.
+	(do_test): Call support_become_root early.
+
+2017-11-18  Florian Weimer  <fweimer@redhat.com>
+
 	* support/namespace.h (support_enter_mount_namespace): Declare.
 	* support/support_enter_mount_namespace.c: New file.
 	* support/Makefile (libsupport-routines): Add
