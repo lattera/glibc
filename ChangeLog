@@ -1,5 +1,13 @@
 2017-11-19  Florian Weimer  <fweimer@redhat.com>
 
+	manual: Document mprotect
+	* manual/memory.texi (Memory Protection): New section.
+	* manual/llio.texi (Memory-mapped I/O): Remove duplicate
+	documentation of PROT_* flags and reference the Memory Protection
+	section instead.
+
+2017-11-19  Florian Weimer  <fweimer@redhat.com>
+
 	* manual/llio.texi (I/O Primitives): Move preadv, preadv64,
 	pwritev, pwritev64, preadv2, preadv64v2, pwritev2, pwritev64v2 ...
 	(Scatter-Gather): ... to here.  Remove misleading comment.

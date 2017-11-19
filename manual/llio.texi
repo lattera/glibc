@@ -1401,19 +1401,11 @@ is created, which is not removed by closing the file.
 address is automatically removed.  The address you give may still be
 changed, unless you use the @code{MAP_FIXED} flag.
 
-@vindex PROT_READ
-@vindex PROT_WRITE
-@vindex PROT_EXEC
 @var{protect} contains flags that control what kind of access is
 permitted.  They include @code{PROT_READ}, @code{PROT_WRITE}, and
-@code{PROT_EXEC}, which permit reading, writing, and execution,
-respectively.  Inappropriate access will cause a segfault (@pxref{Program
-Error Signals}).
-
-Note that most hardware designs cannot support write permission without
-read permission, and many do not distinguish read and execute permission.
-Thus, you may receive wider permissions than you ask for, and mappings of
-write-only files may be denied even if you do not use @code{PROT_READ}.
+@code{PROT_EXEC}.  The special flag @code{PROT_NONE} reserves a region
+of address space for future use.  The @code{mprotect} function can be
+used to change the protection flags.  @xref{Memory Protection}.
 
 @var{flags} contains flags that control the nature of the map.
 One of @code{MAP_SHARED} or @code{MAP_PRIVATE} must be specified.

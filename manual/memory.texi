@@ -17,6 +17,7 @@ and allocation of real memory.
 * Memory Concepts::             An introduction to concepts and terminology.
 * Memory Allocation::           Allocating storage for your program data
 * Resizing the Data Segment::   @code{brk}, @code{sbrk}
+* Memory Protection::           Controlling access to memory regions.
 * Locking Pages::               Preventing page faults
 @end menu
 
@@ -3047,7 +3048,128 @@ of the data segment is.
 
 @end deftypefun
 
+@node Memory Protection
+@section Memory Protection
+@cindex memory protection
+@cindex page protection
+@cindex protection flags
 
+When a page is mapped using @code{mmap}, page protection flags can be
+specified using the protection flags argument.  @xref{Memory-mapped
+I/O}.
+
+The following flags are available:
+
+@vtable @code
+@item PROT_WRITE
+@standards{POSIX, sys/mman.h}
+The memory can be written to.
+
+@item PROT_READ
+@standards{POSIX, sys/mman.h}
+The memory can be read.  On some architectures, this flag implies that
+the memory can be executed as well (as if @code{PROT_EXEC} had been
+specified at the same time).
+
+@item PROT_EXEC
+@standards{POSIX, sys/mman.h}
+The memory can be used to store instructions which can then be executed.
+On most architectures, this flag implies that the memory can be read (as
+if @code{PROT_READ} had been specified).
+
+@item PROT_NONE
+@standards{POSIX, sys/mman.h}
+This flag must be specified on its own.
+
+The memory is reserved, but cannot be read, written, or executed.  If
+this flag is specified in a call to @code{mmap}, a virtual memory area
+will be set aside for future use in the process, and @code{mmap} calls
+without the @code{MAP_FIXED} flag will not use it for subsequent
+allocations.  For anonymous mappings, the kernel will not reserve any
+physical memory for the allocation at the time the mapping is created.
+@end vtable
+
+The operating system may keep track of these flags separately even if
+the underlying hardware treats them the same for the purposes of access
+checking (as happens with @code{PROT_READ} and @code{PROT_EXEC} on some
+platforms).  On GNU systems, @code{PROT_EXEC} always implies
+@code{PROT_READ}, so that users can view the machine code which is
+executing on their system.
+
+Inappropriate access will cause a segfault (@pxref{Program Error
+Signals}).
+
+After allocation, protection flags can be changed using the
+@code{mprotect} function.
+
+@deftypefun int mprotect (void *@var{address}, size_t @var{length}, int @var{protection})
+@standards{POSIX, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+A successful call to the @code{mprotect} function changes the protection
+flags of at least @var{length} bytes of memory, starting at
+@var{address}.
+
+@var{address} must be aligned to the page size for the mapping.  The
+system page size can be obtained by calling @code{sysconf} with the
+@code{_SC_PAGESIZE} parameter (@pxref{Sysconf Definition}).  The system
+page size is the granularity in which the page protection of anonymous
+memory mappings and most file mappings can be changed.  Memory which is
+mapped from special files or devices may have larger page granularity
+than the system page size and may require larger alignment.
+
+@var{length} is the number of bytes whose protection flags must be
+changed.  It is automatically rounded up to the next multiple of the
+system page size.
+
+@var{protection} is a combination of the @code{PROT_*} flags described
+above.
+
+The @code{mprotect} function returns @math{0} on success and @math{-1}
+on failure.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item ENOMEM
+The system was not able to allocate resources to fulfill the request.
+This can happen if there is not enough physical memory in the system for
+the allocation of backing storage.  The error can also occur if the new
+protection flags would cause the memory region to be split from its
+neighbors, and the process limit for the number of such distinct memory
+regions would be exceeded.
+
+@item EINVAL
+@var{address} is not properly aligned to a page boundary for the
+mapping, or @var{length} (after rounding up to the system page size) is
+not a multiple of the applicable page size for the mapping, or the
+combination of flags in @var{protection} is not valid.
+
+@item EACCES
+The file for a file-based mapping was not opened with open flags which
+are compatible with @var{protection}.
+
+@item EPERM
+The system security policy does not allow a mapping with the specified
+flags.  For example, mappings which are both @code{PROT_EXEC} and
+@code{PROT_WRITE} at the same time might not be allowed.
+@end table
+@end deftypefun
+
+If the @code{mprotect} function is used to make a region of memory
+inaccessible by specifying the @code{PROT_NONE} protection flag and
+access is later restored, the memory retains its previous contents.
+
+On some systems, it may not be possible to specify additional flags
+which were not present when the mapping was first created.  For example,
+an attempt to make a region of memory executable could fail if the
+initial protection flags were @samp{PROT_READ | PROT_WRITE}.
+
+In general, the @code{mprotect} function can be used to change any
+process memory, no matter how it was allocated.  However, portable use
+of the function requires that it is only used with memory regions
+returned by @code{mmap} or @code{mmap64}.
 
 @node Locking Pages
 @section Locking Pages
