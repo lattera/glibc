@@ -1,5 +1,9 @@
 2017-11-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-memcpy-walk.c (START_SIZE): Set to 128.
+	* benchtests/bench-memmove-walk.c (START_SIZE): Likewise.
+	* benchtests/bench-memset-walk.c (START_SIZE): Likewise.
+
 	* benchtests/bench-memcpy-walk.c (do_one_test): Copy only
 	backwards.  Fix timing computation.
 	* benchtests/bench-memmove-walk.c (do_one_test): Likewise.

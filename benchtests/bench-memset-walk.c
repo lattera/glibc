@@ -22,7 +22,7 @@
 #else
 # define TEST_NAME "wmemset"
 #endif /* WIDE */
-#define START_SIZE (1)
+#define START_SIZE 128
 #define MIN_PAGE_SIZE (getpagesize () + 32 * 1024 * 1024)
 #define TIMEOUT (20 * 60)
 #include "bench-string.h"

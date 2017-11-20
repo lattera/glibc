@@ -29,7 +29,7 @@
 
 #ifndef MEMCPY_RESULT
 # define MEMCPY_RESULT(dst, len) dst
-# define START_SIZE 1
+# define START_SIZE 128
 # define MIN_PAGE_SIZE (getpagesize () + 32 * 1024 * 1024)
 # define TEST_MAIN
 # define TEST_NAME "memcpy"
