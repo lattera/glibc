@@ -1,3 +1,12 @@
+2017-11-22  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22469]
+	* localedata/locales/pl_PL (LC_COLLATE): Use “copy "iso14651_t1"”
+	and implement the collation rules for pl from CLDR on top of that.
+	* Makefile: Add pl_PL.UTF-8 to test-input and to the list
+	of locales to be built for testing.
+	* pl_PL.UTF-8.in: New file with test data to test the Polish sorting.
+
 2017-11-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/fpu/libm-symbols.h: Include <libm-alias-ldouble.h>.
