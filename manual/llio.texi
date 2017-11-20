@@ -1377,15 +1377,18 @@ available.
 
 Memory mapping only works on entire pages of memory.  Thus, addresses
 for mapping must be page-aligned, and length values will be rounded up.
-To determine the size of a page the machine uses one should use
+To determine the default size of a page the machine uses one should use:
 
 @vindex _SC_PAGESIZE
 @smallexample
 size_t page_size = (size_t) sysconf (_SC_PAGESIZE);
 @end smallexample
 
-@noindent
-These functions are declared in @file{sys/mman.h}.
+On some systems, mappings can use larger page sizes
+for certain files, and applications can request larger page sizes for
+anonymous mappings as well (see the @code{MAP_HUGETLB} flag below).
+
+The following functions are declared in @file{sys/mman.h}:
 
 @deftypefun {void *} mmap (void *@var{address}, size_t @var{length}, int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
 @standards{POSIX, sys/mman.h}
@@ -1452,6 +1455,29 @@ On some systems using private anonymous mmaps is more efficient than using
 @code{malloc} for large blocks.  This is not an issue with @theglibc{},
 as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
+@item MAP_HUGETLB
+@standards{Linux, sys/mman.h}
+This requests that the system uses an alternative page size which is
+larger than the default page size for the mapping.  For some workloads,
+increasing the page size for large mappings improves performance because
+the system needs to handle far fewer pages.  For other workloads which
+require frequent transfer of pages between storage or different nodes,
+the decreased page granularity may cause performance problems due to the
+increased page size and larger transfers.
+
+In order to create the mapping, the system needs physically contiguous
+memory of the size of the increased page size.  As a result,
+@code{MAP_HUGETLB} mappings are affected by memory fragmentation, and
+their creation can fail even if plenty of memory is available in the
+system.
+
+Not all file systems support mappings with an increased page size.
+
+The @code{MAP_HUGETLB} flag is specific to Linux.
+
+@c There is a mechanism to select different hugepage sizes; see
+@c include/uapi/asm-generic/hugetlb_encode.h in the kernel sources.
+
 @c Linux has some other MAP_ options, which I have not discussed here.
 @c MAP_DENYWRITE, MAP_EXECUTABLE and MAP_GROWSDOWN don't seem applicable to
 @c user programs (and I don't understand the last two).  MAP_LOCKED does
@@ -1468,8 +1494,11 @@ Possible errors include:
 
 @item EINVAL
 
-Either @var{address} was unusable, or inconsistent @var{flags} were
-given.
+Either @var{address} was unusable (because it is not a multiple of the
+applicable page size), or inconsistent @var{flags} were given.
+
+If @code{MAP_HUGETLB} was specified, the file or system does not support
+large page sizes.
 
 @item EACCES
 
@@ -1669,6 +1698,21 @@ be pre-faulted in by the kernel.
 The region is no longer needed.  The kernel may free these pages,
 causing any changes to the pages to be lost, as well as swapped
 out pages to be discarded.
+
+@item MADV_HUGEPAGE
+@standards{Linux, sys/mman.h}
+Indicate that it is beneficial to increase the page size for this
+mapping.  This can improve performance for larger mappings because the
+system needs to handle far fewer pages.  However, if parts of the
+mapping are frequently transferred between storage or different nodes,
+performance may suffer because individual transfers can become
+substantially larger due to the increased page size.
+
+This flag is specific to Linux.
+
+@item MADV_NOHUGEPAGE
+Undo the effect of a previous @code{MADV_HUGEPAGE} advice.  This flag
+is specific to Linux.
 
 @end vtable
 

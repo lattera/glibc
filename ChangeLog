@@ -1,3 +1,8 @@
+2017-11-20  Florian Weimer  <fweimer@redhat.com>
+
+	* manual/llio.texi (Memory-mapped I/O): Document MAP_HUGETLB,
+	MADV_HUGEPAGE, MADV_NOHUGEPAGE.
+
 2017-11-19  Florian Weimer  <fweimer@redhat.com>
 
 	manual: Document mprotect
