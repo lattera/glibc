@@ -20,6 +20,9 @@
 #include <sys/auxv.h>
 #include <elf/dl-hwcaps.h>
 
+#define DCZID_DZP_MASK (1 << 4)
+#define DCZID_BS_MASK (0xf)
+
 #if HAVE_TUNABLES
 struct cpu_list
 {
@@ -72,4 +75,11 @@ init_cpu_features (struct cpu_features *cpu_features)
     }
 
   cpu_features->midr_el1 = midr;
+
+  /* Check if ZVA is enabled.  */
+  unsigned dczid;
+  asm volatile ("mrs %0, dczid_el0" : "=r"(dczid));
+
+  if ((dczid & DCZID_DZP_MASK) == 0)
+    cpu_features->zva_size = 4 << (dczid & DCZID_BS_MASK);
 }

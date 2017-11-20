@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include "memset-reg.h"
 
 /* Assumptions:
  *
@@ -24,20 +25,7 @@
  *
  */
 
-#define dstin	x0
-#define val	x1
-#define valw	w1
-#define count	x2
-#define dst	x3
-#define dstend	x4
-#define tmp1	x5
-#define tmp1w	w5
-#define tmp2	x6
-#define tmp2w	w6
-#define zva_len x7
-#define zva_lenw w7
-
-ENTRY_ALIGN (__memset, 6)
+ENTRY_ALIGN (MEMSET, 6)
 
 	DELOUSE (0)
 	DELOUSE (2)
@@ -108,8 +96,11 @@ L(tail64):
 	stp	q0, q0, [dstend, -32]
 	ret
 
-	.p2align 3
 L(try_zva):
+#ifdef ZVA_MACRO
+	zva_macro
+#else
+	.p2align 3
 	mrs	tmp1, dczid_el0
 	tbnz	tmp1w, 4, L(no_zva)
 	and	tmp1w, tmp1w, 15
@@ -189,7 +180,7 @@ L(zva_other):
 	b.hs	3b
 4:	add	count, count, zva_len
 	b	L(tail64)
+#endif
 
-END (__memset)
-weak_alias (__memset, memset)
-libc_hidden_builtin_def (memset)
+END (MEMSET)
+libc_hidden_builtin_def (MEMSET)

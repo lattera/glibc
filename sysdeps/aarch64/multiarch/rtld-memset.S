@@ -1,6 +1,7 @@
-/* Define INIT_ARCH so that midr is initialized before use by IFUNCs.
-   This file is part of the GNU C Library.
+/* Memset for aarch64, for the dynamic linker.
    Copyright (C) 2017 Free Software Foundation, Inc.
+
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,13 +14,10 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-
-#define INIT_ARCH()							      \
-  uint64_t __attribute__((unused)) midr =				      \
-    GLRO(dl_aarch64_cpu_features).midr_el1;				      \
-  unsigned __attribute__((unused)) zva_size =				      \
-    GLRO(dl_aarch64_cpu_features).zva_size;
+#if IS_IN (rtld)
+# define MEMSET memset
+# include <sysdeps/aarch64/memset.S>
+#endif

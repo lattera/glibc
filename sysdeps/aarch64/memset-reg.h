@@ -1,6 +1,6 @@
-/* Define INIT_ARCH so that midr is initialized before use by IFUNCs.
-   This file is part of the GNU C Library.
+/* Register aliases for memset to be used across implementations.
    Copyright (C) 2017 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-
-#define INIT_ARCH()							      \
-  uint64_t __attribute__((unused)) midr =				      \
-    GLRO(dl_aarch64_cpu_features).midr_el1;				      \
-  unsigned __attribute__((unused)) zva_size =				      \
-    GLRO(dl_aarch64_cpu_features).zva_size;
+#define dstin	x0
+#define val	x1
+#define valw	w1
+#define count	x2
+#define dst	x3
+#define dstend	x4
+#define tmp1	x5
+#define tmp1w	w5
+#define tmp2	x6
+#define tmp2w	w6
+#define zva_len x7
+#define zva_lenw w7

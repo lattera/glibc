@@ -1,5 +1,26 @@
 2017-11-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/memset-reg.h: New file.
+	* sysdeps/aarch64/memset.S: Use it.
+	(__memset): Rename to MEMSET macro.
+	[ZVA_MACRO]: Use zva_macro.
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):
+	Add memset_generic and memset_falkor.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add memset ifuncs.
+	* sysdeps/aarch64/multiarch/init-arch.h (INIT_ARCH): New
+	local variable zva_size.
+	* sysdeps/aarch64/multiarch/memset.c: New file.
+	* sysdeps/aarch64/multiarch/memset_generic.S: New file.
+	* sysdeps/aarch64/multiarch/memset_falkor.S: New file.
+	* sysdeps/aarch64/multiarch/rtld-memset.S: New file.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c
+	(DCZID_DZP_MASK): New macro.
+	(DCZID_BS_MASK): Likewise.
+	(init_cpu_features): Read and set zva_size.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h
+	(struct cpu_features): New member zva_size.
+
 	* benchtests/bench-memcpy-walk.c (START_SIZE): Set to 128.
 	* benchtests/bench-memmove-walk.c (START_SIZE): Likewise.
 	* benchtests/bench-memset-walk.c (START_SIZE): Likewise.
