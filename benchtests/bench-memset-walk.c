@@ -66,14 +66,14 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s, CHAR *s_end,
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
-  for (i = 0; i < iters && s <= s_end; s++, i++)
+  for (i = 0; i < iters && s <= s_end; s_end -= n, i++)
     CALL (impl, s, c, n);
   TIMING_NOW (stop);
 
   TIMING_DIFF (cur, start, stop);
 
   /* Get time taken per function call.  */
-  json_element_double (json_ctx, (double) cur * n / i);
+  json_element_double (json_ctx, (double) cur / i);
 }
 
 static void

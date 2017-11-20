@@ -47,26 +47,22 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 	     size_t len)
 {
-  size_t i, iters = MIN_PAGE_SIZE / len;
+  size_t i = 0;
   timing_t start, stop, cur;
 
   char *dst_end = dst + MIN_PAGE_SIZE - len;
   char *src_end = src + MIN_PAGE_SIZE - len;
 
   TIMING_NOW (start);
-  /* Copy the entire buffer back and forth, LEN at a time.  */
-  for (i = 0; i < iters && dst_end >= dst && src <= src_end; src++, dst_end--)
-    {
-      CALL (impl, dst_end, src, len);
-      CALL (impl, src, dst_end, len);
-      i += 2;
-    }
+  /* Copy the entire buffer backwards, LEN at a time.  */
+  for (; src_end >= src && dst_end >= dst; src_end -= len, dst_end -= len, i++)
+    CALL (impl, src_end, dst_end, len);
   TIMING_NOW (stop);
 
   TIMING_DIFF (cur, start, stop);
 
   /* Get time taken per function call.  */
-  json_element_double (json_ctx, (double) cur * len / i);
+  json_element_double (json_ctx, (double) cur / i);
 }
 
 static void

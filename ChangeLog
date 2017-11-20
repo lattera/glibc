@@ -1,3 +1,11 @@
+2017-11-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-memcpy-walk.c (do_one_test): Copy only
+	backwards.  Fix timing computation.
+	* benchtests/bench-memmove-walk.c (do_one_test): Likewise.
+	* benchtests/bench-memset-walk.c (do_one_test): Walk backwards
+	on memset by N at a time.  Fix timing computation.
+
 2017-11-20  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/llio.texi (Memory-mapped I/O): Document MAP_HUGETLB,
