@@ -1,3 +1,19 @@
+2017-11-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: don't assume uint64_t or uint32_t
+	This avoids -Werror=overflow errors for 32-bit systems in
+	the 64-bit case.  Problem reported by Joseph Myers in:
+	https://sourceware.org/ml/libc-alpha/2017-11/msg00694.html
+	Also, when this code is used in Gnulib it ports to platforms
+	that lack uint64_t and uint32_t.  The C standard doesn't guarantee
+	them, and on some 32-bit compilers there is no uint64_t.
+	Problem reported by Gianluigi Tiesi in:
+	http://lists.gnu.org/archive/html/bug-gnulib/2012-03/msg00154.html
+	* posix/regcomp.c (init_word_char): Don't assume that the types
+	uint64_t and uint32_t exist.  Adapted from Gnulib patch
+	2012-05-27T06:40:00!eggert@cs.ucla.edu.  See:
+	https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=252b52457da7887667c036d18cc5169777615bb0
+
 2017-11-20  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/memset-reg.h: New file.
