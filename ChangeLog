@@ -1,5 +1,18 @@
 2017-11-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* sysdeps/s390/s390-64/start.S (_start): Add cfi information for r14.
+	* sysdeps/s390/s390-32/start.S (_start): Likewise
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S
+	(thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S
+	(thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/__makecontext_ret.S
+	(__makecontext_ret): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/__makecontext_ret.S
+	(__makecontext_ret): Likewise.
+
+2017-11-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* include/wchar.h (__wcsnlen, __wcscat, __wcsncpy, __wcpncpy,
 	__wcschrnul): Remove attribute_hidden.
 
