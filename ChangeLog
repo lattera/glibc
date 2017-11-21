@@ -1,3 +1,8 @@
+2017-11-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* include/wchar.h (__wcsnlen, __wcscat, __wcsncpy, __wcpncpy,
+	__wcschrnul): Remove attribute_hidden.
+
 2017-11-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: don't assume uint64_t or uint32_t
