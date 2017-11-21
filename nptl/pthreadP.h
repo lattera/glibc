@@ -644,7 +644,7 @@ check_stacksize_attr (size_t st)
 		  "sizeof (" #type ") != " #size)
 
 #define ASSERT_PTHREAD_INTERNAL_SIZE(type, internal) 			\
-  _Static_assert (sizeof ((type) { 0 }).__size >= sizeof (internal), 	\
+  _Static_assert (sizeof ((type) { { 0 } }).__size >= sizeof (internal),\
 		  "sizeof (" #type ".__size) < sizeof (" #internal ")")
 
 #define ASSERT_PTHREAD_STRING(x) __STRING (x)

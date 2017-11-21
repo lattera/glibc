@@ -1,3 +1,8 @@
+2017-11-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* nptl/pthreadP.h (ASSERT_PTHREAD_INTERNAL_SIZE): Add workarond for
+	-Wmissing-braces on GCC 4.9.
+
 2017-11-21  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-64/start.S (_start): Add cfi information for r14.
