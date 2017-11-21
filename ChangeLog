@@ -1,3 +1,12 @@
+2017-11-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h
+	[__USE_MISC] (MADV_SPACEAVAIL): Remove macro.
+	[__USE_MISC] (MADV_VPS_PURGE): Likewise.
+	[__USE_MISC] (MADV_VPS_INHERIT): Likewise.
+	[__USE_MISC] (MADV_HWPOISON): New macro.
+	[__USE_MISC] (MADV_SOFT_OFFLINE): Likewise.
+
 2017-11-21  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* nptl/pthreadP.h (ASSERT_PTHREAD_INTERNAL_SIZE): Add workarond for

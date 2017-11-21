@@ -85,9 +85,6 @@
 # define MADV_SEQUENTIAL  2	/* Expect sequential page references */
 # define MADV_WILLNEED	  3	/* Will need these pages */
 # define MADV_DONTNEED	  4	/* Dont need these pages */
-# define MADV_SPACEAVAIL  5	/* Insure that resources are reserved */
-# define MADV_VPS_PURGE	  6	/* Purge pages from VM page cache */
-# define MADV_VPS_INHERIT 7	/* Inherit parents page size */
 # define MADV_FREE	  8	/* Free pages only if memory pressure.  */
 # define MADV_REMOVE	  9	/* Remove these pages and resources.  */
 # define MADV_DONTFORK	 10	/* Do not inherit across fork.  */
@@ -101,6 +98,8 @@
 # define MADV_DODUMP	 70	/* Clear the MADV_NODUMP flag */
 # define MADV_WIPEONFORK 71	/* Zero memory on fork, child only.  */
 # define MADV_KEEPONFORK 72	/* Undo MADV_WIPEONFORK.  */
+# define MADV_HWPOISON	 100	/* Poison a page for testing.  */
+# define MADV_SOFT_OFFLINE 101	/* Soft offline page for testing.  */
 #endif
 
 /* The POSIX people had to invent similar names for the same things.  */
