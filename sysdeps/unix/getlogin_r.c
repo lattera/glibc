@@ -80,7 +80,7 @@ __getlogin_r (char *name, size_t name_len)
 
   if (result == 0)
     {
-      size_t needed = strlen (ut->ut_user) + 1;
+      size_t needed = __strnlen (ut->ut_user, UT_NAMESIZE) + 1;
 
       if (needed > name_len)
 	{
@@ -89,7 +89,8 @@ __getlogin_r (char *name, size_t name_len)
 	}
       else
 	{
-	  memcpy (name, ut->ut_user, needed);
+	  memcpy (name, ut->ut_user, needed - 1);
+	  name[needed - 1] = 0;
 	  result = 0;
 	}
     }
