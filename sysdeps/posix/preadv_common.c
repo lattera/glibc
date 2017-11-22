@@ -24,6 +24,7 @@
 #include <malloc.h>
 
 #include <ldsodefs.h>
+#include <libc-pointer-arith.h>
 
 /* Read data from file descriptor FD at the given position OFFSET
    without change the file pointer, and put the result in the buffers
@@ -54,8 +55,9 @@ PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
      but 1. it is system specific (not meant in generic implementation), and
      2. it would make the implementation more complex, and 3. it will require
      another syscall (fcntl).  */
-  void *buffer = NULL;
-  if (__posix_memalign (&buffer, GLRO(dl_pagesize), bytes) != 0)
+  void *buffer = __mmap (NULL, bytes, PROT_READ | PROT_WRITE,
+		         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (__glibc_unlikely (buffer == MAP_FAILED))
     return -1;
 
   ssize_t bytes_read = PREAD (fd, buffer, bytes, offset);
@@ -78,6 +80,6 @@ PREADV (int fd, const struct iovec *vector, int count, OFF_T offset)
     }
 
 end:
-  free (buffer);
+  __munmap (buffer, bytes);
   return bytes_read;
 }

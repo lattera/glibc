@@ -24,6 +24,7 @@
 #include <malloc.h>
 
 #include <ldsodefs.h>
+#include <libc-pointer-arith.h>
 
 /* Write data pointed by the buffers described by IOVEC, which is a
    vector of COUNT 'struct iovec's, to file descriptor FD at the given
@@ -54,8 +55,9 @@ PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
      but 1. it is system specific (not meant in generic implementation), and
      2. it would make the implementation more complex, and 3. it will require
      another syscall (fcntl).  */
-  void *buffer = NULL;
-  if (__posix_memalign (&buffer, GLRO(dl_pagesize), bytes) != 0)
+  void *buffer = __mmap (NULL, bytes, PROT_WRITE,
+		         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (__glibc_unlikely (buffer == MAP_FAILED))
     return -1;
 
   /* Copy the data from BUFFER into the memory specified by VECTOR.  */
@@ -66,7 +68,7 @@ PWRITEV (int fd, const struct iovec *vector, int count, OFF_T offset)
 
   ssize_t ret = PWRITE (fd, buffer, bytes, offset);
 
-  free (buffer);
+  __munmap (buffer, bytes);
 
   return ret;
 }
