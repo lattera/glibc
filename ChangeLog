@@ -1,3 +1,9 @@
+2017-11-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc64/soft-fp/s_frexpl.c: Remove file.
+	* sysdeps/sparc/sparc64/soft-fp/s_scalblnl.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/s_scalbnl.c: Likewise.
+
 2017-11-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* posix/regcomp.c (init_word_char): Add comments.
