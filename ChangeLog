@@ -1,3 +1,7 @@
+2017-11-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posix/regcomp.c (init_word_char): Add comments.
+
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22447]
