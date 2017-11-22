@@ -55,6 +55,7 @@ tests += \
   tst-resolv-network \
   tst-resolv-res_init-multi \
   tst-resolv-search \
+  tst-p_secstodate \
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
@@ -176,6 +177,7 @@ $(objpfx)tst-ns_name.out: tst-ns_name.data
 $(objpfx)tst-ns_name_compress: $(objpfx)libresolv.so
 $(objpfx)tst-ns_name_pton: $(objpfx)libresolv.so
 $(objpfx)tst-res_hnok: $(objpfx)libresolv.so
+$(objpfx)tst-p_secstodate: $(objpfx)libresolv.so
 
 
 # This test case uses the deprecated RES_USE_INET6 resolver option.

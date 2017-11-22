@@ -107,6 +107,7 @@
 #include <string.h>
 #include <time.h>
 #include <shlib-compat.h>
+#include <libc-diag.h>
 
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)
@@ -1054,6 +1055,8 @@ libresolv_hidden_def (__dn_count_labels)
 /*
  * Make dates expressed in seconds-since-Jan-1-1970 easy to read.
  * SIG records are required to be printed like this, by the Secure DNS RFC.
+ * This is an obsolescent function and does not handle dates outside the
+ * signed 32-bit range.
  */
 char *
 p_secstodate (u_long secs) {
@@ -1063,12 +1066,31 @@ p_secstodate (u_long secs) {
 	struct tm *time;
 
 	struct tm timebuf;
-	time = __gmtime_r(&clock, &timebuf);
+	/* The call to __gmtime_r can never produce a year overflowing
+	   the range of int, given the check on SECS, but check for a
+	   NULL return anyway to avoid a null pointer dereference in
+	   case there are any other unspecified errors.  */
+	if (secs > 0x7fffffff
+	    || (time = __gmtime_r (&clock, &timebuf)) == NULL) {
+		strcpy (output, "<overflow>");
+		__set_errno (EOVERFLOW);
+		return output;
+	}
 	time->tm_year += 1900;
 	time->tm_mon += 1;
+	/* The struct tm fields, given the above range check,
+	   must have values that mean this sprintf exactly fills the
+	   buffer.  But as of GCC 8 of 2017-11-21, GCC cannot tell
+	   that, even given range checks on all fields with
+	   __builtin_unreachable called for out-of-range values.  */
+	DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+	DIAG_IGNORE_NEEDS_COMMENT (8, "-Wformat-overflow=");
+#endif
 	sprintf(output, "%04d%02d%02d%02d%02d%02d",
 		time->tm_year, time->tm_mon, time->tm_mday,
 		time->tm_hour, time->tm_min, time->tm_sec);
+	DIAG_POP_NEEDS_COMMENT;
 	return (output);
 }
 libresolv_hidden_def (__p_secstodate)

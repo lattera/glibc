@@ -1,5 +1,17 @@
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22463]
+	* resolv/res_debug.c: Include <libc-diag.h>.
+	(p_secstodate): Assert time_t at least as wide as u_long.  On
+	overflow, use integer seconds since the epoch as output, or use
+	"<overflow>" as output and set errno to EOVERFLOW if integer
+	seconds since the epoch would be 14 or more characters.
+	(p_secstodate) [__GNUC_PREREQ (7, 0)]: Disable -Wformat-overflow=
+	for sprintf call.
+	* resolv/tst-p_secstodate.c: New file.
+	* resolv/Makefile (tests): Add tst-p_secstodate.
+	($(objpfx)tst-p_secstodate): Depend on $(objpfx)libresolv.so.
+
 	* sysdeps/sparc/sparc64/soft-fp/s_frexpl.c: Remove file.
 	* sysdeps/sparc/sparc64/soft-fp/s_scalblnl.c: Likewise.
 	* sysdeps/sparc/sparc64/soft-fp/s_scalbnl.c: Likewise.
