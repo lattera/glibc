@@ -994,6 +994,9 @@ _IO_new_file_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	  goto dumb;
       }
     }
+
+  _IO_free_backup_area (fp);
+
   /* At this point, dir==_IO_seek_set. */
 
   /* If destination is within current buffer, optimize: */

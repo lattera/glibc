@@ -1,5 +1,17 @@
 2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* libio/Makefile (tests): Add tst-bz22415.
+	(tst-bz22415-ENV): New rule.
+	(generated): Add tst-bz22415.mtrace and tst-bz22415.check.
+	(tests-special): Add tst-bz22415-mem.out.
+	($(objpfx)tst-bz22415-mem.out): New rule.
+	* libio/fileops.c (_IO_new_file_seekoff): Call _IO_free_backup_area
+	in case of a successful seek operation.
+	* libio/wfileops.c (_IO_wfile_seekoff): Likewise.
+	(_IO_wfile_overflow): Call _IO_free_wbackup_area in case a write
+	buffer is required.
+	* libio/tst-bz22415.c: New test.
+
 	* sysdeps/ia64/fpu/libm-test-ulps: Update.
 
 2017-12-12  James Clarke <jrtc27@jrtc27.com>

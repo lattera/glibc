@@ -421,6 +421,7 @@ _IO_wfile_overflow (_IO_FILE *f, wint_t wch)
       if (f->_wide_data->_IO_write_base == 0)
 	{
 	  _IO_wdoallocbuf (f);
+	  _IO_free_wbackup_area (f);
 	  _IO_wsetg (f, f->_wide_data->_IO_buf_base,
 		     f->_wide_data->_IO_buf_base, f->_wide_data->_IO_buf_base);
 
@@ -850,6 +851,9 @@ _IO_wfile_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	  goto dumb;
       }
     }
+
+  _IO_free_wbackup_area (fp);
+
   /* At this point, dir==_IO_seek_set. */
 
   /* If destination is within current buffer, optimize: */

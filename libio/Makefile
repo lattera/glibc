@@ -62,7 +62,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	bug-memstream1 bug-wmemstream1 \
 	tst-setvbuf1 tst-popen1 tst-fgetwc bug-wsetpos tst-fseek \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
-	tst-ftell-append tst-fputws
+	tst-ftell-append tst-fputws tst-bz22415
 ifeq (yes,$(build-shared))
 # Add test-fopenloc only if shared library is enabled since it depends on
 # shared localedata objects.
@@ -151,9 +151,11 @@ tst_wprintf2-ARGS = "Some Text"
 
 test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace
 tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
+tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace
 
 generated += test-fmemopen.mtrace test-fmemopen.check
 generated += tst-fopenloc.mtrace tst-fopenloc.check
+generated += tst-bz22415.mtrace tst-bz22415.check
 
 aux	:= fileops genops stdfiles stdio strops
 
@@ -167,7 +169,8 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofsetpos64
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)test-freopen.out $(objpfx)test-fmemopen-mem.out
+tests-special += $(objpfx)test-freopen.out $(objpfx)test-fmemopen-mem.out \
+		 $(objpfx)tst-bz22415-mem.out
 ifeq (yes,$(build-shared))
 # Run tst-fopenloc-cmp.out and tst-openloc-mem.out only if shared
 # library is enabled since they depend on tst-fopenloc.out.
@@ -217,4 +220,8 @@ $(objpfx)test-fmemopen-mem.out: $(objpfx)test-fmemopen.out
 
 $(objpfx)tst-fopenloc-mem.out: $(objpfx)tst-fopenloc.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-fopenloc.mtrace > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-bz22415-mem.out: $(objpfx)tst-bz22415.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-bz22415.mtrace > $@; \
 	$(evaluate-test)
