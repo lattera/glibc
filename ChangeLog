@@ -1,5 +1,7 @@
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* localedata/gen-locale.sh: Fix typo in variable name.
+
 	* resolv/res_debug.c (p_secstodate): Condition definition on
 	[SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)].  Define
 	directly as __p_secstodate, and as a compat symbol.  Do not use

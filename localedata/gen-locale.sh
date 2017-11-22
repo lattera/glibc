@@ -69,7 +69,7 @@ fi
 # warning. See localedata/Makefile $(INSTALL-SUPPORTED-LOCALES)
 # for the same logic.
 if [ "$charmap_real" = 'SHIFT_JIS' ] \
-   || [ "$charmpa_real" = 'SHIFT_JISX0213' ]; then
+   || [ "$charmap_real" = 'SHIFT_JISX0213' ]; then
   flags="$flags --no-warnings=ascii"
 fi
 
