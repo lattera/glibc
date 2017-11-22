@@ -66,6 +66,9 @@ Deprecated and removed features, and other changes affecting compatibility:
 * In the malloc_info output, the <heap> element may contain another <aspace>
   element, "subheaps", which contains the number of sub-heaps.
 
+* The libresolv function p_secstodate is no longer supported for new
+  programs.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

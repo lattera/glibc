@@ -65,7 +65,6 @@ libresolv_hidden_proto (__res_nameinquery)
 libresolv_hidden_proto (__res_queriesmatch)
 libresolv_hidden_proto (__b64_ntop)
 libresolv_hidden_proto (__dn_count_labels)
-libresolv_hidden_proto (__p_secstodate)
 
 # endif /* _RESOLV_H_ && !_ISOMAC */
 #endif

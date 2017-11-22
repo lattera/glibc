@@ -55,7 +55,6 @@ tests += \
   tst-resolv-network \
   tst-resolv-res_init-multi \
   tst-resolv-search \
-  tst-p_secstodate \
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
@@ -76,6 +75,9 @@ endif
 
 # This test accesses __inet_ntop_length, an internal libc function.
 tests-internal += tst-inet_pton
+
+# This test accesses the __p_secstodate compat symbol.
+tests-internal += tst-p_secstodate
 
 # This test sends millions of packets and is rather slow.
 xtests += tst-resolv-qtypes

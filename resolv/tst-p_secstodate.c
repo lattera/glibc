@@ -1,4 +1,4 @@
-/* Test p_secstodate.
+/* Test __p_secstodate compat symbol.
    Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -23,9 +23,16 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <shlib-compat.h>
+
+#if TEST_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)
+
+char *__p_secstodate (unsigned long int);
+compat_symbol_reference (libresolv, __p_secstodate, __p_secstodate, GLIBC_2_0);
+
 struct test
 {
-  /* Argument to p_secstodate.  */
+  /* Argument to __p_secstodate.  */
   unsigned long int in;
   /* Expected output.  */
   const char *out;
@@ -39,12 +46,12 @@ static const struct test tests[] =
     { 2147483647UL, "20380119031407" },
     { 2147483648UL, "<overflow>" },
     { 4294967295UL, "<overflow>" },
-#if ULONG_MAX > 0xffffffffUL
+# if ULONG_MAX > 0xffffffffUL
     { 4294967296UL, "<overflow>" },
     { 9999999999UL, "<overflow>" },
     { LONG_MAX, "<overflow>" },
     { ULONG_MAX, "<overflow>" },
-#endif
+# endif
   };
 
 static int
@@ -53,7 +60,7 @@ do_test (void)
   int ret = 0;
   for (size_t i = 0; i < array_length (tests); i++)
     {
-      char *p = p_secstodate (tests[i].in);
+      char *p = __p_secstodate (tests[i].in);
       printf ("Test %zu: %lu -> %s\n", i, tests[i].in, p);
       if (strcmp (p, tests[i].out) != 0)
 	{
@@ -63,5 +70,15 @@ do_test (void)
     }
   return ret;
 }
+
+#else
+
+static int
+do_test (void)
+{
+  return 77;
+}
+
+#endif
 
 #include <support/test-driver.c>

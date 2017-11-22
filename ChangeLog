@@ -1,5 +1,24 @@
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* resolv/res_debug.c (p_secstodate): Condition definition on
+	[SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)].  Define
+	directly as __p_secstodate, and as a compat symbol.  Do not use
+	libresolv_hidden_def.
+	* resolv/resolv.h (p_secstodate): Remove macro and function
+	declaration.
+	* resolv/ns_print.c (ns_sprintrrf): Print times with %lu, not
+	using p_secstodate.
+	* include/resolv.h (__p_secstodate): Do not use
+	libresolv_hidden_proto.
+	* resolv/Makefile (tests): Move tst-p_secstodate to ....
+	(tests-internal): ... here.
+	* resolv/tst-p_secstodate.c: Include <shlib-compat.h>.  Condition
+	all contents on [TEST_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)]
+	and declare and use __p_secstodate and use compat_symbol_reference
+	in that case.
+	[!TEST_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)] (do_test): Add
+	implementation returning 77.
+
 	[BZ #22463]
 	* resolv/res_debug.c: Include <libc-diag.h>.
 	(p_secstodate): Assert time_t at least as wide as u_long.  On

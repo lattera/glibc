@@ -1052,6 +1052,7 @@ dn_count_labels(const char *name) {
 libresolv_hidden_def (__dn_count_labels)
 
 
+#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)
 /*
  * Make dates expressed in seconds-since-Jan-1-1970 easy to read.
  * SIG records are required to be printed like this, by the Secure DNS RFC.
@@ -1059,7 +1060,7 @@ libresolv_hidden_def (__dn_count_labels)
  * signed 32-bit range.
  */
 char *
-p_secstodate (u_long secs) {
+__p_secstodate (u_long secs) {
 	/* XXX nonreentrant */
 	static char output[15];		/* YYYYMMDDHHMMSS and null */
 	time_t clock = secs;
@@ -1084,13 +1085,14 @@ p_secstodate (u_long secs) {
 	   that, even given range checks on all fields with
 	   __builtin_unreachable called for out-of-range values.  */
 	DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
+# if __GNUC_PREREQ (7, 0)
 	DIAG_IGNORE_NEEDS_COMMENT (8, "-Wformat-overflow=");
-#endif
+# endif
 	sprintf(output, "%04d%02d%02d%02d%02d%02d",
 		time->tm_year, time->tm_mon, time->tm_mday,
 		time->tm_hour, time->tm_min, time->tm_sec);
 	DIAG_POP_NEEDS_COMMENT;
 	return (output);
 }
-libresolv_hidden_def (__p_secstodate)
+compat_symbol (libresolv, __p_secstodate, __p_secstodate, GLIBC_2_0);
+#endif

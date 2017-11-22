@@ -488,12 +488,12 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 
 		/* Inception. */
 		t = ns_get32(rdata);  rdata += NS_INT32SZ;
-		len = SPRINTF((tmp, "%s ", p_secstodate(t)));
+		len = SPRINTF((tmp, "%lu ", t));
 		T(addstr(tmp, len, &buf, &buflen));
 
 		/* Experation. */
 		t = ns_get32(rdata);  rdata += NS_INT32SZ;
-		len = SPRINTF((tmp, "%s ", p_secstodate(t)));
+		len = SPRINTF((tmp, "%lu ", t));
 		T(addstr(tmp, len, &buf, &buflen));
 
 		/* Mode , Error, Key Size. */

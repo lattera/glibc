@@ -213,7 +213,6 @@ __END_DECLS
 #define p_fqname		__p_fqname
 #define p_fqnname		__p_fqnname
 #define p_option		__p_option
-#define p_secstodate		__p_secstodate
 #define p_time			__p_time
 #define p_type			__p_type
 #define p_rcode			__p_rcode
@@ -268,7 +267,6 @@ const unsigned char * p_fqnname (const unsigned char *__cp,
 const unsigned char * p_fqname (const unsigned char *,
 				const unsigned char *, FILE *) __THROW;
 const char *	p_option (unsigned long __option) __THROW;
-char *		p_secstodate (unsigned long) __THROW;
 int		dn_count_labels (const char *) __THROW;
 int		dn_comp (const char *, unsigned char *, int, unsigned char **,
 			 unsigned char **) __THROW;
