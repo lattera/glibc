@@ -982,3 +982,4 @@ GLOBAL_LIBM_ENTRY(cbrtl)
 ;;
 
 GLOBAL_LIBM_END(cbrtl)
+libm_alias_ldouble_other (cbrt, cbrt)

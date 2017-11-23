@@ -1,3 +1,66 @@
+2017-11-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h: Include <libm-alias-ldouble.h>.
+	* sysdeps/ia64/fpu/e_acoshl.S (acoshl): Use
+	libm_alias_ldouble_other.
+	* sysdeps/ia64/fpu/e_acosl.S (acosl): Likewise.
+	* sysdeps/ia64/fpu/e_asinl.S (asinl): Likewise.
+	* sysdeps/ia64/fpu/e_atanhl.S (atanhl): Likewise.
+	* sysdeps/ia64/fpu/e_coshl.S (coshl): Likewise.
+	* sysdeps/ia64/fpu/e_exp10l.S (exp10l): Likewise.
+	* sysdeps/ia64/fpu/e_exp2l.S (exp2l): Likewise.
+	* sysdeps/ia64/fpu/e_fmodl.S (fmodl): Likewise.
+	* sysdeps/ia64/fpu/e_hypotl.S (hypotl): Likewise.
+	* sysdeps/ia64/fpu/e_lgammal_r.c (lgammal_r): Define using
+	libm_alias_ldouble_r.
+	* sysdeps/ia64/fpu/e_log2l.S (log2l): Use
+	libm_alias_ldouble_other.
+	* sysdeps/ia64/fpu/e_logl.S (logl): Likewise.
+	(log10l): Likewise.
+	* sysdeps/ia64/fpu/e_powl.S (powl): Likewise.
+	* sysdeps/ia64/fpu/e_remainderl.S (remainderl): Likewise.
+	* sysdeps/ia64/fpu/e_sinhl.S (sinhl): Likewise.
+	* sysdeps/ia64/fpu/e_sqrtl.S (sqrtl): Likewise.
+	* sysdeps/ia64/fpu/libm_sincosl.S (sincosl): Likewise.
+	* sysdeps/ia64/fpu/s_asinhl.S (asinhl): Likewise.
+	* sysdeps/ia64/fpu/s_atanl.S (atanl): Likewise.
+	(atan2l): Likewise.
+	* sysdeps/ia64/fpu/s_cbrtl.S (cbrtl): Likewise.
+	* sysdeps/ia64/fpu/s_ceill.S (ceill): Likewise.
+	* sysdeps/ia64/fpu/s_copysign.S (copysignl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ia64/fpu/s_cosl.S (sinl): Use libm_alias_ldouble_other.
+	(cosl): Likewise.
+	* sysdeps/ia64/fpu/s_erfcl.S (erfcl): Likewise.
+	* sysdeps/ia64/fpu/s_erfl.S (erfl): Likewise.
+	* sysdeps/ia64/fpu/s_expm1l.S (expm1l): Likewise.
+	(expl): Likewise.
+	* sysdeps/ia64/fpu/s_fabsl.S (fabsl): Likewise.
+	* sysdeps/ia64/fpu/s_fdiml.S (fdiml): Likewise.
+	* sysdeps/ia64/fpu/s_floorl.S (floorl): Likewise.
+	* sysdeps/ia64/fpu/s_fmal.S (fmal): Likewise.
+	* sysdeps/ia64/fpu/s_fmaxl.S (fmaxl): Likewise.
+	* sysdeps/ia64/fpu/s_frexpl.c (frexpl): Likewise.
+	* sysdeps/ia64/fpu/s_ldexpl.c (ldexpl): Likewise.
+	* sysdeps/ia64/fpu/s_log1pl.S (log1pl): Likewise.
+	* sysdeps/ia64/fpu/s_logbl.S (logbl): Likewise.
+	* sysdeps/ia64/fpu/s_modfl.S (modfl): Likewise.
+	* sysdeps/ia64/fpu/s_nearbyintl.S (nearbyintl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ia64/fpu/s_nextafterl.S (nextafterl): Use
+	libm_alias_ldouble_other.
+	* sysdeps/ia64/fpu/s_rintl.S (rintl): Likewise.
+	* sysdeps/ia64/fpu/s_roundl.S (roundl): Likewise.
+	* sysdeps/ia64/fpu/s_scalbnl.c (scalbnl): Define using
+	libm_alias_ldouble.
+	* sysdeps/ia64/fpu/s_tanhl.S (tanhl): Use
+	libm_alias_ldouble_other.
+	* sysdeps/ia64/fpu/s_tanl.S (tanl): Likewise.
+	* sysdeps/ia64/fpu/s_truncl.S (truncl): Likewise.
+	* sysdeps/ia64/fpu/w_lgammal_main.c
+	[BUILD_LGAMMA && !USE_AS_COMPAT] (lgammal): Likewise.
+	* sysdeps/ia64/fpu/w_tgammal_compat.S (tgammal): Likewise.
+
 2017-11-23  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (tcache_thread_shutdown): Rename from

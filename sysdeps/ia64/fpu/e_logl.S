@@ -633,6 +633,7 @@ GLOBAL_IEEE754_ENTRY(logl)
 ;;
 
 GLOBAL_IEEE754_END(logl)
+libm_alias_ldouble_other (__log, log)
 
 
 GLOBAL_IEEE754_ENTRY(log10l)
@@ -1145,6 +1146,7 @@ LOGL_64_negative:
 
 
 GLOBAL_IEEE754_END(log10l)
+libm_alias_ldouble_other (__log10, log10)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

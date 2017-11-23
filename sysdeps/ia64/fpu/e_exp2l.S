@@ -746,6 +746,7 @@ OUT_RANGE_exp2l:
 
 
 GLOBAL_LIBM_END(exp2l)
+libm_alias_ldouble_other (exp2, exp2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

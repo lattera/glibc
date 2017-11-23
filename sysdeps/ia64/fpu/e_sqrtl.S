@@ -221,6 +221,7 @@ alloc r32= ar.pfs,0,5,4,0
 
 // END DOUBLE EXTENDED PRECISION MINIMUM LATENCY SQUARE ROOT ALGORITHM
 GLOBAL_IEEE754_END(sqrtl)
+libm_alias_ldouble_other (__sqrt, sqrt)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

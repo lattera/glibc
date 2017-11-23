@@ -65,3 +65,4 @@ long double frexpl(long double x, int *y)
 #endif
 
 }
+libm_alias_ldouble_other (frexp, frexp)

@@ -2755,6 +2755,7 @@ POWL_64_SQRT:
 ;;
 
 GLOBAL_LIBM_END(powl)
+libm_alias_ldouble_other (pow, pow)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

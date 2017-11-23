@@ -813,6 +813,7 @@ GLOBAL_IEEE754_ENTRY(atanl)
 ;;
 
 GLOBAL_IEEE754_END(atanl)
+libm_alias_ldouble_other (__atan, atan)
 
 GLOBAL_IEEE754_ENTRY(atan2l)
 
@@ -1953,6 +1954,7 @@ ATANL_ArgY_Not_INF:
 ;;
 
 GLOBAL_IEEE754_END(atan2l)
+libm_alias_ldouble_other (__atan2, atan2)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

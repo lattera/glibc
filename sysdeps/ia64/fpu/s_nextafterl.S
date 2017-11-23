@@ -436,6 +436,7 @@ NEXT_OVERFLOW:
 ;;
 
 GLOBAL_LIBM_END(nextafterl)
+libm_alias_ldouble_other (nextafter, nextafter)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

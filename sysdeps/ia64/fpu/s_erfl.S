@@ -1235,3 +1235,4 @@ _0_to_1o8:
 
 
 GLOBAL_LIBM_END(erfl)
+libm_alias_ldouble_other (erf, erf)

@@ -760,6 +760,7 @@ LOG2_PSEUDO_ZERO:
 
 
 GLOBAL_IEEE754_END(log2l)
+libm_alias_ldouble_other (__log2, log2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

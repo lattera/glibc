@@ -774,6 +774,7 @@ GLOBAL_IEEE754_ENTRY(sinl)
 ;;
 
 GLOBAL_IEEE754_END(sinl)
+libm_alias_ldouble_other (__sin, sin)
 
 GLOBAL_IEEE754_ENTRY(cosl)
 { .mlx
@@ -2288,6 +2289,7 @@ SINCOSL_SPECIAL:
 }
 
 GLOBAL_IEEE754_END(cosl)
+libm_alias_ldouble_other (__cos, cos)
 
 // *******************************************************************
 // *******************************************************************

@@ -4426,6 +4426,7 @@ tgammal_underflow:
 
 
 GLOBAL_LIBM_END(tgammal)
+libm_alias_ldouble_other (tgamma, tgamma)
 
 
 

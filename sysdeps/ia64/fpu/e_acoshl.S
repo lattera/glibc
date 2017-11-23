@@ -1650,6 +1650,7 @@ acoshl_lt_pone:
 };;
 
 GLOBAL_LIBM_END(acoshl)
+libm_alias_ldouble_other (acosh, acosh)
 
 
 

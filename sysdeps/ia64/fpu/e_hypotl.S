@@ -422,6 +422,7 @@ GLOBAL_IEEE754_ENTRY(hypotl)
 (p9) br.ret.sptk b0;;
 }
 GLOBAL_IEEE754_END(hypotl)
+libm_alias_ldouble_other (__hypot, hypot)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

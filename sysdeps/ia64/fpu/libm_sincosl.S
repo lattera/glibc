@@ -835,6 +835,7 @@ GLOBAL_IEEE754_ENTRY(sincosl)
     br.cond.sptk _COMMON_SINCOSL
 };;
 GLOBAL_IEEE754_END(sincosl)
+libm_alias_ldouble_other (__sincos, sincos)
 
 GLOBAL_LIBM_ENTRY(__libm_sincosl)
 { .mlx  ///////////////////////////// 1 /////////////////

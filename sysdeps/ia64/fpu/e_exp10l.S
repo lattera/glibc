@@ -749,6 +749,7 @@ OUT_RANGE_EXP10:
 ;;
 
 GLOBAL_IEEE754_END(exp10l)
+libm_alias_ldouble_other (__exp10, exp10)
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
 compat_symbol (libm, exp10l, pow10l, GLIBC_2_2)
 #endif

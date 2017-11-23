@@ -2481,6 +2481,7 @@ acosl_SPECIAL_CASES:
 
 
 GLOBAL_LIBM_END(acosl)
+libm_alias_ldouble_other (acos, acos)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -1054,6 +1054,7 @@ SINH_HUGE:
 ;;
 
 GLOBAL_IEEE754_END(sinhl)
+libm_alias_ldouble_other (__sinh, sinh)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

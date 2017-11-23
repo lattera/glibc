@@ -2457,6 +2457,7 @@ SMALL_S:
 
 
 GLOBAL_LIBM_END(asinl)
+libm_alias_ldouble_other (asin, asin)
 
 
 

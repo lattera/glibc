@@ -1342,3 +1342,4 @@ near_0:
 };;
 
 GLOBAL_LIBM_END(asinhl)
+libm_alias_ldouble_other (asinh, asinh)

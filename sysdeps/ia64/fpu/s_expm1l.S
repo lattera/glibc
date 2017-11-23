@@ -677,6 +677,7 @@ GLOBAL_IEEE754_ENTRY(expm1l)
 ;;
 
 GLOBAL_IEEE754_END(expm1l)
+libm_alias_ldouble_other (__expm1, expm1)
 
 
 GLOBAL_IEEE754_ENTRY(expl)
@@ -1377,6 +1378,7 @@ EXP_64_UNSUPPORTED:
 ;;
 
 GLOBAL_IEEE754_END(expl)
+libm_alias_ldouble_other (__exp, exp)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

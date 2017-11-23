@@ -69,3 +69,4 @@ GLOBAL_LIBM_ENTRY(fmal)
 ;;
 
 GLOBAL_LIBM_END(fmal)
+libm_alias_ldouble_other (fma, fma)

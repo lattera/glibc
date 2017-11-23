@@ -163,6 +163,7 @@ FDIM_OVERFLOW:
 ;;
 
 GLOBAL_LIBM_END(fdiml)
+libm_alias_ldouble_other (fdim, fdim)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

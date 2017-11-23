@@ -34,4 +34,4 @@ strong_alias (__copysign, __libm_copysignl)
 
 weak_alias (__copysign, copysign)
 weak_alias (__copysignf, copysignf)
-weak_alias (__copysignl, copysignl)
+libm_alias_ldouble (__copysign, copysign)

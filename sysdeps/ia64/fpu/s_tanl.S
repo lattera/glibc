@@ -3091,6 +3091,7 @@ TANL_UNSUPPORTED:
 ;;
 
 GLOBAL_IEEE754_END(tanl)
+libm_alias_ldouble_other (__tan, tan)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

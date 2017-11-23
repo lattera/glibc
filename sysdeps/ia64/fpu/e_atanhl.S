@@ -1101,6 +1101,7 @@ atanhl_gt_one:
 };;
 
 GLOBAL_LIBM_END(atanhl)
+libm_alias_ldouble_other (atanh, atanh)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

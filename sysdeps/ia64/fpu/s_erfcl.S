@@ -2003,6 +2003,7 @@ ERFC_RESULT:
 };;
 
 GLOBAL_LIBM_END(erfcl)
+libm_alias_ldouble_other (erfc, erfc)
 
 // call via (p15) br.cond.spnt   __libm_error_region
 //          for  x > POS_ARG_ASYMP

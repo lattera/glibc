@@ -68,6 +68,7 @@ long double LGFUNC (lgammal) (long double x)
 compat_symbol (libm, __lgammal_compat, lgammal, LGAMMA_OLD_VER);
 # else
 versioned_symbol (libm, __ieee754_lgammal, lgammal, LGAMMA_NEW_VER);
+libm_alias_ldouble_other (__ieee754_lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
 strong_alias (LGFUNC (lgammal), __ieee754_gammal)

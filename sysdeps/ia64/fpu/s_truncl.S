@@ -164,3 +164,4 @@ TRUNC_UNORM:
 ;;
 
 GLOBAL_LIBM_END(truncl)
+libm_alias_ldouble_other (trunc, trunc)
