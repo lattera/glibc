@@ -944,6 +944,11 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
 static void __attribute__ ((section ("__libc_thread_freeres_fn")))
 arena_thread_freeres (void)
 {
+  /* Shut down the thread cache first.  This could deallocate data for
+     the thread arena, so do this before we put the arena on the free
+     list.  */
+  tcache_thread_shutdown ();
+
   mstate a = thread_arena;
   thread_arena = NULL;
 

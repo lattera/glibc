@@ -1,5 +1,13 @@
 2017-11-23  Florian Weimer  <fweimer@redhat.com>
 
+	* malloc/malloc.c (tcache_thread_shutdown): Rename from
+	tcache_thread_freeres.  Define for USE_TCACHE and !USE_TCACHE
+	alike.  Remove freeres marker.
+	* malloc/arena.c (arena_thread_freeres): Call
+	tcache_thread_shutdown.
+
+2017-11-23  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22459]
 	Export nscd hash function as __nss_hash.
 	* include/nss.h (__nss_hash): Declare.

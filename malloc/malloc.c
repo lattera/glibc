@@ -1869,6 +1869,9 @@ void *weak_variable (*__memalign_hook)
   = memalign_hook_ini;
 void weak_variable (*__after_morecore_hook) (void) = NULL;
 
+/* This function is called from the arena shutdown hook, to free the
+   thread cache (if it exists).  */
+static void tcache_thread_shutdown (void);
 
 /* ------------------ Testing support ----------------------------------*/
 
@@ -2938,8 +2941,8 @@ tcache_get (size_t tc_idx)
   return (void *) e;
 }
 
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-tcache_thread_freeres (void)
+static void
+tcache_thread_shutdown (void)
 {
   int i;
   tcache_perthread_struct *tcache_tmp = tcache;
@@ -2965,7 +2968,6 @@ tcache_thread_freeres (void)
 
   __libc_free (tcache_tmp);
 }
-text_set_element (__libc_thread_subfreeres, tcache_thread_freeres);
 
 static void
 tcache_init(void)
@@ -3002,13 +3004,20 @@ tcache_init(void)
 
 }
 
-#define MAYBE_INIT_TCACHE() \
+# define MAYBE_INIT_TCACHE() \
   if (__glibc_unlikely (tcache == NULL)) \
     tcache_init();
 
-#else
-#define MAYBE_INIT_TCACHE()
-#endif
+#else  /* !USE_TCACHE */
+# define MAYBE_INIT_TCACHE()
+
+static void
+tcache_thread_shutdown (void)
+{
+  /* Nothing to do if there is no thread cache.  */
+}
+
+#endif /* !USE_TCACHE  */
 
 void *
 __libc_malloc (size_t bytes)
