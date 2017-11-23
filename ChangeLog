@@ -1,5 +1,23 @@
 2017-11-23  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22459]
+	Export nscd hash function as __nss_hash.
+	* include/nss.h (__nss_hash): Declare.
+	* nis/nis_hash.c (__nis_hash): Call __nss_hash.  Turn into compat
+	symbol.
+	* nscd/Makefile (aux, nscd-modules): Remove nscd_hash.
+	* nscd/cache.c (cache_search, cache_add): Call __nss_hash instead
+	of __nscd_hash.
+	* nscd/nscd_helper.c (__nscd_cache_search): Likewise.
+	* nscd/nscd_hash.h, nscd/nscd_hash.c: Remove files.
+	* nss/Makefiles (routines): Add nss_hash.
+	* nss/Versions (GLIBC_PRIVATE): Export __nss_hash.
+	* nss/nss_hash.c: Rename from nis/nis_hash.c.
+	(__nss_hash): Rename from __nis_hash.  Define hidden alias.
+	* nis/rpcsvc/nislib.h (__nis_hash): Remove declaration.
+
+2017-11-23  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22478]
 	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Retry on EINTR.
 	Return error code, not -1.

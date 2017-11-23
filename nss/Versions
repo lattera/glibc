@@ -15,6 +15,7 @@ libc {
 
     __nss_passwd_lookup2; __nss_group_lookup2; __nss_hosts_lookup2;
     __nss_services_lookup2; __nss_next2; __nss_lookup;
+    __nss_hash;
   }
 }
 

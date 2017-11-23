@@ -1,6 +1,6 @@
-/* Copyright (c) 1997-2017 Free Software Foundation, Inc.
+/* Forward __nis_hash calls to __nss_hash, for ABI compatibility.
+   Copyright (c) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,61 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stdint.h>
-#include <rpcsvc/nis.h>
+#include <shlib-compat.h>
 
-/* This is from libc/db/hash/hash_func.c, hash3 is static there */
-/*
- * This is INCREDIBLY ugly, but fast.  We break the string up into 8 byte
- * units.  On the first time through the loop we get the "leftover bytes"
- * (strlen % 8).  On every other iteration, we perform 8 HASHC's so we handle
- * all 8 bytes.  Essentially, this saves us 7 cmp & branch instructions.  If
- * this routine is heavily used enough, it's worth the ugly coding.
- *
- * OZ's original sdbm hash
- */
+#if SHLIB_COMPAT (libnsl, GLIBC_2_1, GLIBC_2_27)
+
+# include <nss.h>
+
 uint32_t
 __nis_hash (const void *keyarg, size_t len)
 {
-  const u_char *key;
-  size_t loop;
-  uint32_t h;
-
-#define HASHC   h = *key++ + 65599 * h
-
-  h = 0;
-  key = keyarg;
-  if (len > 0)
-    {
-      loop = (len + 8 - 1) >> 3;
-      switch (len & (8 - 1))
-	{
-	case 0:
-	  do {
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 7:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 6:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 5:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 4:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 3:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 2:
-	    HASHC;
-	    /* FALLTHROUGH */
-	  case 1:
-	    HASHC;
-	  } while (--loop);
-	}
-    }
-  return h;
+  return __nss_hash (keyarg, len);
 }
+
+compat_symbol (libnsl, __nis_hash, __nis_hash, GLIBC_2_1);
+
+#endif

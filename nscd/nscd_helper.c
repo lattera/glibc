@@ -36,10 +36,9 @@
 #include <sys/un.h>
 #include <not-cancel.h>
 #include <kernel-features.h>
+#include <nss.h>
 
 #include "nscd-client.h"
-#include "nscd_hash.h"
-
 
 /* Extra time we wait if the socket is still receiving data.  This
    value is in milliseconds.  Note that the other side is nscd on the
@@ -451,7 +450,7 @@ struct datahead *
 __nscd_cache_search (request_type type, const char *key, size_t keylen,
 		     const struct mapped_database *mapped, size_t datalen)
 {
-  unsigned long int hash = __nscd_hash (key, keylen) % mapped->head->module;
+  unsigned long int hash = __nss_hash (key, keylen) % mapped->head->module;
   size_t datasize = mapped->datasize;
 
   ref_t trail = mapped->head->array[hash];

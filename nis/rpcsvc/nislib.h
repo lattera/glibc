@@ -244,7 +244,6 @@ extern uint32_t __nis_default_ttl (char *) __THROW;
 extern unsigned int __nis_default_access (char *, unsigned int) __THROW;
 extern fd_result *__nis_finddirectory (directory_obj *, const_nis_name) __THROW;
 extern void __free_fdresult (fd_result *) __THROW;
-extern uint32_t __nis_hash (const void *__keyarg, size_t __len) __THROW;
 
 /* NIS+ cache locking */
 extern int __nis_lock_cache (void) __THROW;

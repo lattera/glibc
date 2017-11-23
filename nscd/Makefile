@@ -25,7 +25,7 @@ include ../Makeconfig
 ifneq ($(use-nscd),no)
 routines := nscd_getpw_r nscd_getgr_r nscd_gethst_r nscd_getai \
 	    nscd_initgroups nscd_getserv_r nscd_netgroup
-aux	:= nscd_helper nscd_hash
+aux	:= nscd_helper
 endif
 
 # To find xmalloc.c
@@ -36,7 +36,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
 		xmalloc xstrdup aicache initgrcache gai res_hconf \
-		netgroupcache nscd_hash
+		netgroupcache
 
 ifeq ($(build-nscd)$(have-thread-library),yesyes)
 

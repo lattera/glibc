@@ -29,10 +29,10 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <nss.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
-#include "nscd_hash.h"
 
 
 /* Wrapper functions with error checking for standard functions.  */
@@ -74,7 +74,7 @@ struct datahead *
 cache_search (request_type type, const void *key, size_t len,
 	      struct database_dyn *table, uid_t owner)
 {
-  unsigned long int hash = __nscd_hash (key, len) % table->head->module;
+  unsigned long int hash = __nss_hash (key, len) % table->head->module;
 
   unsigned long int nsearched = 0;
   struct datahead *result = NULL;
@@ -153,7 +153,7 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	       first ? _(" (first)") : "");
     }
 
-  unsigned long int hash = __nscd_hash (key, len) % table->head->module;
+  unsigned long int hash = __nss_hash (key, len) % table->head->module;
   struct hashentry *newp;
 
   newp = mempool_alloc (table, sizeof (struct hashentry), 0);
