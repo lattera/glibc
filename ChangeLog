@@ -1,5 +1,13 @@
 2017-11-23  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22478]
+	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): Retry on EINTR.
+	Return error code, not -1.
+	* signal/tst-sigwait-eintr.c: New file.
+	* signal/Makefile (tests): Add tst-sigwait-eintr.
+
+2017-11-23  Florian Weimer  <fweimer@redhat.com>
+
 	Linux: Add memfd_create system call wrapper
 	* sysdeps/unix/sysv/linux/Makefile [misc] (tests): Add
 	tst-memfd_create.

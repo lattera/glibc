@@ -45,8 +45,8 @@ routines	:= signal raise killpg \
 		   allocrtsig sigtimedwait sigwaitinfo sigqueue \
 		   sighold sigrelse sigignore sigset
 
-tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2
-
+tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2 \
+  tst-sigwait-eintr \
 
 include ../Rules
 

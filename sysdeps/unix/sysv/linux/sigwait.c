@@ -17,13 +17,20 @@
 
 #include <signal.h>
 #include <sysdep-cancel.h>
+#include <errno.h>
 
 int
 __sigwait (const sigset_t *set, int *sig)
 {
   siginfo_t si;
-  if (__sigtimedwait (set, &si, 0) < 0)
-    return -1;
+  int ret;
+  do
+    ret = __sigtimedwait (set, &si, 0);
+  /* Applications do not expect sigwait to return with EINTR, and the
+     error code is not specified by POSIX.  */
+  while (ret < 0 && errno == EINTR);
+  if (ret < 0)
+    return errno;
   *sig = si.si_signo;
   return 0;
 }
