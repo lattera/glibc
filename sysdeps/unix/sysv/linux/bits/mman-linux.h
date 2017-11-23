@@ -111,3 +111,19 @@
 # define MCL_ONFAULT	4		/* Lock all pages that are
 					   faulted in.  */
 #endif
+
+#ifdef __USE_GNU
+/* Flags for memfd_create.  */
+# define MFD_CLOEXEC 1U
+# define MFD_ALLOW_SEALING 2U
+# define MFD_HUGETLB 4U
+
+__BEGIN_DECLS
+
+/* Create a new memory file descriptor.  NAME is a name for debugging.
+   FLAGS is a combination of the MFD_* constants.  */
+int memfd_create (const char *__name, unsigned int __flags) __THROW;
+
+__END_DECLS
+
+#endif /* __USE_GNU */

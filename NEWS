@@ -35,6 +35,8 @@ Major new features:
   are the same interfaces added in version 2.26 for some platforms where
   this format is supported but is not the format of long double.
 
+* glibc now implements the memfd_create function on Linux.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

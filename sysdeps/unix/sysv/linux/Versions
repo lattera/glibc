@@ -166,6 +166,9 @@ libc {
   GLIBC_2.15 {
     process_vm_readv; process_vm_writev;
   }
+  GLIBC_2.27 {
+    memfd_create;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

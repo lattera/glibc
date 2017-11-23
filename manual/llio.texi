@@ -1801,6 +1801,69 @@ the given @var{name} previously created by @code{shm_open}.
 On failure @code{errno} is set.
 @end deftypefn
 
+@deftypefun int memfd_create (const char *@var{name}, unsigned int @var{flags})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+The @code{memfd_create} function returns a file descriptor which can be
+used to create memory mappings using the @code{mmap} function.  It is
+similar to the @code{shm_open} function in the sense that these mappings
+are not backed by actual files.  However, the descriptor returned by
+@code{memfd_create} does not correspond to a named object; the
+@var{name} argument is used for debugging purposes only (e.g., will
+appear in @file{/proc}), and separate invocations of @code{memfd_create}
+with the same @var{name} will not return descriptors for the same region
+of memory.  The descriptor can also be used to create alias mappings
+within the same process.
+
+The descriptor initially refers to a zero-length file.  Before mappings
+can be created which are backed by memory, the file size needs to be
+increased with the @code{ftruncate} function.  @xref{File Size}.
+
+The @var{flags} argument can be a combination of the following flags:
+
+@vtable @code
+@item MFD_CLOEXEC
+@standards{Linux, sys/mman.h}
+The descriptor is created with the @code{O_CLOEXEC} flag.
+
+@item MFD_ALLOW_SEALING
+@standards{Linux, sys/mman.h}
+The descriptor supports the addition of seals using the @code{fcntl}
+function.
+
+@item MFD_HUGETLB
+@standards{Linux, sys/mman.h}
+This requests that mappings created using the returned file descriptor
+use a larger page size.  See @code{MAP_HUGETLB} above for details.
+
+This flag is incompatible with @code{MFD_ALLOW_SEALING}.
+@end vtable
+
+@code{memfd_create} returns a file descriptor on success, and @math{-1}
+on failure.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item EINVAL
+An invalid combination is specified in @var{flags}, or @var{name} is
+too long.
+
+@item EFAULT
+The @var{name} argument does not point to a string.
+
+@item EMFILE
+The operation would exceed the file descriptor limit for this process.
+
+@item ENFILE
+The operation would exceed the system-wide file descriptor limit.
+
+@item ENOMEM
+There is not enough memory for the operation.
+@end table
+@end deftypefun
+
 @node Waiting for I/O
 @section Waiting for Input or Output
 @cindex waiting for input or output

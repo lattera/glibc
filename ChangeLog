@@ -1,3 +1,17 @@
+2017-11-23  Florian Weimer  <fweimer@redhat.com>
+
+	Linux: Add memfd_create system call wrapper
+	* sysdeps/unix/sysv/linux/Makefile [misc] (tests): Add
+	tst-memfd_create.
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h [__USE_GNU]
+	(MFD_CLOEXEC, MFD_ALLOW_SEALING): Define.
+	[__USE_GNU] (memfd_create): Declare.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.27): Add memfd_create.
+	* sysdeps/unix/sysv/linux/syscalls.list (memfd_create): Add.
+	* sysdeps/unix/sysv/linux/tst-memfd_create.c: New file.
+	* sysdeps/unix/sysv/linux/**.abilist: Update.
+	* manual/llio.texi (Memory-mapped I/O): Document memfd_create.
+
 2017-11-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* localedata/gen-locale.sh: Fix typo in variable name.

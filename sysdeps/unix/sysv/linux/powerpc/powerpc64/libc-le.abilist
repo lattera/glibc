@@ -2201,3 +2201,4 @@ GLIBC_2.26 wcstof128_l F
 GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
+GLIBC_2.27 memfd_create F
