@@ -203,11 +203,11 @@ class Type(object):
         # Internal types represent the combination of long double with
         # _Float64 or _Float64x, for which the ordering depends on
         # whether long double has the same format as double.
-        Type.create_type('long_double_Float64', 'LDBL_MANT_DIG',
+        Type.create_type('long_double_Float64', None, 'LDBL_MANT_DIG',
                          complex_name='complex_long_double_Float64',
                          condition='defined HUGE_VAL_F64', order=(6, 7),
                          internal=True)
-        Type.create_type('long_double_Float64x', 'FLT64X_MANT_DIG',
+        Type.create_type('long_double_Float64x', None, 'FLT64X_MANT_DIG',
                          complex_name='complex_long_double_Float64x',
                          condition='defined HUGE_VAL_F64X', order=(7, 7),
                          internal=True)

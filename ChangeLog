@@ -1,5 +1,8 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-tgmath-tests.py (Type.init_types): Pass suffix argument
+	for combinations of long double with _Float64 and _Float64x.
+
 	* bits/libm-simd-decl-stubs.h (__DECL_SIMD_cosf16): New macro.
 	(__DECL_SIMD_cosf32): Likewise.
 	(__DECL_SIMD_cosf64): Likewise.
