@@ -39,6 +39,11 @@
 # define wcstof128_l __hide_wcstof128_l
 #endif
 
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# define strtof64x_l __hide_strtof64x_l
+# define wcstof64x_l __hide_wcstof64x_l
+#endif
+
 #include <strtod_l.c>
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
@@ -48,5 +53,15 @@
 weak_alias (wcstold_l, wcstof128_l)
 # else
 weak_alias (strtold_l, strtof128_l)
+# endif
+#endif
+
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# undef strtof64x_l
+# undef wcstof64x_l
+# ifdef USE_WIDE_CHAR
+weak_alias (wcstold_l, wcstof64x_l)
+# else
+weak_alias (strtold_l, strtof64x_l)
 # endif
 #endif

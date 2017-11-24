@@ -22,6 +22,11 @@
 # define wcstof128_l __hide_wcstof128_l
 #endif
 
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# define strtof64x_l __hide_strtof64x_l
+# define wcstof64x_l __hide_wcstof64x_l
+#endif
+
 #include <math.h>
 #include <stdlib.h>
 #include <wchar.h>
@@ -72,5 +77,15 @@ long_double_symbol (libc, ____new_strtold_l, __strtold_l);
 weak_alias (____new_wcstold_l, wcstof128_l)
 # else
 weak_alias (____new_strtold_l, strtof128_l)
+# endif
+#endif
+
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# undef strtof64x_l
+# undef wcstof64x_l
+# ifdef USE_WIDE_CHAR
+weak_alias (____new_wcstold_l, wcstof64x_l)
+# else
+weak_alias (____new_strtold_l, strtof64x_l)
 # endif
 #endif

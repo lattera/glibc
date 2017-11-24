@@ -34,4 +34,19 @@
 #define MPN2FLOAT	__mpn_construct_long_double
 #define FLOAT_HUGE_VAL	HUGE_VALL
 
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# define strtof64x_l __hide_strtof64x_l
+# define wcstof64x_l __hide_wcstof64x_l
+#endif
+
 #include <stdlib/strtod_l.c>
+
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# undef strtof64x_l
+# undef wcstof64x_l
+# ifdef USE_WIDE_CHAR
+weak_alias (wcstold_l, wcstof64x_l)
+# else
+weak_alias (strtold_l, strtof64x_l)
+# endif
+#endif

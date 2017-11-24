@@ -1,5 +1,40 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strtold.c [__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x):
+	Define and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x): Define and later
+	undefine as macro.  Define as weak alias if [USE_WIDE_CHAR].
+	* sysdeps/ieee754/float128/strtof128.c: Include <bits/floatn.h>.
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x):
+	Define and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x):
+	Define and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+	* sysdeps/ieee754/float128/strtof128_l.c
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x_l):
+	Define and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x_l):
+	Define and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+	* sysdeps/ieee754/ldbl-128/strtold_l.c
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [USE_WIDE_CHAR].
+	* sysdeps/ieee754/ldbl-64-128/strtold_l.c
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [USE_WIDE_CHAR].
+	* sysdeps/ieee754/ldbl-96/strtold_l.c
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [!USE_WIDE_CHAR].
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (wcstof64x_l): Define and later
+	undefine as macro.  Define as weak alias if [USE_WIDE_CHAR].
+
 	* math/test-float64x.h: New file.
 	* math/Makefile (type-float64x-yes): New variable.
 	(test-types): Add $(type-float64x-$(float64x-alias-fcts)).

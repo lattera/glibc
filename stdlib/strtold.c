@@ -27,6 +27,10 @@
 # define strtof128 __hide_strtof128
 # define wcstof128 __hide_wcstof128
 #endif
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# define strtof64x __hide_strtof64x
+# define wcstof64x __hide_wcstof64x
+#endif
 
 #ifdef __LONG_DOUBLE_MATH_OPTIONAL
 # include <wchar.h>
@@ -76,5 +80,15 @@ libc_hidden_ver (____new_strtold_internal, __strtold_internal)
 weak_alias (NEW (wcstold), wcstof128)
 # else
 weak_alias (NEW (strtold), strtof128)
+# endif
+#endif
+
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# undef strtof64x
+# undef wcstof64x
+# ifdef USE_WIDE_CHAR
+weak_alias (NEW (wcstold), wcstof64x)
+# else
+weak_alias (NEW (strtold), strtof64x)
 # endif
 #endif
