@@ -3,4 +3,4 @@
 #define FUNC __ufromfpxf128
 #include <float128_private.h>
 #include "../ldbl-128/s_fromfpl_main.c"
-weak_alias (__ufromfpxf128, ufromfpxf128)
+libm_alias_float128 (__ufromfpx, ufromfpx)

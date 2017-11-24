@@ -1,5 +1,18 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/float128/s_fromfpf128.c (fromfpf128): Define
+	using libm_alias_float128.
+	* sysdeps/ieee754/float128/s_fromfpxf128.c (fromfpxf128):
+	Likewise.
+	* sysdeps/ieee754/float128/s_setpayloadf128.c (setpayloadf128):
+	Likewise.
+	* sysdeps/ieee754/float128/s_setpayloadsigf128.c
+	(setpayloadsigf128): Likewise.
+	* sysdeps/ieee754/float128/s_ufromfpf128.c (ufromfpf128):
+	Likewise.
+	* sysdeps/ieee754/float128/s_ufromfpxf128.c (ufromfpxf128):
+	Likewise.
+
 	* sysdeps/powerpc/powerpc64le/Makefile ($(foreach
 	suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf))): Add
 	-mfloat128 to CFLAGS.
