@@ -19,12 +19,19 @@
 #ifndef _LIBM_ALIAS_FLOAT128_H
 #define _LIBM_ALIAS_FLOAT128_H
 
+#include <bits/floatn.h>
+
 /* Define _FloatN / _FloatNx aliases (other than that for _Float128)
    for a _Float128 libm function that has internal name FROM ## f128
    ## R and public names TO ## suffix ## R for each suffix of a
    supported _FloatN / _FloatNx floating-point type with the same
    format as _Float128.  */
-#define libm_alias_float128_other_r(from, to, r)
+#if __HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE
+# define libm_alias_float128_other_r(from, to, r)	\
+  weak_alias (from ## f128 ## r, to ## f64x ## r)
+#else
+# define libm_alias_float128_other_r(from, to, r)
+#endif
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_float128_other(from, to)	\
@@ -39,7 +46,7 @@
    per format, not per type) or for obsolescent functions not provided
    for _FloatN types.  */
 #define libm_alias_float128_r(from, to, r)		\
-  weak_alias (from ## f128 ## r, to ## f128 ## r)	\
+  weak_alias (from ## f128 ## r, to ## f128 ## r);	\
   libm_alias_float128_other_r (from, to, r)
 
 /* Likewise, but without the R suffix.  */

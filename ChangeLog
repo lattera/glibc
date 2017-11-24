@@ -1,5 +1,22 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/libm-alias-float128.h: Include <bits/floatn.h>.
+	(libm_alias_float128_other_r): If
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE], define f64x
+	alias.
+	(libm_alias_float128_r): Add semicolon after weak_alias call.
+	* sysdeps/generic/libm-alias-ldouble.h
+	(libm_alias_ldouble_other_r_f128): New macro.
+	(libm_alias_ldouble_other_r_f64x): Likewise.
+	(libm_alias_ldouble_other_r): Use libm_alias_ldouble_other_r_f128
+	and libm_alias_ldouble_other_r_f64x.
+	(libm_alias_ldouble_r): Add semicolon after weak_alias call.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-ldouble.h
+	(libm_alias_ldouble_other_r_f128): New macro.
+	(libm_alias_ldouble_other_r_f64x): Likewise.
+	(libm_alias_ldouble_other_r): Use libm_alias_ldouble_other_r_f128
+	and libm_alias_ldouble_other_r_f64x.
+
 	* stdlib/strfroml.c: Always include <stdlib.h>.
 	[__HAVE_FLOAT64X_LONG_DOUBLE] (strfromf64x): Define and later
 	undefine as macro and define as weak alias.
