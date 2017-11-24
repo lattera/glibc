@@ -1,5 +1,42 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* bits/libm-simd-decl-stubs.h (__DECL_SIMD_cosf16): New macro.
+	(__DECL_SIMD_cosf32): Likewise.
+	(__DECL_SIMD_cosf64): Likewise.
+	(__DECL_SIMD_cosf32x): Likewise.
+	(__DECL_SIMD_cosf64x): Likewise.
+	(__DECL_SIMD_cosf128x): Likewise.
+	(__DECL_SIMD_sinf16): Likewise.
+	(__DECL_SIMD_sinf32): Likewise.
+	(__DECL_SIMD_sinf64): Likewise.
+	(__DECL_SIMD_sinf32x): Likewise.
+	(__DECL_SIMD_sinf64x): Likewise.
+	(__DECL_SIMD_sinf128x): Likewise.
+	(__DECL_SIMD_sincosf16): Likewise.
+	(__DECL_SIMD_sincosf32): Likewise.
+	(__DECL_SIMD_sincosf64): Likewise.
+	(__DECL_SIMD_sincosf32x): Likewise.
+	(__DECL_SIMD_sincosf64x): Likewise.
+	(__DECL_SIMD_sincosf128x): Likewise.
+	(__DECL_SIMD_logf16): Likewise.
+	(__DECL_SIMD_logf32): Likewise.
+	(__DECL_SIMD_logf64): Likewise.
+	(__DECL_SIMD_logf32x): Likewise.
+	(__DECL_SIMD_logf64x): Likewise.
+	(__DECL_SIMD_logf128x): Likewise.
+	(__DECL_SIMD_expf16): Likewise.
+	(__DECL_SIMD_expf32): Likewise.
+	(__DECL_SIMD_expf64): Likewise.
+	(__DECL_SIMD_expf32x): Likewise.
+	(__DECL_SIMD_expf64x): Likewise.
+	(__DECL_SIMD_expf128x): Likewise.
+	(__DECL_SIMD_powf16): Likewise.
+	(__DECL_SIMD_powf32): Likewise.
+	(__DECL_SIMD_powf64): Likewise.
+	(__DECL_SIMD_powf32x): Likewise.
+	(__DECL_SIMD_powf64x): Likewise.
+	(__DECL_SIMD_powf128x): Likewise.
+
 	* stdlib/Versions (libc): Move entries for wcstof128 and
 	wcstof128_l to ....
 	* wcsmbs/Versions (libc): ... here.
