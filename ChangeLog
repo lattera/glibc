@@ -1,5 +1,12 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math_private.h (min_of_type_f): Make into a
+	function-like macro.
+	(min_of_type_): Likewise.
+	(min_of_type_l): Likewise.
+	(min_of_type_f128): Likewise.
+	(min_of_type): Pass () as last argument of __MATH_TG.
+
 	* stdlib/tst-strtod-round-skeleton.c
 	(__STDC_WANT_IEC_60559_TYPES_EXT__): Define before including
 	headers.

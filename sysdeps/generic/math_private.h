@@ -298,12 +298,15 @@ extern void __docos (double __x, double __dx, double __v[]);
 
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 
-#define min_of_type_f FLT_MIN
-#define min_of_type_ DBL_MIN
-#define min_of_type_l LDBL_MIN
-#define min_of_type_f128 FLT128_MIN
+/* These must be function-like macros because some __MATH_TG
+   implementations macro-expand the function-name argument before
+   concatenating a suffix to it.  */
+#define min_of_type_f() FLT_MIN
+#define min_of_type_() DBL_MIN
+#define min_of_type_l() LDBL_MIN
+#define min_of_type_f128() FLT128_MIN
 
-#define min_of_type(x) __MATH_TG ((x), (__typeof (x)) min_of_type_, )
+#define min_of_type(x) __MATH_TG ((x), (__typeof (x)) min_of_type_, ())
 
 /* If X (which is not a NaN) is subnormal, force an underflow
    exception.  */
