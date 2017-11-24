@@ -127,8 +127,6 @@ libc {
     strfromf128;
     strtof128;
     strtof128_l;
-    wcstof128;
-    wcstof128_l;
   }
 %endif
   GLIBC_PRIVATE {

@@ -1,3 +1,4 @@
+%include <float128-abi.h>
 libc {
   GLIBC_2.0 {
     # functions used in inline functions or macros
@@ -34,4 +35,10 @@ libc {
   GLIBC_2.16 {
     c16rtomb; c32rtomb; mbrtoc16; mbrtoc32;
   }
+%ifdef FLOAT128_VERSION
+  FLOAT128_VERSION {
+    wcstof128;
+    wcstof128_l;
+  }
+%endif
 }
