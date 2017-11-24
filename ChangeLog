@@ -1,5 +1,15 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/powerpc64le/Makefile ($(foreach
+	suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf))): Add
+	-mfloat128 to CFLAGS.
+	($(foreach
+	suf,$(all-object-suffixes),$(objpfx)test-ifloat64x%$(suf))):
+	Likewise.
+	(CFLAGS-libm-test-support-float64x.c): New variable.
+	($(objpfx)test-float64x% $(objpfx)test-ifloat64x%): Add
+	$(f128-loader-link) to gnulib-tests.
+
 	* sysdeps/generic/libm-alias-float128.h: Include <bits/floatn.h>.
 	(libm_alias_float128_other_r): If
 	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE], define f64x

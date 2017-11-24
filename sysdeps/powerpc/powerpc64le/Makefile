@@ -14,12 +14,16 @@ CPPFLAGS += -I../soft-fp
 $(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat64x%$(suf)): CFLAGS += -mfloat128
 CFLAGS-libm-test-support-float128.c += -mfloat128
+CFLAGS-libm-test-support-float64x.c += -mfloat128
 CFLAGS-test-math-iscanonical.cc += -mfloat128
 CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
-$(objpfx)test-float128% $(objpfx)test-ifloat128% $(objpfx)test-math-iszero: \
+$(objpfx)test-float128% $(objpfx)test-ifloat128% \
+$(objpfx)test-float64x% $(objpfx)test-ifloat64x% $(objpfx)test-math-iszero: \
   gnulib-tests += $(f128-loader-link)
 endif
 
