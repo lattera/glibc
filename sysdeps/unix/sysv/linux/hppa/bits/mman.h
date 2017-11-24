@@ -110,3 +110,5 @@
 # define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
 # define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
 #endif
+
+#include <bits/mman-shared.h>

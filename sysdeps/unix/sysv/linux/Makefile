@@ -39,7 +39,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/timerfd.h sys/fanotify.h bits/eventfd.h bits/inotify.h \
 		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
 		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
-		  bits/mman-linux.h \
+		  bits/mman-linux.h bits/mman-shared.h \
 		  bits/siginfo-arch.h bits/siginfo-consts-arch.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
