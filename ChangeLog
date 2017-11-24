@@ -1,5 +1,9 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-float64x.h: New file.
+	* math/Makefile (type-float64x-yes): New variable.
+	(test-types): Add $(type-float64x-$(float64x-alias-fcts)).
+
 	* sysdeps/generic/math_private.h (min_of_type_f): Make into a
 	function-like macro.
 	(min_of_type_): Likewise.
