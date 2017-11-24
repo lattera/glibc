@@ -20,6 +20,7 @@
 /* Defining _LIBC_TEST ensures long double math functions are
    declared in the headers.  */
 #define _LIBC_TEST 1
+#define __STDC_WANT_IEC_60559_TYPES_EXT__
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
