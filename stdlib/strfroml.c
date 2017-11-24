@@ -23,12 +23,25 @@
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
 # define strfromf128 __hide_strfromf128
-# include <stdlib.h>
+#endif
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# define strfromf64x __hide_strfromf64x
+#endif
+
+#include <stdlib.h>
+
+#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
 # undef strfromf128
+#endif
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+# undef strfromf64x
 #endif
 
 #include "strfrom-skeleton.c"
 
 #if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
 weak_alias (strfroml, strfromf128)
+#endif
+#if __HAVE_FLOAT64X_LONG_DOUBLE
+weak_alias (strfroml, strfromf64x)
 #endif

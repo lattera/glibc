@@ -1,5 +1,14 @@
 2017-11-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strfroml.c: Always include <stdlib.h>.
+	[__HAVE_FLOAT64X_LONG_DOUBLE] (strfromf64x): Define and later
+	undefine as macro and define as weak alias.
+	* sysdeps/ieee754/float128/strfromf128.c: Include <bits/floatn.h>.
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE]: Include
+	<stdlib.h>.
+	[__HAVE_FLOAT64X && !__HAVE_FLOAT64X_LONG_DOUBLE] (strfromf64x):
+	Define and later undefine as macro and define as weak alias.
+
 	* stdlib/strtold.c [__HAVE_FLOAT64X_LONG_DOUBLE] (strtof64x):
 	Define and later undefine as macro.  Define as weak alias if
 	[!USE_WIDE_CHAR].
