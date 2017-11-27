@@ -222,7 +222,7 @@ float128: 4
 idouble: 1
 ifloat: 1
 ifloat128: 4
-ildouble: 3
+ildouble: 4
 ldouble: 4
 
 Function: "atanh_towardzero":
@@ -2472,7 +2472,7 @@ float128: 3
 idouble: 1
 ifloat: 1
 ifloat128: 3
-ildouble: 4
+ildouble: 5
 ldouble: 5
 
 Function: "sinh_towardzero":
@@ -2482,7 +2482,7 @@ float128: 3
 idouble: 1
 ifloat: 1
 ifloat128: 3
-ildouble: 3
+ildouble: 4
 ldouble: 4
 
 Function: "sinh_upward":
@@ -2492,7 +2492,7 @@ float128: 4
 idouble: 1
 ifloat: 1
 ifloat128: 4
-ildouble: 4
+ildouble: 5
 ldouble: 5
 
 Function: "tan":

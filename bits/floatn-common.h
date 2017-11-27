@@ -34,7 +34,6 @@
 #define __HAVE_FLOAT32 0
 #define __HAVE_FLOAT64 0
 #define __HAVE_FLOAT32X 0
-#define __HAVE_FLOAT64X 0
 #define __HAVE_FLOAT128X 0
 
 /* Defined to 1 if the corresponding __HAVE_<type> macro is 1 and the
@@ -55,12 +54,6 @@
 #define __HAVE_DISTINCT_FLOAT32X 0
 #define __HAVE_DISTINCT_FLOAT64X 0
 #define __HAVE_DISTINCT_FLOAT128X __HAVE_FLOAT128X
-
-/* Defined to 1 if __HAVE_FLOAT64X is 1 and _Float64x has the format
-   of long double.  Otherwise, if __HAVE_FLOAT64X is 1, _Float64x has
-   the format of _Float128, which must be different from that of long
-   double.  */
-#define __HAVE_FLOAT64X_LONG_DOUBLE 0
 
 /* Defined to 1 if any _FloatN or _FloatNx types that are not
    ABI-distinct are however distinct types at the C language level (so

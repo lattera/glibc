@@ -66,9 +66,9 @@ these functions are described along with the @code{double},
 @w{ISO/IEC TS 18661-3}, unless explicitly stated otherwise.
 
 Currently, support for @code{_Float@var{N}} or @code{_Float@var{N}x}
-types is only provided for @code{_Float128} on powerpc64le (PowerPC
-64-bits little-endian), x86_64, x86, ia64, aarch64, alpha, mips64,
-s390 and sparc.
+types is only provided for @code{_Float128} and @code{_Float64x} on
+powerpc64le (PowerPC 64-bits little-endian), x86_64, x86, ia64,
+aarch64, alpha, mips64, s390 and sparc.
 
 @menu
 * Mathematical Constants::      Precise numeric values for often-used

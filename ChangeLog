@@ -1,3 +1,60 @@
+2017-11-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/Makeconfig (float64x-alias-fcts): New variable.
+	* sysdeps/ieee754/float128/Makeconfig (float64x-alias-fcts):
+	Likewise.
+	* sysdeps/ieee754/ldbl-128/Makeconfig (float64x-alias-fcts):
+	Likewise.
+	* sysdeps/x86/Makeconfig: New file.
+	* bits/floatn-common.h (__HAVE_FLOAT64X): Remove macro.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* bits/floatn.h (__HAVE_FLOAT64X): New macro.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* sysdeps/ia64/bits/floatn.h (__HAVE_FLOAT64X): Likewise.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* sysdeps/ieee754/ldbl-128/bits/floatn.h (__HAVE_FLOAT64X):
+	Likewise.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* sysdeps/mips/ieee754/bits/floatn.h (__HAVE_FLOAT64X): Likewise.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* sysdeps/powerpc/bits/floatn.h (__HAVE_FLOAT64X): Likewise.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* sysdeps/x86/bits/floatn.h (__HAVE_FLOAT64X): Likewise.
+	(__HAVE_FLOAT64X_LONG_DOUBLE): Likewise.
+	* manual/math.texi (Mathematics): Document support for _Float64x.
+	* math/Versions (GLIBC_2.27): Add _Float64x functions.
+	* stdlib/Versions (GLIBC_2.27): Likewise.
+	* wcsmbs/Versions (GLIBC_2.27): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Update.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+	* sysdeps/i386/fpu/libm-test-ulps: Likewise.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+
 2017-11-27  Andreas Schwab  <schwab@suse.de>
 
 	* elf/Makefile (dl-routines): Add dl-sort-maps.

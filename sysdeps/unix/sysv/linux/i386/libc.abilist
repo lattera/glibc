@@ -2037,6 +2037,11 @@ GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
 GLIBC_2.27 memfd_create F
+GLIBC_2.27 strfromf64x F
+GLIBC_2.27 strtof64x F
+GLIBC_2.27 strtof64x_l F
+GLIBC_2.27 wcstof64x F
+GLIBC_2.27 wcstof64x_l F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F

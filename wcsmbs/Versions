@@ -41,4 +41,8 @@ libc {
     wcstof128_l;
   }
 %endif
+  GLIBC_2.27 {
+    wcstof64x;
+    wcstof64x_l;
+  }
 }

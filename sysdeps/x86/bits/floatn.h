@@ -42,6 +42,17 @@
 # define __HAVE_DISTINCT_FLOAT128 0
 #endif
 
+/* Defined to 1 if the current compiler invocation provides a
+   floating-point type with the right format for _Float64x, and this
+   glibc includes corresponding *f64x interfaces for it.  */
+#define __HAVE_FLOAT64X 1
+
+/* Defined to 1 if __HAVE_FLOAT64X is 1 and _Float64x has the format
+   of long double.  Otherwise, if __HAVE_FLOAT64X is 1, _Float64x has
+   the format of _Float128, which must be different from that of long
+   double.  */
+#define __HAVE_FLOAT64X_LONG_DOUBLE 1
+
 #ifndef __ASSEMBLER__
 
 /* Defined to concatenate the literal suffix to be used with _Float128
