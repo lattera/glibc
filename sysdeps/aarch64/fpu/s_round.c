@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __round (double x)
@@ -24,4 +25,4 @@ __round (double x)
   return __builtin_round (x);
 }
 
-weak_alias (__round, round)
+libm_alias_double (__round, round)

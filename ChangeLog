@@ -1,3 +1,32 @@
+2017-11-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/aarch64/fpu/s_ceil.c: Include <libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_floor.c: Include <libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_fma.c: Include <libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_fmax.c: Include <libm-alias-double.h>.
+	(fmax): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_fmin.c: Include <libm-alias-double.h>.
+	(fmin): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_llrint.c: Include <libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_llround.c: Include <libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_lrint.c: Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_lround.c: Include <libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_nearbyint.c: Include <libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_rint.c: Include <libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_round.c: Include <libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/aarch64/fpu/s_trunc.c: Include <libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+
 2017-11-27  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mlock2.c: New file.

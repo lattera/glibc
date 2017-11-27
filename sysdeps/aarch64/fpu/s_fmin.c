@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __fmin (double x, double y)
@@ -24,4 +25,4 @@ __fmin (double x, double y)
   return __builtin_fmin (x, y);
 }
 
-weak_alias (__fmin, fmin)
+libm_alias_double (__fmin, fmin)

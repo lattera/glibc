@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __nearbyint (double x)
@@ -24,4 +25,4 @@ __nearbyint (double x)
   return __builtin_nearbyint (x);
 }
 
-weak_alias (__nearbyint, nearbyint)
+libm_alias_double (__nearbyint, nearbyint)

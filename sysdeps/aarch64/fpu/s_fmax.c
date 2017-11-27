@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __fmax (double x, double y)
@@ -24,4 +25,4 @@ __fmax (double x, double y)
   return __builtin_fmax (x, y);
 }
 
-weak_alias (__fmax, fmax)
+libm_alias_double (__fmax, fmax)

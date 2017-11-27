@@ -20,6 +20,7 @@
 #include <get-rounding-mode.h>
 #include <stdint.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 # define IREG_SIZE 64
 
@@ -84,4 +85,4 @@ __lrint (double x)
   return r;
 }
 
-weak_alias (__lrint, lrint)
+libm_alias_double (__lrint, lrint)

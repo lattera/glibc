@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __ceil (double x)
@@ -24,4 +25,4 @@ __ceil (double x)
   return __builtin_ceil (x);
 }
 
-weak_alias (__ceil, ceil)
+libm_alias_double (__ceil, ceil)

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __floor (double x)
@@ -24,4 +25,4 @@ __floor (double x)
   return __builtin_floor (x);
 }
 
-weak_alias (__floor, floor)
+libm_alias_double (__floor, floor)

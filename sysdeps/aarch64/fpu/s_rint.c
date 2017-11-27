@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __rint (double x)
@@ -24,4 +25,4 @@ __rint (double x)
   return __builtin_rint (x);
 }
 
-weak_alias (__rint, rint)
+libm_alias_double (__rint, rint)

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __trunc (double x)
@@ -24,4 +25,4 @@ __trunc (double x)
   return __builtin_trunc (x);
 }
 
-weak_alias (__trunc, trunc)
+libm_alias_double (__trunc, trunc)
