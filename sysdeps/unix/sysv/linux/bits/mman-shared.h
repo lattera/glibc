@@ -28,11 +28,20 @@
 #  define MFD_HUGETLB 4U
 # endif
 
+/* Flags for mlock2.  */
+# ifndef MLOCK_ONFAULT
+#  define MLOCK_ONFAULT 1U
+# endif
+
 __BEGIN_DECLS
 
 /* Create a new memory file descriptor.  NAME is a name for debugging.
    FLAGS is a combination of the MFD_* constants.  */
 int memfd_create (const char *__name, unsigned int __flags) __THROW;
+
+/* Lock pages from ADDR (inclusive) to ADDR + LENGTH (exclusive) into
+   memory.  FLAGS is a combination of the MLOCK_* flags above.  */
+int mlock2 (const void *__addr, size_t __length, unsigned int __flags) __THROW;
 
 __END_DECLS
 

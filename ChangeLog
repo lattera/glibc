@@ -1,3 +1,16 @@
+2017-11-27  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mlock2.c: New file.
+	* sysdeps/unix/sysv/linux/tst-mlock2.c: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile (routines): Add mlock2.
+	(tests): Add tst-mlock2.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.27): Export mlock2.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_MLOCK2)
+	[__LINUX_KERNEL_VERSION >= 4.4]: Define.
+	* sysdeps/unix/sysv/linux/libc**.abilist: Update.
+	* manual/memory.texi (Page Lock Functions): Move @end deftypefun
+	for mlock.  Document mlock2.
+
 2017-11-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ia64/Makeconfig (float64x-alias-fcts): New variable.

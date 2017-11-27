@@ -41,7 +41,7 @@ Major new features:
   18661-3:2015.  These are corresponding interfaces to those supported for
   _Float128.
 
-* glibc now implements the memfd_create function on Linux.
+* glibc now implements the memfd_create and mlock2 functions on Linux.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

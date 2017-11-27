@@ -3337,6 +3337,36 @@ The calling process is not superuser.
 The kernel does not provide @code{mlock} capability.
 
 @end table
+@end deftypefun
+
+@deftypefun int mlock2 (const void *@var{addr}, size_t @var{len}, unsigned int @var{flags})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function is similar to @code{mlock}.  If @var{flags} is zero, a
+call to @code{mlock2} behaves exactly as the equivalent call to @code{mlock}.
+
+The @var{flags} argument must be a combination of zero or more of the
+following flags:
+
+@vtable @code
+@item MLOCK_ONFAULT
+@standards{Linux, sys/mman.h}
+Only those pages in the specified address range which are already in
+memory are locked immediately.  Additional pages in the range are
+automatically locked in case of a page fault and allocation of memory.
+@end vtable
+
+Like @code{mlock}, @code{mlock2} returns zero on success and @code{-1}
+on failure, setting @code{errno} accordingly.  Additional @code{errno}
+values defined for @code{mlock2} are:
+
+@table @code
+@item EINVAL
+The specified (non-zero) @var{flags} argument is not supported by this
+system.
+@end table
+@end deftypefun
 
 You can lock @emph{all} a process' memory with @code{mlockall}.  You
 unlock memory with @code{munlock} or @code{munlockall}.
@@ -3345,8 +3375,6 @@ To avoid all page faults in a C program, you have to use
 @code{mlockall}, because some of the memory a program uses is hidden
 from the C code, e.g. the stack and automatic variables, and you
 wouldn't know what address to tell @code{mlock}.
-
-@end deftypefun
 
 @deftypefun int munlock (const void *@var{addr}, size_t @var{len})
 @standards{POSIX.1b, sys/mman.h}

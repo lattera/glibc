@@ -107,3 +107,7 @@
 #if __LINUX_KERNEL_VERSION >= 0x031300
 # define __ASSUME_EXECVEAT	1
 #endif
+
+#if __LINUX_KERNEL_VERSION >= 0x040400
+# define __ASSUME_MLOCK2 1
+#endif
