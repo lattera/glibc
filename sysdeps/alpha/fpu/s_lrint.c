@@ -19,6 +19,7 @@
 #define llrint		not_llrint
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 #undef __llrint
 #undef llrint
 
@@ -33,15 +34,5 @@ __lrint (double x)
 }
 
 strong_alias (__lrint, __llrint)
-weak_alias (__lrint, lrint)
-weak_alias (__llrint, llrint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lrint, __lrintl)
-strong_alias (__lrint, __llrintl)
-weak_alias (__lrintl, lrintl)
-weak_alias (__llrintl, llrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __lrint, lrintl, GLIBC_2_1);
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1);
-#endif
+libm_alias_double (__lrint, lrint)
+libm_alias_double (__llrint, llrint)

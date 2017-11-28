@@ -1,5 +1,28 @@
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/alpha/fpu/s_ceil.c: Include <libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_copysign.c: Include <libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_fabs.c: Include <libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_floor.c: Include <libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_fmax.S: Include <libm-alias-double.h>.
+	(fmax): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_fmin.S: Include <libm-alias-double.h>.
+	(fmin): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_lrint.c: Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	(llrint): Likewise.
+	* sysdeps/alpha/fpu/s_lround.c: Include <libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	(llround): Likewise.
+	* sysdeps/alpha/fpu/s_rint.c: Include <libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/alpha/fpu/s_trunc.c: Include <libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+
 	* sysdeps/ieee754/ldbl-opt/libm-alias-double.h
 	(libm_alias_double_r): Add semicolon after weak_alias call.
 

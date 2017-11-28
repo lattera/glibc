@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 double
 __fabs (double x)
@@ -25,11 +26,4 @@ __fabs (double x)
   return __builtin_fabs (x);
 }
 
-weak_alias (__fabs, fabs)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fabs, __fabsl)
-weak_alias (__fabs, fabsl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __fabs, fabsl, GLIBC_2_0);
-#endif
+libm_alias_double (__fabs, fabs)

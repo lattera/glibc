@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 
 /* Use the -inf rounding mode conversion instructions to implement
@@ -47,11 +48,4 @@ __floor (double x)
   return x;
 }
 
-weak_alias (__floor, floor)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__floor, __floorl)
-weak_alias (__floor, floorl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __floor, floorl, GLIBC_2_0);
-#endif
+libm_alias_double (__floor, floor)

@@ -19,6 +19,7 @@
 #define llround		not_llround
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 #undef __llround
 #undef llround
 
@@ -33,15 +34,5 @@ __lround (double x)
 }
 
 strong_alias (__lround, __llround)
-weak_alias (__lround, lround)
-weak_alias (__llround, llround)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lround, __lroundl)
-strong_alias (__lround, __llroundl)
-weak_alias (__lroundl, lroundl)
-weak_alias (__llroundl, llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __lround, lroundl, GLIBC_2_1);
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
-#endif
+libm_alias_double (__lround, lround)
+libm_alias_double (__llround, llround)

@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 /* Use the -inf rounding mode conversion instructions to implement
    ceil, via something akin to -floor(-x).  This is much faster than
@@ -46,11 +47,4 @@ __ceil (double x)
   return x;
 }
 
-weak_alias (__ceil, ceil)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ceil, __ceill)
-weak_alias (__ceil, ceill)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __ceil, ceill, GLIBC_2_0);
-#endif
+libm_alias_double (__ceil, ceil)

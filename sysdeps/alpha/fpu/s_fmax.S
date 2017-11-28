@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
         .set noat
 	.set noreorder
@@ -47,11 +48,4 @@ END (__fmax)
 strong_alias (__fmax, __fmaxf)
 weak_alias (__fmaxf, fmaxf)
 
-weak_alias (__fmax, fmax)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fmax, __fmaxl)
-weak_alias (__fmaxl, fmaxl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __fmax, fmaxl, GLIBC_2_1);
-#endif
+libm_alias_double (__fmax, fmax)

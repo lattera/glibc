@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 
 double
@@ -41,11 +42,4 @@ __rint (double x)
   return x;
 }
 
-weak_alias (__rint, rint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__rint, __rintl)
-weak_alias (__rint, rintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __rint, rintl, GLIBC_2_0);
-#endif
+libm_alias_double (__rint, rint)
