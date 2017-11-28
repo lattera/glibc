@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 RCSID("$NetBSD: s_logb.S,v 1.4 1995/05/09 00:14:30 jtc Exp $")
 
@@ -13,4 +14,4 @@ ENTRY(__logb)
 	fstp	%st
 	ret
 END (__logb)
-weak_alias (__logb, logb)
+libm_alias_double (__logb, logb)

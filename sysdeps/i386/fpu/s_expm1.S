@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-double.h>
 
 	.section .rodata
 
@@ -110,4 +111,4 @@ ENTRY(__expm1)
 	fldl	MO(minus1)	// Set result to -1.0.
 3:	ret
 END(__expm1)
-weak_alias (__expm1, expm1)
+libm_alias_double (__expm1, expm1)

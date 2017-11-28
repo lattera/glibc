@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 RCSID("$NetBSD: s_copysign.S,v 1.4 1995/05/08 23:53:02 jtc Exp $")
 
@@ -17,4 +18,4 @@ ENTRY(__copysign)
 	fldl	4(%esp)
 	ret
 END (__copysign)
-weak_alias (__copysign, copysign)
+libm_alias_double (__copysign, copysign)

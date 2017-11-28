@@ -19,6 +19,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	.text
 ENTRY(__lrint)
@@ -31,4 +32,4 @@ ENTRY(__lrint)
 	cfi_adjust_cfa_offset (-4)
 	ret
 END(__lrint)
-weak_alias (__lrint, lrint)
+libm_alias_double (__lrint, lrint)

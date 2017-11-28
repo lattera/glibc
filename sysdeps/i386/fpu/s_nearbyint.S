@@ -5,6 +5,7 @@
 /* Adapted for use as nearbyint by Ulrich Drepper <drepper@cygnus.com>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 ENTRY(__nearbyint)
 	fldl	4(%esp)
@@ -17,4 +18,4 @@ ENTRY(__nearbyint)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__nearbyint)
-weak_alias (__nearbyint, nearbyint)
+libm_alias_double (__nearbyint, nearbyint)

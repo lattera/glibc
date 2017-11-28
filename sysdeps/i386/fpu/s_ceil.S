@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 RCSID("$NetBSD: s_ceil.S,v 1.4 1995/05/08 23:52:13 jtc Exp $")
 
@@ -31,4 +32,4 @@ ENTRY(__ceil)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__ceil)
-weak_alias (__ceil, ceil)
+libm_alias_double (__ceil, ceil)

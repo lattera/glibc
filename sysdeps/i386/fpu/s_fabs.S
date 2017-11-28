@@ -1,4 +1,5 @@
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	.text
 ENTRY(__fabs)
@@ -6,4 +7,4 @@ ENTRY(__fabs)
 	fabs
 	ret
 END(__fabs)
-weak_alias (__fabs, fabs)
+libm_alias_double (__fabs, fabs)

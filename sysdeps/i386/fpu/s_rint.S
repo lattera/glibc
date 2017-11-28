@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 RCSID("$NetBSD: s_rint.S,v 1.4 1995/05/09 00:16:08 jtc Exp $")
 
@@ -12,4 +13,4 @@ ENTRY(__rint)
 	frndint
 	ret
 END (__rint)
-weak_alias (__rint, rint)
+libm_alias_double (__rint, rint)

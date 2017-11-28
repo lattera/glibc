@@ -5,6 +5,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 #define PARMS	4		/* no space for saved regs */
 #define DVDND	PARMS
@@ -42,4 +43,4 @@ ENTRY (__remquo)
 
 	ret
 END (__remquo)
-weak_alias (__remquo, remquo)
+libm_alias_double (__remquo, remquo)

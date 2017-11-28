@@ -19,6 +19,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
         .section .rodata
 
@@ -197,4 +198,4 @@ ENTRY(__cbrt)
 1:	fldl	4(%esp)
 	ret
 END(__cbrt)
-weak_alias (__cbrt, cbrt)
+libm_alias_double (__cbrt, cbrt)

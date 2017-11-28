@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 	.section .rodata
 
@@ -80,4 +81,4 @@ ENTRY (__frexp)
 
 	ret
 END (__frexp)
-weak_alias (__frexp, frexp)
+libm_alias_double (__frexp, frexp)

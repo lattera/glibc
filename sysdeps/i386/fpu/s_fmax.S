@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	.text
 ENTRY(__fmax)
@@ -40,4 +41,4 @@ ENTRY(__fmax)
 
 	ret
 END(__fmax)
-weak_alias (__fmax, fmax)
+libm_alias_double (__fmax, fmax)

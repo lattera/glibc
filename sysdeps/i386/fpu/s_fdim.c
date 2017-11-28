@@ -20,6 +20,7 @@
 #include <fpu_control.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-double.h>
 
 double
 __fdim (double x, double y)
@@ -43,8 +44,4 @@ __fdim (double x, double y)
 
   return r;
 }
-weak_alias (__fdim, fdim)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fdim, __fdiml)
-weak_alias (__fdim, fdiml)
-#endif
+libm_alias_double (__fdim, fdim)

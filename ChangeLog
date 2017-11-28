@@ -1,3 +1,50 @@
+2017-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/fpu/s_asinh.S: Include <libm-alias-double.h>.
+	(asinh): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_atan.S: Include <libm-alias-double.h>.
+	(atan): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_cbrt.S: Include <libm-alias-double.h>.
+	(cbrt): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_ceil.S: Include <libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_copysign.S: Include <libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_expm1.S: Include <libm-alias-double.h>.
+	(expm1): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_fabs.S: Include <libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_fdim.c: Include <libm-alias-double.h>.
+	(fdim): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_floor.S: Include <libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_fmax.S: Include <libm-alias-double.h>.
+	(fmax): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_fmin.S: Include <libm-alias-double.h>.
+	(fmin): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_frexp.S: Include <libm-alias-double.h>.
+	(frexp): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_llrint.S: Include <libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_logb.S: Include <libm-alias-double.h>.
+	(logb): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_lrint.S: Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_nearbyint.S: Include <libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_remquo.S: Include <libm-alias-double.h>.
+	(remquo): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_rint.S: Include <libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/i386/fpu/s_trunc.S: Include <libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/i386/i686/fpu/s_fmax.S: Include <libm-alias-double.h>.
+	(fmax): Define using libm_alias_double.
+	* sysdeps/i386/i686/fpu/s_fmin.S: Include <libm-alias-double.h>.
+	(fmin): Define using libm_alias_double.
+	* sysdeps/i386/i686/multiarch/s_fma.c: Include <libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+
 2017-11-28  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22370]

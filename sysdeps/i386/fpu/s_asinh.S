@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 	.section .rodata
 
@@ -136,4 +137,4 @@ ENTRY(__asinh)
 	fchs
 4:	ret
 END(__asinh)
-weak_alias (__asinh, asinh)
+libm_alias_double (__asinh, asinh)
