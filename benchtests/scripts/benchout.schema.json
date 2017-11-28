@@ -13,7 +13,7 @@
           "title": "Function names",
           "type": "object",
           "patternProperties": {
-            "^[_a-zA-Z0-9]*$": {
+            "^[_a-zA-Z0-9,=.-]*$": {
               "title": "Function variants",
               "type": "object",
               "properties": {

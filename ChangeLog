@@ -1,5 +1,8 @@
 2017-11-28  Victor Rodriguez  <victor.rodriguez.bahena@intel.com>
 
+	* benchtests/scripts/benchout.schema.json: Fix regex to accept a wider
+	range of tests names.
+
 	* benchtests/scripts/benchout.schema.json: Add throughput as accepted
 	result from property and remove "max", min" and "mean" from
 	required properties based on benchtests/bench-skeleton.c.
