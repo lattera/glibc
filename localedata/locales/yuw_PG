@@ -45,7 +45,6 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-define DIACRIT_FORWARD
 copy "iso14651_t1"
 END LC_COLLATE
 

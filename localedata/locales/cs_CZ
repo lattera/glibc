@@ -140,8 +140,6 @@ END LC_IDENTIFICATION
 
 LC_COLLATE
 
-define DIACRIT_FORWARD
-
 copy "iso14651_t1"
 
 collating-symbol <c-caron>

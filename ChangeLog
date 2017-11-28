@@ -1,3 +1,20 @@
+2017-11-28  Mike FABIAN  <mfabian@redhat.com>, Alexandre Oliva <aoliva@redhat.com>
+
+	[BZ #17750]
+	* Makefile: add fr_CA.UTF-8 to test-input and LOCALES.
+	* localedata/fr_CA.UTF-8.in: New file with test data for backward
+	accents sorting.
+	* localedata/fr_FR.UTF-8.in: Fix test data for forward accents
+	sorting.
+	* localedata/locales/cs_CZ (LC_COLLATE): Remove “define DIACRIT_FORWARD”
+	* localedata/locales/de_DE (LC_COLLATE): Likewise.
+	* localedata/locales/hu_HU (LC_COLLATE): Likewise.
+	* localedata/locales/lb_LU (LC_COLLATE): Likewise.
+	* localedata/locales/yuw_PG (LC_COLLATE): Likewise.
+	* localedata/locales/fr_CA (LC_COLLATE): Add “define DIACRIT_BACKWARD”
+	* localedata/locales/iso14651_t1_common: Use “ifdef DIACRIT_FORWARD”
+	instead of “ifdef DIACRIT_BACKWARD”.
+
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* config.h.in (HAVE_AS_VIS3_SUPPORT): Remove check for VIS3 support.

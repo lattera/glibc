@@ -54,6 +54,8 @@ copy "fr_FR"
 END LC_CTYPE
 
 LC_COLLATE
+define DIACRIT_BACKWARD
+
 copy "en_CA"
 END LC_COLLATE
 
