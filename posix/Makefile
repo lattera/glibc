@@ -90,8 +90,8 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-getaddrinfo3 tst-fnmatch2 tst-cpucount tst-cpuset \
 		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
-		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8 \
-		   tst-fnmatch3 bug-regex36 tst-getaddrinfo5 \
+		   tst-pathconf tst-rxspencer-no-utf8 \
+		   tst-fnmatch3 bug-regex36 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \
@@ -99,7 +99,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
 		   tst-glob_lstat_compat
-xtests		:= bug-ga2
+xtests		:= bug-ga2 tst-getaddrinfo4 tst-getaddrinfo5
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn tst-spawn2 tst-spawn3

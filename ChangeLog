@@ -1,3 +1,12 @@
+2017-11-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20826]
+	Turn posix/tst-getaddrinfo4, posix/tst-getaddrinfo5 into xtests
+	due to Internet requirement.
+	* posix/Makefile (tests): Remove tst-getaddrinfo4,
+	tst-getaddrinfo5.
+	(xtests): Add tst-getaddrinfo4, tst-getaddrinfo5.
+
 2017-11-28  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile
