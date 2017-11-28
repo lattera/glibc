@@ -1,3 +1,8 @@
+2017-11-28  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-opt/libm-alias-double.h
+	(libm_alias_double_r): Add semicolon after weak_alias call.
+
 2017-11-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/aarch64/fpu/s_ceil.c: Include <libm-alias-double.h>.

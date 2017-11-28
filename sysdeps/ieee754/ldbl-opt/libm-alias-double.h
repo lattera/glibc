@@ -41,7 +41,7 @@
    (where there is one name per format, not per type) or for
    obsolescent functions not provided for _FloatN types.  */
 #define libm_alias_double_r(from, to, r)			\
-  weak_alias (from ## r, to ## r)				\
+  weak_alias (from ## r, to ## r);				\
   LONG_DOUBLE_COMPAT_CHOOSE_libm_ ## to ## l ## r		\
     (compat_symbol (libm,					\
 		    from ## r,					\
