@@ -30,7 +30,11 @@ bench-pthread := pthread_once thread_create
 
 bench-string := ffs ffsll
 
+ifeq (${BENCHSET},)
 bench := $(bench-math) $(bench-pthread) $(bench-string)
+else
+bench := $(foreach B,$(filter bench-%,${BENCHSET}), ${${B}})
+endif
 
 # String function benchmarks.
 string-benchset := bcopy bzero memccpy memchr memcmp memcpy memmem memmove \
@@ -68,8 +72,12 @@ stdio-common-benchset := sprintf
 
 math-benchset := math-inlines
 
+ifeq (${BENCHSET},)
 benchset := $(string-benchset-all) $(stdlib-benchset) $(stdio-common-benchset) \
 	    $(math-benchset)
+else
+benchset := $(foreach B,$(filter %-benchset,${BENCHSET}), ${${B}})
+endif
 
 CFLAGS-bench-ffs.c += -fno-builtin
 CFLAGS-bench-ffsll.c += -fno-builtin
@@ -81,7 +89,11 @@ CFLAGS-bench-fmaxf.c += -fno-builtin
 CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
 
+ifeq (${BENCHSET},)
 bench-malloc := malloc-thread
+else
+bench-malloc := $(filter malloc-%,${BENCHSET})
+endif
 
 $(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
 $(addprefix $(objpfx)bench-,$(math-benchset)): $(libm)
@@ -149,6 +161,19 @@ bench-clean:
 	rm -f $(timing-type) $(addsuffix .o,$(timing-type))
 	rm -f $(addprefix $(objpfx),$(bench-extra-objs))
 
+# Validate the passed in BENCHSET
+ifneq ($(strip ${BENCHSET}),)
+VALIDBENCHSETNAMES := bench-pthread bench-math bench-string string-benchset \
+   wcsmbs-benchset stdlib-benchset stdio-common-benchset math-benchset \
+   malloc-thread
+INVALIDBENCHSETNAMES := $(filter-out ${VALIDBENCHSETNAMES},${BENCHSET})
+ifneq (${INVALIDBENCHSETNAMES},)
+$(info The following values in BENCHSET are invalid: ${INVALIDBENCHSETNAMES})
+$(info The valid ones are: ${VALIDBENCHSETNAMES})
+$(error Invalid BENCHSET value)
+endif
+endif
+
 # Define the bench target only if the target has a usable python installation.
 ifdef PYTHON
 bench: bench-build bench-set bench-func bench-malloc
@@ -175,10 +200,11 @@ bench-set: $(binaries-benchset)
 	done
 
 bench-malloc: $(binaries-bench-malloc)
-	run=$(objpfx)bench-malloc-thread; \
-	for thr in 1 8 16 32; do \
-	  echo "Running $${run} $${thr}"; \
+	for run in $^; do \
+		for thr in 1 8 16 32; do \
+			echo "Running $${run} $${thr}"; \
 	  $(run-bench) $${thr} > $${run}-$${thr}.out; \
+	  done;\
 	done
 
 # Build and execute the benchmark functions.  This target generates JSON
@@ -186,25 +212,28 @@ bench-malloc: $(binaries-bench-malloc)
 # so one could even execute them individually and process it using any JSON
 # capable language or tool.
 bench-func: $(binaries-bench)
+	if [ -n '$^' ] ; then \
 	{ timing_type=$$($(timing-type)); \
-	echo "{\"timing_type\": \"$${timing_type}\","; \
-	echo " \"functions\": {"; \
-	for run in $^; do \
-	  if ! [ "x$${run}" = "x$<" ]; then \
-	    echo ","; \
+	  echo "{\"timing_type\": \"$${timing_type}\","; \
+	  echo " \"functions\": {"; \
+	  for run in $^; do \
+	    if ! [ "x$${run}" = "x$<" ]; then \
+	      echo ","; \
+	    fi; \
+	    echo "Running $${run}" >&2; \
+	    $(run-bench) $(DETAILED_OPT); \
+	  done; \
+	  echo; \
+	  echo " }"; \
+	  echo "}"; \
+	  } > $(objpfx)bench.out-tmp; \
+	  if [ -f $(objpfx)bench.out ]; then \
+	    mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
 	  fi; \
-	  echo "Running $${run}" >&2; \
-	  $(run-bench) $(DETAILED_OPT); \
-	done; \
-	echo; \
-	echo " }"; \
-	echo "}"; } > $(objpfx)bench.out-tmp; \
-	if [ -f $(objpfx)bench.out ]; then \
-	  mv -f $(objpfx)bench.out $(objpfx)bench.out.old; \
-	fi; \
-	mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out
-	$(PYTHON) scripts/validate_benchout.py $(objpfx)bench.out \
-		scripts/benchout.schema.json
+	  mv -f $(objpfx)bench.out-tmp $(objpfx)bench.out; \
+	  $(PYTHON) scripts/validate_benchout.py $(objpfx)bench.out \
+	  scripts/benchout.schema.json; \
+	fi
 
 $(timing-type) $(binaries-bench) $(binaries-benchset) \
 	$(binaries-bench-malloc): %: %.o $(objpfx)json-lib.o \

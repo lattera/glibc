@@ -53,6 +53,25 @@ otherwise the above command may try to build the benchmark again.  Benchmarks
 that require generated code to be executed during the build are skipped when
 cross-building.
 
+Running subsets of benchmarks:
+==============================
+
+To run only a subset of benchmarks, one may invoke make as follows
+
+  $ make bench BENCHSET="bench-pthread bench-math malloc-thread"
+
+where BENCHSET may be a space-separated list of the following values:
+
+    bench-math
+    bench-pthread
+    bench-string
+    string-benchset
+    wcsmbs-benchset
+    stdlib-benchset
+    stdio-common-benchset
+    math-benchset
+    malloc-thread
+
 Adding a function to benchtests:
 ===============================
 

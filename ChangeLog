@@ -1,4 +1,12 @@
 2017-11-28  Victor Rodriguez  <victor.rodriguez.bahena@intel.com>
+	    Icarus Sparry  <icarus.w.sparry@intel.com>
+
+	* benchtests/Makefile:Add BENCHSET to allow subsets of
+	benchmarks to be run.
+	* benchtests/README: Add documentation for: Running subsets of
+	benchmarks.
+
+2017-11-28  Victor Rodriguez  <victor.rodriguez.bahena@intel.com>
 
 	* benchtests/scripts/benchout.schema.json: Fix regex to accept a wider
 	range of tests names.
