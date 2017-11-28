@@ -1,5 +1,8 @@
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/s390/fpu/s_fmaf.c: Include <libm-alias-float.h>.
+	[!__fmaf] (fmaf): Define using libm_alias_float.
+
 	* sysdeps/s390/fpu/s_fma.c: Include <libm-alias-double.h>.
 	[!__fma] (fma): Define using libm_alias_double.
 	* sysdeps/unix/sysv/linux/s390/fpu/s_fma.c: Remove.
