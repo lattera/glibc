@@ -1683,6 +1683,18 @@ open_verify (const char *name, int fd,
 	if (ph->p_type == PT_NOTE && ph->p_filesz >= 32 && ph->p_align >= 4)
 	  {
 	    ElfW(Addr) size = ph->p_filesz;
+	    /* NB: Some PT_NOTE segment may have alignment value of 0
+	       or 1.  gABI specifies that PT_NOTE segments should be
+	       aligned to 4 bytes in 32-bit objects and to 8 bytes in
+	       64-bit objects.  As a Linux extension, we also support
+	       4 byte alignment in 64-bit objects.  If p_align is less
+	       than 4, we treate alignment as 4 bytes since some note
+	       segments have 0 or 1 byte alignment.   */
+	    ElfW(Addr) align = ph->p_align;
+	    if (align < 4)
+	      align = 4;
+	    else if (align != 4 && align != 8)
+	      continue;
 
 	    if (ph->p_offset + size <= (size_t) fbp->len)
 	      abi_note = (void *) (fbp->buf + ph->p_offset);
@@ -1696,10 +1708,9 @@ open_verify (const char *name, int fd,
 
 	    while (memcmp (abi_note, &expected_note, sizeof (expected_note)))
 	      {
-#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
-		ElfW(Addr) note_size = 3 * sizeof (ElfW(Word))
-				       + ROUND (abi_note[0])
-				       + ROUND (abi_note[1]);
+		ElfW(Addr) note_size
+		  = ELF_NOTE_NEXT_OFFSET (abi_note[0], abi_note[1],
+					  align);
 
 		if (size - 32 < note_size)
 		  {

@@ -131,15 +131,26 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	      ElfW(Word) *abi_note = (ElfW(Word) *) (file_contents
 						     + segment->p_offset);
 	      ElfW(Addr) size = segment->p_filesz;
+	      /* NB: Some PT_NOTE segment may have alignment value of 0
+		 or 1.  gABI specifies that PT_NOTE segments should be
+		 aligned to 4 bytes in 32-bit objects and to 8 bytes in
+		 64-bit objects.  As a Linux extension, we also support
+		 4 byte alignment in 64-bit objects.  If p_align is less
+		 than 4, we treate alignment as 4 bytes since some note
+		 segments have 0 or 1 byte alignment.   */
+	      ElfW(Addr) align = segment->p_align;
+	      if (align < 4)
+		align = 4;
+	      else if (align != 4 && align != 8)
+		continue;
 
 	      while (abi_note [0] != 4 || abi_note [1] != 16
 		     || abi_note [2] != 1
 		     || memcmp (abi_note + 3, "GNU", 4) != 0)
 		{
-#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
-		  ElfW(Addr) note_size = 3 * sizeof (ElfW(Word))
-					 + ROUND (abi_note[0])
-					 + ROUND (abi_note[1]);
+		  ElfW(Addr) note_size
+		    = ELF_NOTE_NEXT_OFFSET (abi_note[0], abi_note[1],
+					    align);
 
 		  if (size - 32 < note_size || note_size == 0)
 		    {

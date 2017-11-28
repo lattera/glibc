@@ -1,3 +1,17 @@
+2017-11-28  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22370]
+	* elf/dl-hwcaps.c (ROUND): Removed.
+	(_dl_important_hwcaps): Replace ROUND with ELF_NOTE_DESC_OFFSET
+	and ELF_NOTE_NEXT_OFFSET.
+	* elf/dl-load.c (ROUND): Removed.
+	(open_verify): Replace ROUND with ELF_NOTE_NEXT_OFFSET.
+	* elf/readelflib.c (ROUND): Removed.
+	(process_elf_file): Replace ROUND with ELF_NOTE_NEXT_OFFSET.
+	* include/elf.h [!_ISOMAC]: Include <libc-pointer-arith.h>.
+	[!_ISOMAC] (ELF_NOTE_DESC_OFFSET): New.
+	[!_ISOMAC] (ELF_NOTE_NEXT_OFFSET): Likewise.
+
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/s390/fpu/s_fmaf.c: Include <libm-alias-float.h>.

@@ -67,6 +67,18 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	  {
 	    const ElfW(Addr) start = (phdr[i].p_vaddr
 				      + GLRO(dl_sysinfo_map)->l_addr);
+	    /* NB: Some PT_NOTE segment may have alignment value of 0
+	       or 1.  gABI specifies that PT_NOTE segments should be
+	       aligned to 4 bytes in 32-bit objects and to 8 bytes in
+	       64-bit objects.  As a Linux extension, we also support
+	       4 byte alignment in 64-bit objects.  If p_align is less
+	       than 4, we treate alignment as 4 bytes since some note
+	       segments have 0 or 1 byte alignment.   */
+	    ElfW(Addr) align = phdr[i].p_align;
+	    if (align < 4)
+	      align = 4;
+	    else if (align != 4 && align != 8)
+	      continue;
 	    /* The standard ELF note layout is exactly as the anonymous struct.
 	       The next element is a variable length vendor name of length
 	       VENDORLEN (with a real length rounded to ElfW(Word)), followed
@@ -80,7 +92,6 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	    } *note = (const void *) start;
 	    while ((ElfW(Addr)) (note + 1) - start < phdr[i].p_memsz)
 	      {
-#define ROUND(len) (((len) + sizeof (ElfW(Word)) - 1) & -sizeof (ElfW(Word)))
 		/* The layout of the type 2, vendor "GNU" note is as follows:
 		   .long <Number of capabilities enabled by this note>
 		   .long <Capabilities mask> (as mask >> _DL_FIRST_EXTRA).
@@ -91,17 +102,18 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 		    && !memcmp ((note + 1), "GNU", sizeof "GNU")
 		    && note->datalen > 2 * sizeof (ElfW(Word)) + 2)
 		  {
-		    const ElfW(Word) *p = ((const void *) (note + 1)
-					   + ROUND (sizeof "GNU"));
+		    const ElfW(Word) *p
+		      = ((const void *) note
+			 + ELF_NOTE_DESC_OFFSET (sizeof "GNU", align));
 		    cnt += *p++;
 		    ++p;	/* Skip mask word.  */
 		    dsocaps = (const char *) p; /* Pseudo-string "<b>name"  */
 		    dsocapslen = note->datalen - sizeof *p * 2;
 		    break;
 		  }
-		note = ((const void *) (note + 1)
-			+ ROUND (note->vendorlen) + ROUND (note->datalen));
-#undef ROUND
+		note = ((const void *) note
+			+ ELF_NOTE_NEXT_OFFSET (note->vendorlen,
+						note->datalen, align));
 	      }
 	    if (dsocaps != NULL)
 	      break;
