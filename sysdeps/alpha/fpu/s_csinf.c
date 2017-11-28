@@ -51,4 +51,4 @@ __c2_csinf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (csinf);
+cfloat_versions (csin);

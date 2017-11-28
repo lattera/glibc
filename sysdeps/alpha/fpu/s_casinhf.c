@@ -51,4 +51,4 @@ __c2_casinhf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (casinhf);
+cfloat_versions (casinh);

@@ -39,4 +39,4 @@ __c2_conjf (c2_cfloat_decl (z))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (conjf);
+cfloat_versions (conj);

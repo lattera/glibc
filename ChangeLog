@@ -1,5 +1,55 @@
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/alpha/fpu/cfloat-compat.h: Include <libm-alias-float.h>.
+	(cfloat_versions): Take function argument without trailing 'f'.
+	Call libm_alias_float_other.
+	* sysdeps/alpha/fpu/cabsf.c: Update call to cfloat_versions.
+	* sysdeps/alpha/fpu/cargf.c: Likewise.
+	* sysdeps/alpha/fpu/cimagf.c: Likewise.
+	* sysdeps/alpha/fpu/conjf.c: Likewise.
+	* sysdeps/alpha/fpu/crealf.c: Likewise.
+	* sysdeps/alpha/fpu/s_cacosf.c: Likewise.
+	* sysdeps/alpha/fpu/s_cacoshf.c: Likewise.
+	* sysdeps/alpha/fpu/s_casinf.c: Likewise.
+	* sysdeps/alpha/fpu/s_casinhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_catanf.c: Likewise.
+	* sysdeps/alpha/fpu/s_catanhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccosf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ccoshf.c: Likewise.
+	* sysdeps/alpha/fpu/s_cexpf.c: Likewise.
+	* sysdeps/alpha/fpu/s_clogf.c: Likewise.
+	* sysdeps/alpha/fpu/s_cpowf.c: Likewise.
+	* sysdeps/alpha/fpu/s_cprojf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csinhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_csqrtf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanf.c: Likewise.
+	* sysdeps/alpha/fpu/s_ctanhf.c: Likewise.
+	* sysdeps/alpha/fpu/s_clog10f.c: Include <libm-alias-float.h>.
+	(clog10f): Use libm_alias_float_other.
+	* sysdeps/alpha/fpu/s_ceilf.c: Include <libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_copysignf.c: Include <libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_fabsf.c: Include <libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_floorf.c: Include <libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_fmax.S: Include <libm-alias-float.h>.
+	(fmaxf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_fmin.S: Include <libm-alias-float.h>.
+	(fminf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_lrintf.c: Include <libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	(llrintf): Likewise.
+	* sysdeps/alpha/fpu/s_lroundf.c: Include <libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	(llroundf): Likewise.
+	* sysdeps/alpha/fpu/s_rintf.c: Include <libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/alpha/fpu/s_truncf.c: Include <libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+
 	* sysdeps/aarch64/fpu/s_ceilf.c: Include <libm-alias-float.h>.
 	(ceilf): Define using libm_alias_float.
 	* sysdeps/aarch64/fpu/s_floorf.c: Include <libm-alias-float.h>.

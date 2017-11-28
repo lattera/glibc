@@ -37,4 +37,4 @@ __c2_cimagf (c2_cfloat_decl (z))
   return c2_cfloat_imag (z);
 }
 
-cfloat_versions (cimagf);
+cfloat_versions (cimag);

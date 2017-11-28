@@ -37,4 +37,4 @@ __c2_crealf (c2_cfloat_decl (z))
   return c2_cfloat_real (z);
 }
 
-cfloat_versions (crealf);
+cfloat_versions (creal);

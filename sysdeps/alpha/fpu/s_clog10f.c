@@ -21,6 +21,7 @@
 
 #include <complex.h>
 #include <math.h>
+#include <libm-alias-float.h>
 
 #undef __clog10f
 #undef clog10f
@@ -62,3 +63,4 @@ compat_symbol (libm, __c1_clog10f_2, __clog10f, GLIBC_2_1);
 versioned_symbol (libm, __c2_clog10f, clog10f, GLIBC_2_3_4);
 extern typeof(__c2_clog10f) __clog10f attribute_hidden;
 strong_alias (__c2_clog10f, __clog10f)
+libm_alias_float_other (__c2_clog10, clog10)

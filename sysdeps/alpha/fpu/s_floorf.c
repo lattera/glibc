@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 
 /* Use the -inf rounding mode conversion instructions to implement
@@ -51,4 +52,4 @@ __floorf (float x)
   return x;
 }
 
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)

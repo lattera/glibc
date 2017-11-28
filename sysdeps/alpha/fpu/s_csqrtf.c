@@ -51,4 +51,4 @@ __c2_csqrtf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (csqrtf);
+cfloat_versions (csqrt);

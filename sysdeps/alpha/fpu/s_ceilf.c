@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 /* Use the -inf rounding mode conversion instructions to implement
    ceil, via something akin to -floor(-x).  This is much faster than
@@ -50,4 +51,4 @@ __ceilf (float x)
   return x;
 }
 
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)

@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
         .set noat
@@ -46,6 +47,6 @@ END (__fmin)
 
 /* Given the in-register format of single-precision, this works there too.  */
 strong_alias (__fmin, __fminf)
-weak_alias (__fminf, fminf)
+libm_alias_float (__fmin, fmin)
 
 libm_alias_double (__fmin, fmin)

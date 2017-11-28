@@ -51,4 +51,4 @@ __c2_clogf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (clogf);
+cfloat_versions (clog);

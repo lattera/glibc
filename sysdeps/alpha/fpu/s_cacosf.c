@@ -54,4 +54,4 @@ __c2_cacosf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (cacosf);
+cfloat_versions (cacos);

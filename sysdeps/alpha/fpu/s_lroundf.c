@@ -18,6 +18,7 @@
 #define __llroundf	not___llroundf
 #define llroundf	not_llroundf
 #include <math.h>
+#include <libm-alias-float.h>
 #undef __llroundf
 #undef llroundf
 
@@ -33,5 +34,5 @@ __lroundf (float x)
 }
 
 strong_alias (__lroundf, __llroundf)
-weak_alias (__lroundf, lroundf)
-weak_alias (__llroundf, llroundf)
+libm_alias_float (__lround, lround)
+libm_alias_float (__llround, llround)

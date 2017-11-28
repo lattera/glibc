@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __copysignf (float x, float y)
@@ -24,4 +25,4 @@ __copysignf (float x, float y)
   return __builtin_copysignf (x, y);
 }
 
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)

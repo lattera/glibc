@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 
 /* Use the chopped rounding mode conversion instructions to implement trunc. */
@@ -40,4 +41,4 @@ __truncf (float x)
   return copysignf (r, x);
 }
 
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)

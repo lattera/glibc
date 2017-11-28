@@ -51,4 +51,4 @@ __c2_ccosf (c2_cfloat_decl (x))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (ccosf);
+cfloat_versions (ccos);

@@ -38,4 +38,4 @@ __c2_cabsf (c2_cfloat_decl (z))
   return __hypotf (c2_cfloat_real (z), c2_cfloat_imag (z));
 }
 
-cfloat_versions (cabsf);
+cfloat_versions (cabs);

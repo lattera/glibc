@@ -51,4 +51,4 @@ __c2_cpowf (c2_cfloat_decl (x), c2_cfloat_decl (c))
   return c2_cfloat_return (r);
 }
 
-cfloat_versions (cpowf);
+cfloat_versions (cpow);
