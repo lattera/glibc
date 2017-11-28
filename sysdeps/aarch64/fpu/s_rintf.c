@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __rintf (float x)
@@ -24,4 +25,4 @@ __rintf (float x)
   return __builtin_rintf (x);
 }
 
-weak_alias (__rintf, rintf)
+libm_alias_float (__rint, rint)

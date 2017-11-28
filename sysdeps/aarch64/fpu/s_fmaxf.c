@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __fmaxf (float x, float y)
@@ -24,4 +25,4 @@ __fmaxf (float x, float y)
   return __builtin_fmaxf (x, y);
 }
 
-weak_alias (__fmaxf, fmaxf)
+libm_alias_float (__fmax, fmax)

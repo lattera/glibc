@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __nearbyintf (float x)
@@ -24,4 +25,4 @@ __nearbyintf (float x)
   return __builtin_nearbyintf (x);
 }
 
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)

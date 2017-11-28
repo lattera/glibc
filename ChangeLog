@@ -1,5 +1,33 @@
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/aarch64/fpu/s_ceilf.c: Include <libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_floorf.c: Include <libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_fmaf.c: Include <libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_fmaxf.c: Include <libm-alias-float.h>.
+	(fmaxf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_fminf.c: Include <libm-alias-float.h>.
+	(fminf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_llrintf.c: Include <libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_llroundf.c: Include <libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_lrintf.c: Include <libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_lroundf.c: Include <libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_nearbyintf.c: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_rintf.c: Include <libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_roundf.c: Include <libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/aarch64/fpu/s_truncf.c: Include <libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+
 	* sysdeps/alpha/fpu/s_ceil.c: Include <libm-alias-double.h>.
 	(ceil): Define using libm_alias_double.
 	* sysdeps/alpha/fpu/s_copysign.c: Include <libm-alias-double.h>.

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __fminf (float x, float y)
@@ -24,4 +25,4 @@ __fminf (float x, float y)
   return __builtin_fminf (x, y);
 }
 
-weak_alias (__fminf, fminf)
+libm_alias_float (__fmin, fmin)

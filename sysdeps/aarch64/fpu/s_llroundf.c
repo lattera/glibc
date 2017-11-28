@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 long long int
 __llroundf (float x)
@@ -24,4 +25,4 @@ __llroundf (float x)
   return __builtin_llroundf (x);
 }
 
-weak_alias (__llroundf, llroundf)
+libm_alias_float (__llround, llround)

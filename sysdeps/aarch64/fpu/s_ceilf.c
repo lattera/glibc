@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __ceilf (float x)
@@ -24,4 +25,4 @@ __ceilf (float x)
   return __builtin_ceilf (x);
 }
 
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)

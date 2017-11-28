@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __floorf (float x)
@@ -24,4 +25,4 @@ __floorf (float x)
   return __builtin_floorf (x);
 }
 
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)

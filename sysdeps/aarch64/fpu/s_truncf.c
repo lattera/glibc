@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-float.h>
 
 float
 __truncf (float x)
@@ -24,4 +25,4 @@ __truncf (float x)
   return __builtin_truncf (x);
 }
 
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)
