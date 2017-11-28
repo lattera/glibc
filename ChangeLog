@@ -1,3 +1,11 @@
+2017-11-28  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22336]
+	* localedata/locales/cs_CZ (LC_COLLATE): Use “copy "iso14651_t1"”
+	and implement the collation rules for cs from CLDR on top of that.
+	* Makefile: Add cs_CZ.UTF-8 to test-input.
+	* cs_CZ.UTF-8.in: New file with test data to test the Czech sorting.
+
 2017-11-28  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* localedata/Makefile (LOCALES): Remove duplicate cs_CZ.UTF-8.
