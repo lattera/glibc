@@ -19,6 +19,7 @@
               "properties": {
                 "duration": {"type": "number"},
                 "iterations": {"type": "number"},
+                "throughput": {"type": "number"},
                 "max": {"type": "number"},
                 "min": {"type": "number"},
                 "mean": {"type": "number"},
@@ -27,7 +28,7 @@
                   "items": {"type": "number"}
                 }
               },
-              "required": ["duration", "iterations", "max", "min", "mean"],
+              "required": ["duration", "iterations"],
               "additionalProperties": false
             }
           },
