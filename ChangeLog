@@ -1,3 +1,7 @@
+2017-11-28  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* localedata/Makefile (LOCALES): Remove duplicate cs_CZ.UTF-8.
+
 2017-11-28  Victor Rodriguez  <victor.rodriguez.bahena@intel.com>
 	    Icarus Sparry  <icarus.w.sparry@intel.com>
 

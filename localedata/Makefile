@@ -108,7 +108,7 @@ LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   nb_NO.ISO-8859-1 nn_NO.ISO-8859-1 tr_TR.UTF-8 cs_CZ.UTF-8 \
 	   zh_TW.EUC-TW fa_IR.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 si_LK.UTF-8 \
 	   tr_TR.ISO-8859-9 en_GB.UTF-8 uk_UA.UTF-8 hu_HU.UTF-8 lv_LV.UTF-8 \
-	   pl_PL.UTF-8 cs_CZ.UTF-8
+	   pl_PL.UTF-8
 include ../gen-locales.mk
 endif
 
