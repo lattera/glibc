@@ -19,6 +19,7 @@
 #include <config.h>
 #include <math.h>
 #include <init-arch.h>
+#include <libm-alias-float.h>
 
 extern float __fmaf_sse2 (float x, float y, float z) attribute_hidden;
 
@@ -42,7 +43,7 @@ __fmaf_fma4 (float x, float y, float z)
 libm_ifunc (__fmaf, HAS_ARCH_FEATURE (FMA_Usable)
 	    ? __fmaf_fma3 : (HAS_ARCH_FEATURE (FMA4_Usable)
 			     ? __fmaf_fma4 : __fmaf_sse2));
-weak_alias (__fmaf, fmaf)
+libm_alias_float (__fma, fma)
 
 #define __fmaf __fmaf_sse2
 

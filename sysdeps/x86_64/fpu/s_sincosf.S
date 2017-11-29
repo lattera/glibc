@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <libm-alias-float.h>
 
 /* Short algorithm description:
  *
@@ -560,4 +561,4 @@ L(SP_ONE):
 	.type L(SP_ONE), @object
 	ASM_SIZE_DIRECTIVE(L(SP_ONE))
 
-weak_alias(__sincosf, sincosf)
+libm_alias_float (__sincos, sincos)

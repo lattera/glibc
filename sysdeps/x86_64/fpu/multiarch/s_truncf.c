@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 #define truncf __redirect_truncf
 #define __truncf __redirect___truncf
 #include <math.h>
@@ -26,4 +28,4 @@
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_truncf, __truncf, IFUNC_SELECTOR ());
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 #define ceilf __redirect_ceilf
 #define __ceilf __redirect___ceilf
 #include <math.h>
@@ -26,4 +28,4 @@
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_ceilf, __ceilf, IFUNC_SELECTOR ());
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)

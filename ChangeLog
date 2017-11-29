@@ -1,5 +1,63 @@
 2017-11-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86_64/fpu/multiarch/e_exp2f.c: Include
+	<libm-alias-float.h>.
+	(exp2f): Define using libm_alias_float, or libm_alias_float_other
+	if [SHARED].
+	* sysdeps/x86_64/fpu/multiarch/e_expf.c: Include
+	<libm-alias-float.h>.
+	(exp2f): Define using libm_alias_float, or libm_alias_float_other
+	if [SHARED].
+	* sysdeps/x86_64/fpu/multiarch/e_log2f.c: Include
+	<libm-alias-float.h>.
+	(exp2f): Define using libm_alias_float, or libm_alias_float_other
+	if [SHARED].
+	* sysdeps/x86_64/fpu/multiarch/e_logf.c: Include
+	<libm-alias-float.h>.
+	(exp2f): Define using libm_alias_float, or libm_alias_float_other
+	if [SHARED].
+	* sysdeps/x86_64/fpu/multiarch/e_powf.c: Include
+	<libm-alias-float.h>.
+	(exp2f): Define using libm_alias_float, or libm_alias_float_other
+	if [SHARED].
+	* sysdeps/x86_64/fpu/multiarch/s_ceilf.c: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/multiarch/s_floorf.c: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/multiarch/s_fmaf.c: Include
+	<libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyintf.c: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/multiarch/s_rintf.c: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/multiarch/s_truncf.c: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_copysignf.S: Include <libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_cosf.S: Include <libm-alias-float.h>.
+	(cosf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_fabsf.c: Include <libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_fmaxf.S: Include <libm-alias-float.h>.
+	(fmaxf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_fminf.S: Include <libm-alias-float.h>.
+	(fminf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_llrintf.S: Include <libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	[!__ILP32__] (lrintf): Likewise.
+	* sysdeps/x86_64/fpu/s_sincosf.S: Include <libm-alias-float.h>.
+	(sincosf): Define using libm_alias_float.
+	* sysdeps/x86_64/fpu/s_sinf.S: Include <libm-alias-float.h>.
+	(sinf): Define using libm_alias_float.
+	* sysdeps/x86_64/x32/fpu/s_lrintf.S: Include <libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+
 	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Include
 	<libm-alias-double.h>.
 	(atan): Define using libm_alias_double.

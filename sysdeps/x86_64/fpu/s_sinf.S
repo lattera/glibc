@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <libm-alias-float.h>
 
 /* Short algorithm description:
  *
@@ -555,4 +556,4 @@ L(SP_ABS_MASK): /* Mask for getting SP absolute value */
 	.type L(SP_ABS_MASK), @object
 	ASM_SIZE_DIRECTIVE(L(SP_ABS_MASK))
 
-weak_alias(__sinf, sinf)
+libm_alias_float (__sin, sin)

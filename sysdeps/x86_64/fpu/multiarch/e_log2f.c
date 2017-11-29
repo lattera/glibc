@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 extern float __redirect_log2f (float);
 
 #define SYMBOL_NAME log2f
@@ -29,8 +31,9 @@ __hidden_ver1 (__log2f, __GI___log2f, __redirect_log2f)
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __log2f, log2f, GLIBC_2_27);
+libm_alias_float_other (__log2, log2)
 #else
-weak_alias (__log2f, log2f)
+libm_alias_float (__log2, log2)
 #endif
 
 strong_alias (__log2f, __ieee754_log2f)

@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 extern float __redirect_expf (float);
 
 #define SYMBOL_NAME expf
@@ -29,8 +31,9 @@ __hidden_ver1 (__expf, __GI___expf, __redirect_expf)
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __expf, expf, GLIBC_2_27);
+libm_alias_float_other (__exp, exp)
 #else
-weak_alias (__expf, expf)
+libm_alias_float (__exp, exp)
 #endif
 
 strong_alias (__expf, __ieee754_expf)

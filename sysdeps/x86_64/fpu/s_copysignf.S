@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 	.section .rodata
 
@@ -42,4 +43,4 @@ ENTRY(__copysignf)
 	retq
 END (__copysignf)
 
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)
