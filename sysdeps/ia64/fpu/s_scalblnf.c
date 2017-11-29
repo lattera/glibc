@@ -59,3 +59,4 @@ float scalblnf(float x, long int n)
 #endif
 
 }
+libm_alias_float_other (scalbln, scalbln)

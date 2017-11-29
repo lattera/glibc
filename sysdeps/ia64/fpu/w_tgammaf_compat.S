@@ -1276,6 +1276,7 @@ tgammaf_libm_err:
 };;
 
 GLOBAL_LIBM_END(tgammaf)
+libm_alias_float_other (tgamma, tgamma)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

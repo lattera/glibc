@@ -967,6 +967,7 @@ ACOSH_LESS_ONE:
 ;;
 
 GLOBAL_LIBM_END(acoshf)
+libm_alias_float_other (acosh, acosh)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

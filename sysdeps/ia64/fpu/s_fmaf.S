@@ -69,3 +69,4 @@ GLOBAL_LIBM_ENTRY(fmaf)
 ;;
 
 GLOBAL_LIBM_END(fmaf)
+libm_alias_float_other (fma, fma)

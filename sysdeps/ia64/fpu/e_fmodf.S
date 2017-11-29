@@ -514,6 +514,7 @@ EXP_ERROR_RETURN:
 }
 
 GLOBAL_IEEE754_END(fmodf)
+libm_alias_float_other (__fmod, fmod)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

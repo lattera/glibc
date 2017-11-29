@@ -550,6 +550,7 @@ Return_From_Huges:
 ;;
 
 GLOBAL_IEEE754_END(tanf)
+libm_alias_float_other (__tan, tan)
 
 
 LOCAL_LIBM_ENTRY(__libm_callout)

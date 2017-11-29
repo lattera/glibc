@@ -222,3 +222,4 @@ CEIL_UNORM:
 ;;
 
 GLOBAL_LIBM_END(ceilf)
+libm_alias_float_other (ceil, ceil)

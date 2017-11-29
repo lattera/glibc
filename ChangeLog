@@ -1,3 +1,62 @@
+2017-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h: Include <libm-alias-float.h>.
+	* sysdeps/ia64/fpu/e_acosf.S (acosf): Use libm_alias_float_other.
+	* sysdeps/ia64/fpu/e_acoshf.S (acoshf): Likewise.
+	* sysdeps/ia64/fpu/e_asinf.S (asinf): Likewise.
+	* sysdeps/ia64/fpu/e_atan2f.S (atan2f): Likewise.
+	* sysdeps/ia64/fpu/e_atanhf.S (atanhf): Likewise.
+	* sysdeps/ia64/fpu/e_coshf.S (coshf): Likewise.
+	* sysdeps/ia64/fpu/e_exp10f.S (exp10f): Likewise.
+	* sysdeps/ia64/fpu/e_exp2f.S (exp2f): Likewise.
+	* sysdeps/ia64/fpu/e_expf.S (expf): Likewise.
+	* sysdeps/ia64/fpu/e_fmodf.S (fmodf): Likewise.
+	* sysdeps/ia64/fpu/e_hypotf.S (hypotf): Likewise.
+	* sysdeps/ia64/fpu/e_lgammaf_r.c (lgammaf_r): Define using
+	libm_alias_float_r.
+	* sysdeps/ia64/fpu/e_log2f.S (log2f): Use libm_alias_float_other.
+	* sysdeps/ia64/fpu/e_logf.S (log10f): Likewise.
+	(logf): Likewise.
+	* sysdeps/ia64/fpu/e_powf.S (powf): Likewise.
+	* sysdeps/ia64/fpu/e_remainderf.S (remainderf): Likewise.
+	* sysdeps/ia64/fpu/e_sinhf.S (sinhf): Likewise.
+	* sysdeps/ia64/fpu/e_sqrtf.S (sqrtf): Likewise.
+	* sysdeps/ia64/fpu/libm_sincosf.S (sincosf): Likewise.
+	* sysdeps/ia64/fpu/s_asinhf.S (asinhf): Likewise.
+	* sysdeps/ia64/fpu/s_atanf.S (atanf): Likewise.
+	* sysdeps/ia64/fpu/s_cbrtf.S (cbrtf): Likewise.
+	* sysdeps/ia64/fpu/s_ceilf.S (ceilf): Likewise.
+	* sysdeps/ia64/fpu/s_copysign.S (copysignf): Define using
+	libm_alias_float.
+	* sysdeps/ia64/fpu/s_cosf.S (sinf): Use libm_alias_float_other.
+	(cosf): Likewise.
+	* sysdeps/ia64/fpu/s_erfcf.S (erfcf): Likewise.
+	* sysdeps/ia64/fpu/s_erff.S (erff): Likewise.
+	* sysdeps/ia64/fpu/s_expm1f.S (expm1f): Likewise.
+	* sysdeps/ia64/fpu/s_fabsf.S (fabsf): Likewise.
+	* sysdeps/ia64/fpu/s_fdimf.S (fdimf): Likewise.
+	* sysdeps/ia64/fpu/s_floorf.S (floorf): Likewise.
+	* sysdeps/ia64/fpu/s_fmaf.S (fmaf): Likewise.
+	* sysdeps/ia64/fpu/s_fmaxf.S (fmaxf): Likewise.
+	* sysdeps/ia64/fpu/s_frexpf.c (frexpf): Likewise.
+	* sysdeps/ia64/fpu/s_ldexpf.c (ldexpf): Likewise.
+	* sysdeps/ia64/fpu/s_log1pf.S (log1pf): Likewise.
+	* sysdeps/ia64/fpu/s_logbf.S (logbf): Likewise.
+	* sysdeps/ia64/fpu/s_modff.S (modff): Likewise.
+	* sysdeps/ia64/fpu/s_nearbyintf.S (nearbyintf): Likewise.
+	* sysdeps/ia64/fpu/s_nextafterf.S (nextafterf): Likewise.
+	* sysdeps/ia64/fpu/s_rintf.S (rintf): Likewise.
+	* sysdeps/ia64/fpu/s_roundf.S (roundf): Likewise.
+	* sysdeps/ia64/fpu/s_scalblnf.c (scalblnf): Likewise.
+	* sysdeps/ia64/fpu/s_scalbnf.c (scalbnf): Define using
+	libm_alias_float.
+	* sysdeps/ia64/fpu/s_tanf.S (tanf): Use libm_alias_float_other.
+	* sysdeps/ia64/fpu/s_tanhf.S (tanhf): Likewise.
+	* sysdeps/ia64/fpu/s_truncf.S (truncf): Likewise.
+	* sysdeps/ia64/fpu/w_lgammaf_main.c
+	[BUILD_LGAMMA && !USE_AS_COMPAT] (lgammaf): Likewise.
+	* sysdeps/ia64/fpu/w_tgammaf_compat.S (tgammaf): Likewise.
+
 2017-11-28  Mike FABIAN  <mfabian@redhat.com>, Alexandre Oliva <aoliva@redhat.com>
 
 	[BZ #17750]

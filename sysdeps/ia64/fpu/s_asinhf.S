@@ -935,3 +935,4 @@ ASINH_UNORM:
 ;;
 
 GLOBAL_LIBM_END(asinhf)
+libm_alias_float_other (asinh, asinh)

@@ -203,6 +203,7 @@ GLOBAL_IEEE754_ENTRY(sqrtf)
 // with the result equal to frcpa(x)
 //
 GLOBAL_IEEE754_END(sqrtf)
+libm_alias_float_other (__sqrt, sqrt)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

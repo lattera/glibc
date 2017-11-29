@@ -918,6 +918,7 @@ SPECIAL:
 ;;
 
 GLOBAL_LIBM_END(erfcf)
+libm_alias_float_other (erfc, erfc)
 
 
 // Call via (p10) br.cond.spnt   __libm_error_region

@@ -583,6 +583,7 @@ ASINF_ABS_ONE:
 ;;
 
 GLOBAL_LIBM_END(asinf)
+libm_alias_float_other (asin, asin)
 
 // Stack operations when calling error support.
 //       (1)               (2)

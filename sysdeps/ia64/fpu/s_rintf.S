@@ -227,3 +227,4 @@ RINT_NOT_ROUND_NEAREST:
 ;;
 
 GLOBAL_IEEE754_END(rintf)
+libm_alias_float_other (__rint, rint)

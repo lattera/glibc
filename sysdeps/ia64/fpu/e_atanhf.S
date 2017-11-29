@@ -781,6 +781,7 @@ atanhf_ge_one:
 ;;
 
 GLOBAL_LIBM_END(atanhf)
+libm_alias_float_other (atanh, atanh)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

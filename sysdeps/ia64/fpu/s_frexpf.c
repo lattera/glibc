@@ -65,3 +65,4 @@ float frexpf(float x, int *y)
 #endif
 
 }
+libm_alias_float_other (frexp, frexp)

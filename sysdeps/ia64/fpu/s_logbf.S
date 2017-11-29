@@ -218,6 +218,7 @@ LOGB_ZERO:
 ;;
 
 GLOBAL_LIBM_END(logbf)
+libm_alias_float_other (logb, logb)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -421,6 +421,7 @@ GLOBAL_IEEE754_ENTRY(sincosf)
       br.cond.sptk  _CISF_COMMON
 };;
 GLOBAL_IEEE754_END(sincosf)
+libm_alias_float_other (__sincos, sincos)
 
 GLOBAL_LIBM_ENTRY(__libm_sincosf)
 { .mlx

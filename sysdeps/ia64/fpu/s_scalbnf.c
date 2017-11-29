@@ -60,4 +60,4 @@ float __scalbnf(float x, int n)
 
 }
 
-weak_alias (__scalbnf, scalbnf)
+libm_alias_float (__scalbn, scalbn)

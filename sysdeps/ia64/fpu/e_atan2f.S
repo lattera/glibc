@@ -826,6 +826,7 @@ ATAN2F_XY_INF_NAN_ZERO:
 
 
 GLOBAL_IEEE754_END(atan2f)
+libm_alias_float_other (__atan2, atan2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

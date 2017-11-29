@@ -842,6 +842,7 @@ GLOBAL_IEEE754_ENTRY(log10f)
       br.cond.sptk  logf_log10f_common
 };;
 GLOBAL_IEEE754_END(log10f)
+libm_alias_float_other (__log10, log10)
 
 GLOBAL_IEEE754_ENTRY(logf)
 { .mfi
@@ -1088,6 +1089,7 @@ logf_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(logf)
+libm_alias_float_other (__log, log)
 #ifdef SHARED
 .symver logf,logf@@GLIBC_2.27
 .weak __logf_compat

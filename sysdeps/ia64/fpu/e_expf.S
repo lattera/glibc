@@ -657,6 +657,7 @@ EXP_UNDERFLOW_ZERO:
 ;;
 
 GLOBAL_IEEE754_END(expf)
+libm_alias_float_other (__exp, exp)
 #ifdef SHARED
 .symver expf,expf@@GLIBC_2.27
 .weak __expf_compat

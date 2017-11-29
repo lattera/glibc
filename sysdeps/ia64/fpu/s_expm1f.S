@@ -612,6 +612,7 @@ EXPM1_CERTAIN_OVERFLOW:
 ;;
 
 GLOBAL_IEEE754_END(expm1f)
+libm_alias_float_other (__expm1, expm1)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

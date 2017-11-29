@@ -579,3 +579,4 @@ tanhf_denormal:
 ;;
 
 GLOBAL_LIBM_END(tanhf)
+libm_alias_float_other (tanh, tanh)

@@ -600,6 +600,7 @@ ACOSF_ABS_ONE:
 }
 
 GLOBAL_LIBM_END(acosf)
+libm_alias_float_other (acos, acos)
 
 
 // Stack operations when calling error support.

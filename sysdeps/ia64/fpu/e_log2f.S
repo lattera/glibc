@@ -492,6 +492,7 @@ SPECIAL_log2f:
 }
 
 GLOBAL_LIBM_END(__log2f)
+libm_alias_float_other (__log2, __log2)
 #ifdef SHARED
 .symver __log2f,log2f@@GLIBC_2.27
 .weak __log2f_compat

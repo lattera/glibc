@@ -689,6 +689,7 @@ SINH_UNORM:
 ;;
 
 GLOBAL_IEEE754_END(sinhf)
+libm_alias_float_other (__sinh, sinh)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

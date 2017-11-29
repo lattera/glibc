@@ -69,6 +69,7 @@ float LGFUNC (lgammaf) (float x)
 compat_symbol (libm, __lgammaf_compat, lgammaf, LGAMMA_OLD_VER);
 # else
 versioned_symbol (libm, __ieee754_lgammaf, lgammaf, LGAMMA_NEW_VER);
+libm_alias_float_other (__ieee754_lgamma, lgamma)
 # endif
 # if GAMMA_ALIAS
 strong_alias (LGFUNC (lgammaf), __ieee754_gammaf)

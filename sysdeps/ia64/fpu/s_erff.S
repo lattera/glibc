@@ -556,3 +556,4 @@ erff_denormal:
 ;;
 
 GLOBAL_LIBM_END(erff)
+libm_alias_float_other (erf, erf)

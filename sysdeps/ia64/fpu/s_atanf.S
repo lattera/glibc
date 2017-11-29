@@ -553,3 +553,4 @@ ATANF_X_INF_NAN_ZERO:
 ;;
 
 GLOBAL_LIBM_END(atanf)
+libm_alias_float_other (atan, atan)

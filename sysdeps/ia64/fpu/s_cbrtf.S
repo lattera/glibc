@@ -759,3 +759,4 @@ GLOBAL_LIBM_ENTRY(cbrtf)
 
 
 GLOBAL_LIBM_END(cbrtf)
+libm_alias_float_other (cbrt, cbrt)

@@ -59,3 +59,4 @@ float ldexpf(float x, int n)
 #endif
 
 }
+libm_alias_float_other (ldexp, ldexp)

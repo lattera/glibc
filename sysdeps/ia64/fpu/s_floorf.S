@@ -213,3 +213,4 @@ FLOOR_UNORM:
 ;;
 
 GLOBAL_IEEE754_END(floorf)
+libm_alias_float_other (__floor, floor)
