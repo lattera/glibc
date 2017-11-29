@@ -1,3 +1,9 @@
+2017-11-28  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/hppa/start.S (_start): Check PIC instead of SHARED.  Load
+	address of $global$ into %dp register earlier.  Use pc-relative
+	instruction sequence for PIC case.
+
 2017-11-28  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/i386/fpu/s_asinhf.S: Include <libm-alias-float.h>.
