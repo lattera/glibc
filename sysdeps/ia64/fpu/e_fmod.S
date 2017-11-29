@@ -499,6 +499,7 @@ FMOD_Y_ZERO:
 }
 
 GLOBAL_IEEE754_END(fmod)
+libm_alias_double_other (__fmod, fmod)
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
 .prologue

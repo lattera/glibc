@@ -425,6 +425,7 @@ GLOBAL_IEEE754_ENTRY(sincos)
       br.cond.sptk  _CIS_COMMON
 };;
 GLOBAL_IEEE754_END(sincos)
+libm_alias_double_other (__sincos, sincos)
 
 GLOBAL_LIBM_ENTRY(__libm_sincos)
 // cis_GR_sig_inv_pi_by_16 = significand of 16/pi

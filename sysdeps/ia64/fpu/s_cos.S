@@ -420,6 +420,7 @@ GLOBAL_IEEE754_ENTRY(sin)
 ;;
 
 GLOBAL_IEEE754_END(sin)
+libm_alias_double_other (__sin, sin)
 
 GLOBAL_IEEE754_ENTRY(cos)
 
@@ -707,6 +708,7 @@ _SINCOS_UNORM:
 };;
 
 GLOBAL_IEEE754_END(cos)
+libm_alias_double_other (__cos, cos)
 
 //////////// x >= 2^27 - large arguments routine call ////////////
 LOCAL_LIBM_ENTRY(__libm_callout_sincos)

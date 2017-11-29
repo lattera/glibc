@@ -59,3 +59,4 @@ double ldexp(double x, int n)
 #endif
 
 }
+libm_alias_double_other (ldexp, ldexp)

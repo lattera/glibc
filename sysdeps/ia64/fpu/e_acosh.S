@@ -1139,6 +1139,7 @@ ACOSH_LESS_ONE:
 ;;
 
 GLOBAL_LIBM_END(acosh)
+libm_alias_double_other (acosh, acosh)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

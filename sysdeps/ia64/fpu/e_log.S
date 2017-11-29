@@ -1386,6 +1386,7 @@ GLOBAL_IEEE754_ENTRY(log10)
       br.cond.sptk  log_log10_common
 };;
 GLOBAL_IEEE754_END(log10)
+libm_alias_double_other (__log10, log10)
 
 
 GLOBAL_IEEE754_ENTRY(log)
@@ -1668,6 +1669,7 @@ log_libm_err:
       nop.i         0
 };;
 GLOBAL_IEEE754_END(log)
+libm_alias_double_other (__log, log)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

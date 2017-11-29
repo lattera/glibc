@@ -654,6 +654,7 @@ SPECIAL_LOG2:
 }
 
 GLOBAL_LIBM_END(log2)
+libm_alias_double_other (log2, log2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

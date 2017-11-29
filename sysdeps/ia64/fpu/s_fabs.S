@@ -80,3 +80,4 @@ GLOBAL_IEEE754_ENTRY(fabs)
 }
 
 GLOBAL_IEEE754_END(fabs)
+libm_alias_double_other (__fabs, fabs)

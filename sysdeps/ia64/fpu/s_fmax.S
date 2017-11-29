@@ -112,3 +112,4 @@ GLOBAL_LIBM_ENTRY(fmax)
 ;;
 
 GLOBAL_LIBM_END(fmax)
+libm_alias_double_other (fmax, fmax)

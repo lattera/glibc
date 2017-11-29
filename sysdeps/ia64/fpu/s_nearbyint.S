@@ -215,3 +215,4 @@ RINT_NOT_ROUND_NEAREST:
 ;;
 
 GLOBAL_LIBM_END(nearbyint)
+libm_alias_double_other (nearbyint, nearbyint)

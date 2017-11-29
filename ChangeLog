@@ -1,3 +1,61 @@
+2017-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ia64/fpu/libm-symbols.h: Include <libm-alias-double.h>.
+	* sysdeps/ia64/fpu/e_acos.S (acos): Use libm_alias_double_other.
+	* sysdeps/ia64/fpu/e_acosh.S (acosh): Likewise.
+	* sysdeps/ia64/fpu/e_asin.S (asin): Likewise.
+	* sysdeps/ia64/fpu/e_atan2.S (atan2): Likewise.
+	* sysdeps/ia64/fpu/e_atanh.S (atanh): Likewise.
+	* sysdeps/ia64/fpu/e_cosh.S (cosh): Likewise.
+	* sysdeps/ia64/fpu/e_exp.S (exp): Likewise.
+	* sysdeps/ia64/fpu/e_exp10.S (exp10): Likewise.
+	* sysdeps/ia64/fpu/e_exp2.S (exp2): Likewise.
+	* sysdeps/ia64/fpu/e_fmod.S (fmod): Likewise.
+	* sysdeps/ia64/fpu/e_hypot.S (hypot): Likewise.
+	* sysdeps/ia64/fpu/e_lgamma_r.c (lgamma_r): Define using
+	libm_alias_double_r.
+	* sysdeps/ia64/fpu/e_log.S (log10): Use libm_alias_double_other.
+	(log): Likewise.
+	* sysdeps/ia64/fpu/e_log2.S (log2): Likewise.
+	* sysdeps/ia64/fpu/e_pow.S (pow): Likewise.
+	* sysdeps/ia64/fpu/e_remainder.S (remainder): Likewise.
+	* sysdeps/ia64/fpu/e_sinh.S (sinh): Likewise.
+	* sysdeps/ia64/fpu/e_sqrt.S (sqrt): Likewise.
+	* sysdeps/ia64/fpu/libm_sincos.S (sincos): Likewise.
+	* sysdeps/ia64/fpu/s_asinh.S (asinh): Likewise.
+	* sysdeps/ia64/fpu/s_atan.S (atan): Likewise.
+	* sysdeps/ia64/fpu/s_cbrt.S (cbrt): Likewise.
+	* sysdeps/ia64/fpu/s_ceil.S (ceil): Likewise.
+	* sysdeps/ia64/fpu/s_copysign.S (copysign): Define using
+	libm_alias_double.
+	* sysdeps/ia64/fpu/s_cos.S (sin): Use libm_alias_double_other.
+	(cos): Likewise.
+	* sysdeps/ia64/fpu/s_erf.S (erf): Likewise.
+	* sysdeps/ia64/fpu/s_erfc.S (erfc): Likewise.
+	* sysdeps/ia64/fpu/s_expm1.S (expm1): Likewise.
+	* sysdeps/ia64/fpu/s_fabs.S (fabs): Likewise.
+	* sysdeps/ia64/fpu/s_fdim.S (fdim): Likewise.
+	* sysdeps/ia64/fpu/s_floor.S (floor): Likewise.
+	* sysdeps/ia64/fpu/s_fma.S (fma): Likewise.
+	* sysdeps/ia64/fpu/s_fmax.S (fmax): Likewise.
+	* sysdeps/ia64/fpu/s_frexp.c (frexp): Likewise.
+	* sysdeps/ia64/fpu/s_ldexp.c (ldexp): Likewise.
+	* sysdeps/ia64/fpu/s_log1p.S (log1p): Likewise.
+	* sysdeps/ia64/fpu/s_logb.S (logb): Likewise.
+	* sysdeps/ia64/fpu/s_modf.S (modf): Likewise.
+	* sysdeps/ia64/fpu/s_nearbyint.S (nearbyint): Likewise.
+	* sysdeps/ia64/fpu/s_nextafter.S (nextafter): Likewise.
+	* sysdeps/ia64/fpu/s_rint.S (rint): Likewise.
+	* sysdeps/ia64/fpu/s_round.S (round): Likewise.
+	* sysdeps/ia64/fpu/s_scalbn.c (scalbn): Define using
+	libm_alias_double.
+	* sysdeps/ia64/fpu/s_tan.S (tan): Use libm_alias_double_other.
+	* sysdeps/ia64/fpu/s_tanh.S (tanh): Likewise.
+	* sysdeps/ia64/fpu/s_trunc.S (trunc): Likewise.
+	* sysdeps/ia64/fpu/w_lgamma_main.c
+	[BUILD_LGAMMA && !USE_AS_COMPAT] (lgamma): Likewise.
+	* sysdeps/ia64/fpu/w_tgamma_compat.S (tgamma): Likewise.
+
 2017-11-28  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/start.S (_start): Check PIC instead of SHARED.  Load

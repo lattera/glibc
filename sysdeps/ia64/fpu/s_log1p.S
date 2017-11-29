@@ -1047,6 +1047,7 @@ log_libm_err:
 ;;
 
 GLOBAL_IEEE754_END(log1p)
+libm_alias_double_other (__log1p, log1p)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -60,7 +60,7 @@ double __ieee754_lgamma_r(double x, int* signgam)
 {
     return __libm_lgamma(x, signgam, sizeof(*signgam));
 }
-weak_alias (__ieee754_lgamma_r, lgamma_r)
+libm_alias_double_r (__ieee754_lgamma, lgamma, _r)
 
 #ifndef _LIBC
 double __ieee754_gamma_r(double x, int* signgam)

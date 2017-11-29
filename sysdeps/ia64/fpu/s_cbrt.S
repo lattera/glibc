@@ -765,3 +765,4 @@ GLOBAL_LIBM_ENTRY(cbrt)
 
 
 GLOBAL_LIBM_END(cbrt)
+libm_alias_double_other (cbrt, cbrt)

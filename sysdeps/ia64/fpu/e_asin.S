@@ -798,6 +798,7 @@ asin_abs_gt_1:
 }
 ;;
 GLOBAL_LIBM_END(asin)
+libm_alias_double_other (asin, asin)
 
 
 

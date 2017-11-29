@@ -1135,3 +1135,4 @@ ASINH_UNORM:
 ;;
 
 GLOBAL_LIBM_END(asinh)
+libm_alias_double_other (asinh, asinh)

@@ -985,6 +985,7 @@ ATAN2_ERROR:
 ;;
 }
 GLOBAL_IEEE754_END(atan2)
+libm_alias_double_other (__atan2, atan2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

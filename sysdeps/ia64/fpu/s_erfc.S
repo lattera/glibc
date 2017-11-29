@@ -1136,6 +1136,7 @@ GLOBAL_LIBM_ENTRY(erfc)
 };;
 
 GLOBAL_LIBM_END(erfc)
+libm_alias_double_other (erfc, erfc)
 
 // call via (p15) br.cond.spnt   __libm_error_region
 //          for  x > ARG_ASYMP = 28.0

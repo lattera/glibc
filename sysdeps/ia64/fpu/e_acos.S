@@ -822,6 +822,7 @@ acos_abs_gt_1:
 }
 ;;
 GLOBAL_LIBM_END(acos)
+libm_alias_double_other (acos, acos)
 
 
 

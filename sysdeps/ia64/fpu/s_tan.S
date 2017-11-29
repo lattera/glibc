@@ -737,6 +737,7 @@ COMMON_PATH:
       br.ret.sptk    b0 ;;
 }
 GLOBAL_IEEE754_END(tan)
+libm_alias_double_other (__tan, tan)
 
 
 LOCAL_LIBM_ENTRY(__libm_callout)

@@ -982,3 +982,4 @@ _tanh_spec:
 };;
 
 GLOBAL_LIBM_END(tanh)
+libm_alias_double_other (tanh, tanh)

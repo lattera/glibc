@@ -922,3 +922,4 @@ erf_denormal:
 ;;
 
 GLOBAL_LIBM_END(erf)
+libm_alias_double_other (erf, erf)

@@ -831,6 +831,7 @@ EXPM1_CERTAIN_MINUS_ONE:
 ;;
 
 GLOBAL_IEEE754_END(expm1)
+libm_alias_double_other (__expm1, expm1)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

@@ -276,3 +276,4 @@ MODF_DENORM:
 }
 
 GLOBAL_LIBM_END(modf)
+libm_alias_double_other (modf, modf)

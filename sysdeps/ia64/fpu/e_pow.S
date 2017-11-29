@@ -2234,6 +2234,7 @@ POW_OVER_UNDER_ERROR:
 ;;
 
 GLOBAL_LIBM_END(pow)
+libm_alias_double_other (pow, pow)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

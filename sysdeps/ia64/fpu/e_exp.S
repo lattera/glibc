@@ -738,6 +738,7 @@ EXP_UNDERFLOW_ZERO:
 ;;
 
 GLOBAL_IEEE754_END(exp)
+libm_alias_double_other (__exp, exp)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

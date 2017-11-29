@@ -60,4 +60,4 @@ double __scalbn(double x, int n)
 
 }
 
-weak_alias (__scalbn, scalbn)
+libm_alias_double (__scalbn, scalbn)

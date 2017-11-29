@@ -751,3 +751,4 @@ GLOBAL_LIBM_ENTRY(atan)
 }
 
 GLOBAL_LIBM_END(atan)
+libm_alias_double_other (atan, atan)

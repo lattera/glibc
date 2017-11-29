@@ -2,6 +2,7 @@
 # include <sysdep.h>
 # undef ret	/* get rid of the stupid "ret" macro; it breaks br.ret */
 
+# include <libm-alias-double.h>
 # include <libm-alias-ldouble.h>
 
 /* Support for compatible assembler handling.  */

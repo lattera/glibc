@@ -65,3 +65,4 @@ double frexp(double x, int *y)
 #endif
 
 }
+libm_alias_double_other (frexp, frexp)

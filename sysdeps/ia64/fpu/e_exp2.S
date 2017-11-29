@@ -494,6 +494,7 @@ OUT_RANGE_exp2:
 ;;
 
 GLOBAL_LIBM_END(exp2)
+libm_alias_double_other (exp2, exp2)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)
