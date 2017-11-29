@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
+
 #define trunc __redirect_trunc
 #define __trunc __redirect___trunc
 #include <math.h>
@@ -26,4 +28,4 @@
 #include "ifunc-sse4_1.h"
 
 libc_ifunc_redirected (__redirect_trunc, __trunc, IFUNC_SELECTOR ());
-weak_alias (__trunc, trunc)
+libm_alias_double (__trunc, trunc)

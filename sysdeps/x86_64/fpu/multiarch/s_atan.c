@@ -16,13 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
+
 extern double __redirect_atan (double);
 
 #define SYMBOL_NAME atan
 #include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_atan, __atan, IFUNC_SELECTOR ());
-weak_alias (__atan, atan)
+libm_alias_double (__atan, atan)
 
 #define __atan __atan_sse2
 #include <sysdeps/ieee754/dbl-64/s_atan.c>

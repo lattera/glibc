@@ -18,10 +18,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	.text
 ENTRY(__lrint)
 	cvtsd2si %xmm0,%eax
 	ret
 END(__lrint)
-weak_alias (__lrint, lrint)
+libm_alias_double (__lrint, lrint)

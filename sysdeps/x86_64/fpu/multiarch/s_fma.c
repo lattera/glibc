@@ -20,6 +20,7 @@
 #include <config.h>
 #include <math.h>
 #include <init-arch.h>
+#include <libm-alias-double.h>
 
 extern double __fma_sse2 (double x, double y, double z) attribute_hidden;
 
@@ -43,7 +44,7 @@ __fma_fma4 (double x, double y, double z)
 libm_ifunc (__fma, HAS_ARCH_FEATURE (FMA_Usable)
 	    ? __fma_fma3 : (HAS_ARCH_FEATURE (FMA4_Usable)
 			    ? __fma_fma4 : __fma_sse2));
-weak_alias (__fma, fma)
+libm_alias_double (__fma, fma)
 
 #define __fma __fma_sse2
 

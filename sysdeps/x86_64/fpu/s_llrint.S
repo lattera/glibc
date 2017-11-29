@@ -19,14 +19,15 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	.text
 ENTRY(__llrint)
 	cvtsd2si %xmm0,%rax
 	ret
 END(__llrint)
-weak_alias (__llrint, llrint)
+libm_alias_double (__llrint, llrint)
 #ifndef __ILP32__
 strong_alias (__llrint, __lrint)
-weak_alias (__llrint, lrint)
+libm_alias_double (__llrint, lrint)
 #endif

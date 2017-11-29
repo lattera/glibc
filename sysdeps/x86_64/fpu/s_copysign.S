@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-double.h>
 
 	.section .rodata.cst16,"aM",@progbits,16
 
@@ -47,4 +48,4 @@ ENTRY(__copysign)
 	ret
 END (__copysign)
 
-weak_alias (__copysign, copysign)
+libm_alias_double (__copysign, copysign)

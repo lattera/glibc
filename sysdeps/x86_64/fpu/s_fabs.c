@@ -17,10 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <libm-alias-double.h>
 
 double
 __fabs (double x)
 {
   return __builtin_fabs (x);
 }
-weak_alias (__fabs, fabs)
+libm_alias_double (__fabs, fabs)

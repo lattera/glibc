@@ -1,3 +1,47 @@
+2017-11-29  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86_64/fpu/multiarch/s_atan.c: Include
+	<libm-alias-double.h>.
+	(atan): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_ceil.c: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_floor.c: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_fma.c: Include
+	<libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_nearbyint.c: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_rint.c: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_sin.c: Include
+	<libm-alias-double.h>.
+	(sin): Define using libm_alias_double.
+	(cos): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_tan.c: Include
+	<libm-alias-double.h>.
+	(tan): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/multiarch/s_trunc.c: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/s_copysign.S: Include <libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/s_fabs.c: Include <libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/s_fmax.S: Include <libm-alias-double.h>.
+	(fmax): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/s_fmin.S: Include <libm-alias-double.h>.
+	(fmin): Define using libm_alias_double.
+	* sysdeps/x86_64/fpu/s_llrint.S: Include <libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	[!__ILP32__] (lrint): Likewise.
+	* sysdeps/x86_64/x32/fpu/s_lrint.S: Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+
 2017-11-29  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/fpu/multiarch/Makefile

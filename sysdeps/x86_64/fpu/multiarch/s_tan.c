@@ -16,13 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
+
 extern double __redirect_tan (double);
 
 #define SYMBOL_NAME tan
 #include "ifunc-avx-fma4.h"
 
 libc_ifunc_redirected (__redirect_tan, __tan, IFUNC_SELECTOR ());
-weak_alias (__tan, tan)
+libm_alias_double (__tan, tan)
 
 #define __tan __tan_sse2
 #include <sysdeps/ieee754/dbl-64/s_tan.c>
