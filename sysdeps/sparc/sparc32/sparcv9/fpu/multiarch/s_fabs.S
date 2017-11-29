@@ -1,12 +1,10 @@
 #include <sparc-ifunc.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 SPARC_ASM_VIS3_IFUNC(fabs)
 
-weak_alias (__fabs, fabs)
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, __fabs, fabsl, GLIBC_2_0);
-#endif
+libm_alias_double (__fabs, fabs)
 
 # undef weak_alias
 # define weak_alias(a, b)

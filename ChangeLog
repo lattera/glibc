@@ -1,5 +1,83 @@
 2017-11-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/sparc/sparc32/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/fpu/s_fabs.S: Include
+	<libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.S:
+	Include <libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabs.S: Include
+	<libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdim.c: Include
+	<libm-alias-double.h>.
+	(fdim): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fma.c: Include
+	<libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyint.S:
+	Include <libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rint.S: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fabs.S: Include
+	<libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyint.S: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rint.S: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceil.c: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floor.c: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fma.c: Include
+	<libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrint.c: Include
+	<libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	(llrint): Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyint.c: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rint.c: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_trunc.c: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/s_fabs.c: Include
+	<libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/s_lrint.S: Include
+	<libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	(llrint): Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_nearbyint.S: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/sparc/sparc64/fpu/s_rint.S: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+
 	[BZ #22229]
 	* sysdeps/sparc/sparc32/sparcv9/fpu/s_fabs.S: Include
 	<math_ldbl_opt.h>.

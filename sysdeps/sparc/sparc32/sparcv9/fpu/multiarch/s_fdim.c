@@ -20,12 +20,10 @@
 #include <first-versions.h>
 #include <sparc-ifunc.h>
 #include <math.h>
+#include <libm-alias-double.h>
 
 extern double __fdim_vis3 (double, double);
 extern double __fdim_generic (double, double);
 
 sparc_libm_ifunc(__fdim, hwcap & HWCAP_SPARC_VIS3 ? __fdim_vis3 : __fdim_generic);
-weak_alias (__fdim, fdim)
-#if LONG_DOUBLE_COMPAT (libm, FIRST_VERSION_libm_fdiml)
-compat_symbol (libm, __fdim, fdiml, FIRST_VERSION_libm_fdiml);
-#endif
+libm_alias_double (__fdim, fdim)

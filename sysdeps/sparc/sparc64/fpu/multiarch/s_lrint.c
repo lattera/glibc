@@ -26,6 +26,7 @@
 #undef __lrint
 #undef __llrint
 #include <sparc-ifunc.h>
+#include <libm-alias-double.h>
 
 extern __typeof (__redirect_lrint) __lrint_vis3 attribute_hidden;
 extern __typeof (__redirect_lrint) __lrint_generic attribute_hidden;
@@ -34,6 +35,6 @@ sparc_libm_ifunc_redirected (__redirect_lrint, __lrint,
 			     hwcap & HWCAP_SPARC_VIS3
 			     ? __lrint_vis3
 			     : __lrint_generic);
-weak_alias (__lrint, lrint)
+libm_alias_double (__lrint, lrint)
 strong_alias (__lrint, __llrint)
-weak_alias (__llrint, llrint)
+libm_alias_double (__llrint, llrint)

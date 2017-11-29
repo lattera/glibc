@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 ENTRY (__copysign)
 	sethi	%hi(0x80000000), %g1
@@ -29,10 +30,7 @@ ENTRY (__copysign)
 	retl
 	 ldd	[%sp + 72], %f0
 END (__copysign)
-weak_alias (__copysign, copysign)
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
-#endif
+libm_alias_double (__copysign, copysign)
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
 #endif

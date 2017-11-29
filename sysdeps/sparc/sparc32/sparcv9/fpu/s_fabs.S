@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 ENTRY (__fabs)
 	st	%o0, [%sp+72]
@@ -26,7 +27,4 @@ ENTRY (__fabs)
 	retl
 	 fabsd	%f0, %f0
 END (__fabs)
-weak_alias (__fabs, fabs)
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, __fabs, fabsl, GLIBC_2_0);
-#endif
+libm_alias_double (__fabs, fabs)

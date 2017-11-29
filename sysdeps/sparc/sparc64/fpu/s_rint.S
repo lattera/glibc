@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 	/* We pop constants into the FPU registers using the incoming
 	   argument stack slots, since this avoid having to use any PIC
@@ -54,4 +55,4 @@ ENTRY (__rint)
 	retl
 	 for	%f0, SIGN_BIT, %f0
 END (__rint)
-weak_alias (__rint, rint)
+libm_alias_double (__rint, rint)
