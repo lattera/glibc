@@ -1,5 +1,8 @@
 2017-11-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	SPARC --disable-multi-arch glibc variants.
+
 	* sysdeps/x86_64/fpu/multiarch/e_exp2f.c: Include
 	<libm-alias-float.h>.
 	(exp2f): Define using libm_alias_float, or libm_alias_float_other

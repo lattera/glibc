@@ -358,7 +358,13 @@ class Context(object):
                         os_name='linux-gnu',
                         glibcs=[{},
                                 {'arch': 'sparcv9',
-                                 'ccopts': '-m32 -mlong-double-128'}])
+                                 'ccopts': '-m32 -mlong-double-128'}],
+                        extra_glibcs=[{'variant': 'disable-multi-arch',
+                                       'cfg': ['--disable-multi-arch']},
+                                      {'variant': 'disable-multi-arch',
+                                       'arch': 'sparcv9',
+                                       'ccopts': '-m32 -mlong-double-128',
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='tilegx',
                         os_name='linux-gnu',
                         glibcs=[{},
