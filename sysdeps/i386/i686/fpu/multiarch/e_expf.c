@@ -23,14 +23,16 @@ extern float __redirect_expf (float);
 
 libc_ifunc_redirected (__redirect_expf, __expf, IFUNC_SELECTOR ());
 
+#include <libm-alias-float.h>
 #ifdef SHARED
 __hidden_ver1 (__expf_ia32, __GI___expf, __redirect_expf)
   __attribute__ ((visibility ("hidden")));
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __expf, expf, GLIBC_2_27);
+libm_alias_float_other (__exp, exp)
 #else
-weak_alias (__expf, expf)
+libm_alias_float (__exp, exp)
 #endif
 
 strong_alias (__expf, __ieee754_expf)

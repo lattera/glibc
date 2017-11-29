@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 RCSID("$NetBSD: s_rintf.S,v 1.3 1995/05/09 00:17:22 jtc Exp $")
 
@@ -12,4 +13,4 @@ ENTRY(__rintf)
 	frndint
 	ret
 END (__rintf)
-weak_alias (__rintf, rintf)
+libm_alias_float (__rint, rint)

@@ -4,6 +4,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 RCSID("$NetBSD: s_floorf.S,v 1.3 1995/05/09 00:04:32 jtc Exp $")
 
@@ -31,4 +32,4 @@ ENTRY(__floorf)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__floorf)
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)

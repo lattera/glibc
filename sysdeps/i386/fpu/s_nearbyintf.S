@@ -5,6 +5,7 @@
 /* Adapted for use as nearbyint by Ulrich Drepper <drepper@cygnus.com>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 ENTRY(__nearbyintf)
 	flds	4(%esp)
@@ -17,4 +18,4 @@ ENTRY(__nearbyintf)
 	cfi_adjust_cfa_offset (-32)
 	ret
 END (__nearbyintf)
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)

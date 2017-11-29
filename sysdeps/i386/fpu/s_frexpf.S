@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 	.section .rodata
 
@@ -77,4 +78,4 @@ ENTRY (__frexpf)
 
 	ret
 END (__frexpf)
-weak_alias (__frexpf, frexpf)
+libm_alias_float (__frexp, frexp)

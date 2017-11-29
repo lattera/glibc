@@ -5,6 +5,7 @@
  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 #define PARMS	4		/* no space for saved regs */
 #define DVDND	PARMS
@@ -42,4 +43,4 @@ ENTRY (__remquof)
 
 	ret
 END (__remquof)
-weak_alias (__remquof, remquof)
+libm_alias_float (__remquo, remquo)

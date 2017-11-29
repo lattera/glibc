@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <machine/asm.h>
 #include <i386-math-asm.h>
+#include <libm-alias-float.h>
 
 	.section .rodata
 
@@ -110,4 +111,4 @@ ENTRY(__expm1f)
 	fldl	MO(minus1)	// Set result to -1.0.
 3:	ret
 END(__expm1f)
-weak_alias (__expm1f, expm1f)
+libm_alias_float (__expm1, expm1)

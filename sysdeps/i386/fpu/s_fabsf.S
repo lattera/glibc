@@ -1,4 +1,5 @@
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.text
 ENTRY(__fabsf)
@@ -6,4 +7,4 @@ ENTRY(__fabsf)
 	fabs
 	ret
 END(__fabsf)
-weak_alias (__fabsf, fabsf)
+libm_alias_float (__fabs, fabs)

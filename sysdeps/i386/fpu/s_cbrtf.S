@@ -19,6 +19,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
         .section .rodata
 
@@ -174,4 +175,4 @@ ENTRY(__cbrtf)
 1:	flds	4(%esp)
 	ret
 END(__cbrtf)
-weak_alias (__cbrtf, cbrtf)
+libm_alias_float (__cbrt, cbrt)

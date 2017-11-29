@@ -26,14 +26,16 @@
 
 libc_ifunc_redirected (__redirect_powf, __powf, IFUNC_SELECTOR ());
 
+#include <libm-alias-float.h>
 #ifdef SHARED
 __hidden_ver1 (__powf_ia32, __GI___powf, __redirect_powf)
   __attribute__ ((visibility ("hidden")));
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __powf, powf, GLIBC_2_27);
+libm_alias_float_other (__pow, pow)
 #else
-weak_alias (__powf, powf)
+libm_alias_float (__pow, pow)
 #endif
 
 strong_alias (__powf, __ieee754_powf)

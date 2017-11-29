@@ -21,13 +21,14 @@
 
 #include <math.h>
 #include <init-arch.h>
+#include <libm-alias-float.h>
 
 extern float __fmaf_ia32 (float x, float y, float z) attribute_hidden;
 extern float __fmaf_fma (float x, float y, float z) attribute_hidden;
 
 libm_ifunc (__fmaf,
 	    HAS_ARCH_FEATURE (FMA_Usable) ? __fmaf_fma : __fmaf_ia32);
-weak_alias (__fmaf, fmaf)
+libm_alias_float (__fma, fma)
 
 #define __fmaf __fmaf_ia32
 

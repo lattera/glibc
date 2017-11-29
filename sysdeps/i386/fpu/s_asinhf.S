@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <machine/asm.h>
+#include <libm-alias-float.h>
 
 	.section .rodata
 
@@ -136,4 +137,4 @@ ENTRY(__asinhf)
 	fchs
 4:	ret
 END(__asinhf)
-weak_alias (__asinhf, asinhf)
+libm_alias_float (__asinh, asinh)

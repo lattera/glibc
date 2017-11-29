@@ -19,6 +19,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.text
 ENTRY(__lrintf)
@@ -31,4 +32,4 @@ ENTRY(__lrintf)
 	cfi_adjust_cfa_offset (-4)
 	ret
 END(__lrintf)
-weak_alias (__lrintf, lrintf)
+libm_alias_float (__lrint, lrint)

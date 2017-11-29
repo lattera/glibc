@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.text
 ENTRY(__fminf)
@@ -40,4 +41,4 @@ ENTRY(__fminf)
 
 	ret
 END(__fminf)
-weak_alias (__fminf, fminf)
+libm_alias_float (__fmin, fmin)

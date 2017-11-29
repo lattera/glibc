@@ -23,14 +23,16 @@ extern float __redirect_log2f (float);
 
 libc_ifunc_redirected (__redirect_log2f, __log2f, IFUNC_SELECTOR ());
 
+#include <libm-alias-float.h>
 #ifdef SHARED
 __hidden_ver1 (__log2f_ia32, __GI___log2f, __redirect_log2f)
   __attribute__ ((visibility ("hidden")));
 
 # include <shlib-compat.h>
 versioned_symbol (libm, __log2f, log2f, GLIBC_2_27);
+libm_alias_float_other (__log2, log2)
 #else
-weak_alias (__log2f, log2f)
+libm_alias_float (__log2, log2)
 #endif
 
 strong_alias (__log2f, __ieee754_log2f)

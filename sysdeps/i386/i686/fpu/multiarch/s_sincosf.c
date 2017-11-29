@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <init-arch.h>
+#include <libm-alias-float.h>
 
 extern void __sincosf_sse2 (float, float *, float *);
 extern void __sincosf_ia32 (float, float *, float *);
@@ -24,7 +25,7 @@ void __sincosf (float, float *, float *);
 
 libm_ifunc (__sincosf,
 	    HAS_CPU_FEATURE (SSE2) ? __sincosf_sse2 : __sincosf_ia32);
-weak_alias (__sincosf, sincosf);
+libm_alias_float (__sincos, sincos);
 
 #define SINCOSF __sincosf_ia32
 #include <sysdeps/ieee754/flt-32/s_sincosf.c>
