@@ -3031,7 +3031,8 @@ __libc_malloc (size_t bytes)
     return (*hook)(bytes, RETURN_ADDRESS (0));
 #if USE_TCACHE
   /* int_free also calls request2size, be careful to not pad twice.  */
-  size_t tbytes = request2size (bytes);
+  size_t tbytes;
+  checked_request2size (bytes, tbytes);
   size_t tc_idx = csize2tidx (tbytes);
 
   MAYBE_INIT_TCACHE ();
