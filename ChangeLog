@@ -1,5 +1,12 @@
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrint.S
+	(__lllrint): Remove alias.
+	(lllrint): Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S
+	(__lllrintf): Likewise.
+	(lllrintf): Likewise.
+
 	* sysdeps/sparc/sparc32/fpu/s_copysignf.S: Include
 	<libm-alias-float.h>.
 	(copysignf): Define using libm_alias_float.

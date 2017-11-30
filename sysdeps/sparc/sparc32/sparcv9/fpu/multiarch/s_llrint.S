@@ -6,9 +6,6 @@ SPARC_ASM_VIS3_IFUNC(llrint)
 
 libm_alias_double (__llrint, llrint)
 
-strong_alias (__llrint, __lllrint)
-weak_alias (__lllrint, lllrint)
-
 # undef weak_alias
 # define weak_alias(a, b)
 # undef strong_alias
