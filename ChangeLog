@@ -1,3 +1,26 @@
+2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>
+
+	[BZ #10580]
+	* localedata/locales/hr_HR (LC_COLLATE): Base collation rules on
+	iso14651_t1.
+	* localedata/locales/hr_HR (LC_TIME): Sync month and day names with
+	CLDR (except use ligatures for the digraphs, CLDR does not use
+	the ligatures), add first_workday, some fixes in the date and time
+	formats.
+	* localedata/locales/hr_HR (LC_CTYPE): Add transliteration rules
+	for Đ and đ.
+	* localedata/locales/hr_HR (LC_MONETARY): Change currency_symbol to
+	lower case. p_cs_precedes and n_cs_precedes should be 0 instead of 1.
+	Add int_p_cs_precedes and int_n_cs_precedes.
+	* localedata/locales/hr_HR (LC_NUMERIC): Change thousands_sep to
+	"<U202F>" (NARROW NO-BREAK SPACE) and grouping to 3;3 (Agrees with
+	LC_MONETARY now).
+	* localedata/locales/hr_HR (LC_TELEPHONE): Add tel_dom_fmt.
+	* localedata/locales/hr_HR (LC_NAME): Add name_mr, name_mrs, and
+	name_miss.
+	* localedata/locales/hr_HR (LC_ADDRESS): Add country_post, country_isbn,
+	and lang_lib. Change postal_fmt.
+
 2017-11-30  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* debug/longjmp_chk.c: Include <setjmpP.h> instead of
