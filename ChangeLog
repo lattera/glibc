@@ -1,3 +1,17 @@
+2017-11-30  Juro Bystricky  <juro.bystricky@linux.intel.com>
+
+	[BZ #22432]
+	* configure.ac (BISON): Require to be present.
+	* configure: Regenerated.
+	* intl/Makefile (generated): Add plural.c.
+	[$(BISON) != no]: Make code unconditional.
+	(plural.c): Change rule to $(objpfx)plural.c.
+	($(objpfx)plural.o): Depend on $(objpfx)plural.c.
+	* intl/plural.c: Remove.
+	* manual/install.texi (Tools for Compilation): Document bison as
+	required.
+	* INSTALL: Regenerated.
+
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/m680x0/fpu/s_llrint.c: Include

@@ -510,6 +510,12 @@ As of release time, @code{gawk} version 4.1.3 is the newest verified
 to work to build @theglibc{}.
 
 @item
+GNU @code{bison} 2.7 or later
+
+@code{bison} is used to generate the @code{yacc} parser code in the @file{intl}
+subdirectory.
+
+@item
 Perl 5
 
 Perl is not required, but it is used if present to test the
@@ -540,14 +546,6 @@ and if you change any of the message translation files you will need
 GNU @code{gettext} 0.10.36 or later
 @end itemize
 
-@noindent
-If you wish to regenerate the @code{yacc} parser code in the @file{intl}
-subdirectory you will need
-
-@itemize @bullet
-@item
-GNU @code{bison} 2.7 or later
-@end itemize
 
 @noindent
 You may also need these packages if you upgrade your source tree using

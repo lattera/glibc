@@ -38,14 +38,13 @@ before-compile += $(objpfx)msgs.h
 
 install-others = $(inst_localedir)/locale.alias
 
-generated += msgs.h mtrace-tst-gettext.out tst-gettext.mtrace
+generated += msgs.h mtrace-tst-gettext.out tst-gettext.mtrace plural.c
 generated-dirs += domaindir localedir
 
-ifneq (no,$(BISON))
-plural.c: plural.y
+$(objpfx)plural.c: plural.y
 	$(BISON) $(BISONFLAGS) $@ $^
-endif
-$(objpfx)plural.o: plural.c
+
+$(objpfx)plural.o: $(objpfx)plural.c
 
 ifeq ($(run-built-tests),yes)
 ifeq (yes,$(build-shared))

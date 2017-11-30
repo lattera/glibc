@@ -79,7 +79,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* bison version 2.7 or later is required to generate code in the 'intl'
+  subdirectory.
 
 Security related changes:
 

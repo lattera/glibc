@@ -462,6 +462,11 @@ build the GNU C Library:
      version 4.1.3 is the newest verified to work to build the GNU C
      Library.
 
+   * GNU 'bison' 2.7 or later
+
+     'bison' is used to generate the 'yacc' parser code in the 'intl'
+     subdirectory.
+
    * Perl 5
 
      Perl is not required, but it is used if present to test the
@@ -480,11 +485,6 @@ If you change any of the 'configure.ac' files you will also need
 and if you change any of the message translation files you will need
 
    * GNU 'gettext' 0.10.36 or later
-
-If you wish to regenerate the 'yacc' parser code in the 'intl'
-subdirectory you will need
-
-   * GNU 'bison' 2.7 or later
 
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
