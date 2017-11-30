@@ -15,10 +15,12 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 float
 __fabsf (float x)
 {
   asm ("fsabs.s %1,%0" : "=f" (x) : "dm" (x));
   return x;
 }
-weak_alias (__fabsf, fabsf)
+libm_alias_float (__fabs, fabs)

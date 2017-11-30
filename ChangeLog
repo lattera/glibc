@@ -1,5 +1,15 @@
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/coldfire/fpu/s_fabsf.c: Include
+	<libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/m68k/coldfire/fpu/s_lrintf.c: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/m68k/coldfire/fpu/s_rintf.c: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+
 	* sysdeps/m68k/coldfire/fpu/s_fabs.c: Include
 	<libm-alias-double.h>.
 	(fabs): Define using libm_alias_double.

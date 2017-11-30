@@ -15,6 +15,8 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-float.h>
+
 long int
 __lrintf (float x)
 {
@@ -22,4 +24,4 @@ __lrintf (float x)
   asm ("fmove.l %1,%0" : "=dm" (result) : "f" (x));
   return result;
 }
-weak_alias (__lrintf, lrintf)
+libm_alias_float (__lrint, lrint)
