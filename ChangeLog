@@ -1,5 +1,11 @@
 2017-11-30  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/hr_HR (LC_COLLATE): Fix collation
+	to make test case pass.
+	* localedata/hr_HR.UTF-8.in: Add more test strings.
+
+2017-11-30  Mike FABIAN  <mfabian@redhat.com>
+
 	* stdlib/tst-strfmon_l.c: Fix testcase. Needed because of [BZ #10580]
 
 2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>

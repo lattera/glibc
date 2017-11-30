@@ -67,8 +67,16 @@ END LC_CTYPE
 LC_COLLATE
 copy "iso14651_t1"
 
-% define collating elements which should be considered
-% as if they are digraphs while collating
+% CLDR collation rules for Croatian
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/hr.xml):
+%  &C<č<<<Č<ć<<<Ć
+%  &D<dž<<<ǆ<<<Dž<<<ǅ<<<DŽ<<<Ǆ<đ<<<Đ
+%  &L<lj<<<ǉ<<<Lj<<<ǈ<<<LJ<<<Ǉ
+%  &N<nj<<<ǌ<<<Nj<<<ǋ<<<NJ<<<Ǌ
+%  &S<š<<<Š
+%  &Z<ž<<<Ž
+%
+% The following rules implement the same order for glibc:
 
 % Digraphs dŽ, lJ and nJ (1st char lower, 2nd char upper)
 % are clearly errors and you'd be hard pressed to
@@ -91,9 +99,6 @@ collating-element <N-j> from "<U004E><U006A>"
 collating-element <n-J> from "<U006E><U004A>"
 collating-element <n-j> from "<U006E><U006A>"
 
-
-% <U01C6> {}, <U01C9> {} and <U01CC> {}
-% make č, ć, ǆ, đ, ǉ, ǌ, š and ž distinct letters
 collating-symbol <ccaron>
 collating-symbol <cacute>
 collating-symbol <d-z-sh>
@@ -103,13 +108,10 @@ collating-symbol <n-j-sh>
 collating-symbol <scaron>
 collating-symbol <zcaron>
 
-% order them as:
-% a b c č ć d ǆ đ e f g h i j k l ǉ m n ǌ o p r s š t u v z ž
-
 reorder-after <c>
 <ccaron>
 <cacute>
-<d>
+reorder-after <d>
 <d-z-sh>
 <doblique>
 reorder-after <l>
@@ -121,58 +123,44 @@ reorder-after <s>
 reorder-after <z>
 <zcaron>
 
-% c č ć
-reorder-after <U0063>
-<U010D> <ccaron>;<ACA>;<MIN>;IGNORE
-<U0107> <cacute>;<CAR>;<MIN>;IGNORE
-reorder-after <U0043>
-<U010C> <ccaron>;<ACA>;<CAP>;IGNORE
-<U0106> <cacute>;<CAR>;<CAP>;IGNORE
+<U010D> <ccaron>;<ACA>;<MIN>;IGNORE % č
+<U010C> <ccaron>;<ACA>;<CAP>;IGNORE % Č
+<U0107> <cacute>;<CAR>;<MIN>;IGNORE % ć
+<U0106> <cacute>;<CAR>;<CAP>;IGNORE % Ć
 
-% d, ǆ and đ
-% give <d-z> collating elements collating value of ǆ
-reorder-after <U01C6>
-<d-z<> "<d><z>";"<BAS><CAR>";"<MIN><MIN>";IGNORE
-<d-Z<> "<d><z>";"<BAS><CAR>";"<MIN><CAP>";IGNORE
-<U0111> <doblique>;<OBL>;<MIN>;IGNORE
-reorder-after <U01C4>
-<D-Z<> "<d><z>";"<BAS><CAR>";"<CAP><CAP>";IGNORE
-reorder-after <U01C5>
-<D-z<> "<d><z>";"<BAS><CAR>";"<CAP><MIN>";IGNORE
-<U0110> <doblique>;<OBL>;<CAP>;IGNORE
+<d-z<> "<d-z-sh>";"<BAS><CAR>";"<MIN><MIN><BAS>";IGNORE % dž
+<U01C6> "<d-z-sh>";"<BAS><CAR>";"<MIN><MIN><LIG>";IGNORE % ǆ
+<d-Z<> "<d-z-sh>";"<BAS><CAR>";"<MIN><CAP><BAS>";IGNORE % dŽ
+<D-z<> "<d-z-sh>";"<BAS><CAR>";"<CAP><MIN><BAS>";IGNORE % Dž
+<U01C5> "<d-z-sh>";"<BAS><CAR>";"<CAP><MIN><LIG>";IGNORE % ǅ
+<D-Z<> "<d-z-sh>";"<BAS><CAR>";"<CAP><CAP><BAS>";IGNORE % DŽ
+<U01C4> "<d-z-sh>";"<BAS><CAR>";"<CAP><CAP><LIG>";IGNORE % Ǆ
+<U0111> <doblique>;<OBL>;<MIN>;IGNORE % đ
+<U0110> <doblique>;<OBL>;<CAP>;IGNORE % Đ
 
-% give <l-j> collating elements collating value of ǉ
-reorder-after <U01C9>
-<l-j> "<l><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE
-<l-J> "<l><j>";"<BAS><BAS>";"<MIN><CAP>";IGNORE
-reorder-after <U01C7>
-<L-J> "<l><j>";"<BAS><BAS>";"<CAP><CAP>";IGNORE
-reorder-after <U01C8>
-<L-j> "<l><j>";"<BAS><BAS>";"<CAP><MIN>";IGNORE
+<l-j> "<l-j-sh>";"<BAS><BAS>";"<MIN><MIN><BAS>";IGNORE % lj
+<U01C9> "<l-j-sh>";"<BAS><BAS>";"<MIN><MIN><LIG>";IGNORE % ǉ
+<l-J> "<l-j-sh>";"<BAS><BAS>";"<MIN><CAP><BAS>";IGNORE % lJ
+<L-j> "<l-j-sh>";"<BAS><BAS>";"<CAP><MIN><BAS>";IGNORE % Lj
+<U01C8> "<l-j-sh>";"<BAS><BAS>";"<CAP><MIN><LIG>";IGNORE % ǈ
+<L-J> "<l-j-sh>";"<BAS><BAS>";"<CAP><CAP><BAS>";IGNORE % LJ
+<U01C7> "<l-j-sh>";"<BAS><BAS>";"<CAP><CAP><LIG>";IGNORE % Ǉ
 
-% give <n-j> collating elements collating value of ǌ
-reorder-after <U01CC>
-<n-j> "<n><j>";"<BAS><BAS>";"<MIN><MIN>";IGNORE
-<n-J> "<n><j>";"<BAS><BAS>";"<MIN><CAP>";IGNORE
-reorder-after <U01CA>
-<N-J> "<n><j>";"<BAS><BAS>";"<CAP><CAP>";IGNORE
-reorder-after <U01CB>
-<N-j> "<n><j>";"<BAS><BAS>";"<CAP><MIN>";IGNORE
+<n-j> "<n-j-sh>";"<BAS><BAS>";"<MIN><MIN><BAS>";IGNORE % nj
+<U01CC> "<n-j-sh>";"<BAS><BAS>";"<MIN><MIN><LIG>";IGNORE % ǌ
+<n-J> "<n-j-sh>";"<BAS><BAS>";"<MIN><CAP><BAS>";IGNORE % nJ
+<N-j> "<n-j-sh>";"<BAS><BAS>";"<CAP><MIN><BAS>";IGNORE % Nj
+<U01CB> "<n-j-sh>";"<BAS><BAS>";"<CAP><MIN><LIG>";IGNORE % ǋ
+<N-J> "<n-j-sh>";"<BAS><BAS>";"<CAP><CAP><BAS>";IGNORE % NJ
+<U01CA> "<n-j-sh>";"<BAS><BAS>";"<CAP><CAP><LIG>";IGNORE % Ǌ
 
-% s š
-reorder-after <U0073>
-<U0161> <scaron>;<ACA>;<MIN>;IGNORE
-reorder-after <U0053>
-<U0160> <scaron>;<ACA>;<CAP>;IGNORE
+<U0161> <scaron>;<ACA>;<MIN>;IGNORE % š
+<U0160> <scaron>;<ACA>;<CAP>;IGNORE % Š
 
-% z ž
-reorder-after <U007A>
-<U017E> <zcaron>;<ACA>;<MIN>;IGNORE
-reorder-after <U005A>
-<U017D> <zcaron>;<ACA>;<CAP>;IGNORE
+<U017E> <zcaron>;<ACA>;<MIN>;IGNORE % ž
+<U017D> <zcaron>;<ACA>;<CAP>;IGNORE % Ž
 
 reorder-end
-
 END LC_COLLATE
 
 LC_MESSAGES
