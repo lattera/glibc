@@ -59,4 +59,4 @@ s(__csinh) (CFLOAT x)
 
   return retval;
 }
-weak_alias (s(__csinh), s(csinh))
+declare_mgen_alias (__csinh, csinh)

@@ -65,4 +65,4 @@ s(__ccosh) (CFLOAT x)
 
   return retval;
 }
-weak_alias (s(__ccosh), s(ccosh))
+declare_mgen_alias (__ccosh, ccosh)

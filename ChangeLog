@@ -1,3 +1,11 @@
+2017-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/m68k/m680x0/fpu/s_ccosh_template.c (ccosh): Use
+	declare_mgen_alias instead of weak_alias.
+	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c (cexp): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_csin_template.c (csin): Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_csinh_template.c (csinh): Likewise.
+
 2017-11-30  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/sparc64/multiarch/Makefile (sysdep_routines):

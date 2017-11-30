@@ -126,4 +126,4 @@ s(__cexp) (CFLOAT x)
 
   return retval;
 }
-weak_alias (s(__cexp), s(cexp))
+declare_mgen_alias (__cexp, cexp)
