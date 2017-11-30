@@ -1,5 +1,15 @@
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/m680x0/fpu/s_llrint.c: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/m68k/m680x0/fpu/s_llrintf.c: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/m68k/m680x0/fpu/s_llrintl.c: Include
+	<libm-alias-ldouble.h>.
+	(llrintl): Define using libm_alias_ldouble.
+
 	* sysdeps/m68k/m680x0/fpu/s_ccosh_template.c (ccosh): Use
 	declare_mgen_alias instead of weak_alias.
 	* sysdeps/m68k/m680x0/fpu/s_cexp_template.c (cexp): Likewise.

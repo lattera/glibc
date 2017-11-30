@@ -20,6 +20,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-ldouble.h>
 #include "mathimpl.h"
 
 long long int
@@ -61,4 +62,4 @@ __llrintl (long double x)
   return result;
 }
 
-weak_alias (__llrintl, llrintl)
+libm_alias_ldouble (__llrint, llrint)
