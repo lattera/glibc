@@ -1,8 +1,9 @@
 #include <sparc-ifunc.h>
+#include <libm-alias-float.h>
 
 SPARC_ASM_VIS3_IFUNC(nearbyintf)
 
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)
 
 # undef weak_alias
 # define weak_alias(a, b)

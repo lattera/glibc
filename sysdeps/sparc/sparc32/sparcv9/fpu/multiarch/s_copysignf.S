@@ -1,8 +1,9 @@
 #include <sparc-ifunc.h>
+#include <libm-alias-float.h>
 
 SPARC_ASM_VIS3_IFUNC(copysignf)
 
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)
 
 # undef weak_alias
 # define weak_alias(a, b)

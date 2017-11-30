@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 ENTRY (__copysignf)
 	fzeros	%f7
@@ -27,4 +28,4 @@ ENTRY (__copysignf)
 	retl
 	 fors	%f1, %f9, %f0
 END (__copysignf)
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)

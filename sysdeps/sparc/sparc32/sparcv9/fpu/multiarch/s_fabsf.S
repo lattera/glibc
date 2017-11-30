@@ -1,8 +1,9 @@
 #include <sparc-ifunc.h>
+#include <libm-alias-float.h>
 
 SPARC_ASM_VIS3_IFUNC(fabsf)
 
-weak_alias (__fabsf, fabsf)
+libm_alias_float (__fabs, fabs)
 
 # undef weak_alias
 # define weak_alias(a, b)

@@ -18,6 +18,7 @@
 
 #include <sparc-ifunc.h>
 #include <math.h>
+#include <libm-alias-float.h>
 
 extern __typeof (truncf) __truncf_vis3 attribute_hidden;
 extern __typeof (truncf) __truncf_generic attribute_hidden;
@@ -26,4 +27,4 @@ sparc_libm_ifunc (__truncf,
 		  hwcap & HWCAP_SPARC_VIS3
 		  ? __truncf_vis3
 		  : __truncf_generic)
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)

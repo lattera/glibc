@@ -1,3 +1,83 @@
+2017-11-30  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc32/fpu/s_copysignf.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/fpu/s_fabsf.S: Include
+	<libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysignf.S:
+	Include <libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fabsf.S: Include
+	<libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fdimf.c: Include
+	<libm-alias-float.h>.
+	(fdimf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_fmaf.c: Include
+	<libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_llrintf.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_nearbyintf.S:
+	Include <libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_rintf.S: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_llrintf.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_lrintf.S: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_nearbyintf.S: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc32/sparcv9/fpu/s_rintf.S: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_ceilf.c: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_floorf.c: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_fmaf.c: Include
+	<libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_lrintf.c: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	(llrintf): Likewise.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_nearbyintf.c: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_rintf.c: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/multiarch/s_truncf.c: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/s_copysignf.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/s_fabsf.c: Include
+	<libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/s_lrintf.S: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	(llrintf): Likewise.
+	* sysdeps/sparc/sparc64/fpu/s_nearbyintf.S: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/sparc/sparc64/fpu/s_rintf.S: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+
 2017-11-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sparc/sparc32/fpu/s_copysign.S: Include

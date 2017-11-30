@@ -20,6 +20,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	/* We pop constants into the FPU registers using the incoming
 	   argument stack slots, since this avoid having to use any PIC
@@ -60,4 +61,4 @@ ENTRY (__nearbyintf)
 	retl
 	 ldx	[%sp + STACK_BIAS + 144], %fsr
 END (__nearbyintf)
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)

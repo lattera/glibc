@@ -1,8 +1,9 @@
 #include <sparc-ifunc.h>
+#include <libm-alias-float.h>
 
 SPARC_ASM_VIS3_IFUNC(llrintf)
 
-weak_alias (__llrintf, llrintf)
+libm_alias_float (__llrint, llrint)
 
 strong_alias (__llrintf, __lllrintf)
 weak_alias (__lllrintf, lllrintf)

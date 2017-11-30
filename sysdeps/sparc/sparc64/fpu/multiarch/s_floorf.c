@@ -18,6 +18,7 @@
 
 #include <sparc-ifunc.h>
 #include <math.h>
+#include <libm-alias-float.h>
 
 extern __typeof (floorf) __floorf_vis3 attribute_hidden;
 extern __typeof (floorf) __floorf_generic attribute_hidden;
@@ -26,4 +27,4 @@ sparc_libm_ifunc (__floorf,
 		  hwcap & HWCAP_SPARC_VIS3
 		  ? __floorf_vis3
 		  : __floorf_generic);
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)
