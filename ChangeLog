@@ -1,5 +1,18 @@
 2017-11-30  Mike FABIAN  <mfabian@redhat.com>
 
+	According to CLDR, collation rules for Serbian and Bosnian
+	should be the same as for Croatian.
+
+	[BZ #22534]
+	* localedata/Makefile: Add sr_RS.UTF-8 and bs_BA.UTF-8 to test-input
+	and to the list of locales to be built for testing.
+	* localedata/bs_BA.UTF-8.in: New file (same as hr_HR.UTF-8.in).
+	* localedata/sr_RS.UTF-8.in: New file (same as hr_HR.UTF-8.in).
+	* localedata/locales/bs_BA (LC_COLLATE): Use “copy "hr_HR"”.
+	* localedata/locales/sr_RS (LC_COLLATE): Use “copy "hr_HR"”.
+
+2017-11-30  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/hr_HR (LC_COLLATE): Fix collation
 	to make test case pass.
 	* localedata/hr_HR.UTF-8.in: Add more test strings.
