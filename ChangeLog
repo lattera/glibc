@@ -1,5 +1,11 @@
 2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>
 
+	* localedata/Makefile: Add hr_HR.UTF-8 to test-input and to
+	the list of locales to built for testing.
+	* localedata/hr_HR.UTF-8.in: New file.
+
+2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>
+
 	[BZ #10580]
 	* localedata/locales/hr_HR (LC_COLLATE): Base collation rules on
 	iso14651_t1.
