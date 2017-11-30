@@ -1,4 +1,5 @@
-/* Copyright (C) 1992-2017 Free Software Foundation, Inc.
+/* Internal header file for <setjmp.h>.  Generic version.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,20 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <setjmpP.h>
-#include <signal.h>
+#ifndef	_SETJMPP_H
+#define	_SETJMPP_H	1
 
-/* This function is called by the `sigsetjmp' macro
-   before doing a `__setjmp' on ENV[0].__jmpbuf.
-   Always return zero.  */
+#include <setjmp.h>
 
-int
-__sigjmp_save (sigjmp_buf env, int savemask)
-{
-  env[0].__mask_was_saved = (savemask &&
-			     __sigprocmask (SIG_BLOCK, (sigset_t *) NULL,
-					    (sigset_t *) &env[0].__saved_mask) == 0);
-
-  return 0;
-}
+#endif /* setjmpP.h  */

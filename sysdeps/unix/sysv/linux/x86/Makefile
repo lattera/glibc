@@ -19,3 +19,8 @@ endif
 ifeq ($(subdir),elf)
 sysdep_routines += dl-vdso
 endif
+
+ifeq ($(subdir),setjmp)
+gen-as-const-headers += jmp_buf-ssp.sym
+tests += tst-saved_mask-1
+endif

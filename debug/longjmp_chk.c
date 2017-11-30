@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <setjmp.h>
+#include <setjmpP.h>
 
 #define __longjmp ____longjmp_chk
 #define __libc_siglongjmp __longjmp_chk

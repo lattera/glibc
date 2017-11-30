@@ -1,3 +1,19 @@
+2017-11-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* debug/longjmp_chk.c: Include <setjmpP.h> instead of
+	<setjmp.h>.
+	* setjmp/longjmp.c: Include <setjmpP.h> instead of <setjmp.h>.
+	(__libc_siglongjmp): Cast &env[0].__saved_mask to "sigset_t *".
+	* setjmp/sigjmp.c: Include <setjmpP.h> instead of <setjmp.h>.
+	(__sigjmp_save): Cast &env[0].__saved_mask to "sigset_t *".
+	* sysdeps/generic/setjmpP.h: New file.
+	* sysdeps/unix/sysv/linux/x86/jmp_buf-ssp.sym: Likewise.
+	* sysdeps/unix/sysv/linux/x86/setjmpP.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/tst-saved_mask-1.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/Makefile (gen-as-const-headers):
+	Add jmp_buf-ssp.sym.
+	(tests): Add tst-saved_mask-1.
+
 2017-11-30  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22375]
