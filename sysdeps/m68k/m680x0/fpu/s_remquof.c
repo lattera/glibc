@@ -1,3 +1,2 @@
-#define SUFF f
-#define float_type float
-#include <s_remquo.c>
+#include <math-type-macros-float.h>
+#include <s_remquo_template.c>

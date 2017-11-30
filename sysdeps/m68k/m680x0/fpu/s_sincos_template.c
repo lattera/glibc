@@ -1,5 +1,5 @@
-/* Implement significand for m68k.
-   Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Implement sincos for m68k.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,18 +18,9 @@
 
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+void
+M_DECL_FUNC (__sincos) (FLOAT x, FLOAT *sinx, FLOAT *cosx)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  __m81_u(M_SUF (__sincos)) (x, sinx, cosx);
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__sincos, sincos)

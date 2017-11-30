@@ -1,4 +1,4 @@
-/* Implement significand for m68k.
+/* Implement modf for m68k.
    Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,19 +17,27 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+FLOAT
+M_DECL_FUNC (__modf) (FLOAT x, FLOAT *iptr)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  FLOAT x_int, result;
+  unsigned long x_cond;
+
+  __asm ("fintrz%.x %1, %0" : "=f" (x_int) : "f" (x));
+  *iptr = x_int;
+  x_cond = __m81_test (x);
+  if (x_cond & __M81_COND_INF)
+    {
+      result = 0;
+      if (x_cond & __M81_COND_NEG)
+	result = -result;
+    }
+  else if (x_cond & __M81_COND_ZERO)
+    result = x;
+  else
+    result = x - x_int;
+  return result;
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__modf, modf)

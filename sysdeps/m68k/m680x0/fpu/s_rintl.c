@@ -1,2 +1,2 @@
-#define FUNC rintl
-#include <s_atanl.c>
+#include <math-type-macros-ldouble.h>
+#include <s_rint_template.c>

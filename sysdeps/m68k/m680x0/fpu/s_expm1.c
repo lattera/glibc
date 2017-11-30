@@ -15,27 +15,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-#include <errno.h>
-#include "mathimpl.h"
-
-#ifndef FUNC
-# define FUNC expm1
-#endif
-#ifndef float_type
-# define float_type double
-#endif
-#ifndef o_threshold
-# define o_threshold 7.09782712893383973096e+02
-#endif
-
-#define CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-CONCATX(__,FUNC) (float_type x)
-{
-  if ((__m81_test (x) & __M81_COND_INF) == 0 && isgreater (x, o_threshold))
-    __set_errno (ERANGE);
-  return __m81_u(CONCATX(__, FUNC)) (x);
-}
-weak_alias (CONCATX(__, FUNC), FUNC)
+#include <math-type-macros-double.h>
+#define o_threshold 7.09782712893383973096e+02
+#include <s_expm1_template.c>

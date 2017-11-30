@@ -1,5 +1,102 @@
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/m680x0/fpu/s_atan_template.c: New file.
+	* sysdeps/m68k/m680x0/fpu/s_ceil_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_cos_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_expm1_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_fabs_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_floor_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_frexp_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_lrint_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_modf_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nearbyint_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_remquo_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rint_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sin_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sincos_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tan_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tanh_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_trunc_template.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_atan.c: Reimplement to use
+	s_atan_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_atanf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_atanl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_ceil.c: Reimplement to use
+	s_ceil_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_ceilf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_ceill.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_cos.c: Reimplement to use
+	s_cos_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_cosf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_cosl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_expm1.c: Reimplement to use
+	s_expm1_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_expm1f.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_expm1l.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_fabs.c: Reimplement to use
+	s_fabs_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_fabsf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_fabsl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_floor.c: Reimplement to use
+	s_floor_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_floorf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_floorl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_frexp.c: Reimplement to use
+	s_frexp_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_frexpf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_lrint.c: Reimplement to use
+	s_lrint_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_lrintf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_lrintl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_modf.c: Reimplement to use
+	s_modf_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_modff.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_modfl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nearbyint.c: Reimplement to use
+	s_nearbyint_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_nearbyintf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nearbyintl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_remquo.c: Reimplement to use
+	s_remquo_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_remquof.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_remquol.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rint.c: Reimplement to use
+	s_rint_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_rintf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_rintl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sin.c: Reimplement to use
+	s_sin_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_sinf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sinl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sincos.c: Reimplement to use
+	s_sincos_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_sincosf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_sincosl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tan.c: Reimplement to use
+	s_tan_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_tanf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tanl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tanh.c: Reimplement to use
+	s_tanh_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_tanhf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_tanhl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_trunc.c: Reimplement to use
+	s_trunc_template.c.
+	* sysdeps/m68k/m680x0/fpu/s_truncf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_truncl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_significand.c: Reimplement based on
+	s_atan.c instead of including s_atan.c.
+	* sysdeps/m68k/m680x0/fpu/s_significandf.c: Reimplement based on
+	s_atanf.c instead of including s_atanf.c.
+	* sysdeps/m68k/m680x0/fpu/s_significandl.c: Reimplement based on
+	s_atanl.c instead of including s_atanl.c.
+	* sysdeps/m68k/m680x0/fpu/s_log1p.c: Include s_significand.c
+	instead of s_atan.c.
+	* sysdeps/m68k/m680x0/fpu/s_log1pf.c: Include s_significandf.c
+	instead of s_atanf.c.
+	* sysdeps/m68k/m680x0/fpu/s_log1pl.c: Include s_significandl.c
+	instead of s_atanl.c.
+
 	* scripts/update-copyrights: Do not handle intl/plural.c
 	specially.
 

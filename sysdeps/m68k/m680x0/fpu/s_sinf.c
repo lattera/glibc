@@ -1,5 +1,2 @@
-#ifndef FUNC
-# define FUNC sinf
-#endif
-#define float_type float
-#include <s_sin.c>
+#include <math-type-macros-float.h>
+#include <s_sin_template.c>

@@ -1,2 +1,2 @@
-#define	FUNC	fabs
-#include <s_atan.c>
+#include <math-type-macros-double.h>
+#include <s_fabs_template.c>

@@ -1,5 +1,2 @@
-#ifndef FUNC
-# define FUNC sinl
-#endif
-#define float_type long double
-#include <s_sin.c>
+#include <math-type-macros-ldouble.h>
+#include <s_sin_template.c>

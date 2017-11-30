@@ -1,2 +1,2 @@
-#define	FUNC	floorf
-#include <s_atanf.c>
+#include <math-type-macros-float.h>
+#include <s_floor_template.c>

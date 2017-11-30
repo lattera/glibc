@@ -1,6 +1,7 @@
-/* Implement significand for m68k.
-   Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Compute remainder and a congruent to the quotient.  m68k fpu version
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,18 +19,18 @@
 
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+FLOAT
+M_DECL_FUNC (__remquo) (FLOAT x, FLOAT y, int *quo)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  FLOAT result;
+  int cquo, fpsr;
+
+  __asm ("frem%.x %2,%0\n\tfmove%.l %/fpsr,%1"
+	 : "=f" (result), "=dm" (fpsr) : "f" (y), "0" (x));
+  cquo = (fpsr >> 16) & 0x7f;
+  if (fpsr & (1 << 23))
+    cquo = -cquo;
+  *quo = cquo;
+  return result;
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__remquo, remquo)

@@ -1,2 +1,2 @@
-#define	FUNC truncl
-#include <s_atanl.c>
+#include <math-type-macros-ldouble.h>
+#include <s_trunc_template.c>

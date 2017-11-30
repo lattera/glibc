@@ -1,6 +1,8 @@
-/* Implement significand for m68k.
-   Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Round argument to nearest integral value according to current rounding
+   direction.
+   Copyright (C) 1997-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,18 +20,9 @@
 
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+long int
+M_DECL_FUNC (__lrint) (FLOAT x)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  return __m81_u(M_SUF (__lrint)) (x);
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__lrint, lrint)

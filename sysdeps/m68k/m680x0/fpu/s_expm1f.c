@@ -1,4 +1,3 @@
-#define	FUNC expm1f
-#define float_type float
+#include <math-type-macros-float.h>
 #define o_threshold 8.8722831726e+01F
-#include <s_expm1.c>
+#include <s_expm1_template.c>

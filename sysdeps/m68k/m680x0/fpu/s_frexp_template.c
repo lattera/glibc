@@ -1,4 +1,4 @@
-/* Implement significand for m68k.
+/* Implement frexp for m68k.
    Copyright (C) 1996-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,18 +18,28 @@
 
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+FLOAT
+M_DECL_FUNC (__frexp) (FLOAT value, int *expptr)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  FLOAT mantissa, exponent;
+  int iexponent;
+  unsigned long fpsr;
+
+  __asm ("ftst%.x %1\n"
+	 "fmove%.l %/fpsr, %0"
+	 : "=dm" (fpsr) : "f" (value));
+  if (fpsr & (7 << 24))
+    {
+      /* Not finite or zero.  */
+      *expptr = 0;
+      return value;
+    }
+  __asm ("fgetexp%.x %1, %0" : "=f" (exponent) : "f" (value));
+  iexponent = (int) exponent + 1;
+  *expptr = iexponent;
+  __asm ("fscale%.l %2, %0"
+	 : "=f" (mantissa)
+	 : "0" (value), "dmi" (-iexponent));
+  return mantissa;
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__frexp, frexp)

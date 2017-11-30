@@ -1,2 +1,2 @@
-#define FUNC cosl
-#include <s_sinl.c>
+#include <math-type-macros-ldouble.h>
+#include <s_cos_template.c>

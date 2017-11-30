@@ -1,2 +1,2 @@
-#define FUNC cosf
-#include <s_sinf.c>
+#include <math-type-macros-float.h>
+#include <s_cos_template.c>

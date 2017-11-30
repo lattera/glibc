@@ -1,5 +1,5 @@
-/* Implement significand for m68k.
-   Copyright (C) 1996-2017 Free Software Foundation, Inc.
+/* Implement expm1 for m68k.
+   Copyright (C) 2012-2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,19 +17,14 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <errno.h>
+#include "mathimpl.h"
 
-#ifndef FUNC
-#define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
+FLOAT
+M_DECL_FUNC (__expm1) (FLOAT x)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x);
+  if ((__m81_test (x) & __M81_COND_INF) == 0 && isgreater (x, o_threshold))
+    __set_errno (ERANGE);
+  return __m81_u(M_SUF (__expm1)) (x);
 }
-weak_alias (__CONCATX(__,FUNC), FUNC)
+declare_mgen_alias (__expm1, expm1)

@@ -1,5 +1,2 @@
-#ifndef FUNC
-#define FUNC atanl
-#endif
-#define float_type long double
-#include <s_atan.c>
+#include <math-type-macros-ldouble.h>
+#include <s_atan_template.c>

@@ -1,2 +1,2 @@
-#define	FUNC nearbyint
-#include <s_atan.c>
+#include <math-type-macros-double.h>
+#include <s_nearbyint_template.c>

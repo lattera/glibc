@@ -1,3 +1,2 @@
-#define FUNC sincosf
-#define float_type float
-#include <s_sincos.c>
+#include <math-type-macros-float.h>
+#include <s_sincos_template.c>

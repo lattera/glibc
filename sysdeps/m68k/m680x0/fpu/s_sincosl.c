@@ -1,3 +1,2 @@
-#define FUNC sincosl
-#define float_type long double
-#include <s_sincos.c>
+#include <math-type-macros-ldouble.h>
+#include <s_sincos_template.c>

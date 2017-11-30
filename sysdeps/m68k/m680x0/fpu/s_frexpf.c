@@ -1,3 +1,2 @@
-#define FUNC frexpf
-#define float_type float
-#include <s_frexp.c>
+#include <math-type-macros-float.h>
+#include <s_frexp_template.c>

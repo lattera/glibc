@@ -1,3 +1,2 @@
-#define suffix l
-#define float_type long double
-#include <s_lrint.c>
+#include <math-type-macros-ldouble.h>
+#include <s_lrint_template.c>

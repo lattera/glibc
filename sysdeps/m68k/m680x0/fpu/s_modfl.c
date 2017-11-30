@@ -1,3 +1,2 @@
-#define SUFF l
-#define float_type long double
-#include <s_modf.c>
+#include <math-type-macros-ldouble.h>
+#include <s_modf_template.c>

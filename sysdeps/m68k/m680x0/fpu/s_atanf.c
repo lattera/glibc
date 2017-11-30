@@ -1,5 +1,2 @@
-#ifndef FUNC
-#define FUNC atanf
-#endif
-#define float_type float
-#include <s_atan.c>
+#include <math-type-macros-float.h>
+#include <s_atan_template.c>

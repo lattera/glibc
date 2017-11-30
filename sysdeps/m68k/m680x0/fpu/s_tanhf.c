@@ -1,2 +1,2 @@
-#define	FUNC	tanhf
-#include <s_atanf.c>
+#include <math-type-macros-float.h>
+#include <s_tanh_template.c>

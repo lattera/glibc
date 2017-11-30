@@ -1,2 +1,2 @@
-#define	FUNC	cos
-#include <s_sin.c>
+#include <math-type-macros-double.h>
+#include <s_cos_template.c>

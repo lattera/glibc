@@ -1,2 +1,2 @@
-#define	FUNC	rintf
-#include <s_atanf.c>
+#include <math-type-macros-float.h>
+#include <s_rint_template.c>

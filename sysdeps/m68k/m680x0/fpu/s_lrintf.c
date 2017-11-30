@@ -1,3 +1,2 @@
-#define suffix f
-#define float_type float
-#include <s_lrint.c>
+#include <math-type-macros-float.h>
+#include <s_lrint_template.c>

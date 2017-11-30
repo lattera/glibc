@@ -1,2 +1,2 @@
-#define FUNC floorl
-#include <s_atanl.c>
+#include <math-type-macros-ldouble.h>
+#include <s_floor_template.c>
