@@ -15,14 +15,12 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
+
 double
 __rint (double x)
 {
   asm ("fint.d %1,%0" : "=f" (x) : "fm" (x));
   return x;
 }
-weak_alias (__rint, rint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__rint, __rintl)
-weak_alias (__rint, rintl)
-#endif
+libm_alias_double (__rint, rint)

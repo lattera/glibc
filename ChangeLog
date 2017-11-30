@@ -1,5 +1,15 @@
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/coldfire/fpu/s_fabs.c: Include
+	<libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/m68k/coldfire/fpu/s_lrint.c: Include
+	<libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/m68k/coldfire/fpu/s_rint.c: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+
 	* sysdeps/m68k/m680x0/fpu/s_atan_template.c: New file.
 	* sysdeps/m68k/m680x0/fpu/s_ceil_template.c: Likewise.
 	* sysdeps/m68k/m680x0/fpu/s_cos_template.c: Likewise.

@@ -15,14 +15,12 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
+
 double
 __fabs (double x)
 {
   asm ("fdabs.d %1,%0" : "=f" (x) : "fm" (x));
   return x;
 }
-weak_alias (__fabs, fabs)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__fabs, __fabsl)
-weak_alias (__fabs, fabsl)
-#endif
+libm_alias_double (__fabs, fabs)
