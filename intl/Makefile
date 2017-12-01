@@ -42,6 +42,7 @@ generated += msgs.h mtrace-tst-gettext.out tst-gettext.mtrace plural.c
 generated-dirs += domaindir localedir
 
 $(objpfx)plural.c: plural.y
+	$(make-target-directory)
 	$(BISON) $(BISONFLAGS) $@ $^
 
 $(objpfx)plural.o: $(objpfx)plural.c
