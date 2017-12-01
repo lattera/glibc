@@ -1,5 +1,13 @@
 2017-12-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/power7/fpu/s_logb.c
+	[LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)] (logbl): Define as compat
+	symbol based on __logb, not on logb.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb.c
+	[LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)] (logbl): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb.c
+	[LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)] (logbl): Likewise.
+
 	* sysdeps/powerpc/fpu/s_rint.c: Include <libm-alias-double.h>.
 	(rint): Define using libm_alias_double.
 	* sysdeps/powerpc/power5+/fpu/s_modf.c: Include
