@@ -1,3 +1,7 @@
+2017-11-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_reloc): Expand MIN.
+
 2017-11-30  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/m68k/coldfire/fpu/s_fabsf.c: Include

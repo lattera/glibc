@@ -695,7 +695,8 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 			      RTLD_PROGNAME, strtab + refsym->st_name);
 	  }
 	memcpy (reloc_addr, (void *) value,
-		MIN (sym->st_size, refsym->st_size));
+		sym->st_size < refsym->st_size
+		? sym->st_size : refsym->st_size);
 	break;
       }
 
