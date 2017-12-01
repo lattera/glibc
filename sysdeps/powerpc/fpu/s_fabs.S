@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-double.h>
 
 ENTRY(__fabs)
 /* double [f1] fabs (double [f1] x); */
@@ -24,13 +25,8 @@ ENTRY(__fabs)
 	blr
 END(__fabs)
 
-weak_alias (__fabs,fabs)
+libm_alias_double (__fabs, fabs)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
 strong_alias(__fabs,__fabsf)
 weak_alias (__fabs,fabsf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__fabs,__fabsl)
-weak_alias (__fabs,fabsl)
-#endif

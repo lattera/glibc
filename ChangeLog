@@ -1,3 +1,14 @@
+2017-12-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/fpu/s_fabs.S: Include <libm-alias-double.h>.
+	(fabs): Define using libm_alias_double.
+	* sysdeps/powerpc/fpu/s_fma.S: Include <libm-alias-double.h>.
+	(fma): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_fabs.S: Remove file.
+	* sysdeps/powerpc/powerpc32/fpu/s_fma.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fabs.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_fma.S: Likewise.
+
 2017-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/x86_64/x32/getcpu.c: Remove file.
