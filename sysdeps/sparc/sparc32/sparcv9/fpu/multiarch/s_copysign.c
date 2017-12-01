@@ -18,8 +18,8 @@
 
 #define __copysign __redirect_copysign
 #include <math.h>
-#undef __copysign
 #include <math_ldbl_opt.h>
+#undef __copysign
 #include <libm-alias-double.h>
 #include <sparc-ifunc.h>
 

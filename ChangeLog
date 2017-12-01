@@ -1,3 +1,8 @@
+2017-12-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/sparc/sparc32/sparcv9/fpu/multiarch/s_copysign.c: Fix build
+	due redirect macro.
+
 2017-12-01  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* intl/Makefile ($(objpfx)plural.c): Add $(make-target-directory).
