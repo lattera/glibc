@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 	.section	".toc","aw"
 .LC0:	/* 2**52 */
@@ -61,12 +62,4 @@ ENTRY (__floor, 4)
 	blr
 	END (__floor)
 
-weak_alias (__floor, floor)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__floor, floorl)
-strong_alias (__floor, __floorl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __floor, floorl, GLIBC_2_0)
-#endif
+libm_alias_double (__floor, floor)

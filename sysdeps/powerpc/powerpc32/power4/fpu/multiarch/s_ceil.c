@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__ceil) __ceil_ppc32 attribute_hidden;
 extern __typeof (__ceil) __ceil_power5plus attribute_hidden;
@@ -29,12 +30,4 @@ libc_ifunc (__ceil,
 	    ? __ceil_power5plus
             : __ceil_ppc32);
 
-weak_alias (__ceil, ceil)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__ceil, __ceill)
-weak_alias (__ceil, ceill)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __ceil, ceill, GLIBC_2_0);
-#endif
+libm_alias_double (__ceil, ceil)

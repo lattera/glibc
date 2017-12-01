@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 	.machine	"power5"
 EALIGN (__round, 4, 0)
@@ -25,12 +26,4 @@ EALIGN (__round, 4, 0)
 	blr
 	END (__round)
 
-weak_alias (__round, round)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__round, roundl)
-strong_alias (__round, __roundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __round, roundl, GLIBC_2_1)
-#endif
+libm_alias_double (__round, round)

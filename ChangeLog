@@ -1,5 +1,101 @@
 2017-12-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/fpu/s_rint.c: Include <libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/powerpc/power5+/fpu/s_modf.c: Include
+	<libm-alias-double.h>.
+	(modf): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceil.S: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_floor.S: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyint.S: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_rint.S: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_round.S: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_trunc.S: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceil.c: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floor.c:
+	Include <libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modf.c: Include
+	<libm-alias-double.h>.
+	(modf): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_round.c:
+	Include <libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_trunc.c:
+	Include <libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceil.S: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floor.S: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_round.S: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_trunc.S: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceil.c: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floor.c: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modf.c: Include
+	<libm-alias-double.h>.
+	(modf): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_round.c: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_trunc.c: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceil.S: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_floor.S: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyint.S: Include
+	<libm-alias-double.h>.
+	(nearbyint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_rint.S: Include
+	<libm-alias-double.h>.
+	(rint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_round.S: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_trunc.S: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceil.S: Include
+	<libm-alias-double.h>.
+	(ceil): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floor.S: Include
+	<libm-alias-double.h>.
+	(floor): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_round.S: Include
+	<libm-alias-double.h>.
+	(round): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_trunc.S: Include
+	<libm-alias-double.h>.
+	(trunc): Define using libm_alias_double.
+
 	* sysdeps/powerpc/fpu/s_fabs.S: Include <libm-alias-double.h>.
 	(fabs): Define using libm_alias_double.
 	* sysdeps/powerpc/fpu/s_fma.S: Include <libm-alias-double.h>.

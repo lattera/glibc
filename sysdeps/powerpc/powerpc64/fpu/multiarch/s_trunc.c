@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__trunc) __trunc_ppc64 attribute_hidden;
 extern __typeof (__trunc) __trunc_power5plus attribute_hidden;
@@ -29,12 +30,4 @@ libc_ifunc (__trunc,
 	    ? __trunc_power5plus
             : __trunc_ppc64);
 
-weak_alias (__trunc, trunc)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__trunc, __truncl)
-weak_alias (__trunc, truncl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __trunc, truncl, GLIBC_2_0);
-#endif
+libm_alias_double (__trunc, trunc)

@@ -18,6 +18,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 double
 __modf (double x, double *iptr)
@@ -44,15 +45,7 @@ __modf (double x, double *iptr)
       return __copysign (x - *iptr, x);
     }
 }
-weak_alias (__modf, modf)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__modf, __modfl)
-weak_alias (__modf, modfl)
-#endif
-#if IS_IN (libm)
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __modf, modfl, GLIBC_2_0);
-# endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+libm_alias_double (__modf, modf)
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, __modf, modfl, GLIBC_2_0);
 #endif

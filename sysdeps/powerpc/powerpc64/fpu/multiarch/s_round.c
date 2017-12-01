@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__round) __round_ppc64 attribute_hidden;
 extern __typeof (__round) __round_power5plus attribute_hidden;
@@ -29,12 +30,4 @@ libc_ifunc (__round,
 	    ? __round_power5plus
             : __round_ppc64);
 
-weak_alias (__round, round)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__round, __roundl)
-weak_alias (__round, roundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __round, roundl, GLIBC_2_0);
-#endif
+libm_alias_double (__round, round)
