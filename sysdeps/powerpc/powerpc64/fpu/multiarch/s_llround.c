@@ -46,7 +46,6 @@ strong_alias (__llround, __llroundl)
 #endif
 #if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
 compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
-compat_symbol (libm, llround, lroundl, GLIBC_2_1);
 #endif
 
 /* long has the same width as long long on PPC64.  */
