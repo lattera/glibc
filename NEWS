@@ -100,8 +100,8 @@ Security related changes:
   processing, leading to a memory leak and, potentially, to a denial
   of service.
 
-  The glob function, when invoked with GLOB_TILDE and without
-  GLOB_NOESCAPE, could write past the end of a buffer while
+  CVE-2017-15804: The glob function, when invoked with GLOB_TILDE and
+  without GLOB_NOESCAPE, could write past the end of a buffer while
   unescaping user names.  Reported by Tim Rühsen.
 
 The following bugs are resolved with this release:
