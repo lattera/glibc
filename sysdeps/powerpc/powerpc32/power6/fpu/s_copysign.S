@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 /* double [f1] copysign (double [f1] x, double [f2] y);
    copysign(x,y) returns a value with the magnitude of x and
@@ -34,7 +35,7 @@ EALIGN (__copysign, 4, 0)
 END (__copysign)
 
 hidden_def (__copysign)
-weak_alias (__copysign, copysign)
+libm_alias_double (__copysign, copysign)
 
 /* It turns out that the 'double' version will also always work for
    single-precision.  */
@@ -42,17 +43,6 @@ strong_alias (__copysign, __copysignf)
 hidden_def (__copysignf)
 weak_alias (__copysignf, copysignf)
 
-#ifdef NO_LONG_DOUBLE
-strong_alias (__copysign, __copysignl)
-weak_alias (__copysign, copysignl)
-#endif
-
-#if IS_IN (libm)
-# if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, copysign, copysignl, GLIBC_2_0)
-# endif
-#else
-# if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, copysign, copysignl, GLIBC_2_0);
-# endif
 #endif

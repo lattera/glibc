@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
  .section .rodata.cst8,"aM",@progbits,8
  .align 3
@@ -92,15 +93,7 @@ ENTRY (__llround)
 	b	.Lconvert
 	END (__llround)
 
-weak_alias (__llround, llround)
+libm_alias_double (__llround, llround)
 
 strong_alias (__llround, __llroundf)
 weak_alias (__llround, llroundf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__llround, llroundl)
-strong_alias (__llround, __llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1)
-#endif

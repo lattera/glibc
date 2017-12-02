@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__llrint) __llrint_ppc32 attribute_hidden;
 extern __typeof (__llrint) __llrint_power6 attribute_hidden;
@@ -29,12 +30,4 @@ libc_ifunc (__llrint,
 	    ? __llrint_power6
             : __llrint_ppc32);
 
-weak_alias (__llrint, llrint)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llrint, __llrintl)
-weak_alias (__llrint, llrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1);
-#endif
+libm_alias_double (__llrint, llrint)

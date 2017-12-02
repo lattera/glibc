@@ -21,6 +21,7 @@
 #include <math_ldbl_opt.h>
 #include <math_private.h>
 #include <stdint.h>
+#include <libm-alias-double.h>
 
 /* Round to the nearest integer, with values exactly on a 0.5 boundary
    rounded away from zero, regardless of the current rounding mode.
@@ -80,11 +81,4 @@ __llround (double x)
     }
   return xr;
 }
-weak_alias (__llround, llround)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llround, __llroundl)
-weak_alias (__llround, llroundl)
-#endif
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_1)
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1);
-#endif
+libm_alias_double (__llround, llround)

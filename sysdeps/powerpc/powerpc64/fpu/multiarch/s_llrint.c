@@ -27,6 +27,7 @@
 #undef __lrint
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__llrint) __llrint_ppc64 attribute_hidden;
 extern __typeof (__llrint) __llrint_power6x attribute_hidden;
@@ -39,22 +40,8 @@ libc_ifunc (__llrint,
 	      ? __llrint_power6x
             : __llrint_ppc64);
 
-weak_alias (__llrint, llrint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llrint, __llrintl)
-weak_alias (__llrint, llrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1);
-#endif
+libm_alias_double (__llrint, llrint)
 
 /* long has the same width as long long on PowerPC64.  */
 strong_alias (__llrint, __lrint)
-weak_alias (__lrint, lrint)
-#ifdef NO_LONG_DOUBLE
-strong_alias (__lrint, __lrintl)
-weak_alias (__lrint, lrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __lrint, lrintl, GLIBC_2_1);
-#endif
+libm_alias_double (__lrint, lrint)

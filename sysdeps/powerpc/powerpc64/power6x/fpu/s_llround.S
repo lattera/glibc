@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 /* long long [r3] llround (float x [fp1])
    IEEE 1003.1 llround function.  IEEE specifies "round to the nearest
@@ -39,8 +40,8 @@ ENTRY_TOCLESS (__llround)
 	END (__llround)
 
 strong_alias (__llround, __lround)
-weak_alias (__llround, llround)
-weak_alias (__lround, lround)
+libm_alias_double (__llround, llround)
+libm_alias_double (__lround, lround)
 /* The double version also works for single-precision as both float and
    double parameters are passed in 64bit FPRs and both versions are expected
    to return [long] long type.  */
@@ -48,14 +49,3 @@ strong_alias (__llround, __llroundf)
 weak_alias (__llround, llroundf)
 strong_alias (__lround, __lroundf)
 weak_alias (__lround, lroundf)
-
-#ifdef NO_LONG_DOUBLE
-weak_alias (__llround, llroundl)
-strong_alias (__llround, __llroundl)
-weak_alias (__lround, lroundl)
-strong_alias (__lround, __lroundl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llround, llroundl, GLIBC_2_1)
-compat_symbol (libm, __lround, lroundl, GLIBC_2_1)
-#endif

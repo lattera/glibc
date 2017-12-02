@@ -25,6 +25,7 @@
 #undef __copysign
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__redirect_copysign) __copysign_ppc32 attribute_hidden;
 extern __typeof (__redirect_copysign) __copysign_power6 attribute_hidden;
@@ -36,16 +37,8 @@ libc_ifunc (__libm_copysign,
             : __copysign_ppc32);
 
 strong_alias (__libm_copysign, __copysign)
-weak_alias (__copysign, copysign)
+libm_alias_double (__copysign, copysign)
 
-#ifdef NO_LONG_DOUBLE
-weak_alias (__copysign,copysignl)
-strong_alias(__copysign,__copysignl)
-#endif
-#if IS_IN (libm)
-# if LONG_DOUBLE_COMPAT(libm, GLIBC_2_0)
-compat_symbol (libm, __copysign, copysignl, GLIBC_2_0);
-# endif
-#elif LONG_DOUBLE_COMPAT(libc, GLIBC_2_0)
+#if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, __copysign, copysignl, GLIBC_2_0);
 #endif

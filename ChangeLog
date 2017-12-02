@@ -1,3 +1,117 @@
+2017-12-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/power7/fpu/s_logb.c: Include
+	<libm-alias-double.h>.
+	(logb): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_llround.c: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Include
+	<libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Include
+	<libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysign.c:
+	Include <libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrint.c:
+	Include <libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llround.c:
+	Include <libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logb.c: Include
+	<libm-alias-double.h>.
+	(logb): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrint.c:
+	Include <libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lround.c:
+	Include <libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: Include
+	<libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lrint.S: Include
+	<libm-alias-double.h>.
+	(lrint): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lround.S: Include
+	<libm-alias-double.h>.
+	(lround): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysign.c: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrint.c: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	(lrint): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround.c: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	(lround): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logb.c: Include
+	<libm-alias-double.h>.
+	(logb): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	(lrint): Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	(lround): Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	(lround): Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: Include
+	<libm-alias-double.h>.
+	(copysign): Define using libm_alias_double.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	(lrint): Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	(lround): Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: Include
+	<libm-alias-double.h>.
+	(llrint): Define using libm_alias_double.
+	(lrint): Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Include
+	<libm-alias-double.h>.
+	(llround): Define using libm_alias_double.
+	(lround): Likewise.
+
 2017-12-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llround.c

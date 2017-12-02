@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-double.h>
 
 #define MFVSRD_R3_V1  .long 0x7c230066     /* mfvsrd  r3,vs1  */
 
@@ -30,8 +31,8 @@ ENTRY_TOCLESS (__llrint)
 END (__llrint)
 
 strong_alias (__llrint, __lrint)
-weak_alias (__llrint, llrint)
-weak_alias (__lrint, lrint)
+libm_alias_double (__llrint, llrint)
+libm_alias_double (__lrint, lrint)
 /* The double version also works for single-precision as both float and
    double parameters are passed in 64bit FPRs and both versions are expected
    to return [long] long type.  */
@@ -39,14 +40,3 @@ strong_alias (__llrint, __llrintf)
 weak_alias (__llrint, llrintf)
 strong_alias (__lrint, __lrintf)
 weak_alias (__lrint, lrintf)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__llrint, __llrintl)
-weak_alias (__llrint, llrintl)
-strong_alias (__lrint, __lrintl)
-weak_alias (__lrint, lrintl)
-#endif
-#if LONG_DOUBLE_COMPAT(libm, GLIBC_2_1)
-compat_symbol (libm, __llrint, llrintl, GLIBC_2_1)
-compat_symbol (libm, __lrint, lrintl, GLIBC_2_1)
-#endif

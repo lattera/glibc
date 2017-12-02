@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-double.h>
 
 extern __typeof (__logb) __logb_ppc32 attribute_hidden;
 extern __typeof (__logb) __logb_power7 attribute_hidden;
@@ -29,13 +30,4 @@ libc_ifunc (__logb,
 	    ? __logb_power7
             : __logb_ppc32);
 
-weak_alias (__logb, logb)
-
-#ifdef NO_LONG_DOUBLE
-strong_alias (__logb, __logbl)
-weak_alias (__logb, logbl)
-#endif
-
-#if LONG_DOUBLE_COMPAT (libm, GLIBC_2_0)
-compat_symbol (libm, __logb, logbl, GLIBC_2_0);
-#endif
+libm_alias_double (__logb, logb)
