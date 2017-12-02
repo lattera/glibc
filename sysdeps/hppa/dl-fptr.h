@@ -31,9 +31,8 @@ extern void _dl_fptr_init (void);
 #define ELF_MACHINE_LOAD_ADDRESS(var, symbol) \
   asm (								\
 "	b,l	1f,%0\n"					\
-"	depi	0,31,2,%0\n"					\
-"1:	addil	L'" #symbol " - ($PIC_pcrel$0 - 8),%0\n"	\
-"	ldo	R'" #symbol " - ($PIC_pcrel$0 - 12)(%%r1),%0\n"	\
+"	addil	L'" #symbol " - ($PIC_pcrel$0 - 1),%0\n"	\
+"1:	ldo	R'" #symbol " - ($PIC_pcrel$0 - 5)(%%r1),%0\n"	\
    : "=&r" (var) : : "r1");
 
 #endif /* !dl_hppa_fptr_h */

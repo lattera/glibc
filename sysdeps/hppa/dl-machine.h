@@ -81,10 +81,9 @@ elf_machine_dynamic (void)
 {
   Elf32_Addr dynamic;
 
-  asm ("b,l	1f,%0\n"
-"	depi	0,31,2,%0\n"
-"1:	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 8),%0\n"
-"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 12)(%%r1),%0\n"
+  asm ("bl	1f,%0\n"
+"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 1),%0\n"
+"1:	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 5)(%%r1),%0\n"
        : "=r" (dynamic) : : "r1");
 
   return dynamic;
@@ -100,10 +99,9 @@ elf_machine_load_address (void)
   Elf32_Addr dynamic;
 
   asm (
-"	b,l	1f,%0\n"
-"	depi	0,31,2,%0\n"
-"1:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%0\n"
-"	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%%r1),%0\n"
+"	bl	1f,%0\n"
+"	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 1),%0\n"
+"1:	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 5)(%%r1),%0\n"
    : "=r" (dynamic) : : "r1");
 
   return dynamic - elf_machine_dynamic ();
@@ -339,14 +337,13 @@ asm (									\
 	   just like a branch reloc.  This sequence gets us the		\
 	   runtime address of _DYNAMIC. */				\
 "	bl	0f,%r19\n"						\
-"	depi	0,31,2,%r19\n"	/* clear priviledge bits */		\
-"0:	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 8),%r19\n"			\
-"	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 12)(%r1),%r26\n"		\
+"	addil	L'_DYNAMIC - ($PIC_pcrel$0 - 1),%r19\n"			\
+"0:	ldo	R'_DYNAMIC - ($PIC_pcrel$0 - 5)(%r1),%r26\n"		\
 									\
 	/* The link time address is stored in the first entry of the	\
 	   GOT.  */							\
-"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 16),%r19\n"	\
-"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 20)(%r1),%r20\n" \
+"	addil	L'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 9),%r19\n"	\
+"	ldw	R'_GLOBAL_OFFSET_TABLE_ - ($PIC_pcrel$0 - 13)(%r1),%r20\n" \
 									\
 "	sub	%r26,%r20,%r20\n"	/* Calculate load offset */	\
 									\

@@ -1,3 +1,12 @@
+2017-12-02  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/hppa/dl-fptr.c (elf_machine_resolve): Remove unnecessary
+	depi instruction from PIC pc-relative sequence.
+	* sysdeps/hppa/dl-fptr.h (ELF_MACHINE_LOAD_ADDRESS): Likewise.
+	* sysdeps/hppa/dl-machine.h (elf_machine_dynamic): Likewise.
+	(elf_machine_load_address): Likewise.
+	(elf_machine_runtime_setup): Likewise.
+
 2017-12-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/power7/fpu/s_logb.c: Include
