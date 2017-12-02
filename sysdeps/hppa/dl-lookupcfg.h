@@ -73,7 +73,8 @@ void attribute_hidden _dl_unmap (struct link_map *map);
 
 /* Construct a fixup value from the address and linkmap */
 #define DL_FIXUP_MAKE_VALUE(map, addr) \
-   ((struct fdesc) { (addr), (map)->l_info[DT_PLTGOT]->d_un.d_ptr })
+  (map) ? ((struct fdesc) { (addr), (map)->l_info[DT_PLTGOT]->d_un.d_ptr }) \
+	: ((struct fdesc) { 0, 0 })
 
 /* Extract the code address from a fixup value */
 #define DL_FIXUP_VALUE_CODE_ADDR(value) ((value).ip)

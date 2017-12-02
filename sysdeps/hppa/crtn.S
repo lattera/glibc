@@ -38,27 +38,6 @@
 /* crtn.S puts function epilogues in the .init and .fini sections
    corresponding to the prologues in crti.S. */
 
-/* Note that we cannot have a weak undefined __gmon_start__, because
-   that would require this to be PIC, and the linker is currently not
-   able to generate a proper procedure descriptor for _init.  Sad but
-   true.  Anyway, HPPA is one of those horrible architectures where
-   making the comparison and indirect call is quite expensive (see the
-   comment in sysdeps/generic/initfini.c). */
-        .text
-        .align 4
-        .weak   __gmon_start__
-        .type    __gmon_start__,@function
-__gmon_start__:
-	.proc
-	.callinfo
-	.entry
-        bv,n %r0(%r2)
-	.exit
-	.procend
-
-/* Here is the tail end of _init.  We put __gmon_start before this so
-   that the assembler creates the .PARISC.unwind section for us, ie.
-   with the right attributes.  */
 	.section .init, "ax", @progbits
 	ldw	-84(%sp),%rp
 	copy	%r4,%r19

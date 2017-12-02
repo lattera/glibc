@@ -1,5 +1,15 @@
 2017-12-02  John David Anglin  <danglin@gcc.gnu.org>
 
+	[BZ libc/19170]
+	* sysdeps/hppa/crti.S: Declare PREINIT_FUNCTION weak_extern when
+	PREINIT_FUNCTION_WEAK is nonzero.
+	(gmon_initializer): New function.  Put procedure label for it in
+	.init_array section.
+	(_init): Don't call PREINIT_FUNCTION.
+	* sysdeps/hppa/crtn.S (__gmon_start__): Remove.
+	* sysdeps/hppa/dl-lookupcfg.h (DL_FIXUP_MAKE_VALUE): Create null fixup
+	value when map argument is null.
+
 	* sysdeps/hppa/dl-fptr.c (elf_machine_resolve): Remove unnecessary
 	depi instruction from PIC pc-relative sequence.
 	* sysdeps/hppa/dl-fptr.h (ELF_MACHINE_LOAD_ADDRESS): Likewise.
