@@ -46,15 +46,15 @@ idouble: 1
 ifloat: 2
 
 Function: Imaginary part of "cacos":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: Real part of "cacosh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: Imaginary part of "cacosh":
@@ -74,15 +74,15 @@ idouble: 1
 ifloat: 1
 
 Function: Imaginary part of "casin":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: Real part of "casinh":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 
 Function: Imaginary part of "casinh":
@@ -92,7 +92,9 @@ idouble: 1
 ifloat: 1
 
 Function: Real part of "catan":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: Imaginary part of "catan":
@@ -108,7 +110,9 @@ idouble: 1
 ifloat: 1
 
 Function: Imaginary part of "catanh":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "cbrt":
