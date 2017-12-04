@@ -1,3 +1,8 @@
+2017-12-04  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	[BZ #5997]
+	* sysdeps/ieee754/flt-32/s_sinf.c: New implementation.
+
 2017-12-02  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ libc/19170]
