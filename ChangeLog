@@ -1,3 +1,11 @@
+2017-12-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
+	(INTERNAL_VSYSCALL_CALL, CLOBBER_0, CLOBBER_1, CLOBBER_2,
+	 CLOBBER_3, CLOBBER_4, CLOBBER_5, CLOBBER_6,
+	INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK): Remove.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h: Likewise.
+
 2017-12-04  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	[BZ #5997]

@@ -271,47 +271,11 @@
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
 #define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
 
-#define CLOBBER_0 , "3", "4", "5"
-#define CLOBBER_1 , "3", "4", "5"
-#define CLOBBER_2 , "4", "5"
-#define CLOBBER_3 , "5"
-#define CLOBBER_4
-#define CLOBBER_5
-#define CLOBBER_6
-
 /* List of system calls which are supported as vsyscalls.  */
 #define HAVE_CLOCK_GETRES_VSYSCALL	1
 #define HAVE_CLOCK_GETTIME_VSYSCALL	1
 #define HAVE_GETTIMEOFDAY_VSYSCALL	1
 #define HAVE_GETCPU_VSYSCALL		1
-
-/* This version is for internal uses when there is no desire
-   to set errno */
-#define INTERNAL_VSYSCALL_NO_SYSCALL_FALLBACK(name, err, nr, args...)	      \
-  ({									      \
-    long int _ret = ENOSYS;						      \
-									      \
-    __typeof (__vdso_##name) vdsop = __vdso_##name;			      \
-    PTR_DEMANGLE (vdsop);						      \
-    if (vdsop != NULL)							      \
-      _ret = INTERNAL_VSYSCALL_CALL (vdsop, err, nr, ##args);		      \
-    else								      \
-      err = 1 << 28;							      \
-    _ret;								      \
-  })
-
-#define INTERNAL_VSYSCALL_CALL(fn, err, nr, args...)			      \
-  ({									      \
-    DECLARGS_##nr(args)							      \
-    register long _ret __asm__("2");					      \
-    __asm__ __volatile__ (						      \
-			  "lr 10,14\n\t"				      \
-			  "basr 14,%1\n\t"				      \
-			  "lr 14,10\n\t"				      \
-			  : "=d" (_ret)					      \
-			  : "d" (fn) ASMFMT_##nr			      \
-			  : "cc", "memory", "0", "1", "10" CLOBBER_##nr);     \
-    _ret; })
 
 /* Pointer mangling support.  */
 #if IS_IN (rtld)
