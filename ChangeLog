@@ -1,3 +1,13 @@
+2017-12-04  Florian Weimer  <fweimer@redhat.com>
+
+	* support/check.h (TEST_COMPARE): Define.
+	(support_test_compare_failure): Declare.
+	* support/Makefile (libsupport-routines): Add
+	support_test_compare_failure.
+	(tests): Add tst-test_compare.
+	* support /support_test_compare_failure.c: New file.
+	* support/tst-test_compare.c: Likewise.
+
 2017-12-04  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22527]

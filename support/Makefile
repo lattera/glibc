@@ -54,6 +54,7 @@ libsupport-routines = \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
+  support_test_compare_failure \
   support_write_file_string \
   support_test_main \
   support_test_verify_impl \
@@ -143,6 +144,7 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
   tst-support_record_failure \
+  tst-test_compare \
   tst-xreadlink \
 
 ifeq ($(run-built-tests),yes)

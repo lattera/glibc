@@ -86,6 +86,67 @@ void support_test_verify_exit_impl (int status, const char *file, int line,
    does not support reporting failures from a DSO.  */
 void support_record_failure (void);
 
+/* Compare the two integers LEFT and RIGHT and report failure if they
+   are different.  */
+#define TEST_COMPARE(left, right)                                       \
+  ({                                                                    \
+    /* + applies the integer promotions, for bitfield support.   */     \
+    typedef __typeof__ (+ (left)) __left_type;                          \
+    typedef __typeof__ (+ (right)) __right_type;                        \
+    __left_type __left_value = (left);                                  \
+    __right_type __right_value = (right);                               \
+    /* Prevent use with floating-point and boolean types.  */           \
+    _Static_assert ((__left_type) 1.0 == (__left_type) 1.5,             \
+                    "left value has floating-point type");              \
+    _Static_assert ((__right_type) 1.0 == (__right_type) 1.5,           \
+                    "right value has floating-point type");             \
+    /* Prevent accidental use with larger-than-long long types.  */     \
+    _Static_assert (sizeof (__left_value) <= sizeof (long long),        \
+                    "left value fits into long long");                  \
+    _Static_assert (sizeof (__right_value) <= sizeof (long long),       \
+                    "right value fits into long long");                 \
+    /* Make sure that integer conversions does not alter the sign.   */ \
+    enum                                                                \
+    {                                                                   \
+      __left_is_unsigned = (__left_type) -1 > 0,                        \
+      __right_is_unsigned = (__right_type) -1 > 0,                      \
+      __unsigned_left_converts_to_wider = (__left_is_unsigned           \
+                                           && (sizeof (__left_value)    \
+                                               < sizeof (__right_value))), \
+      __unsigned_right_converts_to_wider = (__right_is_unsigned         \
+                                            && (sizeof (__right_value)  \
+                                                < sizeof (__left_value))) \
+    };                                                                  \
+    _Static_assert (__left_is_unsigned == __right_is_unsigned           \
+                    || __unsigned_left_converts_to_wider                \
+                    || __unsigned_right_converts_to_wider,              \
+                    "integer conversions may alter sign of operands");  \
+    /* Compare the value.  */                                           \
+    if (__left_value != __right_value)                                  \
+      /* Pass the sign for printing the correct value.  */              \
+      support_test_compare_failure                                      \
+        (__FILE__, __LINE__,                                            \
+         #left, __left_value, __left_value < 0, sizeof (__left_type),   \
+         #right, __right_value, __right_value < 0, sizeof (__right_type)); \
+  })
+
+/* Internal implementation of TEST_COMPARE.  LEFT_NEGATIVE and
+   RIGHT_NEGATIVE are used to store the sign separately, so that both
+   unsigned long long and long long arguments fit into LEFT_VALUE and
+   RIGHT_VALUE, and the function can still print the original value.
+   LEFT_SIZE and RIGHT_SIZE specify the size of the argument in bytes,
+   for hexadecimal formatting.  */
+void support_test_compare_failure (const char *file, int line,
+                                   const char *left_expr,
+                                   long long left_value,
+                                   int left_negative,
+                                   int left_size,
+                                   const char *right_expr,
+                                   long long right_value,
+                                   int right_negative,
+                                   int right_size);
+
+
 /* Internal function called by the test driver.  */
 int support_report_failure (int status)
   __attribute__ ((weak, warn_unused_result));
