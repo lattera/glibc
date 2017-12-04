@@ -1,3 +1,15 @@
+2017-12-04  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #10580]
+	* localedata/locales/hr_HR (LC_TIME): Use two letters for the
+	digraphs in the month and day names. Using single code points for
+	digraphs is deprecated.  While there are dedicated Unicode
+	codepoints, for the digraphs, these are included for backwards
+	compatibility and modern texts use a sequence of Basic Latin
+	characters. See: https://www.unicode.org/faq/ligature_digraph.html
+	This makes the month and day names agree exactly with CLDR now,
+	CLDR does not use the single code points for the digraphs either.
+
 2017-12-04  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/tile/libm-test-ulps: Update ca{cos,sin,tan}{,h} ulps.

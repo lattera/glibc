@@ -198,26 +198,26 @@ END LC_NUMERIC
 
 LC_TIME
 abday   "ned";"pon";"uto";"sri";"<U010D>et";"pet";"sub"
-day     "nedje<U01C9>a";/
-        "ponedje<U01C9>ak";/
+day     "nedjelja";/
+        "ponedjeljak";/
         "utorak";/
         "srijeda";/
         "<U010D>etvrtak";/
         "petak";/
         "subota"
-abmon   "sij";"ve<U01C9>";/
+abmon   "sij";"velj";/
         "o<U017E>u";"tra";/
         "svi";"lip";/
         "srp";"kol";/
         "ruj";"lis";/
         "stu";"pro"
-mon     "sije<U010D>a<U01CC>";/
-        "ve<U01C9>a<U010D>a";/
+mon     "sije<U010D>anj";/
+        "velja<U010D>a";/
         "o<U017E>ujak";/
-        "trava<U01CC>";/
-        "sviba<U01CC>";/
-        "lipa<U01CC>";/
-        "srpa<U01CC>";/
+        "travanj";/
+        "svibanj";/
+        "lipanj";/
+        "srpanj";/
         "kolovoz";/
         "rujan";/
         "listopad";/
