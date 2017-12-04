@@ -1,3 +1,8 @@
+2017-12-04  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/multiarch/memcpy_generic.S (__GI_memcpy):
+	Define only for libc.so.
+
 2017-12-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h
