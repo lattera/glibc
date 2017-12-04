@@ -177,8 +177,8 @@ SINF_FUNC (float x)
 	{
 	  if (abstheta < 0x1p+23)     /* |x| < 2^23.  */
 	    {
-	      unsigned long int n = floor (abstheta * inv_PI_4) + 1.0;
-	      double x = floor (n / 2.0);
+	      unsigned long int n = __floor (abstheta * inv_PI_4) + 1.0;
+	      double x = __floor (n / 2.0);
 	      theta = x * PI_2_lo + (x * PI_2_hi + abstheta);
 	      /* Argument reduction needed.  */
 	      return reduced (theta, n, signbit);
