@@ -1,5 +1,13 @@
 2017-12-04  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #22527]
+	*  localedata/locales/tr_TR (LC_COLLATE): Base collation rules
+	on iso14651_t1. A test file localedata/tr_TR.UTF-8.in is already
+	available, this rewrite of the collation rules does reproduce
+	the test file in the same order.
+
+2017-12-04  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #10580]
 	* localedata/locales/hr_HR (LC_TIME): Use two letters for the
 	digraphs in the month and day names. Using single code points for
