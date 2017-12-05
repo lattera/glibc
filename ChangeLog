@@ -1,3 +1,7 @@
+2017-12-05  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/ieee754/flt-32/s_sinf.c (sinf): Use isless.
+
 2017-12-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strfromd.c: Include <bits/floatn.h>.

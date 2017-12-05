@@ -128,7 +128,7 @@ SINF_FUNC (float x)
   double theta = x;
   double abstheta = fabs (theta);
   /* If |x|< Pi/4.  */
-  if (abstheta < M_PI_4)
+  if (isless (abstheta, M_PI_4))
     {
       if (abstheta >= 0x1p-5) /* |x| >= 2^-5.  */
 	{
@@ -162,8 +162,8 @@ SINF_FUNC (float x)
     }
   else                          /* |x| >= Pi/4.  */
     {
-      unsigned int signbit = (x < 0);
-      if (abstheta < 9 * M_PI_4)        /* |x| < 9*Pi/4.  */
+      unsigned int signbit = isless (x, 0);
+      if (isless (abstheta, 9 * M_PI_4))        /* |x| < 9*Pi/4.  */
 	{
 	  /* There are cases where FE_UPWARD rounding mode can
 	     produce a result of abstheta * inv_PI_4 == 9,
