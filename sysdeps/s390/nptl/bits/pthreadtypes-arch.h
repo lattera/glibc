@@ -40,11 +40,7 @@
 /* Definitions for internal mutex struct.  */
 #define __PTHREAD_COMPAT_PADDING_MID
 #define __PTHREAD_COMPAT_PADDING_END
-#ifdef ENABLE_LOCK_ELISION
 #define __PTHREAD_MUTEX_LOCK_ELISION    1
-#else
-#define __PTHREAD_MUTEX_LOCK_ELISION	0
-#endif
 #define __PTHREAD_MUTEX_NUSERS_AFTER_KIND  (__WORDSIZE != 64)
 #define __PTHREAD_MUTEX_USE_UNION          (__WORDSIZE != 64)
 

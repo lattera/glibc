@@ -19,7 +19,6 @@
 #ifndef ELIDE_PPC_H
 # define ELIDE_PPC_H
 
-#ifdef ENABLE_LOCK_ELISION
 # include <htm.h>
 # include <elision-conf.h>
 
@@ -113,13 +112,5 @@ __elide_unlock (int is_lock_free)
 
 # define ELIDE_UNLOCK(is_lock_free) \
   __elide_unlock (is_lock_free)
-
-# else
-
-# define ELIDE_LOCK(adapt_count, is_lock_free) 0
-# define ELIDE_TRYLOCK(adapt_count, is_lock_free, write) 0
-# define ELIDE_UNLOCK(is_lock_free) 0
-
-#endif /* ENABLE_LOCK_ELISION  */
 
 #endif

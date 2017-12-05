@@ -1,3 +1,42 @@
+2017-12-05  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>,
+	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>,
+	    Carlos O'Donnell <carlos@redhat.com>
+
+	* elf/dl-tunables.list: Add elision parameters.
+	* manual/tunables.texi: Add entries about elision tunable.
+	* sysdeps/unix/sysv/linux/powerpc/elision-conf.c:
+	Add callback functions to dynamically enable/disable elision.
+	Add multiple callbacks functions to set elision parameters.
+	Deleted __libc_enable_secure check.
+	* sysdeps/unix/sysv/linux/s390/elision-conf.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/elision-conf.c: Likewise.
+	* configure: Regenerated.
+	* configure.ac: Option enable_lock_elision was deleted.
+	* config.h.in: ENABLE_LOCK_ELISION flag was deleted.
+	* config.make.in: Remove references to enable_lock_elision.
+	* manual/install.texi: Elision configure option was removed.
+	* INSTALL: Regenerated to remove enable_lock_elision.
+	* nptl/Makefile:
+	Disable elision so it can verify error case for destroying a mutex.
+	* sysdeps/powerpc/nptl/elide.h:
+	Cleanup ENABLE_LOCK_ELISION check.
+	Deleted macros for the case when ENABLE_LOCK_ELISION was not defined.
+	* sysdeps/s390/configure: Regenerated.
+	* sysdeps/s390/configure.ac: Remove references to enable_lock_elision..
+	* nptl/tst-mutex8.c:
+	Deleted all #ifndef ENABLE_LOCK_ELISION from the test.
+	* sysdeps/powerpc/powerpc32/sysdep.h:
+	Deleted all ENABLE_LOCK_ELISION checks.
+	* sysdeps/powerpc/powerpc64/sysdep.h: Likewise.
+	* sysdeps/powerpc/sysdep.h: Likewise.
+	* sysdeps/s390/nptl/bits/pthreadtypes-arch.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/force-elision.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/elision-conf.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/force-elision.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/Makefile: Remove references to
+	enable-lock-elision.
+
 2017-12-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* stdlib/strtod.c: Include <bits/floatn.h>.

@@ -22,7 +22,6 @@
 #include <sysdeps/nptl/lowlevellock.h>
 
 /* Transactional lock elision definitions.  */
-# ifdef ENABLE_LOCK_ELISION
 extern int __lll_timedlock_elision
   (int *futex, short *adapt_count, const struct timespec *timeout, int private)
   attribute_hidden;
@@ -45,6 +44,5 @@ extern int __lll_trylock_elision(int *futex, short *adapt_count)
   __lll_unlock_elision (&(futex), &(adapt_count), private)
 #  define lll_trylock_elision(futex, adapt_count) \
   __lll_trylock_elision(&(futex), &(adapt_count))
-# endif  /* ENABLE_LOCK_ELISION */
 
 #endif	/* lowlevellock.h */

@@ -679,7 +679,6 @@ enable_werror
 all_warnings
 force_install
 bindnow
-enable_lock_elision
 hardcoded_path_in_tests
 enable_timezone_tools
 use_default_link
@@ -768,7 +767,6 @@ enable_profile
 enable_timezone_tools
 enable_hardcoded_path_in_tests
 enable_stackguard_randomization
-enable_lock_elision
 enable_hidden_plt
 enable_bind_now
 enable_stack_protector
@@ -1428,8 +1426,6 @@ Optional Features:
   --enable-stackguard-randomization
                           initialize __stack_chk_guard canary with a random
                           number at program start
-  --enable-lock-elision=yes/no
-                          Enable lock elision for pthread mutexes by default
   --disable-hidden-plt    do not hide internal function calls to avoid PLT
   --enable-bind-now       disable lazy relocations in DSOs
   --enable-stack-protector=[yes|no|all|strong]
@@ -3392,19 +3388,6 @@ fi
 
 if test "$enable_stackguard_randomize" = yes; then
   $as_echo "#define ENABLE_STACKGUARD_RANDOMIZE 1" >>confdefs.h
-
-fi
-
-# Check whether --enable-lock-elision was given.
-if test "${enable_lock_elision+set}" = set; then :
-  enableval=$enable_lock_elision; enable_lock_elision=$enableval
-else
-  enable_lock_elision=no
-fi
-
-
-if test "$enable_lock_elision" = yes ; then
-  $as_echo "#define ENABLE_LOCK_ELISION 1" >>confdefs.h
 
 fi
 

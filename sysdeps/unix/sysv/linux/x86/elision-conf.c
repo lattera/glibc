@@ -22,6 +22,11 @@
 #include <elision-conf.h>
 #include <unistd.h>
 
+#if HAVE_TUNABLES
+# define TUNABLE_NAMESPACE elision
+#endif
+#include <elf/dl-tunables.h>
+
 /* Reasonable initial tuning values, may be revised in the future.
    This is a conservative initial value.  */
 
@@ -48,21 +53,76 @@ struct elision_config __elision_aconf =
    pthread_mutex_lock().  Disabled for suid programs.  Only used when elision
    is available.  */
 
-int __pthread_force_elision attribute_hidden;
+int __pthread_force_elision attribute_hidden = 0;
 
-/* Initialize elison.  */
+#if HAVE_TUNABLES
+static inline void
+__always_inline
+do_set_elision_enable (int32_t elision_enable)
+{
+  /* Enable elision if it's avaliable in hardware. It's not necessary to check
+     if __libc_enable_secure isn't enabled since elision_enable will be set
+     according to the default, which is disabled.  */
+  if (elision_enable == 1)
+    __pthread_force_elision = HAS_CPU_FEATURE (RTM) ? 1 : 0;
+}
+
+/* The pthread->elision_enable tunable is 0 or 1 indicating that elision
+   should be disabled or enabled respectively.  The feature will only be used
+   if it's supported by the hardware.  */
+
+void
+TUNABLE_CALLBACK (set_elision_enable) (tunable_val_t *valp)
+{
+  int32_t elision_enable = (int32_t) valp->numval;
+  do_set_elision_enable (elision_enable);
+}
+
+#define TUNABLE_CALLBACK_FNDECL(__name, __type)			\
+static inline void						\
+__always_inline							\
+do_set_elision_ ## __name (__type value)			\
+{								\
+  __elision_aconf.__name = value;				\
+}								\
+void								\
+TUNABLE_CALLBACK (set_elision_ ## __name) (tunable_val_t *valp) \
+{								\
+  __type value = (__type) (valp)->numval;			\
+  do_set_elision_ ## __name (value);				\
+}
+
+TUNABLE_CALLBACK_FNDECL (skip_lock_busy, int32_t);
+TUNABLE_CALLBACK_FNDECL (skip_lock_internal_abort, int32_t);
+TUNABLE_CALLBACK_FNDECL (retry_try_xbegin, int32_t);
+TUNABLE_CALLBACK_FNDECL (skip_trylock_internal_abort, int32_t);
+#endif
+
+/* Initialize elision.  */
 
 static void
 elision_init (int argc __attribute__ ((unused)),
 	      char **argv  __attribute__ ((unused)),
 	      char **environ)
 {
-  int elision_available = HAS_CPU_FEATURE (RTM);
-#ifdef ENABLE_LOCK_ELISION
-  __pthread_force_elision = __libc_enable_secure ? 0 : elision_available;
+#if HAVE_TUNABLES
+  /* Elision depends on tunables and must be explicitly turned on by setting
+     the appropriate tunable on a supported platform.  */
+
+  TUNABLE_GET (enable, int32_t,
+	       TUNABLE_CALLBACK (set_elision_enable));
+  TUNABLE_GET (skip_lock_busy, int32_t,
+	       TUNABLE_CALLBACK (set_elision_skip_lock_busy));
+  TUNABLE_GET (skip_lock_internal_abort, int32_t,
+	       TUNABLE_CALLBACK (set_elision_skip_lock_internal_abort));
+  TUNABLE_GET (tries, int32_t,
+	       TUNABLE_CALLBACK (set_elision_retry_try_xbegin));
+  TUNABLE_GET (skip_trylock_internal_abort, int32_t,
+	       TUNABLE_CALLBACK (set_elision_skip_trylock_internal_abort));
 #endif
-  if (!elision_available)
-    __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks */
+
+  if (!__pthread_force_elision)
+    __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks.  */
 }
 
 #ifdef SHARED

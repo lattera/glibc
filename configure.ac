@@ -199,16 +199,6 @@ if test "$enable_stackguard_randomize" = yes; then
   AC_DEFINE(ENABLE_STACKGUARD_RANDOMIZE)
 fi
 
-AC_ARG_ENABLE([lock-elision],
-	      AC_HELP_STRING([--enable-lock-elision[=yes/no]],
-			     [Enable lock elision for pthread mutexes by default]),
-	      [enable_lock_elision=$enableval],
-	      [enable_lock_elision=no])
-AC_SUBST(enable_lock_elision)
-if test "$enable_lock_elision" = yes ; then
-  AC_DEFINE(ENABLE_LOCK_ELISION)
-fi
-
 AC_ARG_ENABLE([hidden-plt],
 	      AC_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),

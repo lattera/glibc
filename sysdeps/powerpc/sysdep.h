@@ -21,10 +21,8 @@
  */
 #define _SYSDEPS_SYSDEP_H 1
 #include <bits/hwcap.h>
-#ifdef ENABLE_LOCK_ELISION
 #include <tls.h>
 #include <htm.h>
-#endif
 
 #define PPC_FEATURE_970 (PPC_FEATURE_POWER4 + PPC_FEATURE_HAS_ALTIVEC)
 
@@ -176,7 +174,7 @@
    we abort transaction just before syscalls.
 
    [1] Documentation/powerpc/transactional_memory.txt [Syscalls]  */
-#if !IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
+#if !IS_IN(rtld)
 # define ABORT_TRANSACTION \
   ({ 						\
     if (THREAD_GET_TM_CAPABLE ())		\

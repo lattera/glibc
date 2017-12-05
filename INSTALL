@@ -116,9 +116,6 @@ will be used, and CFLAGS sets optimization options for the compiler.
      formats may change over time.  Consult the 'timezone' subdirectory
      for more details.
 
-'--enable-lock-elision=yes'
-     Enable lock elision for pthread mutexes by default.
-
 '--enable-stack-protector'
 '--enable-stack-protector=strong'
 '--enable-stack-protector=all'

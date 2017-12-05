@@ -26,7 +26,7 @@ else
 fi
 rm -f conftest* ])
 
-if test "$enable_lock_elision" = yes && test "$libc_cv_gcc_builtin_tbegin" = no ; then
+if test "$libc_cv_gcc_builtin_tbegin" = no ; then
    critic_missing="$critic_missing The used GCC has no support for __builtin_tbegin, which is needed for lock-elision on target S390."
 fi
 

@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef ENABLE_LOCK_ELISION
 /* Automatically enable elision for existing user lock kinds.  */
 #define FORCE_ELISION(m, s)						\
   if (__pthread_force_elision						\
@@ -25,4 +24,3 @@
       mutex->__data.__kind |= PTHREAD_MUTEX_ELISION_NP;			\
       s;								\
     }
-#endif

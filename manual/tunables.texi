@@ -31,6 +31,7 @@ their own namespace.
 @menu
 * Tunable names::  The structure of a tunable name
 * Memory Allocation Tunables::  Tunables in the memory allocation subsystem
+* Elision Tunables::  Tunables in elision subsystem
 * Hardware Capability Tunables::  Tunables that modify the hardware
 				  capabilities seen by @theglibc{}
 @end menu
@@ -210,6 +211,74 @@ bounded, the user may set this tunable to limit the number of chunks
 that are scanned from the unsorted list while searching for chunks to
 pre-fill the per-thread cache with.  The default, or when set to zero,
 is no limit.
+@end deftp
+
+@node Elision Tunables
+@section Elision Tunables
+@cindex elision tunables
+@cindex tunables, elision
+
+@deftp {Tunable namespace} glibc.elision
+Contended locks are usually slow and can lead to performance and scalability
+issues in multithread code. Lock elision will use memory transactions to under
+certain conditions, to elide locks and improve performance.
+Elision behavior can be modified by setting the following tunables in
+the @code{elision} namespace:
+@end deftp
+
+@deftp Tunable glibc.elision.enable
+The @code{glibc.elision.enable} tunable enables lock elision if the feature is
+supported by the hardware.  If elision is not supported by the hardware this
+tunable has no effect.
+
+Elision tunables are supported for 64-bit Intel, IBM POWER, and z System
+architectures.
+@end deftp
+
+@deftp Tunable glibc.elision.skip_lock_busy
+The @code{glibc.elision.skip_lock_busy} tunable sets how many times to use a
+non-transactional lock after a transactional failure has occurred because the
+lock is already acquired.  Expressed in number of lock acquisition attempts.
+
+The default value of this tunable is @samp{3}.
+@end deftp
+
+@deftp Tunable glibc.elision.skip_lock_internal_abort
+The @code{glibc.elision.skip_lock_internal_abort} tunable sets how many times
+the thread should avoid using elision if a transaction aborted for any reason
+other than a different thread's memory accesses.  Expressed in number of lock
+acquisition attempts.
+
+The default value of this tunable is @samp{3}.
+@end deftp
+
+@deftp Tunable glibc.elision.skip_lock_after_retries
+The @code{glibc.elision.skip_lock_after_retries} tunable sets how many times
+to try to elide a lock with transactions, that only failed due to a different
+thread's memory accesses, before falling back to regular lock.
+Expressed in number of lock elision attempts.
+
+This tunable is supported only on IBM POWER, and z System architectures.
+
+The default value of this tunable is @samp{3}.
+@end deftp
+
+@deftp Tunable glibc.elision.tries
+The @code{glibc.elision.tries} sets how many times to retry elision if there is
+chance for the transaction to finish execution e.g., it wasn't
+aborted due to the lock being already acquired.  If elision is not supported
+by the hardware this tunable is set to @samp{0} to avoid retries.
+
+The default value of this tunable is @samp{3}.
+@end deftp
+
+@deftp Tunable glibc.elision.skip_trylock_internal_abort
+The @code{glibc.elision.skip_trylock_internal_abort} tunable sets how many
+times the thread should avoid trying the lock if a transaction aborted due to
+reasons other than a different thread's memory accesses.  Expressed in number
+of try lock attempts.
+
+The default value of this tunable is @samp{3}.
 @end deftp
 
 @node Hardware Capability Tunables

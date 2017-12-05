@@ -127,9 +127,8 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
       return 1;
     }
 
-  /* Elided mutexes don't fail destroy. If elision is not explicitly disabled
-     we don't know, so can also not check this.  */
-#ifndef ENABLE_LOCK_ELISION
+  /* Elided mutexes don't fail destroy, but this test is run with
+     elision disabled so we can test them.  */
   e = pthread_mutex_destroy (m);
   if (e == 0)
     {
@@ -142,7 +141,6 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
 	      mas);
       return 1;
     }
-#endif
 
   if (pthread_mutex_unlock (m) != 0)
     {
@@ -157,7 +155,6 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
     }
 
   /* Elided mutexes don't fail destroy.  */
-#ifndef ENABLE_LOCK_ELISION
   e = pthread_mutex_destroy (m);
   if (e == 0)
     {
@@ -171,7 +168,6 @@ mutex_destroy of self-trylocked mutex did not return EBUSY %s\n",
 	      mas);
       return 1;
     }
-#endif
 
   if (pthread_mutex_unlock (m) != 0)
     {
@@ -207,7 +203,6 @@ mutex_destroy of self-trylocked mutex did not return EBUSY %s\n",
     }
 
   /* Elided mutexes don't fail destroy.  */
-#ifndef ENABLE_LOCK_ELISION
   e = pthread_mutex_destroy (m);
   if (e == 0)
     {
@@ -220,7 +215,6 @@ mutex_destroy of self-trylocked mutex did not return EBUSY %s\n",
 mutex_destroy of condvar-used mutex did not return EBUSY for %s\n", mas);
       return 1;
     }
-#endif
 
   done = true;
   if (pthread_cond_signal (&c) != 0)
@@ -280,7 +274,6 @@ mutex_destroy of condvar-used mutex did not return EBUSY for %s\n", mas);
     }
 
   /* Elided mutexes don't fail destroy.  */
-#ifndef ENABLE_LOCK_ELISION
   e = pthread_mutex_destroy (m);
   if (e == 0)
     {
@@ -295,7 +288,6 @@ mutex_destroy of condvar-used mutex did not return EBUSY for %s\n", mas);
 	      mas);
       return 1;
     }
-#endif
 
   if (pthread_cancel (th) != 0)
     {

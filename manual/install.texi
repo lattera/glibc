@@ -145,9 +145,6 @@ Note that you need to make sure the external tools are kept in sync with
 the versions that @theglibc{} expects as the data formats may change over
 time.  Consult the @file{timezone} subdirectory for more details.
 
-@item --enable-lock-elision=yes
-Enable lock elision for pthread mutexes by default.
-
 @item --enable-stack-protector
 @itemx --enable-stack-protector=strong
 @itemx --enable-stack-protector=all

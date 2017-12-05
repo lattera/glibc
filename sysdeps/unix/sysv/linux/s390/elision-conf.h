@@ -15,7 +15,6 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
-#ifdef ENABLE_LOCK_ELISION
 #ifndef _ELISION_CONF_H
 #define _ELISION_CONF_H 1
 
@@ -40,5 +39,4 @@ extern int __pthread_force_elision attribute_hidden;
 /* Tell the test suite to test elision for this architecture.  */
 #define HAVE_ELISION 1
 
-#endif
 #endif

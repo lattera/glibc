@@ -263,7 +263,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   TRACEBACK_MASK(name,mask);	\
   END_2(name)
 
-#if !IS_IN(rtld) && defined (ENABLE_LOCK_ELISION)
+#if !IS_IN(rtld)
 # define ABORT_TRANSACTION \
     cmpdi    13,0;		\
     beq      1f;		\
