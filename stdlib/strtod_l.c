@@ -17,6 +17,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <bits/floatn.h>
+
+#ifdef FLOAT
+# define BUILD_DOUBLE 0
+#else
+# define BUILD_DOUBLE 1
+#endif
+
+#if BUILD_DOUBLE
+# if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+#  define strtof64_l __hide_strtof64_l
+#  define wcstof64_l __hide_wcstof64_l
+# endif
+# if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+#  define strtof32x_l __hide_strtof32x_l
+#  define wcstof32x_l __hide_wcstof32x_l
+# endif
+#endif
+
 #include <locale.h>
 
 extern double ____strtod_l_internal (const char *, char **, int, locale_t);
@@ -1781,6 +1800,27 @@ compat_symbol (libc, __strtod_l, __strtold_l, GLIBC_2_1);
 compat_symbol (libc, wcstod_l, wcstold_l, GLIBC_2_3);
 #  else
 compat_symbol (libc, strtod_l, strtold_l, GLIBC_2_3);
+#  endif
+# endif
+#endif
+
+#if BUILD_DOUBLE
+# if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+#  undef strtof64_l
+#  undef wcstof64_l
+#  ifdef USE_WIDE_CHAR
+weak_alias (wcstod_l, wcstof64_l)
+#  else
+weak_alias (strtod_l, strtof64_l)
+#  endif
+# endif
+# if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+#  undef strtof32x_l
+#  undef wcstof32x_l
+#  ifdef USE_WIDE_CHAR
+weak_alias (wcstod_l, wcstof32x_l)
+#  else
+weak_alias (strtod_l, strtof32x_l)
 #  endif
 # endif
 #endif

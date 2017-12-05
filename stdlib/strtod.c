@@ -17,6 +17,25 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <bits/floatn.h>
+
+#ifdef FLOAT
+# define BUILD_DOUBLE 0
+#else
+# define BUILD_DOUBLE 1
+#endif
+
+#if BUILD_DOUBLE
+# if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+#  define strtof64 __hide_strtof64
+#  define wcstof64 __hide_wcstof64
+# endif
+# if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+#  define strtof32x __hide_strtof32x
+#  define wcstof32x __hide_wcstof32x
+# endif
+#endif
+
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale/localeinfo.h>
@@ -75,6 +94,27 @@ compat_symbol (libc, __wcstod_internal, __wcstold_internal, GLIBC_2_0);
 #  else
 compat_symbol (libc, strtod, strtold, GLIBC_2_0);
 compat_symbol (libc, __strtod_internal, __strtold_internal, GLIBC_2_0);
+#  endif
+# endif
+#endif
+
+#if BUILD_DOUBLE
+# if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+#  undef strtof64
+#  undef wcstof64
+#  ifdef USE_WIDE_CHAR
+weak_alias (wcstod, wcstof64)
+#  else
+weak_alias (strtod, strtof64)
+#  endif
+# endif
+# if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+#  undef strtof32x
+#  undef wcstof32x
+#  ifdef USE_WIDE_CHAR
+weak_alias (wcstod, wcstof32x)
+#  else
+weak_alias (strtod, strtof32x)
 #  endif
 # endif
 #endif

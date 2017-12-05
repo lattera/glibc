@@ -1,3 +1,34 @@
+2017-12-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* stdlib/strtod.c: Include <bits/floatn.h>.
+	(BUILD_DOUBLE): New macro.
+	[BUILD_DOUBLE && __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64]
+	(strtof64): Define and later undefine as macro.  Define as weak
+	alias if [!USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64]
+	(wcstof64): Define and later undefine as macro.  Define as weak
+	alias if [USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X]
+	(strtof32x): Define and later undefine as macro.  Define as weak
+	alias if [!USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X]
+	(wcstof32x): Define and later undefine as macro.  Define as weak
+	alias if [USE_WIDE_CHAR].
+	* stdlib/strtod_l.c: Include <bits/floatn.h>.
+	(BUILD_DOUBLE): New macro.
+	[BUILD_DOUBLE && __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64]
+	(strtof64_l): Define and later undefine as macro.  Define as weak
+	alias if [!USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64]
+	(wcstof64_l): Define and later undefine as macro.  Define as weak
+	alias if [USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X]
+	(strtof32x_l): Define and later undefine as macro.  Define as weak
+	alias if [!USE_WIDE_CHAR].
+	[BUILD_DOUBLE && __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X]
+	(wcstof32x_l): Define and later undefine as macro.  Define as weak
+	alias if [USE_WIDE_CHAR].
+
 2017-12-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/ieee754/flt-32/s_sinf.c (ones): Define as double.
