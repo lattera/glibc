@@ -24,6 +24,14 @@
 
 __BEGIN_DECLS
 
+/* The following functions call the corresponding libc functions and
+   terminate the process on error.  */
+
+void xraise (int sig);
+sighandler_t xsignal (int sig, sighandler_t handler);
+void xsigaction (int sig, const struct sigaction *newact,
+                 struct sigaction *oldact);
+
 /* The following functions call the corresponding libpthread functions
    and terminate the process on error.  */
 

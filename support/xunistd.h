@@ -39,6 +39,7 @@ void xstat (const char *path, struct stat64 *);
 void xmkdir (const char *path, mode_t);
 void xchroot (const char *path);
 void xunlink (const char *path);
+long xsysconf (int name);
 
 /* Read the link at PATH.  The caller should free the returned string
    with free.  */

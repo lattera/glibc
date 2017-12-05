@@ -110,3 +110,5 @@ setns		EXTRA	setns		i:ii	setns
 process_vm_readv EXTRA	process_vm_readv i:ipipii process_vm_readv
 process_vm_writev EXTRA	process_vm_writev i:ipipii process_vm_writev
 memfd_create    EXTRA	memfd_create	i:si    memfd_create
+pkey_alloc	EXTRA	pkey_alloc	i:ii	pkey_alloc
+pkey_free	EXTRA	pkey_free	i:i	pkey_free

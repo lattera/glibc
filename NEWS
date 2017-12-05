@@ -43,6 +43,10 @@ Major new features:
 
 * glibc now implements the memfd_create and mlock2 functions on Linux.
 
+* Support for memory protection keys was added.  The <sys/mman.h> header now
+  declares the functions pkey_alloc, pkey_free, pkey_mprotect, pkey_set,
+  pkey_get.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

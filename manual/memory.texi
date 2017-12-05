@@ -3171,6 +3171,238 @@ process memory, no matter how it was allocated.  However, portable use
 of the function requires that it is only used with memory regions
 returned by @code{mmap} or @code{mmap64}.
 
+@subsection Memory Protection Keys
+
+@cindex memory protection key
+@cindex protection key
+@cindex MPK
+On some systems, further restrictions can be added to specific pages
+using @dfn{memory protection keys}.  These restrictions work as follows:
+
+@itemize @bullet
+@item
+All memory pages are associated with a protection key.  The default
+protection key does not cause any additional protections to be applied
+during memory accesses.  New keys can be allocated with the
+@code{pkey_alloc} function, and applied to pages using
+@code{pkey_mprotect}.
+
+@item
+Each thread has a set of separate access right restriction for each
+protection key.  These access rights can be manipulated using the
+@code{pkey_set} and @code{pkey_get} functions.
+
+@item
+During a memory access, the system obtains the protection key for the
+accessed page and uses that to determine the applicable access rights,
+as configured for the current thread.  If the access is restricted, a
+segmentation fault is the result ((@pxref{Program Error Signals}).
+These checks happen in addition to the @code{PROT_}* protection flags
+set by @code{mprotect} or @code{pkey_mprotect}.
+@end itemize
+
+New threads and subprocesses inherit the access rights of the current
+thread.  If a protection key is allocated subsequently, existing threads
+(except the current) will use an unspecified system default for the
+access rights associated with newly allocated keys.
+
+Upon entering a signal handler, the system resets the access rights of
+the current thread so that pages with the default key can be accessed,
+but the access rights for other protection keys are unspecified.
+
+Applications are expected to allocate a key once using
+@code{pkey_alloc}, and apply the key to memory regions which need
+special protection with @code{pkey_mprotect}:
+
+@smallexample
+  int key = pkey_alloc (0, PKEY_DISABLE_ACCESS);
+  if (key < 0)
+    /* Perform error checking, including fallback for lack of support.  */
+    ...;
+
+  /* Apply the key to a special memory region used to store critical
+     data.  */
+  if (pkey_mprotect (region, region_length,
+                     PROT_READ | PROT_WRITE, key) < 0)
+    ...; /* Perform error checking (generally fatal).  */
+@end smallexample
+
+If the key allocation fails due to lack of support for memory protection
+keys, the @code{pkey_mprotect} call can usually be skipped.  In this
+case, the region will not be protected by default.  It is also possible
+to call @code{pkey_mprotect} with a key value of @math{-1}, in which
+case it will behave in the same way as @code{mprotect}.
+
+After key allocation assignment to memory pages, @code{pkey_set} can be
+used to temporarily acquire access to the memory region and relinquish
+it again:
+
+@smallexample
+  if (key >= 0 && pkey_set (key, 0) < 0)
+    ...; /* Perform error checking (generally fatal).  */
+  /* At this point, the current thread has read-write access to the
+     memory region.  */
+  ...
+  /* Revoke access again.  */
+  if (key >= 0 && pkey_set (key, PKEY_DISABLE_ACCESS) < 0)
+    ...; /* Perform error checking (generally fatal).  */
+@end smallexample
+
+In this example, a negative key value indicates that no key had been
+allocated, which means that the system lacks support for memory
+protection keys and it is not necessary to change the the access rights
+of the current thread (because it always has access).
+
+Compared to using @code{mprotect} to change the page protection flags,
+this approach has two advantages: It is thread-safe in the sense that
+the access rights are only changed for the current thread, so another
+thread which changes its own access rights concurrently to gain access
+to the mapping will not suddenly see its access rights revoked.  And
+@code{pkey_set} typically does not involve a call into the kernel and a
+context switch, so it is more efficient.
+
+@deftypefun int pkey_alloc (unsigned int @var{flags}, unsigned int @var{restrictions})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acunsafe{@acucorrupt{}}}
+Allocate a new protection key.  The @var{flags} argument is reserved and
+must be zero.  The @var{restrictions} argument specifies access rights
+which are applied to the current thread (as if with @code{pkey_set}
+below).  Access rights of other threads are not changed.
+
+The function returns the new protection key, a non-negative number, or
+@math{-1} on error.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item ENOSYS
+The system does not implement memory protection keys.
+
+@item EINVAL
+The @var{flags} argument is not zero.
+
+The @var{restrictions} argument is invalid.
+
+The system does not implement memory protection keys or runs in a mode
+in which memory protection keys are disabled.
+
+@item ENOSPC
+All available protection keys already have been allocated.
+@end table
+@end deftypefun
+
+@deftypefun int pkey_free (int @var{key})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Deallocate the protection key, so that it can be reused by
+@code{pkey_alloc}.
+
+Calling this function does not change the access rights of the freed
+protection key.  The calling thread and other threads may retain access
+to it, even if it is subsequently allocated again.  For this reason, it
+is not recommended to call the @code{pkey_free} function.
+
+@table @code
+@item ENOSYS
+The system does not implement memory protection keys.
+
+@item EINVAL
+The @var{key} argument is not a valid protection key.
+@end table
+@end deftypefun
+
+@deftypefun int pkey_mprotect (void *@var{address}, size_t @var{length}, int @var{protection}, int @var{key})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Similar to @code{mprotect}, but also set the memory protection key for
+the memory region to @code{key}.
+
+Some systems use memory protection keys to emulate certain combinations
+of @var{protection} flags.  Under such circumstances, specifying an
+explicit protection key may behave as if additional flags have been
+specified in @var{protection}, even though this does not happen with the
+default protection key.  For example, some systems can support
+@code{PROT_EXEC}-only mappings only with a default protection key, and
+memory with a key which was allocated using @code{pkey_alloc} will still
+be readable if @code{PROT_EXEC} is specified without @code{PROT_READ}.
+
+If @var{key} is @math{-1}, the default protection key is applied to the
+mapping, just as if @code{mprotect} had been called.
+
+The @code{pkey_mprotect} function returns @math{0} on success and
+@math{-1} on failure.  The same @code{errno} error conditions as for
+@code{mprotect} are defined for this function, with the following
+addition:
+
+@table @code
+@item EINVAL
+The @var{key} argument is not @math{-1} or a valid memory protection
+key allocated using @code{pkey_alloc}.
+
+@item ENOSYS
+The system does not implement memory protection keys, and @var{key} is
+not @math{-1}.
+@end table
+@end deftypefun
+
+@deftypefun int pkey_set (int @var{key}, unsigned int @var{rights})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Change the access rights of the current thread for memory pages with the
+protection key @var{key} to @var{rights}.  If @var{rights} is zero, no
+additional access restrictions on top of the page protection flags are
+applied.  Otherwise, @var{rights} is a combination of the following
+flags:
+
+@vtable @code
+@item PKEY_DISABLE_WRITE
+@standards{Linux, sys/mman.h}
+Subsequent attempts to write to memory with the specified protection
+key will fault.
+
+@item PKEY_DISABLE_ACCESS
+@standards{Linux, sys/mman.h}
+Subsequent attempts to write to or read from memory with the specified
+protection key will fault.
+@end vtable
+
+Operations not specified as flags are not restricted.  In particular,
+this means that the memory region will remain executable if it was
+mapped with the @code{PROT_EXEC} protection flag and
+@code{PKEY_DISABLE_ACCESS} has been specified.
+
+Calling the @code{pkey_set} function with a protection key which was not
+allocated by @code{pkey_alloc} results in undefined behavior.  This
+means that calling this function on systems which do not support memory
+protection keys is undefined.
+
+The @code{pkey_set} function returns @math{0} on success and @math{-1}
+on failure.
+
+The following @code{errno} error conditions are defined for this
+function:
+
+@table @code
+@item EINVAL
+The system does not support the access rights restrictions expressed in
+the @var{rights} argument.
+@end table
+@end deftypefun
+
+@deftypefun int pkey_get (int @var{key})
+@standards{Linux, sys/mman.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Return the access rights of the current thread for memory pages with
+protection key @var{key}.  The return value is zero or a combination of
+the @code{PKEY_DISABLE_}* flags; see the @code{pkey_set} function.
+
+Calling the @code{pkey_get} function with a protection key which was not
+allocated by @code{pkey_alloc} results in undefined behavior.  This
+means that calling this function on systems which do not support memory
+protection keys is undefined.
+@end deftypefun
+
 @node Locking Pages
 @section Locking Pages
 @cindex locking pages

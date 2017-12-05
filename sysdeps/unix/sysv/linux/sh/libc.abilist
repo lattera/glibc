@@ -1877,6 +1877,11 @@ GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
 GLIBC_2.27 memfd_create F
 GLIBC_2.27 mlock2 F
+GLIBC_2.27 pkey_alloc F
+GLIBC_2.27 pkey_free F
+GLIBC_2.27 pkey_get F
+GLIBC_2.27 pkey_mprotect F
+GLIBC_2.27 pkey_set F
 GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F

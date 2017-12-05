@@ -1,5 +1,39 @@
 2017-12-05  Florian Weimer  <fweimer@redhat.com>
 
+	Linux: Implement interfaces for memory protection keys
+	* support/Makefile (libsupport-routines): Add xraise, xsigaction,
+	xsignal, xsysconf.
+	* support/xsignal.h (xraise, xsignal, xsigaction): Declare.
+	* support/xunistd.h (xsysconf): Declare.
+	* support/xraise.c: New file.
+	* support/xsigaction.c: Likewise.
+	* support/xsignal.c: Likewise.
+	* support/xsysconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [misc] (routines): Add
+	pkey_set, pkey_get, pkey_mprotect.
+	[misc] (tests): Add tst-pkey.
+	(tst-pkey): Link with -lpthread.
+	* sysdeps/unix/sysv/linux/Versions (GLIBC_2.27): Add pkey_alloc,
+	pkey_free, pkey_set, pkey_get, pkey_mprotect.
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h (PKEY_DISABLE_ACCESS)
+	(PKEY_DISABLE_WRITE): Define.
+	(pkey_alloc, pkey_free, pkey_set, pkey_get, pkey_mprotect):
+	Declare.
+	* sysdeps/unix/sysv/linux/bits/siginfo-consts.h (SEGV_BNDERR)
+	(SEGV_PKUERR): Add.
+	* sysdeps/unix/sysv/linux/pkey_get.c: New file.
+	* sysdeps/unix/sysv/linux/pkey_set.c: Likewise.
+	* sysdeps/unix/sysv/linux/pkey_mprotect.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (pkey_alloc, pkey_free):
+	Add.
+	* sysdeps/unix/sysv/linux/tst-pkey.c: New file.
+	* sysdeps/unix/sysv/linux/x86/arch-pkey.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pkey_get.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/pkey_set.c: Likewise.
+	* sysdeps/unix/sysv/linux/**.abilist: Update.
+
+2017-12-05  Florian Weimer  <fweimer@redhat.com>
+
 	* support/tst-test_compare.c (subprocess): Use long long instead
 	of long argument for consistent type width across 32-bit and
 	64-bit architectures.
