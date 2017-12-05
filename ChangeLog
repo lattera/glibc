@@ -1,3 +1,12 @@
+2017-12-05  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22517]
+	* localedata/Makefile: Add et_EE.UTF-8 to test-input
+	and to the list of locales to be built for testing.
+	* localedata/et_EE.UTF-8.in: New file for testing the collation.
+	* localedata/locales/et_EE (LC_COLLATE): Use “copy "iso14651_t1"”
+	and build the collation rules upon that.
+
 2017-12-05  Chris Metcalf  <cmetcalf@mellanox.com>
 
 	* sysdeps/tile/tilegx/string-endian.h (VECOP): Provide working
