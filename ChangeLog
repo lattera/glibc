@@ -1,5 +1,8 @@
 2017-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-float32x.h: New file.
+	* math/test-float64.h: Likewise.
+
 	* sysdeps/generic/libm-alias-double.h: Include <bits/floatn.h>.
 	(libm_alias_double_other_r_f64): New macro.
 	(libm_alias_double_other_r_f32x): Likewise.
