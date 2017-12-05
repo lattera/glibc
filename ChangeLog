@@ -1,3 +1,19 @@
+2017-12-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/libm-alias-double.h: Include <bits/floatn.h>.
+	(libm_alias_double_other_r_f64): New macro.
+	(libm_alias_double_other_r_f32x): Likewise.
+	(libm_alias_double_other_r): Use libm_alias_double_other_r_f64 and
+	libm_alias_double_other_r_f32x.
+	(libm_alias_double_r): Use semicolon before call to
+	libm_alias_double_other_r.
+	* sysdeps/ieee754/ldbl-opt/libm-alias-double.h: Include
+	<bits/floatn.h>.
+	(libm_alias_double_other_r_f64): New macro.
+	(libm_alias_double_other_r_f32x): Likewise.
+	(libm_alias_double_other_r): Use libm_alias_double_other_r_f64 and
+	libm_alias_double_other_r_f32x.
+
 2017-12-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ieee754/flt-32/s_sinf.c (reduced): Replace long with

@@ -19,11 +19,29 @@
 #ifndef _LIBM_ALIAS_DOUBLE_H
 #define _LIBM_ALIAS_DOUBLE_H
 
+#include <bits/floatn.h>
+
+#if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+# define libm_alias_double_other_r_f64(from, to, r)	\
+  weak_alias (from ## r, to ## f64 ## r)
+#else
+# define libm_alias_double_other_r_f64(from, to, r)
+#endif
+
+#if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+# define libm_alias_double_other_r_f32x(from, to, r)	\
+  weak_alias (from ## r, to ## f32x ## r)
+#else
+# define libm_alias_double_other_r_f32x(from, to, r)
+#endif
+
 /* Define _FloatN / _FloatNx aliases for a double libm function that
    has internal name FROM ## R and public names TO ## suffix ## R for
    each suffix of a supported _FloatN / _FloatNx floating-point type
    with the same format as double.  */
-#define libm_alias_double_other_r(from, to, r)
+#define libm_alias_double_other_r(from, to, r)	\
+  libm_alias_double_other_r_f64 (from, to, r);	\
+  libm_alias_double_other_r_f32x (from, to, r)
 
 /* Likewise, but without the R suffix.  */
 #define libm_alias_double_other(from, to)	\
@@ -40,11 +58,11 @@
 # define libm_alias_double_r(from, to, r)	\
   weak_alias (from ## r, to ## r)		\
   strong_alias (from ## r, from ## l ## r)	\
-  weak_alias (from ## r, to ## l ## r)		\
+  weak_alias (from ## r, to ## l ## r);		\
   libm_alias_double_other_r (from, to, r)
 #else
 # define libm_alias_double_r(from, to, r)	\
-  weak_alias (from ## r, to ## r)		\
+  weak_alias (from ## r, to ## r);		\
   libm_alias_double_other_r (from, to, r)
 #endif
 
