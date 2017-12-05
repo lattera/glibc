@@ -1,3 +1,9 @@
+2017-12-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ieee754/flt-32/s_sinf.c (reduced): Replace long with
+	int.
+	(SINF_FUNC): Likewise.  Replace floor with simple casts.
+
 2017-12-05  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22517]

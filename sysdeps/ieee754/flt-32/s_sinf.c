@@ -85,8 +85,8 @@ static const int ones[] = { +1, -1 };
    SIGNBIT is used to add the correct sign after the Chebyshev
    polynomial is computed.  */
 static inline float
-reduced (const double theta, const unsigned long int n,
-	 const unsigned long int signbit)
+reduced (const double theta, const unsigned int n,
+	 const unsigned int signbit)
 {
   double sx;
   const double theta2 = theta * theta;
@@ -162,14 +162,14 @@ SINF_FUNC (float x)
     }
   else                          /* |x| >= Pi/4.  */
     {
-      unsigned long int signbit = (x < 0);
+      unsigned int signbit = (x < 0);
       if (abstheta < 9 * M_PI_4)        /* |x| < 9*Pi/4.  */
 	{
 	  /* There are cases where FE_UPWARD rounding mode can
 	     produce a result of abstheta * inv_PI_4 == 9,
 	     where abstheta < 9pi/4, so the domain for
 	     pio2_table must go to 5 (9 / 2 + 1).  */
-	  unsigned long int n = (abstheta * inv_PI_4) + 1;
+	  unsigned int n = (abstheta * inv_PI_4) + 1;
 	  theta = abstheta - pio2_table[n / 2];
 	  return reduced (theta, n, signbit);
 	}
@@ -177,8 +177,8 @@ SINF_FUNC (float x)
 	{
 	  if (abstheta < 0x1p+23)     /* |x| < 2^23.  */
 	    {
-	      unsigned long int n = __floor (abstheta * inv_PI_4) + 1.0;
-	      double x = __floor (n / 2.0);
+	      unsigned int n = ((unsigned int) (abstheta * inv_PI_4)) + 1;
+	      double x = n / 2;
 	      theta = x * PI_2_lo + (x * PI_2_hi + abstheta);
 	      /* Argument reduction needed.  */
 	      return reduced (theta, n, signbit);
