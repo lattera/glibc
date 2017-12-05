@@ -16,7 +16,32 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <bits/floatn.h>
+
 #define FLOAT		double
 #define STRFROM		strfromd
 
+#if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+# define strfromf64 __hide_strfromf64
+#endif
+#if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+# define strfromf32x __hide_strfromf32x
+#endif
+
+#include <stdlib.h>
+
+#if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+# undef strfromf64
+#endif
+#if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+# undef strfromf32x
+#endif
+
 #include "strfrom-skeleton.c"
+
+#if __HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64
+weak_alias (strfromd, strfromf64)
+#endif
+#if __HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X
+weak_alias (strfromd, strfromf32x)
+#endif

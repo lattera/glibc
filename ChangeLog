@@ -1,5 +1,11 @@
 2017-12-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strfromd.c: Include <bits/floatn.h>.
+	[__HAVE_FLOAT64 && !__HAVE_DISTINCT_FLOAT64] (strfromf64): Define
+	and later undefine as macro and define as weak alias.
+	[__HAVE_FLOAT32X && !__HAVE_DISTINCT_FLOAT32X] (strfromf32x):
+	Likewise.
+
 	* math/test-float32x.h: New file.
 	* math/test-float64.h: Likewise.
 
