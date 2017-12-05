@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 	.section	.rodata.cst4,"aM",@progbits,4
@@ -119,4 +120,4 @@ ENTRY (__lround)
 libm_alias_double (__lround, lround)
 
 strong_alias (__lround, __lroundf)
-weak_alias (__lround, lroundf)
+libm_alias_float (__lround, lround)

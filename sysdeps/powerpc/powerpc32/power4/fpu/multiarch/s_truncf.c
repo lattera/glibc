@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__truncf) __truncf_ppc32 attribute_hidden;
 extern __typeof (__truncf) __truncf_power5plus attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__truncf,
 	    ? __truncf_power5plus
             : __truncf_ppc32);
 
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)

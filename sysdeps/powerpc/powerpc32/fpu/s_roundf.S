@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align	3
@@ -91,5 +92,5 @@ ENTRY (__roundf )
 	blr
 	END (__roundf)
 
-weak_alias (__roundf, roundf)
+libm_alias_float (__round, round)
 

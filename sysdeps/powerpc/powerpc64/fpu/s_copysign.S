@@ -21,6 +21,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 ENTRY_TOCLESS (__copysign)
@@ -44,8 +45,8 @@ L(0):	fnabs   fp1,fp1
 libm_alias_double (__copysign, copysign)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
-weak_alias (__copysign,copysignf)
 strong_alias(__copysign,__copysignf)
+libm_alias_float (__copysign, copysign)
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, __copysign, copysignl, GLIBC_2_0)

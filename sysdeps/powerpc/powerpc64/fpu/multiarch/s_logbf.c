@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__logbf) __logbf_ppc64 attribute_hidden;
 extern __typeof (__logbf) __logbf_power7 attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__logbf,
 	    ? __logbf_power7
             : __logbf_ppc64);
 
-weak_alias (__logbf, logbf)
+libm_alias_float (__logb, logb)

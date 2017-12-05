@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 /* It's safe to use double-precision implementation for single-precision.  */
 extern __typeof (__llroundf) __llround_ppc32 attribute_hidden;
@@ -31,4 +32,4 @@ libc_ifunc (__llroundf,
 	      ? __llround_power5plus
             : __llround_ppc32);
 
-weak_alias (__llroundf, llroundf)
+libm_alias_float (__llround, llround)

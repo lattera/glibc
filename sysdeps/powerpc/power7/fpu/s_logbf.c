@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "math_private.h"
+#include <libm-alias-float.h>
 
 /* This implementation avoids FP to INT conversions by using VSX
    bitwise instructions over FP values.  */
@@ -57,4 +58,4 @@ __logbf (float x)
      The test is to avoid logb_downward (0.0) == -0.0.  */
   return ret == -0.0 ? 0.0 : ret;
 }
-weak_alias (__logbf, logbf)
+libm_alias_float (__logb, logb)

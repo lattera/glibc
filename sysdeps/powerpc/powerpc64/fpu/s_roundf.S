@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.section	".toc","aw"
 	.p2align 3
@@ -77,5 +78,5 @@ ENTRY (__roundf, 4)
 	blr
 	END (__roundf)
 
-weak_alias (__roundf, roundf)
+libm_alias_float (__round, round)
 

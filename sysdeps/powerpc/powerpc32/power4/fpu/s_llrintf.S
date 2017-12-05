@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 /* long long int[r3, r4] __llrintf (float x[fp1])  */
 ENTRY (__llrintf)
@@ -34,5 +35,5 @@ ENTRY (__llrintf)
 	blr
 	END (__llrintf)
 
-weak_alias (__llrintf, llrintf)
+libm_alias_float (__llrint, llrint)
 

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.machine	"power5"
 ENTRY_TOCLESS (__ceilf, 4)
@@ -26,5 +27,5 @@ ENTRY_TOCLESS (__ceilf, 4)
 	blr
 	END (__ceilf)
 
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)
 

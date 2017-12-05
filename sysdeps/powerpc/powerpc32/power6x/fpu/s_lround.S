@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 /* long [r3] lround (float x [fp1])
@@ -41,4 +42,4 @@ ENTRY (__lround)
 libm_alias_double (__lround, lround)
 
 strong_alias (__lround, __lroundf)
-weak_alias (__lround, lroundf)
+libm_alias_float (__lround, lround)

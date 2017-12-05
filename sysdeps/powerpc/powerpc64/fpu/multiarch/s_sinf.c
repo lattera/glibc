@@ -19,6 +19,7 @@
 #include <math.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__sinf) __sinf_ppc64 attribute_hidden;
 extern __typeof (__sinf) __sinf_power8 attribute_hidden;
@@ -28,4 +29,4 @@ libc_ifunc (__sinf,
             ? __sinf_power8
             : __sinf_ppc64);
 
-weak_alias (__sinf, sinf)
+libm_alias_float (__sin, sin)

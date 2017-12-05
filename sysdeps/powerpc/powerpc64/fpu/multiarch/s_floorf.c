@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__floorf) __floorf_ppc64 attribute_hidden;
 extern __typeof (__floorf) __floorf_power5plus attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__floorf,
 	    ? __floorf_power5plus
             : __floorf_ppc64);
 
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)

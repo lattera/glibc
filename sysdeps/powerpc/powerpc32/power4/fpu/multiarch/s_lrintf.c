@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 /* It's safe to use double-precision implementation for single-precision.  */
 extern __typeof (__lrintf) __lrint_ppc32 attribute_hidden;
@@ -28,4 +29,4 @@ libc_ifunc (__lrintf,
 	      __lrint_power6x
             : __lrint_ppc32);
 
-weak_alias (__lrintf, lrintf)
+libm_alias_float (__lrint, lrint)

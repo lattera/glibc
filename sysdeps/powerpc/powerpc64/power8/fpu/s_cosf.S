@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
+#include <libm-alias-float.h>
 
 #define FRAMESIZE (FRAME_MIN_SIZE+16)
 
@@ -505,4 +506,4 @@ L(DPone):
 L(DPtwo):
 	.8byte	0x4000000000000000	/* 2.0 */
 
-weak_alias(__cosf, cosf)
+libm_alias_float (__cos, cos)

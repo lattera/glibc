@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.machine	"power5"
 EALIGN (__roundf, 4, 0)
@@ -25,5 +26,5 @@ EALIGN (__roundf, 4, 0)
 	blr
 	END (__roundf)
 
-weak_alias (__roundf, roundf)
+libm_alias_float (__round, round)
 

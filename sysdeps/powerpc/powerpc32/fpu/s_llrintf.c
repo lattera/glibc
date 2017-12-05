@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <stdint.h>
+#include <libm-alias-float.h>
 
 long long int
 __llrintf (float x)
@@ -43,4 +44,4 @@ __llrintf (float x)
       return (long long int) ((i0 & 0x80000000) != 0 ? -mant : mant);
     }
 }
-weak_alias (__llrintf, llrintf)
+libm_alias_float (__llrint, llrint)

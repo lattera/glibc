@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 /* long long int[r3] __llrint (double x[fp1])  */
@@ -39,6 +40,6 @@ libm_alias_double (__lrint, lrint)
    double parameters are passed in 64bit FPRs and both versions are expected
    to return [long] long type.  */
 strong_alias (__llrint, __llrintf)
-weak_alias (__llrint, llrintf)
+libm_alias_float (__llrint, llrint)
 strong_alias (__lrint, __lrintf)
-weak_alias (__lrint, lrintf)
+libm_alias_float (__lrint, lrint)

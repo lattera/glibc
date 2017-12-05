@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__roundf) __roundf_ppc64 attribute_hidden;
 extern __typeof (__roundf) __roundf_power5plus attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__roundf,
 	    ? __roundf_power5plus
             : __roundf_ppc64);
 
-weak_alias (__roundf, roundf)
+libm_alias_float (__round, round)

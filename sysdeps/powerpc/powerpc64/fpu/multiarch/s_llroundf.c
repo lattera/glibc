@@ -24,6 +24,7 @@
 #undef lroundf
 #undef __lroundf
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__llroundf) __llroundf_ppc64 attribute_hidden;
 extern __typeof (__llroundf) __llround_power6x attribute_hidden;
@@ -41,6 +42,6 @@ libc_ifunc (__llroundf,
 	    ? __llround_power6x
 	    : __llroundf_ppc64);
 
-weak_alias (__llroundf, llroundf)
+libm_alias_float (__llround, llround)
 strong_alias (__llroundf, __lroundf)
-weak_alias (__lroundf, lroundf)
+libm_alias_float (__lround, lround)

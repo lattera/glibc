@@ -19,6 +19,7 @@
 #include <math.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__cosf) __cosf_ppc64 attribute_hidden;
 extern __typeof (__cosf) __cosf_power8 attribute_hidden;
@@ -28,4 +29,4 @@ libc_ifunc (__cosf,
 	    ? __cosf_power8
 	    : __cosf_ppc64);
 
-weak_alias (__cosf, cosf)
+libm_alias_float (__cos, cos)

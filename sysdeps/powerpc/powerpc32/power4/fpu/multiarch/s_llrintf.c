@@ -19,6 +19,7 @@
 #include <math.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__llrintf) __llrintf_ppc32 attribute_hidden;
 extern __typeof (__llrintf) __llrintf_power6 attribute_hidden;
@@ -28,4 +29,4 @@ libc_ifunc (__llrintf,
 	    ? __llrintf_power6
             : __llrintf_ppc32);
 
-weak_alias (__llrintf, llrintf)
+libm_alias_float (__llrint, llrint)

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.section	".toc","aw"
 	.p2align 3
@@ -62,5 +63,5 @@ ENTRY (__floorf, 4)
 	blr
 	END (__floorf)
 
-weak_alias (__floorf, floorf)
+libm_alias_float (__floor, floor)
 

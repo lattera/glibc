@@ -1,3 +1,223 @@
+2017-12-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/fpu/s_cosf.c: Include <libm-alias-float.h>.
+	(cosf): Define using libm_alias_float.
+	* sysdeps/powerpc/fpu/s_fabs.S: Include <libm-alias-float.h>.
+	(fabsf): Define using libm_alias_float.
+	* sysdeps/powerpc/fpu/s_fmaf.S: Include <libm-alias-float.h>.
+	(fmaf): Define using libm_alias_float.
+	* sysdeps/powerpc/fpu/s_rintf.c: Include <libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/powerpc/fpu/s_sinf.c: Include <libm-alias-float.h>.
+	(sinf): Define using libm_alias_float.
+	* sysdeps/powerpc/power5+/fpu/s_modff.c: Include
+	<libm-alias-float.h>.
+	(modff): Define using libm_alias_float.
+	* sysdeps/powerpc/power7/fpu/s_logbf.c: Include
+	<libm-alias-float.h>.
+	(logbf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_ceilf.S: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_copysign.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_floorf.S: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_llroundf.c: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.S: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_lround.S: Include
+	<libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_nearbyintf.S: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_rintf.S: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_roundf.S: Include
+	<libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/fpu/s_truncf.S: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_ceilf.c:
+	Include <libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_copysignf.c:
+	Include <libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_floorf.c:
+	Include <libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llrintf.c:
+	Include <libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_llroundf.c:
+	Include <libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_logbf.c:
+	Include <libm-alias-float.h>.
+	(logbf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lrintf.c:
+	Include <libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_lroundf.c:
+	Include <libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_modff.c:
+	Include <libm-alias-float.h>.
+	(modff): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_roundf.c:
+	Include <libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/s_truncf.c:
+	Include <libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llrintf.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_ceilf.S: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_floorf.S: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_lround.S: Include
+	<libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_roundf.S: Include
+	<libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power5+/fpu/s_truncf.S: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_copysign.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llrintf.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power6/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lrint.S: Include
+	<libm-alias-float.h>.
+	(lrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc32/power6x/fpu/s_lround.S: Include
+	<libm-alias-float.h>.
+	(lroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_ceilf.c: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_copysignf.c: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf.c: Include
+	<libm-alias-float.h>.
+	(cosf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_floorf.c: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llrintf.c: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_llroundf.c: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_logbf.c: Include
+	<libm-alias-float.h>.
+	(logbf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_modff.c: Include
+	<libm-alias-float.h>.
+	(modff): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_roundf.c: Include
+	<libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf.c: Include
+	<libm-alias-float.h>.
+	(sinf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_truncf.c: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_ceilf.S: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_copysign.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_floorf.S: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_llroundf.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_nearbyintf.S: Include
+	<libm-alias-float.h>.
+	(nearbyintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_rintf.S: Include
+	<libm-alias-float.h>.
+	(rintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_roundf.S: Include
+	<libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/fpu/s_truncf.S: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_ceilf.S: Include
+	<libm-alias-float.h>.
+	(ceilf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_floorf.S: Include
+	<libm-alias-float.h>.
+	(floorf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_roundf.S: Include
+	<libm-alias-float.h>.
+	(roundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/s_truncf.S: Include
+	<libm-alias-float.h>.
+	(truncf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power6/fpu/s_copysign.S: Include
+	<libm-alias-float.h>.
+	(copysignf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llrint.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_cosf.S: Include
+	<libm-alias-float.h>.
+	(cosf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llrint.S: Include
+	<libm-alias-float.h>.
+	(llrintf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_llround.S: Include
+	<libm-alias-float.h>.
+	(llroundf): Define using libm_alias_float.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_sinf.S: Include
+	<libm-alias-float.h>.
+	(sinf): Define using libm_alias_float.
+
 2017-12-04  Florian Weimer  <fweimer@redhat.com>
 
 	* support/check.h (TEST_COMPARE): Define.

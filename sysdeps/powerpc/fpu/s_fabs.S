@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 ENTRY(__fabs)
@@ -29,4 +30,4 @@ libm_alias_double (__fabs, fabs)
 
 /* It turns out that it's safe to use this code even for single-precision.  */
 strong_alias(__fabs,__fabsf)
-weak_alias (__fabs,fabsf)
+libm_alias_float (__fabs, fabs)

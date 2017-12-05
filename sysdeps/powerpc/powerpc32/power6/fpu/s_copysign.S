@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 /* double [f1] copysign (double [f1] x, double [f2] y);
@@ -41,7 +42,7 @@ libm_alias_double (__copysign, copysign)
    single-precision.  */
 strong_alias (__copysign, __copysignf)
 hidden_def (__copysignf)
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)
 
 #if LONG_DOUBLE_COMPAT (libc, GLIBC_2_0)
 compat_symbol (libc, copysign, copysignl, GLIBC_2_0);

@@ -19,6 +19,7 @@
 #include <sysdep.h>
 #include <endian.h>
 #include <math_ldbl_opt.h>
+#include <libm-alias-float.h>
 #include <libm-alias-double.h>
 
 #define MFVSRD_R3_V1  .long 0x7c230066     /* mfvsrd  r3,vs1  */
@@ -40,6 +41,6 @@ libm_alias_double (__lround, lround)
    double parameters are passed in 64bit FPRs and both versions are expected
    to return [long] long type.  */
 strong_alias (__llround, __llroundf)
-weak_alias (__llround, llroundf)
+libm_alias_float (__llround, llround)
 strong_alias (__lround, __lroundf)
-weak_alias (__lround, lroundf)
+libm_alias_float (__lround, lround)

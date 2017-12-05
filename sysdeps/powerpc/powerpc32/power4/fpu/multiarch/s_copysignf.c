@@ -19,6 +19,7 @@
 #include <math.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 /* It's safe to use double-precision implementation for single-precision.  */
 extern __typeof (__copysignf) __copysign_ppc32 attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__copysignf,
 	    ? __copysign_power6
             : __copysign_ppc32);
 
-weak_alias (__copysignf, copysignf)
+libm_alias_float (__copysign, copysign)

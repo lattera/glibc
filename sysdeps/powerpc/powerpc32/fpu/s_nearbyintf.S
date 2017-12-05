@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 
 /* float [fp1] nearbyintf(float [fp1] x) */
@@ -75,4 +76,4 @@ L(lessthanzero):
 	blr
 END (__nearbyintf)
 
-weak_alias (__nearbyintf, nearbyintf)
+libm_alias_float (__nearbyint, nearbyint)

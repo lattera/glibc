@@ -17,6 +17,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 float
 __modff (float x, float *iptr)
@@ -43,4 +44,4 @@ __modff (float x, float *iptr)
       return __copysignf (x - *iptr, x);
     }
 }
-weak_alias (__modff, modff)
+libm_alias_float (__modf, modf)

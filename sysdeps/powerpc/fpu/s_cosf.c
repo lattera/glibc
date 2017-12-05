@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <math.h>
 #include <math_private.h>
+#include <libm-alias-float.h>
 
 static const float pio4 = 7.8539801e-1;
 
@@ -66,4 +67,4 @@ __cosf (float x)
     }
 }
 
-weak_alias (__cosf, cosf)
+libm_alias_float (__cos, cos)

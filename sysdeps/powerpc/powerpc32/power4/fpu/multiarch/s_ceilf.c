@@ -20,6 +20,7 @@
 #include <math_ldbl_opt.h>
 #include <shlib-compat.h>
 #include "init-arch.h"
+#include <libm-alias-float.h>
 
 extern __typeof (__ceilf) __ceilf_ppc32 attribute_hidden;
 extern __typeof (__ceilf) __ceilf_power5plus attribute_hidden;
@@ -29,4 +30,4 @@ libc_ifunc (__ceilf,
 	    ? __ceilf_power5plus
             : __ceilf_ppc32);
 
-weak_alias (__ceilf, ceilf)
+libm_alias_float (__ceil, ceil)

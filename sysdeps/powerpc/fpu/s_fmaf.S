@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 ENTRY_TOCLESS(__fmaf)
 /* float [f1] fmaf (float [f1] x, float [f2] y, float [f3] z); */
@@ -24,4 +25,4 @@ ENTRY_TOCLESS(__fmaf)
 	blr
 END(__fmaf)
 
-weak_alias (__fmaf,fmaf)
+libm_alias_float (__fma, fma)

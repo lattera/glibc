@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.section	".toc","aw"
 	.p2align 3
@@ -52,5 +53,5 @@ ENTRY (__rintf, 4)
 	blr
 	END (__rintf)
 
-weak_alias (__rintf, rintf)
+libm_alias_float (__rint, rint)
 

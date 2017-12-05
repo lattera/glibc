@@ -19,6 +19,7 @@
 #include <math.h>
 #include <math_private.h>
 #include <stdint.h>
+#include <libm-alias-float.h>
 
 /* Round to the nearest integer, with values exactly on a 0.5 boundary
    rounded away from zero, regardless of the current rounding mode.
@@ -69,4 +70,4 @@ __llroundf (float x)
     }
   return xr;
 }
-weak_alias (__llroundf, llroundf)
+libm_alias_float (__llround, llround)

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <libm-alias-float.h>
 
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align	2
@@ -78,5 +79,5 @@ ENTRY (__truncf)
 	blr
 	END (__truncf)
 
-weak_alias (__truncf, truncf)
+libm_alias_float (__trunc, trunc)
 
