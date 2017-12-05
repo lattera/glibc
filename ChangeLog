@@ -1,3 +1,10 @@
+2017-12-05  Florian Weimer  <fweimer@redhat.com>
+
+	* support/tst-test_compare.c (subprocess): Use long long instead
+	of long argument for consistent type width across 32-bit and
+	64-bit architectures.
+	(do_test): Adjust expected output.
+
 2017-12-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/fpu/s_cosf.c: Include <libm-alias-float.h>.

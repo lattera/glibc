@@ -27,7 +27,7 @@ subprocess (void *closure)
   /* These tests should fail.  */
   TEST_COMPARE (ch, -1);         /* Line 28.  */
   TEST_COMPARE (2LL, -2LL);      /* Line 29.  */
-  TEST_COMPARE (3L, (short) -3); /* Line 30.  */
+  TEST_COMPARE (3LL, (short) -3); /* Line 30.  */
 }
 
 struct bitfield
@@ -86,7 +86,7 @@ do_test (void)
              "  right: -2 (0xfffffffffffffffe); from: -2LL\n"
              "tst-test_compare.c:30: numeric comparison failure"
              " (widths 64 and 32)\n"
-             "   left: 3 (0x3); from: 3L\n"
+             "   left: 3 (0x3); from: 3LL\n"
              "  right: -3 (0xfffffffd); from: (short) -3\n") == 0);
 
   /* Check that there is no output on standard error.  */
