@@ -21,6 +21,7 @@
 #define _BITS_FLOATN_COMMON_H
 
 #include <features.h>
+#include <bits/long-double.h>
 
 /* This header should be included at the bottom of each bits/floatn.h.
    It defines the following macros for each _FloatN and _FloatNx type,
@@ -88,7 +89,11 @@
 
 # if __HAVE_FLOAT64
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   define __f64(x) x
+#   ifdef __NO_LONG_DOUBLE_MATH
+#    define __f64(x) x##l
+#   else
+#    define __f64(x) x
+#   endif
 #  else
 #   define __f64(x) x##f64
 #  endif
@@ -142,7 +147,11 @@ typedef _Complex float __cfloat16 __attribute__ ((__mode__ (__HC__)));
 
 # if __HAVE_FLOAT64
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-#   define __CFLOAT64 _Complex double
+#   ifdef __NO_LONG_DOUBLE_MATH
+#    define __CFLOAT64 _Complex long double
+#   else
+#    define __CFLOAT64 _Complex double
+#   endif
 #  else
 #   define __CFLOAT64 _Complex _Float64
 #  endif
@@ -209,15 +218,39 @@ typedef float _Float32;
 
 # if __HAVE_FLOAT64
 
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef double _Float64;
-#  endif
+/* If double, long double and _Float64 all have the same set of
+   values, TS 18661-3 requires the usual arithmetic conversions on
+   long double and _Float64 to produce _Float64.  For this to be the
+   case when building with a compiler without a distinct _Float64
+   type, _Float64 must be a typedef for long double, not for
+   double.  */
 
-#  if !__GNUC_PREREQ (7, 0)
-#   define __builtin_huge_valf64() (__builtin_huge_val ())
-#   define __builtin_inff64() (__builtin_inf ())
-#   define __builtin_nanf64(x) (__builtin_nan (x))
-#   define __builtin_nansf64(x) (__builtin_nans (x))
+#  ifdef __NO_LONG_DOUBLE_MATH
+
+#   if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+typedef long double _Float64;
+#   endif
+
+#   if !__GNUC_PREREQ (7, 0)
+#    define __builtin_huge_valf64() (__builtin_huge_vall ())
+#    define __builtin_inff64() (__builtin_infl ())
+#    define __builtin_nanf64(x) (__builtin_nanl (x))
+#    define __builtin_nansf64(x) (__builtin_nansl (x))
+#   endif
+
+#  else
+
+#   if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+typedef double _Float64;
+#   endif
+
+#   if !__GNUC_PREREQ (7, 0)
+#    define __builtin_huge_valf64() (__builtin_huge_val ())
+#    define __builtin_inff64() (__builtin_inf ())
+#    define __builtin_nanf64(x) (__builtin_nan (x))
+#    define __builtin_nansf64(x) (__builtin_nans (x))
+#   endif
+
 #  endif
 
 # endif
