@@ -58,7 +58,8 @@ static inline uint64_t copy_byte(uint8_t byte)
 }
 
 /* Implement the byte vector instructions using extended assembly.
-   The __insn_OP() builtins are buggy in current compiler versions.  */
+   The __insn_OP() builtins are buggy in the upstream compiler;
+   see gcc bugzilla 78117.  */
 
 #define VECOP(OP)                                                       \
   static inline uint64_t OP (uint64_t a, uint64_t b)                    \
