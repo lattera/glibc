@@ -36,7 +36,7 @@ __rawmemchr (const void *s, int c)
   uint64_t v = (*p | before_mask) ^ (goal & before_mask);
 
   uint64_t bits;
-  while ((bits = __insn_v1cmpeq (v, goal)) == 0)
+  while ((bits = v1cmpeq (v, goal)) == 0)
     v = *++p;
 
   return ((char *) p) + (CFZ (bits) >> 3);

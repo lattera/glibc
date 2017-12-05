@@ -56,3 +56,28 @@ static inline uint64_t copy_byte(uint8_t byte)
 {
   return __insn_shufflebytes(byte, 0, 0);
 }
+
+/* Implement the byte vector instructions using extended assembly.
+   The __insn_OP() builtins are buggy in current compiler versions.  */
+
+#define VECOP(OP)                                                       \
+  static inline uint64_t OP (uint64_t a, uint64_t b)                    \
+  {                                                                     \
+    uint64_t result;                                                    \
+    asm volatile (#OP " %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));   \
+    return result;                                                      \
+  }                                                                     \
+                                                                        \
+  static inline uint64_t OP ## i (uint64_t a, uint64_t b)               \
+  {                                                                     \
+    uint64_t result;                                                    \
+    asm volatile (#OP "i %0, %1, %2" : "=r"(result) : "r"(a), "I"(b));  \
+    return result;                                                      \
+  }
+
+VECOP(v1cmpeq)
+VECOP(v1cmpltu)
+VECOP(v1cmpne)
+VECOP(v1add)
+VECOP(v1shru)
+VECOP(v1shl)

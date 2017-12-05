@@ -57,10 +57,10 @@ static uint64_t
 vec_tolower (uint64_t cc)
 {
   /* For Uppercases letters, add 32 to convert to lower case.  */
-  uint64_t less_than_eq_Z = __insn_v1cmpltui (cc, 'Z' + 1);
-  uint64_t less_than_A =  __insn_v1cmpltui (cc, 'A');
-  uint64_t is_upper = __insn_v1cmpne (less_than_eq_Z, less_than_A);
-  return __insn_v1add (cc,__insn_v1shli (is_upper, 5));
+  uint64_t less_than_eq_Z = v1cmpltui (cc, 'Z' + 1);
+  uint64_t less_than_A =  v1cmpltui (cc, 'A');
+  uint64_t is_upper = v1cmpne (less_than_eq_Z, less_than_A);
+  return v1add (cc, v1shli (is_upper, 5));
 }
 
 /* There is no strcasechr() defined, but needed for 1 byte case
@@ -85,16 +85,16 @@ strcasechr (const char *s, int c)
      is 1, and the low 7 bits are all the opposite of the goal byte).  */
   const uint64_t before_mask = MASK (s_int);
   uint64_t v =
-    (vec_tolower (*p) | before_mask) ^ (goal & __insn_v1shrui (before_mask, 1));
+    (vec_tolower (*p) | before_mask) ^ (goal & v1shrui (before_mask, 1));
 
   uint64_t zero_matches, goal_matches;
   while (1)
     {
       /* Look for a terminating '\0'.  */
-      zero_matches = __insn_v1cmpeqi (v, 0);
+      zero_matches = v1cmpeqi (v, 0);
 
       /* Look for the goal byte.  */
-      goal_matches = __insn_v1cmpeq (v, goal);
+      goal_matches = v1cmpeq (v, goal);
 
       if (__builtin_expect ((zero_matches | goal_matches) != 0, 0))
         break;
@@ -146,14 +146,14 @@ STRSTR2 (const char *haystack_start, const char *needle)
      is 1, and the low 7 bits are all the opposite of the goal byte).  */
   const uint64_t before_mask = MASK (s_int);
   uint64_t v =
-    (vec_load (p) | before_mask) ^ (byte1 & __insn_v1shrui (before_mask, 1));
+    (vec_load (p) | before_mask) ^ (byte1 & v1shrui (before_mask, 1));
 
   uint64_t zero_matches, goal_matches;
   while (1)
     {
       /* Look for a terminating '\0'.  */
-      zero_matches = __insn_v1cmpeqi (v, 0);
-      uint64_t byte1_matches = __insn_v1cmpeq (v, byte1);
+      zero_matches = v1cmpeqi (v, 0);
+      uint64_t byte1_matches = v1cmpeq (v, byte1);
       if (__builtin_expect (zero_matches != 0, 0))
 	{
 	  /* This is the last vector.  Don't worry about matches
@@ -161,7 +161,7 @@ STRSTR2 (const char *haystack_start, const char *needle)
 	     back 1 byte to align it with the first byte, then and to
 	     check for both matching.  Each vector has a 1 in the LSB
 	     of the byte if there was match.  */
-	  uint64_t byte2_matches = __insn_v1cmpeq (v, byte2);
+	  uint64_t byte2_matches = v1cmpeq (v, byte2);
 	  goal_matches = byte1_matches & STRSHIFT (byte2_matches, 8);
 	  break;
 	}
@@ -175,7 +175,7 @@ STRSTR2 (const char *haystack_start, const char *needle)
 	    {
 	      /* 8-bytes starting 1 byte into v.  */
 	      v = __insn_dblalign (v, v2, (void*)1);
-	      uint64_t byte2_matches_shifted = __insn_v1cmpeq (v, byte2);
+	      uint64_t byte2_matches_shifted = v1cmpeq (v, byte2);
 	      goal_matches = byte1_matches & byte2_matches_shifted;
 	      if (__builtin_expect (goal_matches != 0, 0))
 		break;

@@ -1,3 +1,17 @@
+2017-12-05  Chris Metcalf  <cmetcalf@mellanox.com>
+
+	* sysdeps/tile/tilegx/string-endian.h (VECOP): Provide working
+	replacements for __insn_xxx builtins for v1cmpeq, v1cmpltu,
+	v1cmpne, v1add, v1shru, v1shl (register and immediate versions).
+	* sysdeps/tile/tilegx/memchr.c (__memchr): Use VECOP function
+	instead of __insn__xxx.
+	* sysdeps/tile/tilegx/rawmemchr.c (__rawmemchr): Likewise.
+	* sysdeps/tile/tilegx/strstr.c (strcasechr): Likewise.
+	* sysdeps/tile/tilegx/strrchr.c (strrchr): Likewise.
+	* sysdeps/tile/tilegx/strlen.c (strlen): Likewise.
+	* sysdeps/tile/tilegx/strchrnul.c (__strchrnul): Likewise.
+	* sysdeps/tile/tilegx/strchr.c (strchr): Likewise.
+
 2017-12-05  Florian Weimer  <fweimer@redhat.com>
 
 	Linux: Implement interfaces for memory protection keys
