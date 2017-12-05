@@ -1,3 +1,8 @@
+2017-12-05  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/ieee754/flt-32/s_sinf.c (ones): Define as double.
+	(reduced): Use ones as double instead of integer.
+
 2017-12-05  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/ieee754/flt-32/s_sinf.c (sinf): Use isless.

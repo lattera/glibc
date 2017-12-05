@@ -75,7 +75,7 @@ static const double invpio4_table[] = {
   0x1.0e4107cp-169
 };
 
-static const int ones[] = { +1, -1 };
+static const double ones[] = { 1.0, -1.0 };
 
 /* Compute the sine value using Chebyshev polynomials where
    THETA is the range reduced absolute value of the input
@@ -92,7 +92,7 @@ reduced (const double theta, const unsigned int n,
   const double theta2 = theta * theta;
   /* We are operating on |x|, so we need to add back the original
      signbit for sinf.  */
-  int sign;
+  double sign;
   /* Determine positive or negative primary interval.  */
   sign = ones[((n >> 2) & 1) ^ signbit];
   /* Are we in the primary interval of sin or cos?  */
