@@ -57,9 +57,12 @@ pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
   /* The sizes are subject to alignment.  */
   if (__glibc_likely (thread->stackblock != NULL))
     {
-      iattr->stacksize = thread->stackblock_size;
+      /* The stack size reported to the user should not include the
+	 guard size.  */
+      iattr->stacksize = thread->stackblock_size - thread->guardsize;
 #if _STACK_GROWS_DOWN
-      iattr->stackaddr = (char *) thread->stackblock + iattr->stacksize;
+      iattr->stackaddr = (char *) thread->stackblock
+			 + thread->stackblock_size;
 #else
       iattr->stackaddr = (char *) thread->stackblock;
 #endif

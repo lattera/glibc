@@ -383,9 +383,9 @@ struct pthread
   /* Machine-specific unwind info.  */
   struct _Unwind_Exception exc;
 
-  /* If nonzero pointer to area allocated for the stack and its
-     size.  */
+  /* If nonzero, pointer to the area allocated for the stack and guard. */
   void *stackblock;
+  /* Size of the stackblock area including the guard.  */
   size_t stackblock_size;
   /* Size of the included guard area.  */
   size_t guardsize;

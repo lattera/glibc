@@ -472,8 +472,5 @@ strong_alias (__pthread_initialize_minimal_internal,
 size_t
 __pthread_get_minstack (const pthread_attr_t *attr)
 {
-  struct pthread_attr *iattr = (struct pthread_attr *) attr;
-
-  return (GLRO(dl_pagesize) + __static_tls_size + PTHREAD_STACK_MIN
-	  + iattr->guardsize);
+  return GLRO(dl_pagesize) + __static_tls_size + PTHREAD_STACK_MIN;
 }

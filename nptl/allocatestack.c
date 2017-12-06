@@ -532,6 +532,10 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* Make sure the size of the stack is enough for the guard and
 	 eventually the thread descriptor.  */
       guardsize = (attr->guardsize + pagesize_m1) & ~pagesize_m1;
+      if (guardsize < attr->guardsize || size + guardsize < guardsize)
+	/* Arithmetic overflow.  */
+	return EINVAL;
+      size += guardsize;
       if (__builtin_expect (size < ((guardsize + __static_tls_size
 				     + MINIMAL_REST_STACK + pagesize_m1)
 				    & ~pagesize_m1),
