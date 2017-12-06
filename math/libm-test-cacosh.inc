@@ -46,8 +46,13 @@ static const struct test_c_c_data cacosh_test_data[] =
     TEST_c_c (cacosh, plus_infty, qnan_value, plus_infty, qnan_value),
     TEST_c_c (cacosh, minus_infty, qnan_value, plus_infty, qnan_value),
 
-    TEST_c_c (cacosh, 0, qnan_value, qnan_value, qnan_value),
-    TEST_c_c (cacosh, minus_zero, qnan_value, qnan_value, qnan_value),
+    /* The sign of the imaginary part of the result is unspecified
+       (see
+       <http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2173.htm>),
+       but the libm-test infrastructure does not support describing
+       that.  */
+    TEST_c_c (cacosh, 0, qnan_value, qnan_value, lit_pi_2_d),
+    TEST_c_c (cacosh, minus_zero, qnan_value, qnan_value, lit_pi_2_d),
 
     TEST_c_c (cacosh, qnan_value, plus_infty, plus_infty, qnan_value),
     TEST_c_c (cacosh, qnan_value, minus_infty, plus_infty, qnan_value),

@@ -57,7 +57,10 @@ M_DECL_FUNC (__cacosh) (CFLOAT x)
       else
 	{
 	  __real__ res = M_NAN;
-	  __imag__ res = M_NAN;
+	  if (rcls == FP_ZERO)
+	    __imag__ res = M_MLIT (M_PI_2);
+	  else
+	    __imag__ res = M_NAN;
 	}
     }
   else if (rcls == FP_ZERO && icls == FP_ZERO)
