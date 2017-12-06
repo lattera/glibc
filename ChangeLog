@@ -1,5 +1,9 @@
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strfromf.c: Include <bits/floatn.h>.
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (strfromf32): Define
+	and later undefine as macro and define as weak alias.
+
 	* math/test-float32.h: New file.
 
 	* sysdeps/generic/libm-alias-float.h: Include <bits/floatn.h>.
