@@ -1,5 +1,7 @@
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-float32.h: New file.
+
 	* sysdeps/generic/libm-alias-float.h: Include <bits/floatn.h>.
 	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32]
 	(libm_alias_float_other_r): Create f32 alias.
