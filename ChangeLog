@@ -1,3 +1,12 @@
+2017-12-06  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22515]
+	* localedata/Makefile: Add hsb_DE.UTF-8 to test-input
+	and to the list of locales to be built for testing.
+	* localedata/hsb_DE.UTF-8.in: New file for testing the collation.
+	* localedata/locales/hsb_DE (LC_COLLATE): Use “copy "iso14651_t1"”
+	and build the collation rules upon that.
+
 2017-12-06  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* NEWS: Add sinf to list of optimized functions.
