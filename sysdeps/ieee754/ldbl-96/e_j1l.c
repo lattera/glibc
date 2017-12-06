@@ -507,7 +507,7 @@ static long double
 qone (long double x)
 {
   const long double *p, *q;
-  static long double s, r, z;
+  long double s, r, z;
   int32_t ix;
   uint32_t se, i0, i1;
 
