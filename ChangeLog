@@ -1,3 +1,12 @@
+2017-12-07  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22524]
+	* localedata/Makefile: Add lt_LT.UTF-8 to test-input
+	and to the list of locales to be built for testing.
+	* localedata/lt_LT.UTF-8.in: New file for testing the collation.
+	* localedata/locales/lt_LT (LC_COLLATE): Use “copy "iso14651_t1"”
+	and build the collation rules upon that.
+
 2017-12-07  Joseph Myers  <joseph@codesourcery.com>
 
 	* bits/floatn-common.h (__HAVE_FLOAT32): Define to 1.
