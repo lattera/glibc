@@ -1,5 +1,12 @@
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ia64/fpu/e_exp2f.S (__exp2f): Use exp2 not __exp2 as
+	second argument to libm_alias_float_other.
+	* sysdeps/ia64/fpu/e_log2f.S (__log2f): Use log2 not __log2 as
+	second argument to libm_alias_float_other.
+	* sysdeps/ia64/fpu/e_powf.S (__powf): Use pow not __pow as second
+	argument to libm_alias_float_other.
+
 	[BZ #22561]
 	* math/s_cacosh_template.c (M_DECL_FUNC (__cacosh)): Use pi/2 for
 	real part of result for argument 0 + i * NaN.

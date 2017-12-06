@@ -469,7 +469,7 @@ OUT_RANGE_exp2:
 ;;
 
 GLOBAL_LIBM_END(__exp2f)
-libm_alias_float_other (__exp2, __exp2)
+libm_alias_float_other (__exp2, exp2)
 #ifdef SHARED
 .symver __exp2f,exp2f@@GLIBC_2.27
 .weak __exp2f_compat

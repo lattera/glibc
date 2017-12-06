@@ -2003,7 +2003,7 @@ POW_OVER_UNDER_ERROR:
 ;;
 
 GLOBAL_LIBM_END(__powf)
-libm_alias_float_other (__pow, __pow)
+libm_alias_float_other (__pow, pow)
 #ifdef SHARED
 .symver __powf,powf@@GLIBC_2.27
 .weak __powf_compat
