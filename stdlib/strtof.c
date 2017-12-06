@@ -20,6 +20,13 @@
 /* The actual implementation for all floating point sizes is in strtod.c.
    These macros tell it to produce the `float' version, `strtof'.  */
 
+#include <bits/floatn.h>
+
+#if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+# define strtof32 __hide_strtof32
+# define wcstof32 __hide_wcstof32
+#endif
+
 #define	FLOAT		float
 #define	FLT		FLT
 #ifdef USE_WIDE_CHAR
@@ -32,3 +39,13 @@
 
 
 #include "strtod.c"
+
+#if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+# undef strtof32
+# undef wcstof32
+# ifdef USE_WIDE_CHAR
+weak_alias (wcstof, wcstof32)
+# else
+weak_alias (strtof, strtof32)
+# endif
+#endif

@@ -1,5 +1,20 @@
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* stdlib/strtof.c: Include <bits/floatn.h>
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (strtof32): Define
+	and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (wcstof32): Define
+	and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+	* stdlib/strtof_l.c: Include <bits/floatn.h>
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (strtof32_l): Define
+	and later undefine as macro.  Define as weak alias if
+	[!USE_WIDE_CHAR].
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (wcstof32_l): Define
+	and later undefine as macro.  Define as weak alias if
+	[USE_WIDE_CHAR].
+
 	* stdlib/strfromf.c: Include <bits/floatn.h>.
 	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32] (strfromf32): Define
 	and later undefine as macro and define as weak alias.

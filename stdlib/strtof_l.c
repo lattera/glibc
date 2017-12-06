@@ -17,6 +17,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <bits/floatn.h>
+
+#if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+# define strtof32_l __hide_strtof32_l
+# define wcstof32_l __hide_wcstof32_l
+#endif
+
 #include <locale.h>
 
 extern float ____strtof_l_internal (const char *, char **, int, locale_t);
@@ -36,3 +43,13 @@ extern float ____strtof_l_internal (const char *, char **, int, locale_t);
 #define	FLOAT_HUGE_VAL	HUGE_VALF
 
 #include "strtod_l.c"
+
+#if __HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32
+# undef strtof32_l
+# undef wcstof32_l
+# ifdef USE_WIDE_CHAR
+weak_alias (wcstof_l, wcstof32_l)
+# else
+weak_alias (strtof_l, strtof32_l)
+# endif
+#endif
