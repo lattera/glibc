@@ -1270,7 +1270,7 @@ Function: "cosh_downward":
 double: 2
 float: 1
 float128: 2
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 1
 ildouble: 2
@@ -1280,7 +1280,7 @@ Function: "cosh_towardzero":
 double: 2
 float: 1
 float128: 2
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 1
 ildouble: 2
@@ -1290,7 +1290,7 @@ Function: "cosh_upward":
 double: 4
 float: 2
 float128: 3
-idouble: 1
+idouble: 4
 ifloat: 1
 ifloat128: 1
 ildouble: 2
@@ -2461,6 +2461,7 @@ ldouble: 3
 Function: "sinh":
 double: 1
 float128: 2
+idouble: 1
 ifloat128: 2
 ildouble: 2
 ldouble: 2
@@ -2469,7 +2470,7 @@ Function: "sinh_downward":
 double: 2
 float: 1
 float128: 3
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 3
 ildouble: 5
@@ -2479,7 +2480,7 @@ Function: "sinh_towardzero":
 double: 2
 float: 1
 float128: 3
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 3
 ildouble: 4
@@ -2489,7 +2490,7 @@ Function: "sinh_upward":
 double: 4
 float: 2
 float128: 4
-idouble: 1
+idouble: 4
 ifloat: 1
 ifloat128: 4
 ildouble: 5

@@ -42,7 +42,11 @@ libc {
   }
 %endif
   GLIBC_2.27 {
+    # _Float64x functions, only present for some configurations.
     wcstof64x;
     wcstof64x_l;
+    # _Float64 and _Float32x functions, for all configurations.
+    wcstof64; wcstof32x;
+    wcstof64_l; wcstof32x_l;
   }
 }

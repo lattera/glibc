@@ -33,8 +33,8 @@
    glibc includes corresponding *fN or *fNx interfaces for it.  */
 #define __HAVE_FLOAT16 0
 #define __HAVE_FLOAT32 0
-#define __HAVE_FLOAT64 0
-#define __HAVE_FLOAT32X 0
+#define __HAVE_FLOAT64 1
+#define __HAVE_FLOAT32X 1
 #define __HAVE_FLOAT128X 0
 
 /* Defined to 1 if the corresponding __HAVE_<type> macro is 1 and the

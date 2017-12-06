@@ -53,7 +53,7 @@ usually wise to pick the narrowest type that can accommodate your data.
 Not all machines have a distinct @code{long double} type; it may be the
 same as @code{double}.
 
-On some machines, @theglibc{} also provides @code{_Float@var{N}} and
+@Theglibc{} also provides @code{_Float@var{N}} and
 @code{_Float@var{N}x} types.  These types are defined in @w{ISO/IEC TS
 18661-3}, which extends @w{ISO C} and defines floating-point types that
 are not machine-dependent.  When such a type, such as @code{_Float128},
@@ -65,8 +65,9 @@ these functions are described along with the @code{double},
 @code{float}, and @code{long double} variants and they come from
 @w{ISO/IEC TS 18661-3}, unless explicitly stated otherwise.
 
-Currently, support for @code{_Float@var{N}} or @code{_Float@var{N}x}
-types is only provided for @code{_Float128} and @code{_Float64x} on
+Support for @code{_Float@var{N}} or @code{_Float@var{N}x} types is
+provided for @code{_Float64} and @code{_Float32x} on all platforms.
+It is also provided for @code{_Float128} and @code{_Float64x} on
 powerpc64le (PowerPC 64-bits little-endian), x86_64, x86, ia64,
 aarch64, alpha, mips64, s390 and sparc.
 
