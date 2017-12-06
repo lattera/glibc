@@ -1,5 +1,11 @@
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/libm-alias-float.h: Include <bits/floatn.h>.
+	[__HAVE_FLOAT32 && !__HAVE_DISTINCT_FLOAT32]
+	(libm_alias_float_other_r): Create f32 alias.
+	(libm_alias_float_r): Use semicolon before call to
+	libm_alias_float_other_r.
+
 	* sysdeps/ia64/fpu/e_exp2f.S (__exp2f): Use exp2 not __exp2 as
 	second argument to libm_alias_float_other.
 	* sysdeps/ia64/fpu/e_log2f.S (__log2f): Use log2 not __log2 as
