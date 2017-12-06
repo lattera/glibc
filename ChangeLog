@@ -1,3 +1,8 @@
+2017-12-06  David S. Miller  <davem@davemloft.net>
+
+	* sysdeps/sparc/fpu/libm-test-ulps: Update
+	exp_{downward,towardzero,upward} ulps.
+
 2017-12-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/ieee754/ldbl-96/e_j1l.c (qone): Don't make local
