@@ -1,3 +1,14 @@
+2017-12-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (Y0_2N): Make const.
+	(Y0_2D): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (Y0_2N): Likewise.
+	(Y0_2D): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c (Y0_2N): Likewise.
+	(Y0_2D): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c (Y0_2N): Likewise.
+	(Y0_2D): Likewise.
+
 2017-12-06  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22515]
