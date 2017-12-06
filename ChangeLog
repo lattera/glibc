@@ -1164,6 +1164,7 @@
 2017-11-30  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22375]
+	CVE-2017-17426
 	* malloc/malloc.c (__libc_malloc): Use checked_request2size
 	instead of request2size.
 
