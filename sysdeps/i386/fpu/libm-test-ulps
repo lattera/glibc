@@ -108,6 +108,7 @@ double: 1
 float: 1
 float128: 4
 idouble: 1
+ifloat: 1
 ifloat128: 4
 ildouble: 5
 ldouble: 5
@@ -117,6 +118,7 @@ double: 1
 float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 4
 ldouble: 4
@@ -1270,6 +1272,7 @@ double: 1
 float: 1
 float128: 1
 idouble: 1
+ifloat: 1
 ifloat128: 1
 ildouble: 2
 ldouble: 2
@@ -1299,7 +1302,7 @@ double: 4
 float: 2
 float128: 3
 idouble: 4
-ifloat: 1
+ifloat: 2
 ifloat128: 1
 ildouble: 2
 ldouble: 3
@@ -2507,7 +2510,7 @@ double: 4
 float: 2
 float128: 4
 idouble: 4
-ifloat: 1
+ifloat: 2
 ifloat128: 4
 ildouble: 5
 ldouble: 5

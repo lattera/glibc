@@ -32,7 +32,7 @@
    floating-point type with the right format for this type, and this
    glibc includes corresponding *fN or *fNx interfaces for it.  */
 #define __HAVE_FLOAT16 0
-#define __HAVE_FLOAT32 0
+#define __HAVE_FLOAT32 1
 #define __HAVE_FLOAT64 1
 #define __HAVE_FLOAT32X 1
 #define __HAVE_FLOAT128X 0

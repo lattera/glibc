@@ -66,7 +66,8 @@ these functions are described along with the @code{double},
 @w{ISO/IEC TS 18661-3}, unless explicitly stated otherwise.
 
 Support for @code{_Float@var{N}} or @code{_Float@var{N}x} types is
-provided for @code{_Float64} and @code{_Float32x} on all platforms.
+provided for @code{_Float32}, @code{_Float64} and @code{_Float32x} on
+all platforms.
 It is also provided for @code{_Float128} and @code{_Float64x} on
 powerpc64le (PowerPC 64-bits little-endian), x86_64, x86, ia64,
 aarch64, alpha, mips64, s390 and sparc.

@@ -1878,12 +1878,17 @@ GLIBC_2.27 pkey_free F
 GLIBC_2.27 pkey_get F
 GLIBC_2.27 pkey_mprotect F
 GLIBC_2.27 pkey_set F
+GLIBC_2.27 strfromf32 F
 GLIBC_2.27 strfromf32x F
 GLIBC_2.27 strfromf64 F
+GLIBC_2.27 strtof32 F
+GLIBC_2.27 strtof32_l F
 GLIBC_2.27 strtof32x F
 GLIBC_2.27 strtof32x_l F
 GLIBC_2.27 strtof64 F
 GLIBC_2.27 strtof64_l F
+GLIBC_2.27 wcstof32 F
+GLIBC_2.27 wcstof32_l F
 GLIBC_2.27 wcstof32x F
 GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F

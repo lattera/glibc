@@ -134,10 +134,10 @@ libc {
     strfromf64x;
     strtof64x;
     strtof64x_l;
-    # _Float64 and _Float32x functions, for all configurations.
-    strfromf64; strfromf32x;
-    strtof64; strtof32x;
-    strtof64_l; strtof32x_l;
+    # _Float32, _Float64 and _Float32x functions, for all configurations.
+    strfromf32; strfromf64; strfromf32x;
+    strtof32; strtof64; strtof32x;
+    strtof32_l; strtof64_l; strtof32x_l;
   }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are

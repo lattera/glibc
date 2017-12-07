@@ -132,7 +132,7 @@ type-float64x-yes := float64x
 
 types = $(types-basic) $(type-float128-$(float128-fcts))
 test-types = $(test-types-basic) $(type-float128-$(float128-fcts)) \
-	     float64 $(type-float128-$(float128-alias-fcts)) \
+	     float32 float64 $(type-float128-$(float128-alias-fcts)) \
 	     float32x $(type-float64x-$(float64x-alias-fcts))
 
 # For each of the basic types (float, double, long double), replace the
