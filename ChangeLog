@@ -1,5 +1,14 @@
 2017-12-07  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add s_sinf-sse2 and s_sinf-fma.
+	(CFLAGS-s_sinf-fma.c): New.
+	* sysdeps/x86_64/fpu/multiarch/s_sinf-fma.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_sinf-sse2.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sinf.c: Likewise.
+
+2017-12-07  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/fpu/s_sinf.S: Removed.
 
 2017-12-07  Joseph Myers  <joseph@codesourcery.com>
