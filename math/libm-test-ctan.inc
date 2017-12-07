@@ -90,13 +90,13 @@ static const struct test_c_c_data ctan_test_data[] =
     TEST_c_c (ctan, -0x1.2p16383L, minus_infty, 0.0, -1.0),
 #endif
 
-    TEST_c_c (ctan, plus_infty, 0, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_c_c (ctan, plus_infty, 0, qnan_value, 0, INVALID_EXCEPTION),
     TEST_c_c (ctan, plus_infty, 2, qnan_value, qnan_value, INVALID_EXCEPTION),
-    TEST_c_c (ctan, minus_infty, 0, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_c_c (ctan, minus_infty, 0, qnan_value, 0, INVALID_EXCEPTION),
     TEST_c_c (ctan, minus_infty, 2, qnan_value, qnan_value, INVALID_EXCEPTION),
-    TEST_c_c (ctan, plus_infty, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_c_c (ctan, plus_infty, minus_zero, qnan_value, minus_zero, INVALID_EXCEPTION),
     TEST_c_c (ctan, plus_infty, -2, qnan_value, qnan_value, INVALID_EXCEPTION),
-    TEST_c_c (ctan, minus_infty, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION),
+    TEST_c_c (ctan, minus_infty, minus_zero, qnan_value, minus_zero, INVALID_EXCEPTION),
     TEST_c_c (ctan, minus_infty, -2, qnan_value, qnan_value, INVALID_EXCEPTION),
 
     TEST_c_c (ctan, qnan_value, plus_infty, 0.0, 1.0, IGNORE_ZERO_INF_SIGN),
@@ -112,9 +112,9 @@ static const struct test_c_c_data ctan_test_data[] =
     TEST_c_c (ctan, 0.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
     TEST_c_c (ctan, -4.5, qnan_value, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
 
-    TEST_c_c (ctan, qnan_value, 0, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_c_c (ctan, qnan_value, 0, qnan_value, 0),
     TEST_c_c (ctan, qnan_value, 5, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
-    TEST_c_c (ctan, qnan_value, minus_zero, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
+    TEST_c_c (ctan, qnan_value, minus_zero, qnan_value, minus_zero),
     TEST_c_c (ctan, qnan_value, -0.25, qnan_value, qnan_value, INVALID_EXCEPTION_OK),
 
     TEST_c_c (ctan, qnan_value, qnan_value, qnan_value, qnan_value),

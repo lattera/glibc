@@ -49,7 +49,10 @@ M_DECL_FUNC (__ctan) (CFLOAT x)
       else
 	{
 	  __real__ res = M_NAN;
-	  __imag__ res = M_NAN;
+	  if (__imag__ x == 0)
+	    __imag__ res = __imag__ x;
+	  else
+	    __imag__ res = M_NAN;
 
 	  if (isinf (__real__ x))
 	    feraiseexcept (FE_INVALID);

@@ -1,3 +1,13 @@
+2017-12-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22568]
+	* math/s_ctan_template.c (M_DECL_FUNC (__ctan)): Set imaginary
+	part of result to imaginary part of argument if it is zero and the
+	real part of the argument is not finite.
+	* math/s_ctanh_template.c (M_DECL_FUNC (__ctanh)): Set real part
+	of result to real part of argument if it is zero and the imaginary
+	part of the argument is not finite.
+
 2017-12-07  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22524]
