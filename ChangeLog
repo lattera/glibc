@@ -1,3 +1,9 @@
+2017-12-10  Aurelien Jarno <aurelien@aurel32.net>
+
+	[BZ #22577]
+	* elf/rtld.c (init_tls): Add missing new line to the _dl_fatal_printf
+	call.
+
 2017-12-07  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):

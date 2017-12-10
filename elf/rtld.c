@@ -730,7 +730,7 @@ init_tls (void)
   void *tcbp = _dl_allocate_tls_storage ();
   if (tcbp == NULL)
     _dl_fatal_printf ("\
-cannot allocate TLS data structures for initial thread");
+cannot allocate TLS data structures for initial thread\n");
 
   /* Store for detection of the special case by __tls_get_addr
      so it knows not to pass this dtv to the normal realloc.  */
