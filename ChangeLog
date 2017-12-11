@@ -1,5 +1,11 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/iso14651_t1_common: Add some convenient collation
+	symbols like <AFTER-A>, <BEFORE-A> to make tailoring easier using
+	rules similar to those in CLDR.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/iso14651_t1_common: The new version of this
 	file downloaded from ISO contained several syntax errors which
 	are fixed by this patch.
