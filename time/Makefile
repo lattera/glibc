@@ -59,17 +59,17 @@ tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"'
 
-CFLAGS-tzfile.c = $(tz-cflags)
-CFLAGS-tzset.c = $(tz-cflags)
-CFLAGS-getdate.c = -fexceptions
+CFLAGS-tzfile.c += $(tz-cflags)
+CFLAGS-tzset.c += $(tz-cflags)
+CFLAGS-getdate.c += -fexceptions
 
 # Don't warn about Y2k problem in strftime format string.
-CFLAGS-test_time.c = -Wno-format
+CFLAGS-test_time.c += -Wno-format
 
 tst-getdate-ENV= DATEMSK=datemsk TZDIR=${common-objpfx}timezone/testdata
 test_time-ARGS= EST5EDT CST
 
 tst-tzname-ENV = TZDIR=${common-objpfx}timezone/testdata
-CPPFLAGS-tst-tzname.c = -DTZDEFRULES='"$(posixrules-file)"'
+CPPFLAGS-tst-tzname.c += -DTZDEFRULES='"$(posixrules-file)"'
 
 bug-getdate1-ARGS = ${objpfx}bug-getdate1-fmt

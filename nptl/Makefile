@@ -153,76 +153,76 @@ libpthread-static-only-routines = pthread_atfork
 # even with asynchronous unwind tables.
 
 # nptl-init.c contains sigcancel_handler().
-CFLAGS-nptl-init.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-nptl-init.c += -fexceptions -fasynchronous-unwind-tables
 # The unwind code itself,
-CFLAGS-unwind.c = -fexceptions
-CFLAGS-unwind-forcedunwind.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-unwind.c += -fexceptions
+CFLAGS-unwind-forcedunwind.c += -fexceptions -fasynchronous-unwind-tables
 
 # The following three functions must be async-cancel safe.
-CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_setcancelstate.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_setcanceltype.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_cancel.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_setcancelstate.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_setcanceltype.c += -fexceptions -fasynchronous-unwind-tables
 
 # These are internal functions which similar functionality as setcancelstate
 # and setcanceltype.
-CFLAGS-cancellation.c = -fasynchronous-unwind-tables
-CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
+CFLAGS-cancellation.c += -fasynchronous-unwind-tables
+CFLAGS-libc-cancellation.c += -fasynchronous-unwind-tables
 
 # Calling pthread_exit() must cause the registered cancel handlers to
 # be executed.  Therefore exceptions have to be thrown through this
 # function.
-CFLAGS-pthread_exit.c = -fexceptions
+CFLAGS-pthread_exit.c += -fexceptions
 
 # Among others, __pthread_unwind is forwarded.  This function must handle
 # exceptions.
-CFLAGS-forward.c = -fexceptions
+CFLAGS-forward.c += -fexceptions
 
 # The following are cancellation points.  Some of the functions can
 # block and therefore temporarily enable asynchronous cancellation.
 # Those must be compiled asynchronous unwind tables.
-CFLAGS-pthread_testcancel.c = -fexceptions
-CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pthread_once.c = $(uses-callbacks) -fexceptions \
+CFLAGS-pthread_testcancel.c += -fexceptions
+CFLAGS-pthread_join.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_timedjoin.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_once.c += $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
-CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sem_wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sem_timedwait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_cond_wait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sem_wait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
 
 # These are the function wrappers we have to duplicate here.
-CFLAGS-fcntl.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-lockf.c = -fexceptions
-CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgsnd.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tcdrain.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-open.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-open64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pause.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recv.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-send.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-accept.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendto.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-connect.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvfrom.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvmsg.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendmsg.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-close.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-read.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-write.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-nanosleep.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigsuspend.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msync.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fdatasync.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fsync.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-lockf.c += -fexceptions
+CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-wait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-waitpid.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tcdrain.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-accept.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendto.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-connect.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-read.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-write.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msync.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
 
-CFLAGS-pt-system.c = -fexceptions
+CFLAGS-pt-system.c += -fexceptions
 
 LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11
@@ -356,8 +356,8 @@ endif
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
 # GCC-4.9 compiles 'sprintf(NULL, ...)' into UD2 on x86_64 without -fno-builtin
-CFLAGS-tst-cleanup2.c = -fno-builtin
-CFLAGS-tst-cleanupx2.c = -fno-builtin
+CFLAGS-tst-cleanup2.c += -fno-builtin
+CFLAGS-tst-cleanupx2.c += -fno-builtin
 
 tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
@@ -423,9 +423,9 @@ extra-objs += $(crti-objs) $(crtn-objs)
 extra-objs += pt-crti.o
 endif
 
-CFLAGS-flockfile.c = $(libio-mtsafe)
-CFLAGS-ftrylockfile.c = $(libio-mtsafe)
-CFLAGS-funlockfile.c = $(libio-mtsafe)
+CFLAGS-flockfile.c += $(libio-mtsafe)
+CFLAGS-ftrylockfile.c += $(libio-mtsafe)
+CFLAGS-funlockfile.c += $(libio-mtsafe)
 
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
@@ -528,15 +528,15 @@ CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
 CFLAGS-tst-align3.c += $(stack-align-test-flags)
-CFLAGS-tst-initializers1.c = -W -Wall -Werror
+CFLAGS-tst-initializers1.c += -W -Wall -Werror
 CFLAGS-tst-initializers1-< = $(CFLAGS-tst-initializers1.c) \
 			     $(patsubst tst-initializers1-%.c,-std=%,$<)
-CFLAGS-tst-initializers1-c89.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-c99.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-c11.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-gnu89.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-gnu99.c = $(CFLAGS-tst-initializers1-<)
-CFLAGS-tst-initializers1-gnu11.c = $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-c89.c += $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-c99.c += $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-c11.c += $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu89.c += $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu99.c += $(CFLAGS-tst-initializers1-<)
+CFLAGS-tst-initializers1-gnu11.c += $(CFLAGS-tst-initializers1-<)
 
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)

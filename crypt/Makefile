@@ -39,9 +39,9 @@ endif
 ifeq ($(nss-crypt),yes)
 nss-cpp-flags := -DUSE_NSS \
   -I$(shell nss-config --includedir) -I$(shell nspr-config --includedir)
-CPPFLAGS-sha256-crypt.c = $(nss-cpp-flags)
-CPPFLAGS-sha512-crypt.c = $(nss-cpp-flags)
-CPPFLAGS-md5-crypt.c = $(nss-cpp-flags)
+CPPFLAGS-sha256-crypt.c += $(nss-cpp-flags)
+CPPFLAGS-sha512-crypt.c += $(nss-cpp-flags)
+CPPFLAGS-md5-crypt.c += $(nss-cpp-flags)
 LDLIBS-crypt.so = -lfreebl3
 else
 libcrypt-routines += md5 sha256 sha512

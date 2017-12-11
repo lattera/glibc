@@ -33,10 +33,10 @@ routines	:= opendir closedir readdir readdir_r rewinddir \
 tests	   := list tst-seekdir opendir-tst1 bug-readdir1 tst-fdopendir \
 	      tst-fdopendir2 tst-scandir tst-scandir64
 
-CFLAGS-scandir.c = $(uses-callbacks)
-CFLAGS-scandir64.c = $(uses-callbacks)
-CFLAGS-scandir-tail.c = $(uses-callbacks)
-CFLAGS-scandir64-tail.c = $(uses-callbacks)
+CFLAGS-scandir.c += $(uses-callbacks)
+CFLAGS-scandir64.c += $(uses-callbacks)
+CFLAGS-scandir-tail.c += $(uses-callbacks)
+CFLAGS-scandir64-tail.c += $(uses-callbacks)
 
 include ../Rules
 

@@ -127,7 +127,7 @@ generated += mtrace-tst-leaks.out tst-leaks.mtrace \
 
 include ../Rules
 
-CFLAGS-res_hconf.c = -fexceptions
+CFLAGS-res_hconf.c += -fexceptions
 
 # The DNS NSS modules needs the resolver.
 $(objpfx)libnss_dns.so: $(objpfx)libresolv.so

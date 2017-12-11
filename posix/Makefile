@@ -204,31 +204,31 @@ $(objpfx)config-name.h: $(..)scripts/config-uname.sh $(common-objpfx)config.make
 	   '$(config-machine)-$(config-vendor)' > $@.new
 	mv -f $@.new $@
 
-CFLAGS-getaddrinfo.c = -DRESOLVER -fexceptions
-CFLAGS-pause.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwrite64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sleep.c = -fexceptions
-CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitid.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-getopt.c = -fexceptions
-CFLAGS-wordexp.c = -fexceptions
+CFLAGS-getaddrinfo.c += -DRESOLVER -fexceptions
+CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwrite64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sleep.c += -fexceptions
+CFLAGS-wait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-waitid.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-waitpid.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-getopt.c += -fexceptions
+CFLAGS-wordexp.c += -fexceptions
 CFLAGS-wordexp.os = -fomit-frame-pointer
-CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
-CFLAGS-pathconf.c = -fexceptions
-CFLAGS-fpathconf.c = -fexceptions
-CFLAGS-spawn.c = -fexceptions
+CFLAGS-sysconf.c += -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
+CFLAGS-pathconf.c += -fexceptions
+CFLAGS-fpathconf.c += -fexceptions
+CFLAGS-spawn.c += -fexceptions
 CFLAGS-spawn.os = -fomit-frame-pointer
-CFLAGS-spawnp.c = -fexceptions
+CFLAGS-spawnp.c += -fexceptions
 CFLAGS-spawnp.os = -fomit-frame-pointer
-CFLAGS-spawni.c = -fexceptions
+CFLAGS-spawni.c += -fexceptions
 CFLAGS-spawni.os = -fomit-frame-pointer
-CFLAGS-glob.c = $(uses-callbacks) -fexceptions
-CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
-CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
+CFLAGS-glob.c += $(uses-callbacks) -fexceptions
+CFLAGS-glob64.c += $(uses-callbacks) -fexceptions
+CFLAGS-getconf.c += -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-execve.os = -fomit-frame-pointer
 CFLAGS-fexecve.os = -fomit-frame-pointer
 CFLAGS-execv.os = -fomit-frame-pointer
@@ -236,7 +236,7 @@ CFLAGS-execle.os = -fomit-frame-pointer
 CFLAGS-execl.os = -fomit-frame-pointer
 CFLAGS-execvp.os = -fomit-frame-pointer
 CFLAGS-execlp.os = -fomit-frame-pointer
-CFLAGS-nanosleep.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

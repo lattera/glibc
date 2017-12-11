@@ -124,14 +124,14 @@ $(objpfx)msgs.h: po2test.awk ../po/de.po
 	$(make-target-directory)
 	LC_ALL=C $(AWK) -f $^ > $@
 
-CFLAGS-tst-gettext.c = -DTESTSTRS_H=\"$(objpfx)msgs.h\"
-CFLAGS-tst-translit.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-gettext2.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-codeset.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-gettext3.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-gettext4.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-gettext5.c = -DOBJPFX=\"$(objpfx)\"
-CFLAGS-tst-gettext6.c = -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext.c += -DTESTSTRS_H=\"$(objpfx)msgs.h\"
+CFLAGS-tst-translit.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext2.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-codeset.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext3.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext4.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext5.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-gettext6.c += -DOBJPFX=\"$(objpfx)\"
 
 ifeq ($(have-thread-library),yes)
 ifeq (yes,$(build-shared))

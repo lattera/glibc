@@ -310,7 +310,7 @@ endif
 ifdef PYTHON
 tests += test-tgmath3
 generated += test-tgmath3.c
-CFLAGS-test-tgmath3.c = -fno-builtin
+CFLAGS-test-tgmath3.c += -fno-builtin
 
 $(objpfx)test-tgmath3.c: gen-tgmath-tests.py
 	$(PYTHON) $< > $@
@@ -320,13 +320,13 @@ libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH
 libm-test-vec-cflags = $(libm-test-fast-math-cflags) -fno-inline \
 		       -ffloat-store -D_OPENMP=201307 -Wno-unknown-pragmas
 
-CFLAGS-test-double-vlen4-wrappers.c = $(double-vlen4-arch-ext-cflags)
+CFLAGS-test-double-vlen4-wrappers.c += $(double-vlen4-arch-ext-cflags)
 
-CFLAGS-test-double-vlen8-wrappers.c = $(double-vlen8-arch-ext-cflags)
+CFLAGS-test-double-vlen8-wrappers.c += $(double-vlen8-arch-ext-cflags)
 
-CFLAGS-test-float-vlen8-wrappers.c = $(float-vlen8-arch-ext-cflags)
+CFLAGS-test-float-vlen8-wrappers.c += $(float-vlen8-arch-ext-cflags)
 
-CFLAGS-test-float-vlen16-wrappers.c = $(float-vlen16-arch-ext-cflags)
+CFLAGS-test-float-vlen16-wrappers.c += $(float-vlen16-arch-ext-cflags)
 
 # The no-inline tests use -fsignaling-nans, and thereby use the
 # versions of classification macros that support sNaNs.  The inline
@@ -339,46 +339,46 @@ libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin \
 libm-test-finite-cflags = $(libm-test-no-inline-cflags) \
 			  -U__FINITE_MATH_ONLY__ -D__FINITE_MATH_ONLY__=1
 libm-test-inline-cflags = $(libm-test-fast-math-cflags)
-CFLAGS-test-tgmath.c = -fno-builtin
+CFLAGS-test-tgmath.c += -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
 # while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=54402
-CFLAGS-test-tgmath2.c = -fno-builtin
-CFLAGS-test-tgmath-ret.c = -fno-builtin
-CFLAGS-test-powl.c = -fno-builtin
+CFLAGS-test-tgmath2.c += -fno-builtin
+CFLAGS-test-tgmath-ret.c += -fno-builtin
+CFLAGS-test-powl.c += -fno-builtin
 
-CFLAGS-test-snan.c = -fsignaling-nans
+CFLAGS-test-snan.c += -fsignaling-nans
 
-CFLAGS-test-signgam-finite.c = -ffinite-math-only
-CFLAGS-test-signgam-finite-c99.c = -ffinite-math-only -std=c99
-CFLAGS-test-signgam-finite-c11.c = -ffinite-math-only -std=c11
-CFLAGS-test-signgam-uchar.c = -std=c99
-CFLAGS-test-signgam-uchar-init.c = -std=c99
-CFLAGS-test-signgam-uchar-static.c = -std=c99
-CFLAGS-test-signgam-uchar-init-static.c = -std=c99
-CFLAGS-test-signgam-uint.c = -std=c99
-CFLAGS-test-signgam-uint-init.c = -std=c99
-CFLAGS-test-signgam-uint-static.c = -std=c99
-CFLAGS-test-signgam-uint-init-static.c = -std=c99
-CFLAGS-test-signgam-ullong.c = -std=c99
-CFLAGS-test-signgam-ullong-init.c = -std=c99
-CFLAGS-test-signgam-ullong-static.c = -std=c99
-CFLAGS-test-signgam-ullong-init-static.c = -std=c99
+CFLAGS-test-signgam-finite.c += -ffinite-math-only
+CFLAGS-test-signgam-finite-c99.c += -ffinite-math-only -std=c99
+CFLAGS-test-signgam-finite-c11.c += -ffinite-math-only -std=c11
+CFLAGS-test-signgam-uchar.c += -std=c99
+CFLAGS-test-signgam-uchar-init.c += -std=c99
+CFLAGS-test-signgam-uchar-static.c += -std=c99
+CFLAGS-test-signgam-uchar-init-static.c += -std=c99
+CFLAGS-test-signgam-uint.c += -std=c99
+CFLAGS-test-signgam-uint-init.c += -std=c99
+CFLAGS-test-signgam-uint-static.c += -std=c99
+CFLAGS-test-signgam-uint-init-static.c += -std=c99
+CFLAGS-test-signgam-ullong.c += -std=c99
+CFLAGS-test-signgam-ullong-init.c += -std=c99
+CFLAGS-test-signgam-ullong-static.c += -std=c99
+CFLAGS-test-signgam-ullong-init-static.c += -std=c99
 
-CFLAGS-test-math-cxx11.cc = -std=c++11
+CFLAGS-test-math-cxx11.cc += -std=c++11
 
-CFLAGS-test-math-isinff.cc = -std=gnu++11
-CFLAGS-test-math-iszero.cc = -std=gnu++11
-CFLAGS-test-math-issignaling.cc = -std=gnu++11
-CFLAGS-test-math-iscanonical.cc = -std=gnu++11
+CFLAGS-test-math-isinff.cc += -std=gnu++11
+CFLAGS-test-math-iszero.cc += -std=gnu++11
+CFLAGS-test-math-issignaling.cc += -std=gnu++11
+CFLAGS-test-math-iscanonical.cc += -std=gnu++11
 
-CFLAGS-test-iszero-excess-precision.c = -fexcess-precision=standard
-CFLAGS-test-iseqsig-excess-precision.c = -fexcess-precision=standard
-CFLAGS-test-flt-eval-method.c = -fexcess-precision=standard
+CFLAGS-test-iszero-excess-precision.c += -fexcess-precision=standard
+CFLAGS-test-iseqsig-excess-precision.c += -fexcess-precision=standard
+CFLAGS-test-flt-eval-method.c += -fexcess-precision=standard
 
-CFLAGS-test-fe-snans-always-signal.c = -fsignaling-nans
+CFLAGS-test-fe-snans-always-signal.c += -fsignaling-nans
 
-CFLAGS-test-finite-macros.c = -ffinite-math-only
+CFLAGS-test-finite-macros.c += -ffinite-math-only
 
 include ../Rules
 

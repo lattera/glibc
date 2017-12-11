@@ -165,8 +165,8 @@ endif
 
 include ../Rules
 
-CFLAGS-mcheck-init.c = $(PIC-ccflag)
-CFLAGS-obstack.c = $(uses-callbacks)
+CFLAGS-mcheck-init.c += $(PIC-ccflag)
+CFLAGS-obstack.c += $(uses-callbacks)
 
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 	-rm -f $@

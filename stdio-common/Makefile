@@ -111,15 +111,15 @@ $(objpfx)tst-%-mem.out: $(objpfx)tst-%.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-$*.mtrace > $@; \
 	$(evaluate-test)
 
-CFLAGS-vfprintf.c = -Wno-uninitialized
-CFLAGS-vfwprintf.c = -Wno-uninitialized
+CFLAGS-vfprintf.c += -Wno-uninitialized
+CFLAGS-vfwprintf.c += -Wno-uninitialized
 
-CFLAGS-tmpfile.c = -fexceptions
-CFLAGS-tmpfile64.c = -fexceptions
-CFLAGS-tempname.c = -fexceptions
-CFLAGS-psignal.c = -fexceptions
-CFLAGS-vprintf.c = -fexceptions
-CFLAGS-cuserid.c = -fexceptions
+CFLAGS-tmpfile.c += -fexceptions
+CFLAGS-tmpfile64.c += -fexceptions
+CFLAGS-tempname.c += -fexceptions
+CFLAGS-psignal.c += -fexceptions
+CFLAGS-vprintf.c += -fexceptions
+CFLAGS-cuserid.c += -fexceptions
 
 CFLAGS-vfprintf.c += -fexceptions
 CFLAGS-fprintf.c += -fexceptions
@@ -133,15 +133,15 @@ CFLAGS-isoc99_vfscanf.c += -fexceptions
 CFLAGS-isoc99_vscanf.c += -fexceptions
 CFLAGS-isoc99_fscanf.c += -fexceptions
 CFLAGS-isoc99_scanf.c += -fexceptions
-CFLAGS-errlist.c = $(fno-unit-at-a-time)
-CFLAGS-siglist.c = $(fno-unit-at-a-time)
+CFLAGS-errlist.c += $(fno-unit-at-a-time)
+CFLAGS-siglist.c += $(fno-unit-at-a-time)
 
 # The following is a hack since we must compile scanf1{5,7}.c without any
 # GNU extension.  The latter are needed, though, when internal headers
 # are used.  So made sure we see the installed headers first.
-CFLAGS-scanf15.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
+CFLAGS-scanf15.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
-CFLAGS-scanf17.c = -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
+CFLAGS-scanf17.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
 
 # tst-gets.c tests a deprecated function.

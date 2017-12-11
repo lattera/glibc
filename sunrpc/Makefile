@@ -137,24 +137,24 @@ $(rpc-compat-routines.os): $(objpfx)compat-%.os: %.c $(before-compile)
 	$(compile-command.c) -DEXPORT_RPC_SYMBOLS
 endif
 
-CFLAGS-xbootparam_prot.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xnlm_prot.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xrstat.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xyppasswd.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xklm_prot.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xrex.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xsm_inter.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xmount.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xrusers.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xspray.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xnfs_prot.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xrquota.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-xkey_prot.c = -Wno-unused $(PIC-ccflag)
-CFLAGS-auth_unix.c = -fexceptions
-CFLAGS-key_call.c = -fexceptions
-CFLAGS-pmap_rmt.c = -fexceptions
-CFLAGS-clnt_perr.c = -fexceptions
-CFLAGS-openchild.c = -fexceptions
+CFLAGS-xbootparam_prot.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xnlm_prot.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xrstat.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xyppasswd.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xklm_prot.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xrex.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xsm_inter.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xmount.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xrusers.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xspray.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xnfs_prot.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xrquota.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-xkey_prot.c += -Wno-unused $(PIC-ccflag)
+CFLAGS-auth_unix.c += -fexceptions
+CFLAGS-key_call.c += -fexceptions
+CFLAGS-pmap_rmt.c += -fexceptions
+CFLAGS-clnt_perr.c += -fexceptions
+CFLAGS-openchild.c += -fexceptions
 
 sunrpc-CPPFLAGS = -D_RPC_THREAD_SAFE_
 CPPFLAGS += $(sunrpc-CPPFLAGS)

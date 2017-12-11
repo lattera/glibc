@@ -40,12 +40,12 @@ endif
 ifneq (no,$(have-tunables))
 dl-routines += dl-tunables
 tunables-type = $(addprefix TUNABLES_FRONTEND_,$(have-tunables))
-CPPFLAGS-dl-tunables.c = -DTUNABLES_FRONTEND=$(tunables-type)
+CPPFLAGS-dl-tunables.c += -DTUNABLES_FRONTEND=$(tunables-type)
 
 # Make sure that the compiler does not insert any library calls in tunables
 # code paths.
 ifeq (yes,$(have-loop-to-function))
-CFLAGS-dl-tunables.c = -fno-tree-loop-distribute-patterns
+CFLAGS-dl-tunables.c += -fno-tree-loop-distribute-patterns
 endif
 endif
 
@@ -61,9 +61,9 @@ rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
   dl-error-minimal dl-conflict
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
-CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-dl-lookup.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-dl-iterate-phdr.c = $(uses-callbacks)
+CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-dl-lookup.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-dl-iterate-phdr.c += $(uses-callbacks)
 
 # Compile rtld itself without stack protection.
 # Also compile all routines in the static library that are elided from
@@ -300,7 +300,7 @@ tests-pie += tst-pie1 tst-pie2
 ifeq (yes,$(have-protected-data))
 tests += vismain
 tests-pie += vismain
-CFLAGS-vismain.c = $(PIE-ccflag)
+CFLAGS-vismain.c += $(PIE-ccflag)
 endif
 endif
 modules-execstack-yes = tst-execstack-mod
@@ -386,12 +386,12 @@ endif
 
 # By default tst-linkall-static should try to use crypt routines to test
 # static libcrypt use.
-CFLAGS-tst-linkall-static.c = -DUSE_CRYPT=1
+CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
 # However, if we are using NSS crypto and we don't have a static
 # library, then we exclude the use of crypt functions in the test.
 # We similarly exclude libcrypt.a from the static link (see below).
 ifeq (yesno,$(nss-crypt)$(static-nss-crypt))
-CFLAGS-tst-linkall-static.c = -DUSE_CRYPT=0
+CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
 endif
 
 include ../Rules
@@ -509,7 +509,7 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	echo '#define DL_DST_LIB "$(notdir $(slibdir))"' >> ${@:st=T}
 	$(move-if-change) ${@:st=T} ${@:st=h}
 	touch $@
-CPPFLAGS-dl-load.c = -I$(objpfx). -I$(csu-objpfx).
+CPPFLAGS-dl-load.c += -I$(objpfx). -I$(csu-objpfx).
 
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
@@ -559,12 +559,12 @@ $(objpfx)sln: $(sln-modules:%=$(objpfx)%.o)
 $(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
 SYSCONF-FLAGS := -D'SYSCONFDIR="$(sysconfdir)"'
-CFLAGS-ldconfig.c = $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
+CFLAGS-ldconfig.c += $(SYSCONF-FLAGS) -D'LIBDIR="$(libdir)"' \
 		    -D'SLIBDIR="$(slibdir)"'
 libof-ldconfig = ldconfig
-CFLAGS-dl-cache.c = $(SYSCONF-FLAGS)
-CFLAGS-cache.c = $(SYSCONF-FLAGS)
-CFLAGS-rtld.c = $(SYSCONF-FLAGS)
+CFLAGS-dl-cache.c += $(SYSCONF-FLAGS)
+CFLAGS-cache.c += $(SYSCONF-FLAGS)
+CFLAGS-rtld.c += $(SYSCONF-FLAGS)
 
 cpp-srcs-left := $(all-rtld-routines:=.os)
 lib := rtld
@@ -759,7 +759,7 @@ $(objpfx)loadfail.out: $(objpfx)failobj.so
 
 $(objpfx)multiload: $(libdl)
 LDFLAGS-multiload = -rdynamic
-CFLAGS-multiload.c = -DOBJDIR=\"$(elf-objpfx)\"
+CFLAGS-multiload.c += -DOBJDIR=\"$(elf-objpfx)\"
 
 $(objpfx)multiload.out: $(objpfx)testobj1.so
 
@@ -827,7 +827,7 @@ $(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
 $(objpfx)filter: $(objpfx)filtmod1.so
 
 # This does not link against libc.
-CFLAGS-filtmod1.c = $(no-stack-protector)
+CFLAGS-filtmod1.c += $(no-stack-protector)
 
 $(objpfx)unload: $(libdl)
 $(objpfx)unload.out: $(objpfx)unloadmod.so
@@ -954,10 +954,10 @@ $(patsubst %,$(objpfx)%.so,$(tlsmod18a-modules)): $(objpfx)tst-tlsmod18a%.so: $(
 $(objpfx)tst-tls19: $(libdl)
 $(objpfx)tst-tls19.out: $(objpfx)tst-tls19mod1.so
 
-CFLAGS-tst-align.c = $(stack-align-test-flags)
-CFLAGS-tst-align2.c = $(stack-align-test-flags)
-CFLAGS-tst-alignmod.c = $(stack-align-test-flags)
-CFLAGS-tst-alignmod2.c = $(stack-align-test-flags)
+CFLAGS-tst-align.c += $(stack-align-test-flags)
+CFLAGS-tst-align2.c += $(stack-align-test-flags)
+CFLAGS-tst-alignmod.c += $(stack-align-test-flags)
+CFLAGS-tst-alignmod2.c += $(stack-align-test-flags)
 $(objpfx)tst-align: $(libdl)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
 $(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
@@ -992,7 +992,7 @@ endif
 ifeq ($(have-z-execstack),yes)
 $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
-CPPFLAGS-tst-execstack.c = -DUSE_PTHREADS=0
+CPPFLAGS-tst-execstack.c += -DUSE_PTHREADS=0
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 LDFLAGS-tst-execstack-mod = -Wl,-z,execstack
 
@@ -1193,7 +1193,7 @@ tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child
 tst-ptrguard1-ARGS = --command "$(host-test-program-cmd) --child"
 # When built statically, the pointer guard interface uses
 # __pointer_chk_guard_local.
-CFLAGS-tst-ptrguard1-static.c = -DPTRGUARD_LOCAL
+CFLAGS-tst-ptrguard1-static.c += -DPTRGUARD_LOCAL
 tst-ptrguard1-static-ARGS = --command "$(objpfx)tst-ptrguard1-static --child"
 
 $(objpfx)tst-leaks1: $(libdl)
@@ -1351,7 +1351,7 @@ LDFLAGS-tst-latepthreadmod.so = \
   -Wl,-z,lazy -Wl,--unresolved-symbols=ignore-all
 # Do not optimize sibling calls as the test relies on a JMP_SLOT relocation for
 # function this_function_is_not_defined.
-CFLAGS-tst-latepthreadmod.c = -fno-optimize-sibling-calls
+CFLAGS-tst-latepthreadmod.c += -fno-optimize-sibling-calls
 $(objpfx)tst-latepthreadmod.so: $(shared-thread-library)
 $(objpfx)tst-latepthread: $(libdl)
 $(objpfx)tst-latepthread.out: $(objpfx)tst-latepthreadmod.so

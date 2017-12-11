@@ -50,10 +50,10 @@ tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2 \
 
 include ../Rules
 
-CFLAGS-sigpause.c = -fexceptions
-CFLAGS-sigsuspend.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigtimedwait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigwait.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sigwaitinfo.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigpause.c += -fexceptions
+CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigtimedwait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sigwaitinfo.c += -fexceptions -fasynchronous-unwind-tables
 
-CFLAGS-sigreturn.c = $(no-stack-protector)
+CFLAGS-sigreturn.c += $(no-stack-protector)

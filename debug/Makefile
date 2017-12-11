@@ -60,69 +60,69 @@ elide-routines.o := stack_chk_fail_local
 # Building the stack-protector failure routines with stack protection
 # makes no sense.
 
-CFLAGS-stack_chk_fail.c = $(no-stack-protector)
-CFLAGS-stack_chk_fail_local.c = $(no-stack-protector)
+CFLAGS-stack_chk_fail.c += $(no-stack-protector)
+CFLAGS-stack_chk_fail_local.c += $(no-stack-protector)
 
-CFLAGS-backtrace.c = -fno-omit-frame-pointer -funwind-tables
-CFLAGS-sprintf_chk.c = $(libio-mtsafe)
-CFLAGS-snprintf_chk.c = $(libio-mtsafe)
-CFLAGS-vsprintf_chk.c = $(libio-mtsafe)
-CFLAGS-vsnprintf_chk.c = $(libio-mtsafe)
-CFLAGS-asprintf_chk.c = $(libio-mtsafe)
-CFLAGS-vasprintf_chk.c = $(libio-mtsafe)
-CFLAGS-obprintf_chk.c = $(libio-mtsafe)
-CFLAGS-dprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-vdprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-printf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-vprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-vfprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-gets_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fgets_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fgets_u_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fread_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fread_u_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-swprintf_chk.c = $(libio-mtsafe)
-CFLAGS-vswprintf_chk.c = $(libio-mtsafe)
-CFLAGS-wprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fwprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-vwprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-vfwprintf_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fgetws_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-fgetws_u_chk.c = $(libio-mtsafe) -fexceptions
-CFLAGS-read_chk.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread_chk.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pread64_chk.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-backtrace.c += -fno-omit-frame-pointer -funwind-tables
+CFLAGS-sprintf_chk.c += $(libio-mtsafe)
+CFLAGS-snprintf_chk.c += $(libio-mtsafe)
+CFLAGS-vsprintf_chk.c += $(libio-mtsafe)
+CFLAGS-vsnprintf_chk.c += $(libio-mtsafe)
+CFLAGS-asprintf_chk.c += $(libio-mtsafe)
+CFLAGS-vasprintf_chk.c += $(libio-mtsafe)
+CFLAGS-obprintf_chk.c += $(libio-mtsafe)
+CFLAGS-dprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-vdprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-printf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-vprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-vfprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-gets_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fgets_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fgets_u_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fread_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fread_u_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-swprintf_chk.c += $(libio-mtsafe)
+CFLAGS-vswprintf_chk.c += $(libio-mtsafe)
+CFLAGS-wprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fwprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-vwprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-vfwprintf_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fgetws_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-fgetws_u_chk.c += $(libio-mtsafe) -fexceptions
+CFLAGS-read_chk.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread_chk.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pread64_chk.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recv_chk.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvfrom_chk.c += -fexceptions -fasynchronous-unwind-tables
 
 # Need to make sure the settings here override what configure might have
 # set up for us, so keep the CFLAGS/CPPFLAGS split logical as the order is:
 # <user CFLAGS> <test CFLAGS> <user CPPFLAGS> <test CPPFLAGS>
-CFLAGS-tst-longjmp_chk.c = -fexceptions -fasynchronous-unwind-tables
-CPPFLAGS-tst-longjmp_chk.c = -D_FORTIFY_SOURCE=1
-CFLAGS-tst-longjmp_chk2.c = -fexceptions -fasynchronous-unwind-tables
-CPPFLAGS-tst-longjmp_chk2.c = -D_FORTIFY_SOURCE=1
-CFLAGS-tst-longjmp_chk3.c = -fexceptions -fasynchronous-unwind-tables
-CPPFLAGS-tst-longjmp_chk3.c = -D_FORTIFY_SOURCE=1
+CFLAGS-tst-longjmp_chk.c += -fexceptions -fasynchronous-unwind-tables
+CPPFLAGS-tst-longjmp_chk.c += -D_FORTIFY_SOURCE=1
+CFLAGS-tst-longjmp_chk2.c += -fexceptions -fasynchronous-unwind-tables
+CPPFLAGS-tst-longjmp_chk2.c += -D_FORTIFY_SOURCE=1
+CFLAGS-tst-longjmp_chk3.c += -fexceptions -fasynchronous-unwind-tables
+CPPFLAGS-tst-longjmp_chk3.c += -D_FORTIFY_SOURCE=1
 
 # We know these tests have problems with format strings, this is what
 # we are testing.  Disable that warning.  They are also testing
 # deprecated functions (notably gets) so disable that warning as well.
 # And they also generate warnings from warning attributes, which
 # cannot be disabled via pragmas, so require -Wno-error to be used.
-CFLAGS-tst-chk1.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-chk2.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-chk3.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-chk4.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-chk5.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-chk6.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk1.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk2.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk3.c = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk4.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk5.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
-CFLAGS-tst-lfschk6.cc = -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk1.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk2.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk3.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk4.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk5.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk6.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk1.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk2.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk3.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk4.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk5.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-lfschk6.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
 LDLIBS-tst-chk4 = -lstdc++
 LDLIBS-tst-chk5 = -lstdc++
 LDLIBS-tst-chk6 = -lstdc++
@@ -143,7 +143,7 @@ LDFLAGS-tst-backtrace4 = -rdynamic
 LDFLAGS-tst-backtrace5 = -rdynamic
 LDFLAGS-tst-backtrace6 = -rdynamic
 
-CFLAGS-tst-ssp-1.c = -fstack-protector-all
+CFLAGS-tst-ssp-1.c += -fstack-protector-all
 
 tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \

@@ -62,7 +62,7 @@ GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
 
 include ../Rules
 
-CFLAGS-md5.c = -I../crypt
+CFLAGS-md5.c += -I../crypt
 
 programs/%-kw.h: programs/%-kw.gperf
 	cd programs \
@@ -95,9 +95,9 @@ CPPFLAGS-locale-programs = -DLOCALE_PATH='$(localepath)' \
 			   -DREPERTOIREMAP_PATH='"$(i18ndir)/repertoiremaps"' \
 			   -DLOCSRCDIR='"$(i18ndir)/locales"'
 
-CFLAGS-charmap.c = -Wno-write-strings -Wno-char-subscripts
-CFLAGS-locfile.c = -Wno-write-strings -Wno-char-subscripts
-CFLAGS-charmap-dir.c = -Wno-write-strings
+CFLAGS-charmap.c += -Wno-write-strings -Wno-char-subscripts
+CFLAGS-locfile.c += -Wno-write-strings -Wno-char-subscripts
+CFLAGS-charmap-dir.c += -Wno-write-strings
 
 # Set libof-* for each routine.
 cpp-srcs-left := $(localedef-modules) $(localedef-aux) $(locale-modules) \

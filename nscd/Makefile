@@ -73,11 +73,11 @@ LDLIBS-nscd = $(selinux-LIBS)
 
 include ../Rules
 
-CFLAGS-nscd_getpw_r.c = -fexceptions
-CFLAGS-nscd_getgr_r.c = -fexceptions
-CFLAGS-nscd_gethst_r.c = -fexceptions
-CFLAGS-nscd_getai.c = -fexceptions
-CFLAGS-nscd_initgroups.c = -fexceptions
+CFLAGS-nscd_getpw_r.c += -fexceptions
+CFLAGS-nscd_getgr_r.c += -fexceptions
+CFLAGS-nscd_gethst_r.c += -fexceptions
+CFLAGS-nscd_getai.c += -fexceptions
+CFLAGS-nscd_initgroups.c += -fexceptions
 
 CPPFLAGS-nscd += -D_FORTIFY_SOURCE=2
 

@@ -91,33 +91,33 @@ ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out
 endif
 
-CFLAGS-select.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tsearch.c = $(uses-callbacks)
-CFLAGS-lsearch.c = $(uses-callbacks)
-CFLAGS-pselect.c = -fexceptions
-CFLAGS-readv.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-writev.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-preadv.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-preadv64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwritev.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwritev64.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-preadv2.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-preadv64v2.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwritev2.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pwritev64v2.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-usleep.c = -fexceptions
-CFLAGS-syslog.c = -fexceptions
-CFLAGS-error.c = -fexceptions
-CFLAGS-getpass.c = -fexceptions
-CFLAGS-mkstemp.c = -fexceptions
-CFLAGS-mkstemp64.c = -fexceptions
-CFLAGS-getsysstats.c = -fexceptions
-CFLAGS-getusershell.c = -fexceptions
-CFLAGS-err.c = -fexceptions
-CFLAGS-tst-tsearch.c = $(stack-align-test-flags)
-CFLAGS-msync.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fdatasync.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fsync.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-select.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tsearch.c += $(uses-callbacks)
+CFLAGS-lsearch.c += $(uses-callbacks)
+CFLAGS-pselect.c += -fexceptions
+CFLAGS-readv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-writev.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv2.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-preadv64v2.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev2.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pwritev64v2.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-usleep.c += -fexceptions
+CFLAGS-syslog.c += -fexceptions
+CFLAGS-error.c += -fexceptions
+CFLAGS-getpass.c += -fexceptions
+CFLAGS-mkstemp.c += -fexceptions
+CFLAGS-mkstemp64.c += -fexceptions
+CFLAGS-getsysstats.c += -fexceptions
+CFLAGS-getusershell.c += -fexceptions
+CFLAGS-err.c += -fexceptions
+CFLAGS-tst-tsearch.c += $(stack-align-test-flags)
+CFLAGS-msync.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
 
 # Called during static library initialization, so turn stack-protection
 # off for non-shared builds.

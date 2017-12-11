@@ -34,5 +34,5 @@ tests    := test-sysvmsg test-sysvsem test-sysvshm
 
 include ../Rules
 
-CFLAGS-msgrcv.c = -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgsnd.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables

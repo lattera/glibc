@@ -134,26 +134,26 @@ extra-test-objs += tst-putenvmod.os
 
 generated += isomac isomac.out tst-putenvmod.so
 
-CFLAGS-bsearch.c = $(uses-callbacks)
-CFLAGS-msort.c = $(uses-callbacks)
-CFLAGS-qsort.c = $(uses-callbacks)
-CFLAGS-system.c = -fexceptions
+CFLAGS-bsearch.c += $(uses-callbacks)
+CFLAGS-msort.c += $(uses-callbacks)
+CFLAGS-qsort.c += $(uses-callbacks)
+CFLAGS-system.c += -fexceptions
 CFLAGS-system.os = -fomit-frame-pointer
-CFLAGS-fmtmsg.c = -fexceptions
+CFLAGS-fmtmsg.c += -fexceptions
 
-CFLAGS-strfmon.c = $(libio-mtsafe)
-CFLAGS-strfmon_l.c = $(libio-mtsafe)
+CFLAGS-strfmon.c += $(libio-mtsafe)
+CFLAGS-strfmon_l.c += $(libio-mtsafe)
 
 # The strfrom class of functions call __printf_fp in order to convert the
 # floating-point value to characters.  This requires the value of IO_MTSAFE_IO.
-CFLAGS-strfromd.c = $(libio-mtsafe)
-CFLAGS-strfromf.c = $(libio-mtsafe)
-CFLAGS-strfroml.c = $(libio-mtsafe)
+CFLAGS-strfromd.c += $(libio-mtsafe)
+CFLAGS-strfromf.c += $(libio-mtsafe)
+CFLAGS-strfroml.c += $(libio-mtsafe)
 
-CFLAGS-tst-bsearch.c = $(stack-align-test-flags)
-CFLAGS-tst-qsort.c = $(stack-align-test-flags)
+CFLAGS-tst-bsearch.c += $(stack-align-test-flags)
+CFLAGS-tst-qsort.c += $(stack-align-test-flags)
 CFLAGS-tst-makecontext.c += -funwind-tables
-CFLAGS-tst-makecontext2.c = $(stack-align-test-flags)
+CFLAGS-tst-makecontext2.c += $(stack-align-test-flags)
 
 # Run a test on the header files we use.
 tests-special += $(objpfx)isomac.out

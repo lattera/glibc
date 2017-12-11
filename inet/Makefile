@@ -67,36 +67,36 @@ include ../Rules
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-gethstbyad_r.c = -fexceptions
-CFLAGS-gethstbyad.c = -fexceptions
-CFLAGS-gethstbynm_r.c = -fexceptions
-CFLAGS-gethstbynm.c = -fexceptions
-CFLAGS-gethstbynm2_r.c = -fexceptions
-CFLAGS-gethstbynm2.c = -fexceptions
-CFLAGS-gethstent_r.c = -fexceptions
-CFLAGS-gethstent.c = -fexceptions
-CFLAGS-rcmd.c = -fexceptions
-CFLAGS-getnetbynm_r.c = -fexceptions
-CFLAGS-getnetbynm.c = -fexceptions
-CFLAGS-getnetbyad_r.c = -fexceptions
-CFLAGS-getnetbyad.c = -fexceptions
-CFLAGS-getnetent_r.c = -fexceptions
-CFLAGS-getnetent.c = -fexceptions
-CFLAGS-getaliasent_r.c = -fexceptions
-CFLAGS-getaliasent.c = -fexceptions
-CFLAGS-getrpcent_r.c = -fexceptions
-CFLAGS-getrpcent.c = -fexceptions
-CFLAGS-getservent_r.c = -fexceptions
-CFLAGS-getservent.c = -fexceptions
-CFLAGS-getprtent_r.c = -fexceptions
-CFLAGS-getprtent.c = -fexceptions
-CFLAGS-either_ntoh.c = -fexceptions
-CFLAGS-either_hton.c = -fexceptions
-CFLAGS-getnetgrent.c = -fexceptions
-CFLAGS-getnetgrent_r.c = -fexceptions
+CFLAGS-gethstbyad_r.c += -fexceptions
+CFLAGS-gethstbyad.c += -fexceptions
+CFLAGS-gethstbynm_r.c += -fexceptions
+CFLAGS-gethstbynm.c += -fexceptions
+CFLAGS-gethstbynm2_r.c += -fexceptions
+CFLAGS-gethstbynm2.c += -fexceptions
+CFLAGS-gethstent_r.c += -fexceptions
+CFLAGS-gethstent.c += -fexceptions
+CFLAGS-rcmd.c += -fexceptions
+CFLAGS-getnetbynm_r.c += -fexceptions
+CFLAGS-getnetbynm.c += -fexceptions
+CFLAGS-getnetbyad_r.c += -fexceptions
+CFLAGS-getnetbyad.c += -fexceptions
+CFLAGS-getnetent_r.c += -fexceptions
+CFLAGS-getnetent.c += -fexceptions
+CFLAGS-getaliasent_r.c += -fexceptions
+CFLAGS-getaliasent.c += -fexceptions
+CFLAGS-getrpcent_r.c += -fexceptions
+CFLAGS-getrpcent.c += -fexceptions
+CFLAGS-getservent_r.c += -fexceptions
+CFLAGS-getservent.c += -fexceptions
+CFLAGS-getprtent_r.c += -fexceptions
+CFLAGS-getprtent.c += -fexceptions
+CFLAGS-either_ntoh.c += -fexceptions
+CFLAGS-either_hton.c += -fexceptions
+CFLAGS-getnetgrent.c += -fexceptions
+CFLAGS-getnetgrent_r.c += -fexceptions
 
-CFLAGS-tst-checks-posix.c = -std=c99
-CFLAGS-tst-sockaddr.c = -fno-strict-aliasing
+CFLAGS-tst-checks-posix.c += -std=c99
+CFLAGS-tst-sockaddr.c += -fno-strict-aliasing
 
 endif
 

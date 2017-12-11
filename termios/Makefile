@@ -30,4 +30,4 @@ routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
 
 include ../Rules
 
-CFLAGS-tcdrain.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tcdrain.c += -fexceptions -fasynchronous-unwind-tables
