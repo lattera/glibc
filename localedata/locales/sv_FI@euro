@@ -47,7 +47,7 @@ copy "sv_FI"
 END LC_CTYPE
 
 LC_COLLATE
-copy "fi_FI"
+copy "sv_SE"
 END LC_COLLATE
 
 LC_MESSAGES

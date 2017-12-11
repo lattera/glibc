@@ -47,153 +47,171 @@ END LC_IDENTIFICATION
 
 
 LC_COLLATE
+% CLDR collation rules for Northern Saami:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/se.xml)
+%
+% <collation type="standard">
+%  <cr><![CDATA[
+%   &[before 1]b<á<<<Á
+%   &[before 1]d<č # fallback: ch
+%   <<<Č<ʒ # Skolt Sami, not "index" for other Sami languages
+%   <<<Ʒ<ǯ # Skolt Sami, not "index" for other Sami languages
+%   <<<Ǯ
+%   &[before 1]e<đ # fallback: dh
+%   <<<Đ<<ð # Icelandic uses a "eth"...
+%   <<<Ð
+%   &[before 1]h<ǧ # Skolt Sami, not "index" for other Sami languages
+%   <<<Ǧ<ǥ # Skolt Sami, not "index" for other Sami languages
+%   <<<Ǥ
+%   &[before 1]l<ǩ # Skolt Sami, not "index" for other Sami languages
+%   <<<Ǩ
+%   &[before 1]o<ŋ # fallback: ng
+%   <<<Ŋ<<ń # Lule Sami (alternative "eng")
+%   <<<Ń<<ñ # Lule Sami (alternative "eng")
+%   <<<Ñ
+%   &[before 1]t<š # fallback: sh
+%   <<<Š
+%   &[before 1]u<ŧ # fallback: th
+%   <<<Ŧ<<þ # Icelandic uses thorn...
+%   <<<Þ
+%   &y<<ü # compat. for Norwegian/Swedish
+%   <<<Ü<<ű # considered a variant of ü
+%   <<<Ű
+%   &[before 1]ǀ # LATIN LETTER DENTAL CLICK
+%   <ž # fallback: zh
+%   <<<Ž<ø # compat. for Norwegian
+%   <<<Ø<<œ # considered a variant of ø (and ö...)
+%   <<<Œ<æ # compat. for Norwegian
+%   <<<Æ<å # compat. for Norwegian/Swedish
+%   <<<Å<<ȧ # considered a variant of å
+%   <<<Ȧ<ä # compat. for Swedish
+%   <<<Ä<<ã # considered a variant of ä
+%   <<<Ã<ö # compat. for Swedish
+%   <<<Ö<<ő # considered a variant of ö
+%   <<<Ő<<õ # considered a variant of ö
+%   <<<Õ<<ô # while pronounced as å in French, it is used for some Swedish dialects for "thick ö"
+%   <<<Ô<<ǫ # variant from old Icelandic/old Norse of a vowel now pronounced like ö
+%   <<<Ǫ
+%  ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/se.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[A Á B C Č D Đ E É F G H I J K L M N Ŋ O P Q R S Š T Ŧ U V W X Y Z Ž Ø Æ Å Ä Ö]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
-collating-symbol <aring>
-collating-symbol <atilde>
-collating-symbol <acircumflex>
-collating-symbol <agrave>
-collating-symbol <aacute>
-collating-symbol <noae>
-collating-symbol <svae>
-collating-symbol <ccedilla>
-collating-symbol <ccaron>
+collating-symbol <a-acute>
+collating-symbol <c-caron>
 collating-symbol <ezh>
-collating-symbol <ezhcaron>
-collating-symbol <dstroke>
+collating-symbol <ezh-caron>
+collating-symbol <d-stroke>
 collating-symbol <eth>
-collating-symbol <fhook>
-collating-symbol <gcaron>
-collating-symbol <gstroke>
-collating-symbol <kcaron>
-collating-symbol <otilde>
-collating-symbol <oe>
-collating-symbol <ssharp>
-collating-symbol <scaron>
-collating-symbol <oumlaut>
-collating-symbol <oslash>
+collating-symbol <g-caron>
+collating-symbol <g-stroke>
+collating-symbol <k-caron>
+collating-symbol <eng>
+collating-symbol <t-stroke>
+collating-symbol <z-caron>
+collating-symbol <o-stroke>
+collating-symbol <ae>
+collating-symbol <a-ring>
+collating-symbol <a-diaeresis>
+collating-symbol <o-diaeresis>
 
-%
-reorder-after <CAP>
-<MIN>
-
-reorder-after <a>
-<agrave>
-<atilde>
-<aacute>
-<acircumflex>
-
-
-reorder-after <c>
-<ccaron>
-<ccedilla>
+reorder-after <BEFORE-B>
+<a-acute>
+reorder-after <BEFORE-D>
+<c-caron>
 <ezh>
-<ezhcaron>
-
-reorder-after <d>
-<dstroke>
-<eth>
-
-reorder-after <f>
-<fhook>
-
-reorder-after <g>
-<gcaron>
-<gstroke>
-
-reorder-after <k>
-<kcaron>
-
-reorder-after <s>
-<ssharp>
+<ezh-caron>
+reorder-after <BEFORE-E>
+<d-stroke>
+reorder-after <BEFORE-H>
+<g-caron>
+<g-stroke>
+reorder-after <BEFORE-L>
+<k-caron>
+reorder-after <BEFORE-O>
+<eng>
+reorder-after <BEFORE-T>
 <scaron>
+reorder-after <BEFORE-U>
+<t-stroke>
+reorder-after <AFTER-LATIN>
+<z-caron>
+<o-stroke>
+<ae>
+<a-ring>
+<a-diaeresis>
+<o-diaeresis>
 
-reorder-after <th>
-<noae>
-<oslash>
-<aring>
-<svae>
-<oumlaut>
+<U00E1> <a-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % á
+<U00C1> <a-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Á
+<U010D> <c-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % č
+<U010C> <c-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Č
+<U0292> <ezh>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ʒ
+<U01B7> <ezh>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ʒ
+<U01EF> <ezh-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ǯ
+<U01EE> <ezh-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ǯ
+<U0111> <d-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % đ
+<U0110> <d-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Đ
+<U00F0> <d-stroke>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ð
+<U00D0> <d-stroke>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ð
+<U01E7> <g-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ǧ
+<U01E6> <g-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ǧ
+<U01E5> <g-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ǥ
+<U01E4> <g-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ǥ
+<U01E9> <k-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ǩ
+<U01E8> <k-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ǩ
+<U014B> <eng>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ŋ
+<U014A> <eng>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ŋ
+<U0144> <eng>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ń
+<U0143> <eng>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ń
+<U00F1> <eng>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % ñ
+<U00D1> <eng>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Ñ
+<U0161> <scaron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % š
+<U0160> <scaron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Š
+<U0167> <t-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ŧ
+<U0166> <t-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ŧ
+<U00FE> <t-stroke>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % þ
+<U00DE> <t-stroke>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Þ
+% &y<<ü<<<Ü<<ű<<<Ű
+<U00DC> <S0079>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ü
+<U00FC> <S0079>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ü
+<U0170> <S0079>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Ű
+<U0171> <S0079>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % ű
 
-reorder-after <U0061>
-<U00E0> <agrave>;<GRA>;<MIN>;IGNORE % 201 à
-<U00E1> <aacute>;<ACA>;<MIN>;IGNORE % 200 á
-<U00E2> <acircumflex>;<CIR>;<MIN>;IGNORE % 202 â
-<U00E3> <atilde>;<TIL>;<MIN>;IGNORE % 203 ã
+<U017E> <z-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ž
+<U017D> <z-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ž
+<U00F8> <o-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ø
+<U00D8> <o-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ø
+<U0153> <o-stroke>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % œ
+<U0152> <o-stroke>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Œ
+<U00E6> <ae>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % æ
+<U00C6> <ae>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Æ
+<U00E5> <a-ring>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % å
+<U00C5> <a-ring>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Å
+<U0227> <a-ring>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ȧ
+<U0226> <a-ring>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ȧ
+<U00E4> <a-diaeresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ä
+<U00C4> <a-diaeresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ä
+<U00E3> <a-diaeresis>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ã
+<U00C3> <a-diaeresis>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ã
+<U00F6> <o-diaeresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ö
+<U00D6> <o-diaeresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ö
+<U0151> <o-diaeresis>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ő
+<U0150> <o-diaeresis>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ő
+<U00F5> <o-diaeresis>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % õ
+<U00D5> <o-diaeresis>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Õ
+<U00F4> <o-diaeresis>;"<BASE><VRNT3>";"<MIN><MIN>";IGNORE % ô
+<U00D4> <o-diaeresis>;"<BASE><VRNT3>";"<CAP><MIN>";IGNORE % Ô
+<U01EB> <o-diaeresis>;"<BASE><VRNT4>";"<MIN><MIN>";IGNORE % ǫ
+<U01EA> <o-diaeresis>;"<BASE><VRNT4>";"<CAP><MIN>";IGNORE % Ǫ
 
-reorder-after <U0041>
-<U00C0> <agrave>;<GRA>;<CAP>;IGNORE % 321 À
-<U00C1> <aacute>;<ACA>;<CAP>;IGNORE % 320 Á
-<U00C2> <acircumflex>;<CIR>;<CAP>;IGNORE % 322 Â
-<U00C3> <atilde>;<TIL>;<CAP>;IGNORE % 323 Ã
-
-reorder-after <U0063>
-<U00E7> <ccedilla>;<CDI>;<MIN>;IGNORE % 212 ç
-<U010D> <ccaron>;<CAR>;<MIN>;IGNORE % 215 <c<>
-
-reorder-after <U0043>
-<U00C7> <ccedilla>;<CDI>;<CAP>;IGNORE % 332 Ç
-<U010C> <ccaron>;<CAR>;<CAP>;IGNORE % 335 <C<>
-
-reorder-after <U010B>
-<U0292> <ezh>;<BAS>;<MIN>;IGNORE % ezh
-<U01EF> <ezhcaron>;<CAR>;<MIN>;IGNORE % ezh caron
-
-reorder-after <U010A>
-<U01B7> <ezh>;<BAS>;<MIN>;IGNORE % EZH
-<U01EE> <ezhcaron>;<CAR>;<CAP>;IGNORE % EZH caron
-
-reorder-after <U0064>
-<U00F0> <eth>;<PCL>;<MIN>;IGNORE % 218 ð
-<U0111> <dstroke>;<OBL>;<MIN>;IGNORE % 220 <d//>
-
-reorder-after <U0044>
-<U00D0> <eth>;<PCL>;<CAP>;IGNORE % 338 Ð
-<U0110> <dstroke>;<OBL>;<CAP>;IGNORE % 340 <D//>
-
-reorder-after <U0066>
-<U0192> <fhook>;<BAS>;<MIN>;IGNORE % f WITH HOOK
-
-reorder-after <U0123>
-<U01E7> <gcaron>;<CAR>;<MIN>;IGNORE % gcaron
-<U01E5> <gstroke>;<OBL>;<MIN>;IGNORE % gstroke
-
-reorder-after <U0122>
-<U01E6> <gcaron>;<CAR>;<MIN>;IGNORE % Gcaron
-<U01E4> <gstroke>;<OBL>;<MIN>;IGNORE % Gstroke
-
-reorder-after <U0137>
-<U01E9> <kcaron>;<CAR>;<MIN>;IGNORE % kcaron
-reorder-after <U0136>
-<U01E8> <kcaron>;<CAR>;<CAP>;IGNORE % Kcaron
-
-reorder-after <U0053>
-<U00DF> <ssharp>;"<LIG><LIG>";"<MIN><MIN>";IGNORE % ß
-<U0161> <scaron>;<CAR>;<MIN>;IGNORE % 288 <s<>
-<U0160> <scaron>;<CAR>;<CAP>;IGNORE % 405 <S<>
-
-
-reorder-after <U00E3>
-<U00E4> <svae>;<REU>;<MIN>;IGNORE % ä
-<U00E5> <aring>;<RNE>;<MIN>;IGNORE % å
-<U00E6> <noae>;<LIG>;<MIN>;IGNORE % æ
-reorder-after <U00F5>
-<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % ö
-<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % ø
-
-reorder-after <U00C3>
-<U00C4> <svae>;<REU>;<CAP>;IGNORE % Ä
-<U00C5> <aring>;<RNE>;<CAP>;IGNORE % Å
-<U00C6> <noae>;<LIG>;<CAP>;IGNORE % Æ
-reorder-after <U00D5>
-<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % Ö
-<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % Ø
-
-% ü/Ü is treated like y/Y but is sorted after the latter
-reorder-after <U00FB>
-<U00FC> <y>;<REU>;<MIN>;IGNORE % ü
-reorder-after <U00DB>
-<U00DC> <y>;<REU>;<CAP>;IGNORE % Ü
 reorder-end
 
 END LC_COLLATE

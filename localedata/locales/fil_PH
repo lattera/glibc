@@ -49,37 +49,42 @@ copy "tl_PH"
 END LC_CTYPE
 
 LC_COLLATE
+% CLDR collation rules for Filipino:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/fil.xml)
+%
+% <collation type="standard" references="http://std.dkuug.dk/jtc1/sc2/wg2/docs/N2300.htm (N2165)">
+% 	<cr><![CDATA[
+% 		&N<ñ<<<Ñ<ng<<<Ng<<<NG
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/fil.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N Ñ {Ng} O P Q R S T U V W X Y Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
 copy "iso14651_t1"
 
-% a b c d e f g h i j k l m n n~ ng o p q r s t u v w x y z
-
-collating-symbol  <n-g-ph>
-collating-element <N-G> from "<U004E><U0047>"
-collating-element <n-g> from "<U006E><U0067>"
-collating-element <N-g> from "<U004E><U0067>"
-collating-element <n-G> from "<U006E><U0047>"
 collating-symbol  <ntilde>
+collating-symbol  <ng-digraph>
+collating-element <ng> from "ng"
+collating-element <nG> from "nG"
+collating-element <Ng> from "Ng"
+collating-element <NG> from "NG"
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
-
-reorder-after <MIN>
-<MIN-CAP>
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <n>
+reorder-after <AFTER-N>
 <ntilde>
-<n-g-ph>
+<ng-digraph>
 
-reorder-after <U006E>
-<U00F1> <ntilde>;<TIL>;<MIN>;IGNORE
-<n-g>	<n-g-ph>;<PCT>;<MIN>;IGNORE
-<n-G>	<n-g-ph>;<PCT>;<MIN-CAP>;IGNORE
-reorder-after <U004E>
-<U00D1> <ntilde>;<TIL>;<CAP>;IGNORE
-<N-G>	<n-g-ph>;<PCT>;<CAP>;IGNORE
-<N-g>	<n-g-ph>;<PCT>;<CAP-MIN>;IGNORE
+<U00F1> <ntilde>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ñ
+<U00D1> <ntilde>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ñ
+<ng>	<ng-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<nG>	<ng-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<NG>	<ng-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<Ng>	<ng-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
 
 reorder-end
 

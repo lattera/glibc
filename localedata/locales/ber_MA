@@ -52,32 +52,30 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
-collating-symbol <TIF-GW>
-collating-symbol <TIF-KW>
+collating-symbol <tif-yag-labialization-mark>
+collating-symbol <tif-yak-labialization-mark>
 
-collating-element <TIF-G-W> from "<U2D33><U2D6F>"
-collating-element <TIF-K-W> from "<U2D3D><U2D6F>"
+collating-element <tif-yag-labialization-mark-element> from "<U2D33><U2D6F>"
+collating-element <tif-yak-labialization-mark-element> from "<U2D3D><U2D6F>"
 
-reorder-after <TIF-G>
-<TIF-GW>
-reorder-after <TIF-K>
-<TIF-KW>
-reorder-after <U2D33>
-<TIF-G-W> <TIF-GW>;<PCT>;<MIN>;IGNORE
-reorder-after <U2D37>
-<U2D35> "<TIF-D><TIF-J>";"<LIG><PCL>";"<MIN><MIN>";IGNORE
-<U2D36> "<TIF-D><TIF-J>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
-reorder-after <U2D3D>
-<TIF-K-W> <TIF-KW>;<PCT>;<MIN>;IGNORE
-reorder-after <U2D5C>
-<U2D5E> "<TIF-T><TIF-C>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+reorder-after <S2D33>
+<tif-yag-labialization-mark>
+reorder-after <S2D3D>
+<tif-yak-labialization-mark>
+
+<tif-yag-labialization-mark-element> <tif-yag-labialization-mark>;"<BASE>";<MIN>;IGNORE
+<U2D35> "<S2D37><S2D4A>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U2D36> "<S2D37><S2D4A>";"<BASE><VRNT2>";"<MIN><MIN>";IGNORE
+<tif-yak-labialization-mark-element> <tif-yak-labialization-mark>;"<BASE>";<MIN>;IGNORE
+<U2D5E> "<S2D5C><S2D5B>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
 reorder-end
 
+% “reorder-sections-after” unfortunately does not seem to work.
 % Moroccan sorting standard requires tifinagh to come
 % before latin script
-reorder-sections-after <SPECIAL>
-<TIFINAGH>
-reorder-sections-end
+%reorder-sections-after <SPECIAL>
+%<TIFINAGH>
+%reorder-sections-end
 END LC_COLLATE
 
 LC_CTYPE

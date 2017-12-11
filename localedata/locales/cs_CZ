@@ -142,6 +142,17 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
+% CLDR collation rules for Czech:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/cs.xml)
+%
+% &C<č<<<Č
+% &H<ch<<<cH<<<Ch<<<CH
+% &R<ř<<<Ř
+% &S<š<<<Š
+% &Z<ž<<<Ž
+%
+% The following rules implement the same order for glibc.
+
 collating-symbol <c-caron>
 collating-symbol <ch-digraph>
 collating-symbol <r-caron>
@@ -153,45 +164,45 @@ collating-element <c-H> from "cH"
 collating-element <C-h> from "Ch"
 collating-element <C-H> from "CH"
 
-reorder-after <c>
+reorder-after <AFTER-C>
 <c-caron>
-reorder-after <h>
+reorder-after <AFTER-H>
 <ch-digraph>
-reorder-after <r>
+reorder-after <AFTER-R>
 <r-caron>
-reorder-after <s>
+reorder-after <AFTER-S>
 <s-caron>
-reorder-after <z>
+reorder-after <AFTER-Z>
 <z-caron>
 
 % CLDR has 2 sort orders for Czech, "standard" which sorts the digits
 % before the letters and "digits-after" which sorts the digits after
 % the letters. The cs_CZ locale in glibc always sorted the digits after
 % the letters, so we keep that behaviour here:
-reorder-after <zh>
-<0>
-<1>
-<2>
-<3>
-<4>
-<5>
-<6>
-<7>
-<8>
-<9>
+reorder-after <AFTER-EZH>
+<S0030>
+<S0031>
+<S0032>
+<S0033>
+<S0034>
+<S0035>
+<S0036>
+<S0037>
+<S0038>
+<S0039>
 
-<U010D> <c-caron>;<BAS>;<MIN>;IGNORE % č
-<U010C> <c-caron>;<BAS>;<CAP>;IGNORE % Č
-<c-h> <ch-digraph>;"<BAS><BAS>";"<MIN><MIN>";IGNORE
-<c-H> <ch-digraph>;"<BAS><BAS>";"<MIN><CAP>";IGNORE
-<C-h> <ch-digraph>;"<BAS><BAS>";"<CAP><MIN>";IGNORE
-<C-H> <ch-digraph>;"<BAS><BAS>";"<CAP><CAP>";IGNORE
-<U0159> <r-caron>;<BAS>;<MIN>;IGNORE % ř
-<U0158> <r-caron>;<BAS>;<CAP>;IGNORE % Ř
-<U0161> <s-caron>;<BAS>;<MIN>;IGNORE % š
-<U0160> <s-caron>;<BAS>;<CAP>;IGNORE % Š
-<U017E> <z-caron>;<BAS>;<MIN>;IGNORE % ž
-<U017D> <z-caron>;<BAS>;<CAP>;IGNORE % Ž
+<U010D> <c-caron>;<BASE>;<MIN>;IGNORE % č
+<U010C> <c-caron>;<BASE>;<CAP>;IGNORE % Č
+<c-h> <ch-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<c-H> <ch-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<C-h> <ch-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<C-H> <ch-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U0159> <r-caron>;<BASE>;<MIN>;IGNORE % ř
+<U0158> <r-caron>;<BASE>;<CAP>;IGNORE % Ř
+<U0161> <s-caron>;<BASE>;<MIN>;IGNORE % š
+<U0160> <s-caron>;<BASE>;<CAP>;IGNORE % Š
+<U017E> <z-caron>;<BASE>;<MIN>;IGNORE % ž
+<U017D> <z-caron>;<BASE>;<CAP>;IGNORE % Ž
 
 reorder-end
 

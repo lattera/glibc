@@ -51,83 +51,77 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-
-% a b c c. d e f g. g gh/ h h/ i ie j k l m n o p q r s t u v w x y z. z
-
-% Copy the template from ISO/IEC 14651
+% CLDR collation rules for Maltese:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/mt.xml)
+%
+% <collation type="standard">
+%   <cr><![CDATA[
+% [caseFirst upper]  # DMS MSA 200:2009
+%
+% # This collation follows Maltese Standard DMS MSA 200:2009
+% # The document is available at:
+% #  <http://www.kunsilltalmalti.gov.mt/filebank/documents/2009-10-14%20MSA%20Specification%20for%20Maltese%20locale%20(abbozz%20finali).pdf>
+% # More information is available at: (search for "MSA 200")
+% #  <http://www.kunsilltalmalti.gov.mt/rizorsi>
+%
+% &[before 1]c<ċ<<<Ċ
+% &[before 1]g<ġ<<<Ġ
+% # DMS 200:2009 says that "għ" shall be treated as one letter.
+% &[before 1]h<għ<<<gĦ<<<Għ<<<GĦ
+% # DMS 200:2009 says that "ie" shall be treated as two letters: i + e.
+% &[before 1]i<ħ<<<Ħ
+% &[before 1]z<ż<<<Ż
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/mt.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[A B Ċ C D E F Ġ G {GĦ} H Ħ I {IE*} J K L M N O P Q R S T U V W X Y Ż Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
-collating-symbol <c.>
-collating-symbol <g.>
-collating-symbol <h->
-collating-symbol <z.>
+collating-symbol <c-dot-above>
+collating-symbol <g-dot-above>
+collating-symbol <h-stroke>
+collating-symbol <z-dot-above>
+collating-symbol  <g-h-stroke-digraph>
+collating-element <g-h-stroke> from "g<U0127>"
+collating-element <g-H-stroke> from "g<U0126>"
+collating-element <G-h-stroke> from "G<U0127>"
+collating-element <G-H-stroke> from "G<U0126>"
 
-collating-symbol  <g-h--mt>
-collating-element <G-H-> from "<U0047><U0126>"
-collating-element <g-h-> from "<U0067><U0127>"
-collating-element <G-h-> from "<U0047><U0127>"
-collating-element <g-H-> from "<U0067><U0126>"
+reorder-after <RES-1>
+<COMPATCAP>
+<CAP>
+<COMPAT>
+<MIN>
 
-collating-symbol  <i-e-mt>
-collating-element <I-E> from "<U0049><U0045>"
-collating-element <i-e> from "<U0069><U0065>"
-collating-element <I-e> from "<U0049><U0065>"
-collating-element <i-E> from "<U0069><U0045>"
+reorder-after <BEFORE-C>
+<c-dot-above>
+reorder-after <BEFORE-G>
+<g-dot-above>
+reorder-after <BEFORE-H>
+<g-h-stroke-digraph>
+reorder-after <BEFORE-I>
+<h-stroke>
+reorder-after <BEFORE-Z>
+<z-dot-above>
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
-
-reorder-after <MIN>
-<MIN-CAP>
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <c>
-<c.>
-reorder-after <f>
-<g.>
-reorder-after <g>
-<g-h--mt>
-reorder-after <h>
-<h->
-reorder-after <i>
-<i-e-mt>
-reorder-after <y>
-<z.>
-
-reorder-after <U0063>
-<U010B> <c.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0043>
-<U010A> <c.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0066>
-<U0121> <g.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0046>
-<U0120> <g.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0067>
-<g-h->  <g-h--mt>;<PCL>;<MIN>;IGNORE
-<g-H->  <g-h--mt>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0047>
-<G-H->  <g-h--mt>;<PCL>;<CAP>;IGNORE
-<G-h->  <g-h--mt>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0068>
-<U0127> <h->;<OBL>;<MIN>;IGNORE
-reorder-after <U0048>
-<U0126> <h->;<OBL>;<CAP>;IGNORE
-
-reorder-after <U0069>
-<i-e>  <i-e-mt>;<PCL>;<MIN>;IGNORE
-<i-E>  <i-e-mt>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0049>
-<I-E>  <i-e-mt>;<PCL>;<CAP>;IGNORE
-<I-e>  <i-e-mt>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0079>
-<U017C> <z.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0059>
-<U017B> <z.>;<PCT>;<CAP>;IGNORE
+<U010B>              <c-dot-above>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ċ
+<U010A>              <c-dot-above>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ċ
+<U0121>              <g-dot-above>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ġ
+<U0120>              <g-dot-above>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ġ
+<g-h-stroke>  <g-h-stroke-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<g-H-stroke>  <g-h-stroke-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<G-h-stroke>  <g-h-stroke-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<G-H-stroke>  <g-h-stroke-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U0127>                 <h-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ħ
+<U0126>                 <h-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ħ
+<U017C>              <z-dot-above>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ż
+<U017B>              <z-dot-above>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ż
 
 reorder-end
 

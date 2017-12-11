@@ -54,6 +54,20 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
+% CLDR collation rules for Polish:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/pl.xml)
+%
+% &A<ą<<<Ą
+% &C<ć<<<Ć
+% &E<ę<<<Ę
+% &L<ł<<<Ł
+% &N<ń<<<Ń
+% &O<ó<<<Ó
+% &S<ś<<<Ś
+% &Z<ź<<<Ź<ż<<<Ż
+%
+% The following rules implement the same order for glibc.
+
 collating-symbol <space>
 collating-symbol <a-ogonek>
 collating-symbol <c-acute>
@@ -68,44 +82,44 @@ collating-symbol <z-dot-above>
 reorder-after <RES-1>
 <space>
 
-reorder-after <a>
+reorder-after <AFTER-A>
 <a-ogonek>
-reorder-after <c>
+reorder-after <AFTER-C>
 <c-acute>
-reorder-after <e>
+reorder-after <AFTER-E>
 <e-ogonek>
-reorder-after <l>
+reorder-after <AFTER-L>
 <l-stroke>
-reorder-after <n>
+reorder-after <AFTER-N>
 <n-acute>
-reorder-after <o>
+reorder-after <AFTER-O>
 <o-acute>
-reorder-after <s>
+reorder-after <AFTER-S>
 <s-acute>
-reorder-after <z>
+reorder-after <AFTER-Z>
 <z-acute>
 <z-dot-above>
 
 <U0020> <space>;IGNORE;IGNORE;<U0020>
 <U00A0> <space>;IGNORE;IGNORE;<U00A0>
-<U0105> <a-ogonek>;<BAS>;<MIN>;IGNORE % ą
-<U0104> <a-ogonek>;<BAS>;<CAP>;IGNORE % Ą
-<U0107> <c-acute>;<BAS>;<MIN>;IGNORE % ć
-<U0106> <c-acute>;<BAS>;<CAP>;IGNORE % Ć
-<U0119> <e-ogonek>;<BAS>;<MIN>;IGNORE % ę
-<U0118> <e-ogonek>;<BAS>;<CAP>;IGNORE % Ę
-<U0142> <l-stroke>;<BAS>;<MIN>;IGNORE % ł
-<U0141> <l-stroke>;<BAS>;<CAP>;IGNORE % Ł
-<U0144> <n-acute>;<BAS>;<MIN>;IGNORE % ń
-<U0143> <n-acute>;<BAS>;<CAP>;IGNORE % Ń
-<U00F3> <o-acute>;<BAS>;<MIN>;IGNORE % ó
-<U00D3> <o-acute>;<BAS>;<CAP>;IGNORE % Ó
-<U015B> <s-acute>;<BAS>;<MIN>;IGNORE % ś
-<U015A> <s-acute>;<BAS>;<CAP>;IGNORE % Ś
-<U017A> <z-acute>;<BAS>;<MIN>;IGNORE % ź
-<U0179> <z-acute>;<BAS>;<CAP>;IGNORE % Ź
-<U017C> <z-dot-above>;<BAS>;<MIN>;IGNORE % ż
-<U017B> <z-dot-above>;<BAS>;<CAP>;IGNORE % Ż
+<U0105> <a-ogonek>;<BASE>;<MIN>;IGNORE % ą
+<U0104> <a-ogonek>;<BASE>;<CAP>;IGNORE % Ą
+<U0107> <c-acute>;<BASE>;<MIN>;IGNORE % ć
+<U0106> <c-acute>;<BASE>;<CAP>;IGNORE % Ć
+<U0119> <e-ogonek>;<BASE>;<MIN>;IGNORE % ę
+<U0118> <e-ogonek>;<BASE>;<CAP>;IGNORE % Ę
+<U0142> <l-stroke>;<BASE>;<MIN>;IGNORE % ł
+<U0141> <l-stroke>;<BASE>;<CAP>;IGNORE % Ł
+<U0144> <n-acute>;<BASE>;<MIN>;IGNORE % ń
+<U0143> <n-acute>;<BASE>;<CAP>;IGNORE % Ń
+<U00F3> <o-acute>;<BASE>;<MIN>;IGNORE % ó
+<U00D3> <o-acute>;<BASE>;<CAP>;IGNORE % Ó
+<U015B> <s-acute>;<BASE>;<MIN>;IGNORE % ś
+<U015A> <s-acute>;<BASE>;<CAP>;IGNORE % Ś
+<U017A> <z-acute>;<BASE>;<MIN>;IGNORE % ź
+<U0179> <z-acute>;<BASE>;<CAP>;IGNORE % Ź
+<U017C> <z-dot-above>;<BASE>;<MIN>;IGNORE % ż
+<U017B> <z-dot-above>;<BASE>;<CAP>;IGNORE % Ż
 
 reorder-end
 

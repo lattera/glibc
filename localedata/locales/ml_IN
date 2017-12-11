@@ -65,8 +65,164 @@ END LC_CTYPE
 %
 %
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
+% CLDR collation rules for Malayalam:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ml.xml)
+%
+% <collation type="standard" references="Sabdatharavali Malayalam Dictionary 23rd Ed. by Sahithya Pravarthaka Co-operative Society Ltd.">
+%   <cr><![CDATA[
+%     [reorder Mlym Latn Deva Arab Taml Knda Telu Beng Guru Gujr Orya Sinh]  # native speaker's special list
+%     #
+%     #  Avagraha and Visarga are primary ignorables.
+%     #
+%     &ഃ<<ഽ
+%     #
+%     #  Vowel sign AU ( ൌ) and AU length mark ( ൗ) need to differ
+%     #  only on secondary level, not primary.
+%     #
+%     &\u0D4C<<\u0D57
+%     #
+%     #  Pre-5.1 Chillus secondary equal to 5.1 chillus.
+%     #  Chillus primary equal to their consonant_dead form.
+%     #
+%     &ക്<<ക്\u200D<<<ൿ
+%     &ണ്<<ണ്\u200D<<<ൺ
+%     &ന്<<ന്\u200D<<<ൻ
+%     &ര്<<ര്\u200D<<<ർ
+%     &ല്<<ല്\u200D<<<ൽ
+%     &ള്<<ള്\u200D<<<ൾ
+%     #
+%     #  Anuswara primary equal to MA_dead.
+%     #
+%     &മ്<<ം
+%     #
+%     #  /nta/ is sorted as <NA, Virama, RRA>.
+%     #
+%     &ന്<<<ൻ്
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/ml.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[അ ആ ഇ ഈ ഉ ഊ ഋ എ ഏ ഐ ഒ ഓ ഔ ക ഖ ഗ ഘ ങ ച ഛ ജ ഝ ഞ ട ഠ ഡ ഢ ണ ത ഥ ദ ധ ന പ ഫ ബ ഭ മ യ ര ല വ ശ ഷ സ ഹ ള ഴ റ]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
+%     &ക്<<ക്\u200D<<<ൿ
+collating-element <e0d15-0d4d> from "<U0D15><U0D4D>"
+collating-symbol <s0d15-0d4d>
+collating-element <e0d15-0d4d-200d> from "<U0D15><U0D4D><U200D>"
+collating-symbol <s0d15-0d4d-200d>
+%     &ണ്<<ണ്\u200D<<<ൺ
+collating-element <e0d23-0d4d> from "<U0D23><U0D4D>"
+collating-symbol <s0d23-0d4d>
+collating-element <e0d23-0d4d-200d> from "<U0D23><U0D4D><U200D>"
+collating-symbol <s0d23-0d4d-200d>
+%     &ന്<sന്\u200D<<<ൻ
+collating-element <e0d28-0d4d> from "<U0D28><U0D4D>"
+collating-symbol <s0d28-0d4d>
+collating-element <e0d28-0d4d-200d> from "<U0D28><U0D4D><U200D>"
+collating-symbol <s0d28-0d4d-200d>
+%     &ര്<<ര്\u200D<<<ർ
+collating-element <e0d30-0d4d> from "<U0D30><U0D4D>"
+collating-symbol <s0d30-0d4d>
+collating-element <e0d30-0d4d-200d> from "<U0D30><U0D4D><U200D>"
+collating-symbol <s0d30-0d4d-200d>
+%     &ല്<<ല്\u200D<<<ൽ
+collating-element <e0d32-0d4d> from "<U0D32><U0D4D>"
+collating-symbol <s0d32-0d4d>
+collating-element <e0d32-0d4d-200d> from "<U0D32><U0D4D><U200D>"
+collating-symbol <s0d32-0d4d-200d>
+%     &ള്<<ള്\u200D<<<ൾ
+collating-element <e0d33-0d4d> from "<U0D33><U0D4D>"
+collating-symbol <s0d33-0d4d>
+collating-element <e0d33-0d4d-200d> from "<U0D33><U0D4D><U200D>"
+collating-symbol <s0d33-0d4d-200d>
+%     #
+%     #  Anuswara primary equal to MA_dead.
+%     #
+%     &മ്<<ം
+collating-element <e0d2e-0d4d> from "<U0D2e><U0D4D>"
+collating-symbol <s0d2e-0d4d>
+%     #
+%     #  /nta/ is sorted as <NA, Virama, RRA>.
+%     #
+%     &ന്<<<ൻ്
+% already defined:
+% collating-element <e0d28-0d4d> from "<U0D28><U0D4D>"
+% already defined:
+% collating-symbol <s0d28-0d4d>
+collating-element <e0d7b-0d4d> from "<U0D7B><U0D4D>"
+collating-symbol <s0d7b-0d4d>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Finished defining collating-elements and collating-symbols
+%
+% One dummy reorder-after statement here to avoid a syntax error
+% because the first rule reordering stuff starts without a reorder-after:
+collating-symbol <dummy>
+reorder-after <AFTER-A>
+<dummy>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% # Avagraha and Visarga are primary ignorables.
+% &ഃ<<ഽ
+<U0D03> IGNORE;<VISARGA>;<MIN>;<U0D03> % MALAYALAM SIGN VISARGA
+<U0D3D> IGNORE;<VRNT1>;<MIN>;<U0D3D> % MALAYALAM SIGN AVAGRAHA
+% #  Vowel sign AU ( ൌ) and AU length mark ( ൗ) need to differ
+% #  only on secondary level, not primary.
+% #
+% &\u0D4C<<\u0D57
+<U0D4C> <S0D4C>;<BASE>;<MIN>;<U0D4C> % MALAYALAM VOWEL SIGN AU
+<U0D57> <S0D4C>;<VRNT1>;<MIN>;<U0D57> % MALAYALAM AU LENGTH MARK
+% &ക്<<ക്\u200D<<<ൿ
+<e0d15-0d4d>      "<S0D15><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<e0d15-0d4d-200d> "<S0D15><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U0D7F>           "<S0D15><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7F>
+% &ണ്<<ണ്\u200D<<<ൺ
+<e0d23-0d4d>      "<S0D23><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<e0d23-0d4d-200d> "<S0D23><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U0D7A>           "<S0D23><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7A>
+% &ന്<<ന്\u200D<<<ൻ
+<e0d28-0d4d>      "<S0D28><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE % ന്
+<e0d28-0d4d-200d> "<S0D28><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ന്‍
+<U0D7B>           "<S0D28><S0D4D>";"<BASE><VRNT1>";"<COMPATCAP><COMPATCAP>";<U0D7B> % ൻ
+% &ര്<<ര്\u200D<<<ർ
+<e0d30-0d4d>      "<S0D30><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<e0d30-0d4d-200d> "<S0D30><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U0D7C>           "<S0D30><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7C> % ർ
+% &ല്<<ല്\u200D<<<ൽ
+<e0d32-0d4d>      "<S0D32><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<e0d32-0d4d-200d> "<S0D32><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U0D7D>           "<S0D32><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7D>
+% &ള്<<ള്\u200D<<<ൾ
+<e0d33-0d4d>      "<S0D33><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<e0d33-0d4d-200d> "<S0D33><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
+<U0D7E>           "<S0D33><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7E>
+% #
+% #  Anuswara primary equal to MA_dead.
+% #
+% &മ്<<ം
+<e0d2e-0d4d> "<S0D2E><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";IGNORE % മ്
+<U0D02>      "<S0D2E><S0D4D>";"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % MALAYALAM SIGN ANUSVARA
+% #
+% #  /nta/ is sorted as <NA, Virama, RRA>.
+% #
+% &ന്<<<ൻ്
+%
+% It looks to me that the above line
+% is a contradiction to the earlier rule: &ന്<<ന്\u200D<<<ൻ
+% I experimented with libicu to see how libicu sorts given these rules.
+% And the end result seems to be the same as if the above two rules had been
+% combined in a rule like this:
+%
+%  &ന്<<ന്\u200D<<<ൻ്<<<ൻ
+%
+% So I write the glibc rules to reproduce that behaviour.
+<e0d28-0d4d> "<S0D28><S0D4D>";"<BASE><BASE>";"<MIN><MIN>";<U0D28> % ന്
+<e0d7b-0d4d> "<S0D28><S0D4D>";"<BASE><VRNT1>";"<COMPAT><COMPAT>";<U0D7B> % ൻ്
+
+reorder-end
+
 END LC_COLLATE
 %
 LC_MONETARY

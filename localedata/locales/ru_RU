@@ -51,21 +51,17 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% CLDR collation rules for Russian:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ru.xml)
+%
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		[reorder Cyrl]
+% 		# The root collation already sorts й/Й as a base letter.
+% 	]]></cr>
+% </collation>
+%
 copy "iso14651_t1"
-
-% iso14651_t1 is missing Ukrainian ghe
-collating-symbol <UKR-GHE>
-
-reorder-after <CYR-GZHE>
-<UKR-GHE>
-
-reorder-after <U0453>
-<U0491> <UKR-GHE>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0403>
-<U0490> <UKR-GHE>;<BAS>;<CAP>;IGNORE
-
-reorder-end
 END LC_COLLATE
 
 LC_CTYPE

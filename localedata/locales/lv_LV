@@ -56,6 +56,21 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
+% CLDR collation rules for Latvian:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/lv.xml)
+%
+% &[before 1]D<č<<<Č
+% &[before 1]H<ģ<<<Ģ
+% &I<<y<<<Y
+% &[before 1]L<ķ<<<Ķ
+% &[before 1]M<ļ<<<Ļ
+% &[before 1]O<ņ<<<Ņ
+% &[before 1]S<ŗ<<<Ŗ
+% &[before 1]T<š<<<Š
+% &[before 1]Ʒ<ž<<<Ž
+%
+% The following rules implement the same order for glibc.
+
 collating-symbol <c-caron>
 collating-symbol <g-cedilla>
 collating-symbol <k-cedilla>
@@ -65,41 +80,41 @@ collating-symbol <r-cedilla>
 collating-symbol <s-caron>
 collating-symbol <z-caron>
 
-reorder-after <c>
+reorder-after <BEFORE-D>
 <c-caron>
-reorder-after <g>
+reorder-after <BEFORE-H>
 <g-cedilla>
-reorder-after <k>
+reorder-after <BEFORE-L>
 <k-cedilla>
-reorder-after <l>
+reorder-after <BEFORE-M>
 <l-cedilla>
-reorder-after <n>
+reorder-after <BEFORE-O>
 <n-cedilla>
-reorder-after <r>
+reorder-after <BEFORE-S>
 <r-cedilla>
-reorder-after <s>
+reorder-after <BEFORE-T>
 <s-caron>
-reorder-after <z>
+reorder-after <BEFORE-EZH>
 <z-caron>
 
-<U010D> <c-caron>;<BAS>;<MIN>;IGNORE % č
-<U010C> <c-caron>;<BAS>;<CAP>;IGNORE % Č
-<U0123> <g-cedilla>;<BAS>;<MIN>;IGNORE % ģ
-<U0122> <g-cedilla>;<BAS>;<CAP>;IGNORE % Ģ
-<U0079> <i>;<PCL>;<MIN>;IGNORE % y
-<U0059> <i>;<PCL>;<CAP>;IGNORE % Y
-<U0137> <k-cedilla>;<BAS>;<MIN>;IGNORE % ķ
-<U0136> <k-cedilla>;<BAS>;<CAP>;IGNORE % Ķ
-<U013C> <l-cedilla>;<BAS>;<MIN>;IGNORE % ļ
-<U013B> <l-cedilla>;<BAS>;<CAP>;IGNORE % Ļ
-<U0146> <n-cedilla>;<BAS>;<MIN>;IGNORE % ņ
-<U0145> <n-cedilla>;<BAS>;<CAP>;IGNORE % Ņ
-<U0157> <r-cedilla>;<BAS>;<MIN>;IGNORE % ŗ
-<U0156> <r-cedilla>;<BAS>;<CAP>;IGNORE % Ŗ
-<U0161> <s-caron>;<BAS>;<MIN>;IGNORE % š
-<U0160> <s-caron>;<BAS>;<CAP>;IGNORE % Š
-<U017E> <z-caron>;<BAS>;<MIN>;IGNORE % ž
-<U017D> <z-caron>;<BAS>;<CAP>;IGNORE % Ž
+<U010D> <c-caron>;<BASE>;<MIN>;IGNORE % č
+<U010C> <c-caron>;<BASE>;<CAP>;IGNORE % Č
+<U0123> <g-cedilla>;<BASE>;<MIN>;IGNORE % ģ
+<U0122> <g-cedilla>;<BASE>;<CAP>;IGNORE % Ģ
+<U0079> <S0069>;<LOWLINE>;<MIN>;IGNORE % y
+<U0059> <S0069>;<LOWLINE>;<CAP>;IGNORE % Y
+<U0137> <k-cedilla>;<BASE>;<MIN>;IGNORE % ķ
+<U0136> <k-cedilla>;<BASE>;<CAP>;IGNORE % Ķ
+<U013C> <l-cedilla>;<BASE>;<MIN>;IGNORE % ļ
+<U013B> <l-cedilla>;<BASE>;<CAP>;IGNORE % Ļ
+<U0146> <n-cedilla>;<BASE>;<MIN>;IGNORE % ņ
+<U0145> <n-cedilla>;<BASE>;<CAP>;IGNORE % Ņ
+<U0157> <r-cedilla>;<BASE>;<MIN>;IGNORE % ŗ
+<U0156> <r-cedilla>;<BASE>;<CAP>;IGNORE % Ŗ
+<U0161> <s-caron>;<BASE>;<MIN>;IGNORE % š
+<U0160> <s-caron>;<BASE>;<CAP>;IGNORE % Š
+<U017E> <z-caron>;<BASE>;<MIN>;IGNORE % ž
+<U017D> <z-caron>;<BASE>;<CAP>;IGNORE % Ž
 
 reorder-end
 

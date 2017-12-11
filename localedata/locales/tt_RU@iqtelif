@@ -54,19 +54,9 @@ LC_COLLATE
 % <i> (dotless i), <i.> (i with dot), <i'>, <j>, <k>, <l>, <m>, <n>, <n?>, <o>,
 % <o:>, <p>, <q>, <r>, <s>, <s,>, <t>, <u>, <u:>, <v>, <w>, <x>, <y>, <z>
 
+% The crh_UA locale already does all of the above correctly in LC_COLLATE
+% just copy it:
 copy "crh_UA"
-
-collating-symbol <i'>
-
-reorder-after <i.>
-<i'>
-
-reorder-after <U0069>
-<U00ED> <i'>;<ACA>;<MIN>;IGNORE
-reorder-after <U0130>
-<U00CD> <i'>;<ACA>;<CAP>;IGNORE
-
-reorder-end
 
 END LC_COLLATE
 

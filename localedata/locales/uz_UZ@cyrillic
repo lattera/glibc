@@ -145,56 +145,12 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-copy "iso14651_t1"
-%% a b c d e f g g' h i j k l m n o o' p q r s t u v x y z
-%% cyr: a=, b=, v=, g=, d=, e=, io, z%, z=, i=, j=, k=, l=, m=, n=, o=,
-%%	p=, r=, s=, t=, u=, f=, h=, c=, c%, s%, sc, =' , y=, je, ju, ja,
-%%	v%, k,=, g-=, h,=
-collating-symbol  <g-'-uz>
-collating-element <g-'> from "<U0067><U0027>"
-collating-element <G-'> from "<U0047><U0027>"
-collating-symbol  <o-'-uz>
-collating-element <o-'> from "<U006F><U0027>"
-collating-element <O-'> from "<U004F><U0027>"
-
-collating-symbol <k,=>
-collating-symbol <g-=>
-collating-symbol <h,=>
-
-reorder-after <g>
-<g-'-uz>
-reorder-after <o>
-<o-'-uz>
-reorder-after <CYR-YA>
-<CYR-OUBRE>
-<k,=>
-<g-=>
-<h,=>
-
-reorder-after <U0067>
-<g-'>	<g-'-uz>;<PCL>;<MIN>;IGNORE
-reorder-after <U0047>
-<G-'>	<g-'-uz>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U006F>
-<o-'>	<o-'-uz>;<PCL>;<MIN>;IGNORE
-reorder-after <U004F>
-<O-'>	<o-'-uz>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U044F>
-<U045E> <CYR-OUBRE>;<PCL>;<MIN>;IGNORE
-<U049B> <k,=>;<PCL>;<MIN>;IGNORE
-<U0493> <g-=>;<PCL>;<MIN>;IGNORE
-<U04B3> <h,=>;<PCL>;<MIN>;IGNORE
-
-reorder-after <U042F>
-<U040E> <CYR-OUBRE>;<PCL>;<CAP>;IGNORE
-<U049A> <k,=>;<PCL>;<CAP>;IGNORE
-<U0492> <g-=>;<PCL>;<CAP>;IGNORE
-<U04B2> <h,=>;<PCL>;<CAP>;IGNORE
-
-reorder-end
-
+% There is no information about collation for Uzbek written in Cyrillic in CLDR.
+%
+% The collation rules which were here were exactly the same as in the
+% uz_UZ (Latin) locale though. Therefore just copy the new rules
+% from this locale.
+copy "uz_UZ"
 END LC_COLLATE
 
 LC_MONETARY

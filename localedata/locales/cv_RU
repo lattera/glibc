@@ -50,54 +50,49 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% There is no collation information for Chuvash in CLDR.
+%
+% According to https://en.wikipedia.org/wiki/Chuvash_language
+% the writing system is Cyrillic.
+%
+% But our Chuvash locale here seems to use the Latin Alphabet ...
+%
+% I just adapt the collation rules which I found here to the
+% updated iso14651_t1_common file.
 copy "iso14651_t1"
 
 % The Chuvash alphabet has the following letters, ordered as below:
-% a a( c e e( h i j k l m n p r s< s s, t u u: v y
+% a ă c e ĕ h i j k l m n p r š s ş t u ü v y
 
-collating-symbol <a(>
-collating-symbol <e(>
-collating-symbol <s<>
-collating-symbol <s,>
+collating-symbol <a-breve>
+collating-symbol <e-breve>
+collating-symbol <s-caron>
+collating-symbol <s-cedilla>
 collating-symbol <u-diaerisis>
 
-reorder-after <a>
-<a(>
-reorder-after <e>
-<e(>
-reorder-after <r>
-<s<>
-reorder-after <s>
-<s,>
-reorder-after <u>
+reorder-after <AFTER-A>
+<a-breve>
+reorder-after <AFTER-E>
+<e-breve>
+reorder-after <AFTER-R>
+<s-caron>
+reorder-after <AFTER-S>
+<s-cedilla>
+reorder-after <AFTER-U>
 <u-diaerisis>
 
-reorder-after <U0061>
-<U0103> <a(>;<BRE>;<MIN>;IGNORE
-reorder-after <U0041>
-<U0102> <a(>;<BRE>;<CAP>;IGNORE
-
-reorder-after <U0065>
-<U0115> <e(>;<BRE>;<MIN>;IGNORE
-reorder-after <U0045>
-<U0114> <e(>;<BRE>;<CAP>;IGNORE
-
-reorder-after <U0072>
-<U0161> <s<>;<CAR>;<MIN>;IGNORE
-reorder-after <U0053>
-<U0160> <s<>;<CAR>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<U0219> <s,>;<CDI>;<MIN>;IGNORE
-<U015F> <s,>;<CDI>;<MIN>;IGNORE
-reorder-after <U0053>
-<U0218> <s,>;<CDI>;<CAP>;IGNORE
-<U015E> <s,>;<CDI>;<CAP>;IGNORE
-
-reorder-after <U0074>
-<U00FC> <u-diaerisis>;<BAS>;<MIN>;IGNORE
-reorder-after <U0055>
-<U00DC> <u-diaerisis>;<BAS>;<CAP>;IGNORE
+<U0103>     <a-breve>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ă
+<U0102>     <a-breve>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ă
+<U0115>     <e-breve>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ĕ
+<U0114>     <e-breve>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ĕ
+<U0161>     <s-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % š
+<U0160>     <s-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Š
+<U015F>   <s-cedilla>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ş
+<U015E>   <s-cedilla>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ş
+<U0219>   <s-cedilla>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ș
+<U0218>   <s-cedilla>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ș
+<U00FC> <u-diaerisis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ü
+<U00DC> <u-diaerisis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ü
 
 reorder-end
 

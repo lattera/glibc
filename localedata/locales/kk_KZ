@@ -51,103 +51,45 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% CLDR collation rules for Kazakh:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/kk.xml)
+%
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		[reorder Cyrl]
+% 		# The root collation already sorts й/Й as a base letter.
+% 		&Е<ё<<<Ё
+% 		&Ұ<ү<<<Ү
+% 		&[before 1]ь<і<<<І
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/kk.xml)
+%
+% <exemplarCharacters type="index">[А Ә Б В Г Ғ Д Е Ё Ж З И Й К Қ Л М Н Ң О Ө П Р С Т У Ұ Ү Ф Х Һ Ц Ч Ш Щ Ъ Ы І Ь Э Ю Я]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
-% iso14651_t1 is missing Ukrainian ghe
-collating-symbol <UKR-GHE>
-collating-symbol <CYR-SCHWA>
-collating-symbol <CYR-GHE-WITH-STROKE>
-collating-symbol <CYR-KA-WITH-DESCENDER>
-collating-symbol <CYR-EN-WITH-DESCENDER>
-collating-symbol <CYR-BARRED-O>
-collating-symbol <CYR-STRAIGHT-U-WITH-STROKE>
-collating-symbol <CYR-STRAIGHT-U>
-collating-symbol <CYR-SHHA>
-collating-symbol <CYR-BEL-UKR-I>
+collating-symbol <io>
+collating-symbol <straight-u>
+collating-symbol <i>
 
-reorder-after <CYR-GZHE>
-<UKR-GHE>
+reorder-after <S0435> % CYRILLIC SMALL LETTER IE
+<io>
+reorder-after <S04B1> % CYRILLIC SMALL LETTER STRAIGHT U WITH STROKE
+<straight-u>
+reorder-after <S044B> % CYRILLIC SMALL LETTER YERU
+<i>
 
-reorder-after <U0453>
-<U0491> <UKR-GHE>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0403>
-<U0490> <UKR-GHE>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-A>
-<CYR-SCHWA>
-
-reorder-after <U0430>
-<U04D9> <CYR-SCHWA>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0410>
-<U04D8> <CYR-SCHWA>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-GHE>
-<CYR-GHE-WITH-STROKE>
-
-reorder-after <U0433>
-<U0493> <CYR-GHE-WITH-STROKE>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0413>
-<U0492> <CYR-GHE-WITH-STROKE>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-KA>
-<CYR-KA-WITH-DESCENDER>
-
-reorder-after <U043A>
-<U049B> <CYR-KA-WITH-DESCENDER>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U041A>
-<U049A> <CYR-KA-WITH-DESCENDER>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-EN>
-<CYR-EN-WITH-DESCENDER>
-
-reorder-after <U043D>
-<U04A3> <CYR-EN-WITH-DESCENDER>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U041D>
-<U04A2> <CYR-EN-WITH-DESCENDER>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-O>
-<CYR-BARRED-O>
-
-reorder-after <U043E>
-<U04E9> <CYR-BARRED-O>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U041E>
-<U04E8> <CYR-BARRED-O>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-OU>
-<CYR-STRAIGHT-U-WITH-STROKE>
-<CYR-STRAIGHT-U>
-
-reorder-after <U0443>
-<U04B1> <CYR-STRAIGHT-U-WITH-STROKE>;<BAS>;<MIN>;IGNORE
-<U04AF> <CYR-STRAIGHT-U>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0423>
-<U04B0> <CYR-STRAIGHT-U-WITH-STROKE>;<BAS>;<CAP>;IGNORE
-<U04AE> <CYR-STRAIGHT-U>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-HA>
-<CYR-SHHA>
-
-reorder-after <U0445>
-<U04BB> <CYR-SHHA>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0425>
-<U04BA> <CYR-SHHA>;<BAS>;<CAP>;IGNORE
-
-reorder-after <CYR-YEROU>
-<CYR-BEL-UKR-I>
-
-reorder-after <U044B>
-<U0456> <CYR-BEL-UKR-I>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U042B>
-<U0406> <CYR-BEL-UKR-I>;<BAS>;<CAP>;IGNORE
+<U0451>                <io>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ё
+<U0401>                <io>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ё
+<U04AF>        <straight-u>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ү
+<U04AE>        <straight-u>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ү
+<U0456>                 <i>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % і
+<U0406>                 <i>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % І
 
 reorder-end
 END LC_COLLATE

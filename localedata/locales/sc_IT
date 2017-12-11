@@ -47,17 +47,18 @@ copy "it_IT"
 END LC_CTYPE
 
 LC_COLLATE
+% There is no collation information for Sardinian in CLDR.
+%
+% We implement only this rule here: &C<ç<<<Ç
 copy "iso14651_t1"
 
-collating-symbol <c,>
+collating-symbol <c-cedilla>
 
-reorder-after <c>
-<c,>
+reorder-after <AFTER-C>
+<c-cedilla>
 
-reorder-after <U0063>
-<U00E7> <c,>;<CDI>;<MIN>;IGNORE
-reorder-after <U0043>
-<U00C7> <c,>;<CDI>;<CAP>;IGNORE
+<U00E7> <c-cedilla>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ç
+<U00C7> <c-cedilla>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ç
 
 reorder-end
 

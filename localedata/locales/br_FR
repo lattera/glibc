@@ -49,43 +49,40 @@ END LC_IDENTIFICATION
 
 
 LC_COLLATE
+%% a b c ch c'h d e f g h i j k l m n o p q r s t u v w x y z
+%
+% No collation information is available for this language in CLDR.
+%
+% We use the following at the moment:
+%
+% &c<ch<<<cH<<<Ch<<<CH<c'h<<<c'H<<<C'h<<<C'H
+%
+
 copy "iso14651_t1"
 
-%% a b c ch c'h d e f g h i j k l m n o p q r s t u v w x y z
 collating-symbol  <c-h-br>
-collating-element <C-H> from "<U0043><U0048>"
-collating-element <c-h> from "<U0063><U0068>"
-collating-element <C-h> from "<U0043><U0068>"
-collating-element <c-H> from "<U0063><U0048>"
+collating-element <c-h> from "ch"
+collating-element <c-H> from "cH"
+collating-element <C-h> from "Ch"
+collating-element <C-H> from "CH"
 collating-symbol  <c-'-h-br>
-collating-element <C'H> from "<U0043><U0027><U0048>"
-collating-element <c'h> from "<U0063><U0027><U0068>"
-collating-element <C'h> from "<U0043><U0027><U0068>"
-collating-element <c'H> from "<U0063><U0027><U0048>"
+collating-element <c'h> from "c'h"
+collating-element <c'H> from "c'H"
+collating-element <C'h> from "C'h"
+collating-element <C'H> from "C'H"
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
-
-reorder-after <MIN>
-<MIN-CAP>
-
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <c>
+reorder-after <AFTER-C>
 <c-h-br>
 <c-'-h-br>
 
-reorder-after <U0063>
-<c-h>	<c-h-br>;<PCT>;<MIN>;IGNORE
-<c-H>	<c-h-br>;<PCT>;<MIN-CAP>;IGNORE
-<c'h>	<c-'-h-br>;<PCT>;<MIN>;IGNORE
-<c'H>	<c-'-h-br>;<PCT>;<MIN-CAP>;IGNORE
-reorder-after <U0043>
-<C-H>	<c-h-br>;<PCT>;<CAP>;IGNORE
-<C-h>	<c-h-br>;<PCT>;<CAP-MIN>;IGNORE
-<C'H>	<c-'-h-br>;<PCT>;<CAP>;IGNORE
-<C'h>	<c-'-h-br>;<PCT>;<CAP-MIN>;IGNORE
+<c-h>	<c-h-br>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<c-H>	<c-h-br>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<C-h>	<c-h-br>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<C-H>	<c-h-br>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<c'h>	<c-'-h-br>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<c'H>	<c-'-h-br>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<C'h>	<c-'-h-br>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<C'H>	<c-'-h-br>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
 
 reorder-end
 

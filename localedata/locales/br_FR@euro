@@ -46,8 +46,7 @@ copy "br_FR"
 END LC_CTYPE
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
-copy "iso14651_t1"
+copy "br_FR"
 END LC_COLLATE
 
 LC_MESSAGES

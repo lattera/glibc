@@ -61,167 +61,91 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
+% CLDR collation rules for Vietnamese:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/vi.xml)
+%
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		[normalization on]
+% 		&̀<<̉<<̃<<́<<̣
+% 		&a<ă<<<Ă<â<<<Â
+% 		&d<đ<<<Đ
+% 		&e<ê<<<Ê
+% 		&o<ô<<<Ô<ơ<<<Ơ
+% 		&u<ư<<<Ư
+% 	]]></cr>
+% </collation>
+% <collation type="traditional">
+% 	<cr><![CDATA[
+% 		[normalization on]
+% 		&̀<<̉<<̃<<́<<̣
+% 		&a<ă<<<Ă<â<<<Â
+% 		&C<ch<<<Ch<<<CH
+% 		&d<đ<<<Đ
+% 		&e<ê<<<Ê
+% 		&G<gh<<<Gh<<<GH<gi<<<Gi<<<GI
+% 		&K<kh<<<Kh<<<KH
+% 		&N<nh<<<Nh<<<NH<ng<<<Ng<<<NG<ngh<<<Ngh<<<NGh<<<NGH
+% 		&o<ô<<<Ô<ơ<<<Ơ
+% 		&P<ph<<<Ph<<<PH
+% 		&Q<qu<<<Qu<<<QU
+% 		&T<th<<<Th<<<TH<tr<<<Tr<<<TR
+% 		&u<ư<<<Ư
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/vi.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[A Ă Â B C D Đ E Ê F G H I J K L M N O Ô Ơ P Q R S T U Ư V W X Y Z]</exemplarCharacters>
+%
+% The following rules implement the “standard” order for glibc.
+
 copy "iso14651_t1"
 
-% A( A^ E^ O+ U+ DD are treatead as base letters
-% ordering of accents is: grave, hook, tilde, acute, dot below
-% a a( a> b c d d/ e e> f g h i j k l m n o o+ p q r s t u u+ v w x y z
+collating-symbol <a-breve>
+collating-symbol <a-circumflex>
+collating-symbol <d-stroke>
+collating-symbol <e-circumflex>
+collating-symbol <o-circumflex>
+collating-symbol <o-horn>
+collating-symbol <u-horn>
 
-collating-symbol <a(>
-collating-symbol <a/>>
-collating-symbol <d//>
-collating-symbol <e/>>
-collating-symbol <o/>>
-collating-symbol <o9>
-collating-symbol <u9>
+reorder-after <BASE>
+<GRAVE> % COMBINING GRAVE ACCENT
+<CROOK> % COMBINING HOOK ABOVE
+<TILDE>  % COMBINING TILDE
+<AIGUT>  % COMBINING ACUTE ACCENT
+<POINS>  % COMBINING DOT BELOW
 
-reorder-after <BAS>
-<GRA>
-<HOK>
-<TIL>
-<ACA>
-<PCT>
+reorder-after <AFTER-A>
+<a-breve>
+<a-circumflex>
+reorder-after <AFTER-D>
+<d-stroke>
+reorder-after <AFTER-E>
+<e-circumflex>
+reorder-after <AFTER-O>
+<o-circumflex>
+<o-horn>
+reorder-after <AFTER-U>
+<u-horn>
 
-reorder-after <a>
-<a(>
-<a/>>
-reorder-after <d>
-<d//>
-reorder-after <e>
-<e/>>
-reorder-after <o>
-<o/>>
-<o9>
-reorder-after <u>
-<u9>
-
-reorder-after <U0061>
-<U1EA3> <a>;<HOK>;<MIN>;IGNORE
-<U1EA1> <a>;<PCT>;<MIN>;IGNORE
-<U0103> <a(>;<BAS>;<MIN>;IGNORE
-<U1EB1> <a(>;<GRA>;<MIN>;IGNORE
-<U1EB3> <a(>;<HOK>;<MIN>;IGNORE
-<U1EB5> <a(>;<TIL>;<MIN>;IGNORE
-<U1EAF> <a(>;<ACA>;<MIN>;IGNORE
-<U1EB7> <a(>;<PCT>;<MIN>;IGNORE
-<U00E2> <a/>>;<BAS>;<MIN>;IGNORE
-<U1EA7> <a/>>;<GRA>;<MIN>;IGNORE
-<U1EA9> <a/>>;<HOK>;<MIN>;IGNORE
-<U1EAB> <a/>>;<TIL>;<MIN>;IGNORE
-<U1EA5> <a/>>;<ACA>;<MIN>;IGNORE
-<U1EAD> <a/>>;<PCT>;<MIN>;IGNORE
-reorder-after <U0041>
-<U1EA2> <a>;<HOK>;<CAP>;IGNORE
-<U1EA0> <a>;<PCT>;<CAP>;IGNORE
-<U0102> <a(>;<BAS>;<CAP>;IGNORE
-<U1EB0> <a(>;<GRA>;<CAP>;IGNORE
-<U1EB2> <a(>;<HOK>;<CAP>;IGNORE
-<U1EB4> <a(>;<TIL>;<CAP>;IGNORE
-<U1EAE> <a(>;<ACA>;<CAP>;IGNORE
-<U1EB6> <a(>;<PCT>;<CAP>;IGNORE
-<U00C2> <a/>>;<BAS>;<CAP>;IGNORE
-<U1EA6> <a/>>;<GRA>;<CAP>;IGNORE
-<U1EA8> <a/>>;<HOK>;<CAP>;IGNORE
-<U1EAA> <a/>>;<TIL>;<CAP>;IGNORE
-<U1EA4> <a/>>;<ACA>;<CAP>;IGNORE
-<U1EAC> <a/>>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0064>
-<U0111> <d//>;<BAS>;<MIN>;IGNORE
-<U00F0> <d//>;<PCL>;<MIN>;IGNORE
-reorder-after <U0044>
-<U0110> <d//>;<BAS>;<CAP>;IGNORE
-<U00D0> <d//>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0065>
-<U1EBB> <e>;<HOK>;<MIN>;IGNORE
-<U1EBD> <e>;<TIL>;<MIN>;IGNORE
-<U1EB9> <e>;<PCT>;<MIN>;IGNORE
-<U00EA> <e/>>;<BAS>;<MIN>;IGNORE
-<U1EC1> <e/>>;<GRA>;<MIN>;IGNORE
-<U1EC3> <e/>>;<HOK>;<MIN>;IGNORE
-<U1EC5> <e/>>;<TIL>;<MIN>;IGNORE
-<U1EBF> <e/>>;<ACA>;<MIN>;IGNORE
-<U1EC7> <e/>>;<PCT>;<MIN>;IGNORE
-reorder-after <U0045>
-<U1EBA> <e>;<HOK>;<CAP>;IGNORE
-<U1EBC> <e>;<TIL>;<CAP>;IGNORE
-<U1EB8> <e>;<PCT>;<CAP>;IGNORE
-<U00CA> <e/>>;<BAS>;<CAP>;IGNORE
-<U1EC0> <e/>>;<GRA>;<CAP>;IGNORE
-<U1EC2> <e/>>;<HOK>;<CAP>;IGNORE
-<U1EC4> <e/>>;<TIL>;<CAP>;IGNORE
-<U1EBE> <e/>>;<ACA>;<CAP>;IGNORE
-<U1EC6> <e/>>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0069>
-<U1EC9> <i>;<HOK>;<MIN>;IGNORE
-<U1ECB> <i>;<PCT>;<MIN>;IGNORE
-reorder-after <U0049>
-<U1EC8> <i>;<HOK>;<CAP>;IGNORE
-<U1ECA> <i>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U006F>
-<U1ECF> <o>;<HOK>;<MIN>;IGNORE
-<U1ECD> <o>;<PCT>;<MIN>;IGNORE
-<U00F4> <o/>>;<BAS>;<MIN>;IGNORE
-<U1ED3> <o/>>;<GRA>;<MIN>;IGNORE
-<U1ED5> <o/>>;<HOK>;<MIN>;IGNORE
-<U1ED7> <o/>>;<TIL>;<MIN>;IGNORE
-<U1ED1> <o/>>;<ACA>;<MIN>;IGNORE
-<U1ED9> <o/>>;<PCT>;<MIN>;IGNORE
-<U01A1> <o9>;<BAS>;<MIN>;IGNORE
-<U1EDD> <o9>;<GRA>;<MIN>;IGNORE
-<U1EDF> <o9>;<HOK>;<MIN>;IGNORE
-<U1EE1> <o9>;<TIL>;<MIN>;IGNORE
-<U1EDB> <o9>;<ACA>;<MIN>;IGNORE
-<U1EE3> <o9>;<PCT>;<MIN>;IGNORE
-reorder-after <U004F>
-<U1ECE> <o>;<HOK>;<CAP>;IGNORE
-<U1ECC> <o>;<PCT>;<CAP>;IGNORE
-<U00D4> <o/>>;<BAS>;<CAP>;IGNORE
-<U1ED2> <o/>>;<GRA>;<CAP>;IGNORE
-<U1ED4> <o/>>;<HOK>;<CAP>;IGNORE
-<U1ED6> <o/>>;<TIL>;<CAP>;IGNORE
-<U1ED0> <o/>>;<ACA>;<CAP>;IGNORE
-<U1ED8> <o/>>;<PCT>;<CAP>;IGNORE
-<U01A0> <o9>;<BAS>;<CAP>;IGNORE
-<U1EDC> <o9>;<GRA>;<CAP>;IGNORE
-<U1EDE> <o9>;<HOK>;<CAP>;IGNORE
-<U1EE0> <o9>;<TIL>;<CAP>;IGNORE
-<U1EDA> <o9>;<ACA>;<CAP>;IGNORE
-<U1EE2> <o9>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0075>
-<U1EE7> <u>;<HOK>;<MIN>;IGNORE
-<U1EE5> <u>;<PCT>;<MIN>;IGNORE
-<U01B0> <u9>;<BAS>;<MIN>;IGNORE
-<U1EEB> <u9>;<GRA>;<MIN>;IGNORE
-<U1EED> <u9>;<HOK>;<MIN>;IGNORE
-<U1EEF> <u9>;<TIL>;<MIN>;IGNORE
-<U1EE9> <u9>;<ACA>;<MIN>;IGNORE
-<U1EF1> <u9>;<PCT>;<MIN>;IGNORE
-reorder-after <U0055>
-<U1EE6> <u>;<HOK>;<CAP>;IGNORE
-<U1EE4> <u>;<PCT>;<CAP>;IGNORE
-<U01AF> <u9>;<BAS>;<CAP>;IGNORE
-<U1EEA> <u9>;<GRA>;<CAP>;IGNORE
-<U1EEC> <u9>;<HOK>;<CAP>;IGNORE
-<U1EEE> <u9>;<TIL>;<CAP>;IGNORE
-<U1EE8> <u9>;<ACA>;<CAP>;IGNORE
-<U1EF0> <u9>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0079>
-<U1EF3> <y>;<GRA>;<MIN>;IGNORE
-<U1EF7> <y>;<HOK>;<MIN>;IGNORE
-<U1EF9> <y>;<TIL>;<MIN>;IGNORE
-<U1EF5> <y>;<PCT>;<MIN>;IGNORE
-reorder-after <U0059>
-<U1EF2> <y>;<GRA>;<CAP>;IGNORE
-<U1EF6> <y>;<HOK>;<CAP>;IGNORE
-<U1EF8> <y>;<TIL>;<CAP>;IGNORE
-<U1EF4> <y>;<PCT>;<CAP>;IGNORE
+<U0103> <a-breve>;"<BASE><BREVE>";"<MIN><MIN>";<U0103> % ă
+<U0102> <a-breve>;"<BASE><BREVE>";"<CAP><MIN>";<U0102> % Ă
+<U00E2> <a-circumflex>;"<BASE><CIRCF>";"<MIN><MIN>";<U00E2> % â
+<U00C2> <a-circumflex>;"<BASE><CIRCF>";"<CAP><MIN>";<U00C2> % Â
+<U0111> <d-stroke>;"<BASE><BARRE>";"<MIN><MIN>";<U0111> % đ
+<U0110> <d-stroke>;"<BASE><BARRE>";"<CAP><MIN>";<U0110> % Đ
+<U00EA> <e-circumflex>;"<BASE><CIRCF>";"<MIN><MIN>";<U00EA> % ê
+<U00CA> <e-circumflex>;"<BASE><CIRCF>";"<CAP><MIN>";<U00CA> % Ê
+<U00F4> <o-circumflex>;"<BASE><CIRCF>";"<MIN><MIN>";<U00F4> % ô
+<U00D4> <o-circumflex>;"<BASE><CIRCF>";"<CAP><MIN>";<U00D4> % Ô
+<U01A1> <o-horn>;"<BASE><HORNU>";"<MIN><MIN>";<U01A1> % ơ
+<U01A0> <o-horn>;"<BASE><HORNU>";"<CAP><MIN>";<U01A0> % Ơ
+<U01B0> <u-horn>;"<BASE><HORNU>";"<MIN><MIN>";<U01B0> % ư
+<U01AF> <u-horn>;"<BASE><HORNU>";"<CAP><MIN>";<U01AF> % Ư
 
 reorder-end
 

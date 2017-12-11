@@ -60,75 +60,83 @@ END LC_IDENTIFICATION
 LC_COLLATE
 copy "iso14651_t1"
 
+% CLDR collation rules for Danish:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/da.xml)
+%
+% <collation type="standard">
+%   <cr><![CDATA[
+%     [caseFirst upper]
+%     &D<<đ<<<Đ<<ð<<<Ð
+%     &th<<<þ
+%     &TH<<<Þ
+%     &Y<<ü<<<Ü<<ű<<<Ű
+%     &[before 1]ǀ<æ<<<Æ<<ä<<<Ä<ø<<<Ø<<ö<<<Ö<<ő<<<Ő<å<<<Å<<<aa<<<Aa<<<AA
+%     &oe<<œ<<<Œ
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/da.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
 collating-element <A-A> from "<U0041><U0041>"
 collating-element <A-a> from "<U0041><U0061>"
 collating-element <a-A> from "<U0061><U0041>"
 collating-element <a-a> from "<U0061><U0061>"
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
 collating-symbol <ae>
 collating-symbol <o-stroke>
 collating-symbol <a-ring>
-collating-symbol <ETH>
 
 reorder-after <RES-1>
+<COMPATCAP>
 <CAP>
-<CAP-MIN>
-<MIN-CAP>
+<COMPAT>
+<MIN>
 
-reorder-after <z>
+% &[before 1]ǀ<æ<<<Æ<<ä<<<Ä<ø<<<Ø<<ö<<<Ö<<ő<<<Ő<å<<<Å<<<aa<<<Aa<<<AA
+reorder-after <AFTER-Z>
 <ae>
 <o-stroke>
 <a-ring>
 
-% <U00DC> and <U0170> are treated as <U0059> in Danish
-reorder-after <U0178>
-<U00DC> <y>;<U00DC>;<CAP>;IGNORE
-<U00FC> <y>;<U00DC>;<MIN>;IGNORE
-<U0170> <y>;<U0170>;<CAP>;IGNORE
-<U0171> <y>;<U0170>;<MIN>;IGNORE
+% &D<<đ<<<Đ<<ð<<<Ð
+<U0110> <S0064>;"<BASE><BARRE>";"<CAP><MIN>";IGNORE % Đ
+<U0111> <S0064>;"<BASE><BARRE>";"<MIN><MIN>";IGNORE % đ
+<U00D0> <S0064>;"<BASE><VRNT1>";"<COMPATCAP><COMPAT>";IGNORE % Ð
+<U00F0> <S0064>;"<BASE><VRNT1>";"<COMPAT><COMPAT>";IGNORE % ð
 
-% <U00C6> is a separate letter in Danish
-reorder-after <U017B>
-<U00C6> <ae>;<BAS>;<CAP>;IGNORE
-<U00E6> <ae>;<BAS>;<MIN>;IGNORE
-<U01FC> <ae>;<ACA>;<CAP>;IGNORE
-<U01FD> <ae>;<ACA>;<MIN>;IGNORE
-<U00C4> <ae>;<REU>;<CAP>;IGNORE
-<U00E4> <ae>;<REU>;<MIN>;IGNORE
-<U01E2> <ae>;<MAC>;<CAP>;IGNORE
-<U01E3> <ae>;<MAC>;<MIN>;IGNORE
-% <U00D8> is a separate letter in Danish
-<U00D8> <o-stroke>;<BAS>;<CAP>;IGNORE
-<U00F8> <o-stroke>;<BAS>;<MIN>;IGNORE
-<U01FE> <o-stroke>;<ACA>;<CAP>;IGNORE
-<U01FF> <o-stroke>;<ACA>;<MIN>;IGNORE
-<U00D6> <o-stroke>;<REU>;<CAP>;IGNORE
-<U00F6> <o-stroke>;<REU>;<MIN>;IGNORE
-<U0150> <o-stroke>;<DAC>;<CAP>;IGNORE
-<U0151> <o-stroke>;<DAC>;<MIN>;IGNORE
-% <U00C5> is a separate letter in Danish
-<U00C5> <a-ring>;<BAS>;<CAP>;IGNORE
-<U00E5> <a-ring>;<BAS>;<MIN>;IGNORE
-<A-A>   <a-ring>;<A-A>;<CAP>;IGNORE
-<A-a>   <a-ring>;<A-A>;<CAP-MIN>;IGNORE
-<a-A>   <a-ring>;<A-A>;<MIN-CAP>;IGNORE
-<a-a>   <a-ring>;<A-A>;<MIN>;IGNORE
+% &T<<<Þ/H
+% &t<<<þ/h
+<U00DE> "<S0074><S0068>";"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Þ
+<U00FE> "<S0074><S0068>";"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % þ
 
-%  Present in iso14651_t1, but these definitions seem to have been
-%  removed from latest iso14651 tables.
-reorder-after <U0162>
-<U00DE> "<t><h>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
-<U00FE> "<t><h>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
+% &Y<<ü<<<Ü<<ű<<<Ű
+<U00DC> <S0079>;"<BASE><TREMA>";"<CAP><MIN>";IGNORE % Ü
+<U00FC> <S0079>;"<BASE><TREMA>";"<MIN><MIN>";IGNORE % ü
+<U0170> <S0079>;"<BASE><2AIGU>";"<CAP><MIN>";IGNORE % Ű
+<U0171> <S0079>;"<BASE><2AIGU>";"<MIN><MIN>";IGNORE % ű
 
-reorder-after <OBL>
-<ETH>
-
-reorder-after <U0064>
-<U0110> <d>;<OBL>;<CAP>;IGNORE
-<U0111> <d>;<OBL>;<MIN>;IGNORE
-<U00D0> <d>;<ETH>;<CAP>;IGNORE
-<U00F0> <d>;<ETH>;<MIN>;IGNORE
+% &[before 1]ǀ<æ<<<Æ<<ä<<<Ä<ø<<<Ø<<ö<<<Ö<<ő<<<Ő<å<<<Å<<<aa<<<Aa<<<AA
+<U00C6> <ae>;"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Æ
+<U00E6> <ae>;"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % æ
+<U00C4> <ae>;"<BASE><TREMA>";"<CAP><MIN>";IGNORE % Ä
+<U00E4> <ae>;"<BASE><TREMA>";"<MIN><MIN>";IGNORE % ä
+<U00D8> <o-stroke>;"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Ø
+<U00F8> <o-stroke>;"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % ø
+<U00D6> <o-stroke>;"<BASE><TREMA>";"<CAP><MIN>";IGNORE % Ö
+<U00F6> <o-stroke>;"<BASE><TREMA>";"<MIN><MIN>";IGNORE % ö
+<U0150> <o-stroke>;"<BASE><2AIGU>";"<CAP><MIN>";IGNORE % Ő
+<U0151> <o-stroke>;"<BASE><2AIGU>";"<MIN><MIN>";IGNORE % ő
+<U00C5> <a-ring>;"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Å
+<U00E5> <a-ring>;"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % å
+<A-A>   <a-ring>;"<BASE><VRNT1>";"<CAP><CAP>";IGNORE
+<A-a>   <a-ring>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE
+<a-A>   <a-ring>;"<BASE><VRNT1>";"<MIN><CAP>";IGNORE
+<a-a>   <a-ring>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE
 
 reorder-end
 END LC_COLLATE

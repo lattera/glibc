@@ -46,19 +46,42 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% CLDR collation rules for Belarusian:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/be.xml)
+%
+% 	<collations>
+% 		<collation type="standard">
+% 			<cr><![CDATA[
+% [reorder Cyrl]
+% # The root collation already sorts й/Й as a base letter.
+% &Е<ё<<<Ё
+% &у<ў<<<Ў
+% 			]]></cr>
+% 		</collation>
+% 	</collations>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/be.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[А Б В Г Д Е Ж З І Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Ы Э Ю Я]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
 copy "iso14651_t1"
 
-% iso14651_t1 is missing Ukrainian ghe
-collating-symbol <UKR-GHE>
+collating-symbol <cyrillic-io>
+collating-symbol <cyrillic-short-u>
 
-reorder-after <CYR-GZHE>
-<UKR-GHE>
+reorder-after <S0435> % CYRILLIC SMALL LETTER IE
+<cyrillic-io>
+reorder-after <S0443> % CYRILLIC SMALL LETTER U
+<cyrillic-short-u>
 
-reorder-after <U0453>
-<U0491> <UKR-GHE>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U0403>
-<U0490> <UKR-GHE>;<BAS>;<CAP>;IGNORE
+<U0451> <cyrillic-io>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % CYRILLIC SMALL LETTER IO
+<U0401> <cyrillic-io>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % CYRILLIC CAPITAL LETTER IO
+<U045E> <cyrillic-short-u>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % CYRILLIC SMALL LETTER SHORT U
+<U040E> <cyrillic-short-u>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % CYRILLIC CAPITAL LETTER SHORT U
 
 reorder-end
 END LC_COLLATE

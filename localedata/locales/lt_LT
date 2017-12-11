@@ -117,42 +117,42 @@ collating-symbol <u-ogonek>
 collating-symbol <u-macron>
 collating-symbol <z-caron>
 
-reorder-after <a>
+reorder-after <AFTER-A>
 <a-ogonek>
-reorder-after <c>
+reorder-after <AFTER-C>
 <c-caron>
-reorder-after <e>
+reorder-after <AFTER-E>
 <e-ogonek>
 <e-dot-above>
-reorder-after <i>
+reorder-after <AFTER-I>
 <i-ogonek>
-<y>
-reorder-after <s>
+<S0079>
+reorder-after <AFTER-S>
 <s-caron>
-reorder-after <u>
+reorder-after <AFTER-U>
 <u-ogonek>
 <u-macron>
-reorder-after <z>
+reorder-after <AFTER-Z>
 <z-caron>
 
-<U0105> <a-ogonek>;<BAS>;<MIN>;IGNORE % ą
-<U0104> <a-ogonek>;<BAS>;<CAP>;IGNORE % Ą
-<U010D> <c-caron>;<BAS>;<MIN>;IGNORE % č
-<U010C> <c-caron>;<BAS>;<CAP>;IGNORE % Č
-<U0119> <e-ogonek>;<BAS>;<MIN>;IGNORE % ę
-<U0118> <e-ogonek>;<BAS>;<CAP>;IGNORE % Ę
-<U0117> <e-dot-above>;<BAS>;<MIN>;IGNORE % ė
-<U0116> <e-dot-above>;<BAS>;<CAP>;IGNORE % Ė
-<U012F> <i-ogonek>;<BAS>;<MIN>;IGNORE % į
-<U012E> <i-ogonek>;<BAS>;<CAP>;IGNORE % Į
-<U0161> <s-caron>;<BAS>;<MIN>;IGNORE % š
-<U0160> <s-caron>;<BAS>;<CAP>;IGNORE % Š
-<U0173> <u-ogonek>;<BAS>;<MIN>;IGNORE % ų
-<U0172> <u-ogonek>;<BAS>;<CAP>;IGNORE % Ų
-<U016B> <u-macron>;<BAS>;<MIN>;IGNORE % ū
-<U016A> <u-macron>;<BAS>;<CAP>;IGNORE % Ū
-<U017E> <z-caron>;<BAS>;<MIN>;IGNORE % ž
-<U017D> <z-caron>;<BAS>;<CAP>;IGNORE % Ž
+<U0105> <a-ogonek>;<BASE>;<MIN>;IGNORE % ą
+<U0104> <a-ogonek>;<BASE>;<CAP>;IGNORE % Ą
+<U010D> <c-caron>;<BASE>;<MIN>;IGNORE % č
+<U010C> <c-caron>;<BASE>;<CAP>;IGNORE % Č
+<U0119> <e-ogonek>;<BASE>;<MIN>;IGNORE % ę
+<U0118> <e-ogonek>;<BASE>;<CAP>;IGNORE % Ę
+<U0117> <e-dot-above>;<BASE>;<MIN>;IGNORE % ė
+<U0116> <e-dot-above>;<BASE>;<CAP>;IGNORE % Ė
+<U012F> <i-ogonek>;<BASE>;<MIN>;IGNORE % į
+<U012E> <i-ogonek>;<BASE>;<CAP>;IGNORE % Į
+<U0161> <s-caron>;<BASE>;<MIN>;IGNORE % š
+<U0160> <s-caron>;<BASE>;<CAP>;IGNORE % Š
+<U0173> <u-ogonek>;<BASE>;<MIN>;IGNORE % ų
+<U0172> <u-ogonek>;<BASE>;<CAP>;IGNORE % Ų
+<U016B> <u-macron>;<BASE>;<MIN>;IGNORE % ū
+<U016A> <u-macron>;<BASE>;<CAP>;IGNORE % Ū
+<U017E> <z-caron>;<BASE>;<MIN>;IGNORE % ž
+<U017D> <z-caron>;<BASE>;<CAP>;IGNORE % Ž
 
 reorder-end
 

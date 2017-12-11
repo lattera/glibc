@@ -40,31 +40,17 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% CLDR collation rules for Mongolian:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/mn.xml)
+%
+% <!-- The root collation order is valid for this language. Just move the native scripts first. -->
+% <collations>
+% 	<collation type="standard"><cr><![CDATA[
+%  Cyrl Mong]
+% 	]]></cr></collation>
+% </collations>
+%
 copy "iso14651_t1"
-
-% iso14651_t1 is missing Mongolian ue(straight u), oe(barred o)
-% like russian, but with <o-=> (<barred-o>) after <o=> and
-% <u'=>(straight u) after <u=>
-
-collating-symbol <o-=>
-collating-symbol <u'=>
-
-reorder-after <CYR-O>
-<o-=>
-reorder-after <CYR-OUBRE>
-<u'=>
-
-reorder-after <U043E>
-<U04E9> <o-=>;<PCL>;<MIN>;IGNORE
-reorder-after <U041E>
-<U04E8> <o-=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0443>
-<U04AF> <u'=>;<PCL>;<MIN>;IGNORE
-reorder-after <U0423>
-<U04AE> <u'=>;<PCL>;<CAP>;IGNORE
-
-reorder-end
 END LC_COLLATE
 
 LC_CTYPE

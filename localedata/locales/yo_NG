@@ -68,292 +68,85 @@ LC_COLLATE
 
 copy "iso14651_t1"
 
-% digraphs (gb)
-collating-symbol  <g-b-yo>
-collating-element <G-B> from "<U0047><U0042>"
-collating-element <g-b> from "<U0067><U0062>"
-collating-element <G-b> from "<U0047><U0062>"
-collating-element <g-B> from "<U0067><U0042>"
-% belowdot (ẹ, ọ, ș)
-collating-symbol  <ebelowdot>
-collating-element <E_>  from "<U0045><U0323>"
-collating-element <e_>  from "<U0065><U0323>"
-collating-element <E_'> from "<U1EB8><U0301>"
-collating-element <e_'> from "<U1EB9><U0301>"
-collating-element <E_`> from "<U1EB8><U0300>"
-collating-element <e_`> from "<U1EB9><U0300>"
-collating-element <E_2'> from "<U0045><U0323><U0301>"
-collating-element <e_2'> from "<U0065><U0323><U0301>"
-collating-element <E_2`> from "<U0045><U0323><U0300>"
-collating-element <e_2`> from "<U0065><U0323><U0300>"
-collating-symbol  <obelowdot>
-collating-element <O_>  from "<U004F><U0323>"
-collating-element <o_>  from "<U006F><U0323>"
-collating-element <O_'> from "<U1ECC><U0301>"
-collating-element <o_'> from "<U1ECD><U0301>"
-collating-element <O_`> from "<U1ECC><U0300>"
-collating-element <o_`> from "<U1ECD><U0300>"
-collating-element <O_2'> from "<U004F><U0323><U0301>"
-collating-element <o_2'> from "<U006F><U0323><U0301>"
-collating-element <O_2`> from "<U004F><U0323><U0300>"
-collating-element <o_2`> from "<U006F><U0323><U0300>"
-collating-symbol  <sbelowdot>
-collating-element <S_> from "<U0053><U0323>"
-collating-element <s_> from "<U0073><U0323>"
-% acute (áéíḿńóú; for acute on ẹọ look above)
-collating-element <A'> from "<U0041><U0301>"
-collating-element <a'> from "<U0061><U0301>"
-collating-element <E'> from "<U0045><U0301>"
-collating-element <e'> from "<U0065><U0301>"
-collating-element <I'> from "<U0049><U0301>"
-collating-element <i'> from "<U0069><U0301>"
-collating-element <M'> from "<U004D><U0301>"
-collating-element <m'> from "<U006D><U0301>"
-collating-element <N'> from "<U004E><U0301>"
-collating-element <n'> from "<U006E><U0301>"
-collating-element <O'> from "<U004F><U0301>"
-collating-element <o'> from "<U006F><U0301>"
-collating-element <U'> from "<U0055><U0301>"
-collating-element <u'> from "<U0075><U0301>"
-% grave (àèìm̀ǹòù; for grave on ẹọ look above)
-collating-element <A`> from "<U0041><U0300>"
-collating-element <a`> from "<U0061><U0300>"
-collating-element <E`> from "<U0045><U0300>"
-collating-element <e`> from "<U0065><U0300>"
-collating-element <I`> from "<U0049><U0300>"
-collating-element <i`> from "<U0069><U0300>"
-collating-element <M`> from "<U004D><U0300>"
-collating-element <m`> from "<U006D><U0300>"
-collating-element <N`> from "<U004E><U0300>"
-collating-element <n`> from "<U006E><U0300>"
-collating-element <O`> from "<U004F><U0300>"
-collating-element <o`> from "<U006F><U0300>"
-collating-element <U`> from "<U0055><U0300>"
-collating-element <u`> from "<U0075><U0300>"
-% macron (m̅, n̅; not implemented on other letters)
-collating-element <M-> from "<U004D><U0304>"
-collating-element <m-> from "<U006D><U0304>"
-collating-element <N-> from "<U004E><U0304>"
-collating-element <n-> from "<U006E><U0304>"
-% circumflex (âêệîôộû)
-collating-element <A/>> from "<U0041><U0302>"
-collating-element <a/>> from "<U0061><U0302>"
-collating-element <E/>> from "<U0045><U0302>"
-collating-element <e/>> from "<U0065><U0302>"
-collating-element <E_/>> from "<U1EB8><U0302>"
-collating-element <e_/>> from "<U1EB9><U0302>"
-collating-element <I/>> from "<U0049><U0302>"
-collating-element <i/>> from "<U0069><U0302>"
-collating-element <O/>> from "<U004F><U0302>"
-collating-element <o/>> from "<U006F><U0302>"
-collating-element <O_/>> from "<U1ECC><U0302>"
-collating-element <o_/>> from "<U1ECD><U0302>"
-collating-element <U/>> from "<U0055><U0302>"
-collating-element <u/>> from "<U0075><U0302>"
-% caron (ǎěẹ̌ǐǒọ̌ǔ)
-collating-element <A<> from "<U0041><U030C>"
-collating-element <a<> from "<U0061><U030C>"
-collating-element <E<> from "<U0045><U030C>"
-collating-element <e<> from "<U0065><U030C>"
-collating-element <E_<> from "<U1EB8><U030C>"
-collating-element <e_<> from "<U1EB9><U030C>"
-collating-element <I<> from "<U0049><U030C>"
-collating-element <i<> from "<U0069><U030C>"
-collating-element <O<> from "<U004F><U030C>"
-collating-element <o<> from "<U006F><U030C>"
-collating-element <O_<> from "<U1ECC><U030C>"
-collating-element <o_<> from "<U1ECD><U030C>"
-collating-element <U<> from "<U0055><U030C>"
-collating-element <u<> from "<U0075><U030C>"
-% tilde (not implemented; old orthography)
+% CLDR collation rules for Yoruba:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/yo.xml)
+%
+% <collation type="standard" references="Nigeria University Press: A dictionary of the Yoruba language ISBN 978-030-760-5">
+%   <cr><![CDATA[
+%     [normalization on]
+%     &E<ẹ<<<Ẹ
+%     &G<gb<<<Gb<<<GB
+%     &O<ọ<<<Ọ
+%     &S<ṣ<<<Ṣ
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/yo.xml)
+%
+% <exemplarCharacters type="index">[A B D E F G H I J K L M N O P R S T U W Y]</exemplarCharacters>
+%
+% The list of index characters looks wrong when comparing with the
+% collation rules.
+%
+% The following rules implement the same order for glibc.
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
+collating-symbol <e-dot-below>
+collating-symbol <gb-digraph>
+collating-symbol <o-dot-below>
+collating-symbol <s-dot-below>
 
-reorder-after <BAS>
-<ACA>
-<MAC>
-<GRA>
+collating-element <e-combining-dot-below> from "e<U0323>"
+collating-element <E-combining-dot-below> from "E<U0323>"
 
-reorder-after <MIN>
-<MIN-CAP>
+collating-element <g-b> from "gb"
+collating-element <g-B> from "gB"
+collating-element <G-b> from "Gb"
+collating-element <G-B> from "GB"
 
-reorder-after <CAP>
-<CAP-MIN>
+collating-element <o-combining-dot-below> from "o<U0323>"
+collating-element <O-combining-dot-below> from "O<U0323>"
 
-reorder-after <e>
-<ebelowdot>
-reorder-after <g>
-<g-b-yo>
-reorder-after <o>
-<obelowdot>
-reorder-after <s>
-<sbelowdot>
+collating-element <s-combining-dot-below> from "s<U0323>"
+collating-element <S-combining-dot-below> from "S<U0323>"
 
-reorder-after <U0061>
-<U00E1> <a>;<ACA>;<MIN>;IGNORE
-<a'>    <a>;<ACA>;<MIN>;IGNORE
-<U00E2> "<a><a>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<a/>>   "<a><a>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<U00E0> <a>;<GRA>;<MIN>;IGNORE
-<a`>    <a>;<GRA>;<MIN>;IGNORE
-<U01CE> "<a><a>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<a<>    "<a><a>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-reorder-after <U0041>
-<U00C1> <a>;<ACA>;<CAP>;IGNORE
-<A'>    <a>;<ACA>;<CAP>;IGNORE
-<U00C2> "<a><a>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<A/>>   "<a><a>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U00C0> <a>;<GRA>;<CAP>;IGNORE
-<A`>    <a>;<GRA>;<CAP>;IGNORE
-<U01CD> "<a><a>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<A<>    "<a><a>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
+% &E<ẹ<<<Ẹ
+reorder-after <AFTER-E>
+<e-dot-below>
+% &G<gb<<<Gb<<<GB
+reorder-after <AFTER-G>
+<gb-digraph>
+% &O<ọ<<<Ọ
+reorder-after <AFTER-O>
+<o-dot-below>
+% &S<ṣ<<<Ṣ
+reorder-after <AFTER-S>
+<s-dot-below>
 
-reorder-after <U0065>
-<U00E9> <e>;<ACA>;<MIN>;IGNORE
-<e'>    <e>;<ACA>;<MIN>;IGNORE
-<U00EA> "<e><e>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<e/>>   "<e><e>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<U00E8> <e>;<GRA>;<MIN>;IGNORE
-<e`>    <e>;<GRA>;<MIN>;IGNORE
-<U011B> "<e><e>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<e<>    "<e><e>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<U1EB9> <ebelowdot>;<BAS>;<MIN>;IGNORE
-<e_>    <ebelowdot>;<BAS>;<MIN>;IGNORE
-<e_'>   <ebelowdot>;<ACA>;<MIN>;IGNORE
-<e_2'>  <ebelowdot>;<ACA>;<MIN>;IGNORE
-<e_/>>  "<ebelowdot><ebelowdot>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<e_`>   <ebelowdot>;<GRA>;<MIN>;IGNORE
-<e_2`>  <ebelowdot>;<GRA>;<MIN>;IGNORE
-<e_<>   "<ebelowdot><ebelowdot>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-reorder-after <U0045>
-<U00C9> <e>;<ACA>;<CAP>;IGNORE
-<E'>    <e>;<ACA>;<CAP>;IGNORE
-<U00CA> "<e><e>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<E/>>   "<e><e>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U00C8> <e>;<GRA>;<CAP>;IGNORE
-<E`>    <e>;<GRA>;<CAP>;IGNORE
-<U011A> "<e><e>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<E<>    "<e><e>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<U1EB8> <ebelowdot>;<BAS>;<CAP>;IGNORE
-<E_>    <ebelowdot>;<CAP>;<CAP>;IGNORE
-<E_'>   <ebelowdot>;<ACA>;<CAP>;IGNORE
-<E_2'>  <ebelowdot>;<ACA>;<CAP>;IGNORE
-<E_/>>  "<ebelowdot><ebelowdot>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<E_`>   <ebelowdot>;<GRA>;<CAP>;IGNORE
-<E_2`>  <ebelowdot>;<GRA>;<CAP>;IGNORE
-<E_<>   "<ebelowdot><ebelowdot>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
+% &E<ẹ<<<Ẹ
+<U1EB9> <e-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % LATIN SMALL LETTER E WITH DOT BELOW
+<e-combining-dot-below> <e-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1EB8> <e-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % LATIN CAPITAL LETTER E WITH DOT BELOW
+<E-combining-dot-below> <e-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
 
-reorder-after <U0067>
-<g-b>   <g-b-yo>;<PCL>;<MIN>;IGNORE
-<g-B>   <g-b-yo>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0047>
-<G-B>   <g-b-yo>;<PCL>;<CAP>;IGNORE
-<G-b>   <g-b-yo>;<PCL>;<CAP-MIN>;IGNORE
+% &G<gb<<<Gb<<<GB
+<g-b> <gb-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<g-B> <gb-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<G-b> <gb-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<G-B> <gb-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
 
-reorder-after <U0069>
-<U00ED> <i>;<ACA>;<MIN>;IGNORE
-<i'>    <i>;<ACA>;<MIN>;IGNORE
-<U00EE> "<i><i>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<i/>>   "<i><i>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<U00EC> <i>;<GRA>;<MIN>;IGNORE
-<i`>    <i>;<GRA>;<MIN>;IGNORE
-<U01D0> "<i><i>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<i<>    "<i><i>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-reorder-after <U0049>
-<U00CD> <i>;<ACA>;<CAP>;IGNORE
-<I'>    <i>;<ACA>;<CAP>;IGNORE
-<U00CE> "<i><i>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<I/>>   "<i><i>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U00CC> <i>;<GRA>;<CAP>;IGNORE
-<I`>    <i>;<GRA>;<CAP>;IGNORE
-<U01CF> "<i><i>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<I<>    "<i><i>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
+% &O<ọ<<<Ọ
+<U1ECD> <o-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % LATIN SMALL LETTER O WITH DOT BELOW
+<o-combining-dot-below> <o-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1ECC> <o-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % LATIN CAPITAL LETTER O WITH DOT BELOW
+<O-combining-dot-below> <o-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
 
-reorder-after <U006D>
-<U1E3F> <m>;<ACA>;<MIN>;IGNORE
-<m'>    <m>;<ACA>;<MIN>;IGNORE
-<m->    <m>;<MAC>;<MIN>;IGNORE
-<m`>    <m>;<GRA>;<MIN>;IGNORE
-reorder-after <U004E>
-<U1E3E> <m>;<ACA>;<CAP>;IGNORE
-<M'>    <m>;<ACA>;<CAP>;IGNORE
-<M->    <m>;<MAC>;<CAP>;IGNORE
-<M`>    <m>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U006E>
-<U0144> <n>;<ACA>;<MIN>;IGNORE
-<n'>    <n>;<ACA>;<MIN>;IGNORE
-<n->    <n>;<MAC>;<MIN>;IGNORE
-<U01F9> <n>;<GRA>;<MIN>;IGNORE
-<n`>    <n>;<GRA>;<MIN>;IGNORE
-reorder-after <U004E>
-<U0143> <n>;<ACA>;<CAP>;IGNORE
-<N'>    <n>;<ACA>;<CAP>;IGNORE
-<N->    <n>;<MAC>;<CAP>;IGNORE
-<U01F8> <n>;<GRA>;<CAP>;IGNORE
-<N`>    <n>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U006F>
-<U00F3> <o>;<ACA>;<MIN>;IGNORE
-<o'>    <o>;<ACA>;<MIN>;IGNORE
-<U00F4> "<o><o>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<o/>>   "<o><o>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<U00F2> <o>;<GRA>;<MIN>;IGNORE
-<o`>    <o>;<GRA>;<MIN>;IGNORE
-<U01D2> "<o><o>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<o<>    "<o><o>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<U1ECD> <obelowdot>;<BAS>;<MIN>;IGNORE
-<o_>    <obelowdot>;<BAS>;<MIN>;IGNORE
-<o_'>   <obelowdot>;<ACA>;<MIN>;IGNORE
-<o_2'>  <obelowdot>;<ACA>;<MIN>;IGNORE
-<o_/>>  "<obelowdot><obelowdot>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<o_`>   <obelowdot>;<GRA>;<MIN>;IGNORE
-<o_2`>  <obelowdot>;<GRA>;<MIN>;IGNORE
-<o_<>   "<obelowdot><obelowdot>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-reorder-after <U004F>
-<U00D3> <o>;<ACA>;<CAP>;IGNORE
-<O'>    <o>;<ACA>;<CAP>;IGNORE
-<U00D4> "<o><o>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<O/>>   "<o><o>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U00D2> <o>;<GRA>;<CAP>;IGNORE
-<O`>    <o>;<GRA>;<CAP>;IGNORE
-<U01D1> "<o><o>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<O<>    "<o><o>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<U1ECC> <obelowdot>;<BAS>;<CAP>;IGNORE
-<O_>    <obelowdot>;<BAS>;<CAP>;IGNORE
-<O_'>   <obelowdot>;<ACA>;<CAP>;IGNORE
-<O_2'>  <obelowdot>;<ACA>;<CAP>;IGNORE
-<O_/>>  "<obelowdot><obelowdot>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<O_`>   <obelowdot>;<GRA>;<CAP>;IGNORE
-<O_2`>  <obelowdot>;<GRA>;<CAP>;IGNORE
-<O_<>   "<obelowdot><obelowdot>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-
-reorder-after <U0073>
-<U1E63> <sbelowdot>;<BAS>;<MIN>;IGNORE
-<s_>    <sbelowdot>;<BAS>;<MIN>;IGNORE
-reorder-after <U0053>
-<U1E62> <sbelowdot>;<BAS>;<CAP>;IGNORE
-<S_>    <sbelowdot>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U0075>
-<U00FA> <u>;<ACA>;<MIN>;IGNORE
-<u'>    <u>;<ACA>;<MIN>;IGNORE
-<U00FB> "<u><u>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<u/>>   "<u><u>";"<ACA><GRA>";"<MIN><MIN>";IGNORE
-<U00F9> <u>;<GRA>;<MIN>;IGNORE
-<u`>    <u>;<GRA>;<MIN>;IGNORE
-<U01D4> "<u><u>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-<u<>    "<u><u>";"<GRA><ACA>";"<MIN><MIN>";IGNORE
-reorder-after <U0055>
-<U00DA> <u>;<ACA>;<CAP>;IGNORE
-<U'>    <u>;<ACA>;<CAP>;IGNORE
-<U00DB> "<u><u>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U/>>   "<u><u>";"<ACA><GRA>";"<CAP><CAP>";IGNORE
-<U00D9> <u>;<GRA>;<CAP>;IGNORE
-<U`>    <u>;<GRA>;<CAP>;IGNORE
-<U01D3> "<u><u>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
-<U<>    "<u><u>";"<GRA><ACA>";"<CAP><CAP>";IGNORE
+% &S<ṣ<<<Ṣ
+<U1E63> <s-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % LATIN SMALL LETTER S WITH DOT BELOW
+<s-combining-dot-below> <s-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1E62> <s-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % LATIN CAPITAL LETTER S WITH DOT BELOW
+<S-combining-dot-below> <s-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
 
 reorder-end
 

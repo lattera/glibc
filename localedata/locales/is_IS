@@ -88,22 +88,22 @@ collating-symbol <o-diaresis>
 collating-symbol <o-stroke>
 collating-symbol <a-ring>
 
-reorder-after <a>
+reorder-after <BEFORE-B>
 <a-acute>
-reorder-after <d>
+reorder-after <AFTER-D>
 <d-stroke>
 <eth>
-reorder-after <e>
+reorder-after <BEFORE-F>
 <e-acute>
-reorder-after <i>
+reorder-after <BEFORE-J>
 <i-acute>
-reorder-after <o>
+reorder-after <BEFORE-P>
 <o-acute>
-reorder-after <u>
+reorder-after <BEFORE-V>
 <u-acute>
-reorder-after <y>
+reorder-after <BEFORE-Z>
 <y-acute>
-reorder-after <zh>
+reorder-after <AFTER-EZH>
 <thorn>
 <ae-ligature>
 <a-diaresis>
@@ -111,34 +111,34 @@ reorder-after <zh>
 <o-stroke>
 <a-ring>
 
-<U00E1> <a-acute>;<ACA>;<MIN>;IGNORE % á
-<U00C1> <a-acute>;<ACA>;<CAP>;IGNORE % Á
-<U0111> <d-stroke>;<OBL>;<MIN>;IGNORE % đ
-<U0110> <d-stroke>;<OBL>;<CAP>;IGNORE % Đ
-<U00F0> <eth>;<PCL>;<MIN>;IGNORE % ð
-<U00D0> <eth>;<PCL>;<CAP>;IGNORE % Ð
-<U00E9> <e-acute>;<ACA>;<MIN>;IGNORE % é
-<U00C9> <e-acute>;<ACA>;<CAP>;IGNORE % É
-<U00ED> <i-acute>;<ACA>;<MIN>;IGNORE % í
-<U00CD> <i-acute>;<ACA>;<CAP>;IGNORE % Í
-<U00F3> <o-acute>;<ACA>;<MIN>;IGNORE % ó
-<U00D3> <o-acute>;<ACA>;<CAP>;IGNORE % Ó
-<U00FA> <u-acute>;<ACA>;<MIN>;IGNORE % ú
-<U00DA> <u-acute>;<ACA>;<CAP>;IGNORE % Ú
-<U00FD> <y-acute>;<ACA>;<MIN>;IGNORE % ý
-<U00DD> <y-acute>;<ACA>;<CAP>;IGNORE % Ý
-<U00FE> <thorn>;<BAS>;<MIN>;IGNORE % þ
-<U00DE> <thorn>;<BAS>;<CAP>;IGNORE % Þ
-<U00E6> <ae-ligature>;"<LIG><LIG>";"<MIN><MIN>";IGNORE % æ
-<U00C6> <ae-ligature>;"<LIG><LIG>";"<CAP><CAP>";IGNORE % Æ
-<U00E4> <a-diaresis>;<REU>;<MIN>;IGNORE % ä
-<U00C4> <a-diaresis>;<REU>;<CAP>;IGNORE % Ä
-<U00F6> <o-diaresis>;<REU>;<MIN>;IGNORE % ö
-<U00D6> <o-diaresis>;<REU>;<CAP>;IGNORE % Ö
-<U00F8> <o-stroke>;<OBL>;<MIN>;IGNORE % ø
-<U00D8> <o-stroke>;<OBL>;<CAP>;IGNORE % Ø
-<U00E5> <a-ring>;<RNE>;<MIN>;IGNORE % å
-<U00C5> <a-ring>;<RNE>;<CAP>;IGNORE % Å
+<U00E1> <a-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % á
+<U00C1> <a-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Á
+<U0111> <d-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % đ
+<U0110> <d-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Đ
+<U00F0> <eth>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ð
+<U00D0> <eth>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ð
+<U00E9> <e-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % é
+<U00C9> <e-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % É
+<U00ED> <i-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % í
+<U00CD> <i-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Í
+<U00F3> <o-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ó
+<U00D3> <o-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ó
+<U00FA> <u-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ú
+<U00DA> <u-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ú
+<U00FD> <y-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ý
+<U00DD> <y-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ý
+<U00FE> <thorn>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % þ
+<U00DE> <thorn>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Þ
+<U00E6> <ae-ligature>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % æ
+<U00C6> <ae-ligature>;"<BASE><BASE>";"<CAP><CAP>";IGNORE % Æ
+<U00E4> <a-diaresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ä
+<U00C4> <a-diaresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ä
+<U00F6> <o-diaresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ö
+<U00D6> <o-diaresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ö
+<U00F8> <o-stroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ø
+<U00D8> <o-stroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ø
+<U00E5> <a-ring>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % å
+<U00C5> <a-ring>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Å
 
 reorder-end
 

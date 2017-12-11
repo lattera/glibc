@@ -49,21 +49,7 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
-copy "iso14651_t1"
-
-collating-symbol <ntilde>
-
-reorder-after <n>
-<ntilde>
-
-reorder-after <U006E>
-<U00F1> <ntilde>;<BAS>;<MIN>;IGNORE
-
-reorder-after <U004E>
-<U00D1> <ntilde>;<BAS>;<CAP>;IGNORE
-
-reorder-end
-
+copy "es_ES"
 END LC_COLLATE
 
 LC_CTYPE

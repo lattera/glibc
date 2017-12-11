@@ -50,8 +50,7 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
-copy "iso14651_t1"
+copy "es_ES"
 END LC_COLLATE
 
 LC_CTYPE

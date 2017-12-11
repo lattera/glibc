@@ -39,44 +39,39 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
-
-% The kyrgyz cyrillic alphabet is:
-% a=, b=, v=, g=, d=, e=, io, z%, z=, i=, j=, k=, l=, m=, n=, n,=,
-% o=, o-=, p=, r=, s=, t=, u=, u'=, f=, h=, c=, c%, s%, sc, =', y=, %',
-% je, ju, ja
+% CLDR collation rules for Kyrgyz:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ky.xml)
 %
-% special letters are:
-% n,=: <U04A2>, <U04A3>
-% o-=: <U04E8>, <U04E9>
-% u'=: <U04AE>, <U04AF>
+% 	<collations>
+% 		<collation type="standard">
+% <!-- Mostly standard Cyrillic sort order,
+%   see http://en.wikipedia.org/wiki/Kyrgyz_alphabets#Correspondence_chart
+%   Tilek Mamutov (Google) confirms that ё and й should sort as base letters,
+%   but for string search ё should only be secondary-different from е. -->
+% <cr><![CDATA[
+% [reorder Cyrl]
+% # The root collation already sorts й/Й as a base letter.
+% &е<ё<<<Ё
+% ]]></cr>
+% 		</collation>
+% 	</collations>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/ky.xml)
+%
+% <exemplarCharacters type="index">[А Б В Г Д Е Ё Ж З И Й К Л М Н Ң О Ө П Р С Т У Ү Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я]</exemplarCharacters>
+%
 
 copy "iso14651_t1"
 
-collating-symbol <o-=>
-collating-symbol <u'=>
-collating-symbol <n,=>
+collating-symbol <io>
 
-reorder-after <CYR-EN>
-<n,=>
-reorder-after <CYR-O>
-<o-=>
-reorder-after <CYR-OUBRE>
-<u'=>
+reorder-after <S0435> % CYRILLIC SMALL LETTER IE
+<io>
 
-reorder-after <U043D>
-<U04A3> <n,=>;<PCL>;<MIN>;IGNORE
-reorder-after <U041D>
-<U04A2> <n,=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U043E>
-<U04E9> <o-=>;<PCL>;<MIN>;IGNORE
-reorder-after <U041E>
-<U04E8> <o-=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0443>
-<U04AF> <u'=>;<PCL>;<MIN>;IGNORE
-reorder-after <U0423>
-<U04AE> <u'=>;<PCL>;<CAP>;IGNORE
+<U0451>                <io>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ё
+<U0401>                <io>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ё
 
 reorder-end
 

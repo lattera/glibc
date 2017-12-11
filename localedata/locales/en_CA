@@ -57,14 +57,6 @@ copy "iso14651_t1"
 reorder-after <RES-1>
 <CAP>
 
-%  Present in iso14651_t1, but these definitions seem to have been
-%  removed from latest iso14651 tables.
-reorder-after <U0041>
-<U00C6> "<a><e>";"<LIG><LIG>";"<CAP><CAP>";IGNORE
-
-reorder-after <U0061>
-<U00E6> "<a><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE
-
 reorder-end
 
 END LC_COLLATE

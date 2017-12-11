@@ -43,28 +43,82 @@ copy "hi_IN"
 END LC_CTYPE
 
 LC_COLLATE
-
-% Copy the template from ISO/IEC 14651
+% CLDR collation rules for Marathi:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/mr.xml)
+%
+% 			<collation type="standard">
+% <cr><![CDATA[
+% [normalization on]
+% [reorder Deva Beng Guru Gujr Orya Taml Telu Knda Mlym Sinh]
+% #
+% # The following tailoring is an adjustment of the
+% # DUCET collation order for ANUSVARA, CANDRABINDU,
+% # and VISARGA. Instead of being sorted with secondary
+% # weights, they are collated on primary level before
+% # the independent vowels. CANDRABINDU is secondary
+% # different from ANUSVARA. This gives a sort order
+% # similar to Hindi.
+% #
+% &ॐ<ं<<ँ<ः
+% #
+% # The following tailoring is an adjustment of the
+% # DUCET collation order for LLA. Instead of being
+% # sorted after LA, LLA is sorted after HA.
+% #
+% &ह<ळ
+% #
+% # KSSA is sorted after LLA.
+% #
+% <क्ष
+% #
+% # JNYA is sorted after KSSA.
+% #
+% <ज्ञ
+% ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/mr.xml)
+%
+% <exemplarCharacters type="index">[\u200D ॐ \u0902 ः अ आ इ ई उ ऊ ऋ ऌ ए ऐ ऑ ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह ळ ऽ \u0945 \u094D]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
-% customize sorting required for mr_IN
-collating-element <dv_ksha> from "<U0915><U094D><U0937>"
-collating-element <dv_dnya> from "<U091C><U094D><U091E>"
-collating-element <dv_shra> from "<U0936><U094D><U0930>"
+collating-symbol <anusvara>
+collating-symbol <candrabindu>
+collating-symbol <visarga>
+
+collating-element <dv_ksha> from "<U0915><U094D><U0937>" % क ् ष = क्ष
+collating-element <dv_dnya> from "<U091C><U094D><U091E>" % ज ् ञ = ज्ञ
+% This not in CLDR but it was in the old mr_IN collation in glibc:
+collating-element <dv_shra> from "<U0936><U094D><U0930>" % श ् र = श्र
 
 collating-symbol <d_ksha>
 collating-symbol <d_dnya>
 collating-symbol <d_shra>
 
-reorder-after <d_ha>
+reorder-after <S0950> % DEVANAGARI OM
+<anusvara>
+<visarga>
+
+<U0902> <anusvara>;<ANUSVARA>;<MIN>;<U0902> % DEVANAGARI SIGN ANUSVARA
+<U0901> <anusvara>;"<ANUSVARA><VRNT1>";<MIN>;<U0901> % DEVANAGARI SIGN CANDRABINDU
+<U0903> <visarga>;<VISARGA>;<MIN>;<U0903> % DEVANAGARI SIGN VISARGA
+
+reorder-after <S0939> % <U0939> <S0939>;<BASE>;<MIN>;<U0939> % DEVANAGARI LETTER HA
+<S0933> % DEVANAGARI LETTER LLA
 <d_ksha>
 <d_dnya>
+% This not in CLDR but it was in the old mr_IN collation in glibc:
 <d_shra>
 
-reorder-after <U0939>
-<dv_ksha> <d_ksha>;<BAS>;<MIN>;IGNORE
-<dv_dnya> <d_dnya>;<BAS>;<MIN>;IGNORE
-<dv_shra> <d_shra>;<BAS>;<MIN>;IGNORE
+<U0933> <S0933>;<BASE>;<MIN>;<U0933> % DEVANAGARI LETTER LLA
+<dv_ksha> <d_ksha>;<BASE>;<MIN>;"<U0915><U094D><U0937>" % क ् ष = क्ष
+<dv_dnya> <d_dnya>;<BASE>;<MIN>;IGNORE
+% This not in CLDR but it was in the old mr_IN collation in glibc:
+<dv_shra> <d_shra>;<BASE>;<MIN>;IGNORE
 
 reorder-end
 

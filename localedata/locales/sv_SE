@@ -60,20 +60,48 @@ END LC_IDENTIFICATION
 LC_COLLATE
 copy "iso14651_t1"
 
+% CLDR collation rules for Swedish:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/sv.xml)
+%
+% <collation type="standard">
+%   <cr><![CDATA[
+%     &D<<đ<<<Đ<<ð<<<Ð
+%     &t<<<þ/h
+%     &T<<<Þ/H
+%     &v<<<V<<w<<<W
+%     &Y<<ü<<<Ü<<ű<<<Ű
+%     &[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/sv.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
 collating-symbol <aring>
-collating-symbol <ae>
-collating-symbol <oumlaut>
-collating-symbol <oslash>
+collating-symbol <a-diaresis>
+collating-symbol <o-diaresis>
 
-% æ is sorted after ä and å etc.
-reorder-after <REU>
-<LIG>
+% &[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô
+reorder-after <AFTER-Z>
+<a-ring>
+<a-diaresis>
+<o-diaresis>
 
-reorder-after <z>
-<aring>
-<ae>
-<oumlaut>
-<oslash>
+% &D<<đ<<<Đ<<ð<<<Ð
+<U0110> <S0064>;"<BASE><BARRE>";"<CAP><MIN>";IGNORE % Đ
+<U0111> <S0064>;"<BASE><BARRE>";"<MIN><MIN>";IGNORE % đ
+<U00D0> <S0064>;"<BASE><VRNT1>";"<COMPATCAP><COMPAT>";IGNORE % Ð
+<U00F0> <S0064>;"<BASE><VRNT1>";"<COMPAT><COMPAT>";IGNORE % ð
+
+% &T<<<Þ/H
+% &t<<<þ/h
+<U00DE> "<S0074><S0068>";"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Þ
+<U00FE> "<S0074><S0068>";"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % þ
 
 % The letter w is normally not present in the Swedish alphabet. It
 % exists in some names in Swedish and foreign words, but is accounted
@@ -81,32 +109,39 @@ reorder-after <z>
 % ordered alphabetically among the words and names with 'v'. If two
 % words or names are only to be distinguished by 'v' or % 'w', 'v' is
 % placed before 'w'.
-reorder-after <U0056>
-<U0057> <v>;<BAS>;<CAP>;<w> % W
-reorder-after <U0076>
-<U0077> <v>;<BAS>;<MIN>;<w> % w
 
-reorder-after <U00E3>
-<U00E4> <ae>;<REU>;<MIN>;IGNORE % ä
-<U00E5> <aring>;<RNE>;<MIN>;IGNORE % å
-<U00E6> <ae>;<LIG>;<MIN>;IGNORE % æ
-reorder-after <U00F5>
-<U00F6> <oumlaut>;<REU>;<MIN>;IGNORE % ö
-<U00F8> <oslash>;<OBL>;<MIN>;IGNORE % ø
+% &v<<<V<<w<<<W
+<U0057> <S0076>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % W
+<U0077> <S0076>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % w
 
-reorder-after <U00C3>
-<U00C4> <ae>;<REU>;<CAP>;IGNORE % Ä
-<U00C5> <aring>;<RNE>;<CAP>;IGNORE % Å
-<U00C6> <ae>;<LIG>;<CAP>;IGNORE % Æ
-reorder-after <U00D5>
-<U00D6> <oumlaut>;<REU>;<CAP>;IGNORE % Ö
-<U00D8> <oslash>;<OBL>;<CAP>;IGNORE % Ø
+% &Y<<ü<<<Ü<<ű<<<Ű
+<U00DC> <S0079>;"<BASE><TREMA>";"<CAP><MIN>";IGNORE % Ü
+<U00FC> <S0079>;"<BASE><TREMA>";"<MIN><MIN>";IGNORE % ü
+<U0170> <S0079>;"<BASE><2AIGU>";"<CAP><MIN>";IGNORE % Ű
+<U0171> <S0079>;"<BASE><2AIGU>";"<MIN><MIN>";IGNORE % ű
 
-% ü/Ü is treated like y/Y but is sorted after the latter
-reorder-after <U00FB>
-<U00FC> <y>;<REU>;<MIN>;IGNORE % ü
-reorder-after <U00DB>
-<U00DC> <y>;<REU>;<CAP>;IGNORE % Ü
+% &[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô
+<U00C5> <a-ring>;"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Å
+<U00E5> <a-ring>;"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % å
+
+<U00C4> <a-diaresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ä
+<U00E4> <a-diaresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ä
+<U00C6> <a-diaresis>;"<BASE><VRNT1>";"<COMPATCAP><COMPATCAP>";IGNORE % Æ
+<U00E6> <a-diaresis>;"<BASE><VRNT1>";"<COMPAT><COMPAT>";IGNORE % æ
+<U0118> <a-diaresis>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Ę
+<U0119> <a-diaresis>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % ę
+
+<U00D6> <o-diaresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ö
+<U00F6> <o-diaresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ö
+<U00D8> <o-diaresis>;"<BASE><VRNT1>";"<COMPATCAP><COMPATCAP>";IGNORE % Ø
+<U00F8> <o-diaresis>;"<BASE><VRNT1>";"<COMPAT><COMPAT>";IGNORE % ø
+<U0150> <o-diaresis>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Ő
+<U0151> <o-diaresis>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % ő
+<U0152> <o-diaresis>;"<BASE><VRNT3>";"<CAP><MIN>";IGNORE % Œ
+<U0153> <o-diaresis>;"<BASE><VRNT3>";"<MIN><MIN>";IGNORE % œ
+<U00D4> <o-diaresis>;"<BASE><VRNT4>";"<CAP><MIN>";IGNORE % Ô
+<U00F4> <o-diaresis>;"<BASE><VRNT4>";"<MIN><MIN>";IGNORE % ô
+
 reorder-end
 
 END LC_COLLATE

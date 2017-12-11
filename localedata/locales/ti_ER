@@ -155,7 +155,9 @@ END LC_ADDRESS
 LC_MESSAGES
 yesexpr "^[+1yY<U12A5>]"
 noexpr  "^[-0nN<U1290>]"
+% እወ
 yesstr  "<U12A5><U12C8>"
+% ነኖእ
 nostr   "<U1290><U1296><U12A5>"
 END LC_MESSAGES
 

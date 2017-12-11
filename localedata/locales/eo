@@ -55,6 +55,27 @@ copy "i18n"
 END LC_CTYPE
 
 LC_COLLATE
+% CLDR collation rules for Esperanto:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/eo.xml)
+%
+% <collation type="standard" >
+%   <cr><![CDATA[
+%     &C<ĉ<<<Ĉ
+%     &G<ĝ<<<Ĝ
+%     &H<ĥ<<<Ĥ
+%     &J<ĵ<<<Ĵ
+%     &S<ŝ<<<Ŝ
+%     &U<ŭ<<<Ŭ
+%   ]]></cr>
+% </collation  >
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/eo.xml)
+%
+% <exemplarCharacters type="index">[A B C Ĉ D E F G Ĝ H Ĥ I J Ĵ K L M N O P R S Ŝ T U Ŭ V Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
 collating-symbol <ccirc>
@@ -64,43 +85,31 @@ collating-symbol <jcirc>
 collating-symbol <scirc>
 collating-symbol <ubreve>
 
-reorder-after <c>
+reorder-after <AFTER-C>
 <ccirc>
-reorder-after <g>
+reorder-after <AFTER-G>
 <gcirc>
-reorder-after <h>
+reorder-after <AFTER-H>
 <hcirc>
-reorder-after <j>
+reorder-after <AFTER-J>
 <jcirc>
-reorder-after <s>
+reorder-after <AFTER-S>
 <scirc>
-reorder-after <u>
+reorder-after <AFTER-U>
 <ubreve>
 
-reorder-after <U0043>
-<U0108> <ccirc>;<CIR>;<CAP>;IGNORE
-reorder-after <U0063>
-<U0109> <ccirc>;<CIR>;<MIN>;IGNORE
-reorder-after <U0047>
-<U011C> <gcirc>;<CIR>;<CAP>;IGNORE
-reorder-after <U0067>
-<U011D> <gcirc>;<CIR>;<MIN>;IGNORE
-reorder-after <U0048>
-<U0124> <hcirc>;<CIR>;<CAP>;IGNORE
-reorder-after <U0068>
-<U0125> <hcirc>;<CIR>;<MIN>;IGNORE
-reorder-after <U004A>
-<U0134> <jcirc>;<CIR>;<CAP>;IGNORE
-reorder-after <U006A>
-<U0135> <jcirc>;<CIR>;<MIN>;IGNORE
-reorder-after <U0053>
-<U015C> <scirc>;<CIR>;<CAP>;IGNORE
-reorder-after <U0073>
-<U015D> <scirc>;<CIR>;<MIN>;IGNORE
-reorder-after <U0055>
-<U016C> <ubreve>;<BRE>;<CAP>;IGNORE
-reorder-after <U0075>
-<U016D> <ubreve>;<BRE>;<MIN>;IGNORE
+<U0108> <ccirc>;<BASE>;<CAP>;IGNORE
+<U0109> <ccirc>;<BASE>;<MIN>;IGNORE
+<U011C> <gcirc>;<BASE>;<CAP>;IGNORE
+<U011D> <gcirc>;<BASE>;<MIN>;IGNORE
+<U0124> <hcirc>;<BASE>;<CAP>;IGNORE
+<U0125> <hcirc>;<BASE>;<MIN>;IGNORE
+<U0134> <jcirc>;<BASE>;<CAP>;IGNORE
+<U0135> <jcirc>;<BASE>;<MIN>;IGNORE
+<U015C> <scirc>;<BASE>;<CAP>;IGNORE
+<U015D> <scirc>;<BASE>;<MIN>;IGNORE
+<U016C> <ubreve>;<BASE>;<CAP>;IGNORE
+<U016D> <ubreve>;<BASE>;<MIN>;IGNORE
 
 reorder-end
 

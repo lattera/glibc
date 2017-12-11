@@ -63,6 +63,7 @@ copy "iso14651_t1"
 % The following rules implement the same order for glibc.
 
 collating-symbol <s-caron>
+collating-symbol <z>
 collating-symbol <z-caron>
 collating-symbol <o-tilde>
 collating-symbol <a-diaresis>
@@ -80,28 +81,28 @@ reorder-after <RES-1>
 <CAP>
 <MIN>
 
-reorder-after <s>
+reorder-after <BEFORE-T>
 <s-caron>
-<z>
+<S007A>
 <z-caron>
-reorder-after <w>
+reorder-after <BEFORE-X>
 <o-tilde>
 <a-diaresis>
 <o-diaresis>
 <u-diaresis>
 
-<U0161> <s-caron>;<BAS>;<MIN>;IGNORE % š
-<U0160> <s-caron>;<BAS>;<CAP>;IGNORE % Š
-<U017E> <z-caron>;<BAS>;<MIN>;IGNORE % ž
-<U017D> <z-caron>;<BAS>;<CAP>;IGNORE % Ž
-<U00F5> <o-tilde>;<BAS>;<MIN>;IGNORE % õ
-<U00D5> <o-tilde>;<BAS>;<CAP>;IGNORE % Õ
-<U00E4> <a-diaresis>;<BAS>;<MIN>;IGNORE % ä
-<U00C4> <a-diaresis>;<BAS>;<CAP>;IGNORE % Ä
-<U00F6> <o-diaresis>;<BAS>;<MIN>;IGNORE % ö
-<U00D6> <o-diaresis>;<BAS>;<CAP>;IGNORE % Ö
-<U00FC> <u-diaresis>;<BAS>;<MIN>;IGNORE % ü
-<U00DC> <u-diaresis>;<BAS>;<CAP>;IGNORE % Ü
+<U0161> <s-caron>;<BASE>;<MIN>;IGNORE % š
+<U0160> <s-caron>;<BASE>;<CAP>;IGNORE % Š
+<U017E> <z-caron>;<BASE>;<MIN>;IGNORE % ž
+<U017D> <z-caron>;<BASE>;<CAP>;IGNORE % Ž
+<U00F5> <o-tilde>;<BASE>;<MIN>;IGNORE % õ
+<U00D5> <o-tilde>;<BASE>;<CAP>;IGNORE % Õ
+<U00E4> <a-diaresis>;<BASE>;<MIN>;IGNORE % ä
+<U00C4> <a-diaresis>;<BASE>;<CAP>;IGNORE % Ä
+<U00F6> <o-diaresis>;<BASE>;<MIN>;IGNORE % ö
+<U00D6> <o-diaresis>;<BASE>;<CAP>;IGNORE % Ö
+<U00FC> <u-diaresis>;<BASE>;<MIN>;IGNORE % ü
+<U00DC> <u-diaresis>;<BASE>;<CAP>;IGNORE % Ü
 
 reorder-end
 

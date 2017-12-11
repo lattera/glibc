@@ -85,8 +85,8 @@ copy "iso14651_t1"
 collating-symbol  <odouble>
 collating-symbol  <udouble>
 
-collating-symbol  <SINGLE-OR-COMPOUND>
-collating-symbol  <COMPOUND>
+collating-symbol  <single-or-compound>
+collating-symbol  <compound>
 
 collating-symbol  <cs>
 collating-element <C-S> from "<U0043><U0053>"
@@ -255,195 +255,195 @@ reorder-after <CAP>
 <CAP-CAP-MIN>
 <CAP-CAP-CAP>
 
-reorder-after <c>
+reorder-after <AFTER-C>
 <cs>
-reorder-after <d>
+reorder-after <AFTER-D>
 <dz>
 <dzs>
-reorder-after <g>
+reorder-after <AFTER-G>
 <gy>
-reorder-after <l>
+reorder-after <AFTER-L>
 <ly>
-reorder-after <n>
+reorder-after <AFTER-N>
 <ny>
-reorder-after <o>
+reorder-after <AFTER-O>
 <odouble>
-reorder-after <s>
+reorder-after <AFTER-S>
 <sz>
-reorder-after <t>
+reorder-after <AFTER-T>
 <ty>
-reorder-after <u>
+reorder-after <AFTER-U>
 <udouble>
-reorder-after <z>
+reorder-after <AFTER-Z>
 <zs>
 
-reorder-after <BAS>
-<SINGLE-OR-COMPOUND>
-<COMPOUND>
+reorder-after <BASE>
+<single-or-compound>
+<compound>
 
-reorder-after <o>
-<U00F6>	<odouble>;<REU>;<MIN>;IGNORE
-<U0151>	<odouble>;<DAC>;<MIN>;IGNORE
-<U00D6>	<odouble>;<REU>;<CAP>;IGNORE
-<U0150>	<odouble>;<DAC>;<CAP>;IGNORE
+reorder-after <AFTER-O>
+<U00F6>	<odouble>;<TREMA>;<MIN>;IGNORE
+<U0151>	<odouble>;<2AIGU>;<MIN>;IGNORE
+<U00D6>	<odouble>;<TREMA>;<CAP>;IGNORE
+<U0150>	<odouble>;<2AIGU>;<CAP>;IGNORE
 
-reorder-after <u>
-<U00FC>	<udouble>;<REU>;<MIN>;IGNORE
-<U0171>	<udouble>;<DAC>;<MIN>;IGNORE
-<U00DC>	<udouble>;<REU>;<CAP>;IGNORE
-<U0170>	<udouble>;<DAC>;<CAP>;IGNORE
+reorder-after <AFTER-U>
+<U00FC>	<udouble>;<TREMA>;<MIN>;IGNORE
+<U0171>	<udouble>;<2AIGU>;<MIN>;IGNORE
+<U00DC>	<udouble>;<TREMA>;<CAP>;IGNORE
+<U0170>	<udouble>;<2AIGU>;<CAP>;IGNORE
 
-reorder-after <BAS>
-<ACA>
-<REU>
-<DAC>
+reorder-after <BASE>
+<AIGUT>
+<TREMA>
+<2AIGU>
 
 reorder-after <U0043>
-<C-S>		<cs>;<COMPOUND>;<CAP-CAP>;IGNORE
-<C-s>		<cs>;<COMPOUND>;<CAP-MIN>;IGNORE
-<C-C-S>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<C-C-s>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<C-c-S>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<C-c-s>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<C-S>		<cs>;<compound>;<CAP-CAP>;IGNORE
+<C-s>		<cs>;<compound>;<CAP-MIN>;IGNORE
+<C-C-S>		"<cs><cs>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<C-C-s>		"<cs><cs>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<C-c-S>		"<cs><cs>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<C-c-s>		"<cs><cs>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U0063>
-<c-S>		<cs>;<COMPOUND>;<MIN-CAP>;IGNORE
-<c-s>		<cs>;<COMPOUND>;<MIN-MIN>;IGNORE
-<c-C-S>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<c-C-s>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<c-c-S>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<c-c-s>		"<cs><cs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<c-S>		<cs>;<compound>;<MIN-CAP>;IGNORE
+<c-s>		<cs>;<compound>;<MIN-MIN>;IGNORE
+<c-C-S>		"<cs><cs>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<c-C-s>		"<cs><cs>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<c-c-S>		"<cs><cs>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<c-c-s>		"<cs><cs>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U0044>
-<D-Z>		<dz>;<COMPOUND>;<CAP-CAP>;IGNORE
-<D-z>		<dz>;<COMPOUND>;<CAP-MIN>;IGNORE
-<D-D-Z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<D-D-z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<D-d-Z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<D-d-z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<D-Z>		<dz>;<compound>;<CAP-CAP>;IGNORE
+<D-z>		<dz>;<compound>;<CAP-MIN>;IGNORE
+<D-D-Z>		"<dz><dz>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<D-D-z>		"<dz><dz>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<D-d-Z>		"<dz><dz>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<D-d-z>		"<dz><dz>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U0064>
-<d-Z>		<dz>;<COMPOUND>;<MIN-CAP>;IGNORE
-<d-z>		<dz>;<COMPOUND>;<MIN-MIN>;IGNORE
-<d-D-Z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<d-D-z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<d-d-Z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<d-d-z>		"<dz><dz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<d-Z>		<dz>;<compound>;<MIN-CAP>;IGNORE
+<d-z>		<dz>;<compound>;<MIN-MIN>;IGNORE
+<d-D-Z>		"<dz><dz>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<d-D-z>		"<dz><dz>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<d-d-Z>		"<dz><dz>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<d-d-z>		"<dz><dz>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U0044>
-<D-Z-S>		<dzs>;<COMPOUND>;<CAP-CAP-CAP>;IGNORE
-<D-Z-s>		<dzs>;<COMPOUND>;<CAP-CAP-MIN>;IGNORE
-<D-z-S>		<dzs>;<COMPOUND>;<CAP-MIN-CAP>;IGNORE
-<D-z-s>		<dzs>;<COMPOUND>;<CAP-MIN-MIN>;IGNORE
-<D-D-Z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP-CAP>";IGNORE
-<D-D-Z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP-MIN>";IGNORE
-<D-D-z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN-CAP>";IGNORE
-<D-D-z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN-MIN>";IGNORE
-<D-d-Z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP-CAP>";IGNORE
-<D-d-Z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP-MIN>";IGNORE
-<D-d-z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN-CAP>";IGNORE
-<D-d-z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN-MIN>";IGNORE
+<D-Z-S>		<dzs>;<compound>;<CAP-CAP-CAP>;IGNORE
+<D-Z-s>		<dzs>;<compound>;<CAP-CAP-MIN>;IGNORE
+<D-z-S>		<dzs>;<compound>;<CAP-MIN-CAP>;IGNORE
+<D-z-s>		<dzs>;<compound>;<CAP-MIN-MIN>;IGNORE
+<D-D-Z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><CAP-CAP-CAP>";IGNORE
+<D-D-Z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><CAP-CAP-MIN>";IGNORE
+<D-D-z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><CAP-MIN-CAP>";IGNORE
+<D-D-z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><CAP-MIN-MIN>";IGNORE
+<D-d-Z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><MIN-CAP-CAP>";IGNORE
+<D-d-Z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><MIN-CAP-MIN>";IGNORE
+<D-d-z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><MIN-MIN-CAP>";IGNORE
+<D-d-z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<CAP><MIN-MIN-MIN>";IGNORE
 reorder-after <U0064>
-<d-Z-S>		<dzs>;<COMPOUND>;<MIN-CAP-CAP>;IGNORE
-<d-Z-s>		<dzs>;<COMPOUND>;<MIN-CAP-MIN>;IGNORE
-<d-z-S>		<dzs>;<COMPOUND>;<MIN-MIN-CAP>;IGNORE
-<d-z-s>		<dzs>;<COMPOUND>;<MIN-MIN-MIN>;IGNORE
-<d-D-Z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP-CAP>";IGNORE
-<d-D-Z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP-MIN>";IGNORE
-<d-D-z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN-CAP>";IGNORE
-<d-D-z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN-MIN>";IGNORE
-<d-d-Z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP-CAP>";IGNORE
-<d-d-Z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP-MIN>";IGNORE
-<d-d-z-S>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN-CAP>";IGNORE
-<d-d-z-s>	"<dzs><dzs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN-MIN>";IGNORE
+<d-Z-S>		<dzs>;<compound>;<MIN-CAP-CAP>;IGNORE
+<d-Z-s>		<dzs>;<compound>;<MIN-CAP-MIN>;IGNORE
+<d-z-S>		<dzs>;<compound>;<MIN-MIN-CAP>;IGNORE
+<d-z-s>		<dzs>;<compound>;<MIN-MIN-MIN>;IGNORE
+<d-D-Z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><CAP-CAP-CAP>";IGNORE
+<d-D-Z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><CAP-CAP-MIN>";IGNORE
+<d-D-z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><CAP-MIN-CAP>";IGNORE
+<d-D-z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><CAP-MIN-MIN>";IGNORE
+<d-d-Z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><MIN-CAP-CAP>";IGNORE
+<d-d-Z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><MIN-CAP-MIN>";IGNORE
+<d-d-z-S>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><MIN-MIN-CAP>";IGNORE
+<d-d-z-s>	"<dzs><dzs>";"<single-or-compound><compound>";"<MIN><MIN-MIN-MIN>";IGNORE
 
 reorder-after <U0047>
-<G-Y>		<gy>;<COMPOUND>;<CAP-CAP>;IGNORE
-<G-y>		<gy>;<COMPOUND>;<CAP-MIN>;IGNORE
-<G-G-Y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<G-G-y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<G-g-Y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<G-g-y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<G-Y>		<gy>;<compound>;<CAP-CAP>;IGNORE
+<G-y>		<gy>;<compound>;<CAP-MIN>;IGNORE
+<G-G-Y>		"<gy><gy>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<G-G-y>		"<gy><gy>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<G-g-Y>		"<gy><gy>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<G-g-y>		"<gy><gy>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U0067>
-<g-Y>		<gy>;<COMPOUND>;<MIN-CAP>;IGNORE
-<g-y>		<gy>;<COMPOUND>;<MIN-MIN>;IGNORE
-<g-G-Y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<g-G-y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<g-g-Y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<g-g-y>		"<gy><gy>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<g-Y>		<gy>;<compound>;<MIN-CAP>;IGNORE
+<g-y>		<gy>;<compound>;<MIN-MIN>;IGNORE
+<g-G-Y>		"<gy><gy>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<g-G-y>		"<gy><gy>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<g-g-Y>		"<gy><gy>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<g-g-y>		"<gy><gy>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U004C>
-<L-Y>		<ly>;<COMPOUND>;<CAP-CAP>;IGNORE
-<L-y>		<ly>;<COMPOUND>;<CAP-MIN>;IGNORE
-<L-L-Y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<L-L-y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<L-l-Y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<L-l-y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<L-Y>		<ly>;<compound>;<CAP-CAP>;IGNORE
+<L-y>		<ly>;<compound>;<CAP-MIN>;IGNORE
+<L-L-Y>		"<ly><ly>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<L-L-y>		"<ly><ly>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<L-l-Y>		"<ly><ly>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<L-l-y>		"<ly><ly>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U006C>
-<l-Y>		<ly>;<COMPOUND>;<MIN-CAP>;IGNORE
-<l-y>		<ly>;<COMPOUND>;<MIN-MIN>;IGNORE
-<l-L-Y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<l-L-y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<l-l-Y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<l-l-y>		"<ly><ly>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<l-Y>		<ly>;<compound>;<MIN-CAP>;IGNORE
+<l-y>		<ly>;<compound>;<MIN-MIN>;IGNORE
+<l-L-Y>		"<ly><ly>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<l-L-y>		"<ly><ly>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<l-l-Y>		"<ly><ly>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<l-l-y>		"<ly><ly>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U004E>
-<N-Y>		<ny>;<COMPOUND>;<CAP-CAP>;IGNORE
-<N-y>		<ny>;<COMPOUND>;<CAP-MIN>;IGNORE
-<N-N-Y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<N-N-y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<N-n-Y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<N-n-y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<N-Y>		<ny>;<compound>;<CAP-CAP>;IGNORE
+<N-y>		<ny>;<compound>;<CAP-MIN>;IGNORE
+<N-N-Y>		"<ny><ny>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<N-N-y>		"<ny><ny>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<N-n-Y>		"<ny><ny>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<N-n-y>		"<ny><ny>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U006E>
-<n-Y>		<ny>;<COMPOUND>;<MIN-CAP>;IGNORE
-<n-y>		<ny>;<COMPOUND>;<MIN-MIN>;IGNORE
-<n-N-Y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<n-N-y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<n-n-Y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<n-n-y>		"<ny><ny>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<n-Y>		<ny>;<compound>;<MIN-CAP>;IGNORE
+<n-y>		<ny>;<compound>;<MIN-MIN>;IGNORE
+<n-N-Y>		"<ny><ny>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<n-N-y>		"<ny><ny>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<n-n-Y>		"<ny><ny>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<n-n-y>		"<ny><ny>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U0053>
-<S-Z>		<sz>;<COMPOUND>;<CAP-CAP>;IGNORE
-<S-z>		<sz>;<COMPOUND>;<CAP-MIN>;IGNORE
-<S-S-Z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<S-S-z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<S-s-Z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<S-s-z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<S-Z>		<sz>;<compound>;<CAP-CAP>;IGNORE
+<S-z>		<sz>;<compound>;<CAP-MIN>;IGNORE
+<S-S-Z>		"<sz><sz>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<S-S-z>		"<sz><sz>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<S-s-Z>		"<sz><sz>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<S-s-z>		"<sz><sz>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U0073>
-<s-Z>		<sz>;<COMPOUND>;<MIN-CAP>;IGNORE
-<s-z>		<sz>;<COMPOUND>;<MIN-MIN>;IGNORE
-<s-S-Z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<s-S-z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<s-s-Z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<s-s-z>		"<sz><sz>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<s-Z>		<sz>;<compound>;<MIN-CAP>;IGNORE
+<s-z>		<sz>;<compound>;<MIN-MIN>;IGNORE
+<s-S-Z>		"<sz><sz>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<s-S-z>		"<sz><sz>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<s-s-Z>		"<sz><sz>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<s-s-z>		"<sz><sz>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U0054>
-<T-Y>		<ty>;<COMPOUND>;<CAP-CAP>;IGNORE
-<T-y>		<ty>;<COMPOUND>;<CAP-MIN>;IGNORE
-<T-T-Y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<T-T-y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<T-t-Y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<T-t-y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<T-Y>		<ty>;<compound>;<CAP-CAP>;IGNORE
+<T-y>		<ty>;<compound>;<CAP-MIN>;IGNORE
+<T-T-Y>		"<ty><ty>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<T-T-y>		"<ty><ty>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<T-t-Y>		"<ty><ty>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<T-t-y>		"<ty><ty>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U0074>
-<t-Y>		<ty>;<COMPOUND>;<MIN-CAP>;IGNORE
-<t-y>		<ty>;<COMPOUND>;<MIN-MIN>;IGNORE
-<t-T-Y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<t-T-y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<t-t-Y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<t-t-y>		"<ty><ty>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<t-Y>		<ty>;<compound>;<MIN-CAP>;IGNORE
+<t-y>		<ty>;<compound>;<MIN-MIN>;IGNORE
+<t-T-Y>		"<ty><ty>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<t-T-y>		"<ty><ty>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<t-t-Y>		"<ty><ty>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<t-t-y>		"<ty><ty>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-after <U005A>
-<Z-S>		<zs>;<COMPOUND>;<CAP-CAP>;IGNORE
-<Z-s>		<zs>;<COMPOUND>;<CAP-MIN>;IGNORE
-<Z-Z-S>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-CAP>";IGNORE
-<Z-Z-s>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><CAP-MIN>";IGNORE
-<Z-z-S>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-CAP>";IGNORE
-<Z-z-s>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<CAP><MIN-MIN>";IGNORE
+<Z-S>		<zs>;<compound>;<CAP-CAP>;IGNORE
+<Z-s>		<zs>;<compound>;<CAP-MIN>;IGNORE
+<Z-Z-S>		"<zs><zs>";"<single-or-compound><compound>";"<CAP><CAP-CAP>";IGNORE
+<Z-Z-s>		"<zs><zs>";"<single-or-compound><compound>";"<CAP><CAP-MIN>";IGNORE
+<Z-z-S>		"<zs><zs>";"<single-or-compound><compound>";"<CAP><MIN-CAP>";IGNORE
+<Z-z-s>		"<zs><zs>";"<single-or-compound><compound>";"<CAP><MIN-MIN>";IGNORE
 reorder-after <U007A>
-<z-S>		<zs>;<COMPOUND>;<MIN-CAP>;IGNORE
-<z-s>		<zs>;<COMPOUND>;<MIN-MIN>;IGNORE
-<z-Z-S>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-CAP>";IGNORE
-<z-Z-s>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><CAP-MIN>";IGNORE
-<z-z-S>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-CAP>";IGNORE
-<z-z-s>		"<zs><zs>";"<SINGLE-OR-COMPOUND><COMPOUND>";"<MIN><MIN-MIN>";IGNORE
+<z-S>		<zs>;<compound>;<MIN-CAP>;IGNORE
+<z-s>		<zs>;<compound>;<MIN-MIN>;IGNORE
+<z-Z-S>		"<zs><zs>";"<single-or-compound><compound>";"<MIN><CAP-CAP>";IGNORE
+<z-Z-s>		"<zs><zs>";"<single-or-compound><compound>";"<MIN><CAP-MIN>";IGNORE
+<z-z-S>		"<zs><zs>";"<single-or-compound><compound>";"<MIN><MIN-CAP>";IGNORE
+<z-z-s>		"<zs><zs>";"<single-or-compound><compound>";"<MIN><MIN-MIN>";IGNORE
 
 reorder-end
 

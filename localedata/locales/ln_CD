@@ -43,30 +43,37 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651 i.e.
-% use the rules there when making ordered lists of words.
-% add special characters for Lingala
-% a b c d e ɛ f g h i j k l m o ɔ  p (q) (r) s t u v w (x) y z
-% mb mp nd ng nk ns nt nz are not ordered as digraph, use ln_CD@morph
-% should mf, mv, kp, kw, gb, gw, ngb, ngw be included?
+% CLDR collation rules for Lingala:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ln.xml)
+%
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		&E<ɛ<<<Ɛ
+% 		&O<<ɔ<<<Ɔ
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/ln.xml)
+%
+%  <exemplarCharacters type="index">[A B C D E Ɛ F G {Gb} H I K L M {Mb} {Mp} N {Nd} {Ng} {Nk} {Ns} {Nt} {Ny} {Nz} O Ɔ P R S T U V W Y Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
 
-collating-symbol <opene>
-collating-symbol <openo>
+collating-symbol <open-e>
+collating-symbol <open-o>
 
-reorder-after <e>
-<opene>
-reorder-after <o>
-<openo>
+reorder-after <AFTER-E>
+<open-e>
+reorder-after <AFTER-O>
+<open-o>
 
-reorder-after <U0065>
-<U025B> <opene>;<BAS>;<MIN>;IGNORE % ɛ
-reorder-after <U0045>
-<U0190> <opene>;<BAS>;<CAP>;IGNORE % Ɛ
-reorder-after <U006F>
-<U0254> <openo>;<BAS>;<MIN>;IGNORE % ɔ
-reorder-after <U004F>
-<U0186> <openo>;<BAS>;<CAP>;IGNORE % Ɔ
+<U025B> <open-e>;"<BASE>";"<MIN>";IGNORE % ɛ
+<U0190> <open-e>;"<BASE>";"<CAP>";IGNORE % Ɛ
+<U0254> <open-o>;"<BASE>";"<MIN>";IGNORE % ɔ
+<U0186> <open-o>;"<BASE>";"<CAP>";IGNORE % Ɔ
 
 reorder-end
 END LC_COLLATE

@@ -19,9 +19,6 @@ escape_char /
 % Application: general
 % Users: general
 
-% needed extra chars: ä, ö, ü, ý, ç, ş, ň, ž
-% cyrillic extra chars: җ (z%,=), ң (n,=), ө (o-=), ү (u'=), ә (sw=)
-
 LC_IDENTIFICATION
 
 title     "Turkmen locale for Turkmenistan"
@@ -59,83 +56,83 @@ include "translit_combining";""
 % cyrillic -> latin
 % lower case letters
 
-<U0430> "<U0061>"        % a=   -> a
-<U0431> "<U0062>"        % b=   -> b
-<U0432> "<U0077>"        % v=   -> w
-<U0433> "<U0067>"        % g=   -> g
-<U0434> "<U0064>"        % d=   -> d
-<U0435> "<U0065>"        % e=   -> e (y'e also, but context dependent)
-<U0451> "<U00FD><U006F>" % io   -> y'o
-<U0436> "<U017E>"        % z%   -> z<
-<U0497> "<U006A>"        % z%,  -> j
-<U0437> "<U007A>"        % z=   -> z
-<U0438> "<U0069>"        % i=   -> i
-<U0439> "<U00FD>"        % j=   -> y'
-<U043A> "<U006B>"        % k=   -> k
-<U043B> "<U006C>"        % l=   -> l
-<U043C> "<U006D>"        % m=   -> m
-<U043D> "<U006E>"        % n=   -> n
-<U04A3> "<U0148>"        % n,=  -> n<
-<U043E> "<U006F>"        % o=   -> o
-<U04E9> "<U00F6>"        % o-=  -> o:
-<U043F> "<U0070>"        % p=   -> p
-<U0440> "<U0072>"        % r=   -> r
-<U0441> "<U0073>"        % s=   -> s
-<U0442> "<U0074>"        % t=   -> t
-<U0443> "<U0075>"        % u=   -> u
-<U04AF> "<U00FC>"        % u'=  -> u:
-<U0444> "<U0066>"        % f=   -> f
-<U0445> "<U0068>"        % h=   -> h
-<U0446> "<U0074><U0073>" % c=   -> ts
-<U0447> "<U00E7>"        % c%   -> c,
-<U0448> "<U015F>"        % s%   -> s,
-<U044A> ""               % hard sign omitted
-<U044B> "<U0079>"        % yeru -> y
-<U044C> ""               % soft sign omitted.
-<U044D> "<U0065>"        % je=  -> e
-<U04D9> "<U00E4>"        % sw=  -> a:
-<U044E> "<U00FD><U0075>" % ju   -> y'u
-<U044F> "<U00FD><U0061>" % ja   -> y'a
+<U0430> "<U0061>"        % а -> a
+<U0431> "<U0062>"        % б -> b
+<U0432> "<U0077>"        % в -> w
+<U0433> "<U0067>"        % г -> g
+<U0434> "<U0064>"        % д -> d
+<U0435> "<U0065>"        % е -> e (y'e also, but context dependent)
+<U0451> "<U00FD><U006F>" % ё -> y'o
+<U0436> "<U017E>"        % ж -> z<
+<U0497> "<U006A>"        % җ -> j
+<U0437> "<U007A>"        % з -> z
+<U0438> "<U0069>"        % и -> i
+<U0439> "<U00FD>"        % й -> y'
+<U043A> "<U006B>"        % к -> k
+<U043B> "<U006C>"        % л -> l
+<U043C> "<U006D>"        % м -> m
+<U043D> "<U006E>"        % н -> n
+<U04A3> "<U0148>"        % ң -> n<
+<U043E> "<U006F>"        % о -> o
+<U04E9> "<U00F6>"        % ө -> o:
+<U043F> "<U0070>"        % п -> p
+<U0440> "<U0072>"        % р -> r
+<U0441> "<U0073>"        % с -> s
+<U0442> "<U0074>"        % т -> t
+<U0443> "<U0075>"        % у -> u
+<U04AF> "<U00FC>"        % ү -> u:
+<U0444> "<U0066>"        % ф -> f
+<U0445> "<U0068>"        % х -> h
+<U0446> "<U0074><U0073>" % ц -> ts
+<U0447> "<U00E7>"        % ч -> c,
+<U0448> "<U015F>"        % ш -> s,
+<U044A> ""               % ъ hard sign omitted
+<U044B> "<U0079>"        % ы -> y
+<U044C> ""               % ь soft sign omitted.
+<U044D> "<U0065>"        % э -> e
+<U04D9> "<U00E4>"        % ә -> a:
+<U044E> "<U00FD><U0075>" % ю -> y'u
+<U044F> "<U00FD><U0061>" % я -> y'a
 
 % upper case letters
 
-<U0410> "<U0041>"        % a=   -> a
-<U0411> "<U0042>"        % b=   -> b
-<U0412> "<U0057>"        % v=   -> w
-<U0413> "<U0047>"        % g=   -> g
-<U0414> "<U0044>"        % d=   -> d
-<U0415> "<U0045>"        % e=   -> e (y'e also, but context dependent)
-<U0401> "<U00DD><U006F>" % io   -> y'o
-<U0416> "<U017D>"        % z%   -> z<
-<U0496> "<U004A>"        % z%,  -> j
-<U0417> "<U005A>"        % z=   -> z
-<U0418> "<U0049>"        % i=   -> i
-<U0419> "<U00DD>"        % j=   -> y'
-<U041A> "<U004B>"        % k=   -> k
-<U041B> "<U004C>"        % l=   -> l
-<U041C> "<U004D>"        % m=   -> m
-<U041D> "<U004E>"        % n=   -> n
-<U04A2> "<U0147>"        % n,=  -> n<
-<U041E> "<U004F>"        % o=   -> o
-<U04E8> "<U00D6>"        % o-=  -> o:
-<U041F> "<U0050>"        % p=   -> p
-<U0420> "<U0052>"        % r=   -> r
-<U0421> "<U0053>"        % s=   -> s
-<U0422> "<U0054>"        % t=   -> t
-<U0423> "<U0055>"        % u=   -> u
-<U04AE> "<U00DC>"        % u'=  -> u:
-<U0424> "<U0046>"        % f=   -> f
-<U0425> "<U0048>"        % h=   -> h
-<U0426> "<U0054><U0073>" % c=   -> ts
-<U0427> "<U00C7>"        % c%   -> c,
-<U0428> "<U015E>"        % s%   -> s,
-<U042A> ""               % hard sign omitted
-<U042B> "<U0059>"        % yeru -> y
-<U042C> ""               % soft sign omitted.
-<U042D> "<U0045>"        % je=  -> e
-<U04D8> "<U00C4>"        % sw=  -> a:
-<U042E> "<U00DD><U0075>" % ju   -> y'u
-<U042F> "<U00DD><U0061>" % ja   -> y'a
+<U0410> "<U0041>"        % А -> a
+<U0411> "<U0042>"        % Б -> b
+<U0412> "<U0057>"        % В -> w
+<U0413> "<U0047>"        % Г -> g
+<U0414> "<U0044>"        % Д -> d
+<U0415> "<U0045>"        % Е -> e (y'e also, but context dependent)
+<U0401> "<U00DD><U006F>" % Ё -> y'o
+<U0416> "<U017D>"        % Ж -> z<
+<U0496> "<U004A>"        % Җ -> j
+<U0417> "<U005A>"        % З -> z
+<U0418> "<U0049>"        % И -> i
+<U0419> "<U00DD>"        % Й -> y'
+<U041A> "<U004B>"        % К -> k
+<U041B> "<U004C>"        % Л -> l
+<U041C> "<U004D>"        % М -> m
+<U041D> "<U004E>"        % Н -> n
+<U04A2> "<U0147>"        % Ң -> n<
+<U041E> "<U004F>"        % О -> o
+<U04E8> "<U00D6>"        % Ө -> o:
+<U041F> "<U0050>"        % П -> p
+<U0420> "<U0052>"        % Р -> r
+<U0421> "<U0053>"        % С -> s
+<U0422> "<U0054>"        % Т -> t
+<U0423> "<U0055>"        % У -> u
+<U04AE> "<U00DC>"        % Ү -> u:
+<U0424> "<U0046>"        % Ф -> f
+<U0425> "<U0048>"        % Х -> h
+<U0426> "<U0054><U0073>" % Ц -> ts
+<U0427> "<U00C7>"        % Ч -> c,
+<U0428> "<U015E>"        % Ш -> s,
+<U042A> ""               % Ъ hard sign omitted
+<U042B> "<U0059>"        % Ы -> y
+<U042C> ""               % Ь soft sign omitted.
+<U042D> "<U0045>"        % Э -> e
+<U04D8> "<U00C4>"        % Ә -> a:
+<U042E> "<U00DD><U0075>" % Ю -> y'u
+<U042F> "<U00DD><U0061>" % Я -> y'a
 
 translit_end
 
@@ -143,149 +140,121 @@ END LC_CTYPE
 
 LC_COLLATE
 
+% CLDR collation rules for Turkmen:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/tk.xml)
 %
-% The turkmen latin alphabet order is:
-% (letters in parenthesis are not used in tk)
-% <a>, <b>, <c,> (<c>), <d>, <e>, <a:> (<sw>), <f>, <g>, <h>, <i>
-% <j>, <z<>, <k>, <l>, <m>, <n>, <n<> (<n?> <ng>), <o>, <o:>, <p>, (<q>),
-% <r>, <s>, <s,>, <t>, <u>, <u:>, (<v>) <w>, (<x>), <y>, <y'> (<y:>), <z>
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		&C<ç<<<Ç
+% 		&E<ä<<<Ä
+% 		&J<ž<<<Ž
+% 		&N<ň<<<Ň
+% 		&O<ö<<<Ö
+% 		&S<ş<<<Ş
+% 		&U<ü<<<Ü
+% 		&Y<ý<<<Ý
+% 	]]></cr>
+% </collation>
 %
-% cyrillic alphabet order:
-% <a=>, <b=>, <v=>, <g=>, <d=>, <e=>, <io>, <z%>, <z%,=>, <z=>, <i=>,
-% <j=>, <k=>, <l=>, <m=>, <n=>, <n,=>, <o=>, <o-=>, <p=>, <r=>, <s=>,
-% <t=>, <u=>, <u'=>, <f=>, <h=>, <c=>, <c%>, <s%>, <='>, <y=>, <%'>,
-% <je>, <sw=>, <ju>, <ja>
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/tk.xml)
 %
+%
+% <exemplarCharacters type="index">[A B Ç D E Ä F G H I J Ž K L M N Ň O Ö P R S Ş T U Ü W Y Ý Z]</exemplarCharacters>
+%
+% https://en.wikipedia.org/wiki/Turkmen_alphabet
+%
+% Alphabetic order
+%
+% Latin alphabet (1995-present)
+%
+% Aa, Bb, Çç, Dd, Ee, Ää, Ff, Gg, Hh, Ii, Jj, Žž, Kk, Ll, Mm, Nn, Ňň, Oo, Öö, Pp, Rr, Ss, Şş, Tt, Uu, Üü, Ww, Yy, Ýý, Zz
+%
+%Cyrillic alphabet
+%
+% Аа, Бб, Вв, Гг, Дд, Ее, Ёё, Жж, Җҗ, Зз, Ии, Йй, Кк, Лл, Мм, Нн, Ңң, Оо, Өө, Пп, Рр, Сс, Тт, Уу, Үү, Фф, Хх, (Цц), Чч, Шш, (Щщ), (Ъъ), Ыы, (Ьь), Ээ, Әә, Юю, Яя
 copy "iso14651_t1"
 
-collating-symbol <c,>
-collating-symbol <a:>
-collating-symbol <z<>
-collating-symbol <n<>
-collating-symbol <o:>
-collating-symbol <s,>
-collating-symbol <u:>
-collating-symbol <y'>
-%
-collating-symbol <z,=>
-collating-symbol <n,=>
-collating-symbol <o-=>
-collating-symbol <u'=>
-collating-symbol <sw=>
+collating-symbol <latin-c-cedilla>
+collating-symbol <latin-a-diaeresis>
+collating-symbol <latin-z-caron>
+collating-symbol <latin-n-caron>
+collating-symbol <latin-o-diaeresis>
+collating-symbol <latin-s-cedilla>
+collating-symbol <latin-u-diaeresis>
+collating-symbol <latin-y-acute>
+collating-symbol <cyrillic-io>
+collating-symbol <cyrillic-zhe-descender>
+collating-symbol <cyrillic-en-descender>
+collating-symbol <cyrillic-barred-o>
+collating-symbol <cyrillic-straight-u>
+collating-symbol <cyrillic-schwa>
 
-% priority given to Turkmen accents
-reorder-after <BAS>
-<CDI>
-<CAR>
-<ACA>
-<REU>
+reorder-after <AFTER-C>
+<latin-c-cedilla>
+reorder-after <AFTER-E>
+<latin-a-diaeresis>
+reorder-after <AFTER-J>
+<latin-z-caron>
+reorder-after <AFTER-N>
+<latin-n-caron>
+reorder-after <AFTER-O>
+<latin-o-diaeresis>
+reorder-after <AFTER-S>
+<latin-s-cedilla>
+reorder-after <AFTER-U>
+<latin-u-diaeresis>
+reorder-after <AFTER-Y>
+<latin-y-acute>
 
-reorder-after <b>
-<c,>
-reorder-after <e>
-<a:>
-reorder-after <j>
-<z<>
-reorder-after <n>
-<n<>
-reorder-after <o>
-<o:>
-reorder-after <s>
-<s,>
-reorder-after <u>
-<u:>
-reorder-after <y>
-<y'>
+reorder-after <S0435> % CYRILLIC SMALL LETTER IE
+<cyrillic-io>
+reorder-after <S0436> % CYRILLIC SMALL LETTER ZHE
+<cyrillic-zhe-descender>
+reorder-after <S043D> % CYRILLIC SMALL LETTER EN
+<cyrillic-en-descender>
+reorder-after <S043E> % CYRILLIC SMALL LETTER O
+<cyrillic-barred-o>
+reorder-after <S0443> % CYRILLIC SMALL LETTER U
+<cyrillic-straight-u>
+reorder-after <S044D> % CYRILLIC SMALL LETTER E
+<cyrillic-schwa>
 
-reorder-after <CYR-ZHE>
-<z,=>
-reorder-after <CYR-EN>
-<n,=>
-reorder-after <CYR-O>
-<o-=>
-reorder-after <CYR-OUBRE>
-<u'=>
-reorder-after <CYR-E>
-<sw=>
-
-reorder-after <U0062>
-<U00E7> <c,>;<BAS>;<MIN>;IGNORE
-<U0063> <c,>;<BAS>;<MIN>;<c>
-reorder-after <U0042>
-<U00C7> <c,>;<BAS>;<CAP>;IGNORE
-<U0043> <c,>;<BAS>;<CAP>;<c>
-
-reorder-after <U0065>
-<U00E4> <a:>;<REU>;<MIN>;IGNORE
-<U0259> <a:>;<PCL>;<MIN>;IGNORE
-reorder-after <U0045>
-<U00C4> <a:>;<REU>;<CAP>;IGNORE
-<U018F> <a:>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U006A>
-<U017E> <z<>;<CAR>;<MIN>;IGNORE
-reorder-after <U004A>
-<U017D> <z<>;<CAR>;<CAP>;IGNORE
-
-reorder-after <U006E>
-<U0147> <n<>;<CAR>;<MIN>;IGNORE
-<U00F1> <n<>;<TIL>;<MIN>;IGNORE
-<U014B> <n<>;<PCL>;<MIN>;IGNORE
-reorder-after <U004E>
-<U0148> <n<>;<CAR>;<CAP>;IGNORE
-<U00D1> <n<>;<TIL>;<CAP>;IGNORE
-<U014A> <n<>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U006F>
-<U00F6> <o:>;<REU>;<MIN>;IGNORE
-reorder-after <U004F>
-<U00D6> <o:>;<REU>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<U015F> <s,>;<CDI>;<MIN>;IGNORE
-reorder-after <U0053>
-<U015E> <s,>;<CDI>;<CAP>;IGNORE
-
-reorder-after <U0075>
-<U00FC> <u:>;<REU>;<MIN>;IGNORE
-<U0056> <w>;<BAS>;<CAP>;<v>
-<U0057> <w>;<BAS>;<CAP>;<w>
-reorder-after <U0055>
-<U00DC> <u:>;<REU>;<CAP>;IGNORE
-<U0076> <w>;<BAS>;<MIN>;<v>
-<U0077> <w>;<BAS>;<MIN>;<w>
-
-reorder-after <U0079>
-<U00FD> <y'>;<ACA>;<MIN>;IGNORE
-<U00FF> <y'>;<REU>;<MIN>;IGNORE
-reorder-after <U0059>
-<U00DD> <y'>;<ACA>;<CAP>;IGNORE
-<U0178> <y'>;<REU>;<CAP>;IGNORE
-
-reorder-after <U0436>
-<U0497> <z,=>;<PCL>;<MIN>;IGNORE
-reorder-after <U0416>
-<U0496> <z,=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U043D>
-<U04A3> <n,=>;<PCL>;<MIN>;IGNORE
-reorder-after <U041D>
-<U04A2> <n,=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U043E>
-<U04E9> <o-=>;<PCL>;<MIN>;IGNORE
-reorder-after <U041E>
-<U04E8> <o-=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0443>
-<U04AF> <u'=>;<PCL>;<MIN>;IGNORE
-reorder-after <U0423>
-<U04AE> <u'=>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U044D>
-<U04D9> <sw=>;<PCL>;<MIN>;IGNORE
-reorder-after <U042D>
-<U04D8> <sw=>;<PCL>;<CAP>;IGNORE
+<U00E7>        <latin-c-cedilla>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ç
+<U00C7>        <latin-c-cedilla>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ç
+<U00E4>      <latin-a-diaeresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ä
+<U00C4>      <latin-a-diaeresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ä
+<U017E>          <latin-z-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ž
+<U017D>          <latin-z-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ž
+<U0148>          <latin-n-caron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ň
+<U0147>          <latin-n-caron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ň
+<U00F1>          <latin-n-caron>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ñ
+<U00D1>          <latin-n-caron>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ñ
+<U014B>          <latin-n-caron>;"<BASE><VRNT2>";"<MIN><MIN>";IGNORE % ŋ
+<U014A>          <latin-n-caron>;"<BASE><VRNT2>";"<CAP><MIN>";IGNORE % Ŋ
+<U00F6>      <latin-o-diaeresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ö
+<U00D6>      <latin-o-diaeresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ö
+<U015F>        <latin-s-cedilla>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ş
+<U015E>        <latin-s-cedilla>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ş
+<U00FC>      <latin-u-diaeresis>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ü
+<U00DC>      <latin-u-diaeresis>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ü
+<U00FD>          <latin-y-acute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ý
+<U00DD>          <latin-y-acute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ý
+<U00FF>          <latin-y-acute>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % ÿ
+<U0178>          <latin-y-acute>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % Ÿ
+<U0451>            <cyrillic-io>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ё
+<U0401>            <cyrillic-io>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ё
+<U0497> <cyrillic-zhe-descender>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % җ
+<U0496> <cyrillic-zhe-descender>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Җ
+<U04A3>  <cyrillic-en-descender>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ң
+<U04A2>  <cyrillic-en-descender>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ң
+<U04E9>      <cyrillic-barred-o>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ө
+<U04E8>      <cyrillic-barred-o>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ө
+<U04AF>    <cyrillic-straight-u>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ү
+<U04AE>    <cyrillic-straight-u>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ү
+<U04D9>         <cyrillic-schwa>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ә
+<U04D8>         <cyrillic-schwa>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ә
 
 reorder-end
 

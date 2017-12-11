@@ -59,96 +59,91 @@ LC_COLLATE
 % order: a, b, b+, c, d, d+, e, f, g, h, i, j, k, k+, l, m, n, o, p
 % q, r, r~, s, sh, t, ts, u, [v], w, [x], 'y, y, z
 
+% CLDR collation rules for Hausa:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ha.xml)
+%
+% <collation type="standard" references="Paul Newman: Hausa-English Dictionary ISBN 978-0-300-12246-6">
+%   <cr><![CDATA[
+%     &B<ɓ<<<Ɓ
+%     &D<ɗ<<<Ɗ
+%     &K<ƙ<<<Ƙ
+%     &S<sh<<<Sh<<<SH
+%     &T<ts<<<Ts<<<TS
+%     &Y<ƴ<<<ʼy<<<''y<<<Ƴ<<<ʼY<<<''Y
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/ha.xml)
+%
+% <exemplarCharacters type="index" draft="contributed">[A B Ɓ C D Ɗ E F G H I J K Ƙ L M N O P Q R S T U V W X Y {ʼY} Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+%
+% The original order as described above also had r-tilde (r̃) but
+% as CLDR doesn’t have it, I omit it.
+
 copy "iso14651_t1"
 
-collating-symbol  <s-h-ha>
-collating-element <S-H> from "<U0053><U0048>"
-collating-element <s-h> from "<U0073><U0068>"
-collating-element <S-h> from "<U0053><U0068>"
-collating-element <s-H> from "<U0073><U0048>"
-collating-symbol  <t-s-ha>
-collating-element <T-S> from "<U0054><U0053>"
-collating-element <t-s> from "<U0074><U0073>"
-collating-element <T-s> from "<U0054><U0073>"
-collating-element <t-S> from "<U0074><U0053>"
+collating-symbol  <b-hook>
+collating-symbol  <d-hook>
+collating-symbol  <k-hook>
+collating-symbol  <sh-digraph>
+collating-symbol  <ts-digraph>
 collating-symbol  <'-y-ha>
-collating-element <'1y> from "<U0027><U0079>"
-collating-element <'1Y> from "<U0027><U0059>"
-collating-element <'2y> from "<U2019><U0079>"
-collating-element <'2Y> from "<U2019><U0059>"
-collating-symbol  <rtilde>
-collating-element <r?>  from "<U0072><U0303>"
-collating-element <R?>  from "<U0052><U0303>"
-collating-symbol  <bcurl>
-collating-symbol  <dcurl>
-collating-symbol  <kcurl>
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
+collating-element <sh> from "sh"
+collating-element <sH> from "sH"
+collating-element <Sh> from "Sh"
+collating-element <SH> from "SH"
+collating-element <ts> from "ts"
+collating-element <tS> from "tS"
+collating-element <Ts> from "Ts"
+collating-element <TS> from "TS"
+collating-element <modifier-letter-apostrophe-y> from "<U02BC>y"
+collating-element <modifier-letter-apostrophe-Y> from "<U02BC>Y"
+collating-element <right-single-quotation-mark-y> from "<U2019>y"
+collating-element <right-single-quotation-mark-Y> from "<U2019>Y"
+collating-element <double-apostrophe-y> from "''y"
+collating-element <double-apostrophe-Y> from "''Y"
 
-reorder-after <MIN>
-<MIN-CAP>
-
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <b>
-<bcurl>
-reorder-after <d>
-<dcurl>
-reorder-after <k>
-<kcurl>
-reorder-after <r>
-<rtilde>
-<s>
-<s-h-ha>
-<t>
-<t-s-ha>
-reorder-after <x>
+reorder-after <AFTER-B>
+<b-hook>
+reorder-after <AFTER-D>
+<d-hook>
+reorder-after <AFTER-K>
+<k-hook>
+reorder-after <AFTER-S>
+<sh-digraph>
+reorder-after <AFTER-T>
+<ts-digraph>
+reorder-after <AFTER-Y>
 <'-y-ha>
 
-reorder-after <U0062>
-<U0253> <bcurl>;<BAS>;<MIN>;IGNORE
-reorder-after <U0042>
-<U0181> <bcurl>;<BAS>;<CAP>;IGNORE
+<U0253>     <b-hook>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ɓ
+<U0181>     <b-hook>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ɓ
+<U0257>     <d-hook>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ɗ
+<U018A>     <d-hook>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ɗ
+<U0199>     <k-hook>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ƙ
+<U0198>     <k-hook>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ƙ
+<sh>    <sh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<sH>    <sh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<SH>    <sh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<Sh>    <sh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<ts>    <ts-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<tS>    <ts-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<TS>    <ts-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<Ts>    <ts-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
 
-reorder-after <U0064>
-<U0257> <dcurl>;<BAS>;<MIN>;IGNORE
-reorder-after <U0044>
-<U018A> <dcurl>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U006B>
-<U0199> <kcurl>;<BAS>;<MIN>;IGNORE
-reorder-after <U004B>
-<U0198> <kcurl>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U0072>
-<r?>    <rtilde>;<ACA>;<MIN>;IGNORE
-reorder-after <U0052>
-<R?>    <rtilde>;<ACA>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<s-h>   <s-h-ha>;<PCL>;<MIN>;IGNORE
-<s-H>   <s-h-ha>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0053>
-<S-H>   <s-h-ha>;<PCL>;<CAP>;IGNORE
-<S-h>   <s-h-ha>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0074>
-<t-s>   <t-s-ha>;<PCL>;<MIN>;IGNORE
-<t-S>   <t-s-ha>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0054>
-<T-S>   <t-s-ha>;<PCL>;<CAP>;IGNORE
-<T-s>   <t-s-ha>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0078>
-<'1y>   <'-y-ha>;<PCL>;<MIN>;IGNORE
-<'2y>   <'-y-ha>;<PCL>;<MIN>;IGNORE
-<U01B4> <'-y-ha>;<PCL>;<MIN>;IGNORE
-reorder-after <U0058>
-<'1Y>   <'-y-ha>;<PCL>;<CAP>;IGNORE
-<'2Y>   <'-y-ha>;<PCL>;<CAP>;IGNORE
-<U01B3> <'-y-ha>;<PCL>;<CAP>;IGNORE
+<U01B4>                         <'-y-ha>;"<BASE><BASE>";"<MIN><VRNT1>";IGNORE % ƴ
+<modifier-letter-apostrophe-y>  <'-y-ha>;"<BASE><BASE>";"<MIN><VRNT2>";IGNORE
+<right-single-quotation-mark-y> <'-y-ha>;"<BASE><BASE>";"<MIN><VRNT3>";IGNORE
+<double-apostrophe-y>           <'-y-ha>;"<BASE><BASE>";"<MIN><VRNT4>";IGNORE
+<U01B3>                         <'-y-ha>;"<BASE><BASE>";"<CAP><VRNT1>";IGNORE % Ƴ
+<modifier-letter-apostrophe-Y>  <'-y-ha>;"<BASE><BASE>";"<CAP><VRNT2>";IGNORE
+<right-single-quotation-mark-Y> <'-y-ha>;"<BASE><BASE>";"<CAP><VRNT3>";IGNORE
+<double-apostrophe-Y>           <'-y-ha>;"<BASE><BASE>";"<CAP><VRNT4>";IGNORE
 
 reorder-end
 

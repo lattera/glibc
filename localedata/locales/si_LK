@@ -52,6 +52,48 @@ LC_COLLATE
 % Copy the template from ISO/IEC 14651
 copy "iso14651_t1"
 
+% CLDR collation rules for Sinhala:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/si.xml)
+%
+% <collation type="standard" references="Sri Lanka standard 1134 Part 1 - 2007 edition - Sri Lanka Standards Institution">
+% 	<cr><![CDATA[
+% 		[normalization on]
+% 		[reorder Sinh Deva Beng Guru Gujr Orya Taml Telu Knda Mlym]
+% 		&ඖ<ං<ඃ
+% 		&ඥ<ඤ
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/si.xml)
+%
+% <exemplarCharacters type="index">[අ ආ ඇ ඈ ඉ ඊ උ ඌ ඍ එ ඒ ඓ ඔ ඕ ඖ ක ඛ ග ඝ ඞ ඟ ච ඡ ජ ඣ ඥ ඤ ට ඨ ඩ ඪ ණ ඬ ත ථ ද ධ න ඳ ප ඵ බ භ ම ඹ ය ර ල ව ශ ෂ ස හ ළ ෆ]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
+collating-symbol <sinhala-sign-anusvaraya>
+collating-symbol <sinhala-sign-visargaya>
+collating-symbol <sinhala-letter-taaluja-naasikyaya>
+
+% &ඖ<ං<ඃ
+reorder-after <S0D96> % ඖ U+0D96 SINHALA LETTER AUYANNA
+<sinhala-sign-anusvaraya>
+<sinhala-sign-visargaya>
+
+% &ඥ<ඤ
+reorder-after <S0DA5> % ඥ U+0DA5 SINHALA LETTER TAALUJA SANYOOGA NAAKSIKYAYA
+<sinhala-letter-taaluja-naasikyaya>
+
+% &ඖ<ං<ඃ
+<U0D82> <sinhala-sign-anusvaraya>;<ANUSVARA>;<MIN>;<U0D82> % SINHALA SIGN ANUSVARAYA
+<U0D83> <sinhala-sign-visargaya>;<VISARGA>;<MIN>;<U0D83> % SINHALA SIGN VISARGAYA
+
+% &ඥ<ඤ
+<U0DA4> <sinhala-letter-taaluja-naasikyaya>;<BASE>;<MIN>;<U0DA4> % SINHALA LETTER TAALUJA NAASIKYAYA
+
+reorder-end
+
 END LC_COLLATE
 
 

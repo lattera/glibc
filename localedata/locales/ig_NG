@@ -46,307 +46,166 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
-
-% Igbo uses the following extra letters:
-% idotbelow, odotbelow, udotbelow, nabovedot
-% plus acute and grave combining marks over vowels and n
-% of those, the following have precombined forms:
-% aacute, eacute, iacute, oacute, uacute, nacute
-% agrave, egrave, igrave, ograve, ugrave, ngrave
+% CLDR collation rules for Igbo:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/ig.xml)
 %
-% order: a, b, [c], ch, d, e, f, g, gb, gh, gw, h, i, i., j, k, kp, kw,
-% l, m, n, n., nw, ny, o, o., p, [q], r, s, sh, t, u, u., v, w, [x], y, z
+% <collation type="standard">
+%   <cr><![CDATA[
+%     [normalization on]
+%     &B<ch<<<Ch<<<CH
+%     &G<gb<<<Gb<<<GB<gh<<<Gh<<<GH<gw<<<Gw<<<GW
+%     &I<ị<<<Ị
+%     &K<kp<<<Kp<<<KP<kw<<<Kw<<<KW
+%     &N<ṅ<<<Ṅ<nw<<<Nw<<<NW<ny<<<Ny<<<NY
+%     &O<ọ<<<Ọ
+%     &S<sh<<<Sh<<<SH
+%     &U<ụ<<<Ụ
+%   ]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/ig.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
+
 
 copy "iso14651_t1"
 
-collating-symbol  <c-h-ig>
-collating-element <C-H> from "<U0043><U0048>"
-collating-element <c-h> from "<U0063><U0068>"
-collating-element <C-h> from "<U0043><U0068>"
-collating-element <c-H> from "<U0063><U0048>"
-collating-symbol  <g-b-ig>
-collating-element <G-B> from "<U0047><U0042>"
-collating-element <g-b> from "<U0067><U0062>"
-collating-element <G-b> from "<U0047><U0062>"
-collating-element <g-B> from "<U0067><U0042>"
-collating-symbol  <g-h-ig>
-collating-element <G-H> from "<U0047><U0048>"
-collating-element <g-h> from "<U0067><U0068>"
-collating-element <G-h> from "<U0047><U0068>"
-collating-element <g-H> from "<U0067><U0048>"
-collating-symbol  <g-w-ig>
-collating-element <G-W> from "<U0047><U0057>"
-collating-element <g-w> from "<U0067><U0077>"
-collating-element <G-w> from "<U0047><U0077>"
-collating-element <g-W> from "<U0067><U0057>"
-collating-symbol  <k-p-ig>
-collating-element <K-P> from "<U004B><U0050>"
-collating-element <k-p> from "<U006B><U0070>"
-collating-element <K-p> from "<U004B><U0070>"
-collating-element <k-P> from "<U006B><U0050>"
-collating-symbol  <k-w-ig>
-collating-element <K-W> from "<U004B><U0057>"
-collating-element <k-w> from "<U006B><U0077>"
-collating-element <K-w> from "<U004B><U0077>"
-collating-element <k-W> from "<U006B><U0057>"
-collating-symbol  <n-w-ig>
-collating-element <N-W> from "<U004E><U0057>"
-collating-element <n-w> from "<U006E><U0077>"
-collating-element <N-w> from "<U004E><U0077>"
-collating-element <n-W> from "<U006E><U0057>"
-collating-symbol  <n-y-ig>
-collating-element <N-Y> from "<U004E><U0059>"
-collating-element <n-y> from "<U006E><U0079>"
-collating-element <N-y> from "<U004E><U0079>"
-collating-element <n-Y> from "<U006E><U0059>"
-collating-symbol  <ibelowdot>
-collating-element <I_>  from "<U0049><U0323>"
-collating-element <i_>  from "<U0069><U0323>"
-collating-element <I_'> from "<U0049><U0323><U0301>"
-collating-element <i_'> from "<U0069><U0323><U0301>"
-collating-element <I_`> from "<U0049><U0323><U0300>"
-collating-element <i_`> from "<U0069><U0323><U0300>"
-collating-element <I_2'> from "<U1ECA><U0301>"
-collating-element <i_2'> from "<U1ECB><U0301>"
-collating-element <I_2`> from "<U1ECA><U0300>"
-collating-element <i_2`> from "<U1ECB><U0300>"
-collating-symbol  <obelowdot>
-collating-element <O_>  from "<U004F><U0323>"
-collating-element <o_>  from "<U006F><U0323>"
-collating-element <O_'> from "<U004F><U0323><U0301>"
-collating-element <o_'> from "<U006F><U0323><U0301>"
-collating-element <O_`> from "<U004F><U0323><U0300>"
-collating-element <o_`> from "<U006F><U0323><U0300>"
-collating-element <O_2'> from "<U1ECC><U0301>"
-collating-element <o_2'> from "<U1ECD><U0301>"
-collating-element <O_2`> from "<U1ECC><U0300>"
-collating-element <o_2`> from "<U1ECD><U0300>"
-collating-symbol  <s-h-ig>
-collating-element <S-H> from "<U0053><U0048>"
-collating-element <S-h> from "<U0053><U0068>"
-collating-element <s-H> from "<U0073><U0048>"
-collating-element <s-h> from "<U0073><U0068>"
-collating-symbol  <ubelowdot>
-collating-element <U_>  from "<U0055><U0323>"
-collating-element <u_>  from "<U0075><U0323>"
-collating-element <U_'> from "<U0055><U0323><U0301>"
-collating-element <u_'> from "<U0075><U0323><U0301>"
-collating-element <U_`> from "<U0075><U0323><U0300>"
-collating-element <u_`> from "<U0055><U0323><U0300>"
-collating-element <U_2'> from "<U1EE4><U0301>"
-collating-element <u_2'> from "<U1EE5><U0301>"
-collating-element <U_2`> from "<U1EE4><U0300>"
-collating-element <u_2`> from "<U1EE5><U0300>"
-collating-symbol  <nabovedot>
-collating-element <N.> from "<U004E><U0307>"
-collating-element <n.> from "<U006E><U0307>"
-collating-symbol  <aacute>
-collating-element <A'> from "<U0041><U0301>"
-collating-element <a'> from "<U0061><U0301>"
-collating-symbol  <eacute>
-collating-element <E'> from "<U0045><U0301>"
-collating-element <e'> from "<U0065><U0301>"
-collating-symbol  <iacute>
-collating-element <I'> from "<U0049><U0301>"
-collating-element <i'> from "<U0069><U0301>"
-collating-symbol  <oacute>
-collating-element <O'> from "<U004F><U0301>"
-collating-element <o'> from "<U006F><U0301>"
-collating-symbol  <uacute>
-collating-element <U'> from "<U0055><U0301>"
-collating-element <u'> from "<U0075><U0301>"
-collating-symbol  <agrave>
-collating-element <A`> from "<U0041><U0300>"
-collating-element <a`> from "<U0061><U0300>"
-collating-symbol  <egrave>
-collating-element <E`> from "<U0045><U0300>"
-collating-element <e`> from "<U0065><U0300>"
-collating-symbol  <igrave>
-collating-element <I`> from "<U0049><U0300>"
-collating-element <i`> from "<U0069><U0300>"
-collating-symbol  <ograve>
-collating-element <O`> from "<U004F><U0300>"
-collating-element <o`> from "<U006F><U0300>"
-collating-symbol  <ugrave>
-collating-element <U`> from "<U0055><U0300>"
-collating-element <u`> from "<U0075><U0300>"
+collating-symbol  <ch-digraph>
+collating-element <ch> from "ch"
+collating-element <cH> from "cH"
+collating-element <Ch> from "Ch"
+collating-element <CH> from "CH"
+collating-symbol  <gb-digraph>
+collating-element <gb> from "gb"
+collating-element <gB> from "gB"
+collating-element <Gb> from "Gb"
+collating-element <GB> from "GB"
+collating-symbol  <gh-digraph>
+collating-element <gh> from "gh"
+collating-element <gH> from "gH"
+collating-element <Gh> from "Gh"
+collating-element <GH> from "GH"
+collating-symbol  <gw-digraph>
+collating-element <gw> from "gw"
+collating-element <gW> from "gW"
+collating-element <Gw> from "Gw"
+collating-element <GW> from "GW"
+collating-symbol  <kp-digraph>
+collating-element <kp> from "kp"
+collating-element <kP> from "kP"
+collating-element <Kp> from "Kp"
+collating-element <KP> from "KP"
+collating-symbol  <kw-digraph>
+collating-element <kw> from "kw"
+collating-element <kW> from "kW"
+collating-element <Kw> from "Kw"
+collating-element <KW> from "KW"
+collating-symbol  <nw-digraph>
+collating-element <nw> from "nw"
+collating-element <nW> from "nW"
+collating-element <Nw> from "Nw"
+collating-element <NW> from "NW"
+collating-symbol  <ny-digraph>
+collating-element <ny> from "ny"
+collating-element <nY> from "nY"
+collating-element <Ny> from "Ny"
+collating-element <NY> from "NY"
+collating-symbol  <i-dot-below>
+collating-element <i-dot-below-combining>  from "i<U0323>"
+collating-element <I-dot-below-combining>  from "I<U0323>"
+collating-symbol  <o-dot-below>
+collating-element <o-dot-below-combining>  from "o<U0323>"
+collating-element <O-dot-below-combining>  from "O<U0323>"
+collating-symbol  <sh-digraph>
+collating-element <sh> from "sh"
+collating-element <sH> from "sH"
+collating-element <Sh> from "Sh"
+collating-element <SH> from "SH"
+collating-symbol  <u-dot-below>
+collating-element <u-dot-below-combining>  from "u<U0323>"
+collating-element <U-dot-below-combining>  from "U<U0323>"
+collating-symbol  <n-dot-above>
+collating-element <n-dot-above-combining> from "n<U0307>"
+collating-element <N-dot-above-combining> from "N<U0307>"
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
+reorder-after <AFTER-B>
+<ch-digraph>
+reorder-after <AFTER-G>
+<gb-digraph>
+<gh-digraph>
+<gw-digraph>
+reorder-after <AFTER-I>
+<i-dot-below>
+reorder-after <AFTER-K>
+<kp-digraph>
+<kw-digraph>
+reorder-after <AFTER-N>
+<n-dot-above>
+<nw-digraph>
+<ny-digraph>
+reorder-after <AFTER-O>
+<o-dot-below>
+reorder-after <AFTER-S>
+<sh-digraph>
+reorder-after <AFTER-U>
+<u-dot-below>
 
-reorder-after <MIN>
-<MIN-CAP>
-
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <c>
-<c-h-ig>
-reorder-after <g>
-<g-b-ig>
-<g-h-ig>
-<g-w-ig>
-reorder-after <i>
-<ibelowdot>
-reorder-after <k>
-<k-p-ig>
-<k-w-ig>
-reorder-after <n>
-<nabovedot>
-<n-w-ig>
-<n-y-ig>
-<o>
-<obelowdot>
-reorder-after <s>
-<s-h-ig>
-reorder-after <u>
-<ubelowdot>
-
-reorder-after <U0061>
-<U00E1> <a>;<ACA>;<MIN>;IGNORE
-<a'>    <a>;<ACA>;<MIN>;IGNORE
-<U00E0> <a>;<GRA>;<MIN>;IGNORE
-<a`>    <a>;<GRA>;<MIN>;IGNORE
-reorder-after <U0041>
-<U00C1> <a>;<ACA>;<CAP>;IGNORE
-<A'>    <a>;<ACA>;<CAP>;IGNORE
-<U00C0> <a>;<GRA>;<CAP>;IGNORE
-<A`>    <a>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U0063>
-<c-h>   <c-h-ig>;<PCL>;<MIN>;IGNORE
-<c-H>   <c-h-ig>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0043>
-<C-H>   <c-h-ig>;<PCL>;<CAP>;IGNORE
-<C-h>   <c-h-ig>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0065>
-<U00E9> <e>;<ACA>;<MIN>;IGNORE
-<e'>    <e>;<ACA>;<MIN>;IGNORE
-<U00E8> <e>;<GRA>;<MIN>;IGNORE
-<e`>    <e>;<GRA>;<MIN>;IGNORE
-reorder-after <U0045>
-<U00C9> <e>;<ACA>;<CAP>;IGNORE
-<E'>    <e>;<ACA>;<CAP>;IGNORE
-<U00C8> <e>;<GRA>;<CAP>;IGNORE
-<E`>    <e>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U0067>
-<g-b>   <g-b-ig>;<PCL>;<MIN>;IGNORE
-<g-B>   <g-b-ig>;<PCL>;<MIN-CAP>;IGNORE
-<g-h>   <g-h-ig>;<PCL>;<MIN>;IGNORE
-<g-H>   <g-h-ig>;<PCL>;<MIN-CAP>;IGNORE
-<g-w>   <g-w-ig>;<PCL>;<MIN>;IGNORE
-<g-W>   <g-w-ig>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0047>
-<G-B>   <g-b-ig>;<PCL>;<CAP>;IGNORE
-<G-b>   <g-b-ig>;<PCL>;<CAP-MIN>;IGNORE
-<G-H>   <g-h-ig>;<PCL>;<CAP>;IGNORE
-<G-h>   <g-h-ig>;<PCL>;<CAP-MIN>;IGNORE
-<G-W>   <g-w-ig>;<PCL>;<CAP>;IGNORE
-<G-w>   <g-w-ig>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0069>
-<U00ED> <i>;<ACA>;<MIN>;IGNORE
-<i'>    <i>;<ACA>;<MIN>;IGNORE
-<U00EC> <i>;<GRA>;<MIN>;IGNORE
-<i`>    <i>;<GRA>;<MIN>;IGNORE
-<U1ECB> <ibelowdot>;<BAS>;<MIN>;IGNORE
-<i_>    <ibelowdot>;<BAS>;<MIN>;IGNORE
-<i_'>   <ibelowdot>;<ACA>;<MIN>;IGNORE
-<i_2'>  <ibelowdot>;<ACA>;<MIN>;IGNORE
-<i_`>   <ibelowdot>;<GRA>;<MIN>;IGNORE
-<i_2`>  <ibelowdot>;<GRA>;<MIN>;IGNORE
-reorder-after <U0049>
-<U00CD> <i>;<ACA>;<CAP>;IGNORE
-<I'>    <i>;<ACA>;<CAP>;IGNORE
-<U00CC> <i>;<GRA>;<CAP>;IGNORE
-<I`>    <i>;<GRA>;<CAP>;IGNORE
-<U1ECA> <ibelowdot>;<BAS>;<CAP>;IGNORE
-<I_>    <ibelowdot>;<CAP>;<CAP>;IGNORE
-<I_'>   <ibelowdot>;<ACA>;<CAP>;IGNORE
-<I_2'>  <ibelowdot>;<ACA>;<CAP>;IGNORE
-<I_`>   <ibelowdot>;<GRA>;<CAP>;IGNORE
-<I_2`>  <ibelowdot>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U0067>
-<k-p>   <k-p-ig>;<PCL>;<MIN>;IGNORE
-<k-P>   <k-p-ig>;<PCL>;<MIN-CAP>;IGNORE
-<k-w>   <k-w-ig>;<PCL>;<MIN>;IGNORE
-<k-W>   <k-w-ig>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0047>
-<K-P>   <k-p-ig>;<PCL>;<CAP>;IGNORE
-<K-p>   <k-p-ig>;<PCL>;<CAP-MIN>;IGNORE
-<K-W>   <k-w-ig>;<PCL>;<CAP>;IGNORE
-<K-w>   <k-w-ig>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U006E>
-<U1E45> <nabovedot>;<BAS>;<MIN>;IGNORE
-<n.>    <nabovedot>;<BAS>;<MIN>;IGNORE
-<n-w>   <n-w-ig>;<PCL>;<MIN>;IGNORE
-<n-W>   <n-w-ig>;<PCL>;<MIN-CAP>;IGNORE
-<n-y>   <n-y-ig>;<PCL>;<MIN>;IGNORE
-<n-Y>   <n-y-ig>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U004E>
-<U1E44> <nabovedot>;<BAS>;<CAP>;IGNORE
-<N.>    <nabovedot>;<BAS>;<CAP>;IGNORE
-<N-W>   <n-w-ig>;<PCL>;<CAP>;IGNORE
-<N-w>   <n-w-ig>;<PCL>;<CAP-MIN>;IGNORE
-<N-Y>   <n-y-ig>;<PCL>;<CAP>;IGNORE
-<N-y>   <n-y-ig>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U006F>
-<U00F3> <o>;<ACA>;<MIN>;IGNORE
-<o'>    <o>;<ACA>;<MIN>;IGNORE
-<U00F2> <o>;<GRA>;<MIN>;IGNORE
-<o`>    <o>;<GRA>;<MIN>;IGNORE
-<U1ECD> <obelowdot>;<BAS>;<MIN>;IGNORE
-<o_>    <obelowdot>;<BAS>;<MIN>;IGNORE
-<o_'>   <obelowdot>;<ACA>;<MIN>;IGNORE
-<o_2'>  <obelowdot>;<ACA>;<MIN>;IGNORE
-<o_`>   <obelowdot>;<GRA>;<MIN>;IGNORE
-<o_2`>  <obelowdot>;<GRA>;<MIN>;IGNORE
-reorder-after <U004F>
-<U00D3> <o>;<ACA>;<CAP>;IGNORE
-<O'>    <o>;<ACA>;<CAP>;IGNORE
-<U00D2> <o>;<GRA>;<CAP>;IGNORE
-<O`>    <o>;<GRA>;<CAP>;IGNORE
-<U1ECC> <obelowdot>;<BAS>;<CAP>;IGNORE
-<O_>    <obelowdot>;<BAS>;<CAP>;IGNORE
-<O_'>   <obelowdot>;<ACA>;<CAP>;IGNORE
-<O_2'>  <obelowdot>;<ACA>;<CAP>;IGNORE
-<O_`>   <obelowdot>;<GRA>;<CAP>;IGNORE
-<O_2`>  <obelowdot>;<GRA>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<s-h>   <s-h-ig>;<PCL>;<MIN>;IGNORE
-<s-H>   <s-h-ig>;<PCL>;<MIN-CAP>;IGNORE
-reorder-after <U0053>
-<S-H>   <s-h-ig>;<PCL>;<CAP>;IGNORE
-<S-h>   <s-h-ig>;<PCL>;<CAP-MIN>;IGNORE
-
-reorder-after <U0075>
-<U00FA> <u>;<ACA>;<MIN>;IGNORE
-<u'>    <u>;<ACA>;<MIN>;IGNORE
-<U00F9> <u>;<GRA>;<MIN>;IGNORE
-<u`>    <u>;<GRA>;<MIN>;IGNORE
-<U1EE5> <ubelowdot>;<BAS>;<MIN>;IGNORE
-<u_>    <ubelowdot>;<BAS>;<MIN>;IGNORE
-<u_'>   <ubelowdot>;<ACA>;<MIN>;IGNORE
-<u_2'>  <ubelowdot>;<ACA>;<MIN>;IGNORE
-<u_`>   <ubelowdot>;<GRA>;<MIN>;IGNORE
-<u_2`>  <ubelowdot>;<GRA>;<MIN>;IGNORE
-reorder-after <U0055>
-<U00DA> <u>;<ACA>;<CAP>;IGNORE
-<U'>    <u>;<ACA>;<CAP>;IGNORE
-<U00D9> <u>;<GRA>;<CAP>;IGNORE
-<U`>    <u>;<GRA>;<CAP>;IGNORE
-<U1EE4> <ubelowdot>;<BAS>;<CAP>;IGNORE
-<U_>    <ubelowdot>;<BAS>;<CAP>;IGNORE
-<U_'>   <ubelowdot>;<ACA>;<CAP>;IGNORE
-<U_2'>  <ubelowdot>;<ACA>;<CAP>;IGNORE
-<U_`>   <ubelowdot>;<GRA>;<CAP>;IGNORE
-<U_2`>  <ubelowdot>;<GRA>;<CAP>;IGNORE
+<ch>                     <ch-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<cH>                     <ch-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Ch>                     <ch-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<CH>                     <ch-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<gb>                     <gb-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<gB>                     <gb-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Gb>                     <gb-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<GB>                     <gb-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<gh>                     <gh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<gH>                     <gh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Gh>                     <gh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<GH>                     <gh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<gw>                     <gw-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<gW>                     <gw-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Gw>                     <gw-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<GW>                     <gw-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U1ECB>                 <i-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % ị
+<i-dot-below-combining> <i-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1ECA>                 <i-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % Ị
+<I-dot-below-combining> <i-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
+<kp>                     <kp-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<kP>                     <kp-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Kp>                     <kp-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<KP>                     <kp-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<kw>                     <kw-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<kW>                     <kw-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Kw>                     <kw-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<KW>                     <kw-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U1E45>                 <n-dot-above>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % ṅ
+<n-dot-above-combining> <n-dot-above>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1E44>                 <n-dot-above>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % Ṅ
+<N-dot-above-combining> <n-dot-above>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
+<nw>                     <nw-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<nW>                     <nw-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Nw>                     <nw-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<NW>                     <nw-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<ny>                     <ny-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<nY>                     <ny-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Ny>                     <ny-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<NY>                     <ny-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U1ECD>                 <o-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % ọ
+<o-dot-below-combining> <o-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1ECC>                 <o-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % Ọ
+<O-dot-below-combining> <o-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
+<sh>                     <sh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<sH>                     <sh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Sh>                     <sh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<SH>                     <sh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<U1EE5>                 <u-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT1> % ụ
+<u-dot-below-combining> <u-dot-below>;"<BASE><BASE>";"<MIN><MIN>";<VRNT2>
+<U1EE4>                 <u-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT1> % Ụ
+<U-dot-below-combining> <u-dot-below>;"<BASE><BASE>";"<CAP><MIN>";<VRNT2>
 
 reorder-end
 

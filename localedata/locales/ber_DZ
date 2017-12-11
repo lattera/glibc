@@ -46,115 +46,86 @@ category "i18n:2012";LC_MESSAGES
 END LC_IDENTIFICATION
 
 %
-% TODO: check LC_COLLATE
 % TODO: fix LC_TIME, LC_MONETARY, LC_MESSAGES, LC_NAME, LC_ADDRESS
 
 LC_COLLATE
 % The latin amazigh alphabet is:
-% <a>, <eps>, <b>, <b*>, <c>, <c<>, <d>, <d-.>, <e>, <f>, <g>, <g*>, <g(>,
-% <h>, <h-.>, <i>, <j>, <k>, <k*>, <l>, <m>, <n>, <q>, <q*>, <gam>, <gam*>,
-% <r>, <r-.>, <s>, <s-.>, <t>, <t-.>, <u>, <w>, <x>, <x*>, <y>, <z>, <z-.>
 %
-% arabic alphabet:
+% a ɛ b b* c č d ḍ e f g g* ğ h ḥ i j k k* l m n q q* gam gam* r ṛ s ṣ t ṭ u w x x* y z ẓ
+%
+% (What are the letters followed by a *???)
+%
+% CLDR does not yet have collation rules for this language.
+%
+
+% Looking at the above alphabet and the previously existing collation
+% rules in glibc for this language, I implement this in the following way:
+%
+% &A<ɛ<<<Ɛ
+% &C<č<<<Č
+% &D<ḍ<<<Ḍ
+% &G<ğ<<<Ğ
+% &H<ḥ<<<Ḥ
+% &Q<ɣ<<<Ɣ
+% &R<ṛ<<<Ṛ
+% &S<ṣ<<<Ṣ
+% &T<ṭ<<<Ṭ
+% &Z<ẓ<<<Ẓ
 
 copy "iso14651_t1"
 
-collating-symbol <eps>
-%collating-symbol <b*>
-collating-symbol <c<>
-collating-symbol <d-.>
-%collating-symbol <g*>
-collating-symbol <g(>
-collating-symbol <h-.>
-%collating-symbol <k*>
-%collating-symbol <q*>
-collating-symbol <gam>
-%collating-symbol <gam*>
-collating-symbol <r-.>
-collating-symbol <s-.>
-collating-symbol <t-.>
-%collating-symbol <x*>
-collating-symbol <z-.>
+collating-symbol <open-e>
+collating-symbol <c-caron>
+collating-symbol <d-dot-below>
+collating-symbol <g-breve>
+collating-symbol <h-dot-below>
+collating-symbol <latin-gamma>
+collating-symbol <r-dot-below>
+collating-symbol <s-dot-below>
+collating-symbol <t-dot-below>
+collating-symbol <z-dot-below>
 
-reorder-after <a>
-<eps>
-%reorder-after <b>
-%<b*>
-reorder-after <c>
-<c<>
-reorder-after <d>
-<d-.>
-reorder-after <g>
-%<g*>
-<g(>
-reorder-after <h>
-<h-.>
-%reorder-after <k>
-%<k*>
-reorder-after <q>
-%<q*>
-<gam>
-%<gam*>
-reorder-after <r>
-<r-.>
-reorder-after <s>
-<s-.>
-reorder-after <t>
-<t-.>
-%reorder-after <x>
-%<x*>
-reorder-after <z>
-<z-.>
+reorder-after <AFTER-A>
+<open-e>
+reorder-after <AFTER-C>
+<c-caron>
+reorder-after <AFTER-D>
+<d-dot-below>
+reorder-after <AFTER-G>
+<g-breve>
+reorder-after <AFTER-H>
+<h-dot-below>
+reorder-after <AFTER-Q>
+<latin-gamma>
+reorder-after <AFTER-R>
+<r-dot-below>
+reorder-after <AFTER-S>
+<s-dot-below>
+reorder-after <AFTER-T>
+<t-dot-below>
+reorder-after <AFTER-Z>
+<z-dot-below>
 
-reorder-after <U0061>
-<U025B> <eps>;<PCL>;<MIN>;IGNORE
-reorder-after <U0041>
-<U0190> <eps>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0063>
-<U010D> <c<>;<CAR>;<MIN>;IGNORE
-reorder-after <U0043>
-<U010C> <c<>;<CAR>;<CAP>;IGNORE
-
-reorder-after <U0064>
-<U1E0D> <d-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0044>
-<U1E0C> <d-.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0067>
-<U011F> <g(>;<BRE>;<MIN>;IGNORE
-reorder-after <U0047>
-<U011E> <g(>;<BRE>;<CAP>;IGNORE
-
-reorder-after <U0068>
-<U1E25> <h-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0048>
-<U1E24> <h-.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0071>
-<U0263> <gam>;<PCL>;<MIN>;IGNORE
-reorder-after <U0051>
-<U0194> <gam>;<PCL>;<CAP>;IGNORE
-
-reorder-after <U0072>
-<U1E5B> <r-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0052>
-<U1E5A> <r-.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<U1E63> <s-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0053>
-<U1E62> <s-.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U0074>
-<U1E6D> <t-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U0054>
-<U1E6C> <t-.>;<PCT>;<CAP>;IGNORE
-
-reorder-after <U007A>
-<U1E93> <z-.>;<PCT>;<MIN>;IGNORE
-reorder-after <U005A>
-<U1E92> <z-.>;<PCT>;<CAP>;IGNORE
+<U025B> <open-e>;<BASE>;<MIN>;IGNORE % ɛ
+<U0190> <open-e>;<BASE>;<CAP>;IGNORE % Ɛ
+<U010D> <c-caron>;<BASE>;<MIN>;IGNORE % č
+<U010C> <c-caron>;<BASE>;<CAP>;IGNORE % Č
+<U1E0D> <d-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ḍ
+<U1E0C> <d-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ḍ
+<U011F> <g-breve>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ğ
+<U011E> <g-breve>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ğ
+<U1E25> <h-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ḥ
+<U1E24> <h-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ḥ
+<U0263> <latin-gamma>;<BASE>;<MIN>;IGNORE % ɣ
+<U0194> <latin-gamma>;<BASE>;<CAP>;IGNORE % Ɣ
+<U1E5B> <r-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ṛ
+<U1E5A> <r-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ṛ
+<U1E63> <s-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ṣ
+<U1E62> <s-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ṣ
+<U1E6D> <t-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ṭ
+<U1E6C> <t-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ṭ
+<U1E93> <z-dot-below>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ẓ
+<U1E92> <z-dot-below>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ẓ
 
 reorder-end
 

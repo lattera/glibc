@@ -49,18 +49,20 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
+% There is no collation information for Ossetian in CLDR.
+% I just adapt the collation rules which I found here to the
+% updated iso14651_t1_common file.
 copy "iso14651_t1"
 
 collating-symbol <ae>
 
-reorder-after <CYR-A>
+reorder-after <S0430> % CYRILLIC SMALL LETTER A
 <ae>
 
-reorder-after <U0410>
-<U00C6> <ae>;<BAS>;<CAP>;IGNORE
-<U00E6> <ae>;<BAS>;<MIN>;IGNORE
-<U04D4> <ae>;<BAS>;<CAP>;IGNORE
-<U04D5> <ae>;<BAS>;<MIN>;IGNORE
+<U04D5> <ae>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ӕ CYRILLIC SMALL LIGATURE A IE
+<U04D4> <ae>;"<BASE><BASE>";"<CAP><CAP>";IGNORE % Ӕ CYRILLIC CAPITAL LIGATURE A IE
+<U00E6> <ae>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % æ LATIN SMALL LETTER AE
+<U00C6> <ae>;"<BASE><VRNT1>";"<CAP><CAP>";IGNORE % Æ LATIN CAPITAL LETTER AE
 reorder-end
 END LC_COLLATE
 

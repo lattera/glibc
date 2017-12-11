@@ -73,11 +73,18 @@ copy "iso14651_t1"
 % &S<ş<<<Ş
 % &U<ü<<<Ü
 %
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/tr.xml)
+%
+% <exemplarCharacters type="index">[A B C Ç D E F G H I İ J K L M N O Ö P Q R S Ş T U Ü V W X Y Z]</exemplarCharacters>
+%
 % The following rules implement the same order for glibc.
 
 collating-symbol <c-cedilla>
 collating-symbol <g-breve>
 collating-symbol <i-dotless>
+collating-symbol <i-dot>
 collating-symbol <o-diaresis>
 collating-symbol <s-cedilla>
 collating-symbol <u-diaresis>
@@ -86,33 +93,33 @@ reorder-after <RES-1>
 <CAP>
 <MIN>
 
-reorder-after <c>
+reorder-after <AFTER-C>
 <c-cedilla>
-reorder-after <g>
+reorder-after <AFTER-G>
 <g-breve>
-reorder-after <h>
+reorder-after <BEFORE-I>
 <i-dotless>
-reorder-after <o>
+reorder-after <AFTER-O>
 <o-diaresis>
-reorder-after <s>
+reorder-after <AFTER-S>
 <s-cedilla>
-reorder-after <u>
+reorder-after <AFTER-U>
 <u-diaresis>
 
-<U00E7> <c-cedilla>;<BAS>;<MIN>;IGNORE % ç
-<U00C7> <c-cedilla>;<BAS>;<CAP>;IGNORE % Ç
-<U011F> <g-breve>;<BAS>;<MIN>;IGNORE % ğ
-<U011E> <g-breve>;<BAS>;<CAP>;IGNORE % Ğ
-<U0131> <i-dotless>;<BAS>;<MIN>;IGNORE % ı
-<U0049> <i-dotless>;<BAS>;<CAP>;IGNORE % I
-<U0069> <i>;<BAS>;<MIN>;IGNORE % i
-<U0130> <i>;<BAS>;<CAP>;IGNORE % İ
-<U00F6> <o-diaresis>;<BAS>;<MIN>;IGNORE % ö
-<U00D6> <o-diaresis>;<BAS>;<CAP>;IGNORE % Ö
-<U015F> <s-cedilla>;<BAS>;<MIN>;IGNORE % ş
-<U015E> <s-cedilla>;<BAS>;<CAP>;IGNORE % Ş
-<U00FC> <u-diaresis>;<BAS>;<MIN>;IGNORE % ü
-<U00DC> <u-diaresis>;<BAS>;<CAP>;IGNORE % Ü
+<U00E7> <c-cedilla>;<BASE>;<MIN>;IGNORE % ç
+<U00C7> <c-cedilla>;<BASE>;<CAP>;IGNORE % Ç
+<U011F> <g-breve>;<BASE>;<MIN>;IGNORE % ğ
+<U011E> <g-breve>;<BASE>;<CAP>;IGNORE % Ğ
+<U0131> <i-dotless>;<BASE>;<MIN>;IGNORE % ı
+<U0049> <i-dotless>;<BASE>;<CAP>;IGNORE % I
+<U0069> <S0069>;<BASE>;<MIN>;IGNORE % i
+<U0130> <S0069>;<BASE>;<CAP>;IGNORE % İ
+<U00F6> <o-diaresis>;<BASE>;<MIN>;IGNORE % ö
+<U00D6> <o-diaresis>;<BASE>;<CAP>;IGNORE % Ö
+<U015F> <s-cedilla>;<BASE>;<MIN>;IGNORE % ş
+<U015E> <s-cedilla>;<BASE>;<CAP>;IGNORE % Ş
+<U00FC> <u-diaresis>;<BASE>;<MIN>;IGNORE % ü
+<U00DC> <u-diaresis>;<BASE>;<CAP>;IGNORE % Ü
 
 reorder-end
 

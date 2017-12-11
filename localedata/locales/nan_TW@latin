@@ -61,26 +61,19 @@ copy "iso14651_t1"
 
 %% a b c d e f g h i j k l m n o o͘ p q r s t u v w x y z ⁿ
 
-collating-element <oo> from "<U006F><U0358>"
-collating-element <OO> from "<U004F><U0358>"
-collating-element <nn> from "<U207F>"
+collating-element <o-combining-dot-above> from "<U006F><U0358>"
+collating-element <O-combining-dot-above> from "<U004F><U0358>"
+collating-symbol <o-dot-above>
+collating-symbol <superscript-n>
 
-collating-symbol <CAP-MIN>
-collating-symbol <MIN-CAP>
+reorder-after <AFTER-N>
+<o-dot-above>
+reorder-after <AFTER-Z>
+<superscript-n>
 
-reorder-after <MIN>
-<MIN-CAP>
-reorder-after <CAP>
-<CAP-MIN>
-
-reorder-after <U006E>
-<oo>
-reorder-after <U004E>
-<OO>
-reorder-after <U007A>
-<nn>
-reorder-after <U005A>
-<nn>
+<o-combining-dot-above> <o-dot-above>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % o͘
+<O-combining-dot-above> <o-dot-above>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % O͘
+<U207F>                 <superscript-n>;"<BASE>";"<MNN>";IGNORE % ⁿ
 
 reorder-end
 

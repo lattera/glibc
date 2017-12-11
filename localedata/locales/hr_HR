@@ -108,57 +108,57 @@ collating-symbol <n-j-sh>
 collating-symbol <scaron>
 collating-symbol <zcaron>
 
-reorder-after <c>
+reorder-after <AFTER-C>
 <ccaron>
 <cacute>
-reorder-after <d>
+reorder-after <AFTER-D>
 <d-z-sh>
 <doblique>
-reorder-after <l>
+reorder-after <AFTER-L>
 <l-j-sh>
-reorder-after <n>
+reorder-after <AFTER-N>
 <n-j-sh>
-reorder-after <s>
+reorder-after <AFTER-S>
 <scaron>
-reorder-after <z>
+reorder-after <AFTER-Z>
 <zcaron>
 
-<U010D> <ccaron>;<ACA>;<MIN>;IGNORE % č
-<U010C> <ccaron>;<ACA>;<CAP>;IGNORE % Č
-<U0107> <cacute>;<CAR>;<MIN>;IGNORE % ć
-<U0106> <cacute>;<CAR>;<CAP>;IGNORE % Ć
+<U010D> <ccaron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % č
+<U010C> <ccaron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Č
+<U0107> <cacute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ć
+<U0106> <cacute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ć
 
-<d-z<> "<d-z-sh>";"<BAS><CAR>";"<MIN><MIN><BAS>";IGNORE % dž
-<U01C6> "<d-z-sh>";"<BAS><CAR>";"<MIN><MIN><LIG>";IGNORE % ǆ
-<d-Z<> "<d-z-sh>";"<BAS><CAR>";"<MIN><CAP><BAS>";IGNORE % dŽ
-<D-z<> "<d-z-sh>";"<BAS><CAR>";"<CAP><MIN><BAS>";IGNORE % Dž
-<U01C5> "<d-z-sh>";"<BAS><CAR>";"<CAP><MIN><LIG>";IGNORE % ǅ
-<D-Z<> "<d-z-sh>";"<BAS><CAR>";"<CAP><CAP><BAS>";IGNORE % DŽ
-<U01C4> "<d-z-sh>";"<BAS><CAR>";"<CAP><CAP><LIG>";IGNORE % Ǆ
-<U0111> <doblique>;<OBL>;<MIN>;IGNORE % đ
-<U0110> <doblique>;<OBL>;<CAP>;IGNORE % Đ
+<d-z<> "<d-z-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT1>" % dž
+<U01C6> "<d-z-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT2>" % ǆ
+<d-Z<> "<d-z-sh>";"<BASE><BASE>";"<MIN><CAP>";"<VRNT1>" % dŽ
+<D-z<> "<d-z-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT1>" % Dž
+<U01C5> "<d-z-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT2>" % ǅ
+<D-Z<> "<d-z-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT1>" % DŽ
+<U01C4> "<d-z-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT2>" % Ǆ
+<U0111> <doblique>;"<BASE><BASE>";<MIN>;IGNORE % đ
+<U0110> <doblique>;"<BASE><BASE>";<CAP>;IGNORE % Đ
 
-<l-j> "<l-j-sh>";"<BAS><BAS>";"<MIN><MIN><BAS>";IGNORE % lj
-<U01C9> "<l-j-sh>";"<BAS><BAS>";"<MIN><MIN><LIG>";IGNORE % ǉ
-<l-J> "<l-j-sh>";"<BAS><BAS>";"<MIN><CAP><BAS>";IGNORE % lJ
-<L-j> "<l-j-sh>";"<BAS><BAS>";"<CAP><MIN><BAS>";IGNORE % Lj
-<U01C8> "<l-j-sh>";"<BAS><BAS>";"<CAP><MIN><LIG>";IGNORE % ǈ
-<L-J> "<l-j-sh>";"<BAS><BAS>";"<CAP><CAP><BAS>";IGNORE % LJ
-<U01C7> "<l-j-sh>";"<BAS><BAS>";"<CAP><CAP><LIG>";IGNORE % Ǉ
+<l-j> "<l-j-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT1>" % lj
+<U01C9> "<l-j-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT2>" % ǉ
+<l-J> "<l-j-sh>";"<BASE><BASE>";"<MIN><CAP>";"<VRNT1>" % lJ
+<L-j> "<l-j-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT1>" % Lj
+<U01C8> "<l-j-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT2>" % ǈ
+<L-J> "<l-j-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT1>" % LJ
+<U01C7> "<l-j-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT2>" % Ǉ
 
-<n-j> "<n-j-sh>";"<BAS><BAS>";"<MIN><MIN><BAS>";IGNORE % nj
-<U01CC> "<n-j-sh>";"<BAS><BAS>";"<MIN><MIN><LIG>";IGNORE % ǌ
-<n-J> "<n-j-sh>";"<BAS><BAS>";"<MIN><CAP><BAS>";IGNORE % nJ
-<N-j> "<n-j-sh>";"<BAS><BAS>";"<CAP><MIN><BAS>";IGNORE % Nj
-<U01CB> "<n-j-sh>";"<BAS><BAS>";"<CAP><MIN><LIG>";IGNORE % ǋ
-<N-J> "<n-j-sh>";"<BAS><BAS>";"<CAP><CAP><BAS>";IGNORE % NJ
-<U01CA> "<n-j-sh>";"<BAS><BAS>";"<CAP><CAP><LIG>";IGNORE % Ǌ
+<n-j> "<n-j-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT1>" % nj
+<U01CC> "<n-j-sh>";"<BASE><BASE>";"<MIN><MIN>";"<VRNT2>" % ǌ
+<n-J> "<n-j-sh>";"<BASE><BASE>";"<MIN><CAP>";"<VRNT1>" % nJ
+<N-j> "<n-j-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT1>" % Nj
+<U01CB> "<n-j-sh>";"<BASE><BASE>";"<CAP><MIN>";"<VRNT2>" % ǋ
+<N-J> "<n-j-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT1>" % NJ
+<U01CA> "<n-j-sh>";"<BASE><BASE>";"<CAP><CAP>";"<VRNT2>" % Ǌ
 
-<U0161> <scaron>;<ACA>;<MIN>;IGNORE % š
-<U0160> <scaron>;<ACA>;<CAP>;IGNORE % Š
+<U0161> <scaron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % š
+<U0160> <scaron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Š
 
-<U017E> <zcaron>;<ACA>;<MIN>;IGNORE % ž
-<U017D> <zcaron>;<ACA>;<CAP>;IGNORE % Ž
+<U017E> <zcaron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ž
+<U017D> <zcaron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ž
 
 reorder-end
 END LC_COLLATE

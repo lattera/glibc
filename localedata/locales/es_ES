@@ -51,8 +51,55 @@ category "i18n:2012";LC_MEASUREMENT
 END LC_IDENTIFICATION
 
 LC_COLLATE
-% Copy the template from ISO/IEC 14651
+% CLDR collation rules for Spanish:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/es.xml)
+%
+% <collation type="standard">
+% 	<cr><![CDATA[
+% 		&N<ñ<<<Ñ
+% 	]]></cr>
+% </collation>
+% <collation type="traditional">
+% 	<cr><![CDATA[
+% 		&N<ñ<<<Ñ
+% 		&C<ch<<<Ch<<<CH
+% 		&l<ll<<<Ll<<<LL
+% 	]]></cr>
+% </collation>
+% <collation draft="unconfirmed" alt="proposed" type="traditional">
+% 	<cr><![CDATA[
+% 		&N<ñ<<<Ñ
+% 		&C<ch<<<cH<<<Ch<<<CH
+% 		&l<ll<<<lL<<<Ll<<<LL
+% 	]]></cr>
+% </collation>
+%
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/es.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z]</exemplarCharacters>
+%
+% The following rules implement the same order as “standard” for glibc.
+
 copy "iso14651_t1"
+
+collating-symbol <space>
+collating-symbol <n-tilde>
+
+reorder-after <RES-1>
+<space>
+
+reorder-after <AFTER-N>
+<n-tilde>
+
+<U0020> <space>;IGNORE;IGNORE;<U0020>
+<U00A0> <space>;IGNORE;IGNORE;<U00A0>
+<U00F1> <n-tilde>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ñ
+<U00D1> <n-tilde>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ñ
+
+reorder-end
+
 END LC_COLLATE
 
 LC_CTYPE

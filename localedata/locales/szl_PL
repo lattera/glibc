@@ -53,6 +53,10 @@ copy "pl_PL"
 END LC_CTYPE
 
 LC_COLLATE
+% There is no collation information in CLDR for Silesian
+%
+% A Ã B C Ć D E F G H I J K L Ł M N N Ń O Õ Ō Ô Ŏ P Q R S Ś T U V W X Y Z Ź Ż
+
 copy "iso14651_t1"
 
 collating-symbol <atilde>
@@ -62,70 +66,52 @@ collating-symbol <nacute>
 collating-symbol <otilde>
 collating-symbol <omacron>
 collating-symbol <ocircumflex>
-collating-symbol <U_014F>
+collating-symbol <obreve>
+collating-symbol <sacute>
 collating-symbol <zacute>
 collating-symbol <zdot>
 
-reorder-after <a>
+reorder-after <AFTER-A>
 <atilde>
-
-reorder-after <c>
+reorder-after <AFTER-C>
 <cacute>
-
-reorder-after <l>
+reorder-after <AFTER-L>
 <lstroke>
-
-reorder-after <n>
+reorder-after <AFTER-N>
 <nacute>
-
-reorder-after <o>
+reorder-after <AFTER-O>
 <otilde>
 <omacron>
 <ocircumflex>
-<U014F>
-
-reorder-after <s>
+<obreve>
+reorder-after <AFTER-S>
 <sacute>
-
-reorder-after <z>
+reorder-after <AFTER-Z>
 <zacute>
 <zdot>
 
-reorder-after <U0061>
-<U00E3> <atilde>;<BAS>;<MIN>;IGNORE
-<U00C3> <atilde>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U0063>
-<U0107> <cacute>;<BAS>;<MIN>;IGNORE
-<U0106> <cacute>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U006C>
-<U0142> <lstroke>;<BAS>;<MIN>;IGNORE
-<U0141> <lstroke>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U006E>
-<U0144> <nacute>;<BAS>;<MIN>;IGNORE
-<U0143> <nacute>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U006F>
-<U00F5> <otilde>;<BAS>;<MIN>;IGNORE
-<U00D5> <otilde>;<BAS>;<CAP>;IGNORE
-<U014D> <omacron>;<BAS>;<MIN>;IGNORE
-<U013D> <omacron>;<BAS>;<CAP>;IGNORE
-<U00F4> <ocircumflex>;<BAS>;<MIN>;IGNORE
-<U00D4> <ocircumflex>;<BAS>;<CAP>;IGNORE
-<U014F> <U014F>;<BAS>;<MIN>;IGNORE
-<U014F> <U014F>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<U015B> <sacute>;<BAS>;<MIN>;IGNORE
-<U015A> <sacute>;<BAS>;<CAP>;IGNORE
-
-reorder-after <U007A>
-<U017A> <zacute>;<BAS>;<MIN>;IGNORE
-<U0179> <zacute>;<BAS>;<CAP>;IGNORE
-<U017C> <zdot>;<BAS>;<MIN>;IGNORE
-<U017B> <zdot>;<BAS>;<CAP>;IGNORE
+<U00E3> <atilde>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ã
+<U00C3> <atilde>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ã
+<U0107> <cacute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ć
+<U0106> <cacute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ć
+<U0142> <lstroke>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ł
+<U0141> <lstroke>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ł
+<U0144> <nacute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ń
+<U0143> <nacute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ń
+<U00F5> <otilde>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % õ
+<U00D5> <otilde>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Õ
+<U014D> <omacron>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ō
+<U014C> <omacron>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ō
+<U00F4> <ocircumflex>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ô
+<U00D4> <ocircumflex>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ô
+<U014F> <obreve>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ŏ
+<U014E> <obreve>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ŏ
+<U015B> <sacute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ś
+<U015A> <sacute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ś
+<U017A> <zacute>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ź
+<U0179> <zacute>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ź
+<U017C> <zdot>;"<BASE><BASE>";"<MIN><MIN>";IGNORE % ż
+<U017B> <zdot>;"<BASE><BASE>";"<CAP><MIN>";IGNORE % Ż
 
 reorder-end
 

@@ -64,69 +64,87 @@ END LC_IDENTIFICATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_COLLATE
+% CLDR collation rules for Oromo:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/om.xml)
 %
-% Copy the template from ISO/IEC 14651
+% <collation type="standard" >
+%  <cr><![CDATA[
+%    &Z<ch<<<Ch<<<CH<dh<<<Dh<<<DH<kh<<<Kh<<<KH<ny<<<Ny<<<NY<ph<<<Ph<<<PH<sh<<<Sh
+%  ]]></cr>
+% </collation  >
 %
+% And CLDR also lists the following
+% index characters:
+% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/om.xml)
+%
+% <exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
+%
+% The following rules implement the same order for glibc.
 copy "iso14651_t1"
-%
-% Define extra Oromo letters and their sort order:
-%
-collating-symbol  <CAP-MIN>
-collating-symbol  <ch-qubee>
-collating-element <CH> from "CH"
-collating-element <Ch> from "Ch"
+
+collating-symbol  <ch-digraph>
 collating-element <ch> from "ch"
-collating-symbol  <dh-qubee>
-collating-element <DH> from "DH"
-collating-element <Dh> from "Dh"
+collating-element <cH> from "cH"
+collating-element <Ch> from "Ch"
+collating-element <CH> from "CH"
+collating-symbol  <dh-digraph>
 collating-element <dh> from "dh"
-collating-symbol  <kh-qubee>
-collating-element <KH> from "KH"
-collating-element <Kh> from "Kh"
+collating-element <dH> from "dH"
+collating-element <Dh> from "Dh"
+collating-element <DH> from "DH"
+collating-symbol  <kh-digraph>
 collating-element <kh> from "kh"
-collating-symbol  <ny-qubee>
-collating-element <NY> from "NY"
-collating-element <Ny> from "Ny"
+collating-element <kH> from "kH"
+collating-element <Kh> from "Kh"
+collating-element <KH> from "KH"
+collating-symbol  <ny-digraph>
 collating-element <ny> from "ny"
-collating-symbol  <ph-qubee>
-collating-element <PH> from "PH"
-collating-element <Ph> from "Ph"
+collating-element <nY> from "nY"
+collating-element <Ny> from "Ny"
+collating-element <NY> from "NY"
+collating-symbol  <ph-digraph>
 collating-element <ph> from "ph"
-collating-symbol  <sh-qubee>
-collating-element <SH> from "SH"
-collating-element <Sh> from "Sh"
+collating-element <pH> from "pH"
+collating-element <Ph> from "Ph"
+collating-element <PH> from "PH"
+collating-symbol  <sh-digraph>
 collating-element <sh> from "sh"
+collating-element <sH> from "sH"
+collating-element <Sh> from "Sh"
+collating-element <SH> from "SH"
 
-reorder-after <MIN>
-<CAP-MIN>
+reorder-after <AFTER-Z>
+<ch-digraph>
+<dh-digraph>
+<kh-digraph>
+<ny-digraph>
+<ph-digraph>
+<sh-digraph>
 
-reorder-after <z>
-<ch-qubee>
-<dh-qubee>
-<kh-qubee>
-<ny-qubee>
-<ph-qubee>
-<sh-qubee>
-
-reorder-after <U00DE>
-<ch>	<ch-qubee>;<MIN>;<MIN>;IGNORE
-<Ch>	<ch-qubee>;<CAP>;<MIN>;IGNORE
-<CH>	<ch-qubee>;<CAP>;<CAP>;IGNORE
-<dh>	<dh-qubee>;<MIN>;<MIN>;IGNORE
-<Dh>	<dh-qubee>;<CAP>;<MIN>;IGNORE
-<DH>	<dh-qubee>;<CAP>;<CAP>;IGNORE
-<kh>	<kh-qubee>;<MIN>;<MIN>;IGNORE
-<Kh>	<kh-qubee>;<CAP>;<MIN>;IGNORE
-<KH>	<kh-qubee>;<CAP>;<CAP>;IGNORE
-<ny>	<ny-qubee>;<MIN>;<MIN>;IGNORE
-<Ny>	<ny-qubee>;<CAP>;<MIN>;IGNORE
-<NY>	<ny-qubee>;<CAP>;<CAP>;IGNORE
-<ph>	<ph-qubee>;<MIN>;<MIN>;IGNORE
-<Ph>	<ph-qubee>;<CAP>;<MIN>;IGNORE
-<PH>	<ph-qubee>;<CAP>;<CAP>;IGNORE
-<sh>	<sh-qubee>;<MIN>;<MIN>;IGNORE
-<Sh>	<sh-qubee>;<CAP>;<MIN>;IGNORE
-<SH>	<sh-qubee>;<CAP>;<CAP>;IGNORE
+<ch>	<ch-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<cH>	<ch-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Ch>	<ch-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<CH>	<ch-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<dh>	<dh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<dH>	<dh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Dh>	<dh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<DH>	<dh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<kh>	<kh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<kH>	<kh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Kh>	<kh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<KH>	<kh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<ny>	<ny-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<nY>	<ny-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Ny>	<ny-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<NY>	<ny-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<ph>	<ph-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<pH>	<ph-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Ph>	<ph-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<PH>	<ph-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
+<sh>	<sh-digraph>;"<BASE><BASE>";"<MIN><MIN>";IGNORE
+<sH>	<sh-digraph>;"<BASE><BASE>";"<MIN><CAP>";IGNORE
+<Sh>	<sh-digraph>;"<BASE><BASE>";"<CAP><MIN>";IGNORE
+<SH>	<sh-digraph>;"<BASE><BASE>";"<CAP><CAP>";IGNORE
 
 reorder-end
 %

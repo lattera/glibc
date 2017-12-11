@@ -1,5 +1,149 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #22550] - es_ES locale (and other es_* locales): collation should
+	treat ñ as a primary different character, sync the collation
+	for Spanish with CLDR.
+	[BZ #21547] - Tibetan script collation broken (Dzongkha and Tibetan).
+	* localedata/Makefile: Add new test files.
+	* localedata/lv_LV.UTF-8.in: Adapt test file to new collation order.
+	* localedata/sv_SE.ISO-8859-1.in: Adapt test file to new
+	collation order.
+	* localedata/uk_UA.UTF-8.in: Adapt test file to new collation order.
+	* localedata/am_ET.UTF-8.in: New test file.
+	* localedata/az_AZ.UTF-8.in: Likewise.
+	* localedata/be_BY.UTF-8.in: Likewise.
+	* localedata/ber_DZ.UTF-8.in: Likewise.
+	* localedata/ber_MA.UTF-8.in: Likewise.
+	* localedata/bg_BG.UTF-8.in: Likewise.
+	* localedata/br_FR.UTF-8.in: Likewise.
+	* localedata/cmn_TW.UTF-8.in: Likewise.
+	* localedata/crh_UA.UTF-8.in: Likewise.
+	* localedata/csb_PL.UTF-8.in: Likewise.
+	* localedata/cv_RU.UTF-8.in: Likewise.
+	* localedata/cy_GB.UTF-8.in: Likewise.
+	* localedata/dz_BT.UTF-8.in: Likewise.
+	* localedata/eo.UTF-8.in: Likewise.
+	* localedata/es_ES.UTF-8.in: Likewise.
+	* localedata/fa_IR.UTF-8.in: Likewise.
+	* localedata/fi_FI.UTF-8.in: Likewise.
+	* localedata/fil_PH.UTF-8.in: Likewise.
+	* localedata/fur_IT.UTF-8.in: Likewise.
+	* localedata/gez_ER.UTF-8@abegede.in: Likewise.
+	* localedata/ha_NG.UTF-8.in: Likewise.
+	* localedata/ig_NG.UTF-8.in: Likewise.
+	* localedata/ik_CA.UTF-8.in: Likewise.
+	* localedata/kk_KZ.UTF-8.in: Likewise.
+	* localedata/ku_TR.UTF-8.in: Likewise.
+	* localedata/ky_KG.UTF-8.in: Likewise.
+	* localedata/ln_CD.UTF-8.in: Likewise.
+	* localedata/mi_NZ.UTF-8.in: Likewise.
+	* localedata/ml_IN.UTF-8.in: Likewise.
+	* localedata/mn_MN.UTF-8.in: Likewise.
+	* localedata/mr_IN.UTF-8.in: Likewise.
+	* localedata/mt_MT.UTF-8.in: Likewise.
+	* localedata/nb_NO.UTF-8.in: Likewise.
+	* localedata/om_KE.UTF-8.in: Likewise.
+	* localedata/os_RU.UTF-8.in: Likewise.
+	* localedata/ps_AF.UTF-8.in: Likewise.
+	* localedata/ro_RO.UTF-8.in: Likewise.
+	* localedata/ru_RU.UTF-8.in: Likewise.
+	* localedata/sc_IT.UTF-8.in: Likewise.
+	* localedata/se_NO.UTF-8.in: Likewise.
+	* localedata/sq_AL.UTF-8.in: Likewise.
+	* localedata/sv_SE.UTF-8.in: Likewise.
+	* localedata/szl_PL.UTF-8.in: Likewise.
+	* localedata/tg_TJ.UTF-8.in: Likewise.
+	* localedata/tk_TM.UTF-8.in: Likewise.
+	* localedata/tt_RU.UTF-8.in: Likewise.
+	* localedata/tt_RU.UTF-8@iqtelif.in: Likewise.
+	* localedata/ug_CN.UTF-8.in: Likewise.
+	* localedata/uz_UZ.UTF-8.in: Likewise.
+	* localedata/vi_VN.UTF-8.in: Likewise.
+	* localedata/yi_US.UTF-8.in: Likewise.
+	* localedata/yo_NG.UTF-8.in: Likewise.
+	* localedata/zh_CN.UTF-8.in: Likewise.
+	* localedata/locales/am_ET: Adapt collation rules to new iso14651_t1_common
+	file and fix bugs in the collation.
+	* localedata/locales/az_AZ: Likewise.
+	* localedata/locales/be_BY: Likewise.
+	* localedata/locales/ber_DZ: Likewise.
+	* localedata/locales/ber_MA: Likewise.
+	* localedata/locales/bg_BG: Likewise.
+	* localedata/locales/br_FR: Likewise.
+	* localedata/locales/br_FR@euro: Likewise.
+	* localedata/locales/ca_ES: Likewise.
+	* localedata/locales/cns11643_stroke: Likewise.
+	* localedata/locales/crh_UA: Likewise.
+	* localedata/locales/cs_CZ: Likewise.
+	* localedata/locales/csb_PL: Likewise.
+	* localedata/locales/cv_RU: Likewise.
+	* localedata/locales/cy_GB: Likewise.
+	* localedata/locales/da_DK: Likewise.
+	* localedata/locales/dz_BT: Likewise.
+	* localedata/locales/en_CA: Likewise.
+	* localedata/locales/eo: Likewise.
+	* localedata/locales/es_CU: Likewise.
+	* localedata/locales/es_EC: Likewise.
+	* localedata/locales/es_ES: Likewise.
+	* localedata/locales/es_US: Likewise.
+	* localedata/locales/et_EE: Likewise.
+	* localedata/locales/fa_IR: Likewise.
+	* localedata/locales/fi_FI: Likewise.
+	* localedata/locales/fil_PH: Likewise.
+	* localedata/locales/fur_IT: Likewise.
+	* localedata/locales/gez_ER@abegede: Likewise.
+	* localedata/locales/ha_NG: Likewise.
+	* localedata/locales/hr_HR: Likewise.
+	* localedata/locales/hsb_DE: Likewise.
+	* localedata/locales/hu_HU: Likewise.
+	* localedata/locales/ig_NG: Likewise.
+	* localedata/locales/ik_CA: Likewise.
+	* localedata/locales/is_IS: Likewise.
+	* localedata/locales/iso14651_t1_pinyin: Likewise.
+	* localedata/locales/kk_KZ: Likewise.
+	* localedata/locales/ku_TR: Likewise.
+	* localedata/locales/ky_KG: Likewise.
+	* localedata/locales/ln_CD: Likewise.
+	* localedata/locales/lt_LT: Likewise.
+	* localedata/locales/lv_LV: Likewise.
+	* localedata/locales/mi_NZ: Likewise.
+	* localedata/locales/ml_IN: Likewise.
+	* localedata/locales/mn_MN: Likewise.
+	* localedata/locales/mr_IN: Likewise.
+	* localedata/locales/mt_MT: Likewise.
+	* localedata/locales/nb_NO: Likewise.
+	* localedata/locales/om_KE: Likewise.
+	* localedata/locales/os_RU: Likewise.
+	* localedata/locales/pl_PL: Likewise.
+	* localedata/locales/ps_AF: Likewise.
+	* localedata/locales/ro_RO: Likewise.
+	* localedata/locales/ru_RU: Likewise.
+	* localedata/locales/ru_UA: Likewise.
+	* localedata/locales/sc_IT: Likewise.
+	* localedata/locales/se_NO: Likewise.
+	* localedata/locales/si_LK: Likewise.
+	* localedata/locales/sq_AL: Likewise.
+	* localedata/locales/sv_FI: Likewise.
+	* localedata/locales/sv_FI@euro: Likewise.
+	* localedata/locales/sv_SE: Likewise.
+	* localedata/locales/szl_PL: Likewise.
+	* localedata/locales/tg_TJ: Likewise.
+	* localedata/locales/ti_ER: Likewise.
+	* localedata/locales/tk_TM: Likewise.
+	* localedata/locales/tl_PH: Likewise.
+	* localedata/locales/tr_TR: Likewise.
+	* localedata/locales/tt_RU: Likewise.
+	* localedata/locales/tt_RU@iqtelif: Likewise.
+	* localedata/locales/ug_CN: Likewise.
+	* localedata/locales/uk_UA: Likewise.
+	* localedata/locales/uz_UZ: Likewise.
+	* localedata/locales/uz_UZ@cyrillic: Likewise.
+	* localedata/locales/vi_VN: Likewise.
+	* localedata/locales/yi_US: Likewise.
+	* localedata/locales/yo_NG: Likewise.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* gen-locales.mk: Make test files which contain @ modifiers in their
 	name work.
 	* localedata/gen-locale.sh: Likewise.

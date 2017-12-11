@@ -53,58 +53,47 @@ copy "tr_TR"
 END LC_CTYPE
 
 LC_COLLATE
+% CLDR has neither collation rules nor index characters for Kurdish yet.
+%
+%% a b c ç d e ê f g h ı i î j k l m n o p q r s ş t u û v w x y z
 copy "iso14651_t1"
 
-%% a b c c, d e e> f g h i i> j k l m n o p q r s s, t u u> v w x y z
 
-collating-symbol <c,>
-collating-symbol <e/>>
-collating-symbol <i.>
-collating-symbol <i/>>
-collating-symbol <s,>
-collating-symbol <u/>>
+collating-symbol <c-cedilla>
+collating-symbol <e-circumflex>
+collating-symbol <i-dotless>
+collating-symbol <i-dot>
+collating-symbol <i-circumflex>
+collating-symbol <s-cedilla>
+collating-symbol <u-circumflex>
 
-reorder-after <c>
-<c,>
-reorder-after <e>
-<e/>>
-reorder-after <h>
-<i>
-<i.>
-<i/>>
-reorder-after <s>
-<s,>
-reorder-after <u>
-<u/>>
+reorder-after <AFTER-C>
+<c-cedilla>
+reorder-after <AFTER-E>
+<e-circumflex>
+reorder-after <AFTER-H>
+<i-dotless>
+<i-dot>
+<i-circumflex>
+reorder-after <AFTER-S>
+<s-cedilla>
+reorder-after <AFTER-U>
+<u-circumflex>
 
-reorder-after <U0063>
-<U00E7> <c,>;<CDI>;<MIN>;IGNORE
-reorder-after <U0043>
-<U00C7> <c,>;<CDI>;<CAP>;IGNORE
-
-reorder-after <U0065>
-<U00EA> <e/>>;<CIR>;<MIN>;IGNORE
-reorder-after <U0045>
-<U00CA> <e/>>;<CIR>;<CAP>;IGNORE
-
-reorder-after <U0068>
-<U0131> <i>;<BAS>;<MIN>;IGNORE
-<U0069> <i.>;<PCT>;<MIN>;IGNORE
-<U00EE> <i/>>;<CIR>;<MIN>;IGNORE
-reorder-after <U0048>
-<U0049> <i>;<BAS>;<CAP>;IGNORE
-<U0130> <i.>;<PCT>;<CAP>;IGNORE
-<U00CE> <i/>>;<CIR>;<CAP>;IGNORE
-
-reorder-after <U0073>
-<U015F> <s,>;<CDI>;<MIN>;IGNORE
-reorder-after <U0053>
-<U015E> <s,>;<CDI>;<CAP>;IGNORE
-
-reorder-after <U0075>
-<U00FB> <u/>>;<CIR>;<MIN>;IGNORE
-reorder-after <U0055>
-<U00DB> <u/>>;<CIR>;<CAP>;IGNORE
+<U00E7> <c-cedilla>;<BASE>;<MIN>;IGNORE % ç
+<U00C7> <c-cedilla>;<BASE>;<CAP>;IGNORE % Ç
+<U00EA> <e-circumflex>;<BASE>;<MIN>;IGNORE % ê
+<U00CA> <e-circumflex>;<BASE>;<CAP>;IGNORE % Ê
+<U0131> <i-dotless>;<BASE>;<MIN>;IGNORE % ı
+<U0069> <i-dot>;<BASE>;<MIN>;IGNORE % i
+<U00EE> <i-circumflex>;<BASE>;<MIN>;IGNORE % î
+<U0049> <i-dotless>;<BASE>;<CAP>;IGNORE % I
+<U0130> <i-dot>;<BASE>;<CAP>;IGNORE % İ
+<U00CE> <i-circumflex>;<BASE>;<CAP>;IGNORE % Î
+<U015F> <s-cedilla>;<BASE>;<MIN>;IGNORE % ş
+<U015E> <s-cedilla>;<BASE>;<CAP>;IGNORE % Ş
+<U00FB> <u-circumflex>;<BASE>;<MIN>;IGNORE % û
+<U00DB> <u-circumflex>;<BASE>;<CAP>;IGNORE % Û
 
 reorder-end
 
