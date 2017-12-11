@@ -841,7 +841,7 @@ character value.
 Inquire about the value used to internally represent the zero priority level for
 the process execution.
 
-@item SC_SSIZE_MAX
+@item _SC_SSIZE_MAX
 @standards{X/Open, unistd.h}
 Inquire about the maximum value which can be stored in a variable of type
 @code{ssize_t}.

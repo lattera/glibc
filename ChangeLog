@@ -1,3 +1,8 @@
+2017-12-12  Aurelien Jarno <aurelien@aurel32.net>
+
+	[BZ #22588]
+	* manual/conf.texi (SC_SSIZE_MAX): Rename into _SC_SSIZE_MAX.
+
 2017-12-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* argp/Makefile (CFLAGS-argp-help.c): Replace = with +=.
