@@ -47,16 +47,17 @@ _dl_runtime_resolve:
 	cfi_offset (r3, -88)
 	cfi_offset (r4, -80)
 	cfi_offset (r5, -72)
-	std    %f0,104(%r15)
-	cfi_offset (f0, -56)
-	std    %f2,112(%r15)
-	cfi_offset (f2, -48)
-	std    %f4,120(%r15)
-	cfi_offset (f4, -40)
-	std    %f6,128(%r15)
-	cfi_offset (f6, -32)
-	stg    %r14,96(15)
+	stmg   %r14,%r15,96(%r15)
 	cfi_offset (r14, -64)
+	cfi_offset (r15, -56)
+	std    %f0,112(%r15)
+	cfi_offset (f0, -48)
+	std    %f2,120(%r15)
+	cfi_offset (f2, -40)
+	std    %f4,128(%r15)
+	cfi_offset (f4, -32)
+	std    %f6,136(%r15)
+	cfi_offset (f6, -24)
 	lmg    %r2,%r3,48(%r15) # load args for fixup saved by PLT
 	lgr    %r0,%r15
 #ifdef RESTORE_VRS
@@ -86,17 +87,15 @@ _dl_runtime_resolve:
 	.machine "z13"
 	vlm    %v24,%v31,160(%r15)# restore vector registers
 	.machine pop
-	aghi   %r15,288         # remove stack frame
-	cfi_adjust_cfa_offset (-288)
+	lmg    %r14,%r15,384(%r15)# remove stack frame and restore registers
 #else
-	aghi   %r15,160         # remove stack frame
-	cfi_adjust_cfa_offset (-160)
+	lmg    %r14,%r15,256(%r15)# remove stack frame and restore registers
 #endif
-	lg     %r14,96(%r15)	# restore registers
-	ld     %f0,104(%r15)
-	ld     %f2,112(%r15)
-	ld     %f4,120(%r15)
-	ld     %f6,128(%r15)
+	cfi_def_cfa_offset (160)
+	ld     %f0,112(%r15)
+	ld     %f2,120(%r15)
+	ld     %f4,128(%r15)
+	ld     %f6,136(%r15)
 	lmg    %r2,%r5,64(%r15)
 	br     %r1
 	cfi_endproc

@@ -1,3 +1,10 @@
+2017-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_resolve):
+	Store r15 on stack and add cfi rule.
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
+	Likewise.
+
 2017-12-10  Aurelien Jarno <aurelien@aurel32.net>
 
 	[BZ #22577]

@@ -51,12 +51,13 @@ _dl_runtime_resolve:
 	cfi_offset (r3, -60)
 	cfi_offset (r4, -56)
 	cfi_offset (r5, -52)
+	stm    %r14,%r15,48(%r15)
+	cfi_offset (r14, -48)
+	cfi_offset (r15, -44)
 	std    %f0,56(%r15)
 	cfi_offset (f0, -40)
 	std    %f2,64(%r15)
 	cfi_offset (f2, -32)
-	st     %r14,8(%r15)
-	cfi_offset (r14, -88)
 	lr     %r0,%r15
 	lm     %r2,%r3,24(%r15)		# load args saved by PLT
 #ifdef RESTORE_VRS
@@ -90,13 +91,11 @@ _dl_runtime_resolve:
 	.machinemode "zarch_nohighgprs"
 	vlm    %v24,%v31,96(%r15)	# restore vector registers
 	.machine pop
-	ahi   %r15,224			# remove stack frame
-	cfi_adjust_cfa_offset (-224)
+	lm     %r14,%r15,272(%r15)# remove stack frame and restore registers
 #else
-	ahi    %r15,96			# remove stack frame
-	cfi_adjust_cfa_offset (-96)
+	lm     %r14,%r15,144(%r15)# remove stack frame and restore registers
 #endif
-	l      %r14,8(15)		# restore registers
+	cfi_def_cfa_offset (96)
 	ld     %f0,56(%r15)
 	ld     %f2,64(%r15)
 	lm     %r2,%r5,32(%r15)
