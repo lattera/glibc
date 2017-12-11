@@ -1,3 +1,27 @@
+2017-12-11  Adhemerval Zanella  <azanella@linux.vnet.ibm.com>
+	    Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* manual/tunables.texi (Hardware Capability Tunables): Document
+	glibc.tune.cached_memopt.
+	* sysdeps/powerpc/cpu-features.c: New file.
+	* sysdeps/powerpc/cpu-features.h: New file.
+	* sysdeps/powerpc/dl-procinfo.c [!IS_IN(ldconfig)]: Add
+	_dl_powerpc_cpu_features.
+	* sysdeps/powerpc/dl-tunables.list: New file.
+	* sysdeps/powerpc/ldsodefs.h: Include cpu-features.h.
+	* sysdeps/powerpc/powerpc32/power4/multiarch/init-arch.h
+	(INIT_ARCH): Initialize use_aligned_memopt.
+	* sysdeps/powerpc/powerpc64/dl-machine.h [defined(SHARED &&
+	IS_IN(rtld))]: Restrict dl_platform_init availability and
+	initialize CPU features used by tunables.
+	* sysdeps/powerpc/powerpc64/multiarch/Makefile (sysdep_routines):
+	Add memcpy-power8-cached.
+	* sysdeps/powerpc/powerpc64/multiarch/ifunc-impl-list.c: Add
+	__memcpy_power8_cached.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy.c: Likewise.
+	* sysdeps/powerpc/powerpc64/multiarch/memcpy-power8-cached.S:
+	New file.
+
 2017-12-11  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* string/Makefile (CFLAGS-inl-tester.c): Replace = with +=.

@@ -42,6 +42,22 @@
 # define PROCINFO_CLASS
 #endif
 
+#if !IS_IN (ldconfig)
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_powerpc_cpu_features
+# else
+PROCINFO_CLASS struct cpu_features _dl_powerpc_cpu_features
+# endif
+# ifndef PROCINFO_DECL
+= { }
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
+#endif
+
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_powerpc_cap_flags
 #else

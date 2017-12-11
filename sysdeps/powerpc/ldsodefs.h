@@ -20,6 +20,7 @@
 #define	_POWERPC_LDSODEFS_H	1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_ppc32_regs;
 struct La_ppc32_retval;

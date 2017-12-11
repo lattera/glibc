@@ -319,6 +319,16 @@ the ones in @code{sysdeps/x86/cpu-features.h}.
 This tunable is specific to i386 and x86-64.
 @end deftp
 
+@deftp Tunable glibc.tune.cached_memopt
+The @code{glibc.tune.cached_memopt=[0|1]} tunable allows the user to
+enable optimizations recommended for cacheable memory.  If set to
+@code{1}, @theglibc{} assumes that the process memory image consists
+of cacheable (non-device) memory only.  The default, @code{0},
+indicates that the process may use device memory.
+
+This tunable is specific to powerpc, powerpc64 and powerpc64le.
+@end deftp
+
 @deftp Tunable glibc.tune.cpu
 The @code{glibc.tune.cpu=xxx} tunable allows the user to tell @theglibc{} to
 assume that the CPU is @code{xxx} where xxx may have one of these values:

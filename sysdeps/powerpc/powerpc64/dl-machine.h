@@ -27,6 +27,7 @@
 #include <dl-tls.h>
 #include <sysdep.h>
 #include <hwcapinfo.h>
+#include <cpu-features.c>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -300,13 +301,14 @@ BODY_PREFIX "_dl_start_user:\n"						\
 /* We define an initialization function to initialize HWCAP/HWCAP2 and
    platform data so it can be copied into the TCB later.  This is called
    very early in _dl_sysdep_start for dynamically linked binaries.  */
-#ifdef SHARED
+#if defined(SHARED) && IS_IN (rtld)
 # define DL_PLATFORM_INIT dl_platform_init ()
 
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
   __tcb_parse_hwcap_and_convert_at_platform ();
+  init_cpu_features (&GLRO(dl_powerpc_cpu_features));
 }
 #endif
 
