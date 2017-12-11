@@ -1,3 +1,15 @@
+2017-12-11  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* string/Makefile (CFLAGS-inl-tester.c): Replace = with +=.
+	(CFLAGS-noinl-tester.c): Likewise.
+	(CFLAGS-tst-strlen.c): Likewise.
+	(CFLAGS-stratcliff.c): Likewise.
+	(CFLAGS-test-ffs.c): Likewise.
+	(CFLAGS-tst-inlcall.c): Likewise.
+	(CFLAGS-tst-xbzero-opt.c): Likewise.
+	(CFLAGS-memcpy.c): Likewise.
+	(CFLAGS-wordcopy.c): Likewise.
+
 2017-12-11  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_resolve):
