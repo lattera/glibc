@@ -666,6 +666,7 @@ multi_arch
 no_stack_protector
 stack_protector
 libc_cv_ssp
+libc_cv_with_fp
 base_machine
 have_tunables
 build_pt_chown
@@ -683,7 +684,6 @@ hardcoded_path_in_tests
 enable_timezone_tools
 use_default_link
 sysheaders
-with_fp
 ac_ct_CXX
 CXXFLAGS
 CXX
@@ -756,7 +756,6 @@ with_bugurl
 with_gd
 with_gd_include
 with_gd_lib
-with_fp
 with_binutils
 with_selinux
 with_headers
@@ -1467,7 +1466,6 @@ Optional Packages:
   --with-gd=DIR           find libgd include dir and library with prefix DIR
   --with-gd-include=DIR   find libgd include files in DIR
   --with-gd-lib=DIR       find libgd library files in DIR
-  --with-fp               if using floating-point hardware [default=yes]
   --with-binutils=PATH    specify location of binutils (as and ld)
   --with-selinux          if building with SELinux support
   --with-headers=PATH     location of system headers to use (for example
@@ -3294,15 +3292,6 @@ libgd-LDFLAGS = $libgd_ldflags"
 fi
 
 
-# Check whether --with-fp was given.
-if test "${with_fp+set}" = set; then :
-  withval=$with_fp; with_fp=$withval
-else
-  with_fp=yes
-fi
-
-
-
 # Check whether --with-binutils was given.
 if test "${with_binutils+set}" = set; then :
   withval=$with_binutils; path_binutils=$withval
@@ -3778,6 +3767,11 @@ fi
 # check below.
 libc_config_ok=no
 
+# A preconfigure script for a system that may or may not use fpu
+# sysdeps directories sets this to a preprocessor conditional for
+# whether to use such directories.
+with_fp_cond=1
+
 if frags=`ls -d $srcdir/sysdeps/*/preconfigure 2> /dev/null`
 then
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sysdeps preconfigure fragments" >&5
@@ -3814,6 +3808,30 @@ fi
 
 # Set base_machine if not set by a preconfigure fragment.
 test -n "$base_machine" || base_machine=$machine
+
+
+# Determine whether to use fpu or nofpu sysdeps directories.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for use of fpu sysdeps directories" >&5
+$as_echo_n "checking for use of fpu sysdeps directories... " >&6; }
+if ${libc_cv_with_fp+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+#if $with_fp_cond
+int dummy;
+#else
+# error "no hardware floating point"
+#endif
+EOF
+libc_cv_with_fp=no
+if ${CC-cc} $CFLAGS $CPPFLAGS -S conftest.c -o conftest.s \
+   1>&5 2>&5 ; then
+  libc_cv_with_fp=yes
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_with_fp" >&5
+$as_echo "$libc_cv_with_fp" >&6; }
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
@@ -4085,7 +4103,7 @@ tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
-  if test "$with_fp" = yes; then
+  if test "$libc_cv_with_fp" = yes; then
     maybe_fpu=/fpu
   else
     maybe_fpu=/nofpu

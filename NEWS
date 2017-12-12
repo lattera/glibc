@@ -76,6 +76,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   glibc has been removed.  The --enable-add-ons configure option is now
   ignored.
 
+* The --without-fp configure option is now ignored.  Whether hardware
+  floating-point instructions are used is now configured based on whether
+  the compiler used at configure time (without any options implied by a
+  --with-cpu= configure option) uses such instructions.
+
 * The res_hnok, res_dnok, res_mailok and res_ownok functions now check that
   the specified string can be parsed as a domain name.
 

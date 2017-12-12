@@ -1,3 +1,21 @@
+2017-12-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.ac (--with-fp): Remove configure option.
+	(with_fp_cond): New variable.
+	(libc_cv_with_fp): New configure test.  Use this variable instead
+	of with_fp.
+	* configure: Regenerated.
+	* config.make.in (with-fp): Use @libc_cv_with_fp@.
+	* manual/install.texi (Configuring and compiling): Remove
+	--without-fp.
+	* INSTALL: Regenerated.
+	* sysdeps/m68k/preconfigure (with_fp_cond): Define for ColdFire.
+	* sysdeps/mips/preconfigure (with_fp_cond): Define.
+	* sysdeps/powerpc/preconfigure (with_fp_cond): Define for 32-bit.
+	* sysdeps/sh/preconfigure (with_fp_cond): Define.
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Do not
+	use --without-fp to configure glibc.
+
 2017-12-12  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/locale.texi (nl_langinfo): Fix a typo.

@@ -25,5 +25,7 @@ mips*)
 	if test "$abiflag" != "_ABIO32" -a "$mips16flag" = "1"; then
 		as_fn_error $? "MIPS16 is only supported with the o32 ABI." "$LINENO" 5
 	fi
+
+	with_fp_cond="defined __mips_hard_float"
 	;;
 esac

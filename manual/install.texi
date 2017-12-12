@@ -106,10 +106,6 @@ problem and suppress these constructs, so that the library will still be
 usable, but functionality may be lost---for example, you can't build a
 shared libc with old binutils.
 
-@item --without-fp
-Use this option if your computer lacks hardware floating-point support
-and your operating system does not emulate an FPU.
-
 @c disable static doesn't work currently
 @c @item --disable-static
 @c Don't build static libraries.  Static libraries aren't that useful these

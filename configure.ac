@@ -127,12 +127,6 @@ libgd-LDFLAGS = $libgd_ldflags"
 fi
 
 dnl Arguments to specify presence of other packages/features.
-AC_ARG_WITH([fp],
-	    AC_HELP_STRING([--with-fp],
-			   [if using floating-point hardware @<:@default=yes@:>@]),
-	    [with_fp=$withval],
-	    [with_fp=yes])
-AC_SUBST(with_fp)
 AC_ARG_WITH([binutils],
 	    AC_HELP_STRING([--with-binutils=PATH],
 			   [specify location of binutils (as and ld)]),
@@ -489,6 +483,11 @@ AC_ARG_WITH([cpu],
 # check below.
 libc_config_ok=no
 
+# A preconfigure script for a system that may or may not use fpu
+# sysdeps directories sets this to a preprocessor conditional for
+# whether to use such directories.
+with_fp_cond=1
+
 dnl Let sysdeps/*/preconfigure act here.
 LIBC_PRECONFIGURE([$srcdir], [for sysdeps])
 
@@ -516,6 +515,24 @@ fi
 # Set base_machine if not set by a preconfigure fragment.
 test -n "$base_machine" || base_machine=$machine
 AC_SUBST(base_machine)
+
+# Determine whether to use fpu or nofpu sysdeps directories.
+AC_CACHE_CHECK([for use of fpu sysdeps directories],
+	       libc_cv_with_fp, [dnl
+cat > conftest.c <<EOF
+#if $with_fp_cond
+int dummy;
+#else
+# error "no hardware floating point"
+#endif
+EOF
+libc_cv_with_fp=no
+if ${CC-cc} $CFLAGS $CPPFLAGS -S conftest.c -o conftest.s \
+   1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD ; then
+  libc_cv_with_fp=yes
+fi
+rm -f conftest*])
+AC_SUBST(libc_cv_with_fp)
 
 AC_CACHE_CHECK(for -fstack-protector, libc_cv_ssp, [dnl
 LIBC_TRY_CC_OPTION([$CFLAGS $CPPFLAGS -Werror -fstack-protector],
@@ -720,7 +737,7 @@ tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
   # Prepend the machine's FPU directory unless --without-fp.
-  if test "$with_fp" = yes; then
+  if test "$libc_cv_with_fp" = yes; then
     maybe_fpu=/fpu
   else
     maybe_fpu=/nofpu

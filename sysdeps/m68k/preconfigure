@@ -13,5 +13,9 @@ m68k)		variant=`(echo "#ifdef __mcoldfire__"
 		  echo >&2 "Cannot determine m68k processor variant"
 		  exit 1
 		fi
-		base_machine=m68k machine=m68k/$variant ;;
+		base_machine=m68k machine=m68k/$variant
+		if test "$variant" = "coldfire"; then
+		  with_fp_cond="defined __mcffpu__"
+		fi
+		;;
 esac

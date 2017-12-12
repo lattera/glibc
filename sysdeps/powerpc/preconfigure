@@ -16,5 +16,6 @@ powerpc*)
     base_machine=powerpc machine=powerpc/powerpc32
   fi
   rm -f conftest.i
+  with_fp_cond="!defined __NO_FPRS__"
   ;;
 esac
