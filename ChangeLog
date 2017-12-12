@@ -1,5 +1,11 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/cs_CZ.UTF-8.in: adapt this test file to the collation
+	order of ȥ in the new iso14651_t1_common file.
+	* localedata/pl_PL.UTF-8.in: Likewise.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/iso14651_t1_common: Add sections for various
 	scripts to the iso14651_t1_common file.
 
