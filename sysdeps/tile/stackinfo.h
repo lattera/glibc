@@ -35,7 +35,7 @@
    (unnecessary) parameters.  */
 #define stackinfo_get_sp() \
   ({ void *p__; asm volatile ("move %0, sp" : "=r" (p__)); p__; })
-#if defined __tilegx__ && __WORDSIZE == 32
+#if __WORDSIZE == 32
 #define __stackinfo_sub "subx"
 #else
 #define __stackinfo_sub "sub"

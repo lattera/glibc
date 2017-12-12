@@ -1,7 +1,5 @@
 # This is a -*- sh -*-
 case "$machine" in
-    tilepro)
-	base_machine=tile machine=tile/tilepro ;;
     tilegx*)
 	base_machine=tile
 	if $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep -q __LP64__; then

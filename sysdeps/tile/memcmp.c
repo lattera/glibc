@@ -59,13 +59,8 @@ typedef unsigned char byte;
 /* Provide the appropriate builtins to shift two registers based on
    the alignment of a pointer held in a third register, and to reverse
    the bytes in a word.  */
-#ifdef __tilegx__
 #define DBLALIGN __insn_dblalign
 #define REVBYTES __insn_revbytes
-#else
-#define DBLALIGN __insn_dword_align
-#define REVBYTES __insn_bytex
-#endif
 
 #ifdef WORDS_BIGENDIAN
 # define CMP_LT_OR_GT(a, b) ((a) > (b) ? 1 : -1)

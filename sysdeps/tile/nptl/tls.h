@@ -113,13 +113,8 @@ register void *__thread_pointer asm ("tp");
 			 - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
-#ifdef __tilegx__
 # define DB_THREAD_SELF \
-  REGISTER (64, 64, REG_TP * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
-#else
-# define DB_THREAD_SELF \
-  REGISTER (32, 32, REG_TP * 4, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
-#endif
+ REGISTER (64, 64, REG_TP * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) (descr->member)

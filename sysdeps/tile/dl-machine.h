@@ -20,11 +20,7 @@
 #ifndef dl_machine_h
 #define dl_machine_h
 
-#ifdef __tilegx__
 #define ELF_MACHINE_NAME "tilegx"
-#else
-#define ELF_MACHINE_NAME "tilepro"
-#endif
 
 #include <sys/param.h>
 #include <string.h>
@@ -37,18 +33,12 @@
 static inline int
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
-#if defined __tilegx__
   if (ehdr->e_machine != EM_TILEGX)
     return 0;
-# if __WORDSIZE == 32
+#if __WORDSIZE == 32
   return (ehdr->e_ident[EI_CLASS] == ELFCLASS32);
-# else
-  return (ehdr->e_ident[EI_CLASS] == ELFCLASS64);
-# endif
-#elif defined __tilepro__
-  return ehdr->e_machine == EM_TILEPRO;
 #else
-# error "Unknown tile architecture."
+  return (ehdr->e_ident[EI_CLASS] == ELFCLASS64);
 #endif
 }
 
@@ -62,19 +52,12 @@ elf_machine_dynamic (void)
 {
   ElfW(Addr) *got;
 
-#ifdef __tilegx__
   ElfW(Addr) tmp;
   asm( "	{ lnk %0; moveli %1, hw2_last(_GLOBAL_OFFSET_TABLE_ - 1f) }\n"
        "1:	shl16insli %1, %1, hw1(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
        "	shl16insli %1, %1, hw0(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
        "        add %0, %0, %1"
        : "=r" (got), "=r" (tmp));
-#else
-  asm( "	lnk %0\n"
-       "1:	addli %0, %0, lo16(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
-       "	auli %0, %0, ha16(_GLOBAL_OFFSET_TABLE_ - 1b)"
-       : "=r" (got));
-#endif
 
   return *got;
 }
@@ -86,9 +69,8 @@ elf_machine_load_address (void)
 {
   ElfW(Addr) *got;
   ElfW(Addr) dynamic;
-
-#ifdef __tilegx__
   ElfW(Addr) tmp;
+
   asm( "	lnk %2\n"
        "1:	{\n"
        "	 moveli %0, hw2_last(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
@@ -107,18 +89,6 @@ elf_machine_load_address (void)
        "	 add %1, %1, %2\n"
        "	}"
        : "=r" (got), "=r" (dynamic), "=r" (tmp));
-#else
-  asm( "	lnk %0\n"
-       "1:	{\n"
-       "	 addli %0, %0, lo16(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
-       "	 addli %1, %0, lo16(_DYNAMIC - 1b)\n"
-       "	}\n"
-       "	{\n"
-       "	 auli %0, %0, ha16(_GLOBAL_OFFSET_TABLE_ - 1b)\n"
-       "	 auli %1, %1, ha16(_DYNAMIC - 1b)\n"
-       "	}\n"
-       : "=r" (got), "=r" (dynamic));
-#endif
 
   return dynamic - *got;
 }
@@ -197,15 +167,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #endif
 
 /* Wrap a generic Tilera relocation type. */
-#ifdef __tilegx__
 #define R_TILE(x) R_TILEGX_##x
 #define __R_TILE_TLS(x,c) R_TILEGX_TLS_##x##c
 #define _R_TILE_TLS(x,c) __R_TILE_TLS(x,c)
 #define R_TILE_TLS(x) _R_TILE_TLS(x,__ELF_NATIVE_CLASS)
-#else
-#define R_TILE(x) R_TILEPRO_##x
-#define R_TILE_TLS(x) R_TILEPRO_TLS_##x##32
-#endif
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
    TLS variable, so undefined references should not be allowed to
@@ -272,13 +237,8 @@ struct reloc_howto
   /* Right shift operand by this number of bits. */
   unsigned char right_shift;
 
-#ifdef __tilegx__
   /* If nonzero, this is updating a code bundle. */
   unsigned char is_bundle_update;
-#else
-  /* If nonzero, add 0x8000 to the value. */
-  unsigned char add_0x8000;
-#endif
 
   /* If nonzero, subtract the containing address from the address. */
   unsigned char is_pcrel;
@@ -291,19 +251,17 @@ struct reloc_howto
    because then the table would not be position-independent. */
 static const struct reloc_howto howto[] =
 {
-#ifdef __tilegx__
-
-# if __WORDSIZE == 32
+#if __WORDSIZE == 32
   /* The GX -m32 loader only handles 32-bit types, so it will be confused
      by shifts larger than that.  We convert them to just sign-extend;
      they usually indicate a program bug or missed optimization, but we
      have to handle them correctly anyway.  */
-#  define S32 31
-#  define S48 31
-# else
-#  define S32 32
-#  define S48 48
-# endif
+# define S32 31
+# define S48 31
+#else
+# define S32 32
+# define S48 48
+#endif
 
   /* R_TILEGX_NONE */                    {   0, 0, 0, 0 },
   /* R_TILEGX_64 */                      {   0, 0, 0, 8 },
@@ -417,93 +375,6 @@ static const struct reloc_howto howto[] =
   /* R_TILEGX_TLS_DTPMOD32 */            {   0, 0, 0, 0 },
   /* R_TILEGX_TLS_DTPOFF32 */            {   0, 0, 0, 0 },
   /* R_TILEGX_TLS_TPOFF32 */             {   0, 0, 0, 0 }
-#else
-  /* R_TILEPRO_NONE */                   { 0,  0, 0, 0 },
-  /* R_TILEPRO_32 */                     { 0,  0, 0, 4 },
-  /* R_TILEPRO_16 */                     { 0,  0, 0, 2 },
-  /* R_TILEPRO_8 */                      { 0,  0, 0, 1 },
-  /* R_TILEPRO_32_PCREL */               { 0,  0, 1, 4 },
-  /* R_TILEPRO_16_PCREL */               { 0,  0, 1, 2 },
-  /* R_TILEPRO_8_PCREL */                { 0,  0, 1, 1 },
-  /* R_TILEPRO_LO16 */                   { 0,  0, 0, 2 },
-  /* R_TILEPRO_HI16 */                   { 16, 0, 0, 2 },
-  /* R_TILEPRO_HA16 */                   { 16, 1, 0, 2 },
-  /* R_TILEPRO_COPY */                   { 0,  0, 0, 0 },
-  /* R_TILEPRO_GLOB_DAT */               { 0,  0, 0, 4 },
-  /* R_TILEPRO_JMP_SLOT */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_RELATIVE */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_BROFF_X1 */               { 3,  0, 1, 8 },
-  /* R_TILEPRO_JOFFLONG_X1 */            { 3,  0, 1, 8 },
-  /* R_TILEPRO_JOFFLONG_X1_PLT */        { 3,  0, 1, 8 },
-  /* R_TILEPRO_IMM8_X0 */                { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM8_Y0 */                { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM8_X1 */                { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM8_Y1 */                { 0,  0, 0, 8 },
-  /* R_TILEPRO_MT_IMM15_X1 */            { 0,  0, 0, 8 },
-  /* R_TILEPRO_MF_IMM15_X1 */            { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_LO */            { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_LO */            { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_HI */            { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_HI */            { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_HA */            { 16, 1, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_HA */            { 16, 1, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_PCREL */         { 0,  0, 1, 8 },
-  /* R_TILEPRO_IMM16_X1_PCREL */         { 0,  0, 1, 8 },
-  /* R_TILEPRO_IMM16_X0_LO_PCREL */      { 0,  0, 1, 8 },
-  /* R_TILEPRO_IMM16_X1_LO_PCREL */      { 0,  0, 1, 8 },
-  /* R_TILEPRO_IMM16_X0_HI_PCREL */      { 16, 0, 1, 8 },
-  /* R_TILEPRO_IMM16_X1_HI_PCREL */      { 16, 0, 1, 8 },
-  /* R_TILEPRO_IMM16_X0_HA_PCREL */      { 16, 1, 1, 8 },
-  /* R_TILEPRO_IMM16_X1_HA_PCREL */      { 16, 1, 1, 8 },
-  /* R_TILEPRO_IMM16_X0_GOT */           { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X1_GOT */           { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X0_GOT_LO */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X1_GOT_LO */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X0_GOT_HI */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X1_GOT_HI */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X0_GOT_HA */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X1_GOT_HA */        { 0,  0, 0, 0 },
-  /* R_TILEPRO_MMSTART_X0 */             { 0,  0, 0, 8 },
-  /* R_TILEPRO_MMEND_X0 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_MMSTART_X1 */             { 0,  0, 0, 8 },
-  /* R_TILEPRO_MMEND_X1 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_SHAMT_X0 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_SHAMT_X1 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_SHAMT_Y0 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_SHAMT_Y1 */               { 0,  0, 0, 8 },
-  /* R_TILEPRO_SN_BROFF */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_IMM8 */                { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_UIMM8 */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_BYTE0 */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_BYTE1 */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_BYTE2 */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_BYTE3 */               { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_SPCREL0 */             { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_SPCREL1 */             { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_SPCREL2 */             { 0,  0, 0, 0 },
-  /* R_TILEPRO_SN_SPCREL3 */             { 0,  0, 0, 0 },
-  /* R_TILEPRO_IMM16_X0_TLS_GD */        { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_GD */        { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_GD_LO */     { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_GD_LO */     { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_GD_HI */     { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_GD_HI */     { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_GD_HA */     { 16, 1, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_GD_HA */     { 16, 1, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_IE */        { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_IE */        { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_IE_LO */     { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_IE_LO */     { 0,  0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_IE_HI */     { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_IE_HI */     { 16, 0, 0, 8 },
-  /* R_TILEPRO_IMM16_X0_TLS_IE_HA */     { 16, 1, 0, 8 },
-  /* R_TILEPRO_IMM16_X1_TLS_IE_HA */     { 16, 1, 0, 8 },
-  /* R_TILEPRO_TLS_DTPMOD32 */           { 0,  0, 0, 0 },
-  /* R_TILEPRO_TLS_DTPOFF32 */           { 0,  0, 0, 0 },
-  /* R_TILEPRO_TLS_TPOFF32 */            { 0,  0, 0, 0 },
-#endif
 };
 
 #if __ELF_NATIVE_CLASS == 32
@@ -653,11 +524,6 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   if (h->is_pcrel)
     value -= (ElfW(Addr)) reloc_addr;
 
-#ifndef __tilegx__
-  if (h->add_0x8000)
-    value += 0x8000;
-#endif
-
   value = ((long) value) >> h->right_shift;
 
   switch (h->byte_size)
@@ -671,14 +537,12 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case 4:
       *(int *) reloc_addr = value;
       return;
-#ifdef __tilegx__
     case 8:
       if (!h->is_bundle_update)
         {
           *(ElfW(Addr) *) reloc_addr = value;
           return;
         }
-#endif
     }
 
   /* We are updating a bundle, so use the function pointer that
@@ -704,7 +568,6 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 
   switch (r_type)
     {
-#ifdef __tilegx__
     case R_TILEGX_BROFF_X1:
       MUNGE_SIGNED (BrOff_X1, 17);
       break;
@@ -796,97 +659,6 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     case R_TILEGX_SHAMT_Y1:
       MUNGE (ShAmt_Y1);
       break;
-#else
-    case R_TILEPRO_BROFF_X1:
-      MUNGE_SIGNED (BrOff_X1, 17);
-      break;
-    case R_TILEPRO_JOFFLONG_X1:
-    case R_TILEPRO_JOFFLONG_X1_PLT:
-      MUNGE_NOCHECK (JOffLong_X1);   /* holds full 32-bit value */
-      break;
-    case R_TILEPRO_IMM8_X0:
-      MUNGE_SIGNED (Imm8_X0, 8);
-      break;
-    case R_TILEPRO_IMM8_Y0:
-      MUNGE_SIGNED (Imm8_Y0, 8);
-      break;
-    case R_TILEPRO_IMM8_X1:
-      MUNGE_SIGNED (Imm8_X1, 8);
-      break;
-    case R_TILEPRO_IMM8_Y1:
-      MUNGE_SIGNED (Imm8_Y1, 8);
-      break;
-    case R_TILEPRO_MT_IMM15_X1:
-      MUNGE (MT_Imm15_X1);
-      break;
-    case R_TILEPRO_MF_IMM15_X1:
-      MUNGE (MF_Imm15_X1);
-      break;
-    case R_TILEPRO_IMM16_X0_LO:
-    case R_TILEPRO_IMM16_X0_HI:
-    case R_TILEPRO_IMM16_X0_HA:
-    case R_TILEPRO_IMM16_X0_LO_PCREL:
-    case R_TILEPRO_IMM16_X0_HI_PCREL:
-    case R_TILEPRO_IMM16_X0_HA_PCREL:
-    case R_TILEPRO_IMM16_X0_TLS_GD_LO:
-    case R_TILEPRO_IMM16_X0_TLS_GD_HI:
-    case R_TILEPRO_IMM16_X0_TLS_GD_HA:
-    case R_TILEPRO_IMM16_X0_TLS_IE_LO:
-    case R_TILEPRO_IMM16_X0_TLS_IE_HI:
-    case R_TILEPRO_IMM16_X0_TLS_IE_HA:
-      MUNGE_NOCHECK (Imm16_X0);
-      break;
-    case R_TILEPRO_IMM16_X0:
-    case R_TILEPRO_IMM16_X0_PCREL:
-    case R_TILEPRO_IMM16_X0_TLS_GD:
-    case R_TILEPRO_IMM16_X0_TLS_IE:
-      MUNGE_SIGNED (Imm16_X0, 16);
-      break;
-    case R_TILEPRO_IMM16_X1_LO:
-    case R_TILEPRO_IMM16_X1_HI:
-    case R_TILEPRO_IMM16_X1_HA:
-    case R_TILEPRO_IMM16_X1_LO_PCREL:
-    case R_TILEPRO_IMM16_X1_HI_PCREL:
-    case R_TILEPRO_IMM16_X1_HA_PCREL:
-    case R_TILEPRO_IMM16_X1_TLS_GD_LO:
-    case R_TILEPRO_IMM16_X1_TLS_GD_HI:
-    case R_TILEPRO_IMM16_X1_TLS_GD_HA:
-    case R_TILEPRO_IMM16_X1_TLS_IE_LO:
-    case R_TILEPRO_IMM16_X1_TLS_IE_HI:
-    case R_TILEPRO_IMM16_X1_TLS_IE_HA:
-      MUNGE_NOCHECK (Imm16_X1);
-      break;
-    case R_TILEPRO_IMM16_X1:
-    case R_TILEPRO_IMM16_X1_PCREL:
-    case R_TILEPRO_IMM16_X1_TLS_GD:
-    case R_TILEPRO_IMM16_X1_TLS_IE:
-      MUNGE_SIGNED (Imm16_X1, 16);
-      break;
-    case R_TILEPRO_MMSTART_X0:
-      MUNGE (MMStart_X0);
-      break;
-    case R_TILEPRO_MMEND_X0:
-      MUNGE (MMEnd_X0);
-      break;
-    case R_TILEPRO_MMSTART_X1:
-      MUNGE (MMStart_X1);
-      break;
-    case R_TILEPRO_MMEND_X1:
-      MUNGE (MMEnd_X1);
-      break;
-    case R_TILEPRO_SHAMT_X0:
-      MUNGE (ShAmt_X0);
-      break;
-    case R_TILEPRO_SHAMT_X1:
-      MUNGE (ShAmt_X1);
-      break;
-    case R_TILEPRO_SHAMT_Y0:
-      MUNGE (ShAmt_Y0);
-      break;
-    case R_TILEPRO_SHAMT_Y1:
-      MUNGE (ShAmt_Y1);
-      break;
-#endif
     }
 #undef MUNGE
   *p = bits;

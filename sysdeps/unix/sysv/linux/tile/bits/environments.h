@@ -89,12 +89,10 @@
 
 #endif /* __WORDSIZE == 32 */
 
-#ifdef __tilegx__
-/* Only TILE-Gx has the ability to choose 32- or 64-bit. */
+/* TILE-Gx has the ability to choose 32- or 64-bit. */
 #define __ILP32_OFF32_CFLAGS	"-m32"
 #define __ILP32_OFFBIG_CFLAGS	"-m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 #define __ILP32_OFF32_LDFLAGS	"-m32"
 #define __ILP32_OFFBIG_LDFLAGS	"-m32"
 #define __LP64_OFF64_CFLAGS	"-m64"
 #define __LP64_OFF64_LDFLAGS	"-m64"
-#endif

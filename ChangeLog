@@ -1,5 +1,71 @@
 2017-12-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* README: Remove tilepro-*-linux-gnu from supported architecture.
+	* scripts/build-many-glibcs.py: Likewise.
+	* sysdeps/tile/__tls_get_addr.S (__tls_get_addr): Likewise.
+	* sysdeps/tile/crti.S (PREINIT_FUNCTION): Likewise.
+	* sysdeps/tile/dl-machine.h (ELF_MACHINE_NAME,
+	elf_machine_matches_host, elf_machine_dynamic,
+	elf_machine_load_address, elf_machine_runtime_setup, reloc_howto
+	howto, elf_machine_rela): Likewise.
+	* sysdeps/tile/dl-start.S (_start): Likewise.
+	* sysdeps/tile/memcmp.c (DBLALIGN, REVBYTES): Likewise.
+	* sysdeps/tile/memcopy.h (MEMCPY_OK_FOR_FWD_MEMMOVE,
+	MEMCPY_OK_FOR_FWD_MEMMOVE, op_t): Likewise.
+	* sysdeps/tile/nptl/pthread_spin_lock.c (TNS, CMPTNS): Likewise.
+	* sysdeps/tile/nptl/pthread_spin_trylock.c (TNS): Likewise.
+	* sysdeps/tile/nptl/pthread_spin_unlock.c (pthread_spin_unlock):
+	Likewise.
+	* sysdeps/tile/nptl/tls.h (DB_THREAD_SELF): Likewise.
+	* sysdeps/tile/preconfigure: Likewise.
+	* sysdeps/tile/stackguard-macros.h (STACK_CHK_GUARD,
+	POINTER_CHK_GUARD): Likewise.
+	* sysdeps/tile/stackinfo.h (__stackinfo_sub): Likewise.
+	* sysdeps/tile/start.S (_start): Likewise.
+	* sysdeps/tile/tls-macros.h (TLS_GD_OFFSET, TLS_IE_OFFSET, _TLS_LE):
+	Likewise.
+	* sysdeps/tile/sysdep.h (REGSIZE): Likewise.
+	(LD, LD4U, ST, ST4, BNEZ, BEQZ, BEQZT, BGTZ, CMPEQI, CMPEQ, CMOVEQZ,
+	CMOVNEZ): Remove.
+	* sysdeps/unix/sysv/linux/tile/bits/environments.h
+	(__ILP32_OFF32_CFLAGS, __ILP32_OFFBIG_CFLAGS, __ILP32_OFF32_LDFLAGS,
+	__ILP32_OFFBIG_LDFLAGS, __LP64_OFF64_CFLAGS, __LP64_OFF64_LDFLAGS):
+	Likewise.
+	* sysdeps/tile/wordcopy.c (DBLALIGN): Likewise.
+	* sysdeps/tile/tilepro/Implies: Remove file.
+	* sysdeps/tile/tilepro/atomic-machine.h: Likewise.
+	* sysdeps/tile/tilepro/bits/wordsize.h: Likewise.
+	* sysdeps/tile/tilepro/memchr.c: Likewise.
+	* sysdeps/tile/tilepro/memcpy.S: Likewise.
+	* sysdeps/tile/tilepro/memset.c: Likewise.
+	* sysdeps/tile/tilepro/memusage.h: Likewise.
+	* sysdeps/tile/tilepro/rawmemchr.c: Likewise.
+	* sysdeps/tile/tilepro/strchr.c: Likewise.
+	* sysdeps/tile/tilepro/strchrnul.c: Likewise.
+	* sysdeps/tile/tilepro/strlen.c: Likewise.
+	* sysdeps/tile/tilepro/strrchr.c: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/c++-types.data: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/jmp_buf-macros.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/ldconfig.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilepro/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sysconf.c (linux_sysconf): Remove
+	tilepro mention in comment.
+
 	* nptl/Makefile (libpthread-routines): Add pthread_join_common.
 	* nptl/pthreadP.h (__pthread_timedjoin_ex): New prototype.
 	* nptl/pthread_join_common.c: New file: common function used on

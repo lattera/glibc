@@ -22,12 +22,7 @@
 int
 pthread_spin_unlock (pthread_spinlock_t *lock)
 {
-#ifdef __tilegx__
   /* Use exchange() to bypass the write buffer. */
   atomic_exchange_rel (lock, 0);
-#else
-  atomic_full_barrier ();
-  *lock = 0;
-#endif
   return 0;
 }

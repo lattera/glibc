@@ -25,8 +25,8 @@ static long int linux_sysconf (int name);
 long int
 __sysconf (int name)
 {
-  /* Currently we support only tilepro and tilegx, which have
-     statically-known cache sizes.  */
+  /* Currently we support only tilegx, which have statically-known cache
+     sizes.  */
   switch (name)
     {
     /* Level 1 cache.  */

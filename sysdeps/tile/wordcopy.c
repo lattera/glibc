@@ -31,11 +31,7 @@
 
 /* Provide the appropriate dblalign builtin to shift two registers
    based on the alignment of a pointer held in a third register.  */
-#ifdef __tilegx__
 #define DBLALIGN __insn_dblalign
-#else
-#define DBLALIGN __insn_dword_align
-#endif
 
 /* _wordcopy_fwd_aligned -- Copy block beginning at SRCP to
    block beginning at DSTP with LEN `op_t' words (not LEN bytes!).

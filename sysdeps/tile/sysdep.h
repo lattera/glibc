@@ -60,34 +60,11 @@
 #define L(name)		.L##name
 
 /* Specify the size in bytes of a machine register.  */
-#ifdef __tilegx__
 #define REGSIZE		8
-#else
-#define REGSIZE		4
-#endif
-
-/* Support a limited form of shared assembly between tilepro and tilegx.
-   The presumption is that LD/ST are used for manipulating registers.
-   Since opcode parsing is case-insensitive, we don't need to provide
-   definitions for these on tilegx.  */
-#ifndef __tilegx__
-#define LD		lw
-#define LD4U		lw
-#define ST		sw
-#define ST4		sw
-#define BNEZ		bnz
-#define BEQZ		bz
-#define BEQZT		bzt
-#define BGTZ		bgz
-#define CMPEQI		seqi
-#define CMPEQ		seq
-#define CMOVEQZ		mvz
-#define CMOVNEZ		mvnz
-#endif
 
 /* Provide "pointer-oriented" instruction variants.  These differ not
    just for tilepro vs tilegx, but also for tilegx -m64 vs -m32.  */
-#if defined __tilegx__ && __WORDSIZE == 32
+#if __WORDSIZE == 32
 #define ADD_PTR		addx
 #define ADDI_PTR	addxi
 #define ADDLI_PTR	addxli
@@ -100,11 +77,7 @@
 #define ADDLI_PTR	addli
 #define LD_PTR		LD
 #define ST_PTR		ST
-#ifdef __tilegx__
 #define SHL_PTR_ADD	shl3add
-#else
-#define SHL_PTR_ADD	s2a
-#endif
 #endif
 
 #endif /* __ASSEMBLER__ */

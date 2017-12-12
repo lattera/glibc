@@ -19,11 +19,7 @@
 #include "pthreadP.h"
 #include <errno.h>
 
-#ifdef __tilegx__
 #define TNS(p) __insn_exch4((p), 1)
-#else
-#define TNS(p) __insn_tns(p)
-#endif
 
 int
 pthread_spin_trylock (pthread_spinlock_t *lock)

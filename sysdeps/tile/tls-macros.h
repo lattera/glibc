@@ -16,16 +16,10 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifdef __tilegx__
 #define TLS_GD_OFFSET(x)                        \
   "moveli r0, hw1_last_tls_gd(" #x ")\n\t"      \
   "shl16insli r0, r0, hw0_tls_gd(" #x ")\n\t"   \
   "addi r0, %1, tls_add(" #x ")\n\t"
-#else
-#define TLS_GD_OFFSET(x)                        \
-  "auli r0, %1, tls_gd_ha16(" #x ")\n\t"        \
-  "addli r0, r0, tls_gd_lo16(" #x ")\n\t"
-#endif
 
 #define TLS_GD(x)                                               \
   ({                                                            \
@@ -42,18 +36,11 @@
 /* No special support for LD mode. */
 #define TLS_LD TLS_GD
 
-#ifdef __tilegx__
 #define TLS_IE_OFFSET(x)                        \
   "moveli %0, hw1_last_tls_ie(" #x ")\n\t"      \
   "shl16insli %0, %0, hw0_tls_ie(" #x ")\n\t"   \
   "addi %0, %1, tls_add(" #x ")\n\t"
 #define LD_TLS "ld_tls"
-#else
-#define TLS_IE_OFFSET(x)                        \
-  "auli %0, %1, tls_ie_ha16(" #x ")\n\t"        \
-  "addli %0, %0, tls_ie_lo16(" #x ")\n\t"
-#define LD_TLS "lw_tls"
-#endif
 
 #define TLS_IE(x)                                               \
   ({                                                            \
@@ -66,16 +53,10 @@
          "=&r" (__retval) : "r" (_GLOBAL_OFFSET_TABLE_));       \
     __retval; })
 
-#ifdef __tilegx__
 #define _TLS_LE(x)                              \
   "moveli %0, hw1_last_tls_le(" #x ")\n\t"      \
   "shl16insli %0, %0, hw0_tls_le(" #x ")\n\t"   \
   "add %0, %0, tp"
-#else
-#define _TLS_LE(x)                              \
-  "auli %0, tp, tls_le_ha16(" #x ")\n\t"        \
-  "addli %0, %0, tls_le_lo16(" #x ")\n\t"
-#endif
 
 #define TLS_LE(x)                               \
   ({                                            \

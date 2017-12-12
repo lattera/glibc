@@ -106,6 +106,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The libresolv function p_secstodate is no longer supported for new
   programs.
 
+* The tilepro-*-linux-gnu configuration is no longer supported.
+
 Changes to build and runtime requirements:
 
 * bison version 2.7 or later is required to generate code in the 'intl'

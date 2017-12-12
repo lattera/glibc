@@ -37,7 +37,6 @@ ENTRY (__tls_get_addr)
 	 ADDI_PTR r27, tp, DTV_OFFSET
 	}
 .Llnk:
-#ifdef __tilegx__
 	{
 	 LD_PTR r27, r27	/* r27 = THREAD_DTV() */
 	 moveli r26, hw1_last(_rtld_local + TLS_GENERATION_OFFSET - .Llnk)
@@ -47,16 +46,6 @@ ENTRY (__tls_get_addr)
 	 ADD_PTR r25, r25, r26
 	 LD_PTR r26, r0		/* r26 = ti_module */
 	}
-#else
-	{
-	 LD_PTR r27, r27	/* r27 = THREAD_DTV() */
-	 addli r25, r25, lo16(_rtld_local + TLS_GENERATION_OFFSET - .Llnk)
-	}
-	{
-	 auli r25, r25, ha16(_rtld_local + TLS_GENERATION_OFFSET - .Llnk)
-	 LD_PTR r26, r0		/* r26 = ti_module */
-	}
-#endif
 	LD_PTR r25, r25		/* r25 = DL(dl_tls_generation) */
 	{
 	 LD_PTR r28, r27	/* r28 = THREAD_DTV()->counter */

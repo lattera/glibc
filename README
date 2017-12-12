@@ -43,7 +43,6 @@ The GNU C Library supports these configurations for using Linux kernels:
 	sparc*-*-linux-gnu
 	sparc64*-*-linux-gnu
 	tilegx-*-linux-gnu
-	tilepro-*-linux-gnu
 
 If you are interested in doing a port, please contact the glibc
 maintainers; see http://www.gnu.org/software/libc/ for more

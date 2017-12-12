@@ -20,14 +20,9 @@
 
 	/* Get address of "sym" in "reg" assuming r51 holds ".Llink". */
 	.macro pic_addr reg, sym
-#ifdef __tilegx__
 	moveli \reg, hw1_last(\sym - .Llink)
 	shl16insli \reg, \reg, hw0(\sym - .Llink)
 	ADD_PTR \reg, r51, \reg
-#else
-	ADDLI_PTR \reg, r51, lo16(\sym - .Llink)
-	auli \reg, \reg, ha16(\sym - .Llink)
-#endif
 	.endm
 
 	.text
