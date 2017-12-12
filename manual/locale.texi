@@ -898,7 +898,7 @@ formatting information, information from the
 @code{LC_TIME} and @code{LC_MESSAGES} categories is available.
 
 @pindex langinfo.h
-The type @code{nl_type} is defined in @file{nl_types.h}.  The argument
+The type @code{nl_item} is defined in @file{nl_types.h}.  The argument
 @var{item} is a numeric value defined in the header @file{langinfo.h}.
 The X/Open standard defines the following values:
 
