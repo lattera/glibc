@@ -1,3 +1,9 @@
+2017-12-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #22593]
+	* math/bits/mathcalls.h (nextafter): Remove const.
+	(nexttoward): Likewise.
+
 2017-12-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* configure.ac (--with-fp): Remove configure option.

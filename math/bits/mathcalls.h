@@ -256,9 +256,9 @@ __MATHCALL (lgamma,_r, (_Mdouble_, int *__signgamp));
 __MATHCALL (rint,, (_Mdouble_ __x));
 
 /* Return X + epsilon if X < Y, X - epsilon if X > Y.  */
-__MATHCALLX (nextafter,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+__MATHCALL (nextafter,, (_Mdouble_ __x, _Mdouble_ __y));
 # if defined __USE_ISOC99 && !defined __LDBL_COMPAT && !__MATH_DECLARING_FLOATN
-__MATHCALLX (nexttoward,, (_Mdouble_ __x, long double __y), (__const__));
+__MATHCALL (nexttoward,, (_Mdouble_ __x, long double __y));
 # endif
 
 # if __GLIBC_USE (IEC_60559_BFP_EXT) || __MATH_DECLARING_FLOATN
