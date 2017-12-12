@@ -1,3 +1,42 @@
+2017-12-12  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/fmadf4.c: Move to ....
+	* sysdeps/ieee754/soft-fp/s_fma.c: ... here.
+	* soft-fp/fmasf4.c: Move to ....
+	* sysdeps/ieee754/soft-fp/s_fmaf.c: ... here.
+	* soft-fp/fmatf4.c: Move to ....
+	* sysdeps/ieee754/soft-fp/s_fmal.c: ... here.
+	* sysdeps/ieee754/soft-fp/Makefile: New file.
+	* sysdeps/arm/preconfigure.ac: Define with_fp_cond.
+	* sysdeps/arm/preconfigure: Regenerated.
+	* sysdeps/arm/nofpu/Implies: New file.
+	* sysdeps/arm/s_fma.c: Remove file.
+	* sysdeps/arm/s_fmaf.c: Likewise.
+	* sysdeps/m68k/coldfire/nofpu/Implies: New file.
+	* sysdeps/m68k/coldfire/nofpu/s_fma.c: Remove file.
+	* sysdeps/m68k/coldfire/nofpu/s_fmaf.c: Likewise.
+	* sysdeps/microblaze/Implies: Add ieee754/soft-fp.
+	* sysdeps/microblaze/s_fma.c: Remove file.
+	* sysdeps/microblaze/s_fmaf.c: Likewise.
+	* sysdeps/mips/mips32/nofpu/Implies: New file.
+	* sysdeps/mips/mips64/n32/fpu/s_fma.c: Likewise.
+	* sysdeps/mips/mips64/n32/nofpu/Implies: Likewise.
+	* sysdeps/mips/mips64/n64/fpu/s_fma.c: Likewise.
+	* sysdeps/mips/mips64/n64/nofpu/Implies: Likewise.
+	* sysdeps/mips/ieee754/s_fma.c: Remove file.
+	* sysdeps/mips/ieee754/s_fmaf.c: Likewise.
+	* sysdeps/mips/ieee754/s_fmal.c: Update include for move of fmal
+	implementation.
+	* sysdeps/nios2/Implies: Add ieee754/soft-fp.
+	* sysdeps/nios2/s_fma.c: Remove file.
+	* sysdeps/nios2/s_fmaf.c: Likewise.
+	* sysdeps/sh/nofpu/Implies: New file.
+	* sysdeps/sh/s_fma.c: Remove file.
+	* sysdeps/sh/s_fmaf.c: Likewise.
+	* sysdeps/tile/Implies: Add ieee754/soft-fp.
+	* sysdeps/tile/s_fma.c: Remove file.
+	* sysdeps/tile/s_fmaf.c: Likewise.
+
 2017-12-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):

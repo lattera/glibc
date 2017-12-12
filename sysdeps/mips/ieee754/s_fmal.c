@@ -4,4 +4,4 @@
 # error "long double fma being compiled for o32 ABI"
 #endif
 
-#include <soft-fp/fmatf4.c>
+#include <sysdeps/ieee754/soft-fp/s_fmal.c>

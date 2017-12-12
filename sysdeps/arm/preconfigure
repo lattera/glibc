@@ -52,4 +52,5 @@ $as_echo "$as_me: WARNING: arm/preconfigure: Did not find ARM architecture type;
   esac
 
   machine=arm/$machine
+  with_fp_cond="!defined __SOFTFP__"
 esac

@@ -47,4 +47,5 @@ arm*)
   esac
 
   machine=arm/$machine
+  with_fp_cond="!defined __SOFTFP__"
 esac
