@@ -1,3 +1,8 @@
+2017-12-12  James Clarke <jrtc27@jrtc27.com>
+
+	* sysdeps/unix/sysv/linux/ia64/ipc_priv.h: New file defining
+	__IPC_64 to 0 to avoid IPC_64 being set.
+
 2017-12-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #22593]
