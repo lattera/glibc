@@ -1,3 +1,7 @@
+2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Update.
+
 2017-12-12  James Clarke <jrtc27@jrtc27.com>
 
 	* sysdeps/unix/sysv/linux/ia64/ipc_priv.h: New file defining
