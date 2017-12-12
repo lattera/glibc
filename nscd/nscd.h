@@ -108,7 +108,7 @@ init_traced_file(struct traced_file *file, const char *fname, int crinit)
        size_t len = (size_t)(dname - fname);
        if (len > sizeof (file->dname))
 	 abort ();
-       strncpy (file->dname, file->fname, len);
+       memcpy (file->dname, file->fname, len);
        file->dname[len] = '\0';
      }
    /* The basename is the name just after the last forward slash.  */

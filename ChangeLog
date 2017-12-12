@@ -1,3 +1,7 @@
+2017-12-12  Steve Ellcey  <sellcey@cavium.com>
+
+	* nscd/nscd.h (init_traced_file): Change strncpy to memcpy.
+
 2017-12-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* libio/Makefile (tests): Add tst-bz22415.
