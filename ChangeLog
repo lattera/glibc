@@ -1,3 +1,9 @@
+2017-12-12  Carlos O'Donell <carlos@redhat.com>
+
+	[BZ #14681]
+	* elf/tst-leaks1.c (do_test): Call one dlopen with $ORIGIN expansion
+	before mtrace.
+
 2017-12-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #19574]
