@@ -1,3 +1,10 @@
+2017-12-14  Jose E. Marchesi  <jose.marchesi@oracle.com>
+
+	* sysdeps/sparc/bits/hwcap.h (HWCAP_SPARC_ADP): Defined.
+	* sysdeps/sparc/dl-procinfo.c: Added "adp" to the
+	_dl_sparc_cap_flags array.
+	* sysdeps/sparc/dl-procinfo.h (_DL_HWCAP_COUNT): Increment.
+
 2017-12-13  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strcmp.S (misaligned8): Compare dword at a
