@@ -1,3 +1,25 @@
+2017-12-14  Patrick McGehearty  <patrick.mcgehearty@oracle.com>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/Makefile
+	(sysdeps_routines): Add memcpy-memmove-niagara7 and memmove-ultra1.
+	* sysdeps/sparc/sparc64/multiarch/Makefile (sysdeps_routines):
+	Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memcpy-memmove-niagara7.S:
+	New file.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/memmove-ultra1.S: Likewise.
+	* sysdeps/sparc/sparc32/sparcv9/multiarch/rtld-memmove.c: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add __memcpy_niagara7, __mempcpy_niagara7,
+	and __memmove_niagara7.
+	* sysdeps/sparc/sparc64/multiarch/ifunc-memcpy.h (IFUNC_SELECTOR):
+	Add niagara7 option.
+	* sysdeps/sparc/sparc64/multiarch/memmove.c: New file.
+	* sysdeps/sparc/sparc64/multiarch/ifunc-memmove.h: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memcpy-memmove-niagara7.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/memmove-ultra1.S: Likewise.
+	* sysdeps/sparc/sparc64/multiarch/rtld-memmove.c: Likewise.
+
 2017-12-14  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
 	* sysdeps/sparc/sparc32/sparcv9/memmove.S: New file.
