@@ -1,3 +1,8 @@
+# Provide biarch definitions.
+abi-variants := 64 32
+abi-64-condition := __WORDSIZE == 64
+abi-32-condition := __WORDSIZE == 32
+
 ifeq ($(subdir),misc)
 
 # <sys/reg.h> provides something like x86 compatibility.

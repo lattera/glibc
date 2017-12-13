@@ -16,20 +16,12 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* The sub-architecture headers provide definitions for these macros
-   that work for "int" and "long" size values only:
-
-   atomic_compare_and_exchange_val_acq()
-   atomic_exchange_acq()
-   atomic_exchange_and_add()
-   atomic_and_val()
-   atomic_or_val()
-   atomic_decrement_if_positive() [tilegx only]
-
-   Here we provide generic definitions true for all Tilera chips.  */
+#ifndef _ATOMIC_MACHINE_H
+#define _ATOMIC_MACHINE_H       1
 
 #include <stdint.h>
 #include <features.h>
+#include <arch/spr_def.h>
 
 typedef int32_t atomic32_t;
 typedef uint32_t uatomic32_t;
@@ -45,6 +37,41 @@ typedef intptr_t atomicptr_t;
 typedef uintptr_t uatomicptr_t;
 typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
+
+#ifdef _LP64
+# define __HAVE_64B_ATOMICS 1
+#else
+/* tilegx32 does have 64-bit atomics, but assumptions in the semaphore
+   code mean that unaligned 64-bit atomics will be used if this symbol
+   is true, and unaligned atomics are not supported on tile.  */
+# define __HAVE_64B_ATOMICS 0
+#endif
+
+#define USE_ATOMIC_COMPILER_BUILTINS 0
+#define ATOMIC_EXCHANGE_USES_CAS 0
+
+/* Pick appropriate 8- or 4-byte instruction. */
+#define __atomic_update(mem, v, op)                                     \
+  ((__typeof (*(mem))) (__typeof (*(mem) - *(mem)))                     \
+   ((sizeof (*(mem)) == 8) ?                                            \
+    __insn_##op ((void *) (mem), (int64_t) (__typeof((v) - (v))) (v)) : \
+    (sizeof (*(mem)) == 4) ?                                            \
+    __insn_##op##4 ((void *) (mem), (int32_t) (__typeof ((v) - (v))) (v)) : \
+    __atomic_error_bad_argument_size()))
+
+#define atomic_compare_and_exchange_val_acq(mem, n, o)                  \
+  ({ __insn_mtspr (SPR_CMPEXCH_VALUE, (int64_t) (__typeof ((o) - (o))) (o)); \
+     __atomic_update (mem, n, cmpexch); })
+#define atomic_exchange_acq(mem, newvalue) \
+  __atomic_update (mem, newvalue, exch)
+#define atomic_exchange_and_add(mem, value) \
+  __atomic_update (mem, value, fetchadd)
+#define atomic_and_val(mem, mask) \
+  __atomic_update (mem, mask, fetchand)
+#define atomic_or_val(mem, mask) \
+  __atomic_update (mem, mask, fetchor)
+#define atomic_decrement_if_positive(mem) \
+  __atomic_update (mem, -1, fetchaddgez)
 
 /* Barrier macro. */
 #define atomic_full_barrier() __sync_synchronize()
@@ -79,3 +106,5 @@ typedef uintmax_t uatomic_max_t;
  */
 extern int __atomic_error_bad_argument_size(void)
   __attribute__ ((warning ("bad sizeof atomic argument")));
+
+#endif /* _ATOMIC_MACHINE_H  */

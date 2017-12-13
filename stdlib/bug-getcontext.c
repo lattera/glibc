@@ -50,7 +50,7 @@ do_test (void)
   printf ("\nDone with getcontext()!\n");
   fflush (NULL);
 
-  /* On nios2 and tilepro, GCC 5 warns that except_mask may be used
+  /* On nios2 GCC 5 warns that except_mask may be used
      uninitialized.  Because it is always initialized and nothing in
      this test ever calls setcontext (a setcontext call could result
      in local variables being clobbered on the second return from

@@ -3,8 +3,8 @@ case "$machine" in
     tilegx*)
 	base_machine=tile
 	if $CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null | grep -q __LP64__; then
-	    machine=tile/tilegx/tilegx64
+	    machine=tile/tilegx64
 	else
-	    machine=tile/tilegx/tilegx32
+	    machine=tile/tilegx32
 	fi ;;
 esac
