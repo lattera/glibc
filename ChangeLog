@@ -1,5 +1,10 @@
 2017-12-14  Jose E. Marchesi  <jose.marchesi@oracle.com>
 
+	* sysdeps/sparc/sparc32/sparcv9/memmove.S: New file.
+	* sysdeps/sparc/sparc32/sparcv9/rtld-memmove.c: Likewise.
+	* sysdeps/sparc/sparc64/memmove.S: Likewise.
+	* sysdeps/sparc/sparc64/rtld-memmove.c: Likewise.
+
 	* sysdeps/sparc/bits/hwcap.h (HWCAP_SPARC_ADP): Defined.
 	* sysdeps/sparc/dl-procinfo.c: Added "adp" to the
 	_dl_sparc_cap_flags array.
