@@ -109,11 +109,11 @@ _start:
 
 	 /* Zero out callee space for return address. Unnecessary but free.
 	    This is just paranoia to help backtracing not go awry. */
-	 ST sp, zero
+	 st sp, zero
 	}
 	{
 	 /* Zero out our frame pointer for __libc_start_main. */
-	 ST r12, zero
+	 st r12, zero
 
 	 /* Zero out lr to make __libc_start_main the end of backtrace.  */
 	 move lr, zero

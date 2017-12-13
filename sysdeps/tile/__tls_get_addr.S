@@ -53,20 +53,20 @@ ENTRY (__tls_get_addr)
 	}
 	{
 	 LD_PTR r29, r29	/* r29 = ti_offset */
-	 CMPEQ r25, r28, r25	/* r25 nonzero if generation OK */
+	 cmpeq r25, r28, r25	/* r25 nonzero if generation OK */
 	 shli r28, r26, LOG_SIZEOF_DTV_T  /* byte index into dtv array */
 	}
 	{
-	 BEQZ r25, .Lslowpath
-	 CMPEQI r25, r26, -1	/* r25 nonzero if ti_module invalid */
+	 beqz r25, .Lslowpath
+	 cmpeqi r25, r26, -1	/* r25 nonzero if ti_module invalid */
 	}
 	{
-	 BNEZ r25, .Lslowpath
+	 bnez r25, .Lslowpath
 	 ADD_PTR r28, r28, r27	/* pointer into module array */
 	}
 	LD_PTR r26, r28		/* r26 = module TLS pointer */
-	CMPEQI r25, r26, -1     /* check r26 == TLS_DTV_UNALLOCATED */
-	BNEZ r25, .Lslowpath
+	cmpeqi r25, r26, -1     /* check r26 == TLS_DTV_UNALLOCATED */
+	bnez r25, .Lslowpath
 	{
 	 ADD_PTR r0, r26, r29
 	 jrp lr
@@ -74,68 +74,68 @@ ENTRY (__tls_get_addr)
 
 .Lslowpath:
 	{
-	 ST sp, lr
+	 st sp, lr
 	 ADDLI_PTR r29, sp, - (25 * REGSIZE)
 	}
 	cfi_offset (lr, 0)
 	{
-	 ST r29, sp
+	 st r29, sp
 	 ADDLI_PTR sp, sp, - (26 * REGSIZE)
 	}
 	cfi_def_cfa_offset (26 * REGSIZE)
 	ADDI_PTR r29, sp, (2 * REGSIZE)
-	{ ST r29, r1;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r2;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r3;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r4;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r5;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r6;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r7;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r8;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r9;  ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r10; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r11; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r12; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r13; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r14; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r15; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r16; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r17; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r18; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r19; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r20; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r21; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r22; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r23; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r24; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r1;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r2;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r3;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r4;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r5;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r6;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r7;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r8;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r9;  ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r10; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r11; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r12; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r13; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r14; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r15; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r16; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r17; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r18; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r19; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r20; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r21; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r22; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r23; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r24; ADDI_PTR r29, r29, REGSIZE }
 	.hidden __tls_get_addr_slow
 	jal __tls_get_addr_slow
 	ADDI_PTR r29, sp, (2 * REGSIZE)
-	{ LD r1,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r2,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r3,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r4,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r5,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r6,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r7,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r8,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r9,  r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r10, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r11, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r12, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r13, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r14, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r15, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r16, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r17, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r18, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r19, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r20, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r21, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r22, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r23, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r24, r29; ADDLI_PTR sp, sp, (26 * REGSIZE) }
+	{ ld r1,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r2,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r3,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r4,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r5,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r6,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r7,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r8,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r9,  r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r10, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r11, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r12, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r13, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r14, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r15, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r16, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r17, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r18, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r19, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r20, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r21, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r22, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r23, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r24, r29; ADDLI_PTR sp, sp, (26 * REGSIZE) }
 	cfi_def_cfa_offset (0)
-	LD lr, sp
+	ld lr, sp
 	jrp lr
 END (__tls_get_addr)

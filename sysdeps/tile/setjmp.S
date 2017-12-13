@@ -36,11 +36,11 @@ ENTRY(__sigsetjmp)
 1:
 	move r2, r0
 
-#define SAVE(r) { ST r2, r ; ADDI_PTR r2, r2, REGSIZE }
+#define SAVE(r) { st r2, r ; ADDI_PTR r2, r2, REGSIZE }
 	FOR_EACH_CALLEE_SAVED_REG(SAVE)
 
 	mfspr r3, INTERRUPT_CRITICAL_SECTION
-	ST r2, r3
+	st r2, r3
 	j plt(__sigjmp_save)
 	jrp lr   /* Keep the backtracer happy. */
 END(__sigsetjmp)

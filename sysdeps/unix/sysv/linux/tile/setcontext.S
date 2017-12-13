@@ -39,15 +39,15 @@ ENTRY (__setcontext)
 #endif
 	LD_PTR r10, r0
 	{
-	 BEQZ r10, .Lsigreturn
+	 beqz r10, .Lsigreturn
 	 addi r10, r10, -1  /* Confirm that it has value "1".  */
 	}
-	BNEZ r10, .Lbadcontext
+	bnez r10, .Lbadcontext
 
 	/* Save lr and r0 briefly on the stack and set the signal mask:
 	   rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, NULL, _NSIG / 8).  */
 	{
-	 ST sp, lr
+	 st sp, lr
 	 ADDI_PTR r11, sp, -(2 * REGSIZE)
 	 move r10, sp
 	}
@@ -55,11 +55,11 @@ ENTRY (__setcontext)
 	cfi_def_cfa_offset (3 * REGSIZE)
 	cfi_offset (lr, 0)
 	{
-	 ST r11, r10
+	 st r11, r10
 	 ADDI_PTR r10, sp, (2 * REGSIZE)
 	}
 	{
-	 ST r10, r0
+	 st r10, r0
 	 ADDLI_PTR r1, r0, UC_SIGMASK_OFFSET
 	}
 	cfi_offset (r0, -REGSIZE)
@@ -74,62 +74,62 @@ ENTRY (__setcontext)
 	swint1
 	ADDI_PTR r11, sp, 2 * REGSIZE  /* Restore uc_context to r11. */
 	{
-	 LD r11, r11
+	 ld r11, r11
 	 ADDI_PTR sp, sp, 3 * REGSIZE
 	}
 	cfi_def_cfa_offset (0)
-	LD lr, sp
+	ld lr, sp
 	{
 	 ADDI_PTR r10, r11, UC_REG(0)
-	 BNEZ r1, .Lsyscall_error
+	 bnez r1, .Lsyscall_error
 	}
 
 	/* Restore the argument registers; note they will be random
 	   unless makecontext() has been called.  */
-	{ LD r0, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r1, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r2, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r3, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r4, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r5, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r6, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r7, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r8, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r9, r10; ADDLI_PTR r10, r10, UC_REG(30) - UC_REG(9) }
+	{ ld r0, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r1, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r2, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r3, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r4, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r5, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r6, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r7, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r8, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r9, r10; ADDLI_PTR r10, r10, UC_REG(30) - UC_REG(9) }
 
 	/* Restore the callee-saved GPRs.  */
-	{ LD r30, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r31, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r32, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r33, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r34, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r35, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r36, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r37, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r38, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r39, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r40, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r41, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r42, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r43, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r44, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r45, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r46, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r47, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r48, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r49, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r50, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r51, r10; ADDI_PTR r10, r10, REGSIZE }
-	{ LD r52, r10; ADDI_PTR r10, r10, REGSIZE * 2 }
+	{ ld r30, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r31, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r32, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r33, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r34, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r35, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r36, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r37, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r38, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r39, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r40, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r41, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r42, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r43, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r44, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r45, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r46, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r47, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r48, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r49, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r50, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r51, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld r52, r10; ADDI_PTR r10, r10, REGSIZE * 2 }
 	/* Skip tp since it must not change for a given thread.  */
-	{ LD sp, r10;  ADDI_PTR r10, r10, REGSIZE }
-	{ LD lr, r10;  ADDI_PTR r10, r10, REGSIZE }
-	{ LD r11, r10; ADDI_PTR r10, r10, REGSIZE }
+	{ ld sp, r10;  ADDI_PTR r10, r10, REGSIZE }
+	{ ld lr, r10;  ADDI_PTR r10, r10, REGSIZE }
+	{ ld r11, r10; ADDI_PTR r10, r10, REGSIZE }
 
 	/* Construct an iret context; we set ICS so we can validly load
 	   EX_CONTEXT for iret without being interrupted halfway through.  */
 	{
-	 LD r12, r10
+	 ld r12, r10
 	 movei r13, 1
 	}
 	{
@@ -157,15 +157,15 @@ ENTRY (__setcontext)
 	cfi_def_cfa_offset (C_ABI_SAVE_AREA_SIZE + SI_MAX_SIZE + UC_SIZE)
 	moveli r2, UC_SIZE / REGSIZE
 0:      {
-	 LD r10, r0
+	 ld r10, r0
 	 ADDI_PTR r0, r0, REGSIZE
 	}
 	{
-	 ST r1, r10
+	 st r1, r10
 	 ADDI_PTR r1, r1, REGSIZE
 	 addi r2, r2, -1
 	}
-	BNEZ r2, 0b
+	bnez r2, 0b
 	moveli TREG_SYSCALL_NR_NAME, __NR_rt_sigreturn
 	swint1
 
@@ -193,7 +193,7 @@ ENTRY (__startcontext)
 	cfi_undefined (lr)
 	FEEDBACK_ENTER(__startcontext)
 	jalr r31
-	BEQZ r30, 1f
+	beqz r30, 1f
 	{
 	 move r0, r30
 	 jal __setcontext

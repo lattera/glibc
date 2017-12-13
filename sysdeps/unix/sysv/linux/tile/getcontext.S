@@ -33,38 +33,38 @@ ENTRY (__getcontext)
 	   Save value "1" to uc_flags to later recognize getcontext().  */
 	{ movei r11, 1; ADDI_PTR r10, r0, UC_FLAGS_OFFSET }
 	{ ST_PTR r10, r11; addli r10, r0, UC_REG(30) }
-	{ ST r10, r30; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r31; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r32; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r33; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r34; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r35; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r36; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r37; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r38; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r39; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r40; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r41; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r42; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r43; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r44; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r45; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r46; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r47; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r48; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r49; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r50; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r51; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, r52; ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, tp;  ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, sp;  ADDI_PTR r10, r10, REGSIZE }
-	{ ST r10, lr;  ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r30; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r31; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r32; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r33; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r34; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r35; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r36; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r37; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r38; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r39; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r40; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r41; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r42; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r43; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r44; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r45; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r46; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r47; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r48; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r49; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r50; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r51; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r52; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, tp;  ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, sp;  ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, lr;  ADDI_PTR r10, r10, REGSIZE }
 	lnk r11   /* Point PC at the "jrp lr" instruction.  */
 	addli r11, r11, .Lreturn - .
-	{ ST r10, r11; ADDI_PTR r10, r10, REGSIZE }
+	{ st r10, r11; ADDI_PTR r10, r10, REGSIZE }
 	mfspr r11, INTERRUPT_CRITICAL_SECTION
 	{
-	 ST r10, r11
+	 st r10, r11
 	 movei r1, 0
 	}
 
@@ -78,7 +78,7 @@ ENTRY (__getcontext)
 	 moveli TREG_SYSCALL_NR_NAME, __NR_rt_sigprocmask
 	}
 	swint1
-	BNEZ r1, .Lsyscall_error
+	bnez r1, .Lsyscall_error
 
 .Lreturn:
 	{

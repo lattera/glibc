@@ -43,7 +43,7 @@ ENTRY (_start)
 	 /* Save zero for caller sp in our 'caller' save area, and make
 	    sure lr has a zero value, to limit backtraces.  */
 	 move lr, zero
-	 ST r4, zero
+	 st r4, zero
 	}
 	{
 	 move r0, r52
@@ -56,8 +56,8 @@ ENTRY (_start)
 	   in which case we have to adjust the argument vector.  */
 	lnk r51; .Llink:
 	pic_addr r4, _dl_skip_args
-	LD4U r4, r4
-	BEQZT r4, .Lno_skip
+	ld4u r4, r4
+	beqzt r4, .Lno_skip
 
 	/* Load the argc word at the initial sp and adjust it.
 	   We basically jump "sp" up over the first few argv entries

@@ -1,5 +1,22 @@
 2017-12-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/tile/__longjmp.S (__longjmp): Use lowercase instructions.
+	* sysdeps/tile/__tls_get_addr.S (__tls_get_addr): Likewise.
+	* sysdeps/tile/_mcount.S (__mcount): Likewise.
+	* sysdeps/tile/crti.S (_init, _fini): Likewise.
+	* sysdeps/tile/crtn.S: Likewise.
+	* sysdeps/tile/dl-start.S (_start): Likewise.
+	* sysdeps/tile/dl-trampoline.S: Likewise.
+	* sysdeps/tile/setjmp.S (__sigsetjmp): Likewise.
+	* sysdeps/tile/start.S (_start): Likewise.
+	* sysdeps/unix/sysv/linux/tile/clone.S (_clone): Likewise.
+	* sysdeps/unix/sysv/linux/tile/getcontext.S (__getcontext): Likewise.
+	* sysdeps/unix/sysv/linux/tile/ioctl.S (__ioctl): Likewise.
+	* sysdeps/unix/sysv/linux/tile/setcontext.S (__setcontext): Likewise.
+	* sysdeps/unix/sysv/linux/tile/swapcontext.S (__swapcontext): Likewise.
+	* sysdeps/unix/sysv/linux/tile/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/tile/vfork.S (__vfork): Likewise.
+
 	* stdlib/bug-getcontext.c (do_test): Remove tilepro mention in
 	comment.
 	* sysdeps/tile/preconfigure: Remove tilegx folder.

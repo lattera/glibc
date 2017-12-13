@@ -27,7 +27,7 @@ ENTRY (__swapcontext)
 	FEEDBACK_ENTER(__swapcontext)
 	/* Set up a frame and save r0 and r1.  */
 	{
-	 ST sp, lr
+	 st sp, lr
 	 ADDI_PTR r11, sp, -(3 * REGSIZE)
 	 move r10, sp
 	}
@@ -35,43 +35,43 @@ ENTRY (__swapcontext)
 	cfi_def_cfa_offset (4 * REGSIZE)
 	cfi_offset (lr, 0)
 	{
-	 ST r11, r10
+	 st r11, r10
 	 ADDI_PTR r10, sp, (2 * REGSIZE)
 	}
 	{
-	 ST r10, r0
+	 st r10, r0
 	 ADDI_PTR r10, sp, (3 * REGSIZE)
 	}
-	ST r10, r1
+	st r10, r1
 
 	/* Save the current context.  */
 	jal __getcontext
 
 	/* Tear down the frame and restore r0, r1, and lr. */
 	{
-	 BNEZ r0, .Lerror
+	 bnez r0, .Lerror
 	 ADDI_PTR r1, sp, 3 * REGSIZE
 	}
 	{
-	 LD r1, r1
+	 ld r1, r1
 	 ADDI_PTR r0, sp, 2 * REGSIZE
 	}
 	{
-	 LD r0, r0
+	 ld r0, r0
 	 ADDI_PTR sp, sp, 4 * REGSIZE
 	}
 	cfi_def_cfa_offset (0)
 	{
-	 LD lr, sp
+	 ld lr, sp
 	 ADDLI_PTR r10, r0, UC_REG(54)
 	}
 
 	/* Update the stored sp and lr.  */
 	{
-	 ST r10, sp
+	 st r10, sp
 	 ADDLI_PTR r10, r0, UC_REG(55)
 	}
-	ST r10, lr
+	st r10, lr
 
 	/* Tail-call setcontext to finish up.  */
 	{
@@ -82,7 +82,7 @@ ENTRY (__swapcontext)
 .Lerror:
 	ADDI_PTR sp, sp, 4 * REGSIZE
 	cfi_def_cfa_offset (0)
-	LD lr, sp
+	ld lr, sp
 	jrp lr
 END (__swapcontext)
 

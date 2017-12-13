@@ -28,7 +28,7 @@
 ENTRY (__longjmp)
 	FEEDBACK_ENTER(__longjmp)
 
-#define RESTORE(r) { LD r, r0 ; ADDI_PTR r0, r0, REGSIZE }
+#define RESTORE(r) { ld r, r0 ; ADDI_PTR r0, r0, REGSIZE }
 	FOR_EACH_CALLEE_SAVED_REG(RESTORE)
 
 	/* Make longjmp(buf, 0) return "1" instead.
@@ -36,9 +36,9 @@ ENTRY (__longjmp)
 	   we can validly load EX_CONTEXT for iret without being
 	   interrupted halfway through.  */
 	{
-	 LD r2, r0   /* retrieve ICS bit from jmp_buf */
+	 ld r2, r0   /* retrieve ICS bit from jmp_buf */
 	 movei r3, 1
-	 CMPEQI r0, r1, 0
+	 cmpeqi r0, r1, 0
 	}
 	{
 	 mtspr INTERRUPT_CRITICAL_SECTION, r3

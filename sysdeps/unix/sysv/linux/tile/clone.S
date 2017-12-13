@@ -44,32 +44,32 @@ ENTRY (__clone)
 	/* Create a stack frame so we can pass callee-saves to new task. */
 	{
 	 move r10, sp
-	 ST sp, lr
+	 st sp, lr
 	 ADDI_PTR sp, sp, -FRAME_SIZE
 	}
 	cfi_offset (lr, 0)
 	cfi_def_cfa_offset (FRAME_SIZE)
 	ADDI_PTR r11, sp, FRAME_SP
 	{
-	 ST r11, r10
+	 st r11, r10
 	 ADDI_PTR r11, sp, FRAME_R30
 	}
 	{
-	 ST r11, r30
+	 st r11, r30
 	 ADDI_PTR r11, sp, FRAME_R31
 	}
 	cfi_offset (r30, FRAME_R30 - FRAME_SIZE)
 	{
-	 ST r11, r31
+	 st r11, r31
 	 ADDI_PTR r11, sp, FRAME_R32
 	}
 	cfi_offset (r31, FRAME_R31 - FRAME_SIZE)
-	ST r11, r32
+	st r11, r32
 	cfi_offset (r32, FRAME_R32 - FRAME_SIZE)
 
 	/* sanity check arguments */
-	BEQZ r0, .Linvalid
-	BEQZ r1, .Linvalid
+	beqz r0, .Linvalid
+	beqz r1, .Linvalid
 
 	/* Make sure child stack is properly aligned, and set up the
 	   top frame so that we can call out of it immediately in the
@@ -79,7 +79,7 @@ ENTRY (__clone)
 	ADDI_PTR r1, r1, -C_ABI_SAVE_AREA_SIZE
 	andi r1, r1, -C_ABI_SAVE_AREA_SIZE
 	ADDI_PTR r9, r1, REGSIZE /* sp of this frame on entry, i.e. zero */
-	ST r9, zero
+	st r9, zero
 
 	/* We need to switch the argument convention around from
 	   libc to kernel:
@@ -118,30 +118,30 @@ ENTRY (__clone)
 	 moveli TREG_SYSCALL_NR_NAME, __NR_clone
 	}
 	swint1
-	BEQZ r0, .Lthread_start  /* If in child task.  */
+	beqz r0, .Lthread_start  /* If in child task.  */
 
 .Ldone:
 	/* Restore the callee-saved registers and return. */
 	ADDLI_PTR lr, sp, FRAME_SIZE
 	{
-	 LD lr, lr
+	 ld lr, lr
 	 ADDLI_PTR r30, sp, FRAME_R30
 	}
 	{
-	 LD r30, r30
+	 ld r30, r30
 	 ADDLI_PTR r31, sp, FRAME_R31
 	}
 	{
-	 LD r31, r31
+	 ld r31, r31
 	 ADDLI_PTR r32, sp, FRAME_R32
 	}
 	{
-	 LD r32, r32
+	 ld r32, r32
 	 ADDI_PTR sp, sp, FRAME_SIZE
 	}
 	cfi_def_cfa_offset (0)
 
-	BNEZ r1, .Lerror
+	bnez r1, .Lerror
 	jrp lr
 
 .Lerror:

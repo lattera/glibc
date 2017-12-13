@@ -33,27 +33,27 @@
 	.text
 ENTRY(__mcount)
 	{
-	 ST sp, lr
+	 st sp, lr
 	 ADDI_PTR r29, sp, - (12 * REGSIZE)
 	}
 	cfi_offset (lr, 0)
 	{
 	 ADDI_PTR sp, sp, - (13 * REGSIZE)
-	 ST r29, sp
+	 st r29, sp
 	 ADDI_PTR r29, r29, REGSIZE
 	}
 	cfi_def_cfa_offset (13 * REGSIZE)
-	{ ST r29, r0; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r1; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r2; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r3; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r4; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r5; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r6; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r7; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r8; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r9; ADDI_PTR r29, r29, REGSIZE }
-	{ ST r29, r10; ADDI_PTR r29, r29, REGSIZE; move r0, r10 }
+	{ st r29, r0; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r1; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r2; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r3; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r4; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r5; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r6; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r7; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r8; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r9; ADDI_PTR r29, r29, REGSIZE }
+	{ st r29, r10; ADDI_PTR r29, r29, REGSIZE; move r0, r10 }
 	{
 	 move r1, lr
 	 jal __mcount_internal
@@ -61,20 +61,20 @@ ENTRY(__mcount)
 	{
 	 ADDI_PTR r29, sp, (2 * REGSIZE)
 	}
-	{ LD r0, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r1, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r2, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r3, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r4, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r5, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r6, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r7, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r8, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r9, r29; ADDI_PTR r29, r29, REGSIZE }
-	{ LD r10, r29; ADDI_PTR sp, sp, (13 * REGSIZE) }
+	{ ld r0, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r1, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r2, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r3, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r4, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r5, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r6, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r7, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r8, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r9, r29; ADDI_PTR r29, r29, REGSIZE }
+	{ ld r10, r29; ADDI_PTR sp, sp, (13 * REGSIZE) }
 	cfi_def_cfa_offset (0)
 	{
-	 LD lr, sp
+	 ld lr, sp
 	}
 	{
 	 move lr, r10

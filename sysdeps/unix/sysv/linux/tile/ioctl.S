@@ -35,7 +35,7 @@ ENTRY (__ioctl)
 	 moveli TREG_SYSCALL_NR_NAME, __NR_ioctl
 	}
 	swint1
-	BNEZ r1, 0f
+	bnez r1, 0f
 	jrp lr
 PSEUDO_END (__ioctl)
 libc_hidden_def (__ioctl)

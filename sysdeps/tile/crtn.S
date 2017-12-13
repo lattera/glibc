@@ -42,7 +42,7 @@
 	ADDI_PTR r29, sp, (2 * REGSIZE)
 	{
 	 ADDI_PTR sp, sp, (2 * REGSIZE)
-	 LD lr, r29
+	 ld lr, r29
 	}
 	jrp lr
 
@@ -50,6 +50,6 @@
 	ADDI_PTR r29, sp, (2 * REGSIZE)
 	{
 	 ADDI_PTR sp, sp, (2 * REGSIZE)
-	 LD lr, r29
+	 ld lr, r29
 	}
 	jrp lr

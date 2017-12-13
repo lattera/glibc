@@ -63,10 +63,10 @@ _init:
 	{
 	 move r29, sp
 	 ADDI_PTR r28, sp, -REGSIZE
-	 ST sp, lr
+	 st sp, lr
 	}
 	ADDI_PTR sp, sp, -(2 * REGSIZE)
-	ST r28, r29
+	st r28, r29
 #if PREINIT_FUNCTION_WEAK
 	lnk r2
 0:
@@ -82,7 +82,7 @@ _init:
 	ADD_PTR r0, r0, r1
 	ADD_PTR r0, r0, r2
 	LD_PTR r0, r0
-	BEQZ r0, .Lno_weak_fn
+	beqz r0, .Lno_weak_fn
 	jalr r0
 #elif !defined(NO_PLT_PCREL)
 	/* Since we are calling from the start of the object to the PLT,
@@ -107,7 +107,7 @@ _fini:
 	{
 	 move r29, sp
 	 ADDI_PTR r28, sp, -REGSIZE
-	 ST sp, lr
+	 st sp, lr
 	}
 	ADDI_PTR sp, sp, -(2 * REGSIZE)
-	ST r28, r29
+	st r28, r29

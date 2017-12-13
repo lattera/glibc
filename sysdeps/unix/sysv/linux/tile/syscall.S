@@ -27,6 +27,6 @@ ENTRY (syscall)
 	{ move r3, r4; move r4, r5 }
 	{ move r5, r6; move r6, r7 }
 	swint1
-	BNEZ r1, 0f
+	bnez r1, 0f
 	jrp lr
 PSEUDO_END (syscall)

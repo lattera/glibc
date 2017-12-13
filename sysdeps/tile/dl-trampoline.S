@@ -73,8 +73,8 @@
 	f(r20); f(r21); f(r22); f(r23); \
 	f(r24); f(r25)
 
-#define SAVE(REG) { ST r27, REG; ADDI_PTR r27, r27, REGSIZE }
-#define RESTORE(REG) { LD REG, r27; ADDI_PTR r27, r27, REGSIZE }
+#define SAVE(REG) { st r27, REG; ADDI_PTR r27, r27, REGSIZE }
+#define RESTORE(REG) { ld REG, r27; ADDI_PTR r27, r27, REGSIZE }
 
 	.macro dl_resolve, name, profile, framesize
 .text
@@ -86,7 +86,7 @@
 \name:
 	cfi_startproc
 	{
-	 ST sp, lr
+	 st sp, lr
 	 move r26, sp
 	}
 	{
@@ -95,24 +95,24 @@
 	}
 	cfi_def_cfa_offset (\framesize)
 	{
-	 ST r27, r26
+	 st r27, r26
 	 ADDI_PTR r27, r27, FRAME_REGS - FRAME_SP
 	}
 	FOR_EACH_REG(SAVE)
 	{
-	 ST r27, lr
+	 st r27, lr
 	 ADDLI_PTR r27, sp, FRAME_TPNT
 	}
 	cfi_offset (lr, FRAME_LR - \framesize)
 	.if \profile
 	{
 	 move r0, r28  /* tpnt value */
-	 ST r27, r28
+	 st r27, r28
 	 ADDI_PTR r27, r27, FRAME_INDEX - FRAME_TPNT
 	}
 	{
 	 move r1, r29  /* PLT index */
-	 ST r27, r29
+	 st r27, r29
 	}
 	{
 	 move r2, lr  /* retaddr */
@@ -124,7 +124,7 @@
 	}
 	ADDLI_PTR r28, sp, FRAME_STACKFRAME
 	LD_PTR r28, r28
-	BGTZ r28, 1f
+	bgtz r28, 1f
 	.else
 	{
 	 move r0, r28  /* tpnt value 1 */
@@ -141,12 +141,12 @@
 	FOR_EACH_REG(RESTORE)
 	.if \profile
 	ADDLI_PTR r28, sp, FRAME_STACKFRAME
-	LD r28, r28
-	BGTZ r28, 1f
+	ld r28, r28
+	bgtz r28, 1f
 	.endif
 	{
 	 /* Restore original user return address. */
-	 LD lr, r27
+	 ld lr, r27
 	 /* Pop off our stack frame. */
 	 ADDLI_PTR sp, sp, \framesize
 	}
@@ -162,11 +162,11 @@
 	}
 	FOR_EACH_REG(SAVE)
 	{
-	 LD r0, r28
+	 ld r0, r28
 	 ADDI_PTR r28, r28, FRAME_INDEX - FRAME_TPNT
 	}
         {
-	 LD r1, r28
+	 ld r1, r28
 	 ADDLI_PTR r2, sp, FRAME_REGS
 	}
 	{
@@ -179,7 +179,7 @@
         }
 	FOR_EACH_REG(RESTORE)
 	{
-	 LD lr, lr
+	 ld lr, lr
 	 ADDLI_PTR sp, sp, \framesize
 	}
 	jrp lr
