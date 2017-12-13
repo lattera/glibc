@@ -52,6 +52,8 @@ Major new features:
   declares the functions pkey_alloc, pkey_free, pkey_mprotect, pkey_set,
   pkey_get.
 
+* Optimized memcpy, mempcpy, memmove, and memset for sparc M7.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer

@@ -62,6 +62,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_ultra1));
 
   IFUNC_IMPL (i, name, bzero,
+	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & HWCAP_SPARC_ADP,
+			      __bzero_niagara7)
 	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & HWCAP_SPARC_CRYPTO,
 			      __bzero_niagara4)
 	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & HWCAP_SPARC_BLKINIT,
@@ -69,6 +71,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ultra1));
 
   IFUNC_IMPL (i, name, memset,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & HWCAP_SPARC_ADP,
+			      __memset_niagara7)
 	      IFUNC_IMPL_ADD (array, i, memset, hwcap & HWCAP_SPARC_CRYPTO,
 			      __memset_niagara4)
 	      IFUNC_IMPL_ADD (array, i, memset, hwcap & HWCAP_SPARC_BLKINIT,
