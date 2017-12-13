@@ -1,3 +1,8 @@
+2017-12-13  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strcmp.S (misaligned8): Compare dword at a
+	time whenever possible.
+
 2017-12-12  Carlos O'Donell <carlos@redhat.com>
 
 	* elf/Makefile [$(nss-crypt)$(static-nss-crypt) == yesno]
