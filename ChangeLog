@@ -1,5 +1,14 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/da_DK.ISO-8859-1.in: In the new iso14651_t1_common file
+	downloaded from ISO, the collation order of @-. and space has changed.
+	Therefore, this test file needed to be adapted.
+	* localedata/fr_CA.UTF-8.in: Likewise.
+	* localedata/fr_FR.UTF-8.in: Likewise.
+	* localedata/uk_UA.UTF-8.in: Likewise.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/cs_CZ.UTF-8.in: adapt this test file to the collation
 	order of ȥ in the new iso14651_t1_common file.
 	* localedata/pl_PL.UTF-8.in: Likewise.
