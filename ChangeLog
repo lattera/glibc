@@ -1,3 +1,8 @@
+2017-12-12  Carlos O'Donell <carlos@redhat.com>
+
+	* elf/Makefile [$(nss-crypt)$(static-nss-crypt) == yesno]
+	(CFLAGS-tst-linkall-static.c): Undefine USE_CRYPT first.
+
 2017-12-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* soft-fp/fmadf4.c: Move to ....

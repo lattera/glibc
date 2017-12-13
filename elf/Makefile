@@ -391,7 +391,7 @@ CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
 # library, then we exclude the use of crypt functions in the test.
 # We similarly exclude libcrypt.a from the static link (see below).
 ifeq (yesno,$(nss-crypt)$(static-nss-crypt))
-CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
+CFLAGS-tst-linkall-static.c += -UUSE_CRYPT -DUSE_CRYPT=0
 endif
 
 include ../Rules
