@@ -1,5 +1,12 @@
 2017-12-14  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22607]
+	CVE-2017-1000409
+	* elf/dl-load.c (_dl_init_paths): Compute number of components in
+	the expanded path string.
+
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22606]
 	CVE-2017-1000408
 	* elf/dl-load.c (system_dirs): Update comment.

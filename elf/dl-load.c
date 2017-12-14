@@ -773,8 +773,6 @@ _dl_init_paths (const char *llp)
 
   if (llp != NULL && *llp != '\0')
     {
-      size_t nllp;
-      const char *cp = llp;
       char *llp_tmp;
 
 #ifdef SHARED
@@ -797,13 +795,10 @@ _dl_init_paths (const char *llp)
 
       /* Decompose the LD_LIBRARY_PATH contents.  First determine how many
 	 elements it has.  */
-      nllp = 1;
-      while (*cp)
-	{
-	  if (*cp == ':' || *cp == ';')
-	    ++nllp;
-	  ++cp;
-	}
+      size_t nllp = 1;
+      for (const char *cp = llp_tmp; *cp != '\0'; ++cp)
+	if (*cp == ':' || *cp == ';')
+	  ++nllp;
 
       env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
