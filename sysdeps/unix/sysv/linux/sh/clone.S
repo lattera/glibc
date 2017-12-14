@@ -73,6 +73,7 @@ ENTRY(__clone)
 	 mov.l	@(4,r15), r4
 
 	/* we are done, passing the return value through r0  */
+	mov     r0, r4
 	mov	#+SYS_ify(exit), r3
 	trapa	#0x15
 	.align	2
