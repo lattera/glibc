@@ -20,6 +20,7 @@
 
 #include <arpa/inet.h>
 #include <resolv.h>
+#include <stdbool.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <support/xmemstream.h>

@@ -21,6 +21,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <support/support.h>
 #include <support/xmemstream.h>
 

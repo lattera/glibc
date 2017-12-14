@@ -1,3 +1,17 @@
+2017-12-14  Florian Weimer  <fweimer@redhat.com>
+
+	Simplify compiling most of support/ outside of glibc.
+	* support/check_addrinfo.c: Include <string.h>.
+	* support/check_dns_packet.c: Likewise.
+	* support/check_hostent.c: Likewise.
+	* support/support_can_chroot.c: Include <support/xunistd.h>.
+	* support/support_format_addrinfo.c: Include <stdlib.h>
+	* support/support_format_dns_packet.c: Include <stdbool.h>.
+	* support/support_format_hostent.c: Include <stdlib.h>.
+	* support/support_format_netent.c: Likewise.
+	* support/support_write_string.c: Include <support/xunistd.h>.
+	* support/xdlfcn.c: Include <stddef.h>.
+
 2017-12-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/fpu/s_cosf.S: Removed.

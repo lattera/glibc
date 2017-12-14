@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <stddef.h>
 #include <support/check.h>
 #include <support/xdlfcn.h>
 

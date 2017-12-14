@@ -21,9 +21,9 @@
 #include <support/check.h>
 #include <support/namespace.h>
 #include <support/support.h>
+#include <support/xunistd.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <xunistd.h>
 
 static void
 callback (void *closure)

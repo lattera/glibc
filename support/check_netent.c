@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <support/check.h>
 #include <support/format_nss.h>
 #include <support/run_diff.h>

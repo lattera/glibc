@@ -19,7 +19,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <support/check.h>
-#include <xunistd.h>
+#include <support/xunistd.h>
 
 void
 support_write_file_string (const char *path, const char *contents)
