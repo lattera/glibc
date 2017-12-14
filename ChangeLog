@@ -1,5 +1,7 @@
 2017-12-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-strcmp.c: Print output in JSON format.
+
 	* elf/dl-tunables.list: Remove redundant SXID_ERASE.
 
 2017-12-14  Florian Weimer  <fweimer@redhat.com>
