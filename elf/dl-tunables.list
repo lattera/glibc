@@ -78,15 +78,12 @@ glibc {
     }
     tcache_max {
       type: SIZE_T
-      security_level: SXID_ERASE
     }
     tcache_count {
       type: SIZE_T
-      security_level: SXID_ERASE
     }
     tcache_unsorted_limit {
       type: SIZE_T
-      security_level: SXID_ERASE
     }
   }
   tune {
@@ -94,7 +91,7 @@ glibc {
       type: UINT_64
       env_alias: LD_HWCAP_MASK
       default: HWCAP_IMPORTANT
-      }
+    }
   }
 
   elision {
@@ -102,32 +99,26 @@ glibc {
       type: INT_32
       minval: 0
       maxval: 1
-      security_level: SXID_ERASE
     }
     skip_lock_busy {
       type: INT_32
       default: 3
-      security_level: SXID_ERASE
     }
     skip_lock_internal_abort {
       type: INT_32
       default: 3
-      security_level: SXID_ERASE
     }
     skip_lock_after_retries {
       type: INT_32
       default: 3
-      security_level: SXID_ERASE
     }
     tries {
       type: INT_32
       default: 3
-      security_level: SXID_ERASE
     }
     skip_trylock_internal_abort {
       type: INT_32
       default: 3
-      security_level: SXID_ERASE
     }
   }
 }

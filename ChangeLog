@@ -1,3 +1,7 @@
+2017-12-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* elf/dl-tunables.list: Remove redundant SXID_ERASE.
+
 2017-12-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22607]
