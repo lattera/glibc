@@ -37,6 +37,7 @@
 #include <sysdep.h>
 #include <stap-probe.h>
 #include <libc-pointer-arith.h>
+#include <array_length.h>
 
 #include <dl-dst.h>
 #include <dl-load.h>
@@ -103,7 +104,9 @@ static size_t ncapstr attribute_relro;
 static size_t max_capstrlen attribute_relro;
 
 
-/* Get the generated information about the trusted directories.  */
+/* Get the generated information about the trusted directories.  Use
+   an array of concatenated strings to avoid relocations.  See
+   gen-trusted-dirs.awk.  */
 #include "trusted-dirs.h"
 
 static const char system_dirs[] = SYSTEM_DIRS;
@@ -111,9 +114,7 @@ static const size_t system_dirs_len[] =
 {
   SYSTEM_DIRS_LEN
 };
-#define nsystem_dirs_len \
-  (sizeof (system_dirs_len) / sizeof (system_dirs_len[0]))
-
+#define nsystem_dirs_len array_length (system_dirs_len)
 
 static bool
 is_trusted_path (const char *path, size_t len)
@@ -685,9 +686,8 @@ _dl_init_paths (const char *llp)
 		 + ncapstr * sizeof (enum r_dir_status))
 		/ sizeof (struct r_search_path_elem));
 
-  rtld_search_dirs.dirs[0] = (struct r_search_path_elem *)
-    malloc ((sizeof (system_dirs) / sizeof (system_dirs[0]))
-	    * round_size * sizeof (struct r_search_path_elem));
+  rtld_search_dirs.dirs[0] = malloc (nsystem_dirs_len * round_size
+				     * sizeof (*rtld_search_dirs.dirs[0]));
   if (rtld_search_dirs.dirs[0] == NULL)
     {
       errstring = N_("cannot create cache for search path");
