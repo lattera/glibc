@@ -67,6 +67,10 @@ ENTRY(__memchr)
 	.body
 	mov	ret0 = str
 	add	last = str, in2		// last byte
+	;;
+	cmp.ltu	p6, p0 = last, str
+	;;
+(p6)	mov	last = -1
 	and	tmp = 7, str		// tmp = str % 8
 	cmp.ne	p7, p0 = r0, r0		// clear p7
 	extr.u	chr = in1, 0, 8		// chr = (unsigned char) in1

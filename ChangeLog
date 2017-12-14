@@ -1,4 +1,11 @@
 2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+	    James Clarke <jrtc27@jrtc27.com>
+
+	[BZ #22603]
+	* sysdeps/ia64/memchr.S (__memchr): Avoid overflow in pointer
+	addition.
+
+2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #22605]
 	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Fix exit return
