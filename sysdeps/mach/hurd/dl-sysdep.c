@@ -575,7 +575,6 @@ check_no_hidden(__access_noerrno);
 int weak_function
 __access_noerrno (const char *file, int type)
 {
-  errno = ENOSYS;
   return -1;
 }
 
