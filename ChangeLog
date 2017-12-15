@@ -1,3 +1,8 @@
+2017-12-15  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/power8/strcpy.S: Use vectors
+	for aligned inputs.
+
 2017-12-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-strcmp.c: Print output in JSON format.

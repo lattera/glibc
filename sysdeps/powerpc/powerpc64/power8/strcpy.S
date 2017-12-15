@@ -47,7 +47,7 @@
    64K as default, the page cross handling assumes minimum page size of
    4k.  */
 
-	.machine  power7
+	.machine  power8
 ENTRY_TOCLESS (FUNC_NAME, 4)
         li      r0,0          /* Doubleword with null chars to use
                                  with cmpb.  */
@@ -120,7 +120,7 @@ L(pagecross):
 	ldu	r8, 8(r7)
 
 L(loop_before):
-	/* Save the two doublewords readed from source and align the source
+	/* Save the two doublewords read from source and align the source
 	   to 16 bytes for the loop.  */
 	mr	r11,r3
 	std	r12,0(r11)
@@ -129,7 +129,150 @@ L(loop_before):
 	rldicl	r9,r4,0,60
 	subf	r7,r9,r7
 	subf	r11,r9,r11
-	b	L(loop_start)
+	/* Source is adjusted to 16B alignment and destination r11 is
+	   also moved based on that adjustment.  Now check if r11 is
+	   also 16B aligned to move to vectorized loop.  */
+	andi.	r6, r11, 0xF
+	bne	L(loop_start)
+
+	/* Prepare for the loop.  */
+	subf	r4, r9, r4	/* Adjust r4 based on alignment.  */
+	li	r7, 16	/* Load required offsets.  */
+	li	r8, 32
+	li	r9, 48
+	vspltisb	v0, 0
+	addi	r4, r4, 16
+	/* Are we 64-byte aligned? If so, jump to the vectorized loop.
+	   Else copy 16B till r4 is 64B aligned.  */
+	andi.	r6, r4, 63
+	beq	L(qw_loop)
+
+	lvx	v6, 0, r4	/* Load 16 bytes from memory.  */
+	vcmpequb.	v5, v0, v6	/* Check for null.  */
+	bne	cr6, L(qw_done)
+	stvx	v6, 0, r11	/* Store 16 bytes.  */
+	addi	r4, r4, 16	/* Increment the address.  */
+	addi	r11, r11, 16
+	andi.	r6, r4, 63
+	beq	L(qw_loop)
+
+	lvx	v6, 0, r4
+	vcmpequb.	v5, v0, v6
+	bne	cr6, L(qw_done)
+	stvx	v6, 0, r11
+	addi	r4, r4, 16
+	addi	r11, r11, 16
+	andi.	r6, r4, 63
+	beq	L(qw_loop)
+
+	lvx	v6, 0, r4
+	vcmpequb.	v5, v0, v6
+	bne	cr6, L(qw_done)
+	stvx	v6, 0, r11
+	addi	r4, r4, 16
+	addi	r11, r11, 16
+
+	.align	4
+L(qw_loop):
+	lvx	v1, r4, r0  /* Load 4 quadwords.  */
+	lvx	v2, r4, r7
+	lvx	v3, r4, r8
+	lvx	v4, r4, r9
+	vminub	v5, v1, v2  /* Compare and merge into one VR for speed.  */
+	vminub	v8, v3, v4
+	vminub	v7, v5, v8
+	vcmpequb.	v7, v7, v0  /* Check for NULLs.  */
+	bne	cr6, L(qw_loop_done)
+	stvx	v1, r11, r0	/* Store 4 quadwords.  */
+	stvx	v2, r11, r7
+	stvx	v3, r11, r8
+	stvx	v4, r11, r9
+	addi	r4, r4, 64  /* Adjust address for the next iteration.  */
+	addi	r11, r11, 64	/* Adjust address for the next iteration.  */
+
+	lvx	v1, r4, r0  /* Load 4 quadwords.  */
+	lvx	v2, r4, r7
+	lvx	v3, r4, r8
+	lvx	v4, r4, r9
+	vminub	v5, v1, v2  /* Compare and merge into one VR for speed.  */
+	vminub	v8, v3, v4
+	vminub	v7, v5, v8
+	vcmpequb.	v7, v7, v0  /* Check for NULLs.  */
+	bne	cr6, L(qw_loop_done)
+	stvx	v1, r11, r0	/* Store 4 quadwords.  */
+	stvx	v2, r11, r7
+	stvx	v3, r11, r8
+	stvx	v4, r11, r9
+	addi	r4, r4, 64  /* Adjust address for the next iteration.  */
+	addi	r11, r11, 64	/* Adjust address for the next iteration.  */
+
+	lvx	v1, r4, r0  /* Load 4 quadwords.  */
+	lvx	v2, r4, r7
+	lvx	v3, r4, r8
+	lvx	v4, r4, r9
+	vminub	v5, v1, v2  /* Compare and merge into one VR for speed.  */
+	vminub	v8, v3, v4
+	vminub	v7, v5, v8
+	vcmpequb.	v7, v7, v0  /* Check for NULLs.  */
+	bne	cr6, L(qw_loop_done)
+	stvx	v1, r11, r0	/* Store 4 quadwords.  */
+	stvx	v2, r11, r7
+	stvx	v3, r11, r8
+	stvx	v4, r11, r9
+	addi	r4, r4, 64  /* Adjust address for the next iteration.  */
+	addi	r11, r11, 64	/* Adjust address for the next iteration.  */
+	b	L(qw_loop)
+
+	.align	4
+L(qw_loop_done):
+	/* Null found in one of the 4 loads.  */
+	vcmpequb.	v7, v1, v0
+	vor	v6, v1, v1
+	bne	cr6, L(qw_done)
+	/* Not on the first 16B, So store it.  */
+	stvx	v1, r11, r0
+	addi	r4, r4, 16
+	addi	r11, r11, 16
+	vcmpequb.	v7, v2, v0
+	vor	v6, v2, v2
+	bne	cr6, L(qw_done)
+	/* Not on the second 16B, So store it.  */
+	stvx	v2, r11, r0
+	addi	r4, r4, 16
+	addi	r11, r11, 16
+	vcmpequb.	v7, v3, v0
+	vor	v6, v3, v3
+	bne	cr6, L(qw_done)
+	/* Not on the third 16B, So store it.  */
+	stvx	v6, r11, r0
+	addi	r4, r4, 16
+	addi	r11, r11, 16
+	vor	v6, v4, v4
+
+	.align	4
+L(qw_done):
+	mr	r7, r4
+	/* Move the result to GPR.  */
+#ifdef __LITTLE_ENDIAN__
+	vsldoi	v4, v6, v0, 8
+	mfvrd	r12, v4
+#else
+	mfvrd	r12, v6
+#endif
+	/* Check for null in the first 8 bytes.  */
+	cmpb	r10, r12, r0
+	cmpdi	cr6, r10, 0
+	bne	cr6, L(done2)
+	/* Null found in second doubleword.  */
+#ifdef __LITTLE_ENDIAN__
+	mfvrd	r6, v6
+#else
+	vsldoi	v6, v6, v0, 8
+	mfvrd	r6, v6
+#endif
+	cmpb	r10, r6, r0
+	addi	r7, r7, 8
+	b	L(done2)
 
         .align  5
 L(loop):
