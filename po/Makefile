@@ -44,6 +44,8 @@ mo-installed = $(inst_localedir)/%/LC_MESSAGES/$(domainname).mo
 # Files to install: a $(domainname).mo file for each language.
 install-others = $(LINGUAS:%=$(mo-installed))
 
+generated += $(ALL_LINGUAS:%=%.mo)
+
 
 include ../Rules
 
@@ -80,14 +82,12 @@ libc.pot.files: FORCE
 
 # Compile the binary message object files from the portable object source
 # files of translations for each language.
-%.mo: %.po
+$(objpfx)%.mo: %.po
+	$(make-target-directory)
 	$(MSGFMT) -o $@ $<
 
 # Install the message object files as libc.po in the language directory.
-$(mo-installed): %.mo $(+force); $(do-install) || exit 0
-
-realclean:
-	rm -f $(ALL_LINGUAS:=.mo)
+$(mo-installed): $(objpfx)%.mo $(+force); $(do-install) || exit 0
 
 # Update translations from the translation project.
 TRANSLATIONS_URL = https://translationproject.org/latest/libc

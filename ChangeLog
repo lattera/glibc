@@ -1,5 +1,11 @@
 2017-12-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14121]
+	* po/Makefile (generated): Add $(ALL_LINGUAS:%=%.mo).
+	(%.mo): Change to $(objpfx)%.mo.  Use $(make-target-directory).
+	($(mo-installed)): Use $(objpfx)%.mo.
+	(realclean): Remove rule.
+
 	* po/Makefile (linguas): Remove rule and dependencies.
 	(linguas.mo): Likewise.
 	(.PHONY): Do not depend on linguas and linguas.mo.
