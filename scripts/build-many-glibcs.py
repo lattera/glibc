@@ -175,17 +175,19 @@ class Context(object):
                         gcc_cfg=['--with-arch=armv7-a'])
         self.add_config(arch='arm',
                         os_name='linux-gnueabihf',
+                        gcc_cfg=['--with-float=hard'],
                         extra_glibcs=[{'variant': 'v7a',
                                        'ccopts': '-march=armv7-a'},
                                       {'variant': 'v7a-disable-multi-arch',
                                        'ccopts': '-march=armv7-a',
                                        'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='armeb',
-                        os_name='linux-gnueabihf')
+                        os_name='linux-gnueabihf',
+                        gcc_cfg=['--with-float=hard'])
         self.add_config(arch='armeb',
                         os_name='linux-gnueabihf',
                         variant='be8',
-                        gcc_cfg=['--with-arch=armv7-a'])
+                        gcc_cfg=['--with-float=hard', '--with-arch=armv7-a'])
         self.add_config(arch='hppa',
                         os_name='linux-gnu')
         self.add_config(arch='ia64',

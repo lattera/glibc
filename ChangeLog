@@ -1,5 +1,8 @@
 2017-12-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Use
+	--with-float=hard for arm-linux-gnueabihf configurations.
+
 	[BZ #14121]
 	* po/Makefile (generated): Add $(ALL_LINGUAS:%=%.mo).
 	(%.mo): Change to $(objpfx)%.mo.  Use $(make-target-directory).
