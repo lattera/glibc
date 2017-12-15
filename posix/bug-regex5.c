@@ -53,9 +53,9 @@ main (void)
       printf ("No collating element!\n");
       return 1;
     }
-  else if (found != 4)
+  else if (found != 6)
     {
-      printf ("expected 4 collating elements, found %d\n", found);
+      printf ("expected 6 collating elements, found %d\n", found);
       return 1;
     }
 

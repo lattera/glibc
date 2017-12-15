@@ -1,5 +1,12 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* posix/bug-regex5.c: Fix test case because with the new
+	iso14651_t1_common file, the da_DK locale now has 6 collating elements
+	in the ISO-8859-1 range instead of 4 with the old iso14651_t1_common
+	file.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/da_DK.ISO-8859-1.in: In the new iso14651_t1_common file
 	downloaded from ISO, the collation order of @-. and space has changed.
 	Therefore, this test file needed to be adapted.
