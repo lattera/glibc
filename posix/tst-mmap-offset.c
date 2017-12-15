@@ -29,7 +29,7 @@
 
 static int fd;
 static long int page_shift;
-static char fname[] = "tst-mmap-offset-XXXXXX";
+static char fname[] = "/tmp/tst-mmap-offset-XXXXXX";
 
 static void
 do_prepare (int argc, char **argv)

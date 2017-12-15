@@ -34,7 +34,7 @@ cleanup() {
 }
 trap cleanup 0
 
-tempfile=$(mktemp "tst-setcontext3.XXXXXXXXXX")
+tempfile=$(mktemp "${objpfx}tst-setcontext3.XXXXXXXXXX")
 
 # We want to run the test program and see if secontext called
 # exit() and wrote out the test file we specified.  If the

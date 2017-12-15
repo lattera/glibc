@@ -109,6 +109,8 @@ test-stat2-ARGS = Makefile . $(objpfx)test-stat2
 
 tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 
+tst-open-tmpfile-ARGS = --test-dir=$(objpfx)
+
 ifeq ($(run-built-tests),yes)
 $(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \

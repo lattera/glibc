@@ -1,3 +1,9 @@
+2017-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* io/Makefile (tst-open-tmpfile-ARGS): New variable.
+	* posix/tst-mmap-offset.c (fname): Use /tmp.
+	* stdlib/tst-setcontext3.sh (tempfile): Use ${objpfx}.
+
 2017-12-15  Steve Ellcey  <sellcey@cavium.com>
 
 	* nscd/dbg_log.c (dbg_log): Increase msg buffer size.
