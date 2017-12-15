@@ -1,3 +1,7 @@
+2017-12-15  Steve Ellcey  <sellcey@cavium.com>
+
+	* nscd/dbg_log.c (dbg_log): Increase msg buffer size.
+
 2017-12-15  Thomas Schwinge  <thomas@codesourcery.com>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (__access_noerrno): Don't set

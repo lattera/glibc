@@ -67,7 +67,7 @@ dbg_log (const char *fmt,...)
       char buf[256];
       strftime (buf, sizeof (buf), "%c", &now);
 
-      char msg[512];
+      char msg[1024];
       snprintf (msg, sizeof (msg), "%s - %d: %s%s", buf, getpid (), msg2,
 		msg2[strlen (msg2) - 1] == '\n' ? "" : "\n");
       if (dbgout)
