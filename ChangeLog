@@ -1,5 +1,12 @@
 2017-12-15  Joseph Myers  <joseph@codesourcery.com>
 
+	* po/Makefile (linguas): Remove rule and dependencies.
+	(linguas.mo): Likewise.
+	(.PHONY): Do not depend on linguas and linguas.mo.
+	(podir): Remove variable.
+	(pofiles): Likewise.
+	[$(pofiles)] (%.po): Remove rule.
+
 	* sysdeps/sparc/sparc32/Makefile
 	($(divrem:%=$(sysdep_dir)/sparc/sparc32/%.S)): Do not include
 	start-of-line whitespace in argument of echo.

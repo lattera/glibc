@@ -86,30 +86,9 @@ libc.pot.files: FORCE
 # Install the message object files as libc.po in the language directory.
 $(mo-installed): %.mo $(+force); $(do-install) || exit 0
 
-.PHONY: linguas linguas.mo
-linguas: $(ALL_LINGUAS:=.po)
-linguas.mo: $(ALL_LINGUAS:=.mo)
-
 realclean:
 	rm -f $(ALL_LINGUAS:=.mo)
 
-# Copy the PO files from the translation coordinator's repository.
-
-podir = /com/share/ftp/gnu/po/maint/glibc
-
-pofiles := $(wildcard $(podir)/*.po)
-
-ifneq (,$(pofiles))
-
-%.po: $(podir)/%.po
-	cp -f $< $@
-	chmod 444 $@
-
-linguas: $(pofiles:$(podir)/%=%)
-linguas.mo: $(pofiles:$(podir)/%.po=%.mo)
-
-endif
-
 # Update translations from the translation project.
 TRANSLATIONS_URL = https://translationproject.org/latest/libc
 WGET = wget
