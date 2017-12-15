@@ -37,10 +37,10 @@ divrem := sdiv udiv rem urem
 +divrem-S-udiv := false
 +divrem-S-urem := false
 $(divrem:%=$(sysdep_dir)/sparc/sparc32/%.S): $(sysdep_dir)/sparc/sparc32/divrem.m4
-	(echo "define(NAME,\`.$(+divrem-NAME)')\
-	       define(OP,\`$(+divrem-OP-$(+divrem-NAME))')\
-	       define(S,\`$(+divrem-S-$(+divrem-NAME))')\
-	       /* This file is generated from divrem.m4; DO NOT EDIT! */"; \
+	(echo -n "define(NAME,\`.$(+divrem-NAME)')"; \
+	 echo -n " define(OP,\`$(+divrem-OP-$(+divrem-NAME))')"; \
+	 echo -n " define(S,\`$(+divrem-S-$(+divrem-NAME))')"; \
+	 echo " /* This file is generated from divrem.m4; DO NOT EDIT! */"; \
 	 cat $<) | $(M4) > $@-tmp
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp

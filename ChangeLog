@@ -1,3 +1,15 @@
+2017-12-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sparc/sparc32/Makefile
+	($(divrem:%=$(sysdep_dir)/sparc/sparc32/%.S)): Do not include
+	start-of-line whitespace in argument of echo.
+	* sysdeps/sparc/sparc32/divrem.m4: Avoid generating lines starting
+	with whitespace.  Generate __wrap_.udiv alias.
+	* sysdeps/sparc/sparc32/rem.S: Regenerated.
+	* sysdeps/sparc/sparc32/sdiv.S: Likewise.
+	* sysdeps/sparc/sparc32/udiv.S: Likewise.
+	* sysdeps/sparc/sparc32/urem.S: Likewise.
+
 2017-12-15  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/power8/strcpy.S: Use vectors

@@ -341,7 +341,7 @@ LOC(4.9):
 
 
 
-	9:
+9:
 LOC(end_regular_divide):
 	subcc	%o4, 1, %o4
 	bge	LOC(divloop)

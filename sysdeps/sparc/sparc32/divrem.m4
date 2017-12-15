@@ -72,15 +72,15 @@ define(DEVELOP_QUOTIENT_BITS,
 	ifelse($1, N,
 	`	b	9f
 		add	Q, ($2*2+1), Q
-	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2+1)')')
+', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2+1)')')
 LOC($1.eval(2**N+$2)):
 	! remainder is negative
 	addcc	R,V,R
 	ifelse($1, N,
 	`	b	9f
 		add	Q, ($2*2-1), Q
-	', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2-1)')')
-	ifelse($1, 1, `9:')')dnl
+', `	DEVELOP_QUOTIENT_BITS(incr($1), `eval(2*$2-1)')')
+ifelse($1, 1, `9:')')dnl
 
 #include <sysdep.h>
 #include <sys/trap.h>
@@ -230,3 +230,5 @@ ifelse(S, `true',
 	ifelse(OP, `div', `mov Q, %o0', `mov R, %o0')
 
 END(NAME)
+ifelse(OP, `div', ifelse(S, `false', `strong_alias (.udiv, __wrap_.udiv)
+'))dnl
