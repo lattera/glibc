@@ -1259,6 +1259,10 @@ main (int argc, char **argv)
   /* Set locale via LC_ALL.  */
   setlocale (LC_ALL, "");
 
+  /* But keep the C collation.  That way `include' directives using
+     globbing patterns are processed in a locale-independent order.  */
+  setlocale (LC_COLLATE, "C");
+
   /* Set the text message domain.  */
   textdomain (_libc_intl_domainname);
 

@@ -1,3 +1,8 @@
+2017-12-16  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22505]
+	* elf/ldconfig.c (main): Call setlocale to force LC_COLLATE to C.
+
 2017-12-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Update.

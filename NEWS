@@ -63,6 +63,10 @@ Major new features:
 
 * Optimized memcpy, mempcpy, memmove, and memset for sparc M7.
 
+* The ldconfig utility now processes `include' directives using the C/POSIX
+  collation ordering.  Previous glibc versions used locale-specific
+  ordering, the change might break systems that relied on that.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer
