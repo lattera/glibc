@@ -1,3 +1,13 @@
+2017-12-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/flt-32/s_cosf.c: Move reduced() and
+	constants to s_sincosf.h file.
+	* sysdeps/ieee754/flt-32/s_sinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_sincosf.c: New
+	implementation.
+	* sysdeps/ieee754/flt-32/s_sincosf.h:
+	New file.
+
 2017-12-12  Carlos O'Donell <carlos@redhat.com>
 
 	[BZ #14681]
