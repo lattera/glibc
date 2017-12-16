@@ -38,7 +38,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   typedef Elf64_Xword d_tag_utype;
 #endif
 
-#ifndef RTLD_BOOTSTRAP
+#if !defined RTLD_BOOTSTRAP && !defined STATIC_PIE_BOOTSTRAP
   if (dyn == NULL)
     return;
 #endif
@@ -139,9 +139,11 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
   /* Only the bind now flags are allowed.  */
   assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
 	  || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
+  /* Flags must not be set for ld.so.  */
   assert (info[DT_FLAGS] == NULL
 	  || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
-  /* Flags must not be set for ld.so.  */
+#endif
+#if defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP
   assert (info[DT_RUNPATH] == NULL);
   assert (info[DT_RPATH] == NULL);
 #else

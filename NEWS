@@ -9,6 +9,15 @@ Version 2.27
 
 Major new features:
 
+* The GNU C Library can now be compiled with support for building static
+  PIE executables (See --enable-static-pie in INSTALL).  These static PIE
+  exectuables are like static executables but can be loaded at any address
+  and provide additional security hardening benefits at the cost of some
+  memory and performance.  When the library is built with --enable-static-pie
+  the resulting libc.a is usable with GCC 8 and above to create static PIE
+  executables using the GCC option '-static-pie'.  This feature is currently
+  supported on i386, x86_64 and x32.
+
 * Optimized x86-64 asin, atan2, exp, expf, log, pow, atan, sin, cosf,
   sinf and tan with FMA, contributed by Arjan van de Ven and H.J. Lu
   from Intel.

@@ -385,3 +385,14 @@ _dl_non_dynamic_init (void)
 #ifdef DL_SYSINFO_IMPLEMENTATION
 DL_SYSINFO_IMPLEMENTATION
 #endif
+
+#if ENABLE_STATIC_PIE
+/* Since relocation to hidden _dl_main_map causes relocation overflow on
+   aarch64, a function is used to get the address of _dl_main_map.  */
+
+struct link_map *
+_dl_get_dl_main_map (void)
+{
+  return &_dl_main_map;
+}
+#endif

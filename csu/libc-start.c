@@ -141,6 +141,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
 
 #ifndef SHARED
+  _dl_relocate_static_pie ();
+
   char **ev = &argv[argc + 1];
 
   __environ = ev;

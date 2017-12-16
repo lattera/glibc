@@ -50,6 +50,39 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_compiler_builtin_inlined" >&5
 $as_echo "$libc_compiler_builtin_inlined" >&6; }
 
+if test "$static_pie" = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker static PIE support" >&5
+$as_echo_n "checking for linker static PIE support... " >&6; }
+if ${libc_cv_ld_static_pie+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<\EOF
+	.text
+	.global _start
+_start:
+	movl	_start@GOT(%ebx), %eax
+EOF
+  libc_cv_pie_option="-Wl,-pie"
+  libc_cv_ld_static_pie=no
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostartfiles -nostdlib $no_ssp $libc_cv_pie_option -o conftest conftest.s 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+    if $READELF -r conftest | grep 'There are no relocations in this file.' > /dev/null; then
+      libc_cv_ld_static_pie=yes
+    fi
+  fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_static_pie" >&5
+$as_echo "$libc_cv_ld_static_pie" >&6; }
+  if test "$libc_cv_ld_static_pie" != yes; then
+    as_fn_error $? "linker support for static PIE needed" "$LINENO" 5
+  fi
+fi
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Intel MPX support" >&5
 $as_echo_n "checking for Intel MPX support... " >&6; }
 if ${libc_cv_asm_mpx+:} false; then :

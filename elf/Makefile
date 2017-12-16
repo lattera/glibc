@@ -24,7 +24,8 @@ include ../Makeconfig
 headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
-		  dl-origin dl-libc dl-sym dl-sysdep dl-error
+		  dl-origin dl-libc dl-sym dl-sysdep dl-error \
+		  dl-reloc-static-pie
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -52,7 +53,7 @@ endif
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
-		    dl-sysdep dl-exception
+		    dl-sysdep dl-exception dl-reloc-static-pie
 shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program
@@ -153,7 +154,7 @@ tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-tls1-static-non-pie
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
-DEFAULT-LDFLAGS-tst-tls1-static-non-pie = $(no-pie-ldflag)
+tst-tls1-static-non-pie-no-pie = yes
 
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \

@@ -1,3 +1,75 @@
+2017-12-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #19574]
+	* INSTALL: Regenerated.
+	* Makeconfig (real-static-start-installed-name): New.
+	(pic-default): Updated for --enable-static-pie.
+	(pie-default): New for --enable-static-pie.
+	(default-pie-ldflag): Likewise.
+	(+link-static-before-libc): Replace $(DEFAULT-LDFLAGS-$(@F))
+	with $(if $($(@F)-no-pie),$(no-pie-ldflag),$(default-pie-ldflag)).
+	Replace $(static-start-installed-name) with
+	$(real-static-start-installed-name).
+	(+prectorT): Updated for --enable-static-pie.
+	(+postctorT): Likewise.
+	(CFLAGS-.o): Add $(pie-default).
+	(CFLAGS-.op): Likewise.
+	* NEWS: Mention --enable-static-pie.
+	* config.h.in (ENABLE_STATIC_PIE): New.
+	* configure.ac (--enable-static-pie): New configure option.
+	(have-no-dynamic-linker): New LIBC_CONFIG_VAR.
+	(have-static-pie): Likewise.
+	Enable static PIE if linker supports --no-dynamic-linker.
+	(ENABLE_STATIC_PIE): New AC_DEFINE.
+	(enable-static-pie): New LIBC_CONFIG_VAR.
+	* configure: Regenerated.
+	* csu/Makefile (omit-deps): Add r$(start-installed-name) and
+	gr$(start-installed-name) for --enable-static-pie.
+	(extra-objs): Likewise.
+	(install-lib): Likewise.
+	(extra-objs): Add static-reloc.o and static-reloc.os
+	($(objpfx)$(start-installed-name)): Also depend on
+	$(objpfx)static-reloc.o.
+	($(objpfx)r$(start-installed-name)): New.
+	($(objpfx)g$(start-installed-name)): Also depend on
+	$(objpfx)static-reloc.os.
+	($(objpfx)gr$(start-installed-name)): New.
+	* csu/libc-start.c (LIBC_START_MAIN): Call _dl_relocate_static_pie
+	in libc.a.
+	* csu/libc-tls.c (__libc_setup_tls): Add main_map->l_addr to
+	initimage.
+	* csu/static-reloc.c: New file.
+	* elf/Makefile (routines): Add dl-reloc-static-pie.
+	(elide-routines.os): Likewise.
+	(DEFAULT-LDFLAGS-tst-tls1-static-non-pie): Removed.
+	(tst-tls1-static-non-pie-no-pie): New.
+	* elf/dl-reloc-static-pie.c: New file.
+	* elf/dl-support.c (_dl_get_dl_main_map): New function.
+	* elf/dynamic-link.h (ELF_DURING_STARTUP): Also check
+	STATIC_PIE_BOOTSTRAP.
+	* elf/get-dynamic-info.h (elf_get_dynamic_info): Likewise.
+	* gmon/Makefile (tests): Add tst-gmon-static-pie.
+	(tests-static): Likewise.
+	(DEFAULT-LDFLAGS-tst-gmon-static): Removed.
+	(tst-gmon-static-no-pie): New.
+	(CFLAGS-tst-gmon-static-pie.c): Likewise.
+	(CRT-tst-gmon-static-pie): Likewise.
+	(tst-gmon-static-pie-ENV): Likewise.
+	(tests-special): Likewise.
+	($(objpfx)tst-gmon-static-pie.out): Likewise.
+	(clean-tst-gmon-static-pie-data): Likewise.
+	($(objpfx)tst-gmon-static-pie-gprof.out): Likewise.
+	* gmon/tst-gmon-static-pie.c: New file.
+	* manual/install.texi: Document --enable-static-pie.
+	* sysdeps/generic/ldsodefs.h (_dl_relocate_static_pie): New.
+	(_dl_get_dl_main_map): Likewise.
+	* sysdeps/i386/configure.ac: Check if linker supports static PIE.
+	* sysdeps/x86_64/configure.ac: Likewise.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/x86_64/configure: Likewise.
+	* sysdeps/mips/Makefile (ASFLAGS-.o): Add $(pie-default).
+	(ASFLAGS-.op): Likewise.
+
 2017-12-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* io/Makefile (tst-open-tmpfile-ARGS): New variable.

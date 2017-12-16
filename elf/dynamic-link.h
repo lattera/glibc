@@ -94,7 +94,7 @@ elf_machine_lazy_rel (struct link_map *map,
 
 #ifdef RESOLVE_MAP
 
-# ifdef RTLD_BOOTSTRAP
+# if defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP
 #  define ELF_DURING_STARTUP (1)
 # else
 #  define ELF_DURING_STARTUP (0)

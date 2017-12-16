@@ -39,6 +39,10 @@ tests-static += tst-gmon-static
 ifeq (yesyes,$(have-fpie)$(build-shared))
 tests += tst-gmon-pie
 tests-pie += tst-gmon-pie
+ifeq (yes,$(enable-static-pie))
+tests += tst-gmon-static-pie
+tests-static += tst-gmon-static-pie
+endif
 endif
 
 # The mcount code won't work without a frame pointer.
@@ -54,7 +58,7 @@ endif
 
 CFLAGS-tst-gmon-static.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
 CRT-tst-gmon-static := $(csu-objpfx)gcrt1.o
-DEFAULT-LDFLAGS-tst-gmon-static = $(no-pie-ldflag)
+tst-gmon-static-no-pie = yes
 tst-gmon-static-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-static.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-static-gprof.out
@@ -65,6 +69,15 @@ CRT-tst-gmon-pie := $(csu-objpfx)gcrt1.o
 tst-gmon-pie-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-pie.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-pie-gprof.out
+endif
+
+ifeq (yes,$(enable-static-pie))
+CFLAGS-tst-gmon-static-pie.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
+CRT-tst-gmon-static-pie := $(csu-objpfx)grcrt1.o
+tst-gmon-static-pie-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-static-pie.data
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-gmon-static-pie-gprof.out
+endif
 endif
 
 
@@ -110,4 +123,14 @@ clean-tst-gmon-pie-data:
 
 $(objpfx)tst-gmon-pie-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon-pie.out
 	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon-pie $(objpfx)tst-gmon-pie.data.* > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-gmon-static-pie.out: clean-tst-gmon-static-pie-data
+clean-tst-gmon-static-pie-data:
+	rm -f $(objpfx)tst-gmon-static-pie.data.*
+
+$(objpfx)tst-gmon-static-pie-gprof.out: tst-gmon-static-gprof.sh \
+					$(objpfx)tst-gmon-static-pie.out
+	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon-static-pie \
+		$(objpfx)tst-gmon-static-pie.data.* > $@; \
 	$(evaluate-test)

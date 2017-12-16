@@ -37,7 +37,9 @@ extra-objs = start.o \
 	     S$(start-installed-name)
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
-			     S$(start-installed-name))
+			     S$(start-installed-name) \
+			     r$(start-installed-name) \
+			     gr$(start-installed-name))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 
 # No tests are allowed in the csu/ subdirectory because the startup
@@ -60,10 +62,17 @@ extra-objs += gmon-start.o
 endif
 
 ifneq ($(start-installed-name),$(static-start-installed-name))
+# FIXME: Only Hurd defines static-start-installed-name.  Hurd needs to
+# provide special rules to support static PIE.
 extra-objs += $(static-start-installed-name) g$(static-start-installed-name)
 omit-deps += $(patsubst %.o,%,$(static-start-installed-name) \
 			     g$(static-start-installed-name))
 install-lib += $(static-start-installed-name) g$(static-start-installed-name)
+else
+ifeq (yes,$(enable-static-pie))
+extra-objs += r$(start-installed-name) gr$(start-installed-name)
+install-lib += r$(start-installed-name) gr$(start-installed-name)
+endif
 endif
 
 before-compile += $(objpfx)abi-tag.h
@@ -82,7 +91,10 @@ multilib-extra-objs = $(addprefix $(multidir)/, $(install-lib))
 extra-objs += $(multilib-extra-objs)
 endif
 
-extra-objs += abi-note.o init.o
+extra-objs += abi-note.o init.o static-reloc.o
+ifeq (yes,$(build-shared))
+extra-objs += static-reloc.os
+endif
 asm-CPPFLAGS += -I$(objpfx).
 
 # Enable unwinding so backtrace unwinds to __libc_start_main
@@ -101,6 +113,9 @@ ifndef start-installed-name-rule
 # We link the ELF startfile along with a SHT_NOTE section indicating
 # the kernel ABI the binaries linked with this library will require.
 $(objpfx)$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
+				  $(objpfx)init.o $(objpfx)static-reloc.o
+	$(link-relocatable)
+$(objpfx)r$(start-installed-name): $(objpfx)start.o $(objpfx)abi-note.o \
 				  $(objpfx)init.o
 	$(link-relocatable)
 $(objpfx)S$(start-installed-name): $(objpfx)start.os $(objpfx)abi-note.o \
@@ -113,7 +128,10 @@ endif
 # to turn on profiling code at startup.
 ifeq (yes,$(build-shared))
 $(objpfx)g$(start-installed-name): \
-  $(objpfx)g%: $(objpfx)S% $(objpfx)gmon-start.os
+  $(objpfx)g%: $(objpfx)S% $(objpfx)gmon-start.os $(objpfx)static-reloc.os
+	$(link-relocatable)
+$(objpfx)gr$(start-installed-name): \
+  $(objpfx)gr%: $(objpfx)r% $(objpfx)gmon-start.o
 	$(link-relocatable)
 ifneq ($(start-installed-name),$(static-start-installed-name))
 $(objpfx)g$(static-start-installed-name): \

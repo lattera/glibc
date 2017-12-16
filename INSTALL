@@ -86,6 +86,15 @@ will be used, and CFLAGS sets optimization options for the compiler.
      systems support shared libraries; you need ELF support and
      (currently) the GNU linker.
 
+'--enable-static-pie'
+     Enable static position independent executable (static PIE) support.
+     Static PIE is similar to static executable, but can be loaded at
+     any address without help from a dynamic linker.  All static
+     programs as well as static tests are built as static PIE, except
+     for those marked with no-pie.  The resulting glibc can be used with
+     the GCC option, -static-pie, which is available with GCC 8 or
+     above, to create static PIE.
+
 '--disable-profile'
      Don't build libraries with profiling information.  You may want to
      use this option if you don't plan to do profiling.

@@ -352,6 +352,14 @@ ifndef static-start-installed-name
 static-start-installed-name = $(start-installed-name)
 endif
 
+ifeq (yes,$(enable-static-pie))
+# Link with rcrt1.o, instead of crt1.o, to call _dl_relocate_static_pie
+# to relocate static PIE.
+real-static-start-installed-name = r$(static-start-installed-name)
+else
+real-static-start-installed-name = $(static-start-installed-name)
+endif
+
 ifeq (yesyes,$(build-shared)$(have-z-combreloc))
 combreloc-LDFLAGS = -Wl,-z,combreloc
 LDFLAGS.so += $(combreloc-LDFLAGS)
@@ -369,6 +377,20 @@ ifeq (yes,$(have-hash-style))
 hashstyle-LDFLAGS = -Wl,--hash-style=both
 LDFLAGS.so += $(hashstyle-LDFLAGS)
 LDFLAGS-rtld += $(hashstyle-LDFLAGS)
+endif
+
+ifeq (yes,$(enable-static-pie))
+pic-default = -DPIC
+# Compile libc.a and libc_p.a with -fPIE/-fpie for static PIE.
+pie-default = $(pie-ccflag)
+ifeq (yes,$(have-static-pie))
+default-pie-ldflag = -static-pie
+else
+# Static PIE can't have dynamic relocations in read-only segments since
+# static PIE is mapped into memory by kernel.  --eh-frame-hdr is needed
+# for PIE to support exception.
+default-pie-ldflag = -Wl,-pie,--no-dynamic-linker,--eh-frame-hdr,-z,text
+endif
 endif
 
 # If lazy relocations are disabled, add the -z now flag.  Use
@@ -420,9 +442,9 @@ endif
 # Command for statically linking programs with the C library.
 ifndef +link-static
 +link-static-before-libc = $(CC) -nostdlib -nostartfiles -static -o $@ \
-	      $(DEFAULT-LDFLAGS-$(@F)) \
+	      $(if $($(@F)-no-pie),$(no-pie-ldflag),$(default-pie-ldflag)) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
-	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(static-start-installed-name)) \
+	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(real-static-start-installed-name)) \
 	      $(+preinit) $(+prectorT) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\
@@ -637,8 +659,14 @@ endif
 +prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
 # Variants of the two previous definitions for statically linking programs.
+ifeq (yes,$(enable-static-pie))
+# Static PIE must use PIE variants.
++prectorT = $(+prectorS)
++postctorT = $(+postctorS)
+else
 +prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
 +postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
+endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
 
@@ -959,7 +987,8 @@ libtypes = $(foreach o,$(object-suffixes-for-libc),$(libtype$o))
 all-object-suffixes := .o .os .oS
 object-suffixes :=
 CPPFLAGS-.o = $(pic-default)
-CFLAGS-.o = $(filter %frame-pointer,$(+cflags))
+# libc.a must be compiled with -fPIE/-fpie for static PIE.
+CFLAGS-.o = $(filter %frame-pointer,$(+cflags)) $(pie-default)
 libtype.o := lib%.a
 object-suffixes += .o
 ifeq (yes,$(build-shared))
@@ -984,7 +1013,8 @@ ifeq (yes,$(build-profile))
 all-object-suffixes += .op
 object-suffixes += .op
 CPPFLAGS-.op = -DPROF $(pic-default)
-CFLAGS-.op = -pg
+# libc_p.a must be compiled with -fPIE/-fpie for static PIE.
+CFLAGS-.op = -pg $(pie-default)
 libtype.op = lib%_p.a
 endif
 

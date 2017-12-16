@@ -170,6 +170,11 @@ AC_ARG_ENABLE([profile],
 			     [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
 	      [profile=no])
+AC_ARG_ENABLE([static-pie],
+	      AC_HELP_STRING([--enable-static-pie],
+			     [enable static PIE support and use it in the testsuite @<:@default=no@:>@]),
+	      [static_pie=$enableval],
+	      [static_pie=no])
 AC_ARG_ENABLE([timezone-tools],
 	      AC_HELP_STRING([--disable-timezone-tools],
 			     [do not install timezone tools @<:@default=install@:>@]),
@@ -1287,6 +1292,19 @@ LIBC_LINKER_FEATURE([-z execstack], [-Wl,-z,execstack],
 		    [libc_cv_z_execstack=yes], [libc_cv_z_execstack=no])
 AC_SUBST(libc_cv_z_execstack)
 
+LIBC_LINKER_FEATURE([--no-dynamic-linker],
+		    [-Wl,--no-dynamic-linker],
+		    [libc_cv_no_dynamic_linker=yes],
+		    [libc_cv_no_dynamic_linker=no])
+LIBC_CONFIG_VAR([have-no-dynamic-linker], [$libc_cv_no_dynamic_linker])
+
+AC_CACHE_CHECK(for -static-pie, libc_cv_static_pie, [dnl
+LIBC_TRY_CC_OPTION([-static-pie],
+		   [libc_cv_static_pie=yes],
+		   [libc_cv_static_pie=no])
+])
+LIBC_CONFIG_VAR([have-static-pie], [$libc_cv_static_pie])
+
 AC_CACHE_CHECK(for -fpie, libc_cv_fpie, [dnl
 LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
 ])
@@ -1793,6 +1811,17 @@ AC_SUBST(libc_cv_pie_default)
 # We do it once and save the result in a generated makefile.
 libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
 AC_SUBST(libc_cv_multidir)
+
+if test "$static_pie" = yes; then
+  # The linker must support --no-dynamic-linker.
+  if test "$libc_cv_no_dynamic_linker" != yes; then
+    AC_MSG_ERROR([linker support for --no-dynamic-linker needed])
+  fi
+  # Default to PIE.
+  libc_cv_pie_default=yes
+  AC_DEFINE(ENABLE_STATIC_PIE)
+fi
+LIBC_CONFIG_VAR([enable-static-pie], [$static_pie])
 
 AC_SUBST(profile)
 AC_SUBST(static_nss)
