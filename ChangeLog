@@ -1,5 +1,9 @@
 2017-12-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
+	* sysdeps/s390/fpu/libm-test-ulps: Update.
+
+2017-12-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
 	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
 
 2017-12-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
