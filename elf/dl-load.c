@@ -773,25 +773,7 @@ _dl_init_paths (const char *llp)
 
   if (llp != NULL && *llp != '\0')
     {
-      char *llp_tmp;
-
-#ifdef SHARED
-      /* Expand DSTs.  */
-      size_t cnt = DL_DST_COUNT (llp, 1);
-      if (__glibc_likely (cnt == 0))
-	llp_tmp = strdupa (llp);
-      else
-	{
-	  /* Determine the length of the substituted string.  */
-	  size_t total = DL_DST_REQUIRED (l, llp, strlen (llp), cnt);
-
-	  /* Allocate the necessary memory.  */
-	  llp_tmp = (char *) alloca (total + 1);
-	  llp_tmp = _dl_dst_substitute (l, llp, llp_tmp, 1);
-	}
-#else
-      llp_tmp = strdupa (llp);
-#endif
+      char *llp_tmp = strdupa (llp);
 
       /* Decompose the LD_LIBRARY_PATH contents.  First determine how many
 	 elements it has.  */

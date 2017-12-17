@@ -1,3 +1,9 @@
+2017-12-18  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22627]
+	* elf/dl-load.c (_dl_init_paths): Remove _dl_dst_substitute preparatory
+	code and invocation.
+
 2017-12-18  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/aarch64/start.S (_start): Handle PIC && !SHARED case.
