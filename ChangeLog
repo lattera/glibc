@@ -1,3 +1,9 @@
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22446]
+	* nscd/connections.c (handle_request) [SO_PEERCRED]: Use separate
+	buffers for readlink input and output.
+
 2017-12-18  Sergei Trofimovich  <slyfox@gentoo.org>
 
 	[BZ #22624]

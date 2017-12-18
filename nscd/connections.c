@@ -1077,14 +1077,15 @@ cannot handle old request version %d; current version is %d"),
       if (debug_level > 0)
 	{
 #ifdef SO_PEERCRED
+	  char pbuf[sizeof ("/proc//exe") + 3 * sizeof (long int)];
 # ifdef PATH_MAX
 	  char buf[PATH_MAX];
 # else
 	  char buf[4096];
 # endif
 
-	  snprintf (buf, sizeof (buf), "/proc/%ld/exe", (long int) pid);
-	  ssize_t n = readlink (buf, buf, sizeof (buf) - 1);
+	  snprintf (pbuf, sizeof (pbuf), "/proc/%ld/exe", (long int) pid);
+	  ssize_t n = readlink (pbuf, buf, sizeof (buf) - 1);
 
 	  if (n <= 0)
 	    dbg_log (_("\
