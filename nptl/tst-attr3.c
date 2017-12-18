@@ -26,6 +26,7 @@
 #include <unistd.h>
 
 #include <stackinfo.h>
+#include <libc-diag.h>
 
 static void *
 tf (void *arg)
@@ -362,7 +363,16 @@ do_test (void)
       result = 1;
     }
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 8 warns about aliasing of the restrict-qualified arguments
+     passed &a.  Since pthread_create does not dereference its fourth
+     argument, this aliasing, which is deliberate in this test, cannot
+     in fact cause problems.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wrestrict");
+#endif
   err = pthread_create (&th, &a, tf, &a);
+  DIAG_POP_NEEDS_COMMENT;
   if (err)
     {
       error (0, err, "pthread_create #2 failed");
@@ -388,7 +398,16 @@ do_test (void)
       result = 1;
     }
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 8 warns about aliasing of the restrict-qualified arguments
+     passed &a.  Since pthread_create does not dereference its fourth
+     argument, this aliasing, which is deliberate in this test, cannot
+     in fact cause problems.  */
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wrestrict");
+#endif
   err = pthread_create (&th, &a, tf, &a);
+  DIAG_POP_NEEDS_COMMENT;
   if (err)
     {
       error (0, err, "pthread_create #3 failed");
