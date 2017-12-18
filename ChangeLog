@@ -1,6 +1,10 @@
 2017-12-18  Sergei Trofimovich  <slyfox@gentoo.org>
 
 	[BZ #22624]
+	* sysdeps/mips/setjmp_aux.c (__sigsetjmp_aux): Use
+	inhibit_stack_protector.
+
+	[BZ #22624]
 	* sysdeps/mips/mips64/setjmp_aux.c (__sigsetjmp_aux): Use
 	inhibit_stack_protector.
 
