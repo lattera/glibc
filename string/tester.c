@@ -387,9 +387,11 @@ test_strncat (void)
   DIAG_PUSH_NEEDS_COMMENT;
 #if __GNUC_PREREQ (7, 0)
   /* GCC 7 warns about the size passed to strncat being larger than
-     the size of the buffer; this is deliberately tested here..  */
+     the size of the buffer; this is deliberately tested here; GCC 8
+     gives a -Warray-bounds warning about this.  */
   DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
 #endif
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
   (void) strncat (one, two, 99);
   DIAG_POP_NEEDS_COMMENT;
   equal (one, "ghef", 5);			/* Basic test encore. */
@@ -480,9 +482,11 @@ test_strncat (void)
 #if __GNUC_PREREQ (7, 0)
 	    /* GCC 7 warns about the size passed to strncat being
 	       larger than the size of the buffer; this is
-	       deliberately tested here..  */
+	       deliberately tested here; GCC 8 gives a -Warray-bounds
+	       warning about this.  */
 	    DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
 #endif
+	    DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
 	    check (strncat (buf1 + n2, buf2 + n1, ~((size_t) 0) - n4)
 		   == buf1 + n2, ntest);
 	    DIAG_POP_NEEDS_COMMENT;

@@ -1,3 +1,8 @@
+2017-12-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_strncat): Also disable -Warray-bounds
+	warnings for two tests.
+
 2017-12-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22614]
