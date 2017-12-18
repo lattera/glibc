@@ -558,7 +558,11 @@ struct rtld_global_ro
   /* Map of shared object to be prelink traced.  */
   EXTERN struct link_map *_dl_trace_prelink_map;
 
-  /* All search directories defined at startup.  */
+  /* All search directories defined at startup.  This is assigned a
+     non-NULL pointer by the ld.so startup code (after initialization
+     to NULL), so this can also serve as an indicator whether a copy
+     of ld.so is initialized and active.  See the rtld_active function
+     below.  */
   EXTERN struct r_search_path_elem *_dl_init_all_dirs;
 
 #ifdef NEED_DL_SYSINFO
@@ -1144,6 +1148,20 @@ extern void _dl_non_dynamic_init (void)
 extern void _dl_aux_init (ElfW(auxv_t) *av)
      attribute_hidden;
 
+/* Return true if the ld.so copy in this namespace is actually active
+   and working.  If false, the dl_open/dlfcn hooks have to be used to
+   call into the outer dynamic linker (which happens after static
+   dlopen).  */
+#ifdef SHARED
+static inline bool
+rtld_active (void)
+{
+  /* The default-initialized variable does not have a non-zero
+     dl_init_all_dirs member, so this allows us to recognize an
+     initialized and active ld.so copy.  */
+  return GLRO(dl_init_all_dirs) != NULL;
+}
+#endif
 
 __END_DECLS
 

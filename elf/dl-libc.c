@@ -157,7 +157,7 @@ __libc_dlopen_mode (const char *name, int mode)
   args.caller_dlopen = RETURN_ADDRESS (0);
 
 #ifdef SHARED
-  if (__glibc_unlikely (_dl_open_hook != NULL))
+  if (!rtld_active ())
     return _dl_open_hook->dlopen_mode (name, mode);
   return (dlerror_run (do_dlopen, &args) ? NULL : (void *) args.map);
 #else
@@ -203,7 +203,7 @@ __libc_dlsym (void *map, const char *name)
   args.name = name;
 
 #ifdef SHARED
-  if (__glibc_unlikely (_dl_open_hook != NULL))
+  if (!rtld_active ())
     return _dl_open_hook->dlsym (map, name);
 #endif
   return (dlerror_run (do_dlsym, &args) ? NULL
@@ -215,7 +215,7 @@ int
 __libc_dlclose (void *map)
 {
 #ifdef SHARED
-  if (__glibc_unlikely (_dl_open_hook != NULL))
+  if (!rtld_active ())
     return _dl_open_hook->dlclose (map);
 #endif
   return dlerror_run (do_dlclose, map);

@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
+#include <ldsodefs.h>
 
 #if !defined SHARED && IS_IN (libdl)
 
@@ -32,7 +33,7 @@ int
 __dladdr (const void *address, Dl_info *info)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dladdr (address, info);
 # endif
   return _dl_addr (address, info, NULL, NULL);

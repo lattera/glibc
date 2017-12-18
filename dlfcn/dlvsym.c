@@ -58,7 +58,7 @@ __dlvsym (void *handle, const char *name, const char *version_str
 	  DL_CALLER_DECL)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlvsym (handle, name, version_str, DL_CALLER);
 # endif
 

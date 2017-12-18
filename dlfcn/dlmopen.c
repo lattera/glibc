@@ -79,7 +79,7 @@ void *
 __dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
 # endif
 

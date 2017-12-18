@@ -63,7 +63,7 @@ __dlerror (void)
   struct dl_action_result *result;
 
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlerror ();
 # endif
 

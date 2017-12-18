@@ -1,3 +1,25 @@
+2017-12-18  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #20204]
+	ld.so: Harden dl-libc/libdl hooks.
+	* sysdeps/generic/ldsodefs.h (_dl_init_all_dirs): Update comment.
+	(rtld_active): New function.
+	* dlfcn/dladdr.c (__dladdr): Call it.
+	* dlfcn/dladdr1.c (__dladdr1): Likewise.
+	* dlfcn/dlclose.c (__dlcose): Likewise.
+	* dlfcn/dlerror.c (__dlerror): Likewise.
+	* dlfcn/dlinfo.c (__dlinfo): Likewise.
+	* dlfcn/dlmopen.c (__dlmopen): Likewise.
+	* dlfcn/dlopen.c (__dlopen): Likewise.
+	* dlfcn/dlopenold.c (__dlopen_nocheck): Likewise.
+	* dlfcn/dlsym.c (__dlsym): Likewise.
+	* dlfcn/dlvsym.c (__dlvsym): Likewise.
+	* libio/vtables.c (_IO_vtable_check): Likewise.
+	* elf/dl-libc.c (__libc_dlopen_mode, __libc_dlsym)
+	(__libc_dlclose): Likewise.
+	* elf/rtld.c (dl_main): Update comment on the _dl_init_all_dirs
+	assignment.
+
 2017-12-18  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22446]

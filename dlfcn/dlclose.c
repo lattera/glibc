@@ -39,7 +39,7 @@ int
 __dlclose (void *handle)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlclose (handle);
 # endif
 

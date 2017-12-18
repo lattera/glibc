@@ -74,7 +74,7 @@ void *
 __dlopen (const char *file, int mode DL_CALLER_DECL)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlopen (file, mode, DL_CALLER);
 # endif
 

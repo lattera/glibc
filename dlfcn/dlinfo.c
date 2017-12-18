@@ -111,7 +111,7 @@ int
 __dlinfo (void *handle, int request, void *arg DL_CALLER_DECL)
 {
 # ifdef SHARED
-  if (__glibc_unlikely (_dlfcn_hook != NULL))
+  if (!rtld_active ())
     return _dlfcn_hook->dlinfo (handle, request, arg,
 				DL_CALLER);
 # endif

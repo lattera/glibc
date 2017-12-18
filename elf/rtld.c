@@ -2096,7 +2096,9 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
   GLRO(dl_initial_searchlist) = *GL(dl_ns)[LM_ID_BASE]._ns_main_searchlist;
 
   /* Remember the last search directory added at startup, now that
-     malloc will no longer be the one from dl-minimal.c.  */
+     malloc will no longer be the one from dl-minimal.c.  As a side
+     effect, this marks ld.so as initialized, so that the rtld_active
+     function returns true from now on.  */
   GLRO(dl_init_all_dirs) = GL(dl_all_dirs);
 
   /* Print scope information.  */
