@@ -117,24 +117,6 @@ static const size_t system_dirs_len[] =
 #define nsystem_dirs_len array_length (system_dirs_len)
 
 static bool
-is_trusted_path (const char *path, size_t len)
-{
-  const char *trun = system_dirs;
-
-  for (size_t idx = 0; idx < nsystem_dirs_len; ++idx)
-    {
-      if (len == system_dirs_len[idx] && memcmp (trun, path, len) == 0)
-	/* Found it.  */
-	return true;
-
-      trun += system_dirs_len[idx] + 1;
-    }
-
-  return false;
-}
-
-
-static bool
 is_trusted_path_normalize (const char *path, size_t len)
 {
   if (len == 0)
@@ -428,8 +410,7 @@ static size_t max_dirnamelen;
 
 static struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
-	      int check_trusted, const char *what, const char *where,
-	      struct link_map *l)
+	      const char *what, const char *where, struct link_map *l)
 {
   char *cp;
   size_t nelems = 0;
@@ -458,13 +439,6 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
       /* Now add one if there is none so far.  */
       if (len > 0 && cp[len - 1] != '/')
 	cp[len++] = '/';
-
-      /* Make sure we don't use untrusted directories if we run SUID.  */
-      if (__glibc_unlikely (check_trusted) && !is_trusted_path (cp, len))
-	{
-	  free (to_free);
-	  continue;
-	}
 
       /* See if this directory is already known.  */
       for (dirp = GL(dl_all_dirs); dirp != NULL; dirp = dirp->next)
@@ -614,7 +588,7 @@ decompose_rpath (struct r_search_path_struct *sps,
       _dl_signal_error (ENOMEM, NULL, NULL, errstring);
     }
 
-  fillin_rpath (copy, result, ":", 0, what, where, l);
+  fillin_rpath (copy, result, ":", what, where, l);
 
   /* Free the copied RPATH string.  `fillin_rpath' make own copies if
      necessary.  */
@@ -791,8 +765,7 @@ _dl_init_paths (const char *llp)
 	}
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
-			   __libc_enable_secure, "LD_LIBRARY_PATH",
-			   NULL, l);
+			   "LD_LIBRARY_PATH", NULL, l);
 
       if (env_path_list.dirs[0] == NULL)
 	{

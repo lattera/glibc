@@ -1,3 +1,9 @@
+2017-12-19  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* elf/dl-load.c (is_trusted_path): Remove.
+	(fillin_rpath): Remove check_trusted argument and its use,
+	all callers changed.
+
 2017-12-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22630]
