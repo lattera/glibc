@@ -1,3 +1,14 @@
+2017-12-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22614]
+	* Makeconfig (no-pie-ldflag): Set to -no-pie only if
+	$(cc-pie-default) == yes.
+	* config.make.in (cc-pie-default): New.
+	* configure.ac (libc_cv_pie_default): Renamed to ...
+	(libc_cv_cc_pie_default): This.
+	(libc_cv_pie_default): Set to $libc_cv_cc_pie_default.
+	* configure: Regenerated.
+
 2017-12-18  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20204]

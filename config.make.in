@@ -89,6 +89,7 @@ static-nss-crypt = @libc_cv_static_nss_crypt@
 build-shared = @shared@
 build-pic-default= @libc_cv_pic_default@
 build-pie-default= @libc_cv_pie_default@
+cc-pie-default= @libc_cv_cc_pie_default@
 build-profile = @profile@
 build-static-nss = @static_nss@
 cross-compiling = @cross_compiling@

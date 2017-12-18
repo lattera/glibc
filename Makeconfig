@@ -464,8 +464,10 @@ endif
 # Commands for linking programs with the C library.
 ifndef +link
 ifeq (yes,$(build-shared))
-ifeq (yes,$(build-pie-default))
+ifeq (yes,$(cc-pie-default))
 no-pie-ldflag = -no-pie
+endif
+ifeq (yes,$(build-pie-default))
 +link = $(+link-pie)
 +link-tests = $(+link-pie-tests)
 +link-printers-tests = $(+link-pie-printers-tests)
