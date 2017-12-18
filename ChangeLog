@@ -1,5 +1,7 @@
 2017-12-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* posix/tst-glob_symlinks.c (do_test): Increase size of buf.
+
 	* string/tester.c (test_strncat): Also disable -Warray-bounds
 	warnings for two tests.
 

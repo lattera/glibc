@@ -94,7 +94,7 @@ do_prepare (int argc, char *argv[])
 static int
 do_test (void)
 {
-  char buf[PATH_MAX];
+  char buf[PATH_MAX + 1];
   glob_t gl;
 
   TEST_VERIFY_EXIT (glob (valid_link, 0, NULL, &gl) == 0);
