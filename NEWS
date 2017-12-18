@@ -16,7 +16,7 @@ Major new features:
   memory and performance.  When the library is built with --enable-static-pie
   the resulting libc.a is usable with GCC 8 and above to create static PIE
   executables using the GCC option '-static-pie'.  This feature is currently
-  supported on i386, x86_64 and x32.
+  supported on i386, x86_64, x32 and aarch64.
 
 * Optimized x86-64 asin, atan2, exp, expf, log, pow, atan, sin, cosf,
   sinf and tan with FMA, contributed by Arjan van de Ven and H.J. Lu
