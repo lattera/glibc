@@ -826,6 +826,7 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	      {
 		size_t home_len = strlen (p->pw_dir);
 		size_t rest_len = end_name == NULL ? 0 : strlen (end_name);
+		char *d;
 
 		if (__glibc_unlikely (malloc_dirname))
 		  free (dirname);
@@ -845,8 +846,10 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 		      }
 		    malloc_dirname = 1;
 		  }
-		*((char *) mempcpy (mempcpy (dirname, p->pw_dir, home_len),
-				    end_name, rest_len)) = '\0';
+		d = mempcpy (dirname, p->pw_dir, home_len);
+		if (end_name != NULL)
+		  d = mempcpy (d, end_name, rest_len);
+		*d = '\0';
 
 		dirlen = home_len + rest_len;
 		dirname_modified = 1;
