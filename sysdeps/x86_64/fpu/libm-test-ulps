@@ -1094,10 +1094,10 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "cexp_upward":
-double: 1
+double: 3
 float: 2
 float128: 3
-idouble: 1
+idouble: 3
 ifloat: 2
 ifloat128: 3
 ildouble: 3
@@ -1902,7 +1902,9 @@ ildouble: 5
 ldouble: 5
 
 Function: "exp":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -2754,30 +2756,30 @@ ildouble: 5
 ldouble: 5
 
 Function: "tgamma_downward":
-double: 5
+double: 6
 float: 5
 float128: 5
-idouble: 5
+idouble: 6
 ifloat: 5
 ifloat128: 5
 ildouble: 5
 ldouble: 5
 
 Function: "tgamma_towardzero":
-double: 5
+double: 7
 float: 5
 float128: 5
-idouble: 5
+idouble: 7
 ifloat: 5
 ifloat128: 5
 ildouble: 5
 ldouble: 5
 
 Function: "tgamma_upward":
-double: 5
+double: 6
 float: 5
 float128: 4
-idouble: 5
+idouble: 6
 ifloat: 5
 ifloat128: 4
 ildouble: 5
