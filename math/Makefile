@@ -114,7 +114,7 @@ type-ldouble-yes := ldouble
 # double support
 type-double-suffix :=
 type-double-routines := branred doasin dosincos halfulp mpa mpatan2	\
-		       mpatan mpexp mplog mpsqrt mptan sincos32 slowexp	\
+		       mpatan mpexp mplog mpsqrt mptan sincos32	\
 		       slowpow sincostab k_rem_pio2
 
 # float support

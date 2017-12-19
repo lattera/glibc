@@ -258,20 +258,6 @@ Unless explicitly mentioned otherwise, a precision of 1 implies 24 bits of
 precision in the mantissa of the multiple precision number.  Hence, a precision
 level of 32 implies 768 bits of precision in the mantissa.
 
-@deftp Probe slowexp_p6 (double @var{$arg1}, double @var{$arg2})
-This probe is triggered when the @code{exp} function is called with an
-input that results in multiple precision computation with precision
-6.  Argument @var{$arg1} is the input value and @var{$arg2} is the
-computed output.
-@end deftp
-
-@deftp Probe slowexp_p32 (double @var{$arg1}, double @var{$arg2})
-This probe is triggered when the @code{exp} function is called with an
-input that results in multiple precision computation with precision
-32.  Argument @var{$arg1} is the input value and @var{$arg2} is the
-computed output.
-@end deftp
-
 @deftp Probe slowpow_p10 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
 This probe is triggered when the @code{pow} function is called with
 inputs that result in multiple precision computation with precision

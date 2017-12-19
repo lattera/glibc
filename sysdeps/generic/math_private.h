@@ -262,7 +262,6 @@ extern double __sin32 (double __x, double __res, double __res1);
 extern double __cos32 (double __x, double __res, double __res1);
 extern double __mpsin (double __x, double __dx, bool __range_reduce);
 extern double __mpcos (double __x, double __dx, bool __range_reduce);
-extern double __slowexp (double __x);
 extern double __slowpow (double __x, double __y, double __z);
 extern void __docos (double __x, double __dx, double __v[]);
 
