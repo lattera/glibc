@@ -65,6 +65,9 @@ struct pthread_unwind_buf
   {
     __jmp_buf jmp_buf;
     int mask_was_saved;
+#ifdef NEED_SAVED_MASK_IN_CANCEL_JMP_BUF
+    __sigset_t saved_mask;
+#endif
   } cancel_jmp_buf[1];
 
   union
