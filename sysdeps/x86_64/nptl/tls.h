@@ -56,7 +56,10 @@ typedef struct
 # else
   int __glibc_reserved1;
 # endif
-  int __glibc_unused1;
+  /* Bit 0: IBT.
+     Bit 1: SHSTK.
+   */
+  unsigned int feature_1;
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];
   /* GCC split stack support.  */

@@ -50,6 +50,10 @@ typedef struct
   void *__private_tm[4];
   /* GCC split stack support.  */
   void *__private_ss;
+  /* Bit 0: IBT.
+     Bit 1: SHSTK.
+   */
+  unsigned int feature_1;
 } tcbhead_t;
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1

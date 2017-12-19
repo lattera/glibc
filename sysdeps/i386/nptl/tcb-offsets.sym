@@ -15,3 +15,4 @@ POINTER_GUARD		offsetof (tcbhead_t, pointer_guard)
 #ifndef __ASSUME_PRIVATE_FUTEX
 PRIVATE_FUTEX		offsetof (tcbhead_t, private_futex)
 #endif
+FEATURE_1_OFFSET	offsetof (tcbhead_t, feature_1)

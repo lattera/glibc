@@ -1,6 +1,15 @@
 2017-12-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22563]
+	* sysdeps/i386/nptl/tcb-offsets.sym (FEATURE_1_OFFSET): New.
+	* sysdeps/i386/nptl/tls.h (tcbhead_t): Add feature_1.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym (FEATURE_1_OFFSET): New.
+	* sysdeps/x86_64/nptl/tls.h (tcbhead_t): Rename __glibc_unused1
+	to feature_1.
+
+2017-12-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22563]
 	* bits/types/__cancel_jmp_buf_tag.h: New file.
 	* sysdeps/unix/sysv/linux/x86/bits/types/__cancel_jmp_buf_tag.h
 	* sysdeps/unix/sysv/linux/x86/pthreaddef.h: Likewise.
