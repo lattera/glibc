@@ -123,7 +123,8 @@ address without help from a dynamic linker.  All static programs as
 well as static tests are built as static PIE, except for those marked
 with no-pie.  The resulting glibc can be used with the GCC option,
 -static-pie, which is available with GCC 8 or above, to create static
-PIE.
+PIE.  This option also implies that glibc programs and tests are created
+as dynamic position independent executables (PIE) by default.
 
 @item --disable-profile
 Don't build libraries with profiling information.  You may want to use
