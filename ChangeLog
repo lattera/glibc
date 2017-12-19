@@ -1,3 +1,8 @@
+2017-12-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	--enable-static-pie variants to x86_64, x32 and i686.
+
 2017-12-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22631]
