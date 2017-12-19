@@ -71,8 +71,8 @@ _start:
         adrp    x4, :got:__libc_csu_fini
 	ldr     PTR_REG (4), [x4, #:got_lo12:__libc_csu_fini]
 # else
-	adrp	x0, main
-	add	x0, x0, :lo12:main
+	adrp	x0, __wrap_main
+	add	x0, x0, :lo12:__wrap_main
 	adrp	x3, __libc_csu_init
 	add	x3, x3, :lo12:__libc_csu_init
 	adrp	x4, __libc_csu_fini
@@ -93,6 +93,15 @@ _start:
 
 	/* should never get here....*/
 	bl	abort
+
+#if defined PIC && !defined SHARED
+	/* When main is not defined in the executable but in a shared library
+	   then a wrapper is needed in crt1.o of the static-pie enabled libc,
+	   because crt1.o and rcrt1.o share code and the later must avoid the
+	   use of GOT relocations before __libc_start_main is called.  */
+__wrap_main:
+	b	main
+#endif
 
 	/* Define a symbol for the first piece of initialized data.  */
 	.data
