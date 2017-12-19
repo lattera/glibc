@@ -641,7 +641,8 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 		    {
 # if defined HAVE_GETPWNAM_R || defined _LIBC
 		      size_t ssize = strlen (s.data) + 1;
-		      err = getpwnam_r (s.data, &pwbuf, s.data + ssize,
+		      char *sdata = s.data;
+		      err = getpwnam_r (sdata, &pwbuf, sdata + ssize,
 					s.length - ssize, &p);
 # else
 		      p = getpwnam (s.data);
