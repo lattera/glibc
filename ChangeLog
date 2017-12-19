@@ -1,3 +1,8 @@
+2017-12-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* elf/dl-load.c (_dl_dst_substitute): Remove checks that is_path
+	is set and name contains ':', and all code depending on these checks.
+
 2017-12-24  Zack Weinberg  <zackw@panix.com>
 
 	* libio/libio.h, libio/_G_config.h: New stub headers which issue a
