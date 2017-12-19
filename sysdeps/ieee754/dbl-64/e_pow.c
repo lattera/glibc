@@ -452,7 +452,8 @@ checkint (double x)
     int4 i[2];
     double x;
   } u;
-  int k, m, n;
+  int k;
+  unsigned int m, n;
   u.x = x;
   m = u.i[HIGH_HALF] & 0x7fffffff;	/* no sign */
   if (m >= 0x7ff00000)
