@@ -1,5 +1,19 @@
 2017-12-19  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #22630]
+	* Makeconfig (link-pie-before-libc): Replace -pie with
+	$(if $($(@F)-no-pie),$(no-pie-ldflag),-pie).
+	* elf/Makefile (LDFLAGS-tst-dlopen-aout): Removed.
+	(tst-dlopen-aout-no-pie): New.
+	(LDFLAGS-tst-prelink): Removed.
+	(tst-prelink-no-pie): New.
+	(LDFLAGS-tst-main1): Removed.
+	(tst-main1-no-pie): New.
+	* gmon/Makefile (LDFLAGS-tst-gmon): Removed.
+	(tst-gmon-no-pie): New.
+
+2017-12-19  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* manual/install.texi: Document that --enable-static-pie
 	implies PIE.
 	* INSTALL: Regenerated.

@@ -195,7 +195,7 @@ tests-internal += loadtest unload unload2 circleload1 \
 	 tst-ptrguard1 tst-stackguard1
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
-LDFLAGS-tst-dlopen-aout = $(no-pie-ldflag)
+tst-dlopen-aout-no-pie = yes
 endif
 test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
@@ -369,7 +369,7 @@ ifeq ($(have-glob-dat-reloc),yes)
 tests += tst-prelink
 # Don't compile tst-prelink.c with PIE for GLOB_DAT relocation.
 CFLAGS-tst-prelink.c += -fno-pie
-LDFLAGS-tst-prelink = $(no-pie-ldflag)
+tst-prelink-no-pie = yes
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-prelink-cmp.out
 endif
@@ -1433,6 +1433,6 @@ $(objpfx)tst-debug1mod1.so: $(objpfx)testobj1.so
 
 $(objpfx)tst-main1: $(objpfx)tst-main1mod.so
 CRT-tst-main1 := $(csu-objpfx)crt1.o
-LDFLAGS-tst-main1 = $(no-pie-ldflag)
+tst-main1-no-pie = yes
 LDLIBS-tst-main1 = $(libsupport)
 tst-main1mod.so-no-z-defs = yes

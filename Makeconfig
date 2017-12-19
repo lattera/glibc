@@ -413,7 +413,8 @@ link-extra-libs-tests = $(libsupport)
 
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
-+link-pie-before-libc = $(CC) -pie -Wl,-O1 -nostdlib -nostartfiles -o $@ \
++link-pie-before-libc = $(CC) $(if $($(@F)-no-pie),$(no-pie-ldflag),-pie) \
+	     -Wl,-O1 -nostdlib -nostartfiles -o $@ \
 	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(combreloc-LDFLAGS) $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
 	     $(firstword $(CRT-$(@F)) $(csu-objpfx)S$(start-installed-name)) \
