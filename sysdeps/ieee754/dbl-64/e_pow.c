@@ -25,7 +25,7 @@
 /*             log1                                                        */
 /*             checkint                                                    */
 /* FILES NEEDED: dla.h endian.h mpa.h mydefs.h                             */
-/*               halfulp.c mpexp.c mplog.c slowpow.c mpa.c                 */
+/*               halfulp.c mpexp.c mplog.c slowexp.c slowpow.c mpa.c       */
 /*                          uexp.c  upow.c				   */
 /*               root.tbl uexp.tbl upow.tbl                                */
 /* An ultimate power routine. Given two IEEE double machine numbers y,x    */

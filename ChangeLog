@@ -1,3 +1,45 @@
+2017-12-19  Joseph Myers  <joseph@codesourcery.com>
+
+	Revert:
+
+	2017-12-19  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update.
+
+	2017-12-19  Patrick McGehearty  <patrick.mcgehearty@oracle.com>
+
+	* sysdeps/ieee754/dbl-64/e_exp.c: Include <math-svid-compat.h> and
+	<errno.h>.  Include "eexp.tbl".
+	(half): New constant.
+	(one): Likewise.
+	(__ieee754_exp): Rewrite.
+	(__slowexp): Remove prototype.
+	* sysdeps/ieee754/dbl-64/eexp.tbl: New file.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Remove file.
+	* sysdeps/i386/fpu/slowexp.c: Likewise.
+	* sysdeps/ia64/fpu/slowexp.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/slowexp.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-avx.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma4.c: Likewise.
+	* sysdeps/generic/math_private.h (__slowexp): Remove prototype.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Remove mention of slowexp.c in
+	comment.
+	* sysdeps/powerpc/power4/fpu/Makefile [$(subdir) = math]
+	(CPPFLAGS-slowexp.c): Remove variable.
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Remove slowexp-fma, slowexp-fma4 and slowexp-avx.
+	(CFLAGS-slowexp-fma.c): Remove variable.
+	(CFLAGS-slowexp-fma4.c): Likewise.
+	(CFLAGS-slowexp-avx.c): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-avx.c (__slowexp): Do not
+	define as macro.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma.c (__slowexp): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma4.c (__slowexp): Likewise.
+	* math/Makefile (type-double-routines): Remove slowexp.
+	* manual/probes.texi (slowexp_p6): Remove.
+	(slowexp_p32): Likewise.
+
 2017-12-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* lib/glob.c (glob): Use a 'char *', not a 'void *', in pointer
