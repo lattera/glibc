@@ -1,5 +1,26 @@
 2017-12-19  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22631]
+	* sysdeps/m68k/m680x0/fpu/bits/mathinline.h (__m81_defun): Add
+	argument for attrubutes.  All callers changed.
+	(__inline_mathop1): Likewise.  All callers changed.
+	(__inline_mathop): Likewise.  All callers changed.
+	[__USE_MISC] (scalbn): Use __inline_forward instead of
+	__inline_forward_c.
+	[__USE_ISOC99] (scalbln): Likewise.
+	[__USE_ISOC99] (nearbyint): Likewise.
+	[__USE_ISOC99] (lrint): Likewise.
+	[__USE_MISC] (scalbnf): Likewise.
+	[__USE_ISOC99] (scalblnf): Likewise.
+	[__USE_ISOC99] (nearbyintf): Likewise.
+	[__USE_ISOC99] (lrintf): Likewise.
+	[__USE_MISC] (scalbnl): Likewise.
+	[__USE_ISOC99] (scalblnl): Likewise.
+	[__USE_ISOC99] (nearbyintl): Likewise.
+	[__USE_ISOC99] (lrintl): Likewise.
+	* sysdeps/m68k/m680x0/fpu/mathimpl.h: All callers of
+	__inline_mathop and __m81_defun changed.
+
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Specify
 	CPU or FPU for ARM hard-float configurations.
 
