@@ -1,5 +1,8 @@
 2017-12-27  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* elf/dl-load.c (is_dst): Remove checks that is_path is set and name
+	contains ':'.
+
 	* elf/dl-load.c (_dl_dst_substitute): Remove checks that is_path
 	is set and name contains ':', and all code depending on these checks.
 
