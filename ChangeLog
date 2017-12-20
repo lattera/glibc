@@ -1,3 +1,12 @@
+2017-12-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* manual/texinfo.tex: Update to version 2017-12-18.20 with
+	trailing whitespace removed.
+	* scripts/config.guess: Update to version 2017-12-17.
+	* scripts/config.sub: Update to version 2017-11-23.
+	* scripts/install-sh: Update to version 2017-09-23.17.
+	* scripts/move-if-change: Update to version 2017-09-13 06:45.
+
 2017-12-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/tile/__longjmp.S (__longjmp): Use lowercase instructions.
