@@ -1,3 +1,7 @@
+2017-12-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/aarch64/memset.S (MEMSET): Define.
+
 2017-12-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22635]

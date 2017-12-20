@@ -19,6 +19,10 @@
 #include <sysdep.h>
 #include "memset-reg.h"
 
+#ifndef MEMSET
+# define MEMSET memset
+#endif
+
 /* Assumptions:
  *
  * ARMv8-a, AArch64, unaligned accesses
