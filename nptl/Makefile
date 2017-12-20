@@ -31,7 +31,7 @@ install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork unregister-atfork
+	   register-atfork unregister-atfork pthread_self
 shared-only-routines = forward
 
 # We need to provide certain routines for compatibility with existing
@@ -49,7 +49,7 @@ pthread-compat-wrappers = \
 libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
-		      pthread_self pthread_equal pthread_yield \
+		      compat-pthread_self pthread_equal pthread_yield \
 		      pthread_getconcurrency pthread_setconcurrency \
 		      pthread_getschedparam pthread_setschedparam \
 		      pthread_setschedprio \

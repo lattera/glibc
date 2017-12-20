@@ -1,3 +1,18 @@
+2017-12-20  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22635]
+	nptl: Provide full implementation of pthread_self in libc.so.
+	* nptl/Makefile (routines): Add pthread_self.
+	(libpthread-routines): Replace pthread_self with
+	compat-pthread_self.
+	* nptl/forward.c (pthread_self): Remove.
+	* nptl/nptl-init.c (pthread_functions): Do not initialize
+	ptr_pthread_self.
+	* nptl/pthread_self.c (pthread_self): Remove weak alias.
+	* nptl/compat-pthread_self.c: New file.
+	* sysdeps/nptl/pthread-functions.h (struct pthread_functions):
+	Remove ptr_pthread_self.
+
 2017-12-19  Arnold D. Robbins  <arnold@skeeve.com>
 
 	* posix/regcomp.c: Fix spelling in comments.

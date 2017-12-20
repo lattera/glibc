@@ -1,6 +1,6 @@
-/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
+/* Compatibility version of pthread_self in libpthread.
+   Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "pthreadP.h"
-#include <tls.h>
+/* Compatibility version of pthread_self for old binaries which link
+   directly against libpthread's version.  */
 
-pthread_t
-pthread_self (void)
-{
-  return (pthread_t) THREAD_SELF;
-}
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_27)
+# include "pthread_self.c"
+compat_symbol (libpthread, pthread_self, pthread_self, GLIBC_2_0);
+#endif
