@@ -1,3 +1,8 @@
+2017-12-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	disable-multi-arch variant to aarch64-linux-gnu.
+
 2017-12-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/texinfo.tex: Update to version 2017-12-18.20 with

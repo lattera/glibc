@@ -160,7 +160,9 @@ class Context(object):
     def add_all_configs(self):
         """Add all known glibc build configurations."""
         self.add_config(arch='aarch64',
-                        os_name='linux-gnu')
+                        os_name='linux-gnu',
+                        extra_glibcs=[{'variant': 'disable-multi-arch',
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='aarch64_be',
                         os_name='linux-gnu')
         self.add_config(arch='alpha',
