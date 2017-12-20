@@ -1096,11 +1096,11 @@ extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
 extern const char *_dl_get_origin (void) attribute_hidden;
 
 /* Count DSTs.  */
-extern size_t _dl_dst_count (const char *name, int is_path) attribute_hidden;
+extern size_t _dl_dst_count (const char *name) attribute_hidden;
 
 /* Substitute DST values.  */
 extern char *_dl_dst_substitute (struct link_map *l, const char *name,
-				 char *result, int is_path) attribute_hidden;
+				 char *result) attribute_hidden;
 
 /* Check validity of the caller.  */
 extern int _dl_check_caller (const void *caller, enum allowmask mask)

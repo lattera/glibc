@@ -100,7 +100,7 @@ struct list
   ({									      \
     const char *__str = (str);						      \
     const char *__result = __str;					      \
-    size_t __dst_cnt = DL_DST_COUNT (__str, 0);				      \
+    size_t __dst_cnt = DL_DST_COUNT (__str);				      \
 									      \
     if (__dst_cnt != 0)							      \
       {									      \
@@ -114,7 +114,7 @@ DST not allowed in SUID/SGID programs"));				      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
 						   __dst_cnt));		      \
 									      \
-	__result = _dl_dst_substitute (l, __str, __newp, 0);		      \
+	__result = _dl_dst_substitute (l, __str, __newp);		      \
 									      \
 	if (*__result == '\0')						      \
 	  {								      \

@@ -1,5 +1,12 @@
 2017-12-27  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* elf/dl-dst.h (DL_DST_COUNT): Remove is_path argument, all callers
+	updated.
+	* elf/dl-load.c (is_dst, _dl_dst_count, _dl_dst_substitute,
+	expand_dynamic_string_token): Likewise.
+	* sysdeps/generic/ldsodefs.h (_dl_dst_count, _dl_dst_substitute): Remove
+	is_path argument.
+
 	* elf/dl-load.c (is_dst): Remove checks that is_path is set and name
 	contains ':'.
 

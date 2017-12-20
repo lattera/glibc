@@ -180,8 +180,7 @@ is_trusted_path_normalize (const char *path, size_t len)
 
 
 static size_t
-is_dst (const char *start, const char *name, const char *str,
-	int is_path, int secure)
+is_dst (const char *start, const char *name, const char *str, int secure)
 {
   size_t len;
   bool is_curly = false;
@@ -219,7 +218,7 @@ is_dst (const char *start, const char *name, const char *str,
 
 
 size_t
-_dl_dst_count (const char *name, int is_path)
+_dl_dst_count (const char *name)
 {
   const char *const start = name;
   size_t cnt = 0;
@@ -231,10 +230,9 @@ _dl_dst_count (const char *name, int is_path)
       /* $ORIGIN is not expanded for SUID/GUID programs (except if it
 	 is $ORIGIN alone) and it must always appear first in path.  */
       ++name;
-      if ((len = is_dst (start, name, "ORIGIN", is_path,
-			 __libc_enable_secure)) != 0
-	  || (len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0
-	  || (len = is_dst (start, name, "LIB", is_path, 0)) != 0)
+      if ((len = is_dst (start, name, "ORIGIN", __libc_enable_secure)) != 0
+	  || (len = is_dst (start, name, "PLATFORM", 0)) != 0
+	  || (len = is_dst (start, name, "LIB", 0)) != 0)
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -246,8 +244,7 @@ _dl_dst_count (const char *name, int is_path)
 
 
 char *
-_dl_dst_substitute (struct link_map *l, const char *name, char *result,
-		    int is_path)
+_dl_dst_substitute (struct link_map *l, const char *name, char *result)
 {
   const char *const start = name;
 
@@ -267,16 +264,15 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  size_t len;
 
 	  ++name;
-	  if ((len = is_dst (start, name, "ORIGIN", is_path,
-			     __libc_enable_secure)) != 0)
+	  if ((len = is_dst (start, name, "ORIGIN", __libc_enable_secure)) != 0)
 	    {
 	      repl = l->l_origin;
 	      check_for_trusted = (__libc_enable_secure
 				   && l->l_type == lt_executable);
 	    }
-	  else if ((len = is_dst (start, name, "PLATFORM", is_path, 0)) != 0)
+	  else if ((len = is_dst (start, name, "PLATFORM", 0)) != 0)
 	    repl = GLRO(dl_platform);
-	  else if ((len = is_dst (start, name, "LIB", is_path, 0)) != 0)
+	  else if ((len = is_dst (start, name, "LIB", 0)) != 0)
 	    repl = DL_DST_LIB;
 
 	  if (repl != NULL && repl != (const char *) -1)
@@ -320,7 +316,7 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
    belonging to the map is loaded.  In this case the path element
    containing $ORIGIN is left out.  */
 static char *
-expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
+expand_dynamic_string_token (struct link_map *l, const char *s)
 {
   /* We make two runs over the string.  First we determine how large the
      resulting string is and then we copy it over.  Since this is no
@@ -331,7 +327,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
   char *result;
 
   /* Determine the number of DST elements.  */
-  cnt = DL_DST_COUNT (s, is_path);
+  cnt = DL_DST_COUNT (s);
 
   /* If we do not have to replace anything simply copy the string.  */
   if (__glibc_likely (cnt == 0))
@@ -345,7 +341,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s, int is_path)
   if (result == NULL)
     return NULL;
 
-  return _dl_dst_substitute (l, s, result, is_path);
+  return _dl_dst_substitute (l, s, result);
 }
 
 
@@ -399,7 +395,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
     {
       struct r_search_path_elem *dirp;
 
-      to_free = cp = expand_dynamic_string_token (l, cp, 1);
+      to_free = cp = expand_dynamic_string_token (l, cp);
 
       size_t len = strlen (cp);
 
@@ -2070,7 +2066,7 @@ _dl_map_object (struct link_map *loader, const char *name,
     {
       /* The path may contain dynamic string tokens.  */
       realname = (loader
-		  ? expand_dynamic_string_token (loader, name, 0)
+		  ? expand_dynamic_string_token (loader, name)
 		  : __strdup (name));
       if (realname == NULL)
 	fd = -1;
