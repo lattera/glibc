@@ -21,18 +21,22 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <support/test-driver.h>
+#include <support/check.h>
+
 struct tests
 {
   const char *regex;
   const char *string;
   reg_syntax_t syntax;
   int retval;
-} tests[] = {
+};
+static const struct tests tests[] = {
 #define EGREP RE_SYNTAX_EGREP
 #define EGREP_NL (RE_SYNTAX_EGREP | RE_DOT_NEWLINE) & ~RE_HAT_LISTS_NOT_NEWLINE
-  { "a.b", "a\nb", EGREP, -1 },
+  { "a.b", "a\nb", EGREP, 0 },
   { "a.b", "a\nb", EGREP_NL, 0 },
-  { "a[^x]b", "a\nb", EGREP, -1 },
+  { "a[^x]b", "a\nb", EGREP, 0 },
   { "a[^x]b", "a\nb", EGREP_NL, 0 },
   /* While \S and \W are internally handled as [^[:space:]] and [^[:alnum:]_],
      RE_HAT_LISTS_NOT_NEWLINE did not make any difference, so ensure
@@ -42,33 +46,33 @@ struct tests
   { "a\\Wb", "a\nb", EGREP, 0 },
   { "a\\Wb", "a\nb", EGREP_NL, 0 }
 };
+static const size_t tests_size = sizeof (tests) / sizeof (tests[0]);
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct re_pattern_buffer r;
-  size_t i;
-  int ret = 0;
 
-  for (i = 0; i < sizeof (tests) / sizeof (tests[i]); ++i)
+  for (size_t i = 0; i < tests_size; i++)
     {
       re_set_syntax (tests[i].syntax);
       memset (&r, 0, sizeof (r));
-      if (re_compile_pattern (tests[i].regex, strlen (tests[i].regex), &r))
-	{
-	  printf ("re_compile_pattern %zd failed\n", i);
-	  ret = 1;
-	  continue;
-	}
+      const char *re = re_compile_pattern (tests[i].regex,
+					   strlen (tests[i].regex), &r);
+      TEST_VERIFY (re == NULL);
+      if (re != NULL)
+        continue;
+
       size_t len = strlen (tests[i].string);
       int rv = re_search (&r, tests[i].string, len, 0, len, NULL);
-      if (rv != tests[i].retval)
-	{
-	  printf ("re_search %zd unexpected value %d != %d\n",
-		  i, rv, tests[i].retval);
-	  ret = 1;
-	}
+      TEST_VERIFY (rv == tests[i].retval);
+      if (test_verbose > 0)
+        printf ("info: i=%zu rv=%d expected=%d\n", i, rv, tests[i].retval);
+
       regfree (&r);
     }
-  return ret;
+
+  return 0;
 }
+
+#include <support/test-driver.c>

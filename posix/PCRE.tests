@@ -1774,19 +1774,6 @@ No match
  0: abcabc
  1: abc
 
-/(a)|\1/
-    a
- 0: a
- 1: a
-    *** Failers
- 0: a
- 1: a
-    ab
- 0: a
- 1: a
-    x
-No match
-
 /abc/i
     ABC
  0: ABC

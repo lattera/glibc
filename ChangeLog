@@ -1,3 +1,21 @@
+2018-07-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23233]
+	[BZ #21163]
+	[BZ #18986]
+	[BZ #13762]
+	* posix/Makefile (tests): Add bug-regex37 and bug-regex38.
+	* posix/PCRE.tests: Remove invalid test.
+	* posix/bug-regex28.c: Fix expected values for used syntax.
+	* posix/bug-regex37.c: New file.
+	* posix/bug-regex38.c: Likewise.
+	* posix/regcomp.c: Sync with gnulib.
+	* posix/regex.c: Likewise.
+	* posix/regex.h: Likewise.
+	* posix/regex_internal.c: Likewise.
+	* posix/regex_internal.h: Likewise.
+	* posix/regexec.c: Likewise.
+
 2018-06-26  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #23308]
