@@ -1,3 +1,10 @@
+2017-12-19  Arnold D. Robbins  <arnold@skeeve.com>
+
+	* posix/regcomp.c: Fix spelling in comments.
+	* posix/regex.h: Likewise.
+	* posix/regex_internal.c: Likewise.
+	* posix/regexec.c: Likewise.
+
 2017-12-19  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #22377]
