@@ -1,5 +1,11 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	See this bug https://sourceware.org/bugzilla/show_bug.cgi?id=22898
+	* localedata/cmn_TW.UTF-8.in: Remove the lines which cannot
+	be sorted correctly at the moment because of a bug.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #22550] - es_ES locale (and other es_* locales): collation should
 	treat ñ as a primary different character, sync the collation
 	for Spanish with CLDR.
