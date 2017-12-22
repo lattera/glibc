@@ -1,3 +1,10 @@
+2017-12-22  Eric Blake  <ebb9@byu.net>
+
+	Avoid gcc warnings on cygwin
+	* posix/regex_internal.c (re_string_reconstruct) [!RE_ENABLE_I18N]:
+	* posix/regexec.c (check_arrival_add_next_nodes) [!RE_ENABLE_I18N]:
+	Avoid unused variable.
+
 2017-12-22  Florian Weimer  <fweimer@redhat.com>
 
 	* io/Makefile (routines): Add copy_file_range.
