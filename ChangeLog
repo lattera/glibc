@@ -1,3 +1,24 @@
+2017-12-22  Florian Weimer  <fweimer@redhat.com>
+
+	* io/Makefile (routines): Add copy_file_range.
+	(tests): Add tst-copy_file_range.
+	(tests-static, tests-internal): Add tst-copy_file_range-compat.
+	* io/Versions (GLIBC_2.27): Export copy_file_range.
+	* io/copy_file_range-compat.c: New file.
+	* io/copy_file_range.c: Likewise.
+	* io/tst-copy_file_range-compat.c: Likewise.
+	* io/tst-copy_file_range.c: Likewise.
+	* manual/llio.texi (Copying File Data): New section.
+	* posix/unistd.h [__USE_GNU] (copy_file_range): Declare.
+	* support/Makefile (libsupport-routines): Add support-xfstat,
+	xftruncate, xlseek.
+	* support/support-xfstat.c: New file.
+	* support/xftruncate.c: Likewise.
+	* support/xlseek.c: Likewise.
+	* support/xunistd.h (xfstat, xftruncate, xlseek): Declare.
+	* sysdeps/unix/sysv/linux/**.abilist: Update.
+	* sysdeps/unix/sysv/linux/copy_file_range.c: New file.
+
 2017-12-21  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Add

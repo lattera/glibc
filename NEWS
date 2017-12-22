@@ -61,6 +61,8 @@ Major new features:
   declares the functions pkey_alloc, pkey_free, pkey_mprotect, pkey_set,
   pkey_get.
 
+* The copy_file_range function was added.
+
 * Optimized memcpy, mempcpy, memmove, and memset for sparc M7.
 
 * The ldconfig utility now processes `include' directives using the C/POSIX

@@ -41,6 +41,7 @@ directly.)
 * Stream/Descriptor Precautions::       Precautions needed if you use both
                                          descriptors and streams.
 * Scatter-Gather::                      Fast I/O to discontinuous buffers.
+* Copying File Data::                   Copying data between files.
 * Memory-mapped I/O::                   Using files like memory.
 * Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
@@ -1351,6 +1352,93 @@ errors with a descriptor in small file mode.
 When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 32 bit machine this function is actually available under the name
 @code{pwritev2} and so transparently replaces the 32 bit interface.
+@end deftypefun
+
+@node Copying File Data
+@section Copying data between two files
+@cindex copying files
+@cindex file copy
+
+A special function is provided to copy data between two files on the
+same file system.  The system can optimize such copy operations.  This
+is particularly important on network file systems, where the data would
+otherwise have to be transferred twice over the network.
+
+Note that this function only copies file data, but not metadata such as
+file permissions or extended attributes.
+
+@deftypefun ssize_t copy_file_range (int @var{inputfd}, off64_t *@var{inputpos}, int @var{outputfd}, off64_t *@var{outputpos}, ssize_t @var{length}, unsigned int @var{flags})
+@standards{GNU, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+
+This function copies up to @var{length} bytes from the file descriptor
+@var{inputfd} to the file descriptor @var{outputfd}.
+
+The function can operate on both the current file position (like
+@code{read} and @code{write}) and an explicit offset (like @code{pread}
+and @code{pwrite}).  If the @var{inputpos} pointer is null, the file
+position of @var{inputfd} is used as the starting point of the copy
+operation, and the file position is advanced during it.  If
+@var{inputpos} is not null, then @code{*@var{inputpos}} is used as the
+starting point of the copy operation, and @code{*@var{inputpos}} is
+incremented by the number of copied bytes, but the file position remains
+unchanged.  Similar rules apply to @var{outputfd} and @var{outputpos}
+for the output file position.
+
+The @var{flags} argument is currently reserved and must be zero.
+
+The @code{copy_file_range} function returns the number of bytes copied.
+This can be less than the specified @var{length} in case the input file
+contains fewer remaining bytes than @var{length}, or if a read or write
+failure occurs.  The return value is zero if the end of the input file
+is encountered immediately.
+
+If no bytes can be copied, to report an error, @code{copy_file_range}
+returns the value @math{-1} and sets @code{errno}.  The following
+@code{errno} error conditions are specific to this function:
+
+@table @code
+@item EISDIR
+At least one of the descriptors @var{inputfd} or @var{outputfd} refers
+to a directory.
+
+@item EINVAL
+At least one of the descriptors @var{inputfd} or @var{outputfd} refers
+to a non-regular, non-directory file (such as a socket or a FIFO).
+
+The input or output positions before are after the copy operations are
+outside of an implementation-defined limit.
+
+The @var{flags} argument is not zero.
+
+@item EFBIG
+The new file size would exceed the process file size limit.
+@xref{Limits on Resources}.
+
+The input or output positions before are after the copy operations are
+outside of an implementation-defined limit.  This can happen if the file
+was not opened with large file support (LFS) on 32-bit machines, and the
+copy operation would create a file which is larger than what
+@code{off_t} could represent.
+
+@item EBADF
+The argument @var{inputfd} is not a valid file descriptor open for
+reading.
+
+The argument @var{outputfd} is not a valid file descriptor open for
+writing, or @var{outputfd} has been opened with @code{O_APPEND}.
+
+@item EXDEV
+The input and output files reside on different file systems.
+@end table
+
+In addition, @code{copy_file_range} can fail with the error codes
+which are used by @code{read}, @code{pread}, @code{write}, and
+@code{pwrite}.
+
+The @code{copy_file_range} function is a cancellation point.  In case of
+cancellation, the input location (the file position or the value at
+@code{*@var{inputpos}}) is indeterminate.
 @end deftypefun
 
 @node Memory-mapped I/O

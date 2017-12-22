@@ -52,7 +52,7 @@ routines :=								\
 	ftw ftw64 fts fts64 poll ppoll					\
 	posix_fadvise posix_fadvise64					\
 	posix_fallocate posix_fallocate64				\
-	sendfile sendfile64 \
+	sendfile sendfile64 copy_file_range 				\
 	utimensat futimens
 
 # These routines will be omitted from the libc shared object.
@@ -70,7 +70,13 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-symlinkat tst-linkat tst-readlinkat tst-mkdirat \
 		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5 \
 		   tst-posix_fallocate tst-posix_fallocate64 \
-		   tst-fts tst-fts-lfs tst-open-tmpfile
+		   tst-fts tst-fts-lfs tst-open-tmpfile \
+		   tst-copy_file_range \
+
+# This test includes the compat implementation of copy_file_range,
+# which uses internal, unexported libc functions.
+tests-static += tst-copy_file_range-compat
+tests-internal += tst-copy_file_range-compat
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)ftwtest.out

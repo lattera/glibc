@@ -111,3 +111,7 @@
 #if __LINUX_KERNEL_VERSION >= 0x040400
 # define __ASSUME_MLOCK2 1
 #endif
+
+#if __LINUX_KERNEL_VERSION >= 0x040500
+# define __ASSUME_COPY_FILE_RANGE 1
+#endif

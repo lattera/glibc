@@ -36,6 +36,7 @@ libsupport-routines = \
   oom_error \
   resolv_test \
   set_fortify_handler \
+  support-xfstat \
   support-xstat \
   support_become_root \
   support_can_chroot \
@@ -73,8 +74,10 @@ libsupport-routines = \
   xfclose \
   xfopen \
   xfork \
+  xftruncate \
   xgetsockname \
   xlisten \
+  xlseek \
   xmalloc \
   xmemstream \
   xmkdir \
