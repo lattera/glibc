@@ -2484,7 +2484,7 @@ in nearly all aspects but handles wide character strings.
 The @code{wcstol} function was introduced in @w{Amendment 1} of @w{ISO C90}.
 @end deftypefun
 
-@deftypefun {unsigned long int} strtoul (const char *retrict @var{string}, char **restrict @var{tailptr}, int @var{base})
+@deftypefun {unsigned long int} strtoul (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 @standards{ISO, stdlib.h}
 @safety{@prelim{}@mtsafe{@mtslocale{}}@assafe{}@acsafe{}}
 The @code{strtoul} (``string-to-unsigned-long'') function is like

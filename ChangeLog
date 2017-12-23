@@ -1,5 +1,8 @@
 2017-12-23  Aurelien Jarno <aurelien@aurel32.net>
 
+	[BZ #21161]
+	* manual/arith.texi (strtoul): Fix a typo.
+
 	[BZ #22596]
 	* manual/arith.texi (finite): Fix the description of the return
 	value.
