@@ -467,8 +467,8 @@ function for some reason, you can write
 @deftypefunx int finitel (long double @var{x})
 @standards{BSD, math.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This function returns a nonzero value if @var{x} is finite or a ``not a
-number'' value, and zero otherwise.
+This function returns a nonzero value if @var{x} is neither infinite nor
+a ``not a number'' value, and zero otherwise.
 @end deftypefun
 
 @strong{Portability Note:} The functions listed in this section are BSD
