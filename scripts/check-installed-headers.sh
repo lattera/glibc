@@ -84,6 +84,11 @@ for header in "$@"; do
         (sys/elf.h)
             continue;;
 
+        # libio.h and _G_config.h are deprecation stubs containing #warnings
+        # to use stdio.h instead.
+        (libio.h | _G_config.h)
+            continue;;
+
 	# sys/sysctl.h is unsupported for x32.
 	(sys/sysctl.h)
             case "$is_x32" in

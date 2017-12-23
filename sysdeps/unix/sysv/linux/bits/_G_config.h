@@ -1,8 +1,12 @@
 /* This file is needed by libio to define various configuration parameters.
    These are always the same in the GNU C library.  */
 
-#ifndef _G_config_h
-#define _G_config_h 1
+#ifndef _BITS_G_CONFIG_H
+#define _BITS_G_CONFIG_H 1
+
+#if !defined _BITS_LIBIO_H && !defined _G_CONFIG_H
+# error "Never include <bits/_G_config.h> directly; use <stdio.h> instead."
+#endif
 
 /* Define types for libio in terms of the standard internal type names.  */
 
@@ -47,6 +51,7 @@ typedef union
 #define _G_va_list __gnuc_va_list
 
 #define _G_HAVE_MMAP 1
+#define _G_HAVE_MREMAP 1
 
 #define _G_IO_IO_FILE_VERSION 0x20001
 
@@ -55,4 +60,4 @@ typedef union
 
 #define _G_BUFSIZ 8192
 
-#endif	/* _G_config.h */
+#endif	/* bits/_G_config.h */

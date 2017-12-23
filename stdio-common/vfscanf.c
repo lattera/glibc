@@ -72,7 +72,6 @@
 
 #include <locale/localeinfo.h>
 #include <libioP.h>
-#include <libio.h>
 
 #undef va_list
 #define va_list	_IO_va_list

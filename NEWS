@@ -110,6 +110,17 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * The tilepro-*-linux-gnu configuration is no longer supported.
 
+* The nonstandard header files <libio.h> and <_G_config.h> are deprecated
+  and will be removed in a future release.  Software that is still using
+  either header should be updated to use standard <stdio.h> interfaces
+  instead.
+
+  libio.h was originally the header for a set of supported GNU extensions,
+  but they have not been maintained as such in many years, they are now
+  standing in the way of improvements to stdio, and we don't think there are
+  any remaining external users.  _G_config.h was never intended for public
+  use, but predates the bits convention.
+
 Changes to build and runtime requirements:
 
 * bison version 2.7 or later is required to generate code in the 'intl'

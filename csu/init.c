@@ -18,7 +18,7 @@
 
 #if defined __GNUC__ && __GNUC__ >= 2
 
-#include <_G_config.h>
+#include <stdio.h>
 
 /* This records which stdio is linked against in the application. */
 const int _IO_stdin_used = _G_IO_IO_FILE_VERSION;

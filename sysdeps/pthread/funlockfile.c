@@ -18,7 +18,6 @@
 
 #include <pthread.h>
 #include <stdio.h>
-#include <libio.h>
 #include <stdio-lock.h>
 
 

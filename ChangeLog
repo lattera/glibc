@@ -1,3 +1,30 @@
+2017-12-24  Zack Weinberg  <zackw@panix.com>
+
+	* libio/libio.h, libio/_G_config.h: New stub headers which issue a
+	deprecation warning and then include <bits/libio.h>, <bits/_G_config.h>
+	respectively.
+	* libio/libio.h: Rename the original version of this file to
+	libio/bits/libio.h.  Error out if not included by stdio.h or the
+	stub libio.h.
+	* include/libio.h: Move to include/bits.  Forward to libio/bits/libio.h.
+	* sysdeps/generic/_G_config.h: Move to top-level bits/.  Error out
+	if not included by bits/libio.h or the stub _G_config.h.
+	* sysdeps/unix/sysv/linux/_G_config.h: Move to
+	sysdeps/unix/sysv/linux/bits.  Error out if not included by
+	bits/libio.h or the stub _G_config.h.
+	* libio/stdio.h: Include bits/libio.h, not libio.h.
+	* libio/Makefile: Install bits/libio.h and bits/_G_config.h as
+	well as libio.h and _G_config.h.
+
+	* csu/init.c, libio/fmemopen.c, libio/iolibio.h, libio/oldfmemopen.c
+	* libio/strfile.h, stdio-common/vfscanf.c
+	* sysdeps/pthread/flockfile.c, sysdeps/pthread/funlockfile.c
+	Include stdio.h, not _G_config.h nor libio.h.
+	* libio/iofgetpos.c: Also rename fgetpos64 out of the way.
+	* libio/iofsetpos.c: Also rename fsetpos64 out of the way.
+
+	* scripts/check-installed-headers.sh: Skip libio.h and _G_config.h.
+
 2017-12-23  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22347]

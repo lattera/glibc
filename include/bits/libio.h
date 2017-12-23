@@ -1,7 +1,7 @@
 #if !defined _ISOMAC && defined _IO_MTSAFE_IO
 # include <stdio-lock.h>
 #endif
-#include <libio/libio.h>
+#include <libio/bits/libio.h>
 
 #ifndef _ISOMAC
 #ifndef _LIBC_LIBIO_H

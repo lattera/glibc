@@ -29,11 +29,13 @@
    complain about the mismatch when we do the alias below.  */
 #define _IO_new_fgetpos64 __renamed__IO_new_fgetpos64
 #define _IO_fgetpos64 __renamed__IO_fgetpos64
+#define fgetpos64 __renamed_fgetpos64
 
 #include "libioP.h"
 
 #undef _IO_new_fgetpos64
 #undef _IO_fgetpos64
+#undef fgetpos64
 
 #include <errno.h>
 #include <stdlib.h>

@@ -29,11 +29,13 @@
    complain about the mismatch when we do the alias below.  */
 #define _IO_new_fsetpos64 __renamed__IO_new_fsetpos64
 #define _IO_fsetpos64 __renamed__IO_fsetpos64
+#define fsetpos64 __renamed_fsetpos64
 
 #include <libioP.h>
 
 #undef _IO_new_fsetpos64
 #undef _IO_fsetpos64
+#undef fsetpos64
 
 #include <errno.h>
 #include <shlib-compat.h>

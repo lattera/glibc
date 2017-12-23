@@ -1,6 +1,5 @@
-/* Copyright (C) 2002-2017 Free Software Foundation, Inc.
+/* Copyright (C) 2017 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +15,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdio-lock.h>
+#ifndef _G_CONFIG_H
+#define _G_CONFIG_H 1
 
+#warning "<_G_config.h> is deprecated; use <stdio.h> instead."
 
-void
-__flockfile (FILE *stream)
-{
-  stream->_flags2 |= _IO_FLAGS2_NEED_LOCK;
-  _IO_lock_lock (*stream->_lock);
-}
-strong_alias (__flockfile, _IO_flockfile)
-weak_alias (__flockfile, flockfile)
+#include <bits/_G_config.h>
+
+#endif

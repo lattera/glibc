@@ -38,7 +38,7 @@ __BEGIN_DECLS
 
 #define _STDIO_USES_IOSTREAM
 
-#include <libio.h>
+#include <bits/libio.h>
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # ifdef __GNUC__

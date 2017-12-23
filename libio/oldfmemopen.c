@@ -71,7 +71,6 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_22)
 
 #include <errno.h>
-#include <libio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
