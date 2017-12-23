@@ -1,3 +1,9 @@
+2017-12-23  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22347]
+	* stdlib/getrandom.c (getrandom): Fix comment.
+	* sysdeps/unix/sysv/linux/getrandom.c (getrandom): Likewise.
+
 2017-12-23  Aurelien Jarno <aurelien@aurel32.net>
 
 	[BZ #21161]

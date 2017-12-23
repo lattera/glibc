@@ -19,8 +19,8 @@
 #include <sys/random.h>
 #include <errno.h>
 
-/* Write LENGTH bytes of randomness starting at BUFFER.  Return the
-   number of bytes written, or -1 on error.  */
+/* Write up to LENGTH bytes of randomness starting at BUFFER.
+   Return the number of bytes written, or -1 on error.  */
 ssize_t
 getrandom (void *buffer, size_t length, unsigned int flags)
 {

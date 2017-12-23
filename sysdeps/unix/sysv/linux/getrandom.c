@@ -22,8 +22,8 @@
 #include <sysdep-cancel.h>
 
 #ifdef __NR_getrandom
-/* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
-   success and -1 on failure.  */
+/* Write up to LENGTH bytes of randomness starting at BUFFER.
+   Return the number of bytes written, or -1 on error.  */
 ssize_t
 getrandom (void *buffer, size_t length, unsigned int flags)
 {
