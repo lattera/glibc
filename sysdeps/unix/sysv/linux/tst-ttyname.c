@@ -253,7 +253,14 @@ do_in_chroot_1 (int (*cb)(const char *, int))
   /* Open the PTS that we'll be testing on.  */
   int master;
   char *slavename;
-  VERIFY ((master = posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK)) >= 0);
+  master = posix_openpt (O_RDWR|O_NOCTTY|O_NONBLOCK);
+  if (master < 0)
+    {
+      if (errno == ENOENT)
+	FAIL_UNSUPPORTED ("posix_openpt: %m");
+      else
+	FAIL_EXIT1 ("posix_openpt: %m");
+    }
   VERIFY ((slavename = ptsname (master)));
   VERIFY (unlockpt (master) == 0);
   if (strncmp (slavename, "/dev/pts/", 9) != 0)

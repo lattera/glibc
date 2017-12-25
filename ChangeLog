@@ -1,3 +1,8 @@
+2018-01-08  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* sysdeps/unix/sysv/linux/tst-ttyname.c (do_in_chroot_1): Skip the
+	test instead of failing in case of ENOENT returned by posix_openpt.
+
 2018-01-08  Florian Weimer  <fweimer@redhat.com>
 
 	resolv: Support binary labels in test framework.
