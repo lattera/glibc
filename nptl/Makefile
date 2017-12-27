@@ -612,6 +612,10 @@ else
 librt = $(common-objpfx)rt/librt.a
 endif
 
+# `make check' sometimes triggers a rebuild of librt.so using this Makefile,
+# which ignores librt's dependence on libpthread
+$(common-objpfx)rt/librt.so: $(shared-thread-library)
+
 $(objpfx)tst-cancel17: $(librt)
 $(objpfx)tst-cancelx17: $(librt)
 $(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
