@@ -14,6 +14,9 @@
 	(R_RISCV_TLS_TPREL64): Likewise.
 	* Makerules (make-link-multidir): Make directories before linking into
 	them.
+	* sysdeps/unix/sysv/linux/dl-vdso.h (VDSO_NAME_LINUX_4_15): New
+	define.
+	(VDSO_HASH_LINUX_4_15): Likewise.
 
 2018-01-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
