@@ -6,6 +6,22 @@
 	* config.h.in: Regenerate.
 	* manual/platform.texi: Add RISC-V documenation for
 	__riscv_flush_icache.
+	* sysdeps/riscv/__longjmp.S: New file.
+	* sysdeps/riscv/backtrace.c: Likewise.
+	* sysdeps/riscv/bits/endian.h: Likewise.
+	* sysdeps/riscv/bits/setjmp.h: Likewise.
+	* sysdeps/riscv/bits/wordsize.h: Likewise.
+	* sysdeps/riscv/bsd-_setjmp.c: Likewise.
+	* sysdeps/riscv/bsd-setjmp.c: Likewise.
+	* sysdeps/riscv/dl-trampoline.S: Likewise.
+	* sysdeps/riscv/gccframe.h: Likewise.
+	* sysdeps/riscv/jmpbuf-offsets.h: Likewise.
+	* sysdeps/riscv/jmpbuf-unwind.h: Likewise.
+	* sysdeps/riscv/machine-gmon.h: Likewise.
+	* sysdeps/riscv/memusage.h: Likewise.
+	* sysdeps/riscv/setjmp.S: Likewise.
+	* sysdeps/riscv/sys/asm.h: Likewise.
+	* sysdeps/riscv/tls-macros.h: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
