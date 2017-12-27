@@ -66,7 +66,7 @@ enum __ptrace_request
   PTRACE_KILL = 8,
 #define PT_KILL PTRACE_KILL
 
-  /* Single step the process. */
+  /* Single step the process.  */
   PTRACE_SINGLESTEP = 9,
 #define PT_STEP PTRACE_SINGLESTEP
 
@@ -80,7 +80,7 @@ enum __ptrace_request
 
   PTRACE_GET_THREAD_AREA = 22,
 
-  /* Continue and stop at the next (return from) syscall.  */
+  /* Continue and stop at the next entry to or return from syscall.  */
   PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
 
@@ -127,15 +127,19 @@ enum __ptrace_request
   PTRACE_LISTEN = 0x4208,
 #define PTRACE_LISTEN PTRACE_LISTEN
 
+  /* Retrieve siginfo_t structures without removing signals from a queue.  */
   PTRACE_PEEKSIGINFO = 0x4209,
 #define PTRACE_PEEKSIGINFO PTRACE_PEEKSIGINFO
 
+  /* Get the mask of blocked signals.  */
   PTRACE_GETSIGMASK = 0x420a,
 #define PTRACE_GETSIGMASK PTRACE_GETSIGMASK
 
+  /* Change the mask of blocked signals.  */
   PTRACE_SETSIGMASK = 0x420b,
 #define PTRACE_SETSIGMASK PTRACE_SETSIGMASK
 
+  /* Get seccomp BPF filters.  */
   PTRACE_SECCOMP_GET_FILTER = 0x420c
 #define PTRACE_SECCOMP_GET_FILTER PTRACE_SECCOMP_GET_FILTER
 };

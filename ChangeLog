@@ -1,5 +1,16 @@
 2017-12-29  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* sysdeps/unix/sysv/linux/sys/ptrace.h (__ptrace_request): Add comments
+	about PTRACE_PEEKSIGINFO, PTRACE_GETSIGMASK, PTRACE_SETSIGMASK, and
+	PTRACE_SECCOMP_GET_FILTER.  Update comments about PTRACE_SINGLESTEP
+	and PTRACE_SYSCALL.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h: Likewise.
+
 	* sysdeps/unix/sysv/linux/sys/ptrace.h: Include <bits/ptrace-shared.h>.
 	(__ptrace_setoptions, __ptrace_eventcodes, __ptrace_peeksiginfo_args,
 	__ptrace_peeksiginfo_flags, ptrace): Move to ...

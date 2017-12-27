@@ -1,5 +1,6 @@
 /* `ptrace' debugger support interface.  Linux version.
    Copyright (C) 1996-2017 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -65,29 +66,28 @@ enum __ptrace_request
   PTRACE_KILL = 8,
 #define PT_KILL PTRACE_KILL
 
-  /* Single step the process.
-     This is not supported on all machines.  */
+  /* Single step the process.  */
   PTRACE_SINGLESTEP = 9,
 #define PT_STEP PTRACE_SINGLESTEP
 
   /* Get all general purpose registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_GETREGS = 12,
+  PTRACE_GETREGS = 12,
 #define PT_GETREGS PTRACE_GETREGS
 
   /* Set all general purpose registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_SETREGS = 13,
+  PTRACE_SETREGS = 13,
 #define PT_SETREGS PTRACE_SETREGS
 
   /* Get all floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_GETFPREGS = 14,
+  PTRACE_GETFPREGS = 14,
 #define PT_GETFPREGS PTRACE_GETFPREGS
 
   /* Set all floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_SETFPREGS = 15,
+  PTRACE_SETFPREGS = 15,
 #define PT_SETFPREGS PTRACE_SETFPREGS
 
   /* Attach to a process that is already running. */
@@ -100,15 +100,15 @@ enum __ptrace_request
 
   /* Get all extended floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_GETFPXREGS = 18,
+  PTRACE_GETFPXREGS = 18,
 #define PT_GETFPXREGS PTRACE_GETFPXREGS
 
   /* Set all extended floating point registers used by a processes.
      This is not supported on all machines.  */
-   PTRACE_SETFPXREGS = 19,
+  PTRACE_SETFPXREGS = 19,
 #define PT_SETFPXREGS PTRACE_SETFPXREGS
 
-  /* Continue and stop at the next (return from) syscall.  */
+  /* Continue and stop at the next entry to or return from syscall.  */
   PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
 
@@ -149,15 +149,19 @@ enum __ptrace_request
   PTRACE_LISTEN = 0x4208,
 #define PTRACE_LISTEN PTRACE_LISTEN
 
+  /* Retrieve siginfo_t structures without removing signals from a queue.  */
   PTRACE_PEEKSIGINFO = 0x4209,
 #define PTRACE_PEEKSIGINFO PTRACE_PEEKSIGINFO
 
+  /* Get the mask of blocked signals.  */
   PTRACE_GETSIGMASK = 0x420a,
 #define PTRACE_GETSIGMASK PTRACE_GETSIGMASK
 
+  /* Change the mask of blocked signals.  */
   PTRACE_SETSIGMASK = 0x420b,
 #define PTRACE_SETSIGMASK PTRACE_SETSIGMASK
 
+  /* Get seccomp BPF filters.  */
   PTRACE_SECCOMP_GET_FILTER = 0x420c
 #define PTRACE_SECCOMP_GET_FILTER PTRACE_SECCOMP_GET_FILTER
 };
