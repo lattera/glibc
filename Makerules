@@ -1081,6 +1081,7 @@ mv -f $@.new $@
 endef
 define make-link-multidir
 $(patsubst %/,cd %,$(objpfx)); \
+  $(addprefix $(abspath $(..)scripts/mkinstalldirs) ,$(dir $(multidir))); \
   $(LN_S) . $(multidir) 2> /dev/null; \
   test -L $(multidir)
 endef
