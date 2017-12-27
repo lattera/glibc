@@ -41,13 +41,13 @@ Major new features:
   process aborts as the result of assertion failures.
 
 * On platforms where long double has the IEEE binary128 format (aarch64,
-  alpha, mips64, s390 and sparc), the math library now implements _Float128
-  interfaces for that type, as defined by ISO/IEC TS 18661-3:2015.  These
-  are the same interfaces added in version 2.26 for some platforms where
+  alpha, mips64, riscv, s390 and sparc), the math library now implements
+  _Float128 interfaces for that type, as defined by ISO/IEC TS 18661-3:2015.
+  These are the same interfaces added in version 2.26 for some platforms where
   this format is supported but is not the format of long double.
 
 * On platforms with support for _Float64x (aarch64, alpha, i386, ia64,
-  mips64, powerpc64le, s390, sparc and x86_64), the math library now
+  mips64, powerpc64le, riscv, s390, sparc and x86_64), the math library now
   implements interfaces for that type, as defined by ISO/IEC TS
   18661-3:2015.  These are corresponding interfaces to those supported for
   _Float128.
@@ -97,6 +97,14 @@ Major new features:
   This feature will cause existing statically compiled applications
   to fail to load locales and fall back to the builtin C/POSIX locales.
   See notes below for other changes affecting compatibility.
+
+* Support for the RISC-V ISA running on Linux has been added.  This port
+  requires at least binutils-2.30, gcc-7.3.0, and linux-4.15; and is supported
+  for the following ISA and ABI pairs:
+
+    - rv64imac lp64
+    - rv64imafdc lp64
+    - rv64imafdc lp64d
 
 Deprecated and removed features, and other changes affecting compatibility:
 
