@@ -1,3 +1,18 @@
+2018-01-06  Palmer Dabbelt  <palmer@sifive.com>
+
+	* elf/elf.h (R_RISCV_NONE): New define.
+	(R_RISCV_32): Likewise.
+	(R_RISCV_64): Likewise.
+	(R_RISCV_RELATIVE): Likewise.
+	(R_RISCV_COPY): Likewise.
+	(R_RISCV_JUMP_SLOT): Likewise.
+	(R_RISCV_TLS_DTPMOD32): Likewise.
+	(R_RISCV_TLS_DTPMOD64): Likewise.
+	(R_RISCV_TLS_DTPREL32): Likewise.
+	(R_RISCV_TLS_DTPREL64): Likewise.
+	(R_RISCV_TLS_TPREL32): Likewise.
+	(R_RISCV_TLS_TPREL64): Likewise.
+
 2018-01-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/jmp_buf-macros.h: New file.
