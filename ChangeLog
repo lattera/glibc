@@ -1,3 +1,8 @@
+2018-01-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* elf/dl-load.c (decompose_rpath): Check for rpath emptiness before
+	making a copy of it.
+
 2018-01-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* manual/texinfo.tex: Update to version 2017-12-26.21 with

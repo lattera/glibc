@@ -499,7 +499,6 @@ decompose_rpath (struct r_search_path_struct *sps,
 {
   /* Make a copy we can work with.  */
   const char *where = l->l_name;
-  char *copy;
   char *cp;
   struct r_search_path_elem **result;
   size_t nelems;
@@ -538,20 +537,19 @@ decompose_rpath (struct r_search_path_struct *sps,
       while (*inhp != '\0');
     }
 
+  /* Ignore empty rpaths.  */
+  if (*rpath == '\0')
+    {
+      sps->dirs = (struct r_search_path_elem **) -1;
+      return false;
+    }
+
   /* Make a writable copy.  */
-  copy = __strdup (rpath);
+  char *copy = __strdup (rpath);
   if (copy == NULL)
     {
       errstring = N_("cannot create RUNPATH/RPATH copy");
       goto signal_error;
-    }
-
-  /* Ignore empty rpaths.  */
-  if (*copy == 0)
-    {
-      free (copy);
-      sps->dirs = (struct r_search_path_elem **) -1;
-      return false;
     }
 
   /* Count the number of necessary elements in the result array.  */
