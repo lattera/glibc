@@ -47,20 +47,20 @@ However, a properly written signal handler saves and restores the value
 of @code{errno}, so you generally do not need to worry about this
 possibility except when writing signal handlers.
 
-The initial value of @code{errno} at program startup is zero.  Many
-library functions are guaranteed to set it to certain nonzero values
-when they encounter certain kinds of errors.  These error conditions are
-listed for each function.  These functions do not change @code{errno}
-when they succeed; thus, the value of @code{errno} after a successful
-call is not necessarily zero, and you should not use @code{errno} to
-determine @emph{whether} a call failed.  The proper way to do that is
-documented for each function.  @emph{If} the call failed, you can
-examine @code{errno}.
+The initial value of @code{errno} at program startup is zero.  In many
+cases, when a library function encounters an error, it will set
+@code{errno} to a non-zero value to indicate what specific error
+condition occurred.  The documentation for each function lists the
+error conditions that are possible for that function.  Not all library
+functions use this mechanism; some return an error code directly,
+instead.
 
-Many library functions can set @code{errno} to a nonzero value as a
-result of calling other library functions which might fail.  You should
-assume that any library function might alter @code{errno} when the
-function returns an error.
+@strong{Warning:} Many library functions may set @code{errno} to some
+meaningless non-zero value even if they did not encounter any errors,
+and even if they return error codes directly.  Therefore, it is
+usually incorrect to check @emph{whether} an error occurred by
+inspecting the value of @code{errno}.  The proper way to check for
+error is documented for each function.
 
 @strong{Portability Note:} @w{ISO C} specifies @code{errno} as a
 ``modifiable lvalue'' rather than as a variable, permitting it to be
