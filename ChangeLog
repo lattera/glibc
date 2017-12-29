@@ -1,5 +1,8 @@
 2018-01-01  Dmitry V. Levin  <ldv@altlinux.org>
 
+	[BZ #22433]
+	* sysdeps/unix/sysv/linux/arm/sys/ptrace.h: New file.
+
 	* elf/dl-load.c (decompose_rpath): Check for rpath emptiness before
 	making a copy of it.
 
