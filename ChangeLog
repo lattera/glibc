@@ -1,3 +1,10 @@
+2018-02-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22433]
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h (__ptrace_request):
+	Remove arm-specific PTRACE_GET_THREAD_AREA, PTRACE_GETHBPREGS,
+	and PTRACE_SETHBPREGS.
+
 2018-02-10  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #22830]

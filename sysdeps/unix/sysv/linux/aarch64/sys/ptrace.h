@@ -78,17 +78,9 @@ enum __ptrace_request
   PTRACE_DETACH = 17,
 #define PT_DETACH PTRACE_DETACH
 
-  PTRACE_GET_THREAD_AREA = 22,
-
   /* Continue and stop at the next entry to or return from syscall.  */
   PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
-
-  /* Get all hardware breakpoint registers.  */
-  PTRACE_GETHBPREGS = 29,
-
-  /* Set all hardware breakpoint registers.  */
-  PTRACE_SETHBPREGS = 30,
 
   /* Set ptrace filter options.  */
   PTRACE_SETOPTIONS = 0x4200,
