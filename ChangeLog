@@ -1,3 +1,9 @@
+2017-12-29  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22611]
+	* malloc/tst-realloc.c (do_test): Remove the test checking that errno
+	is unchanged on success.
+
 2017-12-27  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* elf/dl-dst.h (DL_DST_COUNT): Remove is_path argument, all callers

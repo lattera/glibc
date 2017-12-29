@@ -66,10 +66,6 @@ do_test (void)
   if (p == NULL)
     merror ("realloc (NULL, 10) failed.");
 
-  /* errno should be clear on success (POSIX).  */
-  if (p != NULL && save != 0)
-    merror ("errno is set but should not be");
-
   free (p);
 
   p = calloc (20, 1);
