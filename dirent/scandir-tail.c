@@ -53,16 +53,14 @@ SCANDIR_TAIL (DIR *dp,
         {
           int selected = (*select) (d);
 
-	  /* The SELECT function might have changed errno.  It was
-	     zero before and it need to be again to make the later
-	     tests work.  */
+	  /* The SELECT function might have set errno to non-zero on
+	     success.  It was zero before and it needs to be again to
+	     make the later tests work.  */
 	  __set_errno (0);
 
           if (!selected)
             continue;
         }
-      else
-        __set_errno (0);
 
       if (__glibc_unlikely (c.cnt == vsize))
         {
@@ -81,6 +79,11 @@ SCANDIR_TAIL (DIR *dp,
       if (vnew == NULL)
         break;
       v[c.cnt++] = (DIRENT_TYPE *) memcpy (vnew, d, dsize);
+
+      /* Ignore errors from readdir, malloc or realloc.  These functions
+	 might have set errno to non-zero on success.  It was zero before
+	 and it needs to be again to make the latter tests work.  */
+      __set_errno (0);
     }
 
   if (__glibc_likely (errno == 0))

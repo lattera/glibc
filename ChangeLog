@@ -1,3 +1,9 @@
+2017-12-29  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #17804]
+	* dirent/scandir-tail.c (SCANDIR_TAIL): Move __set_errno (0) at the
+	end of the loop. Improve comments.
+
 2017-12-29  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #22615]
