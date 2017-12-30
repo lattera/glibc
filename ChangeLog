@@ -1,3 +1,13 @@
+2017-12-30  Aurelien Jarno  <aurelien@aurel32.net>
+	    Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22625]
+	* elf/dl-load.c (fillin_rpath): Check for empty tokens before dynamic
+	string token expansion. Check for NULL pointer or empty string possibly
+	returned by expand_dynamic_string_token.
+	(decompose_rpath): Check for empty path after dynamic string
+	token expansion.
+
 2017-12-29  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22433]
