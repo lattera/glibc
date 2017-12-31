@@ -16,9 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _IO_STDIO_H
+#ifndef _BITS_LIBIO_LDBL_H
+#define _BITS_LIBIO_LDBL_H 1
+
+#ifndef _BITS_LIBIO_H
 # error "Never include <bits/libio-ldbl.h> directly; use <libio.h> instead."
 #endif
 
 __LDBL_REDIR_DECL (_IO_vfscanf)
 __LDBL_REDIR_DECL (_IO_vfprintf)
+
+#endif

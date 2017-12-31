@@ -1,3 +1,8 @@
+2017-12-31  Zack Weinberg  <zackw@panix.com>
+
+	* libio/bits/libio-ldbl.h: Correct check for improper
+	inclusion.  Add own multiple include guard.
+
 2017-12-30  Aurelien Jarno  <aurelien@aurel32.net>
 	    Dmitry V. Levin  <ldv@altlinux.org>
 
