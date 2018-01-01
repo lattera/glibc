@@ -1,5 +1,5 @@
 /* Check for GLOB_TIDLE heap allocation issues (bugs 22320, 22325, 22332).
-   Copyright (C) 2017 Free Software Foundation, Inc.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

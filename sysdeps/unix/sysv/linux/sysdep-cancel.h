@@ -1,5 +1,5 @@
 /* Single-thread optimization definitions.  Linux version.
-   Copyright (C) 2017 Free Software Foundation, Inc.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

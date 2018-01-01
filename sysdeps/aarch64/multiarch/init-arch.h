@@ -1,6 +1,6 @@
 /* Define INIT_ARCH so that midr is initialized before use by IFUNCs.
    This file is part of the GNU C Library.
-   Copyright (C) 2017 Free Software Foundation, Inc.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

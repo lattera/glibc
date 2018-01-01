@@ -1,5 +1,5 @@
 /* Forward __nis_hash calls to __nss_hash, for ABI compatibility.
-   Copyright (c) 2017 Free Software Foundation, Inc.
+   Copyright (c) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
