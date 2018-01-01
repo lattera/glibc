@@ -23,7 +23,7 @@
 
 static const char banner[] =
 "Native POSIX Threads Library\n\
-Copyright (C) 2017 Free Software Foundation, Inc.\n\
+Copyright (C) 2018 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n"
