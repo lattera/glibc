@@ -1,5 +1,11 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* gen-locales.mk: Make test files which contain @ modifiers in their
+	name work.
+	* localedata/gen-locale.sh: Likewise.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* posix/tst-fnmatch.input: Fix results for range expressions
 	for non C locales.
 	* posix/tst-regexloc.c: Do not use a range expression for

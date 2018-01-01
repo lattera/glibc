@@ -49,7 +49,8 @@ generate_locale ()
 
 locfile=`echo $locfile|sed 's|.*/\([^/]*/LC_CTYPE\)|\1|'`
 locale=`echo $locfile|sed 's|\([^.]*\)[.].*/LC_CTYPE|\1|'`
-charmap=`echo $locfile|sed 's|[^.]*[.]\(.*\)/LC_CTYPE|\1|'`
+charmap=`echo $locfile|sed 's|[^.]*[.]\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\1|'`
+modifier=`echo $locfile|sed 's|[^.]*[.]\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\2|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
 
@@ -73,4 +74,4 @@ if [ "$charmap_real" = 'SHIFT_JIS' ] \
   flags="$flags --no-warnings=ascii"
 fi
 
-generate_locale $charmap_real $locale $locale.$charmap "$flags"
+generate_locale $charmap_real $locale$modifier $locale.$charmap$modifier "$flags"

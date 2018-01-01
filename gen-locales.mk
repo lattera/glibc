@@ -1,8 +1,8 @@
 # defines target $(gen-locales) that generates the locales given in $(LOCALES)
 
-LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
+LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^@ ]*\(@[^ ]*\)\?/\1\2/g')
 CHARMAPS := $(shell echo "$(LOCALES)" | \
-		    sed -e 's/[^ .]*[.]\([^ ]*\)/\1/g' -e s/SJIS/SHIFT_JIS/g)
+		    sed -e 's/[^ .]*[.]\([^@ ]*\)\(@[^@ ]*\)*/\1/g' -e s/SJIS/SHIFT_JIS/g)
 CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
 gen-locales := $(addprefix $(common-objpfx)localedata/,$(CTYPE_FILES))
 
