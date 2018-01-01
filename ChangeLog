@@ -1,3 +1,11 @@
+2018-01-12  Rafal Luzynski <digitalfreak@lingonborough.com>
+	    Egmont Koblinger  <egmont@gmail.com>
+
+	[BZ #22657]
+	* localedata/locales/hu_HU (d_t_fmt): Avoid a leading space
+	before the day number which may produce a double space.
+	(date_fmt): Likewise.
+
 2018-01-12  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/s390/fpu/feholdexcpt.c (__feholdexcept): Call __fegetenv

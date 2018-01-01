@@ -544,12 +544,12 @@ mon     "janu<U00E1>r";/
         "okt<U00F3>ber";/
         "november";/
         "december"
-d_t_fmt "%Y. %b. %e., %A, %H:%M:%S %Z"
+d_t_fmt "%Y. %b. %-e., %A, %H:%M:%S %Z"
 d_fmt   "%Y-%m-%d"
 t_fmt   "%H:%M:%S"
 am_pm   "";""
 t_fmt_ampm "%H:%M:%S"
-date_fmt "%Y. %b. %e., %A, %H:%M:%S %Z"
+date_fmt "%Y. %b. %-e., %A, %H:%M:%S %Z"
 week     7;19971130;4
 first_weekday	2
 END LC_TIME
