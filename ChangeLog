@@ -1,3 +1,11 @@
+2018-01-02  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22660]
+	* sysdeps/alpha/fpu/s_fmax.S: Remove file.
+	* sysdeps/alpha/fpu/s_fmaxf.S: Likewise.
+	* sysdeps/alpha/fpu/s_fmin.S: Likewise.
+	* sysdeps/alpha/fpu/s_fminf.S: Likewise.
+
 2018-01-01  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22433]
