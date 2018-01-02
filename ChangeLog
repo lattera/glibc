@@ -1,5 +1,7 @@
 2018-01-02  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/powerpc/nofpu/libm-test-ulps: Update.
+
 	* sysdeps/arm/libm-test-ulps: Update.
 
 	* math/Makefile (run-regen-ulps): Add $(objpfx) to test name here.
