@@ -1,3 +1,7 @@
+2018-01-02  Florian Weimer  <fweimer@redhat.com>
+
+	* misc/tst-pselect.c: Add copyright header.
+
 2018-01-02  Aurelien Jarno <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: Fix a typo in the
