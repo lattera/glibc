@@ -1,3 +1,8 @@
+2018-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips32/libm-test-ulps: Update.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+
 2018-01-02  Florian Weimer  <fweimer@redhat.com>
 
 	* misc/tst-pselect.c: Add copyright header.

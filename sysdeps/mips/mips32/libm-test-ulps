@@ -679,9 +679,9 @@ ifloat: 2
 
 Function: Real part of "clog10_downward":
 double: 5
-float: 4
+float: 5
 idouble: 5
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "clog10_downward":
 double: 2
@@ -797,9 +797,9 @@ ifloat: 2
 
 Function: Real part of "cpow":
 double: 2
-float: 4
+float: 5
 idouble: 2
-ifloat: 4
+ifloat: 5
 
 Function: Imaginary part of "cpow":
 float: 2
@@ -985,9 +985,9 @@ ifloat: 1
 
 Function: Imaginary part of "ctan":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 
 Function: Real part of "ctan_downward":
 double: 6
@@ -997,9 +997,9 @@ ifloat: 5
 
 Function: Imaginary part of "ctan_downward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 
 Function: Real part of "ctan_towardzero":
 double: 5
@@ -1015,9 +1015,9 @@ ifloat: 2
 
 Function: Real part of "ctan_upward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 
 Function: Imaginary part of "ctan_upward":
 double: 2
@@ -1027,9 +1027,9 @@ ifloat: 3
 
 Function: Real part of "ctanh":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 
 Function: Imaginary part of "ctanh":
 double: 2
@@ -1039,9 +1039,9 @@ ifloat: 2
 
 Function: Real part of "ctanh_downward":
 double: 4
-float: 1
+float: 2
 idouble: 4
-ifloat: 1
+ifloat: 2
 
 Function: Imaginary part of "ctanh_downward":
 double: 6
@@ -1173,15 +1173,21 @@ ifloat: 1
 
 Function: "exp_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "exp_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "exp_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "expm1":
 double: 1
@@ -1255,9 +1261,9 @@ ifloat: 2
 
 Function: "j0_downward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 
 Function: "j0_towardzero":
 double: 3
@@ -1279,9 +1285,9 @@ ifloat: 2
 
 Function: "j1_downward":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 
 Function: "j1_towardzero":
 double: 3
@@ -1601,9 +1607,9 @@ ifloat: 1
 
 Function: "y0_downward":
 double: 3
-float: 2
+float: 4
 idouble: 3
-ifloat: 2
+ifloat: 4
 
 Function: "y0_towardzero":
 double: 3
@@ -1613,9 +1619,9 @@ ifloat: 3
 
 Function: "y0_upward":
 double: 3
-float: 4
+float: 5
 idouble: 3
-ifloat: 4
+ifloat: 5
 
 Function: "y1":
 double: 3
@@ -1643,15 +1649,15 @@ ifloat: 2
 
 Function: "yn":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 
 Function: "yn_downward":
 double: 3
-float: 2
+float: 4
 idouble: 3
-ifloat: 2
+ifloat: 4
 
 Function: "yn_towardzero":
 double: 3
@@ -1661,8 +1667,8 @@ ifloat: 3
 
 Function: "yn_upward":
 double: 4
-float: 4
+float: 5
 idouble: 4
-ifloat: 4
+ifloat: 5
 
 # end of automatic generation
