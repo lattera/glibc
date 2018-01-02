@@ -60,11 +60,7 @@ int
 attribute_compat_text_section
 __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 {
-# if __RLIM_T_MATCHES_RLIM64_T
-#  define rlimits32 (*rlimits)
-# else
   struct rlimit rlimits32;
-# endif
 
   if (__new_getrlimit (resource, &rlimits32) < 0)
     return -1;

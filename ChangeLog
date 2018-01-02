@@ -7,6 +7,10 @@
 	(settrlimit): Rename into setrlimit.
 	(__sttrlimit): Rename into __setrlimit.
 
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c (__old_getrlimit64):
+	Drop __RLIM_T_MATCHES_RLIM64_T conditional as __old_getrlimit64 is
+	never defined in that case.
+
 2018-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Update.
