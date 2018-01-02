@@ -1,3 +1,7 @@
+2018-01-02  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* NEWS: Add cosf and sincosf to list of optimized functions.
+
 2018-01-02  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22660]
