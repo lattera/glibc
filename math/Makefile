@@ -521,12 +521,12 @@ include $(o-iterator)
 
 run-regen-ulps = $(test-wrapper-env) \
 	    $(run-program-env) \
-	    $($*-ENV) $(rtld-prefix) $${run}
+	    $($*-ENV) $(rtld-prefix) $(objpfx)$${run}
 
 regen-ulps: $(addprefix $(objpfx),$(libm-tests))
 	rm -f $(objpfx)ULPs; rm -f $(objpfx)NewUlps; \
 	cp $(ulps-file) $(objpfx)libm-test-ulps; \
-	for run in $^; do \
+	for run in $(libm-tests); do \
 	  echo "Regenerating ULPs for $${run}"; \
 	  $(run-regen-ulps) -u -o $(objpfx); \
 	  cat $(objpfx)ULPs >> $(objpfx)libm-test-ulps; \

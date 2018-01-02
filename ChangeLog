@@ -1,3 +1,8 @@
+2018-01-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile (run-regen-ulps): Add $(objpfx) to test name here.
+	(regen-ulps): Use $(libm-tests) not $^ in shell loop.
+
 2018-01-02  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* NEWS: Add cosf and sincosf to list of optimized functions.
