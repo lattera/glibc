@@ -21,7 +21,7 @@
 #include <shlib-compat.h>
 
 /* Add this redirection so the strong_alias for __RLIM_T_MATCHES_RLIM64_T
-   linking getlimit64 to {__}getrlimit does not throw a type error.  */
+   linking getrlimit64 to {__}getrlimit does not throw a type error.  */
 #undef getrlimit
 #undef __getrlimit
 #define getrlimit getrlimit_redirect

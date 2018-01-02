@@ -1,3 +1,12 @@
+2018-01-02  Aurelien Jarno <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: Fix a typo in the
+	comment.
+	* sysdeps/unix/sysv/linux/alpha/setrlimit64.c: Fix a typo in the
+	comment.
+	(settrlimit): Rename into setrlimit.
+	(__sttrlimit): Rename into __setrlimit.
+
 2018-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/nofpu/libm-test-ulps: Update.

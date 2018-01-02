@@ -21,9 +21,9 @@
 #include <shlib-compat.h>
 
 /* Add this redirection so the strong_alias for __RLIM_T_MATCHES_RLIM64_T
-   linking setlimit64 to {__}setrlimit does not throw a type error.  */
-#undef settrlimit
-#undef __sttrlimit
+   linking setrlimit64 to {__}setrlimit does not throw a type error.  */
+#undef setrlimit
+#undef __setrlimit
 #define setrlimit setrlimit_redirect
 #define __setrlimit __setrlimit_redirect
 #include <sys/resource.h>
