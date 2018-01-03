@@ -1,3 +1,8 @@
+2018-01-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* support/support_enter_mount_namespace.c [!CLONE_NEWNS]: Do not
+	include <sys/mount.h>.
+
 2018-01-02  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* math/math.h (math_errhandling): Set to 0 with __FAST_MATH__.

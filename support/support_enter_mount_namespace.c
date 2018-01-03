@@ -20,7 +20,9 @@
 
 #include <sched.h>
 #include <stdio.h>
+#ifdef CLONE_NEWNS
 #include <sys/mount.h>
+#endif /* CLONE_NEWNS */
 
 bool
 support_enter_mount_namespace (void)
