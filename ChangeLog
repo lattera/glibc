@@ -1,6 +1,11 @@
 2018-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #15479]
+	[BZ #22666]
+	* sysdeps/alpha/fpu/s_trunc.c: Remove file.
+	* sysdeps/alpha/fpu/s_truncf.c: Likewise.
+
+	[BZ #15479]
 	[BZ #22665]
 	* sysdeps/alpha/fpu/s_ceil.c: Remove file.
 	* sysdeps/alpha/fpu/s_ceilf.c: Likewise.
