@@ -1,3 +1,8 @@
+2018-01-02  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/math.h (math_errhandling): Set to 0 with __FAST_MATH__.
+	Add __NO_MATH_ERRNO__ check.
+
 2018-01-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips32/libm-test-ulps: Update.

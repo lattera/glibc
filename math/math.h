@@ -665,10 +665,16 @@ enum
 # define MATH_ERRNO	1	/* errno set by math functions.  */
 # define MATH_ERREXCEPT	2	/* Exceptions raised by math functions.  */
 
-/* By default all functions support both errno and exception handling.
-   In gcc's fast math mode and if inline functions are defined this
-   might not be true.  */
-# ifndef __FAST_MATH__
+/* By default all math functions support both errno and exception handling
+   (except for soft floating point implementations which may only support
+   errno handling).  If errno handling is disabled, exceptions are still
+   supported by GLIBC.  Set math_errhandling to 0 with -ffast-math (this is
+   nonconforming but it is more useful than leaving it undefined).  */
+# ifdef __FAST_MATH__
+#  define math_errhandling	0
+# elif defined __NO_MATH_ERRNO__
+#  define math_errhandling	(MATH_ERREXCEPT)
+# else
 #  define math_errhandling	(MATH_ERRNO | MATH_ERREXCEPT)
 # endif
 
