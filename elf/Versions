@@ -23,9 +23,9 @@ libc {
   GLIBC_PRIVATE {
     # functions used in other libraries
     _dl_addr;
-    _dl_open_hook;
+    _dl_open_hook; _dl_open_hook2;
     _dl_sym; _dl_vsym;
-    __libc_dlclose; __libc_dlopen_mode; __libc_dlsym;
+    __libc_dlclose; __libc_dlopen_mode; __libc_dlsym; __libc_dlvsym;
 
     # Internal error handling support.  Interposes the functions in ld.so.
     _dl_signal_exception; _dl_catch_exception;

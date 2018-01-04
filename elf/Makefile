@@ -151,7 +151,7 @@ tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables
 tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
-	       tst-tls1-static-non-pie
+	       tst-tls1-static-non-pie tst-libc_dlvsym-static
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
 tst-tls1-static-non-pie-no-pie = yes
@@ -192,7 +192,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
-	 tst-ptrguard1 tst-stackguard1
+	 tst-ptrguard1 tst-stackguard1 tst-libc_dlvsym
 ifeq ($(build-hardcoded-path-in-tests),yes)
 tests += tst-dlopen-aout
 tst-dlopen-aout-no-pie = yes
@@ -272,7 +272,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
-		tst-main1mod
+		tst-main1mod tst-libc_dlvsym-dso
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1436,3 +1436,13 @@ CRT-tst-main1 := $(csu-objpfx)crt1.o
 tst-main1-no-pie = yes
 LDLIBS-tst-main1 = $(libsupport)
 tst-main1mod.so-no-z-defs = yes
+
+# Both the main program and the DSO for tst-libc_dlvsym need to link
+# against libdl.
+$(objpfx)tst-libc_dlvsym: $(libdl)
+$(objpfx)tst-libc_dlvsym-dso.so: $(libsupport) $(libdl)
+$(objpfx)tst-libc_dlvsym.out: $(objpfx)tst-libc_dlvsym-dso.so
+$(objpfx)tst-libc_dlvsym-static: $(common-objpfx)dlfcn/libdl.a
+tst-libc_dlvsym-static-ENV = \
+  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+$(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so

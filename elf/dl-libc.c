@@ -20,6 +20,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <ldsodefs.h>
+#include <dl-hash.h>
 
 extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
@@ -78,6 +79,15 @@ struct do_dlsym_args
   const ElfW(Sym) *ref;
 };
 
+struct do_dlvsym_args
+{
+  /* dlvsym is like dlsym.  */
+  struct do_dlsym_args dlsym;
+
+  /* But dlvsym needs a version  as well.  */
+  struct r_found_version version;
+};
+
 static void
 do_dlopen (void *ptr)
 {
@@ -99,6 +109,18 @@ do_dlsym (void *ptr)
 }
 
 static void
+do_dlvsym (void *ptr)
+{
+  struct do_dlvsym_args *args = ptr;
+  args->dlsym.ref = NULL;
+  args->dlsym.loadbase
+    = GLRO(dl_lookup_symbol_x) (args->dlsym.name, args->dlsym.map,
+				&args->dlsym.ref,
+				args->dlsym.map->l_local_scope,
+				&args->version, 0, 0, NULL);
+}
+
+static void
 do_dlclose (void *ptr)
 {
   GLRO(dl_close) ((struct link_map *) ptr);
@@ -112,6 +134,7 @@ struct dl_open_hook
   void *(*dlopen_mode) (const char *name, int mode);
   void *(*dlsym) (void *map, const char *name);
   int (*dlclose) (void *map);
+  void *(*dlvsym) (void *map, const char *name, const char *version);
 };
 
 #ifdef SHARED
@@ -119,6 +142,15 @@ extern struct dl_open_hook *_dl_open_hook;
 libc_hidden_proto (_dl_open_hook);
 struct dl_open_hook *_dl_open_hook __attribute__ ((nocommon));
 libc_hidden_data_def (_dl_open_hook);
+
+/* The dlvsym member was added retroactively to struct dl_open_hook.
+   Static applications which have it will set _dl_open_hook2 in
+   addition to _dl_open_hook.  */
+extern struct dl_open_hook *_dl_open_hook2;
+libc_hidden_proto (_dl_open_hook2);
+struct dl_open_hook *_dl_open_hook2 __attribute__ ((nocommon));
+libc_hidden_data_def (_dl_open_hook2);
+
 #else
 static void
 do_dlsym_private (void *ptr)
@@ -142,7 +174,8 @@ static struct dl_open_hook _dl_open_hook =
   {
     .dlopen_mode = __libc_dlopen_mode,
     .dlsym = __libc_dlsym,
-    .dlclose = __libc_dlclose
+    .dlclose = __libc_dlclose,
+    .dlvsym = __libc_dlvsym,
   };
 #endif
 
@@ -192,6 +225,11 @@ __libc_register_dl_open_hook (struct link_map *map)
   hook = (struct dl_open_hook **) __libc_dlsym_private (map, "_dl_open_hook");
   if (hook != NULL)
     *hook = &_dl_open_hook;
+
+  /* For dlvsym support.  */
+  hook = (struct dl_open_hook **) __libc_dlsym_private (map, "_dl_open_hook2");
+  if (hook != NULL)
+    *hook = &_dl_open_hook;
 }
 #endif
 
@@ -210,6 +248,39 @@ __libc_dlsym (void *map, const char *name)
 	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
 libc_hidden_def (__libc_dlsym)
+
+/* Replacement for dlvsym.  MAP must be a real map.  This function
+   returns NULL without setting the dlerror value in case of static
+   dlopen from an old binary.  */
+void *
+__libc_dlvsym (void *map, const char *name, const char *version)
+{
+#ifdef SHARED
+  if (!rtld_active ())
+    {
+      /* The static application is too old and does not provide the
+	 dlvsym hook.  */
+      if (_dl_open_hook2 == NULL)
+	return NULL;
+      return _dl_open_hook2->dlvsym (map, name, version);
+    }
+#endif
+
+  struct do_dlvsym_args args;
+  args.dlsym.map = map;
+  args.dlsym.name = name;
+
+  /* See _dl_vsym in dl-sym.c.  */
+  args.version.name = version;
+  args.version.hidden = 1;
+  args.version.hash = _dl_elf_hash (version);
+  args.version.filename = NULL;
+
+  return (dlerror_run (do_dlvsym, &args) ? NULL
+	  : (void *) (DL_SYMBOL_ADDRESS (args.dlsym.loadbase,
+					 args.dlsym.ref)));
+}
+libc_hidden_def (__libc_dlvsym)
 
 int
 __libc_dlclose (void *map)

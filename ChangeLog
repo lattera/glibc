@@ -1,3 +1,28 @@
+2018-01-04  Florian Weimer  <fweimer@redhat.com>
+
+	Add support for calling dlvsym from libc.so.
+	* include/dlfcn.h (__libc_dlvsym): Declare.
+	* elf/Makefile (tests-static-internal): Add
+	tst-libc_dlvsym-static.
+	(tests-internal): Add tst-libc_dlvsym.
+	(modules-names): Add tst-libc_dlvsym-dso.
+	(tst-libc_dlvsym, tst-libc_dlvsym-static): Link with libdl.
+	(tst-libc_dlvsym-dso.so): Link with libdl, libsupport.
+	(tst-libc_dlvsym.out, tst-libc_dlvsym-static.out): The shared
+	object tst-libc_dlvsym-dso.so needs to be built before running
+	these tests.
+	(tst-libc_dlvsym-static-ENV): Set LD_LIBRARY_PATH.
+	* elf/Versions: Export __libc_dlvsym.
+	* elf/dl-libc.c (struct do_dlvsym_args): New.
+	(do_dlvsym, __libc_dlvsym): New functions.
+	(struct dl_open_hook, _dl_open_hook): Add dlvsym member.
+	(_dl_open_hook2): New variable.
+	(__libc_register_dl_open_hook): Set it.
+	* elf/tst-libc_dlvsym-dso.c: New file.
+	* elf/tst-libc_dlvsym-static.c: Likewise.
+	* elf/tst-libc_dlvsym.c: Likewise.
+	* elf/tst-libc_dlvsym.h: Likewise.
+
 2018-01-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* support/support_enter_mount_namespace.c [!CLONE_NEWNS]: Do not

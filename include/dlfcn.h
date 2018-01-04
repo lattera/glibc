@@ -35,9 +35,11 @@ extern char **__libc_argv attribute_hidden;
   __libc_dlopen_mode (name, RTLD_LAZY | __RTLD_DLOPEN)
 extern void *__libc_dlopen_mode  (const char *__name, int __mode);
 extern void *__libc_dlsym   (void *__map, const char *__name);
+extern void *__libc_dlvsym (void *map, const char *name, const char *version);
 extern int   __libc_dlclose (void *__map);
 libc_hidden_proto (__libc_dlopen_mode)
 libc_hidden_proto (__libc_dlsym)
+libc_hidden_proto (__libc_dlvsym)
 libc_hidden_proto (__libc_dlclose)
 
 /* Locate shared object containing the given address.  */
