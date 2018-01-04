@@ -1,3 +1,9 @@
+2018-01-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* malloc/tst-malloc-tcache-leak.c (TIMEOUT): Define to 50.
+	* posix/tst-glob-tilde.c (TIMEOUT): Define to 200.
+	* resolv/tst-resolv-res_ninit.c (TIMEOUT): Define to 50.
+
 2018-01-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #15479]
