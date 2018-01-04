@@ -1,5 +1,13 @@
 2018-01-04  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #22667]
+	* sysdeps/unix/sysv/linux/i386/makecontext.S (__makecontext):
+	Align the stack before calling exit.
+	* stdlib/tst-makecontext-align.c: New file.
+	* stdlib/Makefile (tests): Add tst-makecontext-align.
+
+2018-01-04  Florian Weimer  <fweimer@redhat.com>
+
 	Add support for calling dlvsym from libc.so.
 	* include/dlfcn.h (__libc_dlvsym): Declare.
 	* elf/Makefile (tests-static-internal): Add

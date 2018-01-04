@@ -108,9 +108,19 @@ L(exitcode):
 	call	HIDDEN_JUMPTARGET(__setcontext)
 	/* If this returns (which can happen if the syscall fails) we'll
 	   exit the program with the return error value (-1).  */
+	jmp L(call_exit)
 
-	movl	%eax, (%esp)
-2:	call	HIDDEN_JUMPTARGET(exit)
+2:
+	/* Exit with status 0.  */
+	xorl	%eax, %eax
+
+L(call_exit):
+	/* Align the stack and pass the exit code (from %eax).  */
+	andl	$0xfffffff0, %esp
+	subl	$12, %esp
+	pushl	%eax
+
+	call	HIDDEN_JUMPTARGET(exit)
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */
 	hlt
