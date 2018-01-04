@@ -109,6 +109,7 @@
 	    Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22625]
+	CVE-2017-16997
 	* elf/dl-load.c (fillin_rpath): Check for empty tokens before dynamic
 	string token expansion. Check for NULL pointer or empty string possibly
 	returned by expand_dynamic_string_token.
