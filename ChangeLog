@@ -1,3 +1,8 @@
+2018-01-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.c (_dl_reloc_overflow):
+	Reserve 16 chars to reloc_addr before calling _itoa_word.
+
 2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22678]

@@ -31,7 +31,10 @@ _dl_reloc_overflow (struct link_map *map,
   char buffer[1024];
   char *t;
   t = stpcpy (buffer, name);
-  t = stpcpy (t, " reloc at 0x");
+  /* Notice that _itoa_word() writes characters from the higher address to the
+     lower address, requiring the destination string to reserve all the
+     required size before the call.  */
+  t = stpcpy (t, " reloc at 0x0000000000000000");
   _itoa_word ((unsigned long) reloc_addr, t, 16, 0);
   if (refsym)
     {
