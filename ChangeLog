@@ -1,3 +1,9 @@
+2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22648]
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/setrlimit64.c: Ditto.
+
 2018-01-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* malloc/tst-malloc-tcache-leak.c (TIMEOUT): Define to 50.
