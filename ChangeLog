@@ -7,6 +7,8 @@
 	* sysdeps/unix/sysv/linux/tst-rlimit-infinity.c: New file.
 	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-rlimit-infinity.
 
+	* resource/tst-getrlimit.c: Add copyright header.
+
 2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
