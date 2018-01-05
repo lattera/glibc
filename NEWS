@@ -71,6 +71,33 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* Support for old programs which use internal stdio data structures and
+  functions is deprecated.  This includes programs which use the C++ streams
+  provided by libstdc++ in GCC 2.95.  Programs which use the internal
+  symbols _IO_adjust_wcolumn, _IO_default_doallocate, _IO_default_finish,
+  _IO_default_pbackfail, _IO_default_uflow, _IO_default_xsgetn,
+  _IO_default_xsputn, _IO_doallocbuf, _IO_do_write, _IO_file_attach,
+  _IO_file_close, _IO_file_close_it, _IO_file_doallocate, _IO_file_fopen,
+  _IO_file_init, _IO_file_jumps, _IO_fileno, _IO_file_open,
+  _IO_file_overflow, _IO_file_read, _IO_file_seek, _IO_file_seekoff,
+  _IO_file_setbuf, _IO_file_stat, _IO_file_sync, _IO_file_underflow,
+  _IO_file_write, _IO_file_xsputn, _IO_flockfile, _IO_flush_all,
+  _IO_flush_all_linebuffered, _IO_free_backup_area, _IO_free_wbackup_area,
+  _IO_init, _IO_init_marker, _IO_init_wmarker, _IO_iter_begin, _IO_iter_end,
+  _IO_iter_file, _IO_iter_next, _IO_least_wmarker, _IO_link_in,
+  _IO_list_all, _IO_list_lock, _IO_list_resetlock, _IO_list_unlock,
+  _IO_marker_delta, _IO_marker_difference, _IO_remove_marker, _IO_seekmark,
+  _IO_seekwmark, _IO_str_init_readonly, _IO_str_init_static,
+  _IO_str_overflow, _IO_str_pbackfail, _IO_str_seekoff, _IO_str_underflow,
+  _IO_switch_to_main_wget_area, _IO_switch_to_wget_mode,
+  _IO_unsave_wmarkers, _IO_wdefault_doallocate, _IO_wdefault_finish,
+  _IO_wdefault_pbackfail, _IO_wdefault_setbuf, _IO_wdefault_uflow,
+  _IO_wdefault_xsgetn, _IO_wdefault_xsputn, _IO_wdoallocbuf, _IO_wdo_write,
+  _IO_wfile_jumps, _IO_wfile_overflow, _IO_wfile_sync, _IO_wfile_underflow,
+  _IO_wfile_xsputn, _IO_wmarker_delta, or _IO_wsetb may stop working with a
+  future version of glibc.  Unlike other symbol removals, these old
+  applications will not be supported using compatibility symbols.
+
 * On GNU/Linux, the obsolete Linux constant PTRACE_SEIZE_DEVEL is no longer
   defined by <sys/ptrace.h>.
 
