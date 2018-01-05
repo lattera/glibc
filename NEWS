@@ -71,6 +71,10 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* Support for statically linked applications which call dlopen is deprecated
+  and will be removed in a future version of glibc.  Applications which call
+  dlopen need to be linked dynamically instead.
+
 * Support for old programs which use internal stdio data structures and
   functions is deprecated.  This includes programs which use the C++ streams
   provided by libstdc++ in GCC 2.95.  Programs which use the internal
