@@ -4,6 +4,9 @@
 	* sysdeps/unix/sysv/linux/prlimit.c (prlimit): Translate
 	old_rlimit from RLIM64_INFINITY to RLIM_INFINITY.
 
+	* sysdeps/unix/sysv/linux/tst-rlimit-infinity.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-rlimit-infinity.
+
 2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
