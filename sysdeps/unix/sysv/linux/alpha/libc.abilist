@@ -2016,6 +2016,8 @@ GLIBC_2.26 pwritev64v2 F
 GLIBC_2.26 reallocarray F
 GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 copy_file_range F
+GLIBC_2.27 getrlimit F
+GLIBC_2.27 getrlimit64 F
 GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
 GLIBC_2.27 memfd_create F
@@ -2025,6 +2027,8 @@ GLIBC_2.27 pkey_free F
 GLIBC_2.27 pkey_get F
 GLIBC_2.27 pkey_mprotect F
 GLIBC_2.27 pkey_set F
+GLIBC_2.27 setrlimit F
+GLIBC_2.27 setrlimit64 F
 GLIBC_2.27 strfromf128 F
 GLIBC_2.27 strfromf32 F
 GLIBC_2.27 strfromf32x F

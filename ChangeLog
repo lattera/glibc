@@ -1,4 +1,28 @@
 2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
+	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/getrlimit64.c [USE_VERSIONED_RLIMIT]: Do not
+	define getrlimit and getrlimit64 as weak aliases of __getrlimit64.
+	Define __GI_getrlimit64 as weak alias of __getrlimit64.
+	[__RLIM_T_MATCHES_RLIM64_T]: Do not redefine SHLIB_COMPAT, use #elif
+	instead.
+	* sysdeps/unix/sysv/linux/setrlimit64.c [USE_VERSIONED_RLIMIT]: Do not
+	define setrlimit and setrlimit64 as weak aliases of __setrlimit64.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (RLIM_INFINITY,
+	RLIM64_INFINITY): Fix values to match the kernel ones.
+	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: Define
+	USE_VERSIONED_RLIMIT.  Rename __getrlimit64 into __old_getrlimit64 and
+	provide it as getrlimit@@GLIBC_2_0 and getrlimit64@@GLIBC_2_1.  Add a
+	__getrlimit64 function and provide it as getrlimit@@GLIBC_2_27 and
+	getrlimit64@@GLIBC_2_27.
+	* sysdeps/unix/sysv/linux/alpha/setrlimit64.c: Ditto with setrlimit
+	and setrlimit64.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist (GLIBC_2.27): Add
+	getrlimit, setrlimit, getrlimit64 and setrlimit64.
+	* sysdeps/unix/sysv/linux/alpha/Versions (libc): Add getrlimit,
+	setrlimit, getrlimit64 and setrlimit64.
+
+2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22648]
 	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: New file.

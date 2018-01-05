@@ -38,11 +38,16 @@ __setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
 {
   return INLINE_SYSCALL_CALL (prlimit64, 0, resource, rlimits, NULL);
 }
+/* Alpha defines a versioned setrlimit{64}.  */
+#ifndef USE_VERSIONED_RLIMIT
 weak_alias (__setrlimit64, setrlimit64)
+#endif
 
 #if __RLIM_T_MATCHES_RLIM64_T
 strong_alias (__setrlimit64, __setrlimit)
+# ifndef USE_VERSIONED_RLIMIT
 weak_alias (__setrlimit64, setrlimit)
+# endif
 # ifdef SHARED
 __hidden_ver1 (__setrlimit64, __GI___setrlimit, __setrlimit64);
 # endif

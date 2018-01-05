@@ -15,47 +15,39 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/types.h>
+#define USE_VERSIONED_RLIMIT
+#include <sysdeps/unix/sysv/linux/setrlimit64.c>
+versioned_symbol (libc, __setrlimit, setrlimit, GLIBC_2_27);
+versioned_symbol (libc, __setrlimit64, setrlimit64, GLIBC_2_27);
 
-/* Add this redirection so the strong_alias linking setrlimit64 to
-   {__}setrlimit does not throw a type error.  */
-#undef setrlimit
-#undef __setrlimit
-#define setrlimit setrlimit_redirect
-#define __setrlimit __setrlimit_redirect
-#include <sys/resource.h>
-#undef setrlimit
-#undef __setrlimit
-
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_27)
 /* RLIM64_INFINITY was supposed to be a glibc convention rather than
    anything seen by the kernel, but it ended being passed to the kernel
    through the prlimit64 syscall.  Given that a lot of binaries with
    the wrong constant value are in the wild, provide a wrapper function
    fixing the value before the syscall.  */
-#define KERNEL_RLIM64_INFINITY		0xffffffffffffffffULL
+# define OLD_RLIM64_INFINITY           0x7fffffffffffffffULL
 
 int
-__setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
+attribute_compat_text_section
+__old_setrlimit64 (enum __rlimit_resource resource,
+		   const struct rlimit64 *rlimits)
 {
   struct rlimit64 krlimits;
 
-  if (rlimits->rlim_cur == RLIM64_INFINITY)
-    krlimits.rlim_cur = KERNEL_RLIM64_INFINITY;
+  if (rlimits->rlim_cur == OLD_RLIM64_INFINITY)
+    krlimits.rlim_cur = RLIM64_INFINITY;
   else
     krlimits.rlim_cur = rlimits->rlim_cur;
-  if (rlimits->rlim_max == RLIM64_INFINITY)
-    krlimits.rlim_max = KERNEL_RLIM64_INFINITY;
+  if (rlimits->rlim_max == OLD_RLIM64_INFINITY)
+    krlimits.rlim_max = RLIM64_INFINITY;
   else
     krlimits.rlim_max = rlimits->rlim_max;
 
-  return INLINE_SYSCALL_CALL (prlimit64, 0, resource, &krlimits, NULL);
+  return __setrlimit64 (resource, &krlimits);
 }
 
-weak_alias (__setrlimit64, setrlimit64)
-
-strong_alias (__setrlimit64, __setrlimit)
-weak_alias (__setrlimit64, setrlimit)
-#ifdef SHARED
-__hidden_ver1 (__setrlimit64, __GI___setrlimit, __setrlimit64);
+strong_alias (__old_setrlimit64, __old_setrlimit)
+compat_symbol (libc, __old_setrlimit, setrlimit, GLIBC_2_0);
+compat_symbol (libc, __old_setrlimit64, setrlimit64, GLIBC_2_1);
 #endif

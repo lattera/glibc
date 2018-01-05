@@ -45,13 +45,16 @@ libc_hidden_def (__getrlimit64)
 strong_alias (__getrlimit64, __GI_getrlimit)
 strong_alias (__getrlimit64, __GI___getrlimit)
 strong_alias (__getrlimit64, __getrlimit)
+/* Alpha defines a versioned getrlimit{64}.  */
+# ifndef USE_VERSIONED_RLIMIT
 weak_alias (__getrlimit64, getrlimit)
-/* And there is no need for compat symbols.  */
-# undef SHLIB_COMPAT
-# define SHLIB_COMPAT(a, b, c) 0
-#endif
+weak_alias (__getrlimit64, getrlimit64)
+libc_hidden_weak (getrlimit64)
+# else
+weak_alias (__getrlimit64, __GI_getrlimit64)
+# endif
 
-#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
+#elif SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 /* Back compatible 2GiB limited rlimit.  */
 extern int __new_getrlimit (enum __rlimit_resource, struct rlimit *)
   attribute_hidden;
@@ -78,7 +81,4 @@ __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 }
 versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_2);
 compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
-#else
-weak_alias (__getrlimit64, getrlimit64)
-libc_hidden_weak (getrlimit64)
-#endif
+#endif /* __RLIM_T_MATCHES_RLIM64_T  */

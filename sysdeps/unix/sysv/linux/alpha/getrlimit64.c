@@ -15,50 +15,42 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/types.h>
+#define USE_VERSIONED_RLIMIT
+#include <sysdeps/unix/sysv/linux/getrlimit64.c>
+versioned_symbol (libc, __getrlimit, getrlimit, GLIBC_2_27);
+versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_27);
 
-/* Add this redirection so the strong_alias linking getrlimit64 to
-   {__}getrlimit does not throw a type error.  */
-#undef getrlimit
-#undef __getrlimit
-#define getrlimit getrlimit_redirect
-#define __getrlimit __getrlimit_redirect
-#include <sys/resource.h>
-#undef getrlimit
-#undef __getrlimit
-
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_27)
 /* RLIM64_INFINITY was supposed to be a glibc convention rather than
    anything seen by the kernel, but it ended being passed to the kernel
    through the prlimit64 syscall.  Given that a lot of binaries with
    the wrong constant value are in the wild, provide a wrapper function
    fixing the value after the syscall.  */
-#define KERNEL_RLIM64_INFINITY		0xffffffffffffffffULL
+# define OLD_RLIM64_INFINITY           0x7fffffffffffffffULL
 
 int
-__getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
+attribute_compat_text_section
+__old_getrlimit64 (enum __rlimit_resource resource,
+		   struct rlimit64 *rlimits)
 {
   struct rlimit64 krlimits;
 
-  if (INLINE_SYSCALL_CALL (prlimit64, 0, resource, NULL, &krlimits) < 0)
+  if (__getrlimit64 (resource, &krlimits) < 0)
     return -1;
 
-  if (krlimits.rlim_cur == KERNEL_RLIM64_INFINITY)
-    rlimits->rlim_cur = RLIM64_INFINITY;
+  if (krlimits.rlim_cur == RLIM64_INFINITY)
+    rlimits->rlim_cur = OLD_RLIM64_INFINITY;
   else
     rlimits->rlim_cur = krlimits.rlim_cur;
-  if (krlimits.rlim_max == KERNEL_RLIM64_INFINITY)
-    rlimits->rlim_max = RLIM64_INFINITY;
+  if (krlimits.rlim_max == RLIM64_INFINITY)
+    rlimits->rlim_max = OLD_RLIM64_INFINITY;
   else
     rlimits->rlim_max = krlimits.rlim_max;
 
   return 0;
 }
-libc_hidden_def (__getrlimit64)
-strong_alias (__getrlimit64, __GI_getrlimit)
-strong_alias (__getrlimit64, __GI___getrlimit)
-strong_alias (__getrlimit64, __getrlimit)
-weak_alias (__getrlimit64, getrlimit)
 
-weak_alias (__getrlimit64, getrlimit64)
-libc_hidden_weak (getrlimit64)
+strong_alias (__old_getrlimit64, __old_getrlimit)
+compat_symbol (libc, __old_getrlimit, getrlimit, GLIBC_2_0);
+compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
+#endif

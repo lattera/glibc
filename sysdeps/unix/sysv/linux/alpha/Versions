@@ -85,6 +85,9 @@ libc {
     #errlist-compat	140
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.27 {
+    getrlimit; setrlimit; getrlimit64; setrlimit64;
+  }
   GLIBC_PRIVATE {
     __libc_alpha_cache_shape;
   }
