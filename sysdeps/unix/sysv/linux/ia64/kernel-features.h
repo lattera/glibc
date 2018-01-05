@@ -26,4 +26,7 @@
 #define __ASSUME_SEND_SYSCALL		1
 #define __ASSUME_ACCEPT4_SYSCALL	1
 
+#undef __ASSUME_CLONE_DEFAULT
+#define __ASSUME_CLONE2
+
 #endif /* _KERNEL_FEATURES_H */

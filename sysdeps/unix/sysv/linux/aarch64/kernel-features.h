@@ -1,5 +1,6 @@
-/* ARCH_FORK definition for Linux fork implementation.  MicroBlaze version.
-   Copyright (C) 2014-2018 Free Software Foundation, Inc.
+/* Set flags signalling availability of kernel features based on given
+   kernel version number.  AArch64 version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +17,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <sched.h>
-#include <signal.h>
-#include <sysdep.h>
-#include <tls.h>
+#include_next <kernel-features.h>
 
-#define ARCH_FORK()                                                           \
-  INLINE_SYSCALL (clone, 5,                                                   \
-                  CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD, 0,     \
-                  NULL, NULL, &THREAD_SELF->tid)
+#undef __ASSUME_CLONE_DEFAULT
+#define __ASSUME_CLONE_BACKWARDS 1

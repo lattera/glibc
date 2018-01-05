@@ -115,3 +115,38 @@
 #if __LINUX_KERNEL_VERSION >= 0x040500
 # define __ASSUME_COPY_FILE_RANGE 1
 #endif
+
+/* Support for clone call used on fork.  The signature varies across the
+   architectures with current 4 different variants:
+
+   1. long int clone (unsigned long flags, unsigned long newsp,
+		      int *parent_tidptr, unsigned long tls,
+		      int *child_tidptr)
+
+   2. long int clone (unsigned long newsp, unsigned long clone_flags,
+		      int *parent_tidptr, int * child_tidptr,
+		      unsigned long tls)
+
+   3. long int clone (unsigned long flags, unsigned long newsp,
+		      int stack_size, int *parent_tidptr,
+		      int *child_tidptr, unsigned long tls)
+
+   4. long int clone (unsigned long flags, unsigned long newsp,
+		      int *parent_tidptr, int *child_tidptr,
+		      unsigned long tls)
+
+   The fourth variant is intended to be used as the default for newer ports,
+   Also IA64 uses the third variant but with __NR_clone2 instead of
+   __NR_clone.
+
+   The macros names to define the variant used for the architecture is
+   similar to kernel:
+
+   - __ASSUME_CLONE_BACKWARDS: for variant 1.
+   - __ASSUME_CLONE_BACKWARDS2: for variant 2 (s390).
+   - __ASSUME_CLONE_BACKWARDS3: for variant 3 (microblaze).
+   - __ASSUME_CLONE_DEFAULT: for variant 4.
+   - __ASSUME_CLONE2: for clone2 with variant 3 (ia64).
+   */
+
+#define __ASSUME_CLONE_DEFAULT 1

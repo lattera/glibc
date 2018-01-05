@@ -73,13 +73,7 @@ __libc_fork (void)
       call_function_static_weak (__malloc_fork_lock_parent);
     }
 
-#ifdef ARCH_FORK
-  pid = ARCH_FORK ();
-#else
-# error "ARCH_FORK must be defined so that the CLONE_SETTID flag is used"
-  pid = INLINE_SYSCALL (fork, 0);
-#endif
-
+  pid = arch_fork (&THREAD_SELF->tid);
 
   if (pid == 0)
     {

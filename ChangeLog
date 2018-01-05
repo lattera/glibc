@@ -1,3 +1,48 @@
+2018-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/nptl/fork.c (ARCH_FORK): Replace by auch_fork.
+	* sysdeps/unix/sysv/linux/alpha/arch-fork.h: Remove file.
+	* sysdeps/unix/sysv/linux/riscv/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/arch-fork.h (arch_fork): New function.
+	* sysdeps/unix/sysv/linux/aarch64/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/riscv/kernel-features.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Define.
+	* sysdeps/unix/sysv/linux/createthread.c (ARCH_CLONE): Define to
+	__clone2 if __NR_clone2 is defined.
+	* sysdeps/unix/sysv/linux/hppa/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Likewise.
+	* sysdeps/unix/sysv/linux/i386/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h
+	(__ASSUME_CLONE2): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS3): Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Document possible clone
+	variants and the define architecture can use.
+	(__ASSUME_CLONE_DEFAULT): Define as default.
+	* sysdeps/unix/sysv/linux/mips/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Likewise.
+	* sysdeps/unix/sysv/linux/s390/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS2): Likewise.
+
 2018-03-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/memcmp.S (more16): Fix loop16 branch target.

@@ -28,8 +28,9 @@
 
 #include <arch-fork.h>
 
-
-#ifndef ARCH_CLONE
+#ifdef __NR_clone2
+# define ARCH_CLONE __clone2
+#else
 # define ARCH_CLONE __clone
 #endif
 

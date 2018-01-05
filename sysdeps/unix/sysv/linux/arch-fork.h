@@ -1,4 +1,4 @@
-/* ARCH_FORK definition for Linux fork implementation.  Stub version.
+/* arch_fork definition for Linux fork implementation.
    Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,37 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* This file should define the function-like macro of no arguments
-   ARCH_FORK to an INLINE_SYSCALL invocation of the clone-like system
-   call, passing the CLONE_CHILD_SETTID and CLONE_CHILD_CLEARTID flags
-   and &THREAD_SELF->tid as the TID address.
+#ifndef __ARCH_FORK_H
+#define __ARCH_FORK_H
 
-   Machines that lack an arch-fork.h header file will hit an #error in
-   fork.c; this stub file doesn't contain an #error itself mainly for
-   the transition period of migrating old machine-specific fork.c files
-   to machine-specific arch-fork.h instead.  */
+#include <unistd.h>
+
+/* Call the clone syscall with fork semantic.  The CTID address is used
+   to store the child thread ID at its locationm, to erase it in child memory
+   when the child exits, and do a wakeup on the futex at that address.
+
+   The architecture with non-default kernel abi semantic should correctlly
+   override it with one of the supported calling convention (check generic
+   kernel-features.h for the clone abi variants).  */
+static inline pid_t
+arch_fork (void *ctid)
+{
+  const int flags = CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD;
+  long int ret;
+#ifdef __ASSUME_CLONE_BACKWARDS
+  ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, 0, ctid);
+#elif defined(__ASSUME_CLONE_BACKWARDS2)
+  ret = INLINE_SYSCALL_CALL (clone, 0, flags, NULL, ctid, 0);
+#elif defined(__ASSUME_CLONE_BACKWARDS3)
+  ret = INLINE_SYSCALL_CALL (clone, flags, 0, 0, NULL, ctid, 0);
+#elif defined(__ASSUME_CLONE2)
+  ret = INLINE_SYSCALL_CALL (clone2, flags, 0, 0, NULL, ctid, 0);
+#elif defined(__ASSUME_CLONE_DEFAULT)
+  ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, ctid, 0);
+#else
+# error "Undefined clone variant"
+#endif
+  return ret;
+}
+
+#endif /* __ARCH_FORK_H  */
