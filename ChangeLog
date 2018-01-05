@@ -1,4 +1,10 @@
 2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #22678]
+	* sysdeps/unix/sysv/linux/prlimit.c (prlimit): Translate
+	old_rlimit from RLIM64_INFINITY to RLIM_INFINITY.
+
+2018-01-05  Aurelien Jarno  <aurelien@aurel32.net>
 	    Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/getrlimit64.c [USE_VERSIONED_RLIMIT]: Do not
