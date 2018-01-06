@@ -1,6 +1,10 @@
 2018-01-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/jmp_buf-macros.h: New file.
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_dynamic) [NO_RTLD_HIDDEN]: Call
+	JUMPTARGET (___tls_get_addr) instead of HIDDEN_JUMPTARGET
+	(___tls_get_addr).
+	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Likewise.
 
 2018-01-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 

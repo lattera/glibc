@@ -126,7 +126,11 @@ _dl_tlsdesc_dynamic:
 	.p2align 4,,7
 .Lslow:
 	cfi_adjust_cfa_offset (28)
+#ifdef NO_RTLD_HIDDEN
+	call	JUMPTARGET (___tls_get_addr)
+#else
 	call	HIDDEN_JUMPTARGET (___tls_get_addr)
+#endif
 	jmp	.Lret
 	cfi_endproc
 	.size	_dl_tlsdesc_dynamic, .-_dl_tlsdesc_dynamic
