@@ -8,6 +8,10 @@
 	* sysdeps/i386/fpu/libm-test-ulps: Regenerated for GCC 7 with
 	"-O2 -march=i686".
 	* posix/tst-glob_symlinks.c [!PATH_MAX]: Define PATH_MAX macro.
+	* sysdeps/gnu/glob64.c (__glob): Define macro instead of glob macro.
+	(__glob64): Define GLIBC_2_27 versioned symbol instead of glob64.
+	* sysdeps/gnu/glob-lstat-compat.c: New file.
+	* sysdeps/gnu/glob64-lstat-compat.c: New file.
 
 2018-01-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
