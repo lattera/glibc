@@ -1377,7 +1377,7 @@ class Glibc(object):
             if self.ctx.strip:
                 cmdlist.add_command('strip',
                                     ['sh', '-c',
-                                     ('%s %s/lib*/*.so' %
+                                     ('%s $(find %s/lib* -name "*.so")' %
                                       (self.tool_name('strip'), installdir))])
             cmdlist.add_command('check', ['make', 'check'])
             cmdlist.add_command('save-logs', [self.ctx.save_logs],
