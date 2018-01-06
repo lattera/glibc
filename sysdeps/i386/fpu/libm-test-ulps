@@ -935,10 +935,10 @@ ldouble: 1
 
 Function: Real part of "ccosh_downward":
 double: 1
-float: 1
+float: 2
 float128: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ifloat128: 2
 ildouble: 3
 ldouble: 3
@@ -1637,20 +1637,20 @@ ldouble: 1
 
 Function: Real part of "ctan_downward":
 double: 1
-float: 1
+float: 2
 float128: 4
 idouble: 1
-ifloat: 1
+ifloat: 2
 ifloat128: 4
 ildouble: 5
 ldouble: 5
 
 Function: Imaginary part of "ctan_downward":
 double: 2
-float: 1
+float: 2
 float128: 5
 idouble: 2
-ifloat: 1
+ifloat: 2
 ifloat128: 5
 ildouble: 4
 ldouble: 4
@@ -2099,10 +2099,10 @@ ldouble: 4
 
 Function: "j1":
 double: 2
-float: 1
+float: 2
 float128: 4
 idouble: 2
-ifloat: 1
+ifloat: 2
 ifloat128: 4
 ildouble: 1
 ldouble: 1
@@ -2643,10 +2643,10 @@ ldouble: 1
 
 Function: "y0_downward":
 double: 2
-float: 2
+float: 3
 float128: 4
 idouble: 2
-ifloat: 2
+ifloat: 3
 ifloat128: 4
 ildouble: 5
 ldouble: 5
@@ -2723,10 +2723,10 @@ ldouble: 4
 
 Function: "yn_downward":
 double: 2
-float: 2
+float: 3
 float128: 5
 idouble: 2
-ifloat: 2
+ifloat: 3
 ifloat128: 5
 ildouble: 5
 ldouble: 5
