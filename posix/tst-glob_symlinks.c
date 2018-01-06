@@ -57,6 +57,9 @@ create_link (const char *base, const char *fname, char *linkname,
   add_temp_file (linkname);
 }
 
+#ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
 static char valid_link[PATH_MAX];
 static char dangling_link[PATH_MAX];
 static char dangling_dir[PATH_MAX];

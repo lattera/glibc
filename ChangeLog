@@ -7,6 +7,7 @@
 	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_dynamic): Likewise.
 	* sysdeps/i386/fpu/libm-test-ulps: Regenerated for GCC 7 with
 	"-O2 -march=i686".
+	* posix/tst-glob_symlinks.c [!PATH_MAX]: Define PATH_MAX macro.
 
 2018-01-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
