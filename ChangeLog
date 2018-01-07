@@ -36,6 +36,7 @@
 	(__glob64): Define GLIBC_2_27 versioned symbol instead of glob64.
 	* sysdeps/gnu/glob-lstat-compat.c: New file.
 	* sysdeps/gnu/glob64-lstat-compat.c: New file.
+	* sysdeps/posix/pwritev_common.c: Add PROT_READ to __mmap prot.
 
 2018-01-05  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
