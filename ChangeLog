@@ -1,3 +1,10 @@
+2018-01-07  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* sysdeps/unix/sysv/linux/getrlimit64 (getrlimit64)
+	[!__RLIM_T_MATCHES_RLIM64_T]
+	[!SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)]: Define as weak alias of
+	__getrlimit64. Add libc_hidden_weak.
+
 2018-01-06  Palmer Dabbelt  <palmer@sifive.com>
 
 	* elf/elf.h (R_RISCV_NONE): New define.

@@ -81,4 +81,7 @@ __old_getrlimit64 (enum __rlimit_resource resource, struct rlimit64 *rlimits)
 }
 versioned_symbol (libc, __getrlimit64, getrlimit64, GLIBC_2_2);
 compat_symbol (libc, __old_getrlimit64, getrlimit64, GLIBC_2_1);
+#else
+weak_alias (__getrlimit64, getrlimit64)
+libc_hidden_weak (getrlimit64)
 #endif /* __RLIM_T_MATCHES_RLIM64_T  */
