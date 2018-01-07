@@ -71,7 +71,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-mknodat tst-mkfifoat tst-ttyname_r bug-ftw5 \
 		   tst-posix_fallocate tst-posix_fallocate64 \
 		   tst-fts tst-fts-lfs tst-open-tmpfile \
-		   tst-copy_file_range \
+		   tst-copy_file_range tst-getcwd-abspath \
 
 # This test includes the compat implementation of copy_file_range,
 # which uses internal, unexported libc functions.

@@ -1,3 +1,12 @@
+2018-01-12  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22679]
+	CVE-2018-1000001
+	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Fall back to
+	generic_getcwd if the path returned by getcwd syscall is not absolute.
+	* io/tst-getcwd-abspath.c: New test.
+	* io/Makefile (tests): Add tst-getcwd-abspath.
+
 2018-01-12  Istvan Kurucsai  <pistukem@gmail.com>
 
 	* malloc/malloc.c (malloc_consolidate): Add size check.

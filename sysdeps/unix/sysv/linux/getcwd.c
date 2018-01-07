@@ -76,7 +76,7 @@ __getcwd (char *buf, size_t size)
   int retval;
 
   retval = INLINE_SYSCALL (getcwd, 2, path, alloc_size);
-  if (retval >= 0)
+  if (retval > 0 && path[0] == '/')
     {
 #ifndef NO_ALLOCATION
       if (buf == NULL && size == 0)
@@ -92,10 +92,10 @@ __getcwd (char *buf, size_t size)
       return buf;
     }
 
-  /* The system call cannot handle paths longer than a page.
-     Neither can the magic symlink in /proc/self.  Just use the
+  /* The system call either cannot handle paths longer than a page
+     or can succeed without returning an absolute path.  Just use the
      generic implementation right away.  */
-  if (errno == ENAMETOOLONG)
+  if (retval >= 0 || errno == ENAMETOOLONG)
     {
 #ifndef NO_ALLOCATION
       if (buf == NULL && size == 0)
