@@ -1,5 +1,24 @@
 2018-01-08  Florian Weimer  <fweimer@redhat.com>
 
+	resolv: Support binary labels in test framework.
+	* support/resolv_test.c (struct to_be_freed): Remove.
+	(struct compressed_name): New.
+	(allocate_compressed_name, ascii_tolower)
+	(compare_compressed_name): New functions.
+	(struct resolv_response_builder): Update type of
+	compression_offsets for use with tsearch.  Rempve to_be_freed.
+	(response_push_pointer_to_free): Remove function.
+	(resolv_response_add_name): Rewrite using struct compressed_name
+	and tsearch instead of hsearch_r.
+	(response_builder_allocate): Remove initialization of
+	compression_offsets.
+	(response_builder_free): Update for removal of to_be_freed.  Use
+	tdestroy instead of hdestroy_r.
+	* resolv/Makefile (tests): Add tst-resolv-binary.
+	(tst-resolv-binary): Link with -lresolv -lpthread.
+
+2018-01-08  Florian Weimer  <fweimer@redhat.com>
+
 	* support/check.h (TEST_COMPARE): Allow sign mismatch at compile
 	time.  Pass positive flag instead of negative flag to
 	support_test_compare_failure.

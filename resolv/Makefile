@@ -51,6 +51,7 @@ tests += \
   tst-res_hnok \
   tst-res_use_inet6 \
   tst-resolv-basic \
+  tst-resolv-binary \
   tst-resolv-edns \
   tst-resolv-network \
   tst-resolv-res_init-multi \
@@ -159,6 +160,7 @@ $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-binary: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-res_init: $(libdl) $(objpfx)libresolv.so

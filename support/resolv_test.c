@@ -43,14 +43,98 @@ enum
     max_response_length = 65536
   };
 
-/* List of pointers to be freed.  The hash table implementation
-   (struct hsearch_data) does not provide a way to deallocate all
-   objects, so this approach is used to avoid memory leaks.  */
-struct to_be_freed
+/* Used for locating domain names containing for the purpose of
+   forming compression references.  */
+struct compressed_name
 {
-  struct to_be_freed *next;
-  void *ptr;
+  uint16_t offset;
+  unsigned char length;
+  unsigned char name[];         /* Without terminating NUL.  */
 };
+
+static struct compressed_name *
+allocate_compressed_name (const unsigned char *encoded, unsigned int offset)
+{
+  /* Compute the length of the domain name.  */
+  size_t length;
+  {
+    const unsigned char *p;
+    for (p = encoded; *p != '\0';)
+      {
+        /* No compression references are allowed.  */
+        TEST_VERIFY (*p <= 63);
+        /* Skip over the label.  */
+        p += 1 + *p;
+      }
+    length = p - encoded;
+    ++length;                   /* For the terminating NUL byte.  */
+  }
+  TEST_VERIFY_EXIT (length <= 255);
+
+  struct compressed_name *result
+    = xmalloc (offsetof (struct compressed_name, name) + length);
+  result->offset = offset;
+  result->length = length;
+  memcpy (result->name, encoded, length);
+  return result;
+}
+
+/* Convert CH to lower case.  Only change letters in the ASCII
+   range.  */
+static inline unsigned char
+ascii_tolower (unsigned char ch)
+{
+  if ('A' <= ch && ch <= 'Z')
+    return ch - 'A' + 'a';
+  else
+    return ch;
+}
+
+/* Compare both names, for use with tsearch.  The order is arbitrary,
+   but the comparison is case-insenstive.  */
+static int
+compare_compressed_name (const void *left, const void *right)
+{
+  const struct compressed_name *crleft = left;
+  const struct compressed_name *crright = right;
+
+  if (crleft->length != crright->length)
+    /* The operands are converted to int before the subtraction.  */
+    return crleft->length - crright->length;
+
+  const unsigned char *nameleft = crleft->name;
+  const unsigned char *nameright = crright->name;
+
+  while (true)
+    {
+      int lenleft = *nameleft++;
+      int lenright = *nameright++;
+
+      /* Labels must not e compression references.  */
+      TEST_VERIFY (lenleft <= 63);
+      TEST_VERIFY (lenright <= 63);
+
+      if (lenleft != lenright)
+        return left - right;
+      if (lenleft == 0)
+        /* End of name reached without spotting a difference.  */
+        return 0;
+      /* Compare the label in a case-insenstive manner.  */
+      const unsigned char *endnameleft = nameleft + lenleft;
+      while (nameleft < endnameleft)
+        {
+          int l = *nameleft++;
+          int r = *nameright++;
+          if (l != r)
+            {
+              l = ascii_tolower (l);
+              r = ascii_tolower (r);
+              if (l != r)
+                return l - r;
+            }
+        }
+    }
+}
 
 struct resolv_response_builder
 {
@@ -67,29 +151,14 @@ struct resolv_response_builder
      written RDATA sub-structure.  0 if no RDATA is being written.  */
   size_t current_rdata_offset;
 
-  /* Hash table for locating targets for label compression.  */
-  struct hsearch_data compression_offsets;
-  /* List of pointers which need to be freed.  Used for domain names
-     involved in label compression.  */
-  struct to_be_freed *to_be_freed;
+  /* tsearch tree for locating targets for label compression.  */
+  void *compression_offsets;
 
   /* Must be last.  Not zeroed for performance reasons.  */
   unsigned char buffer[max_response_length];
 };
 
 /* Response builder. */
-
-/* Add a pointer to the list of pointers to be freed when B is
-   deallocated.  */
-static void
-response_push_pointer_to_free (struct resolv_response_builder *b, void *ptr)
-{
-  if (ptr == NULL)
-    return;
-  struct to_be_freed *e = xmalloc (sizeof (*e));
-  *e = (struct to_be_freed) {b->to_be_freed, ptr};
-  b->to_be_freed = e;
-}
 
 void
 resolv_response_init (struct resolv_response_builder *b,
@@ -194,120 +263,88 @@ void
 resolv_response_add_name (struct resolv_response_builder *b,
                           const char *const origname)
 {
-  /* Normalized name.  */
-  char *name;
-  /* Normalized name with case preserved.  */
-  char *name_case;
-  {
-    size_t namelen = strlen (origname);
-    /* Remove trailing dots.  FIXME: Handle trailing quoted dots.  */
-    while (namelen > 0 && origname[namelen - 1] == '.')
-      --namelen;
-    name = xmalloc (namelen + 1);
-    name_case = xmalloc (namelen + 1);
-    /* Copy and convert to lowercase.  FIXME: This needs to normalize
-       escaping as well.  */
-    for (size_t i = 0; i < namelen; ++i)
-      {
-        char ch = origname[i];
-        name_case[i] = ch;
-        if ('A' <= ch && ch <= 'Z')
-          ch = ch - 'A' + 'a';
-        name[i] = ch;
-      }
-    name[namelen] = 0;
-    name_case[namelen] = 0;
-  }
-  char *name_start = name;
-  char *name_case_start = name_case;
+  unsigned char encoded_name[NS_MAXDNAME];
+  if (ns_name_pton (origname, encoded_name, sizeof (encoded_name)) < 0)
+    FAIL_EXIT1 ("ns_name_pton (\"%s\"): %m", origname);
 
-  bool compression = false;
-  while (*name)
+  /* Copy the encoded name into the output buffer, apply compression
+     where possible.  */
+  for (const unsigned char *name = encoded_name; ;)
     {
-      /* Search for a previous name we can reference.  */
-      ENTRY new_entry =
+      if (*name == '\0')
         {
-          .key = name,
-          .data = (void *) (uintptr_t) b->offset,
-        };
-
-      /* If the label can be a compression target because it is at a
-         reachable offset, add it to the hash table.  */
-      ACTION action;
-      if (b->offset < (1 << 12))
-        action = ENTER;
-      else
-        action = FIND;
-
-      /* Search for known compression offsets in the hash table.  */
-      ENTRY *e;
-      if (hsearch_r (new_entry, action, &e, &b->compression_offsets) == 0)
-        {
-          if (action == FIND && errno == ESRCH)
-            /* Fall through.  */
-            e = NULL;
-          else
-            FAIL_EXIT1 ("hsearch_r failure in name compression: %m");
-        }
-
-      /* The name is known.  Reference the previous location.  */
-      if (e != NULL && e->data != new_entry.data)
-        {
-          size_t old_offset = (uintptr_t) e->data;
-          response_add_byte (b, 0xC0 | (old_offset >> 8));
-          response_add_byte (b, old_offset);
-          compression = true;
+          /* We have reached the end of the name.  Add the terminating
+             NUL byte.  */
+          response_add_byte (b, '\0');
           break;
         }
 
-      /* The name does not exist yet.  Write one label.  First, add
-         room for the label length.  */
-      size_t buffer_label_offset = b->offset;
-      response_add_byte (b, 0);
+      /* Set to the compression target if compression is possible.  */
+      struct compressed_name *crname_target;
 
-      /* Copy the label.  */
-      while (true)
+      /* Compression references can only reach the beginning of the
+         packet.  */
+      enum { compression_limit = 1 << 12 };
+
+      {
+        /* The trailing part of the name to be looked up in the tree
+           with the compression targets.  */
+        struct compressed_name *crname
+          = allocate_compressed_name (name, b->offset);
+
+        if (b->offset < compression_limit)
+          {
+            /* Add the name to the tree, for future compression
+               references.  */
+            void **ptr = tsearch (crname, &b->compression_offsets,
+                                  compare_compressed_name);
+            if (ptr == NULL)
+              FAIL_EXIT1 ("tsearch out of memory");
+            crname_target = *ptr;
+
+            if (crname_target != crname)
+              /* The new name was not actually added to the tree.
+                 Deallocate it.  */
+              free (crname);
+            else
+              /* Signal that the tree did not yet contain the name,
+                 but keep the allocation because it is now part of the
+                 tree.  */
+              crname_target = NULL;
+          }
+        else
+          {
+            /* This name cannot be reached by a compression reference.
+               No need to add it to the tree for future reference.  */
+            void **ptr = tfind (crname, &b->compression_offsets,
+                                compare_compressed_name);
+            if (ptr != NULL)
+              crname_target = *ptr;
+            else
+              crname_target = NULL;
+            TEST_VERIFY (crname_target != crname);
+            /* Not added to the tree.  */
+            free (crname);
+          }
+      }
+
+      if (crname_target != NULL)
         {
-          char ch = *name_case;
-          if (ch == '\0')
-            break;
-          ++name;
-          ++name_case;
-          if (ch == '.')
-            break;
-          /* FIXME: Handle escaping.  */
-          response_add_byte (b, ch);
+          /* The name is known.  Reference the previous location.  */
+          unsigned int old_offset = crname_target->offset;
+          TEST_VERIFY_EXIT (old_offset < compression_limit);
+          response_add_byte (b, 0xC0 | (old_offset >> 8));
+          response_add_byte (b, old_offset);
+          break;
         }
-
-      /* Patch in the label length.  */
-      size_t label_length = b->offset - buffer_label_offset - 1;
-      if (label_length == 0)
-        FAIL_EXIT1 ("empty label in name compression: %s", origname);
-      if (label_length > 63)
-        FAIL_EXIT1 ("label too long in name compression: %s", origname);
-      b->buffer[buffer_label_offset] = label_length;
-
-      /* Continue with the tail of the name and the next label.  */
-    }
-
-  if (compression)
-    {
-      /* If we found an immediate match for the name, we have not put
-         it into the hash table, and can free it immediately.  */
-      if (name == name_start)
-        free (name_start);
       else
-        response_push_pointer_to_free (b, name_start);
+        {
+          /* The name is new.  Add this label.  */
+          unsigned int len = 1 + *name;
+          resolv_response_add_data (b, name, len);
+          name += len;
+        }
     }
-  else
-    {
-      /* Terminate the sequence of labels.  With compression, this is
-         implicit in the compression reference.  */
-      response_add_byte (b, 0);
-      response_push_pointer_to_free (b, name_start);
-    }
-
-  free (name_case_start);
 }
 
 void
@@ -403,22 +440,13 @@ response_builder_allocate
   memset (b, 0, offsetof (struct resolv_response_builder, buffer));
   b->query_buffer = query_buffer;
   b->query_length = query_length;
-  TEST_VERIFY_EXIT (hcreate_r (10000, &b->compression_offsets) != 0);
   return b;
 }
 
 static void
 response_builder_free (struct resolv_response_builder *b)
 {
-  struct to_be_freed *current = b->to_be_freed;
-  while (current != NULL)
-    {
-      struct to_be_freed *next = current->next;
-      free (current->ptr);
-      free (current);
-      current = next;
-    }
-  hdestroy_r (&b->compression_offsets);
+  tdestroy (b->compression_offsets, free);
   free (b);
 }
 
