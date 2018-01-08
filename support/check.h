@@ -86,6 +86,13 @@ void support_test_verify_exit_impl (int status, const char *file, int line,
    does not support reporting failures from a DSO.  */
 void support_record_failure (void);
 
+/* Static assertion, under a common name for both C++ and C11.  */
+#ifdef __cplusplus
+# define support_static_assert static_assert
+#else
+# define support_static_assert _Static_assert
+#endif
+
 /* Compare the two integers LEFT and RIGHT and report failure if they
    are different.  */
 #define TEST_COMPARE(left, right)                                       \
@@ -96,14 +103,14 @@ void support_record_failure (void);
     __left_type __left_value = (left);                                  \
     __right_type __right_value = (right);                               \
     /* Prevent use with floating-point and boolean types.  */           \
-    _Static_assert ((__left_type) 1.0 == (__left_type) 1.5,             \
-                    "left value has floating-point type");              \
-    _Static_assert ((__right_type) 1.0 == (__right_type) 1.5,           \
-                    "right value has floating-point type");             \
+    support_static_assert ((__left_type) 1.0 == (__left_type) 1.5,      \
+                           "left value has floating-point type");       \
+    support_static_assert ((__right_type) 1.0 == (__right_type) 1.5,    \
+                           "right value has floating-point type");      \
     /* Prevent accidental use with larger-than-long long types.  */     \
-    _Static_assert (sizeof (__left_value) <= sizeof (long long),        \
-                    "left value fits into long long");                  \
-    _Static_assert (sizeof (__right_value) <= sizeof (long long),       \
+    support_static_assert (sizeof (__left_value) <= sizeof (long long), \
+                           "left value fits into long long");           \
+    support_static_assert (sizeof (__right_value) <= sizeof (long long), \
                     "right value fits into long long");                 \
     /* Make sure that integer conversions does not alter the sign.   */ \
     enum                                                                \
@@ -117,8 +124,8 @@ void support_record_failure (void);
                                             && (sizeof (__right_value)  \
                                                 < sizeof (__left_value))) \
     };                                                                  \
-    _Static_assert (__left_is_unsigned == __right_is_unsigned           \
-                    || __unsigned_left_converts_to_wider                \
+    support_static_assert (__left_is_unsigned == __right_is_unsigned    \
+                           || __unsigned_left_converts_to_wider         \
                     || __unsigned_right_converts_to_wider,              \
                     "integer conversions may alter sign of operands");  \
     /* Compare the value.  */                                           \
