@@ -1,3 +1,15 @@
+2018-01-08  Florian Weimer  <fweimer@redhat.com>
+
+	* support/check.h (TEST_COMPARE): Allow sign mismatch at compile
+	time.  Pass positive flag instead of negative flag to
+	support_test_compare_failure.
+	(support_test_compare_failure): Change negative parameter to
+	positive.
+	* support/support_test_compare_failure.c (report)
+	(support_test_compare_failure): Likewise.
+	* support/tst-test_compare.c (return_ssize_t, return_int): New.
+	(do_test): Check int/size_t, ssize_t/size_t comparisons.
+
 2018-01-08  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #22637]

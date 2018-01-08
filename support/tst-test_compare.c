@@ -42,6 +42,22 @@ struct bitfield
   unsigned long long int u63 : 63;
 };
 
+/* Functions which return signed sizes are common, so test that these
+   results can readily checked using TEST_COMPARE.  */
+
+static int
+return_ssize_t (void)
+{
+  return 4;
+}
+
+static int
+return_int (void)
+{
+  return 4;
+}
+
+
 static int
 do_test (void)
 {
@@ -53,6 +69,8 @@ do_test (void)
     unsigned short u16 = 3;
     TEST_COMPARE (i8, u16);
   }
+  TEST_COMPARE (return_ssize_t (), sizeof (char[4]));
+  TEST_COMPARE (return_int (), sizeof (char[4]));
 
   struct bitfield bitfield = { 0 };
   TEST_COMPARE (bitfield.i2, bitfield.i3);
