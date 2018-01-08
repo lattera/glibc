@@ -561,4 +561,6 @@ L(SP_ONE):
 	.type L(SP_ONE), @object
 	ASM_SIZE_DIRECTIVE(L(SP_ONE))
 
+#ifndef __sincosf
 libm_alias_float (__sincos, sincos)
+#endif

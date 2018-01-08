@@ -19,8 +19,8 @@ Major new features:
   supported on i386, x86_64, x32 and aarch64.
 
 * Optimized x86-64 asin, atan2, exp, expf, log, pow, atan, sin, cosf,
-  sinf and tan with FMA, contributed by Arjan van de Ven and H.J. Lu
-  from Intel.
+  sinf, sincosf and tan with FMA, contributed by Arjan van de Ven and
+  H.J. Lu from Intel.
 
 * Optimized x86-64 trunc and truncf for processors with SSE4.1.
 

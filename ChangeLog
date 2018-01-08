@@ -1,3 +1,14 @@
+2018-01-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/fpu/multiarch/Makefile (libm-sysdep_routines):
+	Add s_sincosf-sse2 and s_sincosf-fma.
+	(CFLAGS-s_sincosf-fma.c): New.
+	* sysdeps/x86_64/fpu/multiarch/s_sincosf-fma.c: New file.
+	* sysdeps/x86_64/fpu/multiarch/s_sincosf-sse2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/s_sincosf.c: Likewise.
+	* sysdeps/x86_64/fpu/s_sincosf.S: Don't add alias if
+	__sincosf is defined.
+
 2018-01-08  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/tst-thread-exit-clobber.cc: New file.
