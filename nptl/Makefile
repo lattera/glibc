@@ -229,6 +229,8 @@ CFLAGS-pt-system.c += -fexceptions
 LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11
 LDLIBS-tst-thread_local1 = -lstdc++
+CFLAGS-tst-thread-exit-clobber.o = -std=gnu++11
+LDLIBS-tst-thread-exit-clobber = -lstdc++
 
 tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
@@ -304,7 +306,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
-	tst-robust-fork tst-create-detached tst-memstream
+	tst-robust-fork tst-create-detached tst-memstream \
+	tst-thread-exit-clobber
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
@@ -458,7 +461,7 @@ tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5
 endif
 # These tests require a C++ compiler and runtime with thread_local support.
 ifneq ($(have-cxx-thread_local),yes)
-tests-unsupported += tst-thread_local1
+tests-unsupported += tst-thread_local1 tst-thread-exit-clobber
 endif
 
 include ../Rules
