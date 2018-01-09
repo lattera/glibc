@@ -30,10 +30,29 @@
 
 /* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
    If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
-   ARGV and ENVP are terminated by NULL pointers.  */
+   ARGV and ENVP are terminated by NULL pointers.
+   Deprecated: use _hurd_exec_paths instead.  */
 error_t
 _hurd_exec (task_t task, file_t file,
 	    char *const argv[], char *const envp[])
+{
+  return _hurd_exec_paths (task, file, NULL, NULL, argv, envp);
+}
+
+link_warning (_hurd_exec,
+	      "_hurd_exec is deprecated, use _hurd_exec_paths instead");
+
+/* Overlay TASK, executing FILE with arguments ARGV and environment ENVP.
+   If TASK == mach_task_self (), some ports are dealloc'd by the exec server.
+   ARGV and ENVP are terminated by NULL pointers.  PATH is the relative path to
+   FILE and ABSPATH is the absolute path to FILE. Passing NULL, though possible,
+   should be avoided, since then the exec server may not know the path to
+   FILE if FILE is a script, and will then pass /dev/fd/N to the
+   interpreter.  */
+error_t
+_hurd_exec_paths (task_t task, file_t file,
+		   const char *path, const char *abspath,
+		   char *const argv[], char *const envp[])
 {
   error_t err;
   char *args, *env;
@@ -216,7 +235,7 @@ _hurd_exec (task_t task, file_t file,
       /* We have euid != svuid or egid != svgid.  POSIX.1 says that exec
 	 sets svuid = euid and svgid = egid.  So we must get a new auth
 	 port and reauthenticate everything with it.  We'll pass the new
-	 ports in file_exec instead of our own ports.  */
+	 ports in file_exec_paths instead of our own ports.  */
 
       auth_t newauth;
 
@@ -360,13 +379,28 @@ _hurd_exec (task_t task, file_t file,
       if (__sigismember (&_hurdsig_traced, SIGKILL))
 	flags |= EXEC_SIGTRAP;
 #endif
-      err = __file_exec (file, task, flags,
-			 args, argslen, env, envlen,
-			 dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
-			 ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
-			 ints, INIT_INT_MAX,
-			 please_dealloc, pdp - please_dealloc,
-			 &_hurd_msgport, task == __mach_task_self () ? 1 : 0);
+      err = __file_exec_paths (file, task, flags,
+			       path ? path : "",
+			       abspath ? abspath : "",
+			       args, argslen, env, envlen,
+			       dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
+			       ports, MACH_MSG_TYPE_COPY_SEND,
+			       _hurd_nports,
+			       ints, INIT_INT_MAX,
+			       please_dealloc, pdp - please_dealloc,
+			       &_hurd_msgport,
+			       task == __mach_task_self () ? 1 : 0);
+      /* Fall back for backwards compatibility.  This can just be removed
+         when __file_exec goes away.  */
+      if (err == MIG_BAD_ID)
+	err = __file_exec (file, task, flags,
+			   args, argslen, env, envlen,
+			   dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
+			   ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
+			   ints, INIT_INT_MAX,
+			   please_dealloc, pdp - please_dealloc,
+			   &_hurd_msgport,
+			   task == __mach_task_self () ? 1 : 0);
     }
 
   /* Release references to the standard ports.  */

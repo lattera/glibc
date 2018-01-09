@@ -25,8 +25,9 @@
 int
 fexecve (int fd, char *const argv[], char *const envp[])
 {
-  error_t err = HURD_DPORT_USE (fd, _hurd_exec (__mach_task_self (), port,
-						argv, envp));
+  error_t err = HURD_DPORT_USE (fd, _hurd_exec_paths (__mach_task_self (),
+						      port, NULL, NULL,
+						      argv, envp));
   if (! err)
     err = EGRATUITOUS;
   return __hurd_fail (err);

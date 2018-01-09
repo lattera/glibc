@@ -1,3 +1,18 @@
+2010-08-04  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+2017-09-26  Svante Signell  <svante.signell@gmail.com>
+
+	* hurd/hurdexec.c (_hurd_exec): Deprecate function.
+	(_hurd_exec_paths): New function.
+	* hurd/hurd.h (_hurd_exec): Deprecate function.
+	(_hurd_exec_paths): Declare function.
+	* hurd/Versions: Export _hurd_exec_paths.
+	* sysdeps/mach/hurd/execve.c: Include <stdlib.h> and <stdio.h>
+	(__execve): Use __getcwd to build absolute path, and use
+	_hurd_exec_paths instead of _hurd_exec.
+	* sysdeps/mach/hurd/spawni.c: Likewise.
+	* sysdeps/mach/hurd/fexecve.c: Use _hurd_exec_paths instead of
+	_hurd_exec.
+
 2018-01-08  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* sysdeps/unix/sysv/linux/tst-ttyname.c (do_in_chroot_1): Skip the

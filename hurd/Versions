@@ -129,6 +129,10 @@ libc {
     # functions used in macros & inline functions
     __errno_location;
   }
+  GLIBC_2.27 {
+    # "quasi-internal" functions
+    _hurd_exec_paths;
+  }
 
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use

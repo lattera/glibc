@@ -240,12 +240,21 @@ extern FILE *fopenport (io_t port, const char *mode);
 extern FILE *__fopenport (io_t port, const char *mode);
 
 
-/* Execute a file, replacing TASK's current program image.  */
+/* Deprecated: use _hurd_exec_paths instead.  */
 
 extern error_t _hurd_exec (task_t task,
 			   file_t file,
 			   char *const argv[],
-			   char *const envp[]);
+			   char *const envp[]) __attribute_deprecated__;
+
+/* Execute a file, replacing TASK's current program image.  */
+
+extern error_t _hurd_exec_paths (task_t task,
+				 file_t file,
+				 const char *path,
+				 const char *abspath,
+				 char *const argv[],
+				 char *const envp[]);
 
 
 /* Inform the proc server we have exited with STATUS, and kill the
