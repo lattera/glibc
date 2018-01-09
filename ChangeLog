@@ -1,5 +1,9 @@
 2018-01-09  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22688]
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = math]
+	(CFLAGS-e_remainderl.c): New variable.
+
 	[BZ #22687]
 	* sysdeps/powerpc/nofpu/Makefile (CFLAGS-s_cacosl.c): New
 	variable.
