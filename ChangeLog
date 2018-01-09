@@ -1,3 +1,20 @@
+2018-01-09  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22687]
+	* sysdeps/powerpc/nofpu/Makefile (CFLAGS-s_cacosl.c): New
+	variable.
+	(CFLAGS-s_cacoshl.c): Likewise.
+	(CFLAGS-s_casinhl.c): Likewise.
+	(CFLAGS-s_catanl.c): Likewise.
+	(CFLAGS-s_catanhl.c): Likewise.
+	(CFLAGS-s_cexpl.c): Likewise.
+	(CFLAGS-s_ccoshl.c): Add -fsignaling-nans.
+	(CFLAGS-s_csinhl.c): Likewise.
+	(CFLAGS-s_clogl.c): Likewise.
+	(CFLAGS-s_clog10l.c): Likewise.
+	(CFLAGS-s_csinl.c): Likewise.
+	(CFLAGS-s_csqrtl.c): Likewise.
+
 2010-08-04  Emilio Pozuelo Monfort  <pochu27@gmail.com>
 2017-09-26  Svante Signell  <svante.signell@gmail.com>
 

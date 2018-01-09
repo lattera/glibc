@@ -15,15 +15,29 @@ CPPFLAGS += -I../soft-fp/
 # gcc-4.1.1 and may be too late for gcc-4.2.  So we need these flags
 # until the fix in a gcc release and glibc drops support for earlier
 # versions of gcc.
+#
+# This bug can cause wrong signs of zero results from fabsl, and
+# spurious "invalid" exceptions from comparisons with NaN in the
+# default code sequence generated.  The fpclassify expansion used by
+# __builtin_fpclassify, which is used in the absence of
+# -fsignaling-nans, uses __builtin_fabsl, and is not affected by
+# -fno-builtin-fabsl, so requiring -fsignaling-nans for some affected
+# source files.
 CFLAGS-e_atan2l.c += -fno-builtin-fabsl
 CFLAGS-e_hypotl.c += -fno-builtin-fabsl
 CFLAGS-e_powl.c += -fno-builtin-fabsl
-CFLAGS-s_ccoshl.c += -fno-builtin-fabsl
-CFLAGS-s_csinhl.c += -fno-builtin-fabsl
-CFLAGS-s_clogl.c += -fno-builtin-fabsl
-CFLAGS-s_clog10l.c += -fno-builtin-fabsl
-CFLAGS-s_csinl.c += -fno-builtin-fabsl
-CFLAGS-s_csqrtl.c += -fno-builtin-fabsl
+CFLAGS-s_cacosl.c += -fsignaling-nans
+CFLAGS-s_cacoshl.c += -fsignaling-nans
+CFLAGS-s_casinhl.c += -fsignaling-nans
+CFLAGS-s_catanl.c += -fsignaling-nans
+CFLAGS-s_catanhl.c += -fsignaling-nans
+CFLAGS-s_ccoshl.c += -fno-builtin-fabsl -fsignaling-nans
+CFLAGS-s_cexpl.c += -fsignaling-nans
+CFLAGS-s_csinhl.c += -fno-builtin-fabsl -fsignaling-nans
+CFLAGS-s_clogl.c += -fno-builtin-fabsl -fsignaling-nans
+CFLAGS-s_clog10l.c += -fno-builtin-fabsl -fsignaling-nans
+CFLAGS-s_csinl.c += -fno-builtin-fabsl -fsignaling-nans
+CFLAGS-s_csqrtl.c += -fno-builtin-fabsl -fsignaling-nans
 CFLAGS-w_acosl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_asinl_compat.c += -fno-builtin-fabsl
 CFLAGS-w_atanhl_compat.c += -fno-builtin-fabsl
