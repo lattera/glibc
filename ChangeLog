@@ -1,3 +1,11 @@
+2018-01-10  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22690]
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c (__lrintl): Use unsigned
+	long int for arguments of possibly overflowing addition or
+	subtraction.
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c (__lroundl): Likewise.
+
 2018-01-09  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22688]

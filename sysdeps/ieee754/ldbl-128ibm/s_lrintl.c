@@ -84,7 +84,7 @@ __lrintl (long double x)
       /* Peg at max/min values, assuming that the above conversions do so.
          Strictly speaking, we can return anything for values that overflow,
          but this is more useful.  */
-      res = hi + lo;
+      res = (long int) ((unsigned long int) hi + (unsigned long int) lo);
 
       /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
       if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
@@ -105,27 +105,27 @@ __lrintl (long double x)
 	    return res;
 
 	  if (xh < 0.0)
-	    res -= 1;
+	    res -= 1UL;
 	  else
-	    res += 1;
+	    res += 1UL;
 	  break;
 
 	case FE_TOWARDZERO:
 	  if (res > 0 && (xh < 0.0 || (xh == 0.0 && xl < 0.0)))
-	    res -= 1;
+	    res -= 1UL;
 	  else if (res < 0 && (xh > 0.0 || (xh == 0.0 && xl > 0.0)))
-	    res += 1;
+	    res += 1UL;
 	  return res;
 	  break;
 
 	case FE_UPWARD:
 	  if (xh > 0.0 || (xh == 0.0 && xl > 0.0))
-	    res += 1;
+	    res += 1UL;
 	  break;
 
 	case FE_DOWNWARD:
 	  if (xh < 0.0 || (xh == 0.0 && xl < 0.0))
-	    res -= 1;
+	    res -= 1UL;
 	  break;
 	}
 
