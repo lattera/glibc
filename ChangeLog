@@ -1,3 +1,7 @@
+2018-01-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* po/libc.pot: Regenerate.
+
 2018-01-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22636]
