@@ -26,6 +26,7 @@
 #include <hurd/hurd_types.h>
 #include <hurd/port.h>
 #include <sys/socket.h>
+#include <fcntl.h>
 
 
 /* Structure representing a file descriptor.  */
@@ -253,6 +254,26 @@ extern int _hurd_select (int nfds, struct pollfd *pollfds,
 			 fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 			 const struct timespec *timeout,
 			 const sigset_t *sigmask);
+
+/* Apply AT_FLAGS on FLAGS, in preparation for calling
+   __hurd_file_name_lookup.  */
+
+_HURD_FD_H_EXTERN_INLINE error_t
+__hurd_at_flags (int *at_flags, int *flags)
+{
+  if ((*at_flags & AT_SYMLINK_FOLLOW) && (*at_flags & AT_SYMLINK_NOFOLLOW))
+    return EINVAL;
+
+  *flags |= (*at_flags & AT_SYMLINK_NOFOLLOW) ? O_NOLINK : 0;
+  *at_flags &= ~AT_SYMLINK_NOFOLLOW;
+  if (*at_flags & AT_SYMLINK_FOLLOW)
+    *flags &= ~O_NOLINK;
+  *at_flags &= ~AT_SYMLINK_FOLLOW;
+  if (*at_flags != 0)
+    return EINVAL;
+
+  return 0;
+}
 
 /* Variant of file_name_lookup used in *at function implementations.
    AT_FLAGS may only contain AT_SYMLINK_FOLLOW or AT_SYMLINK_NOFOLLOW,

@@ -25,6 +25,9 @@ libc_hidden_proto (readlinkat)
 /* Now define the internal interfaces.  */
 extern int __access (const char *__name, int __type) attribute_hidden;
 extern int __euidaccess (const char *__name, int __type);
+extern int __faccessat (int __fd, const char *__file, int __type, int __flag);
+extern int __faccessat_noerrno (int __fd, const char *__file, int __type,
+			        int __flag);
 extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence)
      attribute_hidden;
 extern __off_t __lseek (int __fd, __off_t __offset, int __whence);

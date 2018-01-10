@@ -29,16 +29,9 @@ __file_name_lookup_at (int fd, int at_flags,
   error_t err;
   file_t result;
 
-  if ((at_flags & AT_SYMLINK_FOLLOW) && (at_flags & AT_SYMLINK_NOFOLLOW))
-    return (__hurd_fail (EINVAL), MACH_PORT_NULL);
-
-  flags |= (at_flags & AT_SYMLINK_NOFOLLOW) ? O_NOLINK : 0;
-  at_flags &= ~AT_SYMLINK_NOFOLLOW;
-  if (at_flags & AT_SYMLINK_FOLLOW)
-    flags &= ~O_NOLINK;
-  at_flags &= ~AT_SYMLINK_FOLLOW;
-  if (at_flags != 0)
-    return (__hurd_fail (EINVAL), MACH_PORT_NULL);
+  err = __hurd_at_flags (&at_flags, &flags);
+  if (err)
+    return (__hurd_fail (err), MACH_PORT_NULL);
 
   if (fd == AT_FDCWD || file_name[0] == '/')
     return __file_name_lookup (file_name, flags, mode);

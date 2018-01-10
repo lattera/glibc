@@ -1,3 +1,25 @@
+2018-01-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurd/fd.h: Include <fcntl.h>
+	(__hurd_at_flags): New function.
+	* hurd/lookup-at.c (__file_name_lookup_at): Replace flag computation
+	with call to __hurd_at_flags.
+	* include/unistd.h (__faccessat, __faccessat_noerrno): Add declaration.
+	* sysdeps/mach/hurd/access.c (access_common): Move implementation to
+	__faccessat
+	(hurd_fail_seterrno, hurd_fail_noerrno): Move to sysdeps/mach/hurd/faccessat.c.
+	(__access_noerrno): Use __faccessat_common instead of access_common.
+	(__access): Likewise.
+	* sysdeps/mach/hurd/euidaccess.c (__euidaccess): Replace implementation
+	with a call to __faccessat.
+	* sysdeps/mach/hurd/faccessat.c (faccessat): Rename into...
+	(__faccessat_common): ... this. Move implementation of __access into it when
+	AT_FLAGS does not contain AT_EACCESS. Make it call __hurd_at_flags, add
+	reauthenticate_cwdir_at helper to implement AT mechanism.
+	(__faccessat_noerrno): New function, just calls __faccessat_common.
+	(__faccessat): New function, just calls __faccessat_common.
+	(faccessat): Define weak alias.
+
 2018-01-10  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22691]
