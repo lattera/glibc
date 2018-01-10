@@ -131,8 +131,8 @@ __log1pl (long double xm1)
   /* Test for NaN or infinity input. */
   xhi = ldbl_high (xm1);
   EXTRACT_WORDS (hx, lx, xhi);
-  if (hx >= 0x7ff00000)
-    return xm1 + xm1;
+  if ((hx & 0x7fffffff) >= 0x7ff00000)
+    return xm1 + xm1 * xm1;
 
   /* log1p(+- 0) = +- 0.  */
   if (((hx & 0x7fffffff) | lx) == 0)
