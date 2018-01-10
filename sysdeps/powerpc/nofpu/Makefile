@@ -47,4 +47,6 @@ CFLAGS-e_lgammal_r.c += -fno-builtin-fabsl
 CFLAGS-e_log10l.c += -fno-builtin-fabsl
 CFLAGS-e_log2l.c += -fno-builtin-fabsl
 CFLAGS-e_remainderl.c += -fno-builtin-fabsl
+CFLAGS-s_fmaxmagl.c += -fno-builtin-fabsl
+CFLAGS-s_fminmagl.c += -fno-builtin-fabsl
 endif

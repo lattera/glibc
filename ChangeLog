@@ -1,5 +1,10 @@
 2018-01-10  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22691]
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = math]
+	(CFLAGS-s_fmaxmagl.c): New variable.
+	[$(subdir) = math] (CFLAGS-s_fminmagl.c: Likewise.
+
 	[BZ #22690]
 	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c (__lrintl): Use unsigned
 	long int for arguments of possibly overflowing addition or
