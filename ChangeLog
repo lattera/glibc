@@ -1,3 +1,9 @@
+2018-01-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22636]
+	* sysdeps/nptl/unwind-forcedunwind.c (pthread_cancel_init): Open
+	libgcc.so with RTLD_NOW, to avoid lazy binding during unwind.
+
 2018-01-10  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurd/fd.h: Include <fcntl.h>
