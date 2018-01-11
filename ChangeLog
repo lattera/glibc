@@ -1,3 +1,14 @@
+2018-01-12  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* po/bg.po: Update translations.
+	* po/cs.po: Likewise.
+	* po/de.po: Likewise.
+	* po/ko.po: Likewise.
+	* po/pl.po: Likewise.
+	* po/sv.po: Likewise.
+	* po/uk.po: Likewise.
+	* po/vi.po: Likewise.
+
 2018-01-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* aarch64/start.S (_start): Use __wrap_main.
