@@ -498,7 +498,7 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 # define libc_feresetroundl libc_feupdateenvl
 #endif
 
-/* ... and a version that may also discard exceptions.  */
+/* ... and a version that also discards exceptions.  */
 
 #ifndef libc_feresetround_noex
 # define libc_feresetround_noex  libc_fesetenv
@@ -572,8 +572,9 @@ libc_feresetround_ctx (struct rm_ctx *ctx)
 static __always_inline void
 libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
 {
-  /* Save exception flags and rounding mode.  */
-  __fegetenv (&ctx->env);
+  /* Save exception flags and rounding mode, and disable exception
+     traps.  */
+  __feholdexcept (&ctx->env);
 
   /* Update rounding mode only if different.  */
   if (__glibc_unlikely (round != get_rounding_mode ()))
@@ -626,7 +627,7 @@ libc_feresetround_noex_ctx (struct rm_ctx *ctx)
    the value at the start of the block.  The exception mode must be preserved.
    Exceptions raised within the block must be discarded, and exception flags
    are restored to the value at the start of the block.
-   Non-stop mode may be enabled inside the block.  */
+   Non-stop mode must be enabled inside the block.  */
 
 #define SET_RESTORE_ROUND_NOEX(RM) \
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_noex, \

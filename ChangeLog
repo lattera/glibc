@@ -1,3 +1,13 @@
+2018-01-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #22702]
+	* sysdeps/generic/math_private.h (libc_feresetround_noex): Update
+	comment to say exceptions are discarded.
+	(libc_feholdsetround_noex_ctx): Use __feholdexcept instead of
+	__fegetenv.
+	(SET_RESTORE_ROUND_NOEX): Update comment to say non-stop mode must
+	be enabled.
+
 2018-01-11  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/gnu/unwind-resume.c (__libgcc_s_init): Update comment
