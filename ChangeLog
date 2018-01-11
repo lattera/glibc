@@ -1,5 +1,10 @@
 2018-01-11  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/gnu/unwind-resume.c (__libgcc_s_init): Update comment
+	and error message.
+
+2018-01-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22636]
 	* nptl/Makefile (tests): Add tst-minstack-cancel, tst-minstack-exit.
 	* nptl/tst-minstack-cancel.c, nptl/tst-minstack-exit.c: New files.
