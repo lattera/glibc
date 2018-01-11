@@ -307,7 +307,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached tst-memstream \
-	tst-thread-exit-clobber
+	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
