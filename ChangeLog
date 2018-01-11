@@ -1,5 +1,13 @@
 2018-01-16  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_SHA3): Define.
+	(HWCAP_SM3, HWCAP_SM4, HWCAP_ASIMDDP, HWCAP_SHA512, HWCAP_SVE): Define.
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c
+	(_dl_aarch64_cap_flags): Update.
+	(_DL_HWCAP_COUNT): Update.
+
+2018-01-16  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h
 	(_DL_HWCAP_LAST): Remove.
 	(_DL_HWCAP_COUNT): Move to ...
