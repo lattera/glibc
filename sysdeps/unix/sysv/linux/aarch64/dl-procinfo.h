@@ -27,12 +27,6 @@
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1
 
-/* Number of HWCAP bits set.  */
-#define _DL_HWCAP_COUNT 16
-
-/* Offset of the last bit allocated in HWCAP.  */
-#define _DL_HWCAP_LAST 15
-
 /* HWCAP_CPUID should be available by default to influence IFUNC as well as
    library search.  */
 #define HWCAP_IMPORTANT HWCAP_CPUID

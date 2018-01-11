@@ -56,10 +56,13 @@ PROCINFO_CLASS struct cpu_features _dl_aarch64_cpu_features
 # endif
 #endif
 
+/* Number of HWCAP bits set.  */
+#define _DL_HWCAP_COUNT 16
+
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_aarch64_cap_flags
 #else
-PROCINFO_CLASS const char _dl_aarch64_cap_flags[16][10]
+PROCINFO_CLASS const char _dl_aarch64_cap_flags[_DL_HWCAP_COUNT][10]
 #endif
 #ifndef PROCINFO_DECL
 /* Matches the names in arch/arm64/kernel/cpuinfo.c of Linux.  */

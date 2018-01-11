@@ -1,3 +1,11 @@
+2018-01-16  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h
+	(_DL_HWCAP_LAST): Remove.
+	(_DL_HWCAP_COUNT): Move to ...
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c
+	(_DL_HWCAP_COUNT): ... here.
+
 2018-01-16  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/Makefile (CFLAGS-tst-minstack-throw.o): Compile in C++11
