@@ -18,12 +18,15 @@
 
 #include <support/support.h>
 
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
 
 void
 write_message (const char *message)
 {
+  int saved_errno = errno;
   ssize_t unused __attribute__ ((unused));
   unused = write (STDOUT_FILENO, message, strlen (message));
+  errno = saved_errno;
 }

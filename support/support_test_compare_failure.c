@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <stdio.h>
 #include <support/check.h>
 
@@ -44,6 +45,7 @@ support_test_compare_failure (const char *file, int line,
                               int right_positive,
                               int right_size)
 {
+  int saved_errno = errno;
   support_record_failure ();
   if (left_size != right_size)
     printf ("%s:%d: numeric comparison failure (widths %d and %d)\n",
@@ -52,4 +54,5 @@ support_test_compare_failure (const char *file, int line,
     printf ("%s:%d: numeric comparison failure\n", file, line);
   report (" left", left_expr, left_value, left_positive, left_size);
   report ("right", right_expr, right_value, right_positive, right_size);
+  errno = saved_errno;
 }

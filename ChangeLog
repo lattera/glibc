@@ -1,5 +1,14 @@
 2018-01-12  Florian Weimer  <fweimer@redhat.com>
 
+	* support/write_message.c (write_message): Preserve errno.
+	* support/check.c (print_failure): Likewise.
+	* support/support_test_verify_impl.c (support_test_verify_impl):
+	Likewise.
+	* support/support_test_compare_failure.c
+	(support_test_compare_failure): Likewise.
+
+2018-01-12  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22701]
 	* nis/Makefile (install-lib-ldscripts, $(inst_libdir)/libnsl.so):
 	Prevent installation of libnsl.so.

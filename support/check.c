@@ -18,6 +18,7 @@
 
 #include <support/check.h>
 
+#include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,9 +27,11 @@
 static void
 print_failure (const char *file, int line, const char *format, va_list ap)
 {
+  int saved_errno = errno;
   printf ("error: %s:%d: ", file, line);
   vprintf (format, ap);
   puts ("");
+  errno = saved_errno;
 }
 
 int
