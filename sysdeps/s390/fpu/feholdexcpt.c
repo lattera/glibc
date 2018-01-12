@@ -24,7 +24,7 @@ int __feholdexcept (fenv_t *envp)
 {
   fexcept_t fpc;
   /* Store the environment.  */
-  fegetenv (envp);
+  __fegetenv (envp);
   /* Clear the current sticky bits as more than one exception
      may be generated.  */
   fpc = envp->__fpc & ~(FPC_FLAGS_MASK | FPC_DXC_MASK);
