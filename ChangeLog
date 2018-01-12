@@ -1,3 +1,14 @@
+2018-01-19  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #22685]
+	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION_IMPL): Renamed
+	from ABORT_TRANSACTION.
+	(ABORT_TRANSACTION): Redirect to ABORT_TRANSACTION_IMPL.
+	* sysdeps/powerpc/powerpc64/sysdep.h (ABORT_TRANSACTION,
+	ABORT_TRANSACTION_IMPL): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/not-errno.h: New file.  Reuse
+	Linux code, but remove the code that aborts transactions.
+
 2018-01-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/generic/netinet/if_ether.h: Include <stdint.h>.
