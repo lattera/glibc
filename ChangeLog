@@ -1,3 +1,10 @@
+2018-01-12  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22701]
+	* nis/Makefile (install-lib-ldscripts, $(inst_libdir)/libnsl.so):
+	Prevent installation of libnsl.so.
+	(libnsl-inhibit-o): Do not build (or install) static libraries.
+
 2018-01-12  Rafal Luzynski <digitalfreak@lingonborough.com>
 	    Egmont Koblinger  <egmont@gmail.com>
 

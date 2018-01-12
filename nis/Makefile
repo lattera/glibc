@@ -68,7 +68,15 @@ libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
 libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser \
 			   nss-nisplus nisplus-initgroups
 libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
-endif
+
+else # not $(build-obsolete-nsl)
+# Pretend that libnsl.so is a linker script, so that the symbolic link
+# is not installed.
+install-lib-ldscripts = libnsl.so
+$(inst_libdir)/libnsl.so:
+libnsl-inhibit-o = .o # Build no static libnsl.a.
+
+endif # not $(build-obsolete-nsl)
 
 include ../Rules
 
