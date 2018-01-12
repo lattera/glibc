@@ -1,3 +1,9 @@
+2018-01-12  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	[BZ #22697]
+	* sysdeps/powerpc/powerpc32/power4/fpu/s_llround.S (__llround):
+	Do not add 0.5 to integer or out-of-range arguments.
+
 2018-01-12  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* po/bg.po: Update translations.
