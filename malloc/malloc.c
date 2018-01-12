@@ -4431,6 +4431,12 @@ static void malloc_consolidate(mstate av)
     p = atomic_exchange_acq (fb, NULL);
     if (p != 0) {
       do {
+	{
+	  unsigned int idx = fastbin_index (chunksize (p));
+	  if ((&fastbin (av, idx)) != fb)
+	    malloc_printerr ("malloc_consolidate(): invalid chunk size");
+	}
+
 	check_inuse_chunk(av, p);
 	nextp = p->fd;
 
