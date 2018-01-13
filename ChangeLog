@@ -1,3 +1,17 @@
+2018-01-25  Palmer Dabbelt  <palmer@sifive.com>
+
+	* elf/cache.c (print_entry): Add FLAG_RISCV_FLOAT_ABI_SOFT and
+	FLAG_RISCV_FLOAT_ABI_DOUBLE.
+	* elf/elf.h (EF_RISCV_RVC): New define.
+	(EF_RISCV_FLOAT_ABI): Likewise.
+	(EF_RISCV_FLOAT_ABI_SOFT): Likewise.
+	(EF_RISCV_FLOAT_ABI_SINGLE): Likewise.
+	(EF_RISCV_FLOAT_ABI_DOUBLE): Likewise.
+	(EF_RISCV_FLOAT_ABI_QUAD): Likewise.
+	* sysdeps/generic/ldconfig.h (FLAG_RISCV_FLOAT_ABI_SOFT): New
+	define.
+	(FLAG_RISCV_FLOAT_ABI_DOUBLE): Likewise.
+
 2018-01-25  Andreas Schwab  <schwab@suse.de>
 
 	* aclocal.m4 (LIBC_SLIBDIR_RTLDDIR): Consistently put arguments in

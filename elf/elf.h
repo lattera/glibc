@@ -3766,6 +3766,14 @@ enum
 
 #define R_TILEGX_NUM		130
 
+/* RISC-V ELF Flags */
+#define EF_RISCV_RVC 			0x0001
+#define EF_RISCV_FLOAT_ABI 		0x0006
+#define EF_RISCV_FLOAT_ABI_SOFT 	0x0000
+#define EF_RISCV_FLOAT_ABI_SINGLE 	0x0002
+#define EF_RISCV_FLOAT_ABI_DOUBLE 	0x0004
+#define EF_RISCV_FLOAT_ABI_QUAD 	0x0006
+
 /* RISC-V relocations.  */
 #define R_RISCV_NONE          0
 #define R_RISCV_32            1
