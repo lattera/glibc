@@ -1,3 +1,9 @@
+2018-01-13  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #22707]
+	* elf/elf.h (DF_1_STUB): Define.
+	(DF_1_PIE): Define.
+
 2018-01-12  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	[BZ #22697]
