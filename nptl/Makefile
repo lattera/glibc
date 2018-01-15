@@ -231,6 +231,7 @@ CFLAGS-tst-thread_local1.o = -std=gnu++11
 LDLIBS-tst-thread_local1 = -lstdc++
 CFLAGS-tst-thread-exit-clobber.o = -std=gnu++11
 LDLIBS-tst-thread-exit-clobber = -lstdc++
+LDLIBS-tst-minstack-throw = -lstdc++
 
 tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
@@ -307,7 +308,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-bad-schedattr \
 	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
 	tst-robust-fork tst-create-detached tst-memstream \
-	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit
+	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
+	tst-minstack-throw
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
@@ -457,7 +459,8 @@ endif
 
 ifeq (,$(CXX))
 # These tests require a C++ compiler and runtime.
-tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5
+tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5 \
+  tst-minstack-throw
 endif
 # These tests require a C++ compiler and runtime with thread_local support.
 ifneq ($(have-cxx-thread_local),yes)

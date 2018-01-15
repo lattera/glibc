@@ -1,3 +1,11 @@
+2018-01-15  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22636]
+	* nptl/tst-minstack-throw.cc: New file.
+	* nptl/Makefile (tests): Add tst-minstack-throw.
+	(LDLIBS-tst-minstack-throw): Link with libstdc++.
+	[!CXX] (tests-unsupported): Add tst-minstack-throw.
+
 2018-01-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default
