@@ -1,3 +1,8 @@
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile (CFLAGS-tst-minstack-throw.o): Compile in C++11
+	mode with GNU extensions.
+
 2018-01-15  Alan Hayward  <alan.hayward@arm.com>
 
 	* elf/elf.h (NT_ARM_SVE): Define.
