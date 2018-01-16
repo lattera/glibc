@@ -1,3 +1,9 @@
+2018-01-16  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/Makefile [$(have-cxx-thread_local)] (tests-unsupported):
+	Move tst-thread-exit-clobber ...
+	[$(CXX)] (tests-unsupported): ... to here.
+
 2018-01-16  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_SHA3): Define.

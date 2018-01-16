@@ -461,11 +461,11 @@ endif
 ifeq (,$(CXX))
 # These tests require a C++ compiler and runtime.
 tests-unsupported += tst-cancel24 tst-cancel24-static tst-once5 \
-  tst-minstack-throw
+  tst-thread-exit-clobber tst-minstack-throw
 endif
 # These tests require a C++ compiler and runtime with thread_local support.
 ifneq ($(have-cxx-thread_local),yes)
-tests-unsupported += tst-thread_local1 tst-thread-exit-clobber
+tests-unsupported += tst-thread_local1
 endif
 
 include ../Rules
