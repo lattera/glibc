@@ -20,6 +20,7 @@
 #include <libc-lock.h>
 #include <dlfcn.h>
 #include <execinfo.h>
+#include <gnu/lib-names.h>
 #include <stdlib.h>
 #include <unwind.h>
 
@@ -49,7 +50,7 @@ dummy_getcfa (struct _Unwind_Context *ctx __attribute__ ((unused)))
 static void
 init (void)
 {
-  libgcc_handle = __libc_dlopen ("libgcc_s.so.1");
+  libgcc_handle = __libc_dlopen (LIBGCC_S_SO);
 
   if (libgcc_handle == NULL)
     return;
