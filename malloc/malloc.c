@@ -3716,11 +3716,22 @@ _int_malloc (mstate av, size_t bytes)
       while ((victim = unsorted_chunks (av)->bk) != unsorted_chunks (av))
         {
           bck = victim->bk;
-          if (__builtin_expect (chunksize_nomask (victim) <= 2 * SIZE_SZ, 0)
-              || __builtin_expect (chunksize_nomask (victim)
-				   > av->system_mem, 0))
-            malloc_printerr ("malloc(): memory corruption");
           size = chunksize (victim);
+          mchunkptr next = chunk_at_offset (victim, size);
+
+          if (__glibc_unlikely (size <= 2 * SIZE_SZ)
+              || __glibc_unlikely (size > av->system_mem))
+            malloc_printerr ("malloc(): invalid size (unsorted)");
+          if (__glibc_unlikely (chunksize_nomask (next) < 2 * SIZE_SZ)
+              || __glibc_unlikely (chunksize_nomask (next) > av->system_mem))
+            malloc_printerr ("malloc(): invalid next size (unsorted)");
+          if (__glibc_unlikely ((prev_size (next) & ~(SIZE_BITS)) != size))
+            malloc_printerr ("malloc(): mismatching next->prev_size (unsorted)");
+          if (__glibc_unlikely (bck->fd != victim)
+              || __glibc_unlikely (victim->fd != unsorted_chunks (av)))
+            malloc_printerr ("malloc(): unsorted double linked list corrupted");
+          if (__glibc_unlikely (prev_inuse(next)))
+            malloc_printerr ("malloc(): invalid next->prev_inuse (unsorted)");
 
           /*
              If a small request, try to use last remainder if it is the
