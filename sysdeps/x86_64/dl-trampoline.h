@@ -440,8 +440,16 @@ _dl_runtime_profile:
 # ifdef RESTORE_AVX
 	/* sizeof(La_x86_64_retval).  Need extra space for 2 SSE
 	   registers to detect if xmm0/xmm1 registers are changed
-	   by audit module.  */
-	sub $(LRV_SIZE + XMM_SIZE*2), %RSP_LP
+	   by audit module.  Since rsp is aligned to VEC_SIZE, we
+	   need to make sure that the address of La_x86_64_retval +
+	   LRV_VECTOR0_OFFSET is aligned to VEC_SIZE.  */
+#  define LRV_SPACE (LRV_SIZE + XMM_SIZE*2)
+#  define LRV_MISALIGNED ((LRV_SIZE + LRV_VECTOR0_OFFSET) & (VEC_SIZE - 1))
+#  if LRV_MISALIGNED == 0
+	sub $LRV_SPACE, %RSP_LP
+#  else
+	sub $(LRV_SPACE + VEC_SIZE - LRV_MISALIGNED), %RSP_LP
+#  endif
 # else
 	sub $LRV_SIZE, %RSP_LP	# sizeof(La_x86_64_retval)
 # endif
