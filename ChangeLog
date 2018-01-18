@@ -127,8 +127,7 @@
 	Prevent installation of libnsl.so.
 	(libnsl-inhibit-o): Do not build (or install) static libraries.
 
-2018-01-12  Rafal Luzynski <digitalfreak@lingonborough.com>
-	    Egmont Koblinger  <egmont@gmail.com>
+2018-01-12  Egmont Koblinger  <egmont@gmail.com>
 
 	[BZ #22657]
 	* localedata/locales/hu_HU (d_t_fmt): Avoid a leading space
