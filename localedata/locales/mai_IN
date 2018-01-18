@@ -24,7 +24,7 @@ fax        ""
 language   "Maithili"
 territory  "India"
 revision   "1.1"
-date       "2017-24-07"
+date       "2017-07-24"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

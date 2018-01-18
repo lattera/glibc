@@ -1,3 +1,10 @@
+2018-01-18  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* localedata/locales/bho_NP (LC_IDENTIFICATION): Fix an obvious typo
+	in date: "2017-24-07" should be "2017-07-24".
+	* localedata/locales/mai_IN: Likewise.
+	* localedata/locales/mai_NP: Likewise.
+
 2018-01-17  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* po/ru.po: Update translations.
