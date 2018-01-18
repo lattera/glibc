@@ -1,3 +1,13 @@
+2018-01-18  Arjun Shankar  <arjun@redhat.com>
+
+	[BZ #22343]
+	* malloc/malloc.c (checked_request2size): call REQUEST_OUT_OF_RANGE
+	after padding.
+	(_int_memalign): check for integer overflow before calling
+	_int_malloc.
+	* malloc/tst-malloc-too-large.c: New test.
+	* malloc/Makefile: Add tst-malloc-too-large.
+
 2018-01-18  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* localedata/locales/bho_NP (LC_IDENTIFICATION): Fix an obvious typo

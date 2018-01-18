@@ -36,6 +36,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-alloc_buffer \
 	 tst-malloc-tcache-leak \
 	 tst-malloc_info \
+	 tst-malloc-too-large \
 
 tests-static := \
 	 tst-interpose-static-nothread \

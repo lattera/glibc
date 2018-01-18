@@ -1224,14 +1224,21 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    MINSIZE :                                                      \
    ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
 
-/*  Same, except also perform argument check */
-
-#define checked_request2size(req, sz)                             \
-  if (REQUEST_OUT_OF_RANGE (req)) {					      \
-      __set_errno (ENOMEM);						      \
-      return 0;								      \
-    }									      \
-  (sz) = request2size (req);
+/* Same, except also perform an argument and result check.  First, we check
+   that the padding done by request2size didn't result in an integer
+   overflow.  Then we check (using REQUEST_OUT_OF_RANGE) that the resulting
+   size isn't so large that a later alignment would lead to another integer
+   overflow.  */
+#define checked_request2size(req, sz) \
+({				    \
+  (sz) = request2size (req);	    \
+  if (((sz) < (req))		    \
+      || REQUEST_OUT_OF_RANGE (sz)) \
+    {				    \
+      __set_errno (ENOMEM);	    \
+      return 0;			    \
+    }				    \
+})
 
 /*
    --------------- Physical chunk operations ---------------
@@ -4677,6 +4684,13 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
      request, and then possibly free the leading and trailing space.
    */
 
+
+  /* Check for overflow.  */
+  if (nb > SIZE_MAX - alignment - MINSIZE)
+    {
+      __set_errno (ENOMEM);
+      return 0;
+    }
 
   /* Call malloc with worst case padding to hit alignment. */
 
