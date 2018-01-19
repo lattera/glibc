@@ -19,6 +19,7 @@
 #define __NETINET_IF_ETHER_H	1
 
 #include <sys/types.h>
+#include <stdint.h>
 
 #define ETH_ALEN	6	/* Octets in one ethernet address.  */
 

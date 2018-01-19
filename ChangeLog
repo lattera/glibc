@@ -1,3 +1,7 @@
+2018-01-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/generic/netinet/if_ether.h: Include <stdint.h>.
+
 2018-01-19  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	* localedata/locales/gu_IN (LC_IDENTIFICATION): Fix an obvious typo
