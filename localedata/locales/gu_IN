@@ -24,7 +24,7 @@ fax        ""
 language   "Gujarati"
 territory  "India"
 revision   "0.2"
-date       "2004-14-09"
+date       "2004-09-14"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

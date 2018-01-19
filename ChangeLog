@@ -1,3 +1,10 @@
+2018-01-19  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	* localedata/locales/gu_IN (LC_IDENTIFICATION): Fix an obvious typo
+	in date: "2004-14-09" should be "2004-09-14".
+	* localedata/locales/lo_LA: Fix an obvious typo in date in the header:
+	"2003-15-09" should be "2003-09-15".
+
 2018-01-18  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22343]
