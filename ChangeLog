@@ -1,3 +1,11 @@
+2018-01-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	[BZ #22742]
+	* sysdeps/unix/sysv/linux/aarch64/sys/ucontext.h (__glibc_reserved1):
+	Rename to __reserved and add comment.
+	* sysdeps/unix/sysv/linux/aarch64/ucontext_i.sym (__glibc_reserved1):
+	Rename to __reserved.
+
 2018-01-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Add

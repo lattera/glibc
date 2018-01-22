@@ -56,7 +56,11 @@ typedef struct
     unsigned long long int __ctx(sp);
     unsigned long long int __ctx(pc);
     unsigned long long int __ctx(pstate);
-    unsigned char __glibc_reserved1[4096] __attribute__ ((__aligned__ (16)));
+    /* This field contains extension records for additional processor
+       state such as the FP/SIMD state.  It has to match the definition
+       of the corresponding field in the sigcontext struct, see the
+       arch/arm64/include/uapi/asm/sigcontext.h linux header for details.  */
+    unsigned char __reserved[4096] __attribute__ ((__aligned__ (16)));
   } mcontext_t;
 
 /* Userlevel context.  */
