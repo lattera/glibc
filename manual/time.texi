@@ -1349,10 +1349,10 @@ Emperors' reigns.
 With all format specifiers that produce numbers: use the locale's
 alternate numeric symbols.
 
-With @code{%B} and @code{%b}: use the grammatical form for month names
-that is appropriate when the month is named by itself, rather than
-the form that is appropriate when the month is used as part of a
-complete date.  This is a GNU extension.
+With @code{%B}, @code{%b}, and @code{%h}: use the grammatical form for
+month names that is appropriate when the month is named by itself,
+rather than the form that is appropriate when the month is used as
+part of a complete date.  This is a GNU extension.
 @end table
 
 If the format supports the modifier but no alternate representation

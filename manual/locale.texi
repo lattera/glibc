@@ -923,7 +923,7 @@ corresponds to Sunday.
 @itemx DAY_5
 @itemx DAY_6
 @itemx DAY_7
-Similar to @code{ABDAY_1} etc.,@: but here the return value is the
+Similar to @code{ABDAY_1}, etc.,@: but here the return value is the
 unabbreviated weekday name.
 @item ABMON_1
 @itemx ABMON_2
@@ -937,9 +937,9 @@ unabbreviated weekday name.
 @itemx ABMON_10
 @itemx ABMON_11
 @itemx ABMON_12
-The return value is the abbreviated name of the month, in the grammatical
-form used when the month forms part of a complete date.  @code{ABMON_1}
-corresponds to January.
+The return value is the abbreviated name of the month, in the
+grammatical form used when the month forms part of a complete date.
+@code{ABMON_1} corresponds to January.
 @item MON_1
 @itemx MON_2
 @itemx MON_3
@@ -952,8 +952,9 @@ corresponds to January.
 @itemx MON_10
 @itemx MON_11
 @itemx MON_12
-Similar to @code{ABMON_1} etc.,@: but here the month names are not abbreviated.
-Here the first value @code{MON_1} also corresponds to January.
+Similar to @code{ABMON_1}, etc.,@: but here the month names are not
+abbreviated.  Here the first value @code{MON_1} also corresponds to
+January.
 @item ALTMON_1
 @itemx ALTMON_2
 @itemx ALTMON_3
@@ -966,13 +967,19 @@ Here the first value @code{MON_1} also corresponds to January.
 @itemx ALTMON_10
 @itemx ALTMON_11
 @itemx ALTMON_12
-Similar to @code{MON_1} etc.,@: but here the month names are in the grammatical
-form used when the month is named by itself.  The @code{strftime} functions
-use these month names for the format specifier @code{OB}.
+Similar to @code{MON_1}, etc.,@: but here the month names are in the
+grammatical form used when the month is named by itself.  The
+@code{strftime} functions use these month names for the conversion
+specifier @code{%OB} (@pxref{Formatting Calendar Time}).
 
 Note that not all languages need two different forms of the month names,
 so the strings returned for @code{MON_@dots{}} and @code{ALTMON_@dots{}}
 may or may not be the same, depending on the locale.
+
+@strong{NB:} @code{ABALTMON_@dots{}} constants corresponding to the
+@code{%Ob} conversion specifier are not currently provided, but are
+expected to be in a future release.  In the meantime, it is possible
+to use @code{_NL_ABALTMON_@dots{}}.
 @item AM_STR
 @itemx PM_STR
 The return values are strings which can be used in the representation of time
