@@ -304,7 +304,7 @@ by setting the following tunables in the @code{tune} namespace:
 This tunable supersedes the @env{LD_HWCAP_MASK} environment variable and is
 identical in features.
 
-The @code{AT_HWCAP} key in the Auxilliary Vector specifies instruction set
+The @code{AT_HWCAP} key in the Auxiliary Vector specifies instruction set
 extensions available in the processor at runtime for some architectures.  The
 @code{glibc.tune.hwcap_mask} tunable allows the user to mask out those
 capabilities at runtime, thus disabling use of those extensions.

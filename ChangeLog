@@ -1,3 +1,8 @@
+2018-01-23  Tobias Klauser  <tklauser@distanz.ch>
+
+	* manual/tunables.texi (Hardware Capability Tunables): Fix
+	spelling.
+
 2018-01-22  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/locale.texi (ALTMON_1, ALTMON_2, ALTMON_3, ALTMON_4)
