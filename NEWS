@@ -11,7 +11,7 @@ Major new features:
 
 * The GNU C Library can now be compiled with support for building static
   PIE executables (See --enable-static-pie in INSTALL).  These static PIE
-  exectuables are like static executables but can be loaded at any address
+  executables are like static executables but can be loaded at any address
   and provide additional security hardening benefits at the cost of some
   memory and performance.  When the library is built with --enable-static-pie
   the resulting libc.a is usable with GCC 8 and above to create static PIE
