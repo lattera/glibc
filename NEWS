@@ -94,7 +94,22 @@ Major new features:
   be added to the next revision of POSIX, and it is also already
   available on some BSD-derived operating systems.
 
+  This feature will cause existing statically compiled applications
+  to fail to load locales and fall back to the builtin C/POSIX locales.
+  See notes below for other changes affecting compatibilty.
+
 Deprecated and removed features, and other changes affecting compatibility:
+
+* Statically compiled applications attempting to load locales compiled for the
+  GNU C Library version 2.27 will fail and fall back to the builtin C/POSIX
+  locale.  The reason for this is that the addition of the new "%OB" and "%ob",
+  support for two grammatical forms of the month names, also extends the locale
+  data binary format.  Static applications needing locale support must be
+  recompiled to match the runtime and data they are deployed with. In some
+  distributions there is an upgrade window where dynamically linked applications
+  may use a new library but the old locale data and also fall back to the
+  builtin C/POSIX locales; restarting the application process is sufficient to
+  fix this.
 
 * Support for statically linked applications which call dlopen is deprecated
   and will be removed in a future version of glibc.  Applications which call
