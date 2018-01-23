@@ -418,21 +418,47 @@ C		"-"			"[Z-\\]]"	       NOMATCH
 # Following are tests outside the scope of IEEE 2003.2 since they are using
 # locales other than the C locale.  The main focus of the tests is on the
 # handling of ranges and the recognition of character (vs bytes).
+#
+# See:
+#
+# http://pubs.opengroup.org/onlinepubs/7908799/xbd/re.html
+#
+# > A range expression represents the set of collating elements that fall
+# > between two elements in the current collation sequence,
+# > inclusively. It is expressed as the starting point and the ending
+# > point separated by a hyphen (-).
+# >
+# > Range expressions must not be used in portable applications because
+# > their behaviour is dependent on the collating sequence. Ranges will be
+# > treated according to the current collating sequence, and include such
+# > characters that fall within the range based on that collating
+# > sequence, regardless of character values. This, however, means that
+# > the interpretation will differ depending on collating sequence. If,
+# > for instance, one collating sequence defines Ã¤ as a variant of a,
+# > while another defines it as a letter following z, then the expression
+# > [Ã¤-z] is valid in the first language and invalid in the second.
+#
+# Therefore, using [a-z] does not make much sense except in the C/POSIX locale.
+# The new iso14651_t1_common lists upper case and lower case Latin characters
+# in a different order than the old one which causes surprising results
+# for example in the de_DE locale: [a-z] now includes A because A comes
+# after a in iso14651_t1_common but does not include Z because that comes
+# after z in iso14651_t1_common.
 de_DE.ISO-8859-1 "a"			"[a-z]"		       0
 de_DE.ISO-8859-1 "z"			"[a-z]"		       0
 de_DE.ISO-8859-1 "ä"			"[a-z]"		       0
 de_DE.ISO-8859-1 "ö"			"[a-z]"		       0
 de_DE.ISO-8859-1 "ü"			"[a-z]"		       0
-de_DE.ISO-8859-1 "A"			"[a-z]"		       NOMATCH
+de_DE.ISO-8859-1 "A"			"[a-z]"		       0 # surprising but correct!
 de_DE.ISO-8859-1 "Z"			"[a-z]"		       NOMATCH
-de_DE.ISO-8859-1 "Ä"			"[a-z]"		       NOMATCH
-de_DE.ISO-8859-1 "Ö"			"[a-z]"		       NOMATCH
-de_DE.ISO-8859-1 "Ü"			"[a-z]"		       NOMATCH
+de_DE.ISO-8859-1 "Ä"			"[a-z]"		       0 # surprising but correct!
+de_DE.ISO-8859-1 "Ö"			"[a-z]"		       0 # surprising but correct!
+de_DE.ISO-8859-1 "Ü"			"[a-z]"		       0 # surprising but correct!
 de_DE.ISO-8859-1 "a"			"[A-Z]"		       NOMATCH
-de_DE.ISO-8859-1 "z"			"[A-Z]"		       NOMATCH
-de_DE.ISO-8859-1 "ä"			"[A-Z]"		       NOMATCH
-de_DE.ISO-8859-1 "ö"			"[A-Z]"		       NOMATCH
-de_DE.ISO-8859-1 "ü"			"[A-Z]"		       NOMATCH
+de_DE.ISO-8859-1 "z"			"[A-Z]"		       0 # surprising but correct!
+de_DE.ISO-8859-1 "ä"			"[A-Z]"		       0 # surprising but correct!
+de_DE.ISO-8859-1 "ö"			"[A-Z]"		       0 # surprising but correct!
+de_DE.ISO-8859-1 "ü"			"[A-Z]"		       0 # surprising but correct!
 de_DE.ISO-8859-1 "A"			"[A-Z]"		       0
 de_DE.ISO-8859-1 "Z"			"[A-Z]"		       0
 de_DE.ISO-8859-1 "Ä"			"[A-Z]"		       0
@@ -515,16 +541,16 @@ de_DE.UTF-8	 "z"			"[a-z]"		       0
 de_DE.UTF-8	 "Ã¤"			"[a-z]"		       0
 de_DE.UTF-8	 "Ã¶"			"[a-z]"		       0
 de_DE.UTF-8	 "Ã¼"			"[a-z]"		       0
-de_DE.UTF-8	 "A"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "A"			"[a-z]"		       0 # surprising but correct!
 de_DE.UTF-8	 "Z"			"[a-z]"		       NOMATCH
-de_DE.UTF-8	 "Ã„"			"[a-z]"		       NOMATCH
-de_DE.UTF-8	 "Ã–"			"[a-z]"		       NOMATCH
-de_DE.UTF-8	 "Ãœ"			"[a-z]"		       NOMATCH
+de_DE.UTF-8	 "Ã„"			"[a-z]"	       0 # surprising but correct!
+de_DE.UTF-8	 "Ã–"			"[a-z]"	       0 # surprising but correct!
+de_DE.UTF-8	 "Ãœ"			"[a-z]"	       0 # surprising but correct!
 de_DE.UTF-8	 "a"			"[A-Z]"		       NOMATCH
-de_DE.UTF-8	 "z"			"[A-Z]"		       NOMATCH
-de_DE.UTF-8	 "Ã¤"			"[A-Z]"		       NOMATCH
-de_DE.UTF-8	 "Ã¶"			"[A-Z]"		       NOMATCH
-de_DE.UTF-8	 "Ã¼"			"[A-Z]"		       NOMATCH
+de_DE.UTF-8	 "z"			"[A-Z]"		       0 # surprising but correct!
+de_DE.UTF-8	 "Ã¤"			"[A-Z]"	       0 # surprising but correct!
+de_DE.UTF-8	 "Ã¶"			"[A-Z]"	       0 # surprising but correct!
+de_DE.UTF-8	 "Ã¼"			"[A-Z]"	       0 # surprising but correct!
 de_DE.UTF-8	 "A"			"[A-Z]"		       0
 de_DE.UTF-8	 "Z"			"[A-Z]"		       0
 de_DE.UTF-8	 "Ã„"			"[A-Z]"		       0
