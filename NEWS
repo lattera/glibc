@@ -102,7 +102,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * Statically compiled applications attempting to load locales compiled for the
   GNU C Library version 2.27 will fail and fall back to the builtin C/POSIX
-  locale.  The reason for this is that the addition of the new "%OB" and "%ob",
+  locale.  The reason for this is that the addition of the new "%OB" and "%Ob",
   support for two grammatical forms of the month names, also extends the locale
   data binary format.  Static applications needing locale support must be
   recompiled to match the runtime and data they are deployed with. In some
