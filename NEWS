@@ -96,7 +96,7 @@ Major new features:
 
   This feature will cause existing statically compiled applications
   to fail to load locales and fall back to the builtin C/POSIX locales.
-  See notes below for other changes affecting compatibilty.
+  See notes below for other changes affecting compatibility.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
