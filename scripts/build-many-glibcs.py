@@ -193,6 +193,8 @@ class Context(object):
                                  '--with-fpu=vfpv3'])
         self.add_config(arch='hppa',
                         os_name='linux-gnu')
+        self.add_config(arch='i686',
+                        os_name='gnu')
         self.add_config(arch='ia64',
                         os_name='linux-gnu',
                         first_gcc_cfg=['--with-system-libunwind'])
@@ -461,13 +463,15 @@ class Context(object):
             old_versions = {}
             self.build_host_libraries()
         elif action == 'compilers':
-            build_components = ('binutils', 'gcc', 'glibc', 'linux')
+            build_components = ('binutils', 'gcc', 'glibc', 'linux', 'mig',
+                                'gnumach', 'hurd')
             old_components = ('gmp', 'mpfr', 'mpc')
             old_versions = self.build_state['host-libraries']['build-versions']
             self.build_compilers(configs)
         else:
             build_components = ('glibc',)
-            old_components = ('gmp', 'mpfr', 'mpc', 'binutils', 'gcc', 'linux')
+            old_components = ('gmp', 'mpfr', 'mpc', 'binutils', 'gcc', 'linux',
+                              'mig', 'gnumach', 'hurd')
             old_versions = self.build_state['compilers']['build-versions']
             self.build_glibcs(configs)
         self.write_files()
@@ -694,7 +698,10 @@ class Context(object):
                             'gmp': '6.1.2',
                             'linux': '4.14',
                             'mpc': '1.1.0',
-                            'mpfr': '4.0.0'}
+                            'mpfr': '4.0.0',
+                            'mig': '1.8',
+                            'gnumach': '1.8',
+                            'hurd': '0.9'}
         use_versions = {}
         explicit_versions = {}
         for v in versions:
@@ -829,7 +836,10 @@ class Context(object):
                    'gmp': 'https://ftp.gnu.org/gnu/gmp/gmp-%(version)s.tar.xz',
                    'linux': 'https://www.kernel.org/pub/linux/kernel/v4.x/linux-%(version)s.tar.xz',
                    'mpc': 'https://ftp.gnu.org/gnu/mpc/mpc-%(version)s.tar.gz',
-                   'mpfr': 'https://ftp.gnu.org/gnu/mpfr/mpfr-%(version)s.tar.xz'}
+                   'mpfr': 'https://ftp.gnu.org/gnu/mpfr/mpfr-%(version)s.tar.xz',
+                   'mig': 'https://ftp.gnu.org/gnu/mig/mig-%(version)s.tar.bz2',
+                   'gnumach': 'https://ftp.gnu.org/gnu/gnumach/gnumach-%(version)s.tar.bz2',
+                   'hurd': 'https://ftp.gnu.org/gnu/hurd/hurd-%(version)s.tar.bz2'}
         if component not in url_map:
             print('error: component %s coming from tarball' % component)
             exit(1)
@@ -949,7 +959,8 @@ class Context(object):
                 self.clear_last_build_state(a)
             self.exec_self()
         check_components = {'host-libraries': ('gmp', 'mpfr', 'mpc'),
-                            'compilers': ('binutils', 'gcc', 'glibc', 'linux'),
+                            'compilers': ('binutils', 'gcc', 'glibc', 'linux',
+                                          'mig', 'gnumach', 'hurd'),
                             'glibcs': ('glibc',)}
         must_build = {}
         for a in actions:
@@ -1148,6 +1159,10 @@ class Config(object):
         if self.os.startswith('linux'):
             self.install_linux_headers(cmdlist)
         self.build_gcc(cmdlist, True)
+        if self.os == 'gnu':
+            self.install_gnumach_headers(cmdlist)
+            self.build_cross_tool(cmdlist, 'mig', 'mig')
+            self.install_hurd_headers(cmdlist)
         for g in self.compiler_glibcs:
             cmdlist.push_subdesc('glibc')
             cmdlist.push_subdesc(g.name)
@@ -1227,6 +1242,41 @@ class Config(object):
                              'ARCH=%s' % linux_arch,
                              'INSTALL_HDR_PATH=%s' % headers_dir,
                              'headers_install'])
+        cmdlist.cleanup_dir()
+        cmdlist.pop_subdesc()
+
+    def install_gnumach_headers(self, cmdlist):
+        """Install GNU Mach headers."""
+        srcdir = self.ctx.component_srcdir('gnumach')
+        builddir = self.component_builddir('gnumach')
+        cmdlist.push_subdesc('gnumach')
+        cmdlist.create_use_dir(builddir)
+        cmdlist.add_command('configure',
+                            [os.path.join(srcdir, 'configure'),
+                             '--build=%s' % self.ctx.build_triplet,
+                             '--host=%s' % self.triplet,
+                             '--prefix=',
+                             'CC=%s-gcc -nostdlib' % self.triplet])
+        cmdlist.add_command('install', ['make', 'DESTDIR=%s' % self.sysroot,
+                                        'install-data'])
+        cmdlist.cleanup_dir()
+        cmdlist.pop_subdesc()
+
+    def install_hurd_headers(self, cmdlist):
+        """Install Hurd headers."""
+        srcdir = self.ctx.component_srcdir('hurd')
+        builddir = self.component_builddir('hurd')
+        cmdlist.push_subdesc('hurd')
+        cmdlist.create_use_dir(builddir)
+        cmdlist.add_command('configure',
+                            [os.path.join(srcdir, 'configure'),
+                             '--build=%s' % self.ctx.build_triplet,
+                             '--host=%s' % self.triplet,
+                             '--prefix=',
+                             '--disable-profile', '--without-parted',
+                             'CC=%s-gcc -nostdlib' % self.triplet])
+        cmdlist.add_command('install', ['make', 'prefix=%s' % self.sysroot,
+                                        'no_deps=t', 'install-headers'])
         cmdlist.cleanup_dir()
         cmdlist.pop_subdesc()
 
@@ -1346,8 +1396,10 @@ class Glibc(object):
         # writing into the working directory.  To avoid possible
         # concurrency issues, copy the source directory.
         cmdlist.create_copy_dir(srcdir, srcdir_copy)
+        use_usr = self.os != 'gnu'
+        prefix = '/usr' if use_usr else ''
         cfg_cmd = [os.path.join(srcdir_copy, 'configure'),
-                   '--prefix=/usr',
+                   '--prefix=%s' % prefix,
                    '--enable-profile',
                    '--build=%s' % self.ctx.build_triplet,
                    '--host=%s' % self.triplet,
@@ -1362,6 +1414,8 @@ class Glibc(object):
                    'RANLIB=%s' % self.tool_name('ranlib'),
                    'READELF=%s' % self.tool_name('readelf'),
                    'STRIP=%s' % self.tool_name('strip')]
+        if self.os == 'gnu':
+            cfg_cmd += ['MIG=%s' % self.tool_name('mig')]
         cfg_cmd += self.cfg
         cmdlist.add_command('configure', cfg_cmd)
         cmdlist.add_command('build', ['make'])
@@ -1369,10 +1423,11 @@ class Glibc(object):
                                         'install_root=%s' % installdir])
         # GCC uses paths such as lib/../lib64, so make sure lib
         # directories always exist.
-        cmdlist.add_command('mkdir-lib', ['mkdir', '-p',
-                                          os.path.join(installdir, 'lib'),
-                                          os.path.join(installdir,
-                                                       'usr', 'lib')])
+        mkdir_cmd = ['mkdir', '-p',
+                     os.path.join(installdir, 'lib')]
+        if use_usr:
+            mkdir_cmd += [os.path.join(installdir, 'usr', 'lib')]
+        cmdlist.add_command('mkdir-lib', mkdir_cmd)
         if not for_compiler:
             if self.ctx.strip:
                 cmdlist.add_command('strip',

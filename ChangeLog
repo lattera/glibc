@@ -1,3 +1,20 @@
+2018-01-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	i686-gnu configurations.
+	(Context.run_builds): Include mig, gnumach and hurd in components
+	considered.
+	(Context.checkout): Add mig, gnumach and hurd to components.
+	(Context.checkout_tar): Add URL mappings for mig, gnumach and
+	hurd.
+	(Context.bot_cycle): Check for changes to mig, gnumach and hurd.
+	(Config.build): Install gnumach headers, build mig and install
+	hurd headers for 'gnu' OS.
+	(Config.install_gnumach_headers): New function.
+	(Config.install_hurd_headers): Likewise.
+	(Glibc.build_glibc): Do not use /usr for 'gnu' OS.  Specifiy MIG
+	when building for 'gnu' OS.
+
 2018-01-23  Tobias Klauser  <tklauser@distanz.ch>
 
 	* manual/tunables.texi (Hardware Capability Tunables): Fix
