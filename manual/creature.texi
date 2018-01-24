@@ -8,7 +8,7 @@ is controlled by which @dfn{feature test macros} you define.
 If you compile your programs using @samp{gcc -ansi}, you get only the
 @w{ISO C} library features, unless you explicitly request additional
 features by defining one or more of the feature macros.
-@xref{Invoking GCC,, GNU CC Command Options, gcc.info, The GNU CC Manual},
+@xref{Invoking GCC,, GNU CC Command Options, gcc, The GNU CC Manual},
 for more information about GCC options.@refill
 
 You should define these macros by using @samp{#define} preprocessor

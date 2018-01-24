@@ -1087,7 +1087,7 @@ are often easier and safer automatic techniques that cause buffer
 overruns to reliably terminate a program, such as GCC's
 @option{-fcheck-pointer-bounds} and @option{-fsanitize=address}
 options.  @xref{Debugging Options,, Options for Debugging Your Program
-or GCC, gcc.info, Using GCC}.  Because truncation functions can mask
+or GCC, gcc, Using GCC}.  Because truncation functions can mask
 application bugs that would otherwise be caught by the automatic
 techniques, these functions should be used only when the application's
 underlying logic requires truncation.

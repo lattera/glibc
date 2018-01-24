@@ -1808,7 +1808,7 @@ verifies that the correct number and types of arguments are supplied.
 There is also a GNU C syntax to tell the compiler that a function you
 write uses a @code{printf}-style format string.
 @xref{Function Attributes, , Declaring Attributes of Functions,
-gcc.info, Using GNU CC}, for more information.
+gcc, Using GNU CC}, for more information.
 
 @node Table of Output Conversions
 @subsection Table of Output Conversions
@@ -2730,7 +2730,7 @@ This tells the compiler that @code{eprintf} uses a format string like
 the format string appears as the first argument;
 and the arguments to satisfy the format begin with the second.
 @xref{Function Attributes, , Declaring Attributes of Functions,
-gcc.info, Using GNU CC}, for more information.
+gcc, Using GNU CC}, for more information.
 
 @node Parsing a Template String
 @subsection Parsing a Template String
@@ -3478,7 +3478,7 @@ verifies that the correct number and types of arguments are supplied.
 There is also a GNU C syntax to tell the compiler that a function you
 write uses a @code{scanf}-style format string.
 @xref{Function Attributes, , Declaring Attributes of Functions,
-gcc.info, Using GNU CC}, for more information.
+gcc, Using GNU CC}, for more information.
 
 @node Table of Input Conversions
 @subsection Table of Input Conversions
@@ -4033,7 +4033,7 @@ know that a function uses a @code{scanf}-style format string.  Then it
 can check the number and types of arguments in each call to the
 function, and warn you when they do not match the format string.
 For details, see @ref{Function Attributes, , Declaring Attributes of Functions,
-gcc.info, Using GNU CC}.
+gcc, Using GNU CC}.
 
 @node EOF and Errors
 @section End-Of-File and Errors

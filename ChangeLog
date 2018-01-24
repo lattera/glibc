@@ -1,3 +1,9 @@
+2018-02-09  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/creature.texi: Convert references to gcc.info to gcc.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+
 2018-02-07  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #17979]
