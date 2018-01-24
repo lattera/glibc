@@ -1,5 +1,12 @@
 2018-01-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/m68k/coldfire/jmp_buf-macros.h: Move to
+	....
+	* sysdeps/unix/sysv/linux/m68k/coldfire/fpu/jmp_buf-macros.h:
+	... here.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/nofpu/jmp_buf-macros.h:
+	New file.
+
 	* sysdeps/unix/sysv/linux/m68k/jmp_buf-macros.h: Move to ....
 	* sysdeps/unix/sysv/linux/m68k/m680x0/jmp_buf-macros.h: ... here.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/jmp_buf-macros.h: New
