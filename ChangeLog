@@ -1,5 +1,9 @@
 2018-01-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/m68k/localplt.data: Move to ....
+	* sysdeps/unix/sysv/linux/m68k/m680x0/localplt.data: ... here.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/localplt.data: New file.
+
 	* sysdeps/m68k/coldfire/nofpu/math_private.h: New file.  Based on
 	MicroBlaze file.
 
