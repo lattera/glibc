@@ -1,3 +1,10 @@
+2018-01-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/m68k/jmp_buf-macros.h: Move to ....
+	* sysdeps/unix/sysv/linux/m68k/m680x0/jmp_buf-macros.h: ... here.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/jmp_buf-macros.h: New
+	file.
+
 2018-01-24  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	[BZ #22742]
