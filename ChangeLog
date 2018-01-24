@@ -1,3 +1,9 @@
+2018-02-06  Florian Weimer <fweimer@redhat.com>
+
+	[BZ #18023]
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid):
+	Use scratch_buffer instead of extend_alloca.
+
 2018-02-06  Zack Weinberg  <zackw@panix.com>
 
 	* libio/stdio.h: Don't define getc or putc as macros.
