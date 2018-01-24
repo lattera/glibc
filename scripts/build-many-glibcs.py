@@ -205,6 +205,11 @@ class Context(object):
                         os_name='linux-gnu',
                         variant='coldfire',
                         gcc_cfg=['--with-arch=cf', '--disable-multilib'])
+        self.add_config(arch='m68k',
+                        os_name='linux-gnu',
+                        variant='coldfire-soft',
+                        gcc_cfg=['--with-arch=cf', '--with-cpu=54455',
+                                 '--disable-multilib'])
         self.add_config(arch='microblaze',
                         os_name='linux-gnu',
                         gcc_cfg=['--disable-multilib'])

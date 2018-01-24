@@ -1,5 +1,8 @@
 2018-01-24  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Add
+	soft-float ColdFire configuration.
+
 	* sysdeps/unix/sysv/linux/m68k/localplt.data: Move to ....
 	* sysdeps/unix/sysv/linux/m68k/m680x0/localplt.data: ... here.
 	* sysdeps/unix/sysv/linux/m68k/coldfire/localplt.data: New file.
