@@ -1,3 +1,13 @@
+2018-01-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
+	* localedata/locales/uk_UA (mon): Renamed to...
+	(alt_mon): This.
+	(alt_digits): "0" removed and then renamed to...
+	(mon): This.
+	(date_fmt): Definition changed not to use the alternative
+	digits hack.
+
 2018-01-25  Palmer Dabbelt  <palmer@sifive.com>
 
 	* elf/cache.c (print_entry): Add FLAG_RISCV_FLOAT_ABI_SOFT and
