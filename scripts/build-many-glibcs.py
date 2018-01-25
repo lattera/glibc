@@ -789,7 +789,10 @@ class Context(object):
         elif component == 'hurd':
             git_url = 'git://git.savannah.gnu.org/hurd/hurd.git'
             git_branch = 'master'
-            return self.git_checkout(component, git_url, git_branch, update)
+            r = self.git_checkout(component, git_url, git_branch, update)
+            subprocess.run(['autoconf'],
+                           cwd=self.component_srcdir(component), check=True)
+            return r
         else:
             print('error: component %s coming from VCS' % component)
             exit(1)
