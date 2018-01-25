@@ -1,3 +1,17 @@
+2018-01-25  Andreas Schwab  <schwab@suse.de>
+
+	* aclocal.m4 (LIBC_SLIBDIR_RTLDDIR): Consistently put arguments in
+	single quotes.
+	* sysdeps/gnu/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/aarch64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/mips/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/s390/s390-64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/tile/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/x86_64/64/configure: Regenerate.
+	* sysdeps/unix/sysv/linux/x86_64/x32/configure: Regenerate.
+
 2018-01-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/build-many-glibcs.py (checkout_vcs): Add hurd repository

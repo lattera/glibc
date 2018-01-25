@@ -9,8 +9,8 @@
 test -n "$libc_cv_slibdir" ||
 case "$prefix" in
 /usr | /usr/)
-  libc_cv_slibdir=/lib
-  libc_cv_rtlddir=/lib
+  libc_cv_slibdir='/lib'
+  libc_cv_rtlddir='/lib'
   if test "$libdir" = '${exec_prefix}/lib'; then
     libdir='${exec_prefix}/lib';
     # Locale data can be shared between 32-bit and 64-bit libraries.

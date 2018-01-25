@@ -442,8 +442,8 @@ mips/mips64/n64/*)
   test -n "$libc_cv_slibdir" ||
 case "$prefix" in
 /usr | /usr/)
-  libc_cv_slibdir=/lib64
-  libc_cv_rtlddir=/lib64
+  libc_cv_slibdir='/lib64'
+  libc_cv_rtlddir='/lib64'
   if test "$libdir" = '${exec_prefix}/lib'; then
     libdir='${exec_prefix}/lib64';
     # Locale data can be shared between 32-bit and 64-bit libraries.
@@ -456,8 +456,8 @@ mips/mips64/n32/*)
   test -n "$libc_cv_slibdir" ||
 case "$prefix" in
 /usr | /usr/)
-  libc_cv_slibdir=/lib32
-  libc_cv_rtlddir=/lib32
+  libc_cv_slibdir='/lib32'
+  libc_cv_rtlddir='/lib32'
   if test "$libdir" = '${exec_prefix}/lib'; then
     libdir='${exec_prefix}/lib32';
     # Locale data can be shared between 32-bit and 64-bit libraries.
