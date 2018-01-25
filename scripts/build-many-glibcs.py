@@ -786,6 +786,10 @@ class Context(object):
             r = self.git_checkout(component, git_url, git_branch, update)
             self.fix_glibc_timestamps()
             return r
+        elif component == 'hurd':
+            git_url = 'git://git.savannah.gnu.org/hurd/hurd.git'
+            git_branch = 'master'
+            return self.git_checkout(component, git_url, git_branch, update)
         else:
             print('error: component %s coming from VCS' % component)
             exit(1)
