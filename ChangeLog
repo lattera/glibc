@@ -1,3 +1,8 @@
+2018-01-29  Palmer Dabbelt  <palmer@sifive.com>
+
+	* sysdeps/init_array/crti.S (.section .init_array): Add
+	PREINIT_FUNCTION when defined.
+
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22701]
