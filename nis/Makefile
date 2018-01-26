@@ -74,7 +74,8 @@ else # not $(build-obsolete-nsl)
 # is not installed.
 install-lib-ldscripts = libnsl.so
 $(inst_libdir)/libnsl.so:
-libnsl-inhibit-o = .o # Build no static libnsl.a.
+# Build only shared libnsl.
+libnsl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 endif # not $(build-obsolete-nsl)
 
