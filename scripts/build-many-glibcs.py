@@ -706,7 +706,7 @@ class Context(object):
                             'mpfr': '4.0.0',
                             'mig': '1.8',
                             'gnumach': '1.8',
-                            'hurd': '0.9'}
+                            'hurd': 'vcs-mainline'}
         use_versions = {}
         explicit_versions = {}
         for v in versions:

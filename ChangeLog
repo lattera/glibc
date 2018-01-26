@@ -39,7 +39,7 @@
 2018-01-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/build-many-glibcs.py (checkout_vcs): Add hurd repository
-	URL, and run autoconf.
+	URL, and run autoconf, make it the default for now.
 
 2018-01-24  Joseph Myers  <joseph@codesourcery.com>
 
