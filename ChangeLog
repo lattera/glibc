@@ -1,3 +1,8 @@
+2018-01-26  Patrick McGehearty  <patrick.mcgehearty@oracle.com>
+
+        * sysdeps/sparc/fpu/libm-test-ulps: Update
+        cpow, ctan, ctanh, j0, j1, y0, yn ulps.
+
 2018-01-24  Carlos O'Donll  <carlos@redhat.com>
 
 	Revert:
