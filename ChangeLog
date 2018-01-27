@@ -11,6 +11,8 @@
 	* sysdeps/generic/sigsetops.h (__sigemptyset, __sigfillset,
 	__sigandset, __sigorset, __sigaddset, __sigdelset): Make them really
 	return 0.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Cast
+	vm_address_t * to ElfW(Addr) * for dl_main parameter.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
