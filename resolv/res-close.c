@@ -86,6 +86,7 @@
 #include <resolv_context.h>
 #include <resolv_conf.h>
 #include <not-cancel.h>
+#include <stdlib.h>
 
 /* Close all open sockets.  If FREE_ADDR is true, deallocate any
    separately allocated name server addresses.  */

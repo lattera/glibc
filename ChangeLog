@@ -3,6 +3,7 @@
 	* sysdeps/mach/hurd/xmknodat.c: Include <sys/sysmacros.h>.
 	* sysdeps/mach/hurd/profil.c: Reuse `a' variable instead of introducing
 	a `c' variable.
+	* resolv/res-close.c: Include <stdlib.h>.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
