@@ -31,6 +31,8 @@
 	__task_terminate would ever return successfully.
 	* sysdeps/mach/hurd/profil.c (special_profil_failure): Move variable
 	to global scope.
+	* sysdeps/mach/pagecopy.h (PAGE_THRESHOLD): Rename to
+	PAGE_COPY_THRESHOLD and set to benchmarked 16384.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
