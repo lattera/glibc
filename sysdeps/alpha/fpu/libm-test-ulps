@@ -1069,9 +1069,9 @@ ldouble: 3
 
 Function: Real part of "cpow":
 double: 2
-float: 4
+float: 5
 idouble: 2
-ifloat: 4
+ifloat: 5
 ildouble: 4
 ldouble: 4
 
@@ -1325,9 +1325,9 @@ ldouble: 3
 
 Function: Imaginary part of "ctan":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 3
 ldouble: 3
 
@@ -1341,9 +1341,9 @@ ldouble: 4
 
 Function: Imaginary part of "ctan_downward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
@@ -1365,9 +1365,9 @@ ldouble: 5
 
 Function: Real part of "ctan_upward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 ildouble: 5
 ldouble: 5
 
@@ -1381,9 +1381,9 @@ ldouble: 5
 
 Function: Real part of "ctanh":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 3
 ldouble: 3
 
@@ -1397,9 +1397,9 @@ ldouble: 3
 
 Function: Real part of "ctanh_downward":
 double: 4
-float: 1
+float: 2
 idouble: 4
-ifloat: 1
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
@@ -1691,9 +1691,9 @@ ldouble: 2
 
 Function: "j0_downward":
 double: 2
-float: 3
+float: 4
 idouble: 2
-ifloat: 3
+ifloat: 4
 ildouble: 4
 ldouble: 4
 
@@ -1723,9 +1723,9 @@ ldouble: 4
 
 Function: "j1_downward":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 4
 ldouble: 4
 
@@ -2157,9 +2157,9 @@ ldouble: 3
 
 Function: "y0_downward":
 double: 3
-float: 2
+float: 4
 idouble: 3
-ifloat: 2
+ifloat: 4
 ildouble: 4
 ldouble: 4
 
@@ -2173,9 +2173,9 @@ ldouble: 3
 
 Function: "y0_upward":
 double: 3
-float: 4
+float: 5
 idouble: 3
-ifloat: 4
+ifloat: 5
 ildouble: 3
 ldouble: 3
 
@@ -2213,17 +2213,17 @@ ldouble: 5
 
 Function: "yn":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 ildouble: 5
 ldouble: 5
 
 Function: "yn_downward":
 double: 3
-float: 2
+float: 4
 idouble: 3
-ifloat: 2
+ifloat: 4
 ildouble: 5
 ldouble: 5
 
@@ -2237,9 +2237,9 @@ ldouble: 5
 
 Function: "yn_upward":
 double: 4
-float: 4
+float: 5
 idouble: 4
-ifloat: 4
+ifloat: 5
 ildouble: 5
 ldouble: 5
 
