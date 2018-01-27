@@ -17,8 +17,7 @@
 
 /* Declare the few Mach system calls (except mach_msg, in <mach/message.h>).
    This does not include the kernel RPC shortcut calls (in <mach-shortcuts.h>).
-
-   This file omits the MACH_IPC_COMPAT functions.  */
+   */
 
 #ifndef	_MACH_MACH_TRAPS_H
 

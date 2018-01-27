@@ -21,6 +21,10 @@
 	--disable-libcilkrts to gcc configure.
 	* sysdeps/mach/hurd/Makefile [$(subdir)==nis]: Add
 	-DUSE_BINDINGDIR=1 to CFLAGS-ypclnt.c.
+	* mach/Machrules (MIGFLAGS): Do not set -DMACH_IPC_COMPAT=0.
+	* mach/mach/mach_traps.h: Drop comment about MACH_IPC_COMPAT.
+	* sysdeps/mach/hurd/fork.c (__fork): Drop special casing
+	MACH_IPC_COMPAT.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 

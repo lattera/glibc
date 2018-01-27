@@ -213,38 +213,9 @@ __fork (void)
 	    {
 	      /* This is a receive right.  We want to give the child task
 		 its own new receive right under the same name.  */
-	      err = __mach_port_allocate_name (newtask,
-					       MACH_PORT_RIGHT_RECEIVE,
-					       portnames[i]);
-	      if (err == KERN_NAME_EXISTS)
-		{
-		  /* It already has a right under this name (?!).  Well,
-		     there is this bizarre old Mach IPC feature (in #ifdef
-		     MACH_IPC_COMPAT in the ukernel) which results in new
-		     tasks getting a new receive right for task special
-		     port number 2.  What else might be going on I'm not
-		     sure.  So let's check.  */
-#if !MACH_IPC_COMPAT
-#define TASK_NOTIFY_PORT 2
-#endif
-		  assert (({ mach_port_t thisport, notify_port;
-			     mach_msg_type_name_t poly;
-			     (__task_get_special_port (newtask,
-						       TASK_NOTIFY_PORT,
-						       &notify_port) == 0 &&
-			      __mach_port_extract_right
-			      (newtask,
-			       portnames[i],
-			       MACH_MSG_TYPE_MAKE_SEND,
-			       &thisport, &poly) == 0 &&
-			      (thisport == notify_port) &&
-			      __mach_port_deallocate (__mach_task_self (),
-						      thisport) == 0 &&
-			      __mach_port_deallocate (__mach_task_self (),
-						      notify_port) == 0);
-			   }));
-		}
-	      else if (err)
+	      if (err = __mach_port_allocate_name (newtask,
+						   MACH_PORT_RIGHT_RECEIVE,
+						   portnames[i]))
 		LOSE;
 	      if (porttypes[i] & MACH_PORT_TYPE_SEND)
 		{
