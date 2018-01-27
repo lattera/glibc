@@ -33,6 +33,10 @@
 	to global scope.
 	* sysdeps/mach/pagecopy.h (PAGE_THRESHOLD): Rename to
 	PAGE_COPY_THRESHOLD and set to benchmarked 16384.
+	* sysdeps/mach/hurd/getresgid.c (__getresgid): Set result from
+	critical section to make code simpler and avoid warning.
+	* sysdeps/mach/hurd/getresuid.c (__getresuid): Set result from
+	critical section to make code simpler and avoid warning.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
