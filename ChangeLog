@@ -8,6 +8,9 @@
 	<sys/wait.h>, <time.h>, <sys/uio.h>.
 	(NOT_CANCEL_H): Add inclusion guard.
 	* sysdeps/generic/sigset-cvt-mask.h: Include <sigsetops.h>.
+	* sysdeps/generic/sigsetops.h (__sigemptyset, __sigfillset,
+	__sigandset, __sigorset, __sigaddset, __sigdelset): Make them really
+	return 0.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 

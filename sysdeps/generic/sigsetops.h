@@ -28,12 +28,12 @@
 #define __sigemptyset(set)			\
   (__extension__ ({				\
     *(set) = (__sigset_t) 0;			\
-    (void)0;					\
+    0;						\
   }))
 #define __sigfillset(set)			\
   (__extension__ ({				\
     *(set) = ~(__sigset_t) 0;			\
-    (void)0;					\
+    0;						\
   }))
 
 # define __sigisemptyset(set)			\
@@ -42,13 +42,13 @@
 # define __sigandset(dest, left, right)		\
   (__extension__ ({				\
     *(dest) = *(left) & *(right);		\
-    (void)0;					\
+    0;						\
   }))
 
 # define __sigorset(dest, left, right)		\
   (__extension__ ({				\
     *(dest) = *(left) | *(right);		\
-    (void)0;					\
+    0;						\
   }))
 
 /* These macros needn't check for a bogus signal number;
@@ -63,14 +63,14 @@
   (__extension__ ({				\
     __sigset_t __mask = __sigmask (sig);	\
     *(set) |= __mask;				\
-    (void)0;					\
+    0;						\
   }))
 
 # define __sigdelset(set, sig)			\
   (__extension__ ({				\
     __sigset_t __mask = __sigmask (sig);	\
     *(set) &= ~__mask;				\
-    (void)0;					\
+    0;						\
   }))
 
 #endif
