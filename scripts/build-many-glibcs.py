@@ -1329,6 +1329,8 @@ class Config(object):
             tool_build = 'gcc'
             cfg_opts += ['--enable-languages=c,c++', '--enable-shared',
                          '--enable-threads']
+            if self.os == 'gnu':
+                cfg_opts += ['--disable-libcilkrts']
         self.build_cross_tool(cmdlist, 'gcc', tool_build, cfg_opts)
 
 

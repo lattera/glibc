@@ -17,6 +17,8 @@
 	instead of void *.
 	* sysdeps/pthread/timer_create.c (timer_create): Do not use
 	timer_ptr2id to cast struct timer_node * to void *.
+	* scripts/build-many-glibcs.py [os == gnu] (build_gcc): Pass
+	--disable-libcilkrts to gcc configure.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
