@@ -19,6 +19,8 @@
 	timer_ptr2id to cast struct timer_node * to void *.
 	* scripts/build-many-glibcs.py [os == gnu] (build_gcc): Pass
 	--disable-libcilkrts to gcc configure.
+	* sysdeps/mach/hurd/Makefile [$(subdir)==nis]: Add
+	-DUSE_BINDINGDIR=1 to CFLAGS-ypclnt.c.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
