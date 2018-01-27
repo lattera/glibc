@@ -1,5 +1,7 @@
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
+	* sysdeps/hppa/fpu/libm-test-ulps: Update.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.
 
 2018-01-26  Andreas Schwab  <schwab@linux-m68k.org>
