@@ -29,6 +29,8 @@
 	MACH_IPC_COMPAT.
 	* sysdeps/mach/hurd/dl-sysdep.c (_exit): Call LOSE and abort() if
 	__task_terminate would ever return successfully.
+	* sysdeps/mach/hurd/profil.c (special_profil_failure): Move variable
+	to global scope.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
