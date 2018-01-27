@@ -4,6 +4,9 @@
 	* sysdeps/mach/hurd/profil.c: Reuse `a' variable instead of introducing
 	a `c' variable.
 	* resolv/res-close.c: Include <stdlib.h>.
+	* sysdeps/generic/not-cancel.h: Include <fcntl.h>, <unistd.h>,
+	<sys/wait.h>, <time.h>, <sys/uio.h>.
+	(NOT_CANCEL_H): Add inclusion guard.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 

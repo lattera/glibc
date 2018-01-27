@@ -17,6 +17,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef NOT_CANCEL_H
+# define NOT_CANCEL_H
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <sys/uio.h>
+
 /* By default we have none.  Map the name to the normal functions.  */
 #define __open_nocancel(...) \
   __open (__VA_ARGS__)
@@ -44,3 +53,5 @@
   __nanosleep (requested_time, remaining)
 #define __fcntl_nocancel(fd, cmd, ...) \
   __fcntl (fd, cmd, __VA_ARGS__)
+
+#endif /* NOT_CANCEL_H  */
