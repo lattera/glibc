@@ -154,14 +154,14 @@ fetch_samples (void)
 				     pc_samples, &nsamples);
   if (err)
     {
-      static error_t special_profil_failure;
-      static volatile int a, b, c;
+      static volatile error_t special_profil_failure;
+      static volatile int a, b;
 
       special_profil_failure = err;
       a = 1;
       b = 0;
       while (1)
-	c = a / b;
+	a = a / b;
     }
 
   for (i = 0; i < nsamples; ++i)
