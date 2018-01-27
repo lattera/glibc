@@ -87,7 +87,7 @@ extern struct thread_node __timer_signal_thread_rclk;
 
 /* Return pointer to timer structure corresponding to ID.  */
 #define timer_id2ptr(timerid) ((struct timer_node *) timerid)
-#define timer_ptr2id(timerid) ((void *) timerid)
+#define timer_ptr2id(timerid) ((timer_t) timerid)
 
 /* Check whether timer is valid; global mutex must be held. */
 static inline int
