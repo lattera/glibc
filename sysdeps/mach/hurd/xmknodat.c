@@ -25,6 +25,7 @@
 #include <_itoa.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/sysmacros.h>
 
 /* Create a device file named PATH relative to FD, with permission and
    special bits MODE and device number DEV (which can be constructed
