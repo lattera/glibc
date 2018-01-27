@@ -643,6 +643,9 @@ _exit (int status)
 		    W_EXITCODE (status, 0), 0);
   while (__task_terminate (__mach_task_self ()))
     __mach_task_self_ = (__mach_task_self) ();
+
+  LOSE;
+  abort ();
 }
 /* We need this alias to satisfy references from libc_pic.a objects
    that were affected by the libc_hidden_proto declaration for _exit.  */
