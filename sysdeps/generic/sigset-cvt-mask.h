@@ -20,6 +20,8 @@
 
 /* Convert between an old-style 32-bit signal mask and a POSIX sigset_t.  */
 
+#include <sigsetops.h>
+
 /* Perform *SET = MASK.  Unused bits of *SET are set to 0.
    Returns zero for success or -1 for errors (from sigaddset/sigemptyset).  */
 static inline int __attribute__ ((unused))
