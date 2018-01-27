@@ -150,6 +150,14 @@
 2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
+	* localedata/locales/pl_PL: Alternative month names added,
+	primary month names are genitive now.
+	* time/tst-strptime.c (day_tests): Actually use a genitive case
+	of a month name in Polish language.
+
+2018-01-22  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
 	* manual/locale.texi: Document ALTMON_1..12 constants for
 	nl_langinfo.  Specify when to use ALTMON instead of MON.
 	* manual/time.texi (strftime, strptime): Document GNU extension
