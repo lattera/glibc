@@ -203,7 +203,7 @@ __hurd_dfail (int fd, error_t err)
 /* Likewise, but do not raise SIGPIPE on EPIPE if flags contain
    MSG_NOSIGNAL.  */
 
-exern int __hurd_sockfail (int fd, int flags, error_t err);
+extern int __hurd_sockfail (int fd, int flags, error_t err);
 
 #ifdef __USE_EXTERN_INLINES
 _HURD_FD_H_EXTERN_INLINE int
