@@ -51,6 +51,8 @@
 	* hurd/path-lookup.c (hurd_file_name_path_lookup): Likewise.
 	* sysdeps/mach/hurd/check_native.c: New file.
 	* sysdeps/mach/hurd/check_pf.c: New file.
+	* sysdeps/mach/hurd/libhurduser.abilist: New file.
+	* sysdeps/mach/libmachuser.abilist: New file.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
