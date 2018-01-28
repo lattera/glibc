@@ -705,7 +705,7 @@ class Context(object):
                             'mpc': '1.1.0',
                             'mpfr': '4.0.0',
                             'mig': 'vcs-mainline',
-                            'gnumach': '1.8',
+                            'gnumach': 'vcs-mainline',
                             'hurd': 'vcs-mainline'}
         use_versions = {}
         explicit_versions = {}
@@ -785,6 +785,13 @@ class Context(object):
                 git_branch = 'release/%s/master' % version
             r = self.git_checkout(component, git_url, git_branch, update)
             self.fix_glibc_timestamps()
+            return r
+        elif component == 'gnumach':
+            git_url = 'git://git.savannah.gnu.org/hurd/gnumach.git'
+            git_branch = 'master'
+            r = self.git_checkout(component, git_url, git_branch, update)
+            subprocess.run(['autoreconf', '-i'],
+                           cwd=self.component_srcdir(component), check=True)
             return r
         elif component == 'mig':
             git_url = 'git://git.savannah.gnu.org/hurd/mig.git'

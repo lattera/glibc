@@ -19,8 +19,8 @@
 	timer_ptr2id to cast struct timer_node * to void *.
 	* scripts/build-many-glibcs.py [os == gnu] (build_gcc): Pass
 	--disable-libcilkrts to gcc configure.
-	(checkout_vcs): Add mig repository URL, and run autoreconf, make it the
-	default for now.
+	(checkout_vcs): Add mig and gnumach repository URLs, run autoreconf,
+	and make them the default for now.
 	* sysdeps/mach/hurd/Makefile [$(subdir)==nis]: Add
 	-DUSE_BINDINGDIR=1 to CFLAGS-ypclnt.c.
 	* mach/Machrules (MIGFLAGS): Do not set -DMACH_IPC_COMPAT=0.
