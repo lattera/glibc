@@ -33,7 +33,9 @@
 #include <support/temp_file.h>
 #include <support/test-driver.h>
 #include <support/xunistd.h>
-#include <sys/mount.h>
+#ifdef CLONE_NEWNS
+# include <sys/mount.h>
+#endif
 
 /* Boolean flags which indicate whether to use pointers with explicit
    output flags.  */

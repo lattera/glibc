@@ -58,6 +58,8 @@
 	* libio/tst-wmemstream3.c (FWRITE): Rename accordingly.
 	* io/tst-fchownat.c [!defined _POSIX_CHOWN_RESTRICTED]: Act like when
 	_POSIX_CHOWN_RESTRICTED is defined to 0.
+	* io/tst-copy_file_range.c [!defined CLONE_NEWNS]: Do not include
+	<sys/mount.h>.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
