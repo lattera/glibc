@@ -39,6 +39,16 @@
 	critical section to make code simpler and avoid warning.
 	* sysdeps/mach/hurd/spawni.c (__spawni): Make relpath and abspath
 	const char * instead of char *.
+	* hurd/hurd/lookup.h (__hurd_file_name_lookup, hurd_file_name_lookup,
+	__hurd_file_name_split, hurd_file_name_split,
+	__hurd_directory_name_split, hurd_directory_name_split,
+	__hurd_file_name_lookup_retry, hurd_file_name_lookup_retry,
+	hurd_file_name_path_lookup): Make lookup function parameter take a
+	const char *name instead of char *name.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup, __hurd_file_name_split,
+	__hurd_directory_name_split): Likewise.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Likewise.
+	* hurd/path-lookup.c (hurd_file_name_path_lookup): Likewise.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
