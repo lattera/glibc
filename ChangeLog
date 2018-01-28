@@ -90,6 +90,8 @@
 	_hurd_fd_error, __hurd_dfail, __hurd_sockfail, _hurd_port_locked_set,
 	__hurd_threadvar_location_from_sp, __hurd_threadvar_location,
 	_hurd_userlink_link, _hurd_userlink_unlink, _hurd_userlink_clear.
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_CHOWN_RESTRICTED,
+	_POSIX_NO_TRUNC): Define to 0.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 

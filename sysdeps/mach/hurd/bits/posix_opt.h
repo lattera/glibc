@@ -58,8 +58,8 @@
 
 /* Different Hurd filesystems might do these differently.
    You must query the particular file with `pathconf' or `fpathconf'.  */
-#undef _POSIX_CHOWN_RESTRICTED	/* Only root can change owner of file?  */
-#undef _POSIX_NO_TRUNC		/* Overlong file names get error?  */
+#define _POSIX_CHOWN_RESTRICTED	0	/* Only root can change owner of file?  */
+#define _POSIX_NO_TRUNC		0	/* Overlong file names get error?  */
 #undef _POSIX_SYNC_IO		/* File supports O_SYNC et al?  */
 
 /* X/Open realtime support is not supported.  */
