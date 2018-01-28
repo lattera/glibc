@@ -59,7 +59,7 @@ dnl but we don't do a check for that here because in a bare
 dnl environment the compile against those headers will fail.
 dnl
 mach_interface_list=
-for ifc in mach mach4 \
+for ifc in mach mach4 gnumach \
 	   clock clock_priv host_priv host_security ledger lock_set \
 	   processor processor_set task task_notify thread_act vm_map \
 	   memory_object memory_object_default default_pager \

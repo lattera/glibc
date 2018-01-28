@@ -96,6 +96,9 @@
 	check size against PTHREAD_STACK_MIN.
 	* hurd/hurd/signal.h [__USE_EXTERN_INLINES][_LIBC][IS_IN(libc) ||
 	IS_IN(libpthread)]: Include <sigsetops.h>.
+	* mach/Makefile (user-interfaces): Add mach/gnumach.
+	* sysdeps/mach/configure.ac (mach_interface_list): Add gnumach.
+	* sysdeps/mach/configure (mach_interface_list): Regenerate.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 

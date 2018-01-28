@@ -116,7 +116,7 @@ ifndef mach-shortcuts
 # $(mach-shortcuts) will be set, and that will change how
 # mach_interface.defs is processed: it will get the -D flags below.
 user-interfaces := $(filter-out $(mach-interface-list:%=mach/%) \
-				mach/mach_port mach/mach_host mach/mach4 \
+				mach/mach_port mach/mach_host mach/mach4 mach/gnumach \
 				device/device_request,\
 				$(user-interfaces))
 endif
