@@ -60,6 +60,36 @@
 	_POSIX_CHOWN_RESTRICTED is defined to 0.
 	* io/tst-copy_file_range.c [!defined CLONE_NEWNS]: Do not include
 	<sys/mount.h>.
+	* hurd/hurd.h (__hurd_fail): Always declare function, and provide inline
+	version only if __USE_EXTERN_INLINES is defined.
+	* hurd/hurd/fd.h (_hurd_fd_error_signal, _hurd_fd_error, __hurd_dfail,
+	__hurd_sockfail): Likewise.
+	(_hurd_fd_get): Always declare functions, and provide inline versions
+	only if __USE_EXTERN_INLINES and _LIBC are defined and IS_IN(libc).
+	* hurd/hurd/port.h (_hurd_port_init, _hurd_port_locked_get,
+	_hurd_port_get, _hurd_port_free, _hurd_port_locked_set,
+	_hurd_port_set): Always declare functions, and provide inline versions
+	only if __USE_EXTERN_INLINES and _LIBC are defined and
+	IS_IN(libc).
+	* hurd/hurd/signal.h (_hurd_self_sigstate, _hurd_critical_section_lock,
+	_hurd_critical_section_unlock): Likewise.
+	* hurd/hurd/threadvar.h (__hurd_threadvar_location_from_sp,
+	* __hurd_threadvar_location): Likewise.
+	* hurd/hurd/userlink.h (_hurd_userlink_link, _hurd_userlink_unlink,
+	_hurd_userlink_clear): Likewise.
+	* mach/lock-intern.h (__spin_lock_init, __spin_lock, __mutex_lock,
+	__mutex_unlock, __mutex_trylock): Always declare functions, and provide
+	inline versions only if __USE_EXTERN_INLINES and _LIBC are defined.
+	* mach/mach/mig_support.h (__mig_strncpy): Likewise.
+	* sysdeps/generic/machine-lock.h (__spin_unlock, __spin_try_lock,
+	__spin_lock_locked): Likewise.
+	* sysdeps/mach/i386/machine-lock.h (__spin_unlock, __spin_try_lock,
+	__spin_lock_locked): Likewise.
+	* mach/spin-lock.c (__USE_EXTERN_INLINES): Define to 1.
+	* hurd/Versions (libc: GLIBC_2.27): Add _hurd_fd_error_signal,
+	_hurd_fd_error, __hurd_dfail, __hurd_sockfail, _hurd_port_locked_set,
+	__hurd_threadvar_location_from_sp, __hurd_threadvar_location,
+	_hurd_userlink_link, _hurd_userlink_unlink, _hurd_userlink_clear.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 

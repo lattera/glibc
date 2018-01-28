@@ -1,3 +1,4 @@
+#define __USE_EXTERN_INLINES 1
 #define _EXTERN_INLINE /* Empty to define the real functions.  */
 #include "spin-lock.h"
 
