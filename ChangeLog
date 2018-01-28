@@ -53,6 +53,9 @@
 	* sysdeps/mach/hurd/check_pf.c: New file.
 	* sysdeps/mach/hurd/libhurduser.abilist: New file.
 	* sysdeps/mach/libmachuser.abilist: New file.
+	* libio/tst-memstream3.c (FWRITE): Rename to _FWRITE.
+	(do_test_bz20181): Rename accordingly.
+	* libio/tst-wmemstream3.c (FWRITE): Rename accordingly.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
