@@ -85,7 +85,7 @@ abmon   "Stu";/
         "Kas";/
         "Lis";/
         "<U015A>ni"
-mon     "Studzie<U0144>";/
+alt_mon	"Studzie<U0144>";/
 	"Luty";/
 	"Sakavik";/
 	"Krasavik";/
@@ -97,6 +97,18 @@ mon     "Studzie<U0144>";/
 	"Kastry<U010D>nik";/
 	"Listapad";/
 	"<U015A>nie<U017E>a<U0144>"
+mon	"studzienia";/
+	"lutaha";/
+	"sakavika";/
+	"krasavika";/
+	"maja";/
+	"<U010D>ervienia";/
+	"lipienia";/
+	"<U017E>ni<U016D>nia";/
+	"viera<U015B>nia";/
+	"kastry<U010D>nika";/
+	"listapada";/
+	"<U015B>nie<U017E>nia"
 am_pm     "";""
 d_t_fmt "%a %d %b %Y %T"
 d_fmt     "%d.%m.%Y"
@@ -144,7 +156,7 @@ country_ab2 "BY"
 country_ab3 "BLR"
 country_num 112
 country_car    "BY"
-lang_name    "byelaruskaya mova"
+lang_name    "bie<U0142>aruskaja mova"
 lang_ab      "be"
 lang_term    "bel"
 lang_lib    "bel"

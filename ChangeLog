@@ -1,6 +1,22 @@
 2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
+	* localedata/locales/be_BY (mon): Rename to...
+	(alt_mon): This, then synchronize with CLDR (nominative case).
+	(abmon): Rename to...
+	(ab_alt_mon): This, then synchronize with CLDR (nominative case).
+	(mon): Import from CLDR (genitive case).
+	(abmon): Likewise.
+	* localedata/locales/be_BY@latin (mon): Rename to...
+	(alt_mon): This.
+	(mon): Add, proper genitive forms provided by Viktar Siarheichyk.
+
+	* localedata/locales/be_BY@latin (lang_name): Reworded to
+	"biełaruskaja mova".
+
+2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
 	* localedata/locales/el_CY (mon): Renamed to...
 	(alt_mon): This.
 	(mon): Import from CLDR (genitive case).
