@@ -106,11 +106,17 @@ const char *const serv2str[LASTREQ] =
   [GETFDNETGR] = "GETFDNETGR"
 };
 
+#ifdef PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP
+# define RWLOCK_INITIALIZER PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP
+#else
+# define RWLOCK_INITIALIZER PTHREAD_RWLOCK_INITIALIZER
+#endif
+
 /* The control data structures for the services.  */
 struct database_dyn dbs[lastdb] =
 {
   [pwddb] = {
-    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .lock = RWLOCK_INITIALIZER,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
@@ -129,7 +135,7 @@ struct database_dyn dbs[lastdb] =
     .mmap_used = false
   },
   [grpdb] = {
-    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .lock = RWLOCK_INITIALIZER,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
@@ -148,7 +154,7 @@ struct database_dyn dbs[lastdb] =
     .mmap_used = false
   },
   [hstdb] = {
-    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .lock = RWLOCK_INITIALIZER,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
@@ -167,7 +173,7 @@ struct database_dyn dbs[lastdb] =
     .mmap_used = false
   },
   [servdb] = {
-    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .lock = RWLOCK_INITIALIZER,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
@@ -186,7 +192,7 @@ struct database_dyn dbs[lastdb] =
     .mmap_used = false
   },
   [netgrdb] = {
-    .lock = PTHREAD_RWLOCK_WRITER_NONRECURSIVE_INITIALIZER_NP,
+    .lock = RWLOCK_INITIALIZER,
     .prune_lock = PTHREAD_MUTEX_INITIALIZER,
     .prune_run_lock = PTHREAD_MUTEX_INITIALIZER,
     .enabled = 0,
