@@ -92,6 +92,8 @@
 	_hurd_userlink_link, _hurd_userlink_unlink, _hurd_userlink_clear.
 	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_CHOWN_RESTRICTED,
 	_POSIX_NO_TRUNC): Define to 0.
+	* sysdeps/pthread/allocalim.h [!defined PTHREAD_STACK_MIN]: Do not
+	check size against PTHREAD_STACK_MIN.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
