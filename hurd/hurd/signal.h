@@ -42,6 +42,11 @@
 #include <spin-lock.h>
 #include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
 struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+#  if IS_IN (libc) || IS_IN (libpthread)
+#    include <sigsetops.h>
+#  endif
+#endif
 
 
 /* Full details of a signal.  */

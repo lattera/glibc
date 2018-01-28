@@ -94,6 +94,8 @@
 	_POSIX_NO_TRUNC): Define to 0.
 	* sysdeps/pthread/allocalim.h [!defined PTHREAD_STACK_MIN]: Do not
 	check size against PTHREAD_STACK_MIN.
+	* hurd/hurd/signal.h [__USE_EXTERN_INLINES][_LIBC][IS_IN(libc) ||
+	IS_IN(libpthread)]: Include <sigsetops.h>.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
