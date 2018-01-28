@@ -52,6 +52,10 @@
 	* sysdeps/mach/hurd/check_native.c: New file.
 	* sysdeps/mach/hurd/check_pf.c: New file.
 
+2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
+
+	* hurd/fcntl-internal.h: New file.
+
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
 	* sysdeps/hppa/fpu/libm-test-ulps: Update.
