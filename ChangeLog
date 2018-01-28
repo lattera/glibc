@@ -1,3 +1,19 @@
+2018-01-29  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* mach/Versions: Fix version when __mach_host_self_ was added.
+	* hurd/Versions: Fix version when _hurd_exec_paths was added.
+	* sysdeps/mach/hurd/i386/ld.abilist: New file.
+	* sysdeps/mach/hurd/i386/libBrokenLocale.abilist: New file.
+	* sysdeps/mach/hurd/i386/libanl.abilist: New file.
+	* sysdeps/mach/hurd/i386/libc.abilist: New file.
+	* sysdeps/mach/hurd/i386/libcrypt.abilist: New file.
+	* sysdeps/mach/hurd/i386/libdl.abilist: New file.
+	* sysdeps/mach/hurd/i386/libm.abilist: New file.
+	* sysdeps/mach/hurd/i386/libnsl.abilist: New file.
+	* sysdeps/mach/hurd/i386/libresolv.abilist: New file.
+	* sysdeps/mach/hurd/i386/librt.abilist: New file.
+	* sysdeps/mach/hurd/i386/libutil.abilist: New file.
+
 2018-01-29  Darius Rad  <darius@bluespec.com>
 
 	* sysdeps/unix/sysv/linux/riscv/ipc_priv.h: New file.

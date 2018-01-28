@@ -129,6 +129,10 @@ libc {
     # functions used in macros & inline functions
     __errno_location;
   }
+  GLIBC_2.26 {
+    # "quasi-internal" functions
+    _hurd_exec_paths;
+  }
   GLIBC_2.27 {
     # These always existed as inlines but the real functions were not exported.
     _hurd_fd_error_signal; _hurd_fd_error;
@@ -137,9 +141,6 @@ libc {
     __hurd_threadvar_location_from_sp;
     __hurd_threadvar_location;
     _hurd_userlink_link; _hurd_userlink_unlink; _hurd_userlink_clear;
-
-    # "quasi-internal" functions
-    _hurd_exec_paths;
   }
 
   HURD_CTHREADS_0.3 {

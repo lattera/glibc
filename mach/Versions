@@ -54,7 +54,7 @@ libc {
     # This was always there, but not exported as it should have been.
     mig_strncpy;
   }
-  GLIBC_2.23 {
+  GLIBC_2.21 {
     __mach_host_self_;
   }
 
