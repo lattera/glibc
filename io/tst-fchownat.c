@@ -20,7 +20,7 @@ static int dir_fd;
 static void
 prepare (void)
 {
-#if !defined _POSIX_CHOWN_RESTRICTED || _POSIX_CHOWN_RESTRICTED == 0
+#if _POSIX_CHOWN_RESTRICTED == 0
   if (pathconf (test_dir, _PC_CHOWN_RESTRICTED) != 0)
 #endif
     {
