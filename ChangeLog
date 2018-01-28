@@ -49,6 +49,8 @@
 	__hurd_directory_name_split): Likewise.
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Likewise.
 	* hurd/path-lookup.c (hurd_file_name_path_lookup): Likewise.
+	* sysdeps/mach/hurd/check_native.c: New file.
+	* sysdeps/mach/hurd/check_pf.c: New file.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 
