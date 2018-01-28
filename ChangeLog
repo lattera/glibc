@@ -37,6 +37,8 @@
 	critical section to make code simpler and avoid warning.
 	* sysdeps/mach/hurd/getresuid.c (__getresuid): Set result from
 	critical section to make code simpler and avoid warning.
+	* sysdeps/mach/hurd/spawni.c (__spawni): Make relpath and abspath
+	const char * instead of char *.
 
 2018-01-27  James Clarke  <jrtc27@jrtc27.com>
 

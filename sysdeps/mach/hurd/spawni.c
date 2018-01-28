@@ -45,7 +45,8 @@ __spawni (pid_t *pid, const char *file,
 {
   pid_t new_pid;
   char *path, *p, *name;
-  char *concat_name = NULL, *relpath, *abspath;
+  char *concat_name = NULL;
+  const char *relpath, *abspath;
   int res;
   size_t len;
   size_t pathlen;
