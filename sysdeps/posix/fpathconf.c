@@ -103,25 +103,22 @@ __fpathconf (int fd, int name)
 #endif
 
     case _PC_CHOWN_RESTRICTED:
-#ifdef	_POSIX_CHOWN_RESTRICTED
-      return _POSIX_CHOWN_RESTRICTED;
-#else
-      return -1;
+#if _POSIX_CHOWN_RESTRICTED == -1
+# error "Invalid value for _POSIX_CHOWN_RESTRICTED"
 #endif
+      return _POSIX_CHOWN_RESTRICTED;
 
     case _PC_NO_TRUNC:
-#ifdef	_POSIX_NO_TRUNC
-      return _POSIX_NO_TRUNC;
-#else
-      return -1;
+#if _POSIX_NO_TRUNC == -1
+# error "Invalid value for _POSIX_NO_TRUNC"
 #endif
+      return _POSIX_NO_TRUNC;
 
     case _PC_VDISABLE:
-#ifdef	_POSIX_VDISABLE
-      return _POSIX_VDISABLE;
-#else
-      return -1;
+#if _POSIX_VDISABLE == -1
+# error "Invalid value for _POSIX_VDISABLE"
 #endif
+      return _POSIX_VDISABLE;
 
     case _PC_SYNC_IO:
 #ifdef	_POSIX_SYNC_IO

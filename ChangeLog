@@ -1,3 +1,9 @@
+2018-01-29  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* sysdeps/posix/fpathconf.c (__fpathconf): Verify the values of
+	_POSIX_CHOWN_RESTRICTED, _POSIX_NO_TRUNC, _POSIX_VDISABLE.
+	* sysdeps/posix/pathconf.c (__pathconf): Likewise.
+
 2018-01-29  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* mach/Versions: Fix version when __mach_host_self_ was added.
