@@ -99,6 +99,8 @@
 	* mach/Makefile (user-interfaces): Add mach/gnumach.
 	* sysdeps/mach/configure.ac (mach_interface_list): Add gnumach.
 	* sysdeps/mach/configure (mach_interface_list): Regenerate.
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_VDISABLE): Set to '\0'
+	instead of invalid -1.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 
