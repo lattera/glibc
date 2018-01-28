@@ -31,6 +31,8 @@
 #define __qsort_r qsort_r
 /* nscd uses 1MB or 2MB thread stacks.  */
 #define __libc_use_alloca(size) (size <= __MAX_ALLOCA_CUTOFF)
+#define __getifaddrs getifaddrs
+#define __freeifaddrs freeifaddrs
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
 #undef  USE_NSCD

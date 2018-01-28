@@ -51,6 +51,8 @@
 	* hurd/path-lookup.c (hurd_file_name_path_lookup): Likewise.
 	* sysdeps/mach/hurd/check_native.c: New file.
 	* sysdeps/mach/hurd/check_pf.c: New file.
+	* nscd/gai.c (__getifaddrs): Define macro to getifaddrs.
+	(__freeifaddrs): Define macro to freeifaddrs.
 	* sysdeps/mach/hurd/libhurduser.abilist: New file.
 	* sysdeps/mach/libmachuser.abilist: New file.
 	* libio/tst-memstream3.c (FWRITE): Rename to _FWRITE.
