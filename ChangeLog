@@ -27,6 +27,13 @@
 	* sysdeps/riscv/nptl/tcb-offsets.sym: Likewise.
 	* sysdeps/riscv/nptl/tls.h: Likewise.
 	* sysdeps/riscv/stackinfo.h: Likewise.
+	* sysdeps/riscv/bits/fenv.h: New file.
+	* sysdeps/riscv/e_sqrtl.c: Likewise.
+	* sysdeps/riscv/fpu_control.h: Likewise.
+	* sysdeps/riscv/math-tests.h: Likewise.
+	* sysdeps/riscv/nofpu/Implies: Likewise.
+	* sysdeps/riscv/sfp-machine.h: Likewise.
+	* sysdeps/riscv/tininess.h: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
