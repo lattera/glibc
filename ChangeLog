@@ -105,6 +105,28 @@
 	* sysdeps/unix/sysv/linux/riscv/sysdep.S: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/vfork.S: Likewise.
+	* sysdeps/riscv/nptl/pthread-offsets.h: New file.
+	* sysdeps/riscv/nptl/pthreaddef.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/sigcontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/dl-cache.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/flush-icache.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/getcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/init-first.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/libc-vdso.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/makecontext.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/readelflib.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/register-dump.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sigcontextinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/swapcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/cachectl.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/ucontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sys/user.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/ucontext-macros.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/ucontext_i.sym: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
