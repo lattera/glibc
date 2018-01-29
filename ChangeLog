@@ -1,5 +1,8 @@
 2018-01-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Context.git_checkout): Use git
+	clean -dxfq for git updates when replacing sources.
+
 	* scripts/build-many-glibcs.py (Config.build_gcc): Use
 	--disable-libcilkrts unconditionally, not just for the final GCC
 	build for Hurd.

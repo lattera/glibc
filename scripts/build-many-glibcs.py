@@ -816,6 +816,9 @@ class Context(object):
         if update:
             subprocess.run(['git', 'remote', 'prune', 'origin'],
                            cwd=self.component_srcdir(component), check=True)
+            if self.replace_sources:
+                subprocess.run(['git', 'clean', '-dxfq'],
+                               cwd=self.component_srcdir(component), check=True)
             subprocess.run(['git', 'pull', '-q'],
                            cwd=self.component_srcdir(component), check=True)
         else:
