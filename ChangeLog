@@ -1,5 +1,9 @@
 2018-01-29  Joseph Myers  <joseph@codesourcery.com>
 
+	* scripts/build-many-glibcs.py (Config.build_gcc): Use
+	--disable-libcilkrts unconditionally, not just for the final GCC
+	build for Hurd.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 4.15.
 

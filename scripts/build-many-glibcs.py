@@ -1311,8 +1311,12 @@ class Config(object):
         # libsanitizer commonly breaks because of glibc header
         # changes, or on unusual targets.  libssp is of little
         # relevance with glibc's own stack checking support.
+        # libcilkrts does not support GNU/Hurd (and has been removed
+        # in GCC 8, so --disable-libcilkrts can be removed once glibc
+        # no longer supports building with older GCC versions).
         cfg_opts = list(self.gcc_cfg)
-        cfg_opts += ['--disable-libsanitizer', '--disable-libssp']
+        cfg_opts += ['--disable-libsanitizer', '--disable-libssp',
+                     '--disable-libcilkrts']
         host_libs = self.ctx.host_libraries_installdir
         cfg_opts += ['--with-gmp=%s' % host_libs,
                      '--with-mpfr=%s' % host_libs,
@@ -1343,8 +1347,6 @@ class Config(object):
             tool_build = 'gcc'
             cfg_opts += ['--enable-languages=c,c++', '--enable-shared',
                          '--enable-threads']
-            if self.os == 'gnu':
-                cfg_opts += ['--disable-libcilkrts']
         self.build_cross_tool(cmdlist, 'gcc', tool_build, cfg_opts)
 
 
