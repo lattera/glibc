@@ -377,7 +377,7 @@
 	* sysdeps/mach/hurd/net/if_ppp.h: Do not include non-existing
 	<net/ppp_defs.h>.
 
-2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
+2018-01-27  Thomas Schwinge  <tschwinge@gnu.org>
 
 	* hurd/fcntl-internal.h: New file.
 
