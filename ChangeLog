@@ -92,6 +92,10 @@
 	* sysdeps/riscv/rvf/s_roundevenf.c: Likewise.
 	* sysdeps/riscv/rvf/s_roundf.c: Likewise.
 	* sysdeps/riscv/rvf/s_truncf.c: Likewise.
+	* sysdeps/riscv/nptl/bits/pthreadtypes-arch.h: New file.
+	* sysdeps/riscv/nptl/bits/semaphore.h: Likewise.
+	* sysdeps/riscv/nptl/libc-lowlevellock.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/atomic-machine.h: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
