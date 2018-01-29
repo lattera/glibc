@@ -23,6 +23,9 @@
 	|| to respect codestyle.
 	* libio/tst-memstream3.c (_FWRITE): Rename to FWRITE_FUNC.
 	(do_test_bz20181): Rename accordingly.
+	* malloc/malloc.c: Include <assert.h>.
+	(assert): Do not define.
+	[!defined NDEBUG] (__assert_fail): Define to __malloc_assert.
 
 2018-01-29  Darius Rad  <darius@bluespec.com>
 

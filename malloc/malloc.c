@@ -223,6 +223,7 @@
 #include <unistd.h>
 #include <stdio.h>    /* needed for malloc_stats */
 #include <errno.h>
+#include <assert.h>
 
 #include <shlib-compat.h>
 
@@ -278,13 +279,9 @@
 #define MALLOC_DEBUG 0
 #endif
 
-#ifdef NDEBUG
-# define assert(expr) ((void) 0)
-#else
-# define assert(expr) \
-  ((expr)								      \
-   ? ((void) 0)								      \
-   : __malloc_assert (#expr, __FILE__, __LINE__, __func__))
+#ifndef NDEBUG
+# define __assert_fail(assertion, file, line, function)			\
+	 __malloc_assert(assertion, file, line, function)
 
 extern const char *__progname;
 
