@@ -3,6 +3,7 @@
 	* sysdeps/init_array/crti.S (.section .init_array): Add
 	PREINIT_FUNCTION when defined.
 	* manual/math.texi: RISC-V supports _Float128 and _Float64x.
+	* config.h.in: Regenerate.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 

@@ -100,6 +100,11 @@
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE
 
+/* RISC-V integer ABI for ld.so.  */
+#undef RISCV_ABI_XLEN
+
+/* RISC-V floating-point ABI for ld.so.  */
+#undef RISCV_ABI_FLEN
 
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
