@@ -19,6 +19,8 @@
 	* sysdeps/mach/hurd/i386/libresolv.abilist: New file.
 	* sysdeps/mach/hurd/i386/librt.abilist: New file.
 	* sysdeps/mach/hurd/i386/libutil.abilist: New file.
+	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Commute operands of
+	|| to respect codestyle.
 
 2018-01-29  Darius Rad  <darius@bluespec.com>
 

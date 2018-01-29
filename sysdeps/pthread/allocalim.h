@@ -24,9 +24,9 @@ extern __always_inline
 int
 __libc_use_alloca (size_t size)
 {
-  return (
+  return (__builtin_expect (__libc_alloca_cutoff (size), 1)
 #ifdef PTHREAD_STACK_MIN
-          __builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1) ||
+          || __builtin_expect (size <= PTHREAD_STACK_MIN / 4, 1)
 #endif
-          __builtin_expect (__libc_alloca_cutoff (size), 1));
+	  );
 }
