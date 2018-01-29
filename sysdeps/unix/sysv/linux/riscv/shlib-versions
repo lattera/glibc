@@ -1,0 +1,9 @@
+DEFAULT		GLIBC_2.27
+
+%if RISCV_ABI_XLEN == 64 && RISCV_ABI_FLEN == 64
+ld=ld-linux-riscv64-lp64d.so.1
+%elif RISCV_ABI_XLEN == 64 && RISCV_ABI_FLEN == 0
+ld=ld-linux-riscv64-lp64.so.1
+%else
+%error cannot determine ABI
+%endif

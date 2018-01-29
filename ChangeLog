@@ -144,6 +144,24 @@
 	* sysdeps/unix/sysv/linux/riscv/rv64/libnsl.abilist: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/rv64/librt.abilist: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/rv64/libutil.abilist: Likewise.
+	* sysdeps/riscv/Implies: New file.
+	* sysdeps/riscv/Makefile: Likewise.
+	* sysdeps/riscv/configure: Likewise.
+	* sysdeps/riscv/configure.ac: Likewise.
+	* sysdeps/riscv/nptl/Makefile: Likewise.
+	* sysdeps/riscv/preconfigure: Likewise.
+	* sysdeps/riscv/rv64/Implies-after: Likewise.
+	* sysdeps/riscv/rv64/rvd/Implies: Likewise.
+	* sysdeps/riscv/rv64/rvf/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/Versions: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/configure: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/configure.ac: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/ldd-rewrite.sed: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/shlib-versions: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
