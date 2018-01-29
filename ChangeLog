@@ -1,3 +1,20 @@
+2018-01-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22701]
+	* include/rpcsvc/nislib.h (__nis_default_ttl): Add
+	libnsl_hidden_proto.
+	* include/rpcsvc/yp.h (yp_xdrall): Declare with
+	libnsl_hidden_proto.
+	* include/rpcsvc/ypclnt.h (yp_maplist): Likewise.
+	* nis/Makefile (libnsl-routines): Add nss-default only for
+	build-obsolete-nsl.
+	* nis/nis_defaults.c (__nis_default_ttl): Add
+	libnsl_hidden_nolink_def.
+	* nis/rpcsvc/ypclnt.h (yp_maplist): Remove #ifdef'ed-out
+	declaration.
+	* nis/yp_xdr.c (xdr_ypall): Add libnsl_hidden_nolink_def.
+	* nis/ypclnt.c (yp_maplist): Likewise.
+
 2018-01-29  Romain Naour  <romain.naour@gmail.com>  (tiny change)
 
 	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h

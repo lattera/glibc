@@ -813,6 +813,7 @@ yp_maplist (const char *indomain, struct ypmaplist **outmaplist)
 
   return result;
 }
+libnsl_hidden_nolink_def (yp_maplist, GLIBC_2_0)
 
 const char *
 yperr_string (const int error)

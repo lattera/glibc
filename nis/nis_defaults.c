@@ -428,6 +428,7 @@ __nis_default_ttl (char *defaults)
 
   return searchttl (cptr);
 }
+libnsl_hidden_nolink_def (__nis_default_ttl, GLIBC_2_1)
 
 /* Default access rights are ----rmcdr---r---, but we could change
    this with the NIS_DEFAULTS variable. */

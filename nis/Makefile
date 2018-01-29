@@ -58,9 +58,10 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_print_group_entry nis_domain_of nis_domain_of_r\
 		  nis_modify nis_remove nis_add nis_defaults\
 		  nis_findserv nis_callback nis_clone_dir nis_clone_obj\
-		  nis_clone_res nss-default
+		  nis_clone_res
 
 ifeq ($(build-obsolete-nsl),yes)
+libnsl-routines += nss-default
 libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups \
 			   nss-nis
 libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))

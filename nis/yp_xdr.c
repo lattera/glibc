@@ -327,4 +327,4 @@ xdr_ypall(XDR *xdrs, struct ypall_callback *incallback)
 	    return FALSE;
     }
 }
-/* XXX libnsl_hidden_nolink_def(xdr_ypall, GLIBC_2_2) */
+libnsl_hidden_nolink_def (xdr_ypall, GLIBC_2_2)

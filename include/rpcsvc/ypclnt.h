@@ -3,6 +3,9 @@
 
 # ifndef _ISOMAC
 
+struct ypmaplist;
+int yp_maplist (const char *, struct ypmaplist **) __THROW;
+
 libnsl_hidden_proto (ypbinderr_string)
 libnsl_hidden_proto (yp_bind)
 libnsl_hidden_proto (yp_get_default_domain)
@@ -17,6 +20,7 @@ libnsl_hidden_proto (yp_next)
 libnsl_hidden_proto (yp_match)
 libnsl_hidden_proto (yp_all)
 libnsl_hidden_proto (__yp_check)
+libnsl_hidden_proto (yp_maplist)
 
 # endif /* !_ISOMAC */
 #endif
