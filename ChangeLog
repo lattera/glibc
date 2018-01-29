@@ -28,6 +28,7 @@
 	[!defined NDEBUG] (__assert_fail): Define to __malloc_assert.
 	* bits/fcntl.h: Fix comment for FREAD and FWRITE.
 	* sysdeps/mach/hurd/bits/fcntl.h: Likewise.
+	* sysdeps/mach/hurd/hp-timing.h: New file.
 
 2018-01-29  Darius Rad  <darius@bluespec.com>
 
