@@ -1,3 +1,8 @@
+2018-01-29  Romain Naour  <romain.naour@gmail.com>  (tiny change)
+
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	(__ASSUME_COPY_FILE_RANGE) [__LINUX_KERNEL_VERSION < 0x040A00]: Undef.
+
 2018-01-29  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.git_checkout): Use git
