@@ -101,6 +101,10 @@
 	* sysdeps/mach/configure (mach_interface_list): Regenerate.
 	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_VDISABLE): Set to '\0'
 	instead of invalid -1.
+	* sysdeps/mach/hurd/net/ethernet.h: Include <stdint.h>.
+	* sysdeps/mach/hurd/net/if_arp.h: Include <stdint.h>.
+	* sysdeps/mach/hurd/net/if_ppp.h: Do not include non-existing
+	<net/ppp_defs.h>.
 
 2008-12-18  Thomas Schwinge  <tschwinge@gnu.org>
 

@@ -53,7 +53,6 @@
 
 #include <net/if.h>
 #include <sys/ioctl.h>
-#include <net/ppp_defs.h>
 
 __BEGIN_DECLS
 

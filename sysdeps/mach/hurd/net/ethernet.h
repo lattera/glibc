@@ -23,6 +23,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <stdint.h>
 #include <net/if_ether.h>     /* IEEE 802.3 Ethernet constants */
 
 __BEGIN_DECLS
