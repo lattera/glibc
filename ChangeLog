@@ -1,3 +1,7 @@
+2018-01-29  Darius Rad  <darius@bluespec.com>
+
+	* sysdeps/unix/sysv/linux/riscv/ipc_priv.h: New file.
+
 2018-01-29  Palmer Dabbelt  <palmer@sifive.com>
 
 	* sysdeps/init_array/crti.S (.section .init_array): Add
