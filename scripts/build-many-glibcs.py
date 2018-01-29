@@ -329,6 +329,21 @@ class Context(object):
                         os_name='linux-gnuspe',
                         variant='e500v1',
                         gcc_cfg=['--disable-multilib', '--enable-secureplt'])
+        self.add_config(arch='riscv64',
+                        os_name='linux-gnu',
+                        variant='rv64imac-lp64',
+                        gcc_cfg=['--with-arch=rv64imac', '--with-abi=lp64',
+                                 '--disable-multilib'])
+        self.add_config(arch='riscv64',
+                        os_name='linux-gnu',
+                        variant='rv64imafdc-lp64',
+                        gcc_cfg=['--with-arch=rv64imafdc', '--with-abi=lp64',
+                                 '--disable-multilib'])
+        self.add_config(arch='riscv64',
+                        os_name='linux-gnu',
+                        variant='rv64imafdc-lp64d',
+                        gcc_cfg=['--with-arch=rv64imafdc', '--with-abi=lp64d',
+                                 '--disable-multilib'])
         self.add_config(arch='s390x',
                         os_name='linux-gnu',
                         glibcs=[{},
@@ -1251,6 +1266,8 @@ class Config(object):
                     'nios2': 'nios2',
                     'powerpc': 'powerpc',
                     's390': 's390',
+                    'riscv32': 'riscv',
+                    'riscv64': 'riscv',
                     'sh': 'sh',
                     'sparc': 'sparc',
                     'tile': 'tile',

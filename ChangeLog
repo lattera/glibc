@@ -162,6 +162,8 @@
 	* sysdeps/unix/sysv/linux/riscv/rv64/Implies: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/rv64/Makefile: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/shlib-versions: Likewise.
+	* scripts/build-many-glibcs.py (Context): Add RISC-V targets.
+	(Config): Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
