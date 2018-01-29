@@ -29,7 +29,7 @@
 # define W(o) o
 # define OPEN_MEMSTREAM open_memstream
 # define PRINTF printf
-# define _FWRITE fwrite
+# define FWRITE_FUNC fwrite
 # define FPUTC fputc
 # define STRCMP strcmp
 #endif
@@ -114,14 +114,14 @@ do_test_bz20181 (void)
   if (fp == NULL)
     ERROR_RET1 ("%s failed\n", S(OPEN_MEMSTREAM));
 
-  if ((ret = _FWRITE (W("abc"), 1, 3, fp)) != 3)
-    ERROR_RET1 ("%s failed (errno = %d)\n", S(_FWRITE), errno);
+  if ((ret = FWRITE_FUNC (W("abc"), 1, 3, fp)) != 3)
+    ERROR_RET1 ("%s failed (errno = %d)\n", S(FWRITE_FUNC), errno);
 
   if (fseek (fp, 0, SEEK_SET) != 0)
     ERROR_RET1 ("fseek failed (errno = %d)\n", errno);
 
-  if (_FWRITE (W("z"), 1, 1, fp) != 1)
-    ERROR_RET1 ("%s failed (errno = %d)\n", S(_FWRITE), errno);
+  if (FWRITE_FUNC (W("z"), 1, 1, fp) != 1)
+    ERROR_RET1 ("%s failed (errno = %d)\n", S(FWRITE_FUNC), errno);
 
   if (fflush (fp) != 0)
     ERROR_RET1 ("fflush failed (errno = %d)\n", errno);

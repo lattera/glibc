@@ -37,7 +37,7 @@ fwwrite (const void *ptr, size_t size, size_t nmemb, FILE *arq)
 #define W(o) L##o
 #define OPEN_MEMSTREAM open_wmemstream
 #define PRINTF wprintf
-#define _FWRITE fwwrite
+#define FWRITE_FUNC fwwrite
 #define FPUTC  fputwc
 #define STRCMP wcscmp
 

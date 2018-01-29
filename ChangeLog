@@ -21,6 +21,8 @@
 	* sysdeps/mach/hurd/i386/libutil.abilist: New file.
 	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Commute operands of
 	|| to respect codestyle.
+	* libio/tst-memstream3.c (_FWRITE): Rename to FWRITE_FUNC.
+	(do_test_bz20181): Rename accordingly.
 
 2018-01-29  Darius Rad  <darius@bluespec.com>
 
