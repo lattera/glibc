@@ -1,0 +1,10 @@
+GLIBC_2.27 GLIBC_2.27 A
+GLIBC_2.27 dladdr F
+GLIBC_2.27 dladdr1 F
+GLIBC_2.27 dlclose F
+GLIBC_2.27 dlerror F
+GLIBC_2.27 dlinfo F
+GLIBC_2.27 dlmopen F
+GLIBC_2.27 dlopen F
+GLIBC_2.27 dlsym F
+GLIBC_2.27 dlvsym F

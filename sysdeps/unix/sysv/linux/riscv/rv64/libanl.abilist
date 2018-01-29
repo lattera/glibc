@@ -1,0 +1,5 @@
+GLIBC_2.27 GLIBC_2.27 A
+GLIBC_2.27 gai_cancel F
+GLIBC_2.27 gai_error F
+GLIBC_2.27 gai_suspend F
+GLIBC_2.27 getaddrinfo_a F
