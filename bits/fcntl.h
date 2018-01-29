@@ -63,10 +63,7 @@
 #endif
 
 #ifdef __USE_MISC
-/* Bits in the file status flags returned by F_GETFL.
-   These are all the O_* flags, plus FREAD and FWRITE, which are
-   independent bits set by which of O_RDONLY, O_WRONLY, and O_RDWR, was
-   given to `open'.  */
+/* Flags for TIOCFLUSH.  */
 # define FREAD		1
 # define FWRITE		2
 

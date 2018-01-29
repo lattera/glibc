@@ -135,7 +135,7 @@
 
 
 #ifdef __USE_MISC
-/* Bits in the file status flags returned by F_GETFL.  */
+/* Flags for TIOCFLUSH.  */
 # define FREAD		O_RDONLY
 # define FWRITE		O_WRONLY
 
