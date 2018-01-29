@@ -34,6 +34,64 @@
 	* sysdeps/riscv/nofpu/Implies: Likewise.
 	* sysdeps/riscv/sfp-machine.h: Likewise.
 	* sysdeps/riscv/tininess.h: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_ceil.c: New file.
+	* sysdeps/riscv/rv64/rvd/s_floor.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_llrint.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_llround.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_lrint.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_lround.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_nearbyint.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_rint.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_round.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_roundeven.c: Likewise.
+	* sysdeps/riscv/rv64/rvd/s_trunc.c: Likewise.
+	* sysdeps/riscv/rv64/rvf/s_llrintf.c: Likewise.
+	* sysdeps/riscv/rv64/rvf/s_llroundf.c: Likewise.
+	* sysdeps/riscv/rv64/rvf/s_lrintf.c: Likewise.
+	* sysdeps/riscv/rv64/rvf/s_lroundf.c: Likewise.
+	* sysdeps/riscv/rvd/e_sqrt.c: Likewise.
+	* sysdeps/riscv/rvd/s_copysign.c: Likewise.
+	* sysdeps/riscv/rvd/s_finite.c: Likewise.
+	* sysdeps/riscv/rvd/s_fma.c: Likewise.
+	* sysdeps/riscv/rvd/s_fmax.c: Likewise.
+	* sysdeps/riscv/rvd/s_fmin.c: Likewise.
+	* sysdeps/riscv/rvd/s_fpclassify.c: Likewise.
+	* sysdeps/riscv/rvd/s_isinf.c: Likewise.
+	* sysdeps/riscv/rvd/s_isnan.c: Likewise.
+	* sysdeps/riscv/rvd/s_issignaling.c: Likewise.
+	* sysdeps/riscv/rvf/e_sqrtf.c: Likewise.
+	* sysdeps/riscv/rvf/fclrexcpt.c: Likewise.
+	* sysdeps/riscv/rvf/fegetenv.c: Likewise.
+	* sysdeps/riscv/rvf/fegetmode.c: Likewise.
+	* sysdeps/riscv/rvf/fegetround.c: Likewise.
+	* sysdeps/riscv/rvf/feholdexcpt.c: Likewise.
+	* sysdeps/riscv/rvf/fesetenv.c: Likewise.
+	* sysdeps/riscv/rvf/fesetexcept.c: Likewise.
+	* sysdeps/riscv/rvf/fesetmode.c: Likewise.
+	* sysdeps/riscv/rvf/fesetround.c: Likewise.
+	* sysdeps/riscv/rvf/feupdateenv.c: Likewise.
+	* sysdeps/riscv/rvf/fgetexcptflg.c: Likewise.
+	* sysdeps/riscv/rvf/fraiseexcpt.c: Likewise.
+	* sysdeps/riscv/rvf/fsetexcptflg.c: Likewise.
+	* sysdeps/riscv/rvf/ftestexcept.c: Likewise.
+	* sysdeps/riscv/rvf/get-rounding-mode.h: Likewise.
+	* sysdeps/riscv/rvf/math_private.h: Likewise.
+	* sysdeps/riscv/rvf/s_ceilf.c: Likewise.
+	* sysdeps/riscv/rvf/s_copysignf.c: Likewise.
+	* sysdeps/riscv/rvf/s_finitef.c: Likewise.
+	* sysdeps/riscv/rvf/s_floorf.c: Likewise.
+	* sysdeps/riscv/rvf/s_fmaf.c: Likewise.
+	* sysdeps/riscv/rvf/s_fmaxf.c: Likewise.
+	* sysdeps/riscv/rvf/s_fminf.c: Likewise.
+	* sysdeps/riscv/rvf/s_fpclassifyf.c: Likewise.
+	* sysdeps/riscv/rvf/s_isinff.c: Likewise.
+	* sysdeps/riscv/rvf/s_isnanf.c: Likewise.
+	* sysdeps/riscv/rvf/s_issignalingf.c: Likewise.
+	* sysdeps/riscv/rvf/s_nearbyintf.c: Likewise.
+	* sysdeps/riscv/rvf/s_rintf.c: Likewise.
+	* sysdeps/riscv/rvf/s_roundevenf.c: Likewise.
+	* sysdeps/riscv/rvf/s_roundf.c: Likewise.
+	* sysdeps/riscv/rvf/s_truncf.c: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
