@@ -96,6 +96,15 @@
 	* sysdeps/riscv/nptl/bits/semaphore.h: Likewise.
 	* sysdeps/riscv/nptl/libc-lowlevellock.c: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/atomic-machine.h: Likewise.
+	* sysdeps/riscv/nptl/nptl-sysdep.S: New file.
+	* sysdeps/unix/sysv/linux/riscv/arch-fork.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/profil-counter.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/pt-vfork.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/syscall.c: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sysdep.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/vfork.S: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
