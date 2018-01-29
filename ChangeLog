@@ -1,6 +1,12 @@
 2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
+	* localedata/locales/lt_LT (alt_mon): Import from CLDR (nominative
+	case).
+
+2018-01-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
 	* localedata/locales/be_BY (mon): Rename to...
 	(alt_mon): This, then synchronize with CLDR (nominative case).
 	(abmon): Rename to...

@@ -207,6 +207,18 @@ abmon     "Sau";"Vas";/
           "Lie";"Rgp";/
           "Rgs";"Spa";/
           "Lap";"Grd"
+alt_mon   "sausis";/
+          "vasaris";/
+          "kovas";/
+          "balandis";/
+          "gegu<U017E><U0117>";/
+          "bir<U017E>elis";/
+          "liepa";/
+          "rugpj<U016B>tis";/
+          "rugs<U0117>jis";/
+          "spalis";/
+          "lapkritis";/
+          "gruodis"
 mon       "sausio";/
           "vasario";/
           "kovo";/
