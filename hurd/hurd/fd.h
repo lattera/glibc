@@ -62,7 +62,7 @@ extern struct mutex _hurd_dtable_lock; /* Locks those two variables.  */
 extern struct hurd_fd *_hurd_fd_get (int fd);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_FD_H_EXTERN_INLINE struct hurd_fd *
 _hurd_fd_get (int fd)
 {
@@ -95,7 +95,7 @@ _hurd_fd_get (int fd)
 
   return descriptor;
 }
-#  endif
+# endif
 #endif
 
 
@@ -281,7 +281,7 @@ extern int _hurd_select (int nfds, struct pollfd *pollfds,
    __hurd_file_name_lookup.  */
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_FD_H_EXTERN_INLINE error_t
 __hurd_at_flags (int *at_flags, int *flags)
 {
@@ -298,7 +298,7 @@ __hurd_at_flags (int *at_flags, int *flags)
 
   return 0;
 }
-#  endif
+# endif
 #endif
 
 /* Variant of file_name_lookup used in *at function implementations.

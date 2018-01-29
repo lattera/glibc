@@ -43,9 +43,9 @@
 #include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
 struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc) || IS_IN (libpthread)
-#    include <sigsetops.h>
-#  endif
+# if IS_IN (libc) || IS_IN (libpthread)
+#  include <sigsetops.h>
+# endif
 #endif
 
 
@@ -135,7 +135,7 @@ extern struct hurd_sigstate *_hurd_self_sigstate (void)
 #endif
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
@@ -145,7 +145,7 @@ _hurd_self_sigstate (void)
     *location = _hurd_thread_sigstate (__mach_thread_self ());
   return *location;
 }
-#  endif
+# endif
 #endif
 
 /* Thread listening on our message port; also called the "signal thread".  */
@@ -176,7 +176,7 @@ extern int _hurd_core_limit;
 extern void *_hurd_critical_section_lock (void);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_SIGNAL_H_EXTERN_INLINE void *
 _hurd_critical_section_lock (void)
 {
@@ -201,13 +201,13 @@ _hurd_critical_section_lock (void)
      _hurd_critical_section_unlock to unlock it.  */
   return ss;
 }
-#  endif
+# endif
 #endif
 
 extern void _hurd_critical_section_unlock (void *our_lock);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_SIGNAL_H_EXTERN_INLINE void
 _hurd_critical_section_unlock (void *our_lock)
 {
@@ -230,7 +230,7 @@ _hurd_critical_section_unlock (void *our_lock)
 	__msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
     }
 }
-#  endif
+# endif
 #endif
 
 /* Convenient macros for simple uses of critical sections.

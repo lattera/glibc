@@ -83,7 +83,7 @@ extern unsigned long int *__hurd_threadvar_location_from_sp
   (enum __hurd_threadvar_index __index, void *__sp);
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_THREADVAR_H_EXTERN_INLINE unsigned long int *
 __hurd_threadvar_location_from_sp (enum __hurd_threadvar_index __index,
 				   void *__sp)
@@ -95,7 +95,7 @@ __hurd_threadvar_location_from_sp (enum __hurd_threadvar_index __index,
 	   : (unsigned long int *) ((__stack & __hurd_threadvar_stack_mask) +
 				    __hurd_threadvar_stack_offset))[__index];
 }
-#  endif
+# endif
 #endif
 
 #include <machine-sp.h>		/* Define __thread_stack_pointer.  */
@@ -111,14 +111,14 @@ __hurd_threadvar_location (enum __hurd_threadvar_index __index) __THROW
      __attribute__ ((__const__));
 
 #if defined __USE_EXTERN_INLINES && defined _LIBC
-#  if IS_IN (libc)
+# if IS_IN (libc)
 _HURD_THREADVAR_H_EXTERN_INLINE unsigned long int *
 __hurd_threadvar_location (enum __hurd_threadvar_index __index)
 {
   return __hurd_threadvar_location_from_sp (__index,
 					    __thread_stack_pointer ());
 }
-#  endif
+# endif
 #endif
 
 
