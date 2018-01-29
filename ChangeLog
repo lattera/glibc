@@ -4,6 +4,8 @@
 	PREINIT_FUNCTION when defined.
 	* manual/math.texi: RISC-V supports _Float128 and _Float64x.
 	* config.h.in: Regenerate.
+	* manual/platform.texi: Add RISC-V documenation for
+	__riscv_flush_icache.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 

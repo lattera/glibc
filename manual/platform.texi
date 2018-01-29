@@ -6,6 +6,7 @@
 
 @menu
 * PowerPC::           Facilities Specific to the PowerPC Architecture
+* RISC-V::            Facilities Specific to the RISC-V Architecture
 @end menu
 
 @node PowerPC
@@ -114,4 +115,22 @@ priority is privileged and may only be set during certain time intervals by
 problem-state programs.  If the program priority is medium high when the time
 interval expires or if an attempt is made to set the priority to medium high
 when it is not allowed, the priority is set to medium.
+@end deftypefun
+
+@node RISC-V
+@appendixsec RISC-V-specific Facilities
+
+Cache management facilities specific to RISC-V systems that implement the Linux
+ABI are declared in @file{sys/cachectl.h}.
+
+@deftypefun {void} __riscv_flush_icache(void *@var{start}, void *@var{end}, unsigned long int @var{flags})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Enforce ordering between stores and instruction cache fetches.  The range of
+addresses over which ordering is enforced is specified by @var{start} and
+@var{end}.  The @var{flags} argument controls the extent of this ordering, with
+the default behavior (a @var{flags} value of 0) being to enforce the fence on
+all threads in the current process.  Setting the
+@code{SYS_RISCV_FLUSH_ICACHE_LOCAL} bit allows users to indicate that enforcing
+ordering on only the current thread is necessary.  All other flag bits are
+reserved.
 @end deftypefun
