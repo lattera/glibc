@@ -127,6 +127,9 @@
 	* sysdeps/unix/sysv/linux/riscv/sys/user.h: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/ucontext-macros.h: Likewise.
 	* sysdeps/unix/sysv/linux/riscv/ucontext_i.sym: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/dl-static.c: New file.
+	* sysdeps/unix/sysv/linux/riscv/ldconfig.h: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/ldsodefs.h: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
