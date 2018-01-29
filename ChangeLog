@@ -22,6 +22,11 @@
 	* sysdeps/riscv/setjmp.S: Likewise.
 	* sysdeps/riscv/sys/asm.h: Likewise.
 	* sysdeps/riscv/tls-macros.h: Likewise.
+	* sysdeps/riscv/dl-tls.h: New file.
+	* sysdeps/riscv/libc-tls.c: Likewise.
+	* sysdeps/riscv/nptl/tcb-offsets.sym: Likewise.
+	* sysdeps/riscv/nptl/tls.h: Likewise.
+	* sysdeps/riscv/stackinfo.h: Likewise.
 
 2018-01-29  Florian Weimer  <fweimer@redhat.com>
 
