@@ -1,3 +1,11 @@
+2018-01-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
+	* localedata/locales/hr_HR (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+	(d_t_fmt): Update the comment.
+
 2018-01-29  Andreas Schwab  <schwab@linux-m68k.org>
 
 	* sysdeps/posix/fpathconf.c (__fpathconf): Verify the values of

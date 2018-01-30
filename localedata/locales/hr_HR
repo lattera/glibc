@@ -211,7 +211,7 @@ abmon   "sij";"velj";/
         "srp";"kol";/
         "ruj";"lis";/
         "stu";"pro"
-mon     "sije<U010D>anj";/
+alt_mon "sije<U010D>anj";/
         "velja<U010D>a";/
         "o<U017E>ujak";/
         "travanj";/
@@ -223,9 +223,21 @@ mon     "sije<U010D>anj";/
         "listopad";/
         "studeni";/
         "prosinac"
+mon     "sije<U010D>nja";/
+        "velja<U010D>e";/
+        "o<U017E>ujka";/
+        "travnja";/
+        "svibnja";/
+        "lipnja";/
+        "srpnja";/
+        "kolovoza";/
+        "rujna";/
+        "listopada";/
+        "studenoga";/
+        "prosinca"
 % %A - full weekday name
 % %d - day of month (with padded 0)
-% %B - full month name
+% %B - full month name (genitive case)
 % %Y - year with century
 % %T - 24-hour time
 % %Z - time zone
