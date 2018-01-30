@@ -96,7 +96,7 @@ abmon   "xin";"feb";/
         "xnt";"ago";/
         "set";"och";/
         "pay";"avi"
-mon     "xineru";/
+alt_mon "xineru";/
         "febreru";/
         "marzu";/
         "abril";/
@@ -111,6 +111,21 @@ mon     "xineru";/
 d_t_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d//%m//%y"
 t_fmt   "%T"
+% Month names in genitive form:
+% de xineru, de febreru, de marzu, d’abril, de mayu, de xunu,
+% de xunetu, d’agostu, de setiembre, d’ochobre, de payares, d’avientu
+mon     "de xineru";/
+        "de febreru";/
+        "de marzu";/
+        "d<U2019>abril";/
+        "de mayu";/
+        "de xunu";/
+        "de xunetu";/
+        "d<U2019>agostu";/
+        "de setiembre";/
+        "d<U2019>ochobre";/
+        "de payares";/
+        "d<U2019>avientu"
 am_pm   "";""
 t_fmt_ampm ""
 week 7;19971130;4

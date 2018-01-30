@@ -1,3 +1,10 @@
+2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23140]
+	* localedata/locales/ast_ES (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+
 2018-06-29  Daniel Alvarez  <dalvarez@redhat.com>
 	    Jakub Sitnicki  <jkbs@redhat.com>
 

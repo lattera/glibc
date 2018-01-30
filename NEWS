@@ -25,9 +25,9 @@ Major new features:
     fMxdivfNx functions.
 
 * Nominative and genitive month names are now supported for the following
-  languages: Catalan, Czech, Kashubian, Scottish Gaelic, Upper Sorbian,
-  and Walloon.  The following languages now support abbreviated alternative
-  month names: Catalan, Greek, and Kashubian.
+  languages: Asturian, Catalan, Czech, Kashubian, Scottish Gaelic,
+  Upper Sorbian, and Walloon.  The following languages now support
+  abbreviated alternative month names: Catalan, Greek, and Kashubian.
 
 * Building and running on GNU/Hurd systems now works without out-of-tree
   patches.
