@@ -147,13 +147,19 @@ day    "niedzela";/
         "czwi<U00F4>rtk";/
         "pi<U0105>tk";/
         "sob<U00F2>ta"
-abmon  "st<U00EB>"; "gro";/
+ab_alt_mon "st<U00EB>"; "gro";/
         "str"; "<U0142><U017C><U00EB>";/
         "m<U00F4>j"; "cze";/
         "l<U00EB>p"; "z<U00E9>l";/
         "s<U00E9>w"; "ruj";/
         "l<U00EB>s"; "g<U00F2>d"
-mon    "st<U00EB>cznik";/
+abmon   "st<U00EB>"; "gro";/
+        "str"; "<U0142><U017C><U00EB>";/
+        "maj"; "cze";/
+        "l<U00EB>p"; "z<U00E9>l";/
+        "s<U00E9>w"; "ruj";/
+        "l<U00EB>s"; "g<U00F2>d"
+alt_mon "st<U00EB>cznik";/
         "gromicznik";/
         "str<U00EB>miannik";/
         "<U0142><U017C><U00EB>kwiat";/
@@ -165,6 +171,18 @@ mon    "st<U00EB>cznik";/
         "rujan";/
         "l<U00EB>stopadnik";/
         "g<U00F2>dnik"
+mon     "st<U00EB>cznika";/
+        "gromicznika";/
+        "str<U00EB>miannika";/
+        "<U0142><U017C><U00EB>kwiata";/
+        "maja";/
+        "czerwi<U0144>ca";/
+        "l<U00EB>pi<U0144>ca";/
+        "z<U00E9>lnika";/
+        "s<U00E9>wnika";/
+        "rujana";/
+        "l<U00EB>stopadnika";/
+        "g<U00F2>dnika"
 d_t_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%Y-%m-%d"
 t_fmt   "%T"
