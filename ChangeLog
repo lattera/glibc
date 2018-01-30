@@ -1,5 +1,11 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/iso14651_t1_common: The new version of this
+	file downloaded from ISO contained several syntax errors which
+	are fixed by this patch.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/iso14651_t1_common: replace all <U.....>
 	with <U000.....> because glibc understands only 4 digit or 8 digit
 
