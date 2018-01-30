@@ -1,3 +1,9 @@
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #14095]
+	* localedata/locales/iso14651_t1_common: Update file to
+	latest version from ISO (ISO14651_2016_TABLE1_en.txt).
+
 2018-02-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/timer_routines.c: Include <timer_routines.h> instead
