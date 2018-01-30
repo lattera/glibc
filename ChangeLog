@@ -909,8 +909,8 @@
 	(CFLAGS-s_csinl.c): Likewise.
 	(CFLAGS-s_csqrtl.c): Likewise.
 
-2010-08-04  Emilio Pozuelo Monfort  <pochu27@gmail.com>
-2017-09-26  Svante Signell  <svante.signell@gmail.com>
+2017-01-09  Emilio Pozuelo Monfort  <pochu27@gmail.com>
+2017-01-09  Svante Signell  <svante.signell@gmail.com>
 
 	* hurd/hurdexec.c (_hurd_exec): Deprecate function.
 	(_hurd_exec_paths): New function.
