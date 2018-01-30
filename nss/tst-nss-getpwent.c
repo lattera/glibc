@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <nss.h>
 #include <pwd.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -26,6 +27,8 @@
 int
 do_test (void)
 {
+  __nss_configure_lookup ("passwd", "files");
+
   /* Count the number of entries in the password database, and fetch
      data from the first and last entries.  */
   size_t count = 0;

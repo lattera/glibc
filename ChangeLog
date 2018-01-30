@@ -1,3 +1,9 @@
+2018-01-30  Florian Weimer  <fweimer@redhat.com>
+
+	* nss/bug17079.c (do_test): Use nss_files only for reading passwd
+	data.
+	* nss/tst-nss-getpwent.c (do_test): Likewise.
+
 2018-01-30  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]
