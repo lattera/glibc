@@ -1,5 +1,10 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/iso14651_t1_common: Add sections for various
+	scripts to the iso14651_t1_common file.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/iso14651_t1_common: Use the code point of a
 	character in the fourth collation level instead of IGNORE for all
 	entries which have IGNORE on all 4 levels.
