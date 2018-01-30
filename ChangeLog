@@ -1,3 +1,10 @@
+2018-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23140]
+	* localedata/locales/os_RU (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+
 2018-07-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c: Always include <dl-cet.h> and
