@@ -1,3 +1,24 @@
+2018-02-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* manual/probes.texi: Remove slowexp probes.
+	* math/Makefile: Remove slowexp.
+	* sysdeps/generic/math_private.h (__slowexp): Remove.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Remove __slowexp and
+	document error bounds.
+	* sysdeps/i386/fpu/slowexp.c: Remove.
+	* sysdeps/ia64/fpu/slowexp.c: Remove.
+	* sysdeps/ieee754/dbl-64/slowexp.c: Remove.
+	* sysdeps/ieee754/dbl-64/uexp.h (err_0): Remove.
+	* sysdeps/m68k/m680x0/fpu/slowexp.c: Remove.
+	* sysdeps/powerpc/power4/fpu/Makefile (CPPFLAGS-slowexp.c): Remove.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Remove slowexp-fma.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-avx.c (__slowexp): Remove.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma.c (__slowexp): Remove.
+	* sysdeps/x86_64/fpu/multiarch/e_exp-fma4.c (__slowexp): Remove.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-avx.c: Remove.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma.c: Remove.
+	* sysdeps/x86_64/fpu/multiarch/slowexp-fma4.c: Remove.
+
 2018-02-12  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	[BZ #13932]

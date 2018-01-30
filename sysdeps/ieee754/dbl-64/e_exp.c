@@ -23,10 +23,10 @@
 /*           exp1                                                          */
 /*                                                                         */
 /* FILES NEEDED:dla.h endian.h mpa.h mydefs.h uexp.h                       */
-/*              mpa.c mpexp.x slowexp.c                                    */
+/*              mpa.c mpexp.x                                              */
 /*                                                                         */
 /* An ultimate exp routine. Given an IEEE double machine number x          */
-/* it computes the correctly rounded (to nearest) value of e^x             */
+/* it computes an almost correctly rounded (to nearest) value of e^x       */
 /* Assumption: Machine arithmetic operations are performed in              */
 /* round to nearest mode of IEEE 754 standard.                             */
 /*                                                                         */
@@ -46,10 +46,6 @@
 # define SECTION
 #endif
 
-double __slowexp (double);
-
-/* An ultimate exp routine. Given an IEEE double machine number x it computes
-   the correctly rounded (to nearest) value of e^x.  */
 double
 SECTION
 __ieee754_exp (double x)
@@ -93,17 +89,10 @@ __ieee754_exp (double x)
 
 	rem = (bet + bet * eps) + al * eps;
 	res = al + rem;
-	cor = (al - res) + rem;
-	if (res == (res + cor * err_0))
-	  {
-	    retval = res * binexp.x;
-	    goto ret;
-	  }
-	else
-	  {
-	    retval = __slowexp (x);
-	    goto ret;
-	  }			/*if error is over bound */
+	/* Maximum relative error is 7.8e-22 (70.1 bits).
+	   Maximum ULP error is 0.500007.  */
+	retval = res * binexp.x;
+	goto ret;
       }
 
     if (n <= smallint)
@@ -166,38 +155,22 @@ __ieee754_exp (double x)
 	if (ex >= -1022)
 	  {
 	    binexp.i[HIGH_HALF] = (1023 + ex) << 20;
-	    if (res == (res + cor * err_0))
-	      {
-		retval = res * binexp.x;
-		goto ret;
-	      }
-	    else
-	      {
-		retval = __slowexp (x);
-		goto check_uflow_ret;
-	      }			/*if error is over bound */
+	    /* Does not underflow: res >= 1.0, binexp >= 0x1p-1022
+	       Maximum relative error is 7.8e-22 (70.1 bits).
+	       Maximum ULP error is 0.500007.  */
+	    retval = res * binexp.x;
+	    goto ret;
 	  }
 	ex = -(1022 + ex);
 	binexp.i[HIGH_HALF] = (1023 - ex) << 20;
 	res *= binexp.x;
 	cor *= binexp.x;
-	eps = 1.0000000001 + err_0 * binexp.x;
 	t = 1.0 + res;
 	y = ((1.0 - t) + res) + cor;
 	res = t + y;
-	cor = (t - res) + y;
-	if (res == (res + eps * cor))
-	  {
-	    binexp.i[HIGH_HALF] = 0x00100000;
-	    retval = (res - 1.0) * binexp.x;
-	    goto check_uflow_ret;
-	  }
-	else
-	  {
-	    retval = __slowexp (x);
-	    goto check_uflow_ret;
-	  }			/*   if error is over bound    */
-      check_uflow_ret:
+	/* Maximum ULP error is 0.5000035.  */
+	binexp.i[HIGH_HALF] = 0x00100000;
+	retval = (res - 1.0) * binexp.x;
 	if (retval < DBL_MIN)
 	  {
 	    double force_underflow = tiny * tiny;
@@ -210,10 +183,9 @@ __ieee754_exp (double x)
     else
       {
 	binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
-	if (res == (res + cor * err_0))
-	  retval = res * binexp.x * t256.x;
-	else
-	  retval = __slowexp (x);
+	/* Maximum relative error is 7.8e-22 (70.1 bits).
+	   Maximum ULP error is 0.500007.  */
+	retval = res * binexp.x * t256.x;
 	if (isinf (retval))
 	  goto ret_huge;
 	else
