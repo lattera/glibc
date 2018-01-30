@@ -1,7 +1,14 @@
-% escape_char /
-% comment_char %
+escape_char /
+comment_char %
 
-% LC_COLLATE
+% This file is part of the GNU C Library and contains locale data.
+% The Free Software Foundation does not claim any copyright interest
+% in the locale data contained in this file.  The foregoing does not
+% affect the license of the GNU C Library as a whole.  It does not
+% exempt you from the conditions of the license if your use would
+% otherwise be governed by that license.
+
+LC_COLLATE
 
 % Decomment the lines above to create an
 %   LC_COLLATE definition in the style of ISO/IEC TR 14652:2004.
@@ -21867,10 +21874,11 @@ collating-element <UAABC_AAAF> from "<UAABC><UAAAF>" % collation-element for reo
 
 <SFFFF> % Largest primary weight
 
-
-% order_start forward;forward;forward;forward,position
-
-% order_start forward;backward;forward;forward,position
+ifdef DIACRIT_BACKWARD
+order_start forward;backward;forward;forward,position
+else
+order_start forward;forward;forward;forward,position
+endif
 
 % Decomment the first order_start line to specify directions for each level.
 %   To tailor for French accent handling, instead decomment the second
@@ -52612,7 +52620,7 @@ collating-element <UAABC_AAAF> from "<UAABC><UAAAF>" % collation-element for reo
 
 order_end
 
-% END LC_COLLATE
+END LC_COLLATE
 
 % Decomment the line above to create a 14652-style
 %   LC_COLLATE definition.

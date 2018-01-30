@@ -1,5 +1,10 @@
 2018-02-27  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/locales/iso14651_t1_common: Necessary changes
+	to make the file downloaded from ISO usable by glibc.
+
+2018-02-27  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #14095]
 	* localedata/locales/iso14651_t1_common: Update file to
 	latest version from ISO (ISO14651_2016_TABLE1_en.txt).
