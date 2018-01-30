@@ -170,7 +170,7 @@ abmon	"Jan";"Feb";/
 	"Jul";"Awg";/
 	"Sep";"Okt";/
 	"Now";"Dec"
-mon	"Januar";/
+alt_mon	"Januar";/
 	"Februar";/
 	"M<U011B>rc";/
 	"Apryl";/
@@ -182,6 +182,18 @@ mon	"Januar";/
 	"Oktober";/
 	"Nowember";/
 	"December"
+mon	"januara";/
+	"februara";/
+	"m<U011B>rca";/
+	"apryla";/
+	"meje";/
+	"junija";/
+	"julija";/
+	"awgusta";/
+	"septembra";/
+	"oktobra";/
+	"nowembra";/
+	"decembra"
 d_t_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d.%m.%Y"
 t_fmt   "%T"

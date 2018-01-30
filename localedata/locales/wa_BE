@@ -37,7 +37,7 @@ END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
-country_name "Beljike"
+country_name "Beldjike"
 country_post "B"
 country_ab2 "BE"
 country_ab3 "BEL"
@@ -121,7 +121,7 @@ abmon   "dja";"fev";/
         "djl";"awo";/
         "set";"oct";/
         "n<U00F4>v";"dec"
-mon     "djanv<U00EE>";/
+alt_mon "djanv<U00EE>";/
         "fevr<U00EE>";/
         "m<U00E5>ss";/
         "avri";/
@@ -147,12 +147,20 @@ mon     "djanv<U00EE>";/
 % d' octôbe
 % di nôvimbe
 % di decimbe
-% Est çki c' est possibe d' aveur "di" ou "d'" sorlon ki li no do moes
-% cmince avou ene voyale ou ene cossoune?
-%
-% Neni :-(
+mon     "di djanv<U00EE>";/
+        "di fevr<U00EE>";/
+        "di m<U00E5>ss";/
+        "d<U2019><U00A0>avri";/
+        "di may";/
+        "di djun";/
+        "di djulete";/
+        "d<U2019><U00A0>awousse";/
+        "di setimbe";/
+        "d<U2019><U00A0>oct<U00F4>be";/
+        "di n<U00F4>vimbe";/
+        "di decimbe"
 
-d_t_fmt "Li %A %d di %B %Y %T %Z"
+d_t_fmt "Li %A %d %B %Y %T %Z"
 % Chal, ça va
 d_fmt   "%d//%m//%Y"
 t_fmt   "%H:%M:%S"

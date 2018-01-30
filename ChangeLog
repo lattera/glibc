@@ -1,3 +1,21 @@
+2018-06-12  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23140]
+	* localedata/locales/gd_GB (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+	* localedata/locales/hsb_DE (mon): Rename to...
+	(alt_mon): This.
+	(mon): Import from CLDR (genitive case).
+	* localedata/locales/wa_BE (mon): Rename to...
+	(alt_mon): This.
+	(mon): Add, fill with the proper genitive forms, but CLDR data
+	is incomplete; completed according to the comments in this file.
+	(d_t_fmt): Do not use "di" before the month name, no longer needed.
+
+	* localedata/locales/wa_BE (country_name): Reword
+	"Beljike" -> "Beldjike".
+
 2018-06-11  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23272]

@@ -54,7 +54,7 @@ END LC_COLLATE
 
 LC_TIME
 % Am Faoilleach, An Gearran, Am Màrt, An Giblean, An Cèitean, An t-Ògmhios, An t-Iuchar, An Lùnastal, An t-Sultain, An Dàmhair, An t-Samhain, An Dùbhlachd
-mon           "Am Faoilleach";/
+alt_mon       "Am Faoilleach";/
      "An Gearran";/
      "Am M<U00E0>rt";/
      "An Giblean";/
@@ -66,6 +66,21 @@ mon           "Am Faoilleach";/
      "An D<U00E0>mhair";/
      "An t-Samhain";/
      "An D<U00F9>bhlachd"
+% dhen Fhaoilleach, dhen Ghearran, dhen Mhàrt, dhen Ghiblean, dhen Chèitean,
+% dhen Ògmhios, dhen Iuchar, dhen Lùnastal, dhen t-Sultain, dhen Dàmhair,
+% dhen t-Samhain, dhen Dùbhlachd
+mon  "dhen Fhaoilleach";/
+     "dhen Ghearran";/
+     "dhen Mh<U00E0>rt";/
+     "dhen Ghiblean";/
+     "dhen Ch<U00E8>itean";/
+     "dhen <U00D2>gmhios";/
+     "dhen Iuchar";/
+     "dhen L<U00F9>nastal";/
+     "dhen t-Sultain";/
+     "dhen D<U00E0>mhair";/
+     "dhen t-Samhain";/
+     "dhen D<U00F9>bhlachd"
 % Faoi, Gearr, Màrt, Gibl, Cèit, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
 abmon         "Faoi";/
        "Gearr";/
