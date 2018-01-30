@@ -1,3 +1,8 @@
+2018-01-30  Samuel Thibault  <samuel.thibault@ens-lyon.org
+
+	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Use __glibc_likely
+	instead of __builtin_expect.
+
 2018-01-30  Florian Weimer  <fweimer@redhat.com>
 
 	* nss/bug17079.c (do_test): Use nss_files only for reading passwd
