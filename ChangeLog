@@ -1,3 +1,9 @@
+2018-02-05  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #22761]
+	* assert/assert-perr.c (__assert_perror_fail): Append %n to format
+	string.
+
 2018-02-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* stdlib/test-atexit-race-common.c [!defined PTHREAD_STACK_MIN]: Do
