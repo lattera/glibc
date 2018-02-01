@@ -1,5 +1,7 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/coldfire/math-tests.h: New file.
+
 	* sysdeps/m68k/fpu/bits/fenv.h: Move to ....
 	* sysdeps/m68k/bits/fenv.h: ... here.
 	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_INEXACT): Do
