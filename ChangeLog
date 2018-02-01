@@ -1,5 +1,9 @@
 2018-02-01  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.27".
+	* include/features.h (__GLIBC_MINOR__): Set to 2.27.
+
 	* NEWS: Add the list of bugs fixed in 2.27.
 
 2018-02-01  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
