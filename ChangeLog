@@ -1,3 +1,12 @@
+2018-02-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* soft-fp/double.h (union _FP_UNION_D): Do not use attribute
+	packed on bits.
+	* soft-fp/extended.h (union _FP_UNION_E): Likewise.
+	* soft-fp/half.h (union _FP_UNION_H): Likewise.
+	* soft-fp/quad.h (union _FP_UNION_Q): Likewise.
+	* soft-fp/single.h (union _FP_UNION_S): Likewise.
+
 2018-02-01  Carlos O'Donell  <carlos@redhat.com>
 	    Ramin Seyed-Moussavi  <lordrasmus@gmail.com>
 	    Joseph Myers  <joseph@codesourcery.com>

@@ -88,7 +88,7 @@ union _FP_UNION_E
     unsigned exp : _FP_EXPBITS_E;
     unsigned sign : 1;
 # endif /* not bigendian */
-  } bits __attribute__ ((packed));
+  } bits;
 };
 
 

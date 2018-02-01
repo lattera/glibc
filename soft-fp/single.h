@@ -82,7 +82,7 @@ union _FP_UNION_S
     unsigned exp  : _FP_EXPBITS_S;
     unsigned sign : 1;
 #endif
-  } bits __attribute__ ((packed));
+  } bits;
 };
 
 #define FP_DECL_S(X)		_FP_DECL (1, X)

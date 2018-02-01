@@ -89,7 +89,7 @@ union _FP_UNION_D
     unsigned exp   : _FP_EXPBITS_D;
     unsigned sign  : 1;
 # endif
-  } bits __attribute__ ((packed));
+  } bits;
 };
 
 # define FP_DECL_D(X)		_FP_DECL (2, X)
@@ -210,7 +210,7 @@ union _FP_UNION_D
     unsigned exp    : _FP_EXPBITS_D;
     unsigned sign   : 1;
 # endif
-  } bits __attribute__ ((packed));
+  } bits;
 };
 
 # define FP_DECL_D(X)		_FP_DECL (1, X)
