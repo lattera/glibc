@@ -644,4 +644,14 @@ libc_feresetround_noex_ctx (struct rm_ctx *ctx)
   SET_RESTORE_ROUND_GENERIC (RM, libc_feholdsetround_53bit,	      \
 			     libc_feresetround_53bit)
 
+/* When no floating-point exceptions are defined in <fenv.h>, make
+   feraiseexcept ignore its argument so that unconditional
+   feraiseexcept calls do not cause errors for undefined exceptions.
+   Define it to expand to a void expression so that any calls testing
+   the result of feraiseexcept do produce errors.  */
+#if FE_ALL_EXCEPT == 0
+# define feraiseexcept(excepts) ((void) 0)
+# define __feraiseexcept(excepts) ((void) 0)
+#endif
+
 #endif /* _MATH_PRIVATE_H_ */

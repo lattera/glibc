@@ -1,5 +1,23 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math_private.h [FE_ALL_EXCEPT == 0]
+	(feraiseexcept): New macro.
+	[FE_ALL_EXCEPT == 0] (__feraiseexcept): Likewise.
+	* sysdeps/m68k/coldfire/nofpu/math_private.h (feraiseexcept):
+	Remove macro.
+	(__feraiseexcept): Likewise.
+	(feclearexcept): Likewise.
+	* sysdeps/microblaze/math_private.h (feraiseexcept): Likewise.
+	(__feraiseexcept): Likewise.
+	(feclearexcept): Likewise.
+	* sysdeps/nios2/math_private.h (feraiseexcept): Likewise.
+	(__feraiseexcept): Likewise.
+	(feclearexcept): Likewise.
+	* sysdeps/tile/math_private.h (feraiseexcept): Likewise.
+	(__feraiseexcept): Likewise.
+	(feclearexcept): Likewise.
+	(fetestexcept): Likewise.
+
 	* sysdeps/m68k/coldfire/math-tests.h: New file.
 
 	* sysdeps/m68k/fpu/bits/fenv.h: Move to ....

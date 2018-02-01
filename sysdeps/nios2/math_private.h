@@ -16,9 +16,7 @@
    success in every case.
 
    The overrides for libc_ functions must happen before we include
-   the generic math_private.h, and the overrides for regular
-   <fenv.h> functions must happen afterwards, to avoid clashing with
-   the declarations of those functions.  */
+   the generic math_private.h.  */
 
 #define libc_fesetround(rnd)                   ({ 0; })
 #define libc_fetestexcept(exc)                 ({ 0; })
@@ -30,9 +28,5 @@
 #define LDBL_CLASSIFY_COMPAT 1
 
 #include_next <math_private.h>
-
-#define feraiseexcept(excepts)                 ({ 0; })
-#define __feraiseexcept(excepts)               ({ 0; })
-#define feclearexcept(exc)                     ({ 0; })
 
 #endif

@@ -26,10 +26,6 @@
 
 #include_next <math_private.h>
 
-#define feraiseexcept(excepts)			({ 0; })
-#define __feraiseexcept(excepts)		({ 0; })
-#define feclearexcept(exc)			({ 0; })
-#define fetestexcept(exc)			({ 0; })
 extern inline int fegetenv (fenv_t *__e)	{ return 0; }
 extern inline int __fegetenv (fenv_t *__e)	{ return 0; }
 extern inline int fesetenv (const fenv_t *__e)	{ return 0; }
