@@ -1,5 +1,37 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/ldbl-classify-compat.h: New file.
+	* sysdeps/arm/ldbl-classify-compat.h: Likewise.
+	* sysdeps/m68k/coldfire/ldbl-classify-compat.h: Likewise.
+	* sysdeps/microblaze/ldbl-classify-compat.h: Likewise.
+	* sysdeps/mips/ldbl-classify-compat.h: Likewise.
+	* sysdeps/nios2/ldbl-classify-compat.h: Likewise.
+	* sysdeps/sh/ldbl-classify-compat.h: Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/ieee754/dbl-64/s_isinf.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/ieee754/dbl-64/s_isnan.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_finite.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isinf.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_isnan.c: Include
+	<ldbl-classify-compat.h>.
+	[LDBL_CLASSIFY_COMPAT]: Test value, not whether defined.
+	* sysdeps/arm/math_private.h (LDBL_CLASSIFY_COMPAT): Remove macro.
+	* sysdeps/mips/math_private.h (LDBL_CLASSIFY_COMPAT): Likewise.
+	* sysdeps/m68k/coldfire/math_private.h: Remove file.
+	* sysdeps/microblaze/math_private.h: Likewise.
+	* sysdeps/nios2/math_private.h: Likewise.
+	* sysdeps/sh/math_private.h: Likewise.
+
 	* sysdeps/m68k/coldfire/fpu/math_private.h: Move to ....
 	* sysdeps/m68k/coldfire/math_private.h: ... here.
 	* sysdeps/m68k/coldfire/nofpu/math_private.h: Remove file.

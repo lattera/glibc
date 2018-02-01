@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <ldbl-classify-compat.h>
 #include <shlib-compat.h>
 #include <stdint.h>
 
@@ -30,7 +31,7 @@ __finite(double x)
 hidden_def (__finite)
 weak_alias (__finite, finite)
 #ifdef NO_LONG_DOUBLE
-# ifdef LDBL_CLASSIFY_COMPAT
+# if LDBL_CLASSIFY_COMPAT
 #  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_23)
 compat_symbol (libc, __finite, __finitel, GLIBC_2_0);
 #  endif
