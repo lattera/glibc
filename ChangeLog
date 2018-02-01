@@ -1,3 +1,9 @@
+2018-02-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* manual/contrib.texi (Palmer Dabbelt, Arjun Shankar, Florian Weimer):
+	New entries.
+	(Rafal Luzynski, Andreas Schwab): Update.
+
 2018-02-01  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #10871]

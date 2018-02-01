@@ -62,6 +62,9 @@ committee.
 Thomas Bushnell for his contributions to Hurd.
 
 @item
+Palmer Dabbelt for contributing the port to Linux/RISC-V.
+
+@item
 DJ Delorie for various fixes.
 
 @item
@@ -110,7 +113,6 @@ part of @theglibc{} steering committee.
 Steve Ellcey for various fixes.
 
 @item
-
 Mike FABIAN for various fixes to locales.
 
 @item
@@ -234,7 +236,8 @@ improved string functions, a framework for testing IFUNC
 implementations, and many bug fixes.
 
 @item
-Rafal Luzynski for various fixes to locales.
+Rafal Luzynski for contributing support for two grammatical forms of month
+names, and for various fixes to locales.
 
 @item
 Luis Machado for optimized functions on PowerPC.
@@ -355,8 +358,8 @@ Will Schmidt for optimized string functions on PowerPC.
 
 @item
 Andreas Schwab for the port to Linux/m68k
-(@code{m68k-@var{anything}-linux}) and for his direction as part of
-@theglibc{} steering committee.
+(@code{m68k-@var{anything}-linux}), for his direction as part of
+@theglibc{} steering committee, and for various bug fixes.
 
 @item
 Martin Schwidefsky for porting to Linux on s390
@@ -371,6 +374,9 @@ Andrew Senkevich for contributing vector math function implementations for x86.
 
 @item
 Carlos Eduardo Seo for optimized functions on PowerPC.
+
+@item
+Arjun Shankar for testing and bug fixing.
 
 @item
 Marcus Shawcroft for contributing the AArch64 port.
@@ -406,6 +412,10 @@ Pino Toscano for various fixes.
 @item
 Tim Waugh for the implementation of the POSIX.2 @code{wordexp}
 function family.
+
+@item
+Florian Weimer for his maintainership of the network component, for handling
+of security issues, and for various fixes.
 
 @item
 Zack Weinberg for the @code{explicit_bzero} implementation and for various
