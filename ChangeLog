@@ -1,5 +1,9 @@
 2018-02-01  Dmitry V. Levin  <ldv@altlinux.org>
 
+	* version.h (RELEASE): Set to "development".
+	(VERSION): Set to "2.27.9000".
+	* NEWS (2.28): New section.
+
 	* version.h (RELEASE): Set to "stable".
 	(VERSION): Set to "2.27".
 	* include/features.h (__GLIBC_MINOR__): Set to 2.27.
