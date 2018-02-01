@@ -31,7 +31,7 @@
 	versions of gcc, binutils, texinfo, gawk, bison, and sed.
 	* INSTALL: Regenerated.
 
-2018-01-30  Samuel Thibault  <samuel.thibault@ens-lyon.org
+2018-01-30  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/allocalim.h (__libc_use_alloca): Use __glibc_likely
 	instead of __builtin_expect.
@@ -1198,7 +1198,7 @@
 
 	* misc/tst-pselect.c: Add copyright header.
 
-2018-01-02  Aurelien Jarno <aurelien@aurel32.net>
+2018-01-02  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* sysdeps/unix/sysv/linux/alpha/getrlimit64.c: Fix a typo in the
 	comment.
@@ -1395,7 +1395,7 @@
 	* stdlib/getrandom.c (getrandom): Fix comment.
 	* sysdeps/unix/sysv/linux/getrandom.c (getrandom): Likewise.
 
-2017-12-23  Aurelien Jarno <aurelien@aurel32.net>
+2017-12-23  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #21161]
 	* manual/arith.texi (strtoul): Fix a typo.
@@ -1892,7 +1892,7 @@
 	* sysdeps/ieee754/flt-32/s_sincosf.h:
 	New file.
 
-2017-12-12  Carlos O'Donell <carlos@redhat.com>
+2017-12-12  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #14681]
 	* elf/tst-leaks1.c (do_test): Call one dlopen with $ORIGIN expansion
@@ -2110,7 +2110,7 @@
 	* sysdeps/aarch64/strcmp.S (misaligned8): Compare dword at a
 	time whenever possible.
 
-2017-12-12  Carlos O'Donell <carlos@redhat.com>
+2017-12-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/Makefile [$(nss-crypt)$(static-nss-crypt) == yesno]
 	(CFLAGS-tst-linkall-static.c): Undefine USE_CRYPT first.
@@ -2183,7 +2183,7 @@
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Update.
 
-2017-12-12  James Clarke <jrtc27@jrtc27.com>
+2017-12-12  James Clarke  <jrtc27@jrtc27.com>
 
 	* sysdeps/unix/sysv/linux/ia64/ipc_priv.h: New file defining
 	__IPC_64 to 0 to avoid IPC_64 being set.
@@ -2216,7 +2216,7 @@
 
 	* manual/locale.texi (nl_langinfo): Fix a typo.
 
-2017-12-12  Aurelien Jarno <aurelien@aurel32.net>
+2017-12-12  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22588]
 	* manual/conf.texi (SC_SSIZE_MAX): Rename into _SC_SSIZE_MAX.
@@ -2756,7 +2756,7 @@
 	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
 	Likewise.
 
-2017-12-10  Aurelien Jarno <aurelien@aurel32.net>
+2017-12-10  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22577]
 	* elf/rtld.c (init_tls): Add missing new line to the _dl_fatal_printf
@@ -3050,8 +3050,8 @@
 	[__HAVE_FLOAT64 && !__GNUC_PREREQ (7, 0) && __NO_LONG_DOUBLE_MATH]
 	(__builtin_nansf64): Use __builtin_nansl.
 
-2017-12-05  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>,
-	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>,
+2017-12-05  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
+	    Paul E. Murphy  <murphyp@linux.vnet.ibm.com>
 	    Carlos O'Donnell <carlos@redhat.com>
 
 	* elf/dl-tunables.list: Add elision parameters.
@@ -4065,13 +4065,13 @@
 
 	* stdlib/tst-strfmon_l.c: Fix testcase. Needed because of [BZ #10580]
 
-2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>
+2017-11-30  Dragan Stanojević - Nevidljivi  <invisible@hidden-city.net>
 
 	* localedata/Makefile: Add hr_HR.UTF-8 to test-input and to
 	the list of locales to built for testing.
 	* localedata/hr_HR.UTF-8.in: New file.
 
-2017-11-30  Dragan Stanojević - Nevidljivi <invisible@hidden-city.net>
+2017-11-30  Dragan Stanojević - Nevidljivi  <invisible@hidden-city.net>
 
 	[BZ #10580]
 	* localedata/locales/hr_HR (LC_COLLATE): Base collation rules on
@@ -4524,7 +4524,8 @@
 	[BUILD_LGAMMA && !USE_AS_COMPAT] (lgammaf): Likewise.
 	* sysdeps/ia64/fpu/w_tgammaf_compat.S (tgammaf): Likewise.
 
-2017-11-28  Mike FABIAN  <mfabian@redhat.com>, Alexandre Oliva <aoliva@redhat.com>
+2017-11-28  Mike FABIAN  <mfabian@redhat.com>
+	    Alexandre Oliva  <aoliva@redhat.com>
 
 	[BZ #17750]
 	* Makefile: add fr_CA.UTF-8 to test-input and LOCALES.
@@ -5526,7 +5527,7 @@
 	pwritev, pwritev64, preadv2, preadv64v2, pwritev2, pwritev64v2 ...
 	(Scatter-Gather): ... to here.  Remove misleading comment.
 
-2017-11-18  Christian Brauner <christian.brauner@ubuntu.com>
+2017-11-18  Christian Brauner  <christian.brauner@ubuntu.com>
 
 	* support/support_become_root.c (setup_uid_gid_mapping): Fix comment
 	style.
@@ -5851,7 +5852,7 @@
 	* string/bug-strncat1.c: Include <libc-diag.h>.
 	(main): Disable -Wstringop-truncation for strncat call for GCC 8.
 
-2017-11-13  Claude Paroz <claude@2xlibre.net>
+2017-11-13  Claude Paroz  <claude@2xlibre.net>
 
 	[BZ #22387]
 	* localedata/locales/aa_DJ: Improved readibility by replacing
@@ -6403,7 +6404,7 @@
 	* localedata/locales/miq_NI (LC_TIME): Fix wrong d_fmt, / needs
 	to be escaped.
 
-2017-11-07  Claude Paroz <claude@2xlibre.net>
+2017-11-07  Claude Paroz  <claude@2xlibre.net>
 
 	[BZ #22403]
 	* localedata/locales/an_ES (LC_TIME): Fix wrong d_fmt, / needs
@@ -7217,7 +7218,7 @@
 	* posix/tst-gnuglob64.c: Likewise.
 	* posix/Makefile (tests): Add tst-gnuglob64.
 
-2017-10-30  Michal Ostrowski <ostrowski.michal@gmail.com>
+2017-10-30  Michal Ostrowski  <ostrowski.michal@gmail.com>
 
 	[BZ #19485]
 	* localedata/locales/csb_PL (LC_TIME): Fix “abmon” for March
@@ -7288,7 +7289,7 @@
 	fil but not for tl. As tl and fil are very similar, using fil
 	is probably better than using English.
 
-2017-10-27  Thierry Vignaud <thierry.vignaud@gmail.com>
+2017-10-27  Thierry Vignaud  <thierry.vignaud@gmail.com>
 
 	[BZ #21706]
 	* localedata/locales/br_FR (LC_MESSAGES): Use all lowercase
@@ -7322,13 +7323,13 @@
 	[__HAVE_FLOAT128X && __GLIBC_USE (IEC_60559_TYPES_EXT)]
 	(HUGE_VAL_F128X): Likewise.
 
-2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
+2017-10-26  Thierry Vignaud  <thierry.vignaud@gmail.com>
 
 	* localedata/locales/br_FR (LC_IDENTIFICATON): Add
 	Thierry Vignaud <thierry.vignaud@gmail.com> as the contact
 	for the br_FR locale.
 
-2017-10-26  Thierry Vignaud <thierry.vignaud@gmail.com>
+2017-10-26  Thierry Vignaud  <thierry.vignaud@gmail.com>
 
 	[BZ #21706]
 	* localedata/locales/br_FR (LC_MESSAGES): Fix nostr.
@@ -7962,7 +7963,7 @@
 	(__expf): New.
 	Include <sysdeps/ieee754/flt-32/e_expf.c>.
 
-2017-10-22  Paul Eggert <eggert@cs.ucla.edu>
+2017-10-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #22332]
 	* posix/glob.c (__glob): Fix buffer overflow during GLOB_TILDE
@@ -8064,7 +8065,7 @@
 	(_dl_runtime_resolve_xsave): Likewise.
 	(_dl_runtime_resolve_xsavec): Likewise.
 
-2017-10-20  Paul Eggert <eggert@cs.ucla.edu>
+2017-10-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #22320]
 	CVE-2017-15670
@@ -8132,7 +8133,7 @@
 
 	* malloc/malloc.c (_int_free): Fix deadlock bug in consistency check.
 
-2017-10-19  Valery Reznic <valery_reznic@yahoo.com>
+2017-10-19  Valery Reznic  <valery_reznic@yahoo.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22299]
