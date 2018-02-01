@@ -1,5 +1,9 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.15.
+	(s390_sthyi): New syscall.
+
 	* sysdeps/generic/ldbl-classify-compat.h: New file.
 	* sysdeps/arm/ldbl-classify-compat.h: Likewise.
 	* sysdeps/m68k/coldfire/ldbl-classify-compat.h: Likewise.
