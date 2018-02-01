@@ -17,10 +17,7 @@
    The overrides for libc_ functions must happen before we include
    the generic math_private.h.  */
 
-#define libc_fesetround(rnd)			({ 0; })
-#define libc_fetestexcept(exc)			({ 0; })
 #define libc_feholdexcept_setround(env, exc)	({ (void) (env); 0; })
-#define libc_feupdateenv_test(env, exc)		({ (void) (env); 0; })
 
 #include_next <math_private.h>
 

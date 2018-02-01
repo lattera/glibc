@@ -1,5 +1,19 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/coldfire/nofpu/math_private.h (libc_fesetround):
+	Remove macro.
+	(libc_fetestexcept): Likewise.
+	(libc_feupdateenv_test): Likewise.
+	* sysdeps/microblaze/math_private.h (libc_fesetround): Likewise.
+	(libc_fetestexcept): Likewise.
+	(libc_feupdateenv_test): Likewise.
+	* sysdeps/nios2/math_private.h (libc_fesetround): Likewise.
+	(libc_fetestexcept): Likewise.
+	(libc_feupdateenv_test): Likewise.
+	* sysdeps/tile/math_private.h (libc_fesetround): Likewise.
+	(libc_fetestexcept): Likewise.
+	(libc_feupdateenv_test): Likewise.
+
 	* sysdeps/generic/math_private.h
 	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (feholdexcept):
 	New inline function.
