@@ -34,9 +34,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <support/xthread.h>
+#include <limits.h>
 
 const size_t kNumThreads = 1024;
 const size_t kNumHandlers = 1024;
+const size_t kStacksize =
+	0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN : 0x20000;
 
 static void *
 threadfunc (void *unused)
@@ -60,7 +63,7 @@ do_test (void)
   /* With default 8MiB Linux stack size, creating 1024 threads can cause
      VM exhausiton on 32-bit machines.  Reduce stack size of each thread to
      128KiB for a maximum required VM size of 128MiB.  */
-  xpthread_attr_setstacksize (&attr, 128 * 1024);
+  xpthread_attr_setstacksize (&attr, kStacksize);
 
   for (i = 0; i < kNumThreads; ++i) {
     xpthread_create (&attr, threadfunc, NULL);
