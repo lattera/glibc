@@ -1,5 +1,35 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* include/fenv.h [!_ISOMAC && !FE_TONEAREST]: Give #error.
+	[!_ISOMAC] (FE_HAVE_ROUNDING_MODES): New macro.
+	* sysdeps/generic/math_private.h
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (fegetenv): New
+	inline function.
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (__fegetenv):
+	Likewise.
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (fesetenv):
+	Likewise.
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (__fesetenv):
+	Likewise.
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (feupdateenv):
+	Likewise.
+	[!FE_HAVE_ROUNDING_MODES && FE_ALL_EXCEPT == 0] (__feupdateenv):
+	Likewise.
+	[!FE_HAVE_ROUNDING_MODES] (fegetround): Likewise.
+	[!FE_HAVE_ROUNDING_MODES] (__fegetround): Likewise.
+	[!FE_HAVE_ROUNDING_MODES] (fesetround): Likewise.
+	[!FE_HAVE_ROUNDING_MODES] (__fesetround): Likewise.
+	* sysdeps/tile/math_private.h (fegetenv): Remove inline function.
+	(__fegetenv): Likewise.
+	(fesetenv): Likewise.
+	(__fesetenv): Likewise.
+	(feupdateenv): Likewise.
+	(__feupdateenv): Likewise.
+	(fegetround): Likewise.
+	(__fegetround): Likewise.
+	(fesetround): Likewise.
+	(__fesetround): Likewise.
+
 	* sysdeps/generic/math_private.h [FE_ALL_EXCEPT == 0]
 	(feraiseexcept): New macro.
 	[FE_ALL_EXCEPT == 0] (__feraiseexcept): Likewise.

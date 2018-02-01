@@ -42,6 +42,21 @@ struct rm_ctx
   fenv_t env;
   bool updated_status;
 };
+
+/* Track whether rounding mode macros were defined, since
+   get-rounding-mode.h may define default versions if they weren't.
+   FE_TONEAREST must always be defined (even if no changes of rounding
+   mode are supported, glibc requires it to be defined to represent
+   the default rounding mode).  */
+# ifndef FE_TONEAREST
+#  error "FE_TONEAREST not defined"
+# endif
+# if defined FE_DOWNWARD || defined FE_TOWARDZERO || defined FE_UPWARD
+#  define FE_HAVE_ROUNDING_MODES 1
+# else
+#  define FE_HAVE_ROUNDING_MODES 0
+# endif
+
 #endif
 
 #endif

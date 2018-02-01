@@ -15,9 +15,7 @@
    success in every case.
 
    The overrides for libc_ functions must happen before we include
-   the generic math_private.h, and the overrides for regular
-   <fenv.h> functions must happen afterwards, to avoid clashing with
-   the declarations of those functions.  */
+   the generic math_private.h.  */
 
 #define libc_fesetround(rnd)			({ 0; })
 #define libc_fetestexcept(exc)			({ 0; })
@@ -25,16 +23,5 @@
 #define libc_feupdateenv_test(env, exc)		({ (void) (env); 0; })
 
 #include_next <math_private.h>
-
-extern inline int fegetenv (fenv_t *__e)	{ return 0; }
-extern inline int __fegetenv (fenv_t *__e)	{ return 0; }
-extern inline int fesetenv (const fenv_t *__e)	{ return 0; }
-extern inline int __fesetenv (const fenv_t *__e)	{ return 0; }
-extern inline int feupdateenv (const fenv_t *__e) { return 0; }
-extern inline int __feupdateenv (const fenv_t *__e) { return 0; }
-extern inline int fegetround (void)		{ return FE_TONEAREST; }
-extern inline int __fegetround (void)		{ return FE_TONEAREST; }
-extern inline int fesetround (int __d)		{ return 0; }
-extern inline int __fesetround (int __d)	{ return 0; }
 
 #endif
