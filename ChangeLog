@@ -1,5 +1,32 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/fpu/bits/fenv.h: Move to ....
+	* sysdeps/m68k/bits/fenv.h: ... here.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_INEXACT): Do
+	not define.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_DIVBYZERO):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_UNDERFLOW):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_OVERFLOW):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_INVALID):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_ALL_EXCEPT):
+	Define to 0.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__]
+	(__FE_UNDEFINED): New enum constant.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_TOWARDZERO):
+	Do not define.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_DOWNWARD):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_UPWARD):
+	Likewise.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (fenv_t): Define
+	to match generic bits/fenv.h.
+	[!__HAVE_68881__ && !__HAVE_FPU__ && !__mcffpu__] (FE_NOMASK_ENV):
+	Do not define.
+
 	* soft-fp/double.h (union _FP_UNION_D): Do not use attribute
 	packed on bits.
 	* soft-fp/extended.h (union _FP_UNION_E): Likewise.
