@@ -1,5 +1,14 @@
 2018-02-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/m68k/coldfire/fpu/math_private.h: Move to ....
+	* sysdeps/m68k/coldfire/math_private.h: ... here.
+	* sysdeps/m68k/coldfire/nofpu/math_private.h: Remove file.
+	* sysdeps/tile/math_private.h: Likewise.
+	* sysdeps/microblaze/math_private.h (libc_feholdexcept_setround):
+	Remove macro.
+	* sysdeps/nios2/math_private.h (libc_feholdexcept_setround):
+	Likewise.
+
 	* sysdeps/m68k/coldfire/nofpu/math_private.h (libc_fesetround):
 	Remove macro.
 	(libc_fetestexcept): Likewise.
