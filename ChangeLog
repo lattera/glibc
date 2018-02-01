@@ -1,3 +1,10 @@
+2018-02-01  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #10871]
+	* NEWS: List the languages which actually use the alternative
+	months feature in this release.  Also explain that "alt_mon" and
+	"ab_alt_mon" are optional.
+
 2018-01-31  Il'ya Malakhov  <ilmalakhov@yandex.ru>
 
 	[BZ #22765]

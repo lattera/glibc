@@ -88,7 +88,14 @@ Major new features:
 
   In a locale definition file, use "alt_mon" and "ab_alt_mon" to
   define the strings for %OB and %Ob, respectively; these have the
-  same syntax as "mon" and "ab_mon".
+  same syntax as "mon" and "abmon".  These arrays are optional; if they
+  are not provided then they have the same content as "mon" and "abmon",
+  respectively.
+
+  These features are provided for locales which define "alt_mon" and/or
+  "ab_alt_mon" in their locale source data.  This release includes such
+  alternative month name data for the following languages: Belarusian,
+  Croatian, Greek, Lithuanian, Polish, Russian, and Ukrainian.
 
   This feature is currently a GNU extension, but it is expected to
   be added to the next revision of POSIX, and it is also already
