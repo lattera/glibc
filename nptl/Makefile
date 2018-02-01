@@ -30,7 +30,7 @@ install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork unregister-atfork pthread_self
+	   register-atfork pthread_self
 shared-only-routines = forward
 
 # We need to provide certain routines for compatibility with existing

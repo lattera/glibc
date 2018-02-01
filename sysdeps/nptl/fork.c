@@ -48,11 +48,6 @@ pid_t
 __libc_fork (void)
 {
   pid_t pid;
-  struct used_handler
-  {
-    struct fork_handler *handler;
-    struct used_handler *next;
-  } *allp = NULL;
 
   /* Determine if we are running multiple threads.  We skip some fork
      handlers in the single-thread case, to make fork safer to use in
@@ -60,60 +55,7 @@ __libc_fork (void)
      but our current fork implementation is not.  */
   bool multiple_threads = THREAD_GETMEM (THREAD_SELF, header.multiple_threads);
 
-  /* Run all the registered preparation handlers.  In reverse order.
-     While doing this we build up a list of all the entries.  */
-  struct fork_handler *runp;
-  while ((runp = __fork_handlers) != NULL)
-    {
-      /* Make sure we read from the current RUNP pointer.  */
-      atomic_full_barrier ();
-
-      unsigned int oldval = runp->refcntr;
-
-      if (oldval == 0)
-	/* This means some other thread removed the list just after
-	   the pointer has been loaded.  Try again.  Either the list
-	   is empty or we can retry it.  */
-	continue;
-
-      /* Bump the reference counter.  */
-      if (atomic_compare_and_exchange_bool_acq (&__fork_handlers->refcntr,
-						oldval + 1, oldval))
-	/* The value changed, try again.  */
-	continue;
-
-      /* We bumped the reference counter for the first entry in the
-	 list.  That means that none of the following entries will
-	 just go away.  The unloading code works in the order of the
-	 list.
-
-	 While executing the registered handlers we are building a
-	 list of all the entries so that we can go backward later on.  */
-      while (1)
-	{
-	  /* Execute the handler if there is one.  */
-	  if (runp->prepare_handler != NULL)
-	    runp->prepare_handler ();
-
-	  /* Create a new element for the list.  */
-	  struct used_handler *newp
-	    = (struct used_handler *) alloca (sizeof (*newp));
-	  newp->handler = runp;
-	  newp->next = allp;
-	  allp = newp;
-
-	  /* Advance to the next handler.  */
-	  runp = runp->next;
-	  if (runp == NULL)
-	    break;
-
-	  /* Bump the reference counter for the next entry.  */
-	  atomic_increment (&runp->refcntr);
-	}
-
-      /* We are done.  */
-      break;
-    }
+  __run_fork_handlers (atfork_run_prepare);
 
   /* If we are not running multiple threads, we do not have to
      preserve lock state.  If fork runs from a signal handler, only
@@ -198,29 +140,7 @@ __libc_fork (void)
       __rtld_lock_initialize (GL(dl_load_lock));
 
       /* Run the handlers registered for the child.  */
-      while (allp != NULL)
-	{
-	  if (allp->handler->child_handler != NULL)
-	    allp->handler->child_handler ();
-
-	  /* Note that we do not have to wake any possible waiter.
-	     This is the only thread in the new process.  The count
-	     may have been bumped up by other threads doing a fork.
-	     We reset it to 1, to avoid waiting for non-existing
-	     thread(s) to release the count.  */
-	  allp->handler->refcntr = 1;
-
-	  /* XXX We could at this point look through the object pool
-	     and mark all objects not on the __fork_handlers list as
-	     unused.  This is necessary in case the fork() happened
-	     while another thread called dlclose() and that call had
-	     to create a new list.  */
-
-	  allp = allp->next;
-	}
-
-      /* Initialize the fork lock.  */
-      __fork_lock = LLL_LOCK_INITIALIZER;
+      __run_fork_handlers (atfork_run_child);
     }
   else
     {
@@ -235,17 +155,7 @@ __libc_fork (void)
 	}
 
       /* Run the handlers registered for the parent.  */
-      while (allp != NULL)
-	{
-	  if (allp->handler->parent_handler != NULL)
-	    allp->handler->parent_handler ();
-
-	  if (atomic_decrement_and_test (&allp->handler->refcntr)
-	      && allp->handler->need_signal)
-	    futex_wake (&allp->handler->refcntr, 1, FUTEX_PRIVATE);
-
-	  allp = allp->next;
-	}
+      __run_fork_handlers (atfork_run_parent);
     }
 
   return pid;

@@ -319,8 +319,6 @@ __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
 /* Register handlers to execute before and after `fork'.  Note that the
    last parameter is NULL.  The handlers registered by the libc are
    never removed so this is OK.  */
-#define __libc_atfork(PREPARE, PARENT, CHILD) \
-  __register_atfork (PREPARE, PARENT, CHILD, NULL)
 extern int __register_atfork (void (*__prepare) (void),
 			      void (*__parent) (void),
 			      void (*__child) (void),

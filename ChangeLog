@@ -1,5 +1,21 @@
 2018-02-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/Makefile (routines): Remove unregister-atfork.
+	* nptl/register-atfork.c (fork_handler_pool): Remove variable.
+	(fork_handler_alloc): Remove function.
+	(fork_handlers, fork_handler_init): New variables.
+	(__fork_lock): Rename to atfork_lock.
+	(__register_atfork, __unregister_atfork, libc_freeres_fn): Rewrite
+	to use a dynamic array to add/remove atfork handlers.
+	* sysdeps/nptl/fork.c (__libc_fork): Likewise.
+	* sysdeps/nptl/fork.h (__fork_lock, __fork_handlers, __linkin_atfork):
+	Remove declaration.
+	(fork_handler): Remove next, refcntr, and need_signal member.
+	(__run_fork_handler_type): New enum.
+	(__run_fork_handlers): New prototype.
+	* nptl/register-atfork.c: Remove file.
+	* sysdeps/nptl/libc-lockP.h (__libc_atfork): Remove declaration.
+
 	* sysdeps/nptl/nptl-signals.h: Move to ...
 	* sysdeps/generic/internal-signals.h: ... here.  Adjust internal
 	comments.
