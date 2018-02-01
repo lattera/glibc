@@ -1,3 +1,15 @@
+2018-02-01  Carlos O'Donell  <carlos@redhat.com>
+	    Ramin Seyed-Moussavi  <lordrasmus@gmail.com>
+	    Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21314]
+	* sysdeps/ieee754/dbl-64/s_log1p.c: Include <libc-diag.h>.
+	(__log1p): Disable -Wmaybe-uninitialized for -Os around
+	computation using c.
+	* sysdeps/ieee754/flt-32/s_log1pf.c: Include <libc-diag.h>.
+	(__log1pf): Disable -Wmaybe-uninitialized for -Os around
+	computation using c.
+
 2018-02-01  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* version.h (RELEASE): Set to "development".

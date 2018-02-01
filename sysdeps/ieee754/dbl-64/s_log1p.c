@@ -81,6 +81,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <libc-diag.h>
 
 static const double
   ln2_hi = 6.93147180369123816490e-01,  /* 3fe62e42 fee00000 */
@@ -191,5 +192,14 @@ __log1p (double x)
   if (k == 0)
     return f - (hfsq - s * (hfsq + R));
   else
-    return k * ln2_hi - ((hfsq - (s * (hfsq + R) + (k * ln2_lo + c))) - f);
+    {
+      /* With GCC 7 when compiling with -Os the compiler warns that c
+	 might be used uninitialized.  This can't be true because k
+	 must be 0 for c to be uninitialized and we handled that
+	 computation earlier without using c.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+      return k * ln2_hi - ((hfsq - (s * (hfsq + R) + (k * ln2_lo + c))) - f);
+      DIAG_POP_NEEDS_COMMENT;
+    }
 }
