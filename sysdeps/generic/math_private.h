@@ -673,6 +673,18 @@ __fegetenv (fenv_t *__e)
 }
 
 extern inline int
+feholdexcept (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
+__feholdexcept (fenv_t *__e)
+{
+  return 0;
+}
+
+extern inline int
 fesetenv (const fenv_t *__e)
 {
   return 0;
