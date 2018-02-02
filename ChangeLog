@@ -1,5 +1,7 @@
 2018-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-memcmp.c: Print json instead of plain text.
+
 	* benchtests/bench-memcmp.c (do_test): Call realloc_buf for
 	every test run.
 
