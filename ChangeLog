@@ -1,3 +1,19 @@
+2018-02-02  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22753]
+	* sysdeps/posix/preadv2.c (preadv2): Handle offset == -1.
+	* sysdeps/posix/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/posix/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/posix/pwritev64v2.c (pwritev64v2): Likweise.
+	* sysdeps/unix/sysv/linux/preadv2.c (preadv2): Likewise.
+	* sysdeps/unix/sysv/linux/preadv64v2.c (preadv64v2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev2.c (pwritev2): Likewise.
+	* sysdeps/unix/sysv/linux/pwritev64v2.c (pwritev64v2): Likweise.
+	* manual/llio.texi (Scatter-Gather): Mention offset -1.
+	* misc/tst-preadvwritev-common.c (do_test_without_offset): New.
+	* misc/tst-preadvwritev2.c (do_test): Call it.
+	* misc/tst-preadvwritev64v2.c (do_test): Likewise.
+
 2018-02-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/memcmp.S: Use L() macro for labels.

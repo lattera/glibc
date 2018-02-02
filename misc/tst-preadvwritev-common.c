@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <errno.h>
@@ -25,6 +26,7 @@
 
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <support/xunistd.h>
 
 static char *temp_filename;
 static int temp_fd;
@@ -49,6 +51,42 @@ do_prepare (int argc, char **argv)
 # define PWRITEV(__fd, __iov, __iovcnt, __offset) \
   pwritev (__fd, __iov, __iovcnt, __offset)
 #endif
+
+static __attribute__ ((unused)) void
+do_test_without_offset (void)
+{
+  xftruncate (temp_fd, 0);
+
+  xwrite (temp_fd, "123", 3);
+  xlseek (temp_fd, 2, SEEK_SET);
+  {
+    struct iovec iov[] =
+      {
+        { (void *) "abc", 3 },
+        { (void *) "xyzt", 4 },
+      };
+    TEST_COMPARE (PWRITEV (temp_fd, iov, array_length (iov), -1), 7);
+  }
+  TEST_COMPARE (xlseek (temp_fd, 0, SEEK_CUR), 9);
+
+  xlseek (temp_fd, 1, SEEK_SET);
+  char buf1[3];
+  char buf2[2];
+  {
+    struct iovec iov[] =
+      {
+        { buf1, sizeof (buf1) },
+        { buf2, sizeof (buf2) },
+      };
+    TEST_COMPARE (PREADV (temp_fd, iov, array_length (iov), -1),
+                  sizeof (buf1) + sizeof (buf2));
+    TEST_COMPARE (memcmp ("2ab", buf1, sizeof (buf1)), 0);
+    TEST_COMPARE (memcmp ("cx", buf2, sizeof (buf2)), 0);
+    TEST_COMPARE (xlseek (temp_fd, 0, SEEK_CUR), 6);
+  }
+
+  xftruncate (temp_fd, 0);
+}
 
 static int
 do_test_with_offset (off_t offset)

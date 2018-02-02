@@ -29,6 +29,7 @@ static int
 do_test (void)
 {
   do_test_with_invalid_flags ();
+  do_test_without_offset ();
 
   return do_test_with_offset (0);
 }

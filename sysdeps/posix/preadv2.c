@@ -33,7 +33,10 @@ preadv2 (int fd, const struct iovec *vector, int count, off_t offset,
       return -1;
     }
 
-  return preadv (fd, vector, count, offset);
+  if (offset == -1)
+    return __readv (fd, vector, count);
+  else
+    return preadv (fd, vector, count, offset);
 }
 
 #endif

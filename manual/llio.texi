@@ -1251,9 +1251,13 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls preadv.
 
-This function is similar to the @code{preadv} function, with the difference
-it adds an extra @var{flags} parameter of type @code{int}.  The supported
-@var{flags} are dependent of the underlying system.  For Linux it supports:
+This function is similar to the @code{preadv} function, with the
+difference it adds an extra @var{flags} parameter of type @code{int}.
+Additionally, if @var{offset} is @math{-1}, the current file position
+is used and updated (like the @code{readv} function).
+
+The supported @var{flags} are dependent of the underlying system.  For
+Linux it supports:
 
 @vtable @code
 @item RWF_HIPRI
@@ -1320,10 +1324,13 @@ When the source file is compiled using @code{_FILE_OFFSET_BITS == 64} on a
 @c This is a syscall for Linux v4.6.  The sysdeps/posix fallback emulation
 @c is also MT-Safe since it calls pwritev.
 
-This function is similar to the @code{pwritev} function, with the difference
-it adds an extra @var{flags} parameter of type @code{int}.  The supported
-@var{flags} are dependent of the underlying system and for Linux it supports
-the same ones as for @code{preadv2}.
+This function is similar to the @code{pwritev} function, with the
+difference it adds an extra @var{flags} parameter of type @code{int}.
+Additionally, if @var{offset} is @math{-1}, the current file position
+should is used and updated (like the @code{writev} function).
+
+The supported @var{flags} are dependent of the underlying system.  For
+Linux, the supported flags are the same as those for @code{preadv2}.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} the
 @code{pwritev2} function is in fact @code{pwritev64v2} and the type

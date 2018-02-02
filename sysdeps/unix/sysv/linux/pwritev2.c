@@ -45,7 +45,10 @@ pwritev2 (int fd, const struct iovec *vector, int count, off_t offset,
       __set_errno (ENOTSUP);
       return -1;
     }
-  return pwritev (fd, vector, count, offset);
+  if (offset == -1)
+    return __writev (fd, vector, count);
+  else
+    return pwritev (fd, vector, count, offset);
 }
 
 #endif
