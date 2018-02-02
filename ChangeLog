@@ -1,3 +1,8 @@
+2018-02-02  Sean McKean  <smckean83@gmail.com>
+
+	[BZ #22735]
+	* time/time.h (clock): Reference CLOCKS_PER_SEC in comment.
+
 2018-02-02  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #22753]

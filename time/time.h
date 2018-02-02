@@ -68,7 +68,7 @@ typedef __pid_t pid_t;
 __BEGIN_DECLS
 
 /* Time used by the program so far (user time + system time).
-   The result / CLOCKS_PER_SECOND is program time in seconds.  */
+   The result / CLOCKS_PER_SEC is program time in seconds.  */
 extern clock_t clock (void) __THROW;
 
 /* Return the current time and put it in *TIMER if TIMER is not NULL.  */
