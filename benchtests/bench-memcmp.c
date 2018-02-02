@@ -110,20 +110,23 @@ do_test (size_t align1, size_t align2, size_t len, int exp_result)
   if (align2 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  s1 = (CHAR *) (buf1 + align1);
-  s2 = (CHAR *) (buf2 + align2);
-
-  for (i = 0; i < len; i++)
-    s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % CHAR__MAX;
-
-  s1[len] = align1;
-  s2[len] = align2;
-  s2[len - 1] -= exp_result;
-
   printf ("Length %4zd, alignment %2zd/%2zd:", len, align1, align2);
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s1, s2, len, exp_result);
+    {
+      s1 = (CHAR *) (buf1 + align1);
+      s2 = (CHAR *) (buf2 + align2);
+
+      for (i = 0; i < len; i++)
+	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % CHAR__MAX;
+
+      s1[len] = align1;
+      s2[len] = align2;
+      s2[len - 1] -= exp_result;
+
+      do_one_test (impl, s1, s2, len, exp_result);
+      realloc_bufs ();
+    }
 
   putchar ('\n');
 }
