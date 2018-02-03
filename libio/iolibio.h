@@ -1,4 +1,8 @@
+#ifndef _IOLIBIO_H
+#define _IOLIBIO_H 1
+
 #include <stdio.h>
+#include <bits/libio.h>
 
 /* These emulate stdio functionality, but with a different name
    (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
@@ -94,3 +98,5 @@ _IO_FILE *__old_freopen (const char *, const char *, _IO_FILE *) __THROW;
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* iolibio.h.  */

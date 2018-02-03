@@ -32,18 +32,24 @@ __BEGIN_DECLS
 #define __need_NULL
 #include <stddef.h>
 
+#define __need___va_list
+#include <stdarg.h>
+
 #include <bits/types.h>
+#include <bits/types/__fpos_t.h>
+#include <bits/types/__fpos64_t.h>
 #include <bits/types/__FILE.h>
 #include <bits/types/FILE.h>
+#include <bits/types/struct_FILE.h>
 
-#define _STDIO_USES_IOSTREAM
-
-#include <bits/libio.h>
+#ifdef __USE_GNU
+# include <bits/types/cookie_io_functions_t.h>
+#endif
 
 #if defined __USE_XOPEN || defined __USE_XOPEN2K8
 # ifdef __GNUC__
 #  ifndef _VA_LIST_DEFINED
-typedef _G_va_list va_list;
+typedef __gnuc_va_list va_list;
 #   define _VA_LIST_DEFINED
 #  endif
 # else
@@ -75,12 +81,12 @@ typedef __ssize_t ssize_t;
 
 /* The type of the second argument to `fgetpos' and `fsetpos'.  */
 #ifndef __USE_FILE_OFFSET64
-typedef _G_fpos_t fpos_t;
+typedef __fpos_t fpos_t;
 #else
-typedef _G_fpos64_t fpos_t;
+typedef __fpos64_t fpos_t;
 #endif
 #ifdef __USE_LARGEFILE64
-typedef _G_fpos64_t fpos64_t;
+typedef __fpos64_t fpos64_t;
 #endif
 
 /* The possibilities for the third argument to `setvbuf'.  */
@@ -90,16 +96,12 @@ typedef _G_fpos64_t fpos64_t;
 
 
 /* Default buffer size.  */
-#ifndef BUFSIZ
-# define BUFSIZ _IO_BUFSIZ
-#endif
+#define BUFSIZ 8192
 
 
-/* End of file character.
-   Some things throughout the library rely on this being -1.  */
-#ifndef EOF
-# define EOF (-1)
-#endif
+/* The value returned by fgetc and similar functions to indicate the
+   end of the file.  */
+#define EOF (-1)
 
 
 /* The possibilities for the third argument to `fseek'.
@@ -132,9 +134,9 @@ typedef _G_fpos64_t fpos64_t;
 
 
 /* Standard streams.  */
-extern struct _IO_FILE *stdin;		/* Standard input stream.  */
-extern struct _IO_FILE *stdout;		/* Standard output stream.  */
-extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
+extern FILE *stdin;		/* Standard input stream.  */
+extern FILE *stdout;		/* Standard output stream.  */
+extern FILE *stderr;		/* Standard error output stream.  */
 /* C89/C99 say they're macros.  Make them happy.  */
 #define stdin stdin
 #define stdout stdout
@@ -270,7 +272,7 @@ extern FILE *fdopen (int __fd, const char *__modes) __THROW __wur;
    and uses the given functions for input and output.  */
 extern FILE *fopencookie (void *__restrict __magic_cookie,
 			  const char *__restrict __modes,
-			  _IO_cookie_io_functions_t __io_funcs) __THROW __wur;
+			  cookie_io_functions_t __io_funcs) __THROW __wur;
 #endif
 
 #if defined __USE_XOPEN2K8 || __GLIBC_USE (LIB_EXT2)
@@ -325,15 +327,15 @@ extern int sprintf (char *__restrict __s,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vfprintf (FILE *__restrict __s, const char *__restrict __format,
-		     _G_va_list __arg);
+		     __gnuc_va_list __arg);
 /* Write formatted output to stdout from argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vprintf (const char *__restrict __format, _G_va_list __arg);
+extern int vprintf (const char *__restrict __format, __gnuc_va_list __arg);
 /* Write formatted output to S from argument list ARG.  */
 extern int vsprintf (char *__restrict __s, const char *__restrict __format,
-		     _G_va_list __arg) __THROWNL;
+		     __gnuc_va_list __arg) __THROWNL;
 
 #if defined __USE_ISOC99 || defined __USE_UNIX98
 /* Maximum chars of output to write in MAXLEN.  */
@@ -342,7 +344,7 @@ extern int snprintf (char *__restrict __s, size_t __maxlen,
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 4)));
 
 extern int vsnprintf (char *__restrict __s, size_t __maxlen,
-		      const char *__restrict __format, _G_va_list __arg)
+		      const char *__restrict __format, __gnuc_va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
 #endif
 
@@ -350,7 +352,7 @@ extern int vsnprintf (char *__restrict __s, size_t __maxlen,
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, const char *__restrict __f,
-		      _G_va_list __arg)
+		      __gnuc_va_list __arg)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0))) __wur;
 extern int __asprintf (char **__restrict __ptr,
 		       const char *__restrict __fmt, ...)
@@ -363,7 +365,7 @@ extern int asprintf (char **__restrict __ptr,
 #ifdef __USE_XOPEN2K8
 /* Write formatted output to a file descriptor.  */
 extern int vdprintf (int __fd, const char *__restrict __fmt,
-		     _G_va_list __arg)
+		     __gnuc_va_list __arg)
      __attribute__ ((__format__ (__printf__, 2, 0)));
 extern int dprintf (int __fd, const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
@@ -418,19 +420,19 @@ extern int __isoc99_sscanf (const char *__restrict __s,
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int vfscanf (FILE *__restrict __s, const char *__restrict __format,
-		    _G_va_list __arg)
+		    __gnuc_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 
 /* Read formatted input from stdin into argument list ARG.
 
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int vscanf (const char *__restrict __format, _G_va_list __arg)
+extern int vscanf (const char *__restrict __format, __gnuc_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 
 /* Read formatted input from S into argument list ARG.  */
 extern int vsscanf (const char *__restrict __s,
-		    const char *__restrict __format, _G_va_list __arg)
+		    const char *__restrict __format, __gnuc_va_list __arg)
      __THROW __attribute__ ((__format__ (__scanf__, 2, 0)));
 
 # if !defined __USE_GNU \
@@ -442,26 +444,26 @@ extern int vsscanf (const char *__restrict __s,
    s, S or [.  */
 extern int __REDIRECT (vfscanf,
 		       (FILE *__restrict __s,
-			const char *__restrict __format, _G_va_list __arg),
+			const char *__restrict __format, __gnuc_va_list __arg),
 		       __isoc99_vfscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0))) __wur;
 extern int __REDIRECT (vscanf, (const char *__restrict __format,
-				_G_va_list __arg), __isoc99_vscanf)
+				__gnuc_va_list __arg), __isoc99_vscanf)
      __attribute__ ((__format__ (__scanf__, 1, 0))) __wur;
 extern int __REDIRECT_NTH (vsscanf,
 			   (const char *__restrict __s,
 			    const char *__restrict __format,
-			    _G_va_list __arg), __isoc99_vsscanf)
+			    __gnuc_va_list __arg), __isoc99_vsscanf)
      __attribute__ ((__format__ (__scanf__, 2, 0)));
 #  else
 extern int __isoc99_vfscanf (FILE *__restrict __s,
 			     const char *__restrict __format,
-			     _G_va_list __arg) __wur;
+			     __gnuc_va_list __arg) __wur;
 extern int __isoc99_vscanf (const char *__restrict __format,
-			    _G_va_list __arg) __wur;
+			    __gnuc_va_list __arg) __wur;
 extern int __isoc99_vsscanf (const char *__restrict __s,
 			     const char *__restrict __format,
-			     _G_va_list __arg) __THROW;
+			     __gnuc_va_list __arg) __THROW;
 #   define vfscanf __isoc99_vfscanf
 #   define vscanf __isoc99_vscanf
 #   define vsscanf __isoc99_vsscanf
@@ -592,12 +594,12 @@ extern char *fgets_unlocked (char *__restrict __s, int __n,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation they are cancellation points and
    therefore not marked with __THROW.  */
-extern _IO_ssize_t __getdelim (char **__restrict __lineptr,
-			       size_t *__restrict __n, int __delimiter,
-			       FILE *__restrict __stream) __wur;
-extern _IO_ssize_t getdelim (char **__restrict __lineptr,
-			     size_t *__restrict __n, int __delimiter,
-			     FILE *__restrict __stream) __wur;
+extern __ssize_t __getdelim (char **__restrict __lineptr,
+                             size_t *__restrict __n, int __delimiter,
+                             FILE *__restrict __stream) __wur;
+extern __ssize_t getdelim (char **__restrict __lineptr,
+                           size_t *__restrict __n, int __delimiter,
+                           FILE *__restrict __stream) __wur;
 
 /* Like `getdelim', but reads up to a newline.
 
@@ -605,9 +607,9 @@ extern _IO_ssize_t getdelim (char **__restrict __lineptr,
    cancellation point.  But due to similarity with an POSIX interface
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
-extern _IO_ssize_t getline (char **__restrict __lineptr,
-			    size_t *__restrict __n,
-			    FILE *__restrict __stream) __wur;
+extern __ssize_t getline (char **__restrict __lineptr,
+                          size_t *__restrict __n,
+                          FILE *__restrict __stream) __wur;
 #endif
 
 
@@ -820,7 +822,7 @@ extern int obstack_printf (struct obstack *__restrict __obstack,
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int obstack_vprintf (struct obstack *__restrict __obstack,
 			    const char *__restrict __format,
-			    _G_va_list __args)
+			    __gnuc_va_list __args)
      __THROWNL __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif /* Use GNU.  */
 
@@ -844,6 +846,11 @@ extern void funlockfile (FILE *__stream) __THROW;
    header.  It was removed in Issue 6.  GNU follows Issue 6.  */
 # include <bits/getopt_posix.h>
 #endif
+
+/* Slow-path routines used by the optimized inline functions in
+   bits/stdio.h.  */
+extern int __uflow (FILE *);
+extern int __overflow (FILE *, int);
 
 /* If we are compiling with optimizing read this file.  It contains
    several optimizing inline functions and macros.  */

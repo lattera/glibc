@@ -1,6 +1,11 @@
 #ifndef _STDIO_H
+# if !defined _ISOMAC && defined _IO_MTSAFE_IO
+#  include <stdio-lock.h>
+# endif
 # include <libio/stdio.h>
 # ifndef _ISOMAC
+#  define _LIBC_STDIO_H 1
+#  include <bits/libio.h>
 
 /* Now define the internal interfaces.  */
 

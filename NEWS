@@ -13,6 +13,10 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+ * The nonstandard header files <libio.h> and <_G_config.h> are no longer
+   installed.  Software that was using either header should be updated to
+   use standard <stdio.h> interfaces instead.
+
  * The stdio.h functions 'getc' and 'putc' are no longer defined as macros.
    This was never required by the C standard, and the macros just expanded
    to call alternative names for the same functions.  If you hoped getc and

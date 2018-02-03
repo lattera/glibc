@@ -41,7 +41,7 @@ type fpos_t
 #if !defined ISO && !defined ISO99 && !defined ISO11 && !defined POSIX
 type va_list
 #else
-#define va_list _G_va_list
+#define va_list __gnuc_va_list
 #endif
 type size_t
 #if defined XOPEN2K8 || defined POSIX2008

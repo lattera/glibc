@@ -4,10 +4,6 @@
 #ifndef _BITS_G_CONFIG_H
 #define _BITS_G_CONFIG_H 1
 
-#if !defined _BITS_LIBIO_H && !defined _G_CONFIG_H
-# error "Never include <bits/_G_config.h> directly; use <stdio.h> instead."
-#endif
-
 /* Define types for libio in terms of the standard internal type names.  */
 
 #include <bits/types.h>
@@ -19,20 +15,16 @@
 #include <stddef.h>
 
 #include <bits/types/__mbstate_t.h>
+#include <bits/types/__fpos_t.h>
+#include <bits/types/__fpos64_t.h>
+
+#define _G_fpos_t __fpos_t
+#define _G_fpos64_t __fpos64_t
+
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # include <bits/types/wint_t.h>
 #endif
 
-typedef struct
-{
-  __off_t __pos;
-  __mbstate_t __state;
-} _G_fpos_t;
-typedef struct
-{
-  __off64_t __pos;
-  __mbstate_t __state;
-} _G_fpos64_t;
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # include <gconv.h>
 typedef union

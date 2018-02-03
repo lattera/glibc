@@ -32,6 +32,9 @@
 
    FIXME: All of the C++ cruft eventually needs to go away.  */
 
+#ifndef _LIBIOP_H
+#define _LIBIOP_H 1
+
 #include <stddef.h>
 
 #include <errno.h>
@@ -39,6 +42,8 @@
 
 #include <math_ldbl_opt.h>
 
+#include <stdio.h>
+#include <bits/libio.h>
 #include "iolibio.h"
 
 #ifdef __cplusplus
@@ -876,3 +881,5 @@ IO_validate_vtable (const struct _IO_jump_t *vtable)
     _IO_vtable_check ();
   return vtable;
 }
+
+#endif /* libioP.h.  */
