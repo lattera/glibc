@@ -39,7 +39,10 @@
 const size_t kNumThreads = 1024;
 const size_t kNumHandlers = 1024;
 const size_t kStacksize =
-	0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN : 0x20000;
+#ifdef PTHREAD_STACK_MIN
+	0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN :
+#endif
+		0x20000;
 
 static void *
 threadfunc (void *unused)

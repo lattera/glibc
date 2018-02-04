@@ -1,3 +1,8 @@
+2018-02-04  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* stdlib/test-atexit-race-common.c [!defined PTHREAD_STACK_MIN]: Do
+	not check against PTHREAD_STACK_MIN.
+
 2018-02-02  Sean McKean  <smckean83@gmail.com>
 
 	[BZ #22735]
