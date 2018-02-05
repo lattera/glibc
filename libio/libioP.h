@@ -43,7 +43,7 @@
 #include <math_ldbl_opt.h>
 
 #include <stdio.h>
-#include <bits/libio.h>
+#include <libio/libio.h>
 #include "iolibio.h"
 
 #ifdef __cplusplus

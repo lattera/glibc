@@ -1,5 +1,23 @@
 2018-02-07  Zack Weinberg  <zackw@panix.com>
 
+	* libio/bits/libio.h: Move back to libio/libio.h and adjust
+	multiple-include guard to match.
+	Merge contents of libio/bits/libio-ldbl.h and include/libio.h
+	into this file.
+	Remove preprocessor conditionals that are always true and/or
+	redundant to other preprocessor conditionals in the same nest.
+	Include shlib-compat.h unconditionally.
+	Error out if _LIBC is not defined, or if _ISOMAC is defined,
+	or if _IO_MTSAFE_IO is defined but _IO_lock_t_defined is not
+	defined after including stdio.h.
+	Use __BEGIN_DECLS/__END_DECLS.
+
+	* libio/bits/libio-ldbl.h, include/bits/libio.h: Delete file.
+	* include/stdio.h, libio/iolibio.h, libio/libioP.h: Include
+	libio.h as <libio/libio.h> rather than as <bits/libio.h>.
+
+2018-02-07  Zack Weinberg  <zackw@panix.com>
+
 	* libio/bits/types/__fpos_t.h, libio/bits/types/__fpos64_t.h:
 	New single-type headers split from _G_config.h.
 	* libio/bits/types/cookie_io_functions_t.h
@@ -22,14 +40,14 @@
 	and _IO_cookie_io_functions_t as cookie_io_functions_t.
 	Define _STDIO_USES_IOSTREAM, __HAVE_COLUMN, and _IO_file_flags
 	here, in the "compatibility defines" section.  Remove an #if 0
-	block.  Use the "body" macros from bits/types/struct_FILE.h to
+	block.	Use the "body" macros from bits/types/struct_FILE.h to
 	define _IO_getc_unlocked, _IO_putc_unlocked, _IO_feof_unlocked,
 	and _IO_ferror_unlocked.
 	Move prototypes of __uflow and __overflow...
 
 	* libio/stdio.h: ...here.  Don't include bits/libio.h.
 	Don't define _STDIO_USES_IOSTREAM.  Get __gnuc_va_list
-	directly from stdarg.h.  Include bits/types/__fpos_t.h,
+	directly from stdarg.h.	 Include bits/types/__fpos_t.h,
 	bits/types/__fpos64_t.h, bits/types/struct_FILE.h,
 	and, when __USE_GNU, bits/types/cookie_io_functions_t.h.
 	Use __gnuc_va_list, not _G_va_list; __fpos_t, not _G_fpos_t;
@@ -49,19 +67,18 @@
 	* libio/libioP.h: Add multiple-include guard.
 	Include stdio.h and bits/libio.h before iolibio.h.
 
-        * include/bits/types/__fpos_t.h, include/bits/types/__fpos64_t.h
+	* include/bits/types/__fpos_t.h, include/bits/types/__fpos64_t.h
 	* include/bits/types/cookie_io_functions_t.h
 	* include/bits/types/struct_FILE.h: New wrappers.
 
 	* bits/_G_config.h, sysdeps/unix/sysv/linux/_G_config.h:
-        Get definitions of _G_fpos_t and _G_fpos64_t from
-        bits/types/__fpos_t.h and bits/types/__fpos64_t.h
-        respectively.  Remove improper-inclusion guards.
+	Get definitions of _G_fpos_t and _G_fpos64_t from
+	bits/types/__fpos_t.h and bits/types/__fpos64_t.h
+	respectively.  Remove improper-inclusion guards.
 
-        * conform/data/stdio.h-data: Update expectations of va_list.
+	* conform/data/stdio.h-data: Update expectations of va_list.
 	* scripts/check-installed-headers.sh: Remove special case for
-        libio.h and _G_config.h.
-
+	libio.h and _G_config.h.
 
 2018-02-07  Joseph Myers  <joseph@codesourcery.com>
 

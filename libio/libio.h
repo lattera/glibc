@@ -25,10 +25,21 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#ifndef _BITS_LIBIO_H
-#define _BITS_LIBIO_H 1
+#ifndef _LIBIO_H
+#define _LIBIO_H 1
+
+#ifndef _LIBC
+# error "libio.h should only be included when building glibc itself"
+#endif
+#ifdef _ISOMAC
+# error "libio.h should not be included under _ISOMAC"
+#endif
 
 #include <stdio.h>
+
+#if defined _IO_MTSAFE_IO && !defined _IO_lock_t_defined
+# error "Someone forgot to include stdio-lock.h"
+#endif
 
 #include <bits/_G_config.h>
 /* ALL of these should be defined in _G_config.h */
@@ -45,6 +56,10 @@
 #define _IO_BUFSIZ BUFSIZ
 #define _IO_wint_t wint_t
 #define _IO_va_list __gnuc_va_list
+
+#include <shlib-compat.h>
+
+__BEGIN_DECLS
 
 /* compatibility defines */
 #define _STDIO_USES_IOSTREAM
@@ -143,7 +158,6 @@ enum __codecvt_result
   __codecvt_noconv
 };
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 /* The order of the elements in the following struct must match the order
    of the virtual functions in the libstdc++ codecvt class.  */
 struct _IO_codecvt
@@ -198,7 +212,6 @@ struct _IO_wide_data
 
   const struct _IO_jump_t *_wide_vtable;
 };
-#endif
 
 
 #ifndef __cplusplus
@@ -236,17 +249,10 @@ extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
 			     void *__cookie, _IO_cookie_io_functions_t __fns);
 #endif
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int __underflow (_IO_FILE *);
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 extern _IO_wint_t __wunderflow (_IO_FILE *);
 extern _IO_wint_t __wuflow (_IO_FILE *);
 extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
-#endif
 
 #if  __GNUC__ >= 3
 # define _IO_BE(expr, res) __builtin_expect ((expr), res)
@@ -261,7 +267,6 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
 	: *(unsigned char *) (_fp)->_IO_read_ptr)
 #define _IO_putc_unlocked(_ch, _fp) __putc_unlocked_body (_ch, _fp)
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 # define _IO_getwc_unlocked(_fp) \
   (_IO_BE ((_fp)->_wide_data == NULL					\
 	   || ((_fp)->_wide_data->_IO_read_ptr				\
@@ -273,7 +278,6 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
 	       >= (_fp)->_wide_data->_IO_write_end), 0)			\
    ? __woverflow (_fp, _wch)						\
    : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
-#endif
 
 #define _IO_feof_unlocked(_fp) __feof_unlocked_body (_fp)
 #define _IO_ferror_unlocked(_fp) __ferror_unlocked_body (_fp)
@@ -319,28 +323,25 @@ extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int);
 
 extern void _IO_free_backup_area (_IO_FILE *) __THROW;
 
-#if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
+
 extern _IO_wint_t _IO_getwc (_IO_FILE *__fp);
 extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp);
 extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
-# if __GNUC__ >= 2
+
 /* While compiling glibc we have to handle compatibility with very old
    versions.  */
-#  if defined _LIBC && defined SHARED
-#   include <shlib-compat.h>
-#   if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-#    define _IO_fwide_maybe_incompatible \
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+#  define _IO_fwide_maybe_incompatible \
   (__builtin_expect (&_IO_stdin_used == NULL, 0))
 extern const int _IO_stdin_used;
 weak_extern (_IO_stdin_used);
-#   endif
-#  endif
-#  ifndef _IO_fwide_maybe_incompatible
-#   define _IO_fwide_maybe_incompatible (0)
-#  endif
+#else
+# define _IO_fwide_maybe_incompatible (0)
+#endif
+
 /* A special optimized version of the function above.  It optimizes the
    case of initializing an unoriented byte stream.  */
-#  define _IO_fwide(__fp, __mode) \
+#define _IO_fwide(__fp, __mode) \
   ({ int __result = (__mode);						      \
      if (__result < 0 && ! _IO_fwide_maybe_incompatible)		      \
        {								      \
@@ -354,7 +355,6 @@ weak_extern (_IO_stdin_used);
      else								      \
        __result = _IO_fwide (__fp, __result);				      \
      __result; })
-# endif
 
 extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
 			 _IO_va_list, int *__restrict);
@@ -362,14 +362,46 @@ extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
 			  _IO_va_list);
 extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t);
 extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
-#endif
 
 #ifdef __LDBL_COMPAT
-# include <bits/libio-ldbl.h>
+__LDBL_REDIR_DECL (_IO_vfscanf)
+__LDBL_REDIR_DECL (_IO_vfprintf)
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+libc_hidden_proto (__overflow)
+libc_hidden_proto (__underflow)
+libc_hidden_proto (__uflow)
+libc_hidden_proto (__woverflow)
+libc_hidden_proto (__wunderflow)
+libc_hidden_proto (__wuflow)
+libc_hidden_proto (_IO_free_backup_area)
+libc_hidden_proto (_IO_free_wbackup_area)
+libc_hidden_proto (_IO_padn)
+libc_hidden_proto (_IO_putc)
+libc_hidden_proto (_IO_sgetn)
+libc_hidden_proto (_IO_vfprintf)
+libc_hidden_proto (_IO_vfscanf)
 
-#endif /* _BITS_LIBIO_H */
+#ifdef _IO_MTSAFE_IO
+# undef _IO_peekc
+# undef _IO_flockfile
+# undef _IO_funlockfile
+# undef _IO_ftrylockfile
+
+# define _IO_peekc(_fp) _IO_peekc_locked (_fp)
+# if _IO_lock_inexpensive
+#  define _IO_flockfile(_fp) \
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_lock (*(_fp)->_lock)
+#  define _IO_funlockfile(_fp) \
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_lock_unlock (*(_fp)->_lock)
+# else
+#  define _IO_flockfile(_fp) \
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_flockfile (_fp)
+#  define _IO_funlockfile(_fp) \
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_funlockfile (_fp)
+# endif
+#endif /* _IO_MTSAFE_IO */
+
+__END_DECLS
+
+#endif /* _LIBIO_H */

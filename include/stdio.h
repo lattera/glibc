@@ -5,7 +5,7 @@
 # include <libio/stdio.h>
 # ifndef _ISOMAC
 #  define _LIBC_STDIO_H 1
-#  include <bits/libio.h>
+#  include <libio/libio.h>
 
 /* Now define the internal interfaces.  */
 

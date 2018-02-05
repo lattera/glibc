@@ -2,7 +2,7 @@
 #define _IOLIBIO_H 1
 
 #include <stdio.h>
-#include <bits/libio.h>
+#include <libio/libio.h>
 
 /* These emulate stdio functionality, but with a different name
    (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
