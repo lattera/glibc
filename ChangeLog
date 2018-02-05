@@ -1,5 +1,10 @@
 2018-02-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* elf/elf.h (DT_SYMTAB_SHNDX): New.  Set to 34.
+	(DT_NUM): Updated to 35.
+
+2018-02-05  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/dl-machine.h (elf_machine_rel): Replace
 	__builtin_expect with __glibc_likely and __glibc_unlikely.
 	(elf_machine_rela): Likewise.
