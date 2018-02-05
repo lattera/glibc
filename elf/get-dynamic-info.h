@@ -110,8 +110,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 # endif
       ADJUST_DYN_INFO (DT_JMPREL);
       ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
-      ADJUST_DYN_INFO (DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
-		       + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM);
+      ADJUST_DYN_INFO (ADDRIDX (DT_GNU_HASH));
 # undef ADJUST_DYN_INFO
       assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }

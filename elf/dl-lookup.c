@@ -936,14 +936,10 @@ _dl_setup_hash (struct link_map *map)
 {
   Elf_Symndx *hash;
 
-  if (__glibc_likely (map->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
-				    + DT_THISPROCNUM + DT_VERSIONTAGNUM
-				    + DT_EXTRANUM + DT_VALNUM] != NULL))
+  if (__glibc_likely (map->l_info[ADDRIDX (DT_GNU_HASH)] != NULL))
     {
       Elf32_Word *hash32
-	= (void *) D_PTR (map, l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM
-				      + DT_THISPROCNUM + DT_VERSIONTAGNUM
-				      + DT_EXTRANUM + DT_VALNUM]);
+	= (void *) D_PTR (map, l_info[ADDRIDX (DT_GNU_HASH)]);
       map->l_nbuckets = *hash32++;
       Elf32_Word symbias = *hash32++;
       Elf32_Word bitmask_nwords = *hash32++;

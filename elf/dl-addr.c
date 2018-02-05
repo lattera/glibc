@@ -42,8 +42,7 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
   ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
 
   const ElfW(Sym) *matchsym = NULL;
-  if (match->l_info[DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
-		    + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] != NULL)
+  if (match->l_info[ADDRIDX (DT_GNU_HASH)] != NULL)
     {
       /* We look at all symbol table entries referenced by the hash
 	 table.  */
