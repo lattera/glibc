@@ -16,8 +16,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#undef ssize_t
-#define ssize_t _IO_ssize_t
 
 int
 main (int argc, char *argv[])

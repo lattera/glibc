@@ -1,3 +1,8 @@
+2018-02-06  Zack Weinberg  <zackw@panix.com>
+
+	* stdio-common/tstgetln.c: Don't redefine FILE, va_list, or BUFSIZ.
+	* stdio-common/tstgetln.c: Don't redefine ssize_t.
+
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/netinet/tcp.h (TCP_FASTOPEN_KEY): New macro.

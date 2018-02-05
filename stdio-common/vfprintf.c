@@ -39,13 +39,8 @@
    Beside this it is also shared between the normal and wide character
    implementation as defined in ISO/IEC 9899:1990/Amendment 1:1995.  */
 
-
 #include <libioP.h>
-#define FILE		_IO_FILE
-#undef va_list
-#define va_list	_IO_va_list
-#undef BUFSIZ
-#define BUFSIZ		_IO_BUFSIZ
+
 /* In some cases we need extra space for all the output which is not
    counted in the width of the string. We assume 32 characters is
    enough.  */
