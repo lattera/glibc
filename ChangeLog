@@ -1,5 +1,9 @@
 2018-02-06  Zack Weinberg  <zackw@panix.com>
 
+	* libio/stdio.h: Don't define getc or putc as macros.
+	* libio/bits/stdio.h (getchar, putchar): Use getc and putc,
+	not _IO_getc and _IO_putc.
+
 	* stdio-common/tstgetln.c: Don't redefine FILE, va_list, or BUFSIZ.
 	* stdio-common/tstgetln.c: Don't redefine ssize_t.
 

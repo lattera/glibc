@@ -13,7 +13,12 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+ * The stdio.h functions 'getc' and 'putc' are no longer defined as macros.
+   This was never required by the C standard, and the macros just expanded
+   to call alternative names for the same functions.  If you hoped getc and
+   putc would provide performance improvements over fgetc and fputc, instead
+   investigate using (f)getc_unlocked and (f)putc_unlocked, and, if
+   necessary, flockfile and funlockfile.
 
 Changes to build and runtime requirements:
 

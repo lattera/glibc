@@ -43,7 +43,7 @@ vprintf (const char *__restrict __fmt, _G_va_list __arg)
 __STDIO_INLINE int
 getchar (void)
 {
-  return _IO_getc (stdin);
+  return getc (stdin);
 }
 
 
@@ -78,7 +78,7 @@ getchar_unlocked (void)
 __STDIO_INLINE int
 putchar (int __c)
 {
-  return _IO_putc (__c, stdout);
+  return putc (__c, stdout);
 }
 
 

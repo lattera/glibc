@@ -483,10 +483,6 @@ extern int getc (FILE *__stream);
    marked with __THROW.  */
 extern int getchar (void);
 
-/* The C standard explicitly says this is a macro, so we always do the
-   optimization for it.  */
-#define getc(_fp) _IO_getc (_fp)
-
 #ifdef __USE_POSIX199506
 /* These are defined in POSIX.1:1996.
 
@@ -522,10 +518,6 @@ extern int putc (int __c, FILE *__stream);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern int putchar (int __c);
-
-/* The C standard explicitly says this can be a macro,
-   so we always do the optimization for it.  */
-#define putc(_ch, _fp) _IO_putc (_ch, _fp)
 
 #ifdef __USE_MISC
 /* Faster version when locking is not necessary.
