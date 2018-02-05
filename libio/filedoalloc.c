@@ -93,7 +93,7 @@ _IO_file_doallocate (_IO_FILE *fp)
 	      local_isatty (fp->_fileno))
 	    fp->_flags |= _IO_LINE_BUF;
 	}
-#if _IO_HAVE_ST_BLKSIZE
+#if defined _STATBUF_ST_BLKSIZE
       if (st.st_blksize > 0 && st.st_blksize < _IO_BUFSIZ)
 	size = st.st_blksize;
 #endif

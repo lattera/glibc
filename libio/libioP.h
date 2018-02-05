@@ -46,6 +46,12 @@
 #include <libio/libio.h>
 #include "iolibio.h"
 
+#include <shlib-compat.h>
+
+/* For historical reasons this is the name of the sysdeps header that
+   adjusts the libio configuration.  */
+#include <_G_config.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -75,16 +81,10 @@ extern "C" {
  * object being acted on (i.e. the 'this' parameter).
  */
 
-#include <shlib-compat.h>
-#if !SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-  /* Setting this macro disables the use of the _vtable_offset bias in
-     _IO_JUMPS_FUNCS, below.  That is only needed if we want to
-     support old binaries (see oldfileops.c).  */
-# define _G_IO_NO_BACKWARD_COMPAT 1
-#endif
-
-#if (!defined _IO_USE_OLD_IO_FILE \
-     && (!defined _G_IO_NO_BACKWARD_COMPAT || _G_IO_NO_BACKWARD_COMPAT == 0))
+/* Setting this macro to 1 enables the use of the _vtable_offset bias
+   in _IO_JUMPS_FUNCS, below.  This is only needed for new-format
+   _IO_FILE in libc that must support old binaries (see oldfileops.c).  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1) && !defined _IO_USE_OLD_IO_FILE
 # define _IO_JUMPS_OFFSET 1
 #else
 # define _IO_JUMPS_OFFSET 0

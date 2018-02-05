@@ -1,5 +1,32 @@
 2018-02-07  Zack Weinberg  <zackw@panix.com>
 
+	* bits/_G_config.h: Move back to sysdeps/generic/_G_config.h.
+	Delete all contents except for definitions of _G_HAVE_MMAP and
+	_G_HAVE_MREMAP.  Add commentary explaining those two symbols.
+	* sysdeps/unix/sysv/linux/bits/_G_config.h: Move back to
+	sysdeps/unix/sysv/linux/_G_config.h.  Make same content
+	change as above.
+
+	* libio/libio.h: Don't include bits/_G_config.h here.
+	Include stddef.h with __need_wchar_t defined.  Include
+	bits/types/__mbstate_t.h, bits/types/wint_t.h, and gconv.h.
+	Define _IO_iconv_t here, directly.
+	Don't define _IO_HAVE_ST_BLKSIZE.
+	* libio/libioP.h: Include _G_config.h here.  Move include of
+	shlib-compat.h up with rest of includes.  Simplify conditionals
+	controlling definition of _IO_JUMPS_OFFSET.
+
+	* csu/init.c: Remove always-true #if around entire file.
+	Don't include stdio.h.  Set _IO_stdin_used to hardwired
+	constant 0x20001, and update commentary.
+	* include/stdio.h, sysdeps/ieee754/ldbl-opt/nldbl-compat.h:
+	Replace all uses of _G_va_list with __gnuc_va_list.
+	* libio/filedoalloc.c: Use #if defined _STATBUF_ST_BLKSIZE
+	instead of #if _IO_HAVE_ST_BLKSIZE.
+	* libio/fileops.c: Test _G_HAVE_MREMAP with #if, not #ifdef.
+	* libio/iofdopen.c, libio/iofopen.c: Test _G_HAVE_MMAP with #if,
+	not #ifdef.
+
 	* libio/bits/libio.h: Move back to libio/libio.h and adjust
 	multiple-include guard to match.
 	Merge contents of libio/bits/libio-ldbl.h and include/libio.h

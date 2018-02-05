@@ -33,7 +33,7 @@
 _IO_FILE *
 __fopen_maybe_mmap (_IO_FILE *fp)
 {
-#ifdef _G_HAVE_MMAP
+#if _G_HAVE_MMAP
   if ((fp->_flags2 & _IO_FLAGS2_MMAP) && (fp->_flags & _IO_NO_WRITES))
     {
       /* Since this is read-only, we might be able to mmap the contents

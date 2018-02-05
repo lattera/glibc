@@ -126,13 +126,13 @@ _IO_new_fdopen (int fd, const char *mode)
   new_f->fp.file._lock = &new_f->lock;
 #endif
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd,
-#ifdef _G_HAVE_MMAP
+#if _G_HAVE_MMAP
 	       (use_mmap && (read_write & _IO_NO_WRITES))
 	       ? &_IO_wfile_jumps_maybe_mmap :
 #endif
 	       &_IO_wfile_jumps);
   _IO_JUMPS (&new_f->fp) =
-#ifdef _G_HAVE_MMAP
+#if _G_HAVE_MMAP
     (use_mmap && (read_write & _IO_NO_WRITES)) ? &_IO_file_jumps_maybe_mmap :
 #endif
       &_IO_file_jumps;

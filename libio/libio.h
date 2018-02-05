@@ -41,8 +41,24 @@
 # error "Someone forgot to include stdio-lock.h"
 #endif
 
-#include <bits/_G_config.h>
-/* ALL of these should be defined in _G_config.h */
+#define __need_wchar_t
+#include <stddef.h>
+
+#include <bits/types/__mbstate_t.h>
+#include <bits/types/wint_t.h>
+#include <gconv.h>
+
+typedef union
+{
+  struct __gconv_info __cd;
+  struct
+  {
+    struct __gconv_info __cd;
+    struct __gconv_step_data __data;
+  } __combined;
+} _IO_iconv_t;
+
+/* Map the names used in libio to the names used in libc generally.  */
 #define _IO_fpos_t __fpos_t
 #define _IO_fpos64_t __fpos64_t
 #define _IO_size_t size_t
@@ -51,8 +67,6 @@
 #define _IO_off64_t __off64_t
 #define _IO_pid_t __pid_t
 #define _IO_uid_t __uid_t
-#define _IO_iconv_t _G_iconv_t
-#define _IO_HAVE_ST_BLKSIZE _G_HAVE_ST_BLKSIZE
 #define _IO_BUFSIZ BUFSIZ
 #define _IO_wint_t wint_t
 #define _IO_va_list __gnuc_va_list
