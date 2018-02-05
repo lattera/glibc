@@ -1,3 +1,9 @@
+2018-02-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22638]
+	* sysdeps/sparc/sparc32/start.S (_start): Check PIC instead of
+	SHARED.
+
 2018-02-05  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #22761]

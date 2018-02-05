@@ -42,7 +42,7 @@
 	.global _start
 	.type _start,#function
 _start:
-#ifdef SHARED
+#ifdef PIC
 	SETUP_PIC_REG(l7)
 #endif
 
@@ -58,7 +58,7 @@ _start:
 	add	%sp, STACK_BIAS+23*8, %o2
 
   /* Load the addresses of the user entry points.  */
-#ifndef SHARED
+#ifndef PIC
 	sethi	%hi(main), %o0
 	sethi	%hi(__libc_csu_init), %o3
 	sethi	%hi(__libc_csu_fini), %o4
