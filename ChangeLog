@@ -9,6 +9,7 @@
 	[BZ #22638]
 	* sysdeps/sparc/sparc32/start.S (_start): Check PIC instead of
 	SHARED.
+	* sysdeps/sparc/sparc64/start.S (_start): Likewise.
 
 2018-02-05  Andreas Schwab  <schwab@suse.de>
 
