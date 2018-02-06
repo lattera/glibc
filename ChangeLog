@@ -1,5 +1,13 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14890]
+	* elf/elf.h (NT_PRFPREG): New macro.
+	(NT_S390_VXRS_LOW): Likewise.
+	(NT_S390_VXRS_HIGH): Likewise.
+	(NT_S390_GS_CB): Likewise.
+	(NT_S390_GS_BC): Likewise.
+	(NT_S390_RI_CB): Likewise.
+
 	* sysdeps/unix/sysv/linux/aarch64/bits/mman.h [__USE_MISC]
 	(MAP_SYNC): New macro.
 	* sysdeps/unix/sysv/linux/arm/bits/mman.h [__USE_MISC] (MAP_SYNC):
