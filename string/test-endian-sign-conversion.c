@@ -1,5 +1,5 @@
-/* Macros to swap the order of bytes in 16-bit integer values.
-   Copyright (C) 2012-2018 Free Software Foundation, Inc.
+/* Test endian.h endian-conversion macros work with -Wsign-conversion.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,33 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_BYTESWAP_H
-# error "Never use <bits/byteswap-16.h> directly; include <byteswap.h> instead."
-#endif
+#include <endian.h>
+#include <stdint.h>
 
-#ifdef __GNUC__
-# define __bswap_16(x) \
-    (__extension__							      \
-     ({ unsigned short int __bsx = (unsigned short int) (x);		      \
-       __bswap_constant_16 (__bsx); }))
-#else
-static __inline unsigned short int
-__bswap_16 (unsigned short int __bsx)
+uint16_t u16;
+uint32_t u32;
+uint64_t u64;
+
+static int
+do_test (void)
 {
-  return __bswap_constant_16 (__bsx);
+  /* This is a compilation test.  */
+  u16 = (htobe16 (u16));
+  u16 = (htole16 (u16));
+  u16 = (be16toh (u16));
+  u16 = (le16toh (u16));
+  u32 = (htobe32 (u32));
+  u32 = (htole32 (u32));
+  u32 = (be32toh (u32));
+  u32 = (le32toh (u32));
+  u64 = (htobe64 (u64));
+  u64 = (htole64 (u64));
+  u64 = (be64toh (u64));
+  u64 = (le64toh (u64));
+  (void) u16;
+  (void) u32;
+  (void) u64;
+  return 0;
 }
-#endif
+
+#include <support/test-driver.c>

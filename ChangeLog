@@ -1,5 +1,39 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #14508]
+	[BZ #15512]
+	[BZ #17082]
+	[BZ #20530]
+	* bits/byteswap.h: Update file comment.  Do not include
+	<bits/byteswap-16.h>.
+	(__bswap_constant_16): Cast result to __uint16_t.  Use signed 0xff
+	constant.
+	(__bswap_16): Define as inline function.
+	(__bswap_constant_32): Reformat definition.
+	(__bswap_32): Always define as inline function, not macro, using
+	__uint32_t.  Use __builtin_bswap32 if [__GNUC_PREREQ (4, 3)],
+	otherwise __bswap_constant_32.
+	(__bswap_constant_64): Reformat definition.  Do not use
+	__extension__ here.
+	(__bswap_64): Always define as inline function, not macro.  Use
+	__extension__ on function definition.  Use __builtin_bswap64 if
+	[__GNUC_PREREQ (4, 3)], otherwise __bswap_constant_64.
+	* string/test-endian-file-scope.c: New file.
+	* string/test-endian-sign-conversion.c: Likewise.
+	* string/Makefile (headers): Remove bits/byteswap-16.h.
+	(tests): Add test-endian-file-scope and
+	test-endian-sign-conversion.
+	(CFLAGS-test-endian-sign-conversion.c): New variable.
+	* bits/byteswap-16.h: Remove file.
+	* sysdeps/ia64/bits/byteswap-16.h: Likewise.
+	* sysdeps/ia64/bits/byteswap.h: Likewise.
+	* sysdeps/m68k/bits/byteswap.h: Likewise.
+	* sysdeps/s390/bits/byteswap-16.h: Likewise.
+	* sysdeps/s390/bits/byteswap.h: Likewise.
+	* sysdeps/tile/bits/byteswap.h: Likewise.
+	* sysdeps/x86/bits/byteswap-16.h: Likewise.
+	* sysdeps/x86/bits/byteswap.h: Likewise.
+
 	[BZ #17721]
 	* misc/sys/cdefs.h [!__GNUC__ && (__cplusplus || (__STDC_VERSION__
 	&& __STDC_VERSION__ >= 199901L))] (__inline): Define to inline.
