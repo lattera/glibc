@@ -1,5 +1,10 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19668]
+	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: Include
+	<support/support.h>.  Do not include <malloc.h>.
+	(query_auxv): Use xmalloc instead of malloc.
+
 	[BZ #14553]
 	* posix/sys/types.h (loff_t): Only define for [__USE_MISC].
 	* sysdeps/unix/sysv/linux/sys/quota.h (dqoff): Use __loff_t

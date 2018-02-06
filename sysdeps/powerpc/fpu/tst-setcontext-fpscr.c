@@ -23,11 +23,11 @@
 #include <string.h>
 #include <ucontext.h>
 #include <unistd.h>
-#include <malloc.h>
 #include <link.h>
 #include <elf.h>
 #include <fpu_control.h>
 #include <sys/auxv.h>
+#include <support/support.h>
 
 static ucontext_t ctx[3];
 
@@ -59,7 +59,7 @@ ElfW(Addr) query_auxv(int type)
 	  perror("Error opening file for reading");
 	  return 0;
 	}
-      auxv = (ElfW(auxv_t) *)malloc(getpagesize());
+      auxv = xmalloc (getpagesize ());
 
       do
 	{
