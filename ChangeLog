@@ -1,3 +1,10 @@
+2018-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/bits/mman-linux.h [__USE_MISC]
+	(MAP_SHARED_VALIDATE): New macro.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_MISC]
+	(MAP_SHARED_VALIDATE): Likewise.
+
 2018-02-05  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* elf/dl-addr.c (determine_info): Use ADDRIDX with DT_GNU_HASH.

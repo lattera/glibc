@@ -42,6 +42,8 @@
 #define MAP_SHARED	0x01		/* Share changes.  */
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
 #ifdef __USE_MISC
+# define MAP_SHARED_VALIDATE	0x03	/* Share changes and validate
+					   extension flags.  */
 # define MAP_TYPE	0x0f		/* Mask for type of mapping.  */
 #endif
 
