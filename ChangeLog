@@ -1,5 +1,12 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #13575]
+	* posix/bits/posix1_lim.h: Include <bits/wordsize.h>.
+	[!SSIZE_MAX && !(__WORDSIZE == 64 || __WORDSIZE32_SIZE_ULONG)]
+	(SSIZE_MAX): Define to INT_MAX.
+	* posix/test-ssize-max.c: New file.
+	* posix/Makefile (tests): Add test-ssize-max.
+
 	[BZ #19668]
 	* sysdeps/powerpc/fpu/tst-setcontext-fpscr.c: Include
 	<support/support.h>.  Do not include <malloc.h>.

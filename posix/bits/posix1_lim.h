@@ -24,6 +24,7 @@
 #ifndef	_BITS_POSIX1_LIM_H
 #define	_BITS_POSIX1_LIM_H	1
 
+#include <bits/wordsize.h>
 
 /* These are the standard-mandated minimum values.  */
 
@@ -161,7 +162,14 @@
 
 
 #ifndef	SSIZE_MAX
-# define SSIZE_MAX	LONG_MAX
+/* ssize_t is not formally required to be the signed type
+   corresponding to size_t, but it is for all configurations supported
+   by glibc.  */
+# if __WORDSIZE == 64 || __WORDSIZE32_SIZE_ULONG
+#  define SSIZE_MAX	LONG_MAX
+# else
+#  define SSIZE_MAX	INT_MAX
+# endif
 #endif
 
 
