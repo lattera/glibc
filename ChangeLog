@@ -1,5 +1,8 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/gnu/netinet/tcp.h (TCP_FASTOPEN_KEY): New macro.
+	(TCP_FASTOPEN_NO_COOKIE): Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_FREEBIND): New macro.
 
 	[BZ #14890]
