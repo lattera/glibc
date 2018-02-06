@@ -1,5 +1,11 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17721]
+	* misc/sys/cdefs.h [!__GNUC__ && (__cplusplus || (__STDC_VERSION__
+	&& __STDC_VERSION__ >= 199901L))] (__inline): Define to inline.
+	[!__GNUC_PREREQ (2,92) && __STDC_VERSION__ && __STDC_VERSION__ >=
+	199901L] (__restrict): Define to restrict.
+
 	[BZ #19667]
 	* string/testcopy.c: Include <support/support.h>.  Do not include
 	<malloc.h>.  Use <support/test-driver.c>.

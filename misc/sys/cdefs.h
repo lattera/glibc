@@ -72,7 +72,12 @@
 
 #else	/* Not GCC.  */
 
-# define __inline		/* No inline functions.  */
+# if (defined __cplusplus						\
+      || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L))
+#  define __inline	inline
+# else
+#  define __inline		/* No inline functions.  */
+# endif
 
 # define __THROW
 # define __THROWNL
@@ -368,7 +373,11 @@
 
 /* __restrict is known in EGCS 1.2 and above. */
 #if !__GNUC_PREREQ (2,92)
-# define __restrict	/* Ignore */
+# if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
+#  define __restrict	restrict
+# else
+#  define __restrict	/* Ignore */
+# endif
 #endif
 
 /* ISO C99 also allows to declare arrays as non-overlapping.  The syntax is
