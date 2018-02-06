@@ -1,5 +1,11 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #19667]
+	* string/testcopy.c: Include <support/support.h>.  Do not include
+	<malloc.h>.  Use <support/test-driver.c>.
+	(main): Rename to do_test.  Make static.  Use xmalloc instead of
+	malloc.
+
 	[BZ #13575]
 	* posix/bits/posix1_lim.h: Include <bits/wordsize.h>.
 	[!SSIZE_MAX && !(__WORDSIZE == 64 || __WORDSIZE32_SIZE_ULONG)]
