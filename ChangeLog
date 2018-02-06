@@ -1,3 +1,10 @@
+2018-02-06  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #14553]
+	* posix/sys/types.h (loff_t): Only define for [__USE_MISC].
+	* sysdeps/unix/sysv/linux/sys/quota.h (dqoff): Use __loff_t
+	instead of loff_t.
+
 2018-02-06  Florian Weimer <fweimer@redhat.com>
 
 	[BZ #18023]

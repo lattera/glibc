@@ -114,7 +114,7 @@ struct dqblk
 #define	dq_btime	dq_dqb.dqb_btime
 #define	dq_itime	dq_dqb.dqb_itime
 
-#define dqoff(UID)      ((loff_t)((UID) * sizeof (struct dqblk)))
+#define dqoff(UID)      ((__loff_t)((UID) * sizeof (struct dqblk)))
 
 /* Old name for struct if_dqinfo.  */
 struct dqinfo

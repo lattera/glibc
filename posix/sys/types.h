@@ -39,9 +39,8 @@ typedef __u_quad_t u_quad_t;
 typedef __fsid_t fsid_t;
 #  define __u_char_defined
 # endif
-#endif
-
 typedef __loff_t loff_t;
+#endif
 
 #ifndef __ino_t_defined
 # ifndef __USE_FILE_OFFSET64
