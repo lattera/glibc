@@ -228,6 +228,7 @@ struct in_pktinfo
 #define IPV6_TRANSPARENT	75
 #define IPV6_UNICAST_IF		76
 #define IPV6_RECVFRAGSIZE	77
+#define IPV6_FREEBIND		78
 
 /* Obsolete synonyms for the above.  */
 #if !__USE_KERNEL_IPV6_DEFS

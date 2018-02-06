@@ -1,5 +1,7 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/bits/in.h (IPV6_FREEBIND): New macro.
+
 	[BZ #14890]
 	* elf/elf.h (NT_PRFPREG): New macro.
 	(NT_S390_VXRS_LOW): Likewise.
