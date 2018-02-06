@@ -36,6 +36,8 @@
 # define MAP_NONBLOCK	0x10000		/* Do not block on IO.  */
 # define MAP_STACK	0x20000		/* Allocation is for a stack.  */
 # define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
+# define MAP_SYNC	0x80000		/* Perform synchronous page
+					   faults for the mapping.  */
 #endif
 
 /* Include generic Linux declarations.  */

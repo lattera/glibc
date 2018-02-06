@@ -1,5 +1,26 @@
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): New macro.
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h [__USE_MISC] (MAP_SYNC):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h [__USE_MISC]
+	(MAP_SYNC): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h [__USE_MISC] (MAP_SYNC):
+	Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/mman.h [__USE_MISC] (MAP_SYNC):
+	Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/mman-linux.h [__USE_MISC]
 	(MAP_SHARED_VALIDATE): New macro.
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_MISC]
