@@ -999,7 +999,9 @@
 2018-01-18  Arjun Shankar  <arjun@redhat.com>
 
 	[BZ #22343]
+	[BZ #22774]
 	CVE-2018-6485
+	CVE-2018-6551
 	* malloc/malloc.c (checked_request2size): call REQUEST_OUT_OF_RANGE
 	after padding.
 	(_int_memalign): check for integer overflow before calling
