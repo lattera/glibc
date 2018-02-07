@@ -28,6 +28,17 @@ Deprecated and removed features, and other changes affecting compatibility:
    investigate using (f)getc_unlocked and (f)putc_unlocked, and, if
    necessary, flockfile and funlockfile.
 
+ * The macros 'major', 'minor', and 'makedev' are now only available from
+   the header <sys/sysmacros.h>; not from <sys/types.h> or various other
+   headers that happen to include <sys/types.h>.  These macros are rarely
+   used, not part of POSIX nor XSI, and their names frequently collide with
+   user code; see https://sourceware.org/bugzilla/show_bug.cgi?id=19239 for
+   further explanation.
+
+   <sys/sysmacros.h> is a GNU extension.  Portable programs that require
+   these macros should first include <sys/types.h>, and then include
+   <sys/sysmacros.h> if __GNU_LIBRARY__ is defined.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

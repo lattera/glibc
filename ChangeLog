@@ -1,3 +1,10 @@
+2018-02-12  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #19239]
+	* posix/sys/types.h: Don't include sys/sysmacros.h.
+	* misc/sys/sysmacros.h: Remove the conditional deprecation
+	warnings for the macros defined by this header.
+
 2018-02-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* manual/probes.texi: Remove slowexp probes.
