@@ -29,7 +29,7 @@
 #include <wchar.h>
 
 int
-fwide (_IO_FILE *fp, int mode)
+fwide (FILE *fp, int mode)
 {
   int result;
 

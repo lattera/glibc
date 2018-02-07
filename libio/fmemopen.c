@@ -37,7 +37,7 @@ struct fmemopen_cookie_struct
   int         mybuffer;  /* allocated my buffer?  */
   int         append;    /* buffer open for append?  */
   size_t      size;      /* buffer length in bytes.  */
-  _IO_off64_t pos;       /* current position at the buffer.  */
+  off64_t     pos;       /* current position at the buffer.  */
   size_t      maxpos;    /* max position in buffer.  */
 };
 
@@ -66,7 +66,7 @@ static ssize_t
 fmemopen_write (void *cookie, const char *b, size_t s)
 {
   fmemopen_cookie_t *c = (fmemopen_cookie_t *) cookie;;
-  _IO_off64_t pos = c->append ? c->maxpos : c->pos;
+  off64_t pos = c->append ? c->maxpos : c->pos;
   int addnullc = (s == 0 || b[s - 1] != '\0');
 
   if (pos + s > c->size)
@@ -97,9 +97,9 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
 
 static int
-fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
+fmemopen_seek (void *cookie, off64_t *p, int w)
 {
-  _IO_off64_t np;
+  off64_t np;
   fmemopen_cookie_t *c = (fmemopen_cookie_t *) cookie;
 
   switch (w)

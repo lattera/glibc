@@ -36,12 +36,12 @@
    necessary.  Returns the number of characters read (not including the
    null terminator), or -1 on error or EOF.  */
 
-_IO_ssize_t
-_IO_getdelim (char **lineptr, _IO_size_t *n, int delimiter, _IO_FILE *fp)
+ssize_t
+_IO_getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
-  _IO_ssize_t result;
-  _IO_ssize_t cur_len = 0;
-  _IO_ssize_t len;
+  ssize_t result;
+  ssize_t cur_len = 0;
+  ssize_t len;
 
   if (lineptr == NULL || n == NULL)
     {
@@ -80,7 +80,7 @@ _IO_getdelim (char **lineptr, _IO_size_t *n, int delimiter, _IO_FILE *fp)
 
   for (;;)
     {
-      _IO_size_t needed;
+      size_t needed;
       char *t;
       t = (char *) memchr ((void *) fp->_IO_read_ptr, delimiter, len);
       if (t != NULL)

@@ -37,7 +37,7 @@ struct _IO_obstack_file
 
 
 static int
-_IO_obstack_overflow (_IO_FILE *fp, int c)
+_IO_obstack_overflow (FILE *fp, int c)
 {
   struct obstack *obstack = ((struct _IO_obstack_file *) fp)->obstack;
   int size;
@@ -59,8 +59,8 @@ _IO_obstack_overflow (_IO_FILE *fp, int c)
 }
 
 
-static _IO_size_t
-_IO_obstack_xsputn (_IO_FILE *fp, const void *data, _IO_size_t n)
+static size_t
+_IO_obstack_xsputn (FILE *fp, const void *data, size_t n)
 {
   struct obstack *obstack = ((struct _IO_obstack_file *) fp)->obstack;
 

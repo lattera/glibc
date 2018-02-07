@@ -36,7 +36,7 @@
 static _IO_lock_t list_all_lock = _IO_lock_initializer;
 #endif
 
-static _IO_FILE *run_fp;
+static FILE *run_fp;
 
 #ifdef _IO_MTSAFE_IO
 static void
@@ -53,12 +53,12 @@ _IO_un_link (struct _IO_FILE_plus *fp)
 {
   if (fp->file._flags & _IO_LINKED)
     {
-      struct _IO_FILE **f;
+      FILE **f;
 #ifdef _IO_MTSAFE_IO
       _IO_cleanup_region_start_noarg (flush_cleanup);
       _IO_lock_lock (list_all_lock);
-      run_fp = (_IO_FILE *) fp;
-      _IO_flockfile ((_IO_FILE *) fp);
+      run_fp = (FILE *) fp;
+      _IO_flockfile ((FILE *) fp);
 #endif
       if (_IO_list_all == NULL)
 	;
@@ -66,14 +66,14 @@ _IO_un_link (struct _IO_FILE_plus *fp)
 	_IO_list_all = (struct _IO_FILE_plus *) _IO_list_all->file._chain;
       else
 	for (f = &_IO_list_all->file._chain; *f; f = &(*f)->_chain)
-	  if (*f == (_IO_FILE *) fp)
+	  if (*f == (FILE *) fp)
 	    {
 	      *f = fp->file._chain;
 	      break;
 	    }
       fp->file._flags &= ~_IO_LINKED;
 #ifdef _IO_MTSAFE_IO
-      _IO_funlockfile ((_IO_FILE *) fp);
+      _IO_funlockfile ((FILE *) fp);
       run_fp = NULL;
       _IO_lock_unlock (list_all_lock);
       _IO_cleanup_region_end (0);
@@ -91,13 +91,13 @@ _IO_link_in (struct _IO_FILE_plus *fp)
 #ifdef _IO_MTSAFE_IO
       _IO_cleanup_region_start_noarg (flush_cleanup);
       _IO_lock_lock (list_all_lock);
-      run_fp = (_IO_FILE *) fp;
-      _IO_flockfile ((_IO_FILE *) fp);
+      run_fp = (FILE *) fp;
+      _IO_flockfile ((FILE *) fp);
 #endif
-      fp->file._chain = (_IO_FILE *) _IO_list_all;
+      fp->file._chain = (FILE *) _IO_list_all;
       _IO_list_all = fp;
 #ifdef _IO_MTSAFE_IO
-      _IO_funlockfile ((_IO_FILE *) fp);
+      _IO_funlockfile ((FILE *) fp);
       run_fp = NULL;
       _IO_lock_unlock (list_all_lock);
       _IO_cleanup_region_end (0);
@@ -108,12 +108,12 @@ libc_hidden_def (_IO_link_in)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
-_IO_ssize_t _IO_least_marker (_IO_FILE *fp, char *end_p);
+ssize_t _IO_least_marker (FILE *fp, char *end_p);
 
-_IO_ssize_t
-_IO_least_marker (_IO_FILE *fp, char *end_p)
+ssize_t
+_IO_least_marker (FILE *fp, char *end_p)
 {
-  _IO_ssize_t least_so_far = end_p - fp->_IO_read_base;
+  ssize_t least_so_far = end_p - fp->_IO_read_base;
   struct _IO_marker *mark;
   for (mark = fp->_markers; mark != NULL; mark = mark->_next)
     if (mark->_pos < least_so_far)
@@ -124,7 +124,7 @@ _IO_least_marker (_IO_FILE *fp, char *end_p)
 /* Switch current get area from backup buffer to (start of) main get area. */
 
 void
-_IO_switch_to_main_get_area (_IO_FILE *fp)
+_IO_switch_to_main_get_area (FILE *fp)
 {
   char *tmp;
   fp->_flags &= ~_IO_IN_BACKUP;
@@ -143,7 +143,7 @@ _IO_switch_to_main_get_area (_IO_FILE *fp)
 /* Switch current get area from main get area to (end of) backup area. */
 
 void
-_IO_switch_to_backup_area (_IO_FILE *fp)
+_IO_switch_to_backup_area (FILE *fp)
 {
   char *tmp;
   fp->_flags |= _IO_IN_BACKUP;
@@ -160,7 +160,7 @@ _IO_switch_to_backup_area (_IO_FILE *fp)
 }
 
 int
-_IO_switch_to_get_mode (_IO_FILE *fp)
+_IO_switch_to_get_mode (FILE *fp)
 {
   if (fp->_IO_write_ptr > fp->_IO_write_base)
     if (_IO_OVERFLOW (fp, EOF) == EOF)
@@ -183,7 +183,7 @@ _IO_switch_to_get_mode (_IO_FILE *fp)
 libc_hidden_def (_IO_switch_to_get_mode)
 
 void
-_IO_free_backup_area (_IO_FILE *fp)
+_IO_free_backup_area (FILE *fp)
 {
   if (_IO_in_backup (fp))
     _IO_switch_to_main_get_area (fp);  /* Just in case. */
@@ -196,7 +196,7 @@ libc_hidden_def (_IO_free_backup_area)
 
 #if 0
 int
-_IO_switch_to_put_mode (_IO_FILE *fp)
+_IO_switch_to_put_mode (FILE *fp)
 {
   fp->_IO_write_base = fp->_IO_read_ptr;
   fp->_IO_write_ptr = fp->_IO_read_ptr;
@@ -213,7 +213,7 @@ _IO_switch_to_put_mode (_IO_FILE *fp)
 #endif
 
 int
-__overflow (_IO_FILE *f, int ch)
+__overflow (FILE *f, int ch)
 {
   /* This is a single-byte stream.  */
   if (f->_mode == 0)
@@ -223,16 +223,16 @@ __overflow (_IO_FILE *f, int ch)
 libc_hidden_def (__overflow)
 
 static int
-save_for_backup (_IO_FILE *fp, char *end_p)
+save_for_backup (FILE *fp, char *end_p)
 {
   /* Append [_IO_read_base..end_p] to backup area. */
-  _IO_ssize_t least_mark = _IO_least_marker (fp, end_p);
+  ssize_t least_mark = _IO_least_marker (fp, end_p);
   /* needed_size is how much space we need in the backup area. */
-  _IO_size_t needed_size = (end_p - fp->_IO_read_base) - least_mark;
+  size_t needed_size = (end_p - fp->_IO_read_base) - least_mark;
   /* FIXME: Dubious arithmetic if pointers are NULL */
-  _IO_size_t current_Bsize = fp->_IO_save_end - fp->_IO_save_base;
-  _IO_size_t avail; /* Extra space available for future expansion. */
-  _IO_ssize_t delta;
+  size_t current_Bsize = fp->_IO_save_end - fp->_IO_save_base;
+  size_t avail; /* Extra space available for future expansion. */
+  ssize_t delta;
   struct _IO_marker *mark;
   if (needed_size > current_Bsize)
     {
@@ -283,7 +283,7 @@ save_for_backup (_IO_FILE *fp, char *end_p)
 }
 
 int
-__underflow (_IO_FILE *fp)
+__underflow (FILE *fp)
 {
   if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
@@ -313,7 +313,7 @@ __underflow (_IO_FILE *fp)
 libc_hidden_def (__underflow)
 
 int
-__uflow (_IO_FILE *fp)
+__uflow (FILE *fp)
 {
   if (_IO_vtable_offset (fp) == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
@@ -343,7 +343,7 @@ __uflow (_IO_FILE *fp)
 libc_hidden_def (__uflow)
 
 void
-_IO_setb (_IO_FILE *f, char *b, char *eb, int a)
+_IO_setb (FILE *f, char *b, char *eb, int a)
 {
   if (f->_IO_buf_base && !(f->_flags & _IO_USER_BUF))
     free (f->_IO_buf_base);
@@ -357,7 +357,7 @@ _IO_setb (_IO_FILE *f, char *b, char *eb, int a)
 libc_hidden_def (_IO_setb)
 
 void
-_IO_doallocbuf (_IO_FILE *fp)
+_IO_doallocbuf (FILE *fp)
 {
   if (fp->_IO_buf_base)
     return;
@@ -369,13 +369,13 @@ _IO_doallocbuf (_IO_FILE *fp)
 libc_hidden_def (_IO_doallocbuf)
 
 int
-_IO_default_underflow (_IO_FILE *fp)
+_IO_default_underflow (FILE *fp)
 {
   return EOF;
 }
 
 int
-_IO_default_uflow (_IO_FILE *fp)
+_IO_default_uflow (FILE *fp)
 {
   int ch = _IO_UNDERFLOW (fp);
   if (ch == EOF)
@@ -384,11 +384,11 @@ _IO_default_uflow (_IO_FILE *fp)
 }
 libc_hidden_def (_IO_default_uflow)
 
-_IO_size_t
-_IO_default_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
+size_t
+_IO_default_xsputn (FILE *f, const void *data, size_t n)
 {
   const char *s = (char *) data;
-  _IO_size_t more = n;
+  size_t more = n;
   if (more <= 0)
     return 0;
   for (;;)
@@ -396,7 +396,7 @@ _IO_default_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
       /* Space available. */
       if (f->_IO_write_ptr < f->_IO_write_end)
 	{
-	  _IO_size_t count = f->_IO_write_end - f->_IO_write_ptr;
+	  size_t count = f->_IO_write_end - f->_IO_write_ptr;
 	  if (count > more)
 	    count = more;
 	  if (count > 20)
@@ -407,7 +407,7 @@ _IO_default_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 	  else if (count)
 	    {
 	      char *p = f->_IO_write_ptr;
-	      _IO_ssize_t i;
+	      ssize_t i;
 	      for (i = count; --i >= 0; )
 		*p++ = *s++;
 	      f->_IO_write_ptr = p;
@@ -422,25 +422,25 @@ _IO_default_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
 }
 libc_hidden_def (_IO_default_xsputn)
 
-_IO_size_t
-_IO_sgetn (_IO_FILE *fp, void *data, _IO_size_t n)
+size_t
+_IO_sgetn (FILE *fp, void *data, size_t n)
 {
   /* FIXME handle putback buffer here! */
   return _IO_XSGETN (fp, data, n);
 }
 libc_hidden_def (_IO_sgetn)
 
-_IO_size_t
-_IO_default_xsgetn (_IO_FILE *fp, void *data, _IO_size_t n)
+size_t
+_IO_default_xsgetn (FILE *fp, void *data, size_t n)
 {
-  _IO_size_t more = n;
+  size_t more = n;
   char *s = (char*) data;
   for (;;)
     {
       /* Data available. */
       if (fp->_IO_read_ptr < fp->_IO_read_end)
 	{
-	  _IO_size_t count = fp->_IO_read_end - fp->_IO_read_ptr;
+	  size_t count = fp->_IO_read_end - fp->_IO_read_ptr;
 	  if (count > more)
 	    count = more;
 	  if (count > 20)
@@ -468,14 +468,14 @@ libc_hidden_def (_IO_default_xsgetn)
 #if 0
 /* Seems not to be needed. --drepper */
 int
-_IO_sync (_IO_FILE *fp)
+_IO_sync (FILE *fp)
 {
   return 0;
 }
 #endif
 
-_IO_FILE *
-_IO_default_setbuf (_IO_FILE *fp, char *p, _IO_ssize_t len)
+FILE *
+_IO_default_setbuf (FILE *fp, char *p, ssize_t len)
 {
     if (_IO_SYNC (fp) == EOF)
 	return NULL;
@@ -494,34 +494,34 @@ _IO_default_setbuf (_IO_FILE *fp, char *p, _IO_ssize_t len)
     return fp;
 }
 
-_IO_off64_t
-_IO_default_seekpos (_IO_FILE *fp, _IO_off64_t pos, int mode)
+off64_t
+_IO_default_seekpos (FILE *fp, off64_t pos, int mode)
 {
   return _IO_SEEKOFF (fp, pos, 0, mode);
 }
 
 int
-_IO_default_doallocate (_IO_FILE *fp)
+_IO_default_doallocate (FILE *fp)
 {
   char *buf;
 
-  buf = malloc(_IO_BUFSIZ);
+  buf = malloc(BUFSIZ);
   if (__glibc_unlikely (buf == NULL))
     return EOF;
 
-  _IO_setb (fp, buf, buf+_IO_BUFSIZ, 1);
+  _IO_setb (fp, buf, buf+BUFSIZ, 1);
   return 1;
 }
 libc_hidden_def (_IO_default_doallocate)
 
 void
-_IO_init_internal (_IO_FILE *fp, int flags)
+_IO_init_internal (FILE *fp, int flags)
 {
   _IO_no_init (fp, flags, -1, NULL, NULL);
 }
 
 void
-_IO_init (_IO_FILE *fp, int flags)
+_IO_init (FILE *fp, int flags)
 {
   IO_set_accept_foreign_vtables (&_IO_vtable_check);
   _IO_init_internal (fp, flags);
@@ -554,7 +554,7 @@ _IO_enable_locks (void)
 libc_hidden_def (_IO_enable_locks)
 
 void
-_IO_old_init (_IO_FILE *fp, int flags)
+_IO_old_init (FILE *fp, int flags)
 {
   fp->_flags = _IO_MAGIC|flags;
   fp->_flags2 = 0;
@@ -585,7 +585,7 @@ _IO_old_init (_IO_FILE *fp, int flags)
 }
 
 void
-_IO_no_init (_IO_FILE *fp, int flags, int orientation,
+_IO_no_init (FILE *fp, int flags, int orientation,
 	     struct _IO_wide_data *wd, const struct _IO_jump_t *jmp)
 {
   _IO_old_init (fp, flags);
@@ -615,7 +615,7 @@ _IO_no_init (_IO_FILE *fp, int flags, int orientation,
 }
 
 int
-_IO_default_sync (_IO_FILE *fp)
+_IO_default_sync (FILE *fp)
 {
   return 0;
 }
@@ -624,7 +624,7 @@ _IO_default_sync (_IO_FILE *fp)
    current implementation, this function can get called twice! */
 
 void
-_IO_default_finish (_IO_FILE *fp, int dummy)
+_IO_default_finish (FILE *fp, int dummy)
 {
   struct _IO_marker *mark;
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
@@ -651,14 +651,14 @@ _IO_default_finish (_IO_FILE *fp, int dummy)
 }
 libc_hidden_def (_IO_default_finish)
 
-_IO_off64_t
-_IO_default_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
+off64_t
+_IO_default_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
   return _IO_pos_BAD;
 }
 
 int
-_IO_sputbackc (_IO_FILE *fp, int c)
+_IO_sputbackc (FILE *fp, int c)
 {
   int result;
 
@@ -679,7 +679,7 @@ _IO_sputbackc (_IO_FILE *fp, int c)
 libc_hidden_def (_IO_sputbackc)
 
 int
-_IO_sungetc (_IO_FILE *fp)
+_IO_sungetc (FILE *fp)
 {
   int result;
 
@@ -701,7 +701,7 @@ _IO_sungetc (_IO_FILE *fp)
 /* Seems not to be needed.  */
 #if 0
 void
-_IO_set_column (_IO_FILE *fp, int c)
+_IO_set_column (FILE *fp, int c)
 {
   if (c == -1)
     fp->_column = -1;
@@ -710,7 +710,7 @@ _IO_set_column (_IO_FILE *fp, int c)
 }
 #else
 int
-_IO_set_column (_IO_FILE *fp, int i)
+_IO_set_column (FILE *fp, int i)
 {
   fp->_cur_column = i + 1;
   return 0;
@@ -733,7 +733,7 @@ libc_hidden_def (_IO_adjust_column)
 #if 0
 /* Seems not to be needed. --drepper */
 int
-_IO_get_column (_IO_FILE *fp)
+_IO_get_column (FILE *fp)
 {
   if (fp->_cur_column)
     return _IO_adjust_column (fp->_cur_column - 1,
@@ -748,14 +748,14 @@ int
 _IO_flush_all_lockp (int do_lock)
 {
   int result = 0;
-  struct _IO_FILE *fp;
+  FILE *fp;
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (flush_cleanup);
   _IO_lock_lock (list_all_lock);
 #endif
 
-  for (fp = (_IO_FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
+  for (fp = (FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
     {
       run_fp = fp;
       if (do_lock)
@@ -794,14 +794,14 @@ libc_hidden_def (_IO_flush_all)
 void
 _IO_flush_all_linebuffered (void)
 {
-  struct _IO_FILE *fp;
+  FILE *fp;
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (flush_cleanup);
   _IO_lock_lock (list_all_lock);
 #endif
 
-  for (fp = (_IO_FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
+  for (fp = (FILE *) _IO_list_all; fp != NULL; fp = fp->_chain)
     {
       run_fp = fp;
       _IO_flockfile (fp);
@@ -838,19 +838,19 @@ weak_alias (_IO_flush_all_linebuffered, _flushlbf)
 static void _IO_unbuffer_all (void);
 
 static bool dealloc_buffers;
-static _IO_FILE *freeres_list;
+static FILE *freeres_list;
 
 static void
 _IO_unbuffer_all (void)
 {
-  struct _IO_FILE *fp;
+  FILE *fp;
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (flush_cleanup);
   _IO_lock_lock (list_all_lock);
 #endif
 
-  for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
+  for (fp = (FILE *) _IO_list_all; fp; fp = fp->_chain)
     {
       if (! (fp->_flags & _IO_UNBUFFERED)
 	  /* Iff stream is un-orientated, it wasn't used. */
@@ -934,7 +934,7 @@ _IO_cleanup (void)
 
 
 void
-_IO_init_marker (struct _IO_marker *marker, _IO_FILE *fp)
+_IO_init_marker (struct _IO_marker *marker, FILE *fp)
 {
   marker->_sbuf = fp;
   if (_IO_in_put_mode (fp))
@@ -993,7 +993,7 @@ _IO_marker_delta (struct _IO_marker *mark)
 }
 
 int
-_IO_seekmark (_IO_FILE *fp, struct _IO_marker *mark, int delta)
+_IO_seekmark (FILE *fp, struct _IO_marker *mark, int delta)
 {
   if (mark->_sbuf != fp)
     return EOF;
@@ -1013,7 +1013,7 @@ _IO_seekmark (_IO_FILE *fp, struct _IO_marker *mark, int delta)
 }
 
 void
-_IO_unsave_markers (_IO_FILE *fp)
+_IO_unsave_markers (FILE *fp)
 {
   struct _IO_marker *mark = fp->_markers;
   if (mark)
@@ -1043,7 +1043,7 @@ libc_hidden_def (_IO_unsave_markers)
 #if 0
 /* Seems not to be needed. --drepper */
 int
-_IO_nobackup_pbackfail (_IO_FILE *fp, int c)
+_IO_nobackup_pbackfail (FILE *fp, int c)
 {
   if (fp->_IO_read_ptr > fp->_IO_read_base)
 	fp->_IO_read_ptr--;
@@ -1054,7 +1054,7 @@ _IO_nobackup_pbackfail (_IO_FILE *fp, int c)
 #endif
 
 int
-_IO_default_pbackfail (_IO_FILE *fp, int c)
+_IO_default_pbackfail (FILE *fp, int c)
 {
   if (fp->_IO_read_ptr > fp->_IO_read_base && !_IO_in_backup (fp)
       && (unsigned char) fp->_IO_read_ptr[-1] == c)
@@ -1089,8 +1089,8 @@ _IO_default_pbackfail (_IO_FILE *fp, int c)
       else if (fp->_IO_read_ptr <= fp->_IO_read_base)
 	{
 	  /* Increase size of existing backup buffer. */
-	  _IO_size_t new_size;
-	  _IO_size_t old_size = fp->_IO_read_end - fp->_IO_read_base;
+	  size_t new_size;
+	  size_t old_size = fp->_IO_read_end - fp->_IO_read_base;
 	  char *new_buf;
 	  new_size = 2 * old_size;
 	  new_buf = (char *) malloc (new_size);
@@ -1110,38 +1110,38 @@ _IO_default_pbackfail (_IO_FILE *fp, int c)
 }
 libc_hidden_def (_IO_default_pbackfail)
 
-_IO_off64_t
-_IO_default_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
+off64_t
+_IO_default_seek (FILE *fp, off64_t offset, int dir)
 {
   return _IO_pos_BAD;
 }
 
 int
-_IO_default_stat (_IO_FILE *fp, void *st)
+_IO_default_stat (FILE *fp, void *st)
 {
   return EOF;
 }
 
-_IO_ssize_t
-_IO_default_read (_IO_FILE *fp, void *data, _IO_ssize_t n)
+ssize_t
+_IO_default_read (FILE *fp, void *data, ssize_t n)
 {
   return -1;
 }
 
-_IO_ssize_t
-_IO_default_write (_IO_FILE *fp, const void *data, _IO_ssize_t n)
+ssize_t
+_IO_default_write (FILE *fp, const void *data, ssize_t n)
 {
   return 0;
 }
 
 int
-_IO_default_showmanyc (_IO_FILE *fp)
+_IO_default_showmanyc (FILE *fp)
 {
   return -1;
 }
 
 void
-_IO_default_imbue (_IO_FILE *fp, void *locale)
+_IO_default_imbue (FILE *fp, void *locale)
 {
 }
 
@@ -1166,7 +1166,7 @@ _IO_iter_next (_IO_ITER iter)
 }
 libc_hidden_def (_IO_iter_next)
 
-_IO_FILE *
+FILE *
 _IO_iter_file (_IO_ITER iter)
 {
   return iter;

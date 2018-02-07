@@ -25,12 +25,12 @@ struct _IO_FILE_memstream
 {
   _IO_strfile _sf;
   char **bufloc;
-  _IO_size_t *sizeloc;
+  size_t *sizeloc;
 };
 
 
-static int _IO_mem_sync (_IO_FILE* fp) __THROW;
-static void _IO_mem_finish (_IO_FILE* fp, int) __THROW;
+static int _IO_mem_sync (FILE* fp) __THROW;
+static void _IO_mem_finish (FILE* fp, int) __THROW;
 
 
 static const struct _IO_jump_t _IO_mem_jumps libio_vtable =
@@ -60,8 +60,8 @@ static const struct _IO_jump_t _IO_mem_jumps libio_vtable =
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-_IO_FILE *
-__open_memstream (char **bufloc, _IO_size_t *sizeloc)
+FILE *
+__open_memstream (char **bufloc, size_t *sizeloc)
 {
   struct locked_FILE
   {
@@ -80,7 +80,7 @@ __open_memstream (char **bufloc, _IO_size_t *sizeloc)
   new_f->fp._sf._sbf._f._lock = &new_f->lock;
 #endif
 
-  buf = calloc (1, _IO_BUFSIZ);
+  buf = calloc (1, BUFSIZ);
   if (buf == NULL)
     {
       free (new_f);
@@ -88,7 +88,7 @@ __open_memstream (char **bufloc, _IO_size_t *sizeloc)
     }
   _IO_init_internal (&new_f->fp._sf._sbf._f, 0);
   _IO_JUMPS_FILE_plus (&new_f->fp._sf._sbf) = &_IO_mem_jumps;
-  _IO_str_init_static_internal (&new_f->fp._sf, buf, _IO_BUFSIZ, buf);
+  _IO_str_init_static_internal (&new_f->fp._sf, buf, BUFSIZ, buf);
   new_f->fp._sf._sbf._f._flags &= ~_IO_USER_BUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
@@ -99,14 +99,14 @@ __open_memstream (char **bufloc, _IO_size_t *sizeloc)
   /* Disable single thread optimization.  BZ 21735.  */
   new_f->fp._sf._sbf._f._flags2 |= _IO_FLAGS2_NEED_LOCK;
 
-  return (_IO_FILE *) &new_f->fp._sf._sbf;
+  return (FILE *) &new_f->fp._sf._sbf;
 }
 libc_hidden_def (__open_memstream)
 weak_alias (__open_memstream, open_memstream)
 
 
 static int
-_IO_mem_sync (_IO_FILE *fp)
+_IO_mem_sync (FILE *fp)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
 
@@ -124,7 +124,7 @@ _IO_mem_sync (_IO_FILE *fp)
 
 
 static void
-_IO_mem_finish (_IO_FILE *fp, int dummy)
+_IO_mem_finish (FILE *fp, int dummy)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
 

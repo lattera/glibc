@@ -30,7 +30,7 @@
 char *
 _IO_gets (char *buf)
 {
-  _IO_size_t count;
+  size_t count;
   int ch;
   char *retval;
 

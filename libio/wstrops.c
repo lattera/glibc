@@ -32,19 +32,19 @@
 #include <stdio_ext.h>
 
 void
-_IO_wstr_init_static (_IO_FILE *fp, wchar_t *ptr, _IO_size_t size,
+_IO_wstr_init_static (FILE *fp, wchar_t *ptr, size_t size,
 		      wchar_t *pstart)
 {
   wchar_t *end;
 
   if (size == 0)
     end = ptr + __wcslen (ptr);
-  else if ((_IO_size_t) ptr + size * sizeof (wchar_t) > (_IO_size_t) ptr)
+  else if ((size_t) ptr + size * sizeof (wchar_t) > (size_t) ptr)
     end = ptr + size;
   else
     /* Even for misaligned ptr make sure there is integral number of wide
        characters.  */
-    end = ptr + (-1 - (_IO_size_t) ptr) / sizeof (wchar_t);
+    end = ptr + (-1 - (size_t) ptr) / sizeof (wchar_t);
   _IO_wsetb (fp, ptr, end, 0);
 
   fp->_wide_data->_IO_write_base = ptr;
@@ -66,11 +66,11 @@ _IO_wstr_init_static (_IO_FILE *fp, wchar_t *ptr, _IO_size_t size,
   (((_IO_strfile *) fp)->_s._allocate_buffer) = (_IO_alloc_type)0;
 }
 
-_IO_wint_t
-_IO_wstr_overflow (_IO_FILE *fp, _IO_wint_t c)
+wint_t
+_IO_wstr_overflow (FILE *fp, wint_t c)
 {
   int flush_only = c == WEOF;
-  _IO_size_t pos;
+  size_t pos;
   if (fp->_flags & _IO_NO_WRITES)
       return flush_only ? 0 : WEOF;
   if ((fp->_flags & _IO_TIED_PUT_GET) && !(fp->_flags & _IO_CURRENTLY_PUTTING))
@@ -80,7 +80,7 @@ _IO_wstr_overflow (_IO_FILE *fp, _IO_wint_t c)
       fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
     }
   pos = fp->_wide_data->_IO_write_ptr - fp->_wide_data->_IO_write_base;
-  if (pos >= (_IO_size_t) (_IO_wblen (fp) + flush_only))
+  if (pos >= (size_t) (_IO_wblen (fp) + flush_only))
     {
       if (fp->_flags2 & _IO_FLAGS2_USER_WBUF) /* not allowed to enlarge */
 	return WEOF;
@@ -89,7 +89,7 @@ _IO_wstr_overflow (_IO_FILE *fp, _IO_wint_t c)
 	  wchar_t *new_buf;
 	  wchar_t *old_buf = fp->_wide_data->_IO_buf_base;
 	  size_t old_wblen = _IO_wblen (fp);
-	  _IO_size_t new_size = 2 * old_wblen + 100;
+	  size_t new_size = 2 * old_wblen + 100;
 
 	  if (__glibc_unlikely (new_size < old_wblen)
 	      || __glibc_unlikely (new_size > SIZE_MAX / sizeof (wchar_t)))
@@ -136,8 +136,8 @@ _IO_wstr_overflow (_IO_FILE *fp, _IO_wint_t c)
 }
 
 
-_IO_wint_t
-_IO_wstr_underflow (_IO_FILE *fp)
+wint_t
+_IO_wstr_underflow (FILE *fp)
 {
   if (fp->_wide_data->_IO_write_ptr > fp->_wide_data->_IO_read_end)
     fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_write_ptr;
@@ -155,8 +155,8 @@ _IO_wstr_underflow (_IO_FILE *fp)
 
 
 /* The size of the valid part of the buffer.  */
-_IO_ssize_t
-_IO_wstr_count (_IO_FILE *fp)
+ssize_t
+_IO_wstr_count (FILE *fp)
 {
   struct _IO_wide_data *wd = fp->_wide_data;
 
@@ -167,21 +167,21 @@ _IO_wstr_count (_IO_FILE *fp)
 
 
 static int
-enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
+enlarge_userbuf (FILE *fp, off64_t offset, int reading)
 {
-  if ((_IO_ssize_t) offset <= _IO_wblen (fp))
+  if ((ssize_t) offset <= _IO_wblen (fp))
     return 0;
 
   struct _IO_wide_data *wd = fp->_wide_data;
 
-  _IO_ssize_t oldend = wd->_IO_write_end - wd->_IO_write_base;
+  ssize_t oldend = wd->_IO_write_end - wd->_IO_write_base;
 
   /* Try to enlarge the buffer.  */
   if (fp->_flags2 & _IO_FLAGS2_USER_WBUF)
     /* User-provided buffer.  */
     return 1;
 
-  _IO_size_t newsize = offset + 100;
+  size_t newsize = offset + 100;
   if (__glibc_unlikely (newsize > SIZE_MAX / sizeof (wchar_t)))
     return 1;
 
@@ -236,7 +236,7 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
 }
 
 static void
-_IO_wstr_switch_to_get_mode (_IO_FILE *fp)
+_IO_wstr_switch_to_get_mode (FILE *fp)
 {
   if (_IO_in_backup (fp))
     fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_backup_base;
@@ -252,10 +252,10 @@ _IO_wstr_switch_to_get_mode (_IO_FILE *fp)
   fp->_flags &= ~_IO_CURRENTLY_PUTTING;
 }
 
-_IO_off64_t
-_IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
+off64_t
+_IO_wstr_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
-  _IO_off64_t new_pos;
+  off64_t new_pos;
 
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
@@ -273,13 +273,13 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
     }
   else
     {
-      _IO_ssize_t cur_size = _IO_wstr_count (fp);
+      ssize_t cur_size = _IO_wstr_count (fp);
       new_pos = EOF;
 
       /* Move the get pointer, if requested. */
       if (mode & _IOS_INPUT)
 	{
-	  _IO_ssize_t base;
+	  ssize_t base;
 	  switch (dir)
 	    {
 	    case _IO_seek_set:
@@ -293,7 +293,7 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	      base = cur_size;
 	      break;
 	    }
-	  _IO_ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
+	  ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
 	  if (offset < -base || offset > maxval)
 	    {
 	      __set_errno (EINVAL);
@@ -313,7 +313,7 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
       /* Move the put pointer, if requested. */
       if (mode & _IOS_OUTPUT)
 	{
-	  _IO_ssize_t base;
+	  ssize_t base;
 	  switch (dir)
 	    {
 	    case _IO_seek_set:
@@ -327,7 +327,7 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	      base = cur_size;
 	      break;
 	    }
-	  _IO_ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
+	  ssize_t maxval = SSIZE_MAX/sizeof (wchar_t) - base;
 	  if (offset < -base || offset > maxval)
 	    {
 	      __set_errno (EINVAL);
@@ -345,8 +345,8 @@ _IO_wstr_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
   return new_pos;
 }
 
-_IO_wint_t
-_IO_wstr_pbackfail (_IO_FILE *fp, _IO_wint_t c)
+wint_t
+_IO_wstr_pbackfail (FILE *fp, wint_t c)
 {
   if ((fp->_flags & _IO_NO_WRITES) && c != WEOF)
     return WEOF;
@@ -354,7 +354,7 @@ _IO_wstr_pbackfail (_IO_FILE *fp, _IO_wint_t c)
 }
 
 void
-_IO_wstr_finish (_IO_FILE *fp, int dummy)
+_IO_wstr_finish (FILE *fp, int dummy)
 {
   if (fp->_wide_data->_IO_buf_base && !(fp->_flags2 & _IO_FLAGS2_USER_WBUF))
     (((_IO_strfile *) fp)->_s._free_buffer) (fp->_wide_data->_IO_buf_base);

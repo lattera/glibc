@@ -29,7 +29,7 @@
 #include "../libio/strfile.h"
 
 int
-__isoc99_vsscanf (const char *string, const char *format, _IO_va_list args)
+__isoc99_vsscanf (const char *string, const char *format, va_list args)
 {
   int ret;
   _IO_strfile sf;

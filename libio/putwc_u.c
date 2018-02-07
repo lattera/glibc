@@ -19,7 +19,7 @@
 #include <wchar.h>
 
 wint_t
-putwc_unlocked (wchar_t wc, _IO_FILE *fp)
+putwc_unlocked (wchar_t wc, FILE *fp)
 {
   CHECK_FILE (fp, WEOF);
   return _IO_putwc_unlocked (wc, fp);

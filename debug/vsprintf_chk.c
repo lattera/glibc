@@ -21,10 +21,10 @@
 #include "../libio/strfile.h"
 
 
-static int _IO_str_chk_overflow (_IO_FILE *fp, int c) __THROW;
+static int _IO_str_chk_overflow (FILE *fp, int c) __THROW;
 
 static int
-_IO_str_chk_overflow (_IO_FILE *fp, int c)
+_IO_str_chk_overflow (FILE *fp, int c)
 {
   /* When we come to here this means the user supplied buffer is
      filled.  */

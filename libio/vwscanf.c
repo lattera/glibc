@@ -28,7 +28,7 @@
 #include <wchar.h>
 
 int
-__vwscanf (const wchar_t *format, _IO_va_list args)
+__vwscanf (const wchar_t *format, va_list args)
 {
   return _IO_vfwscanf (_IO_stdin, format, args, NULL);
 }

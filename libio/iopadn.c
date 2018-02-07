@@ -32,14 +32,14 @@ static char const blanks[PADSIZE] =
 static char const zeroes[PADSIZE] =
 {'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'};
 
-_IO_ssize_t
-_IO_padn (_IO_FILE *fp, int pad, _IO_ssize_t count)
+ssize_t
+_IO_padn (FILE *fp, int pad, ssize_t count)
 {
   char padbuf[PADSIZE];
   const char *padptr;
   int i;
-  _IO_size_t written = 0;
-  _IO_size_t w;
+  size_t written = 0;
+  size_t w;
 
   if (pad == ' ')
     padptr = blanks;

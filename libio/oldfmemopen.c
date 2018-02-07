@@ -85,7 +85,7 @@ struct fmemopen_cookie_struct
   int mybuffer;
   int binmode;
   size_t size;
-  _IO_off64_t pos;
+  off64_t pos;
   size_t maxpos;
 };
 
@@ -149,9 +149,9 @@ fmemopen_write (void *cookie, const char *b, size_t s)
 
 
 static int
-fmemopen_seek (void *cookie, _IO_off64_t *p, int w)
+fmemopen_seek (void *cookie, off64_t *p, int w)
 {
-  _IO_off64_t np;
+  off64_t np;
   fmemopen_cookie_t *c;
 
   c = (fmemopen_cookie_t *) cookie;

@@ -32,9 +32,9 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 off64_t
-ftello64 (_IO_FILE *fp)
+ftello64 (FILE *fp)
 {
-  _IO_off64_t pos;
+  off64_t pos;
   CHECK_FILE (fp, -1L);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);

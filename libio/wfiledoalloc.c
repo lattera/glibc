@@ -60,9 +60,9 @@
 
 /* Allocate a file buffer, or switch to unbuffered I/O.  */
 int
-_IO_wfile_doallocate (_IO_FILE *fp)
+_IO_wfile_doallocate (FILE *fp)
 {
-  _IO_size_t size;
+  size_t size;
   wchar_t *p;
 
   /* Allocate room for the external buffer.  */

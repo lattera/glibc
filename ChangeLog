@@ -1,5 +1,36 @@
 2018-02-21  Zack Weinberg  <zackw@panix.com>
 
+	* libio/libio.h (_IO_FILE): Delete; all uses changed to FILE.
+	(_IO_fpos_t): Delete; all uses changed to __fpos_t.
+	(_IO_fpos64_t): Delete; all uses changed to __fpos64_t.
+	(_IO_size_t): Delete; all uses changed to size_t.
+	(_IO_ssize_t): Delete; all uses changed to ssize_t or __ssize_t.
+	(_IO_off_t): Delete; all uses changed to off_t.
+	(_IO_off64_t): Delete; all uses changed to off64_t.
+	(_IO_pid_t): Delete; all uses changed to pid_t.
+	(_IO_uid_t): Delete; all uses changed to uid_t.
+	(_IO_wint_t): Delete; all uses changed to wint_t.
+	(_IO_va_list): Delete; all uses changed to va_list or __gnuc_va_list.
+	(_IO_BUFSIZ): Delete; all uses changed to BUFSIZ.
+	(_IO_cookie_io_functions_t): Delete; all uses changed to
+	cookie_io_functions_t.
+	(__io_read_fn): Delete; all uses changed to cookie_read_function_t.
+	(__io_write_fn): Delete; all uses changed to cookie_write_function_t.
+	(__io_seek_fn): Delete; all uses changed to cookie_seek_function_t.
+	(__io_close_fn): Delete: all uses changed to cookie_close_function_t.
+
+	* libio/iofopncook.c: Remove unnecessary forward declarations.
+	* libio/iolibio.h: Correct outdated commentary.
+	* malloc/malloc.c (__malloc_stats): Remove unnecessary casts.
+	* stdio-common/fxprintf.c (__fxprintf_nocancel):
+	Remove unnecessary casts.
+	* stdio-common/getline.c: Use _IO_getdelim directly.
+	Don't redefine ssize_t.
+	* stdio-common/printf_fp.c, stdio_common/printf_fphex.c
+	* stdio-common/printf_size.c: Don't redefine size_t or FILE.
+	Remove outdated comments.
+	* stdio-common/vfscanf.c: Don't redefine va_list.
+
 	* libio/iolibio.h, libio/libioP.h: Remove extern "C".
 	* libio/libio.h: Remove __BEGIN_DECLS and __END_DECLS.
 	Remove preprocessor conditionals on _LIBC and __USE_GNU,

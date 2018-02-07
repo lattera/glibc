@@ -31,7 +31,7 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 int
 attribute_compat_text_section
-_IO_old_fsetpos (_IO_FILE *fp, const _IO_fpos_t *posp)
+_IO_old_fsetpos (FILE *fp, const __fpos_t *posp)
 {
   int result;
   CHECK_FILE (fp, EOF);

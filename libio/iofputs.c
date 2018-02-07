@@ -28,9 +28,9 @@
 #include <string.h>
 
 int
-_IO_fputs (const char *str, _IO_FILE *fp)
+_IO_fputs (const char *str, FILE *fp)
 {
-  _IO_size_t len = strlen (str);
+  size_t len = strlen (str);
   int result = EOF;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);

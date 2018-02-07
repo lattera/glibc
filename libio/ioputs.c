@@ -32,7 +32,7 @@ int
 _IO_puts (const char *str)
 {
   int result = EOF;
-  _IO_size_t len = strlen (str);
+  size_t len = strlen (str);
   _IO_acquire_lock (_IO_stdout);
 
   if ((_IO_vtable_offset (_IO_stdout) != 0

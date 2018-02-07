@@ -29,9 +29,9 @@
 #include <sys/param.h>
 
 char *
-__fgets_chk (char *buf, size_t size, int n, _IO_FILE *fp)
+__fgets_chk (char *buf, size_t size, int n, FILE *fp)
 {
-  _IO_size_t count;
+  size_t count;
   char *result;
   CHECK_FILE (fp, NULL);
   if (n <= 0)

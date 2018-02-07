@@ -28,7 +28,7 @@
 #include "stdio.h"
 
 int
-fputc (int c, _IO_FILE *fp)
+fputc (int c, FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

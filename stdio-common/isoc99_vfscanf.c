@@ -21,7 +21,7 @@
 /* Read formatted input from STREAM according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-__isoc99_vfscanf (FILE *stream, const char *format, _IO_va_list args)
+__isoc99_vfscanf (FILE *stream, const char *format, va_list args)
 {
   int done;
 

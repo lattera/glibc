@@ -26,11 +26,11 @@
 
 #include "libioP.h"
 
-_IO_size_t
-_IO_fread (void *buf, _IO_size_t size, _IO_size_t count, _IO_FILE *fp)
+size_t
+_IO_fread (void *buf, size_t size, size_t count, FILE *fp)
 {
-  _IO_size_t bytes_requested = size * count;
-  _IO_size_t bytes_read;
+  size_t bytes_requested = size * count;
+  size_t bytes_read;
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)
     return 0;

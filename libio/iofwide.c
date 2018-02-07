@@ -58,7 +58,7 @@ static enum __codecvt_result do_in (struct _IO_codecvt *codecvt,
 static int do_encoding (struct _IO_codecvt *codecvt);
 static int do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
 		      const char *from_start,
-		      const char *from_end, _IO_size_t max);
+		      const char *from_end, size_t max);
 static int do_max_length (struct _IO_codecvt *codecvt);
 static int do_always_noconv (struct _IO_codecvt *codecvt);
 
@@ -81,7 +81,7 @@ const struct _IO_codecvt __libio_codecvt =
    the orientation first.  */
 #undef _IO_fwide
 int
-_IO_fwide (_IO_FILE *fp, int mode)
+_IO_fwide (FILE *fp, int mode)
 {
   /* Normalize the value.  */
   mode = mode < 0 ? -1 : (mode == 0 ? 0 : 1);
@@ -327,7 +327,7 @@ do_always_noconv (struct _IO_codecvt *codecvt)
 
 static int
 do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
-	   const char *from_start, const char *from_end, _IO_size_t max)
+	   const char *from_start, const char *from_end, size_t max)
 {
   int result;
   const unsigned char *cp = (const unsigned char *) from_start;

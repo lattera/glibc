@@ -30,7 +30,7 @@
 #undef _IO_peekc
 
 int
-_IO_peekc_locked (_IO_FILE *fp)
+_IO_peekc_locked (FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

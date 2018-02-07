@@ -32,16 +32,16 @@
 #include "strfile.h"
 
 int
-_IO_vasprintf (char **result_ptr, const char *format, _IO_va_list args)
+_IO_vasprintf (char **result_ptr, const char *format, va_list args)
 {
   /* Initial size of the buffer to be used.  Will be doubled each time an
      overflow occurs.  */
-  const _IO_size_t init_string_size = 100;
+  const size_t init_string_size = 100;
   char *string;
   _IO_strfile sf;
   int ret;
-  _IO_size_t needed;
-  _IO_size_t allocated;
+  size_t needed;
+  size_t allocated;
   /* No need to clear the memory here (unlike for open_memstream) since
      we know we will never seek on the stream.  */
   string = (char *) malloc (init_string_size);

@@ -25,8 +25,8 @@ libc_hidden_proto (__vfscanf)
 extern int __vscanf (const char *__restrict __format,
 		     __gnuc_va_list __arg)
      __attribute__ ((__format__ (__scanf__, 1, 0)));
-extern _IO_ssize_t __getline (char **__lineptr, size_t *__n,
-			      FILE *__stream) attribute_hidden;
+extern __ssize_t __getline (char **__lineptr, size_t *__n,
+                            FILE *__stream) attribute_hidden;
 extern int __vsscanf (const char *__restrict __s,
 		      const char *__restrict __format,
 		      __gnuc_va_list __arg)
@@ -132,22 +132,22 @@ extern int _sys_nerr_internal attribute_hidden;
 
 libc_hidden_proto (__asprintf)
 #  if IS_IN (libc)
-extern _IO_FILE *_IO_new_fopen (const char*, const char*);
+extern FILE *_IO_new_fopen (const char*, const char*);
 #   define fopen(fname, mode) _IO_new_fopen (fname, mode)
-extern _IO_FILE *_IO_new_fdopen (int, const char*);
+extern FILE *_IO_new_fdopen (int, const char*);
 #   define fdopen(fd, mode) _IO_new_fdopen (fd, mode)
-extern int _IO_new_fclose (_IO_FILE*);
+extern int _IO_new_fclose (FILE*);
 #   define fclose(fp) _IO_new_fclose (fp)
-extern int _IO_fputs (const char*, _IO_FILE*);
+extern int _IO_fputs (const char*, FILE*);
 libc_hidden_proto (_IO_fputs)
 /* The compiler may optimize calls to fprintf into calls to fputs.
    Use libc_hidden_proto to ensure that those calls, not redirected by
    the fputs macro, also do not go through the PLT.  */
 libc_hidden_proto (fputs)
 #   define fputs(str, fp) _IO_fputs (str, fp)
-extern int _IO_new_fsetpos (_IO_FILE *, const _IO_fpos_t *);
+extern int _IO_new_fsetpos (FILE *, const __fpos_t *);
 #   define fsetpos(fp, posp) _IO_new_fsetpos (fp, posp)
-extern int _IO_new_fgetpos (_IO_FILE *, _IO_fpos_t *);
+extern int _IO_new_fgetpos (FILE *, __fpos_t *);
 #   define fgetpos(fp, posp) _IO_new_fgetpos (fp, posp)
 #  endif
 

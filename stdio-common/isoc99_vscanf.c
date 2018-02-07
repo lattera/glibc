@@ -21,7 +21,7 @@
 /* Read formatted input from STDIN according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-__isoc99_vscanf (const char *format, _IO_va_list args)
+__isoc99_vscanf (const char *format, va_list args)
 {
   int done;
 

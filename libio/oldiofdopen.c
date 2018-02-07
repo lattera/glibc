@@ -32,7 +32,7 @@
 #include "libioP.h"
 #include <fcntl.h>
 
-_IO_FILE *
+FILE *
 attribute_compat_text_section
 _IO_old_fdopen (int fd, const char *mode)
 {
@@ -116,7 +116,7 @@ _IO_old_fdopen (int fd, const char *mode)
   _IO_mask_flags (&new_f->fp.file._file, read_write,
 		  _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return (_IO_FILE *) &new_f->fp;
+  return (FILE *) &new_f->fp;
 }
 
 strong_alias (_IO_old_fdopen, __old_fdopen)

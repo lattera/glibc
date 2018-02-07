@@ -32,9 +32,9 @@
 
 int
 attribute_compat_text_section
-_IO_old_fgetpos64 (_IO_FILE *fp, _IO_fpos64_t *posp)
+_IO_old_fgetpos64 (FILE *fp, __fpos64_t *posp)
 {
-  _IO_off64_t pos;
+  off64_t pos;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);

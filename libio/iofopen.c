@@ -30,8 +30,8 @@
 #include <stddef.h>
 #include <shlib-compat.h>
 
-_IO_FILE *
-__fopen_maybe_mmap (_IO_FILE *fp)
+FILE *
+__fopen_maybe_mmap (FILE *fp)
 {
 #if _G_HAVE_MMAP
   if ((fp->_flags2 & _IO_FLAGS2_MMAP) && (fp->_flags & _IO_NO_WRITES))
@@ -52,7 +52,7 @@ __fopen_maybe_mmap (_IO_FILE *fp)
 }
 
 
-_IO_FILE *
+FILE *
 __fopen_internal (const char *filename, const char *mode, int is32)
 {
   struct locked_FILE
@@ -75,7 +75,7 @@ __fopen_internal (const char *filename, const char *mode, int is32)
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_fopen ((_IO_FILE *) new_f, filename, mode, is32) != NULL)
+  if (_IO_file_fopen ((FILE *) new_f, filename, mode, is32) != NULL)
     return __fopen_maybe_mmap (&new_f->fp.file);
 
   _IO_un_link (&new_f->fp);
@@ -83,7 +83,7 @@ __fopen_internal (const char *filename, const char *mode, int is32)
   return NULL;
 }
 
-_IO_FILE *
+FILE *
 _IO_new_fopen (const char *filename, const char *mode)
 {
   return __fopen_internal (filename, mode, 1);

@@ -66,7 +66,7 @@
  * with the _IO_JUMPS macro.  The jump table has an eccentric format,
  * so as to be compatible with the layout of a C++ virtual function table.
  * (as implemented by g++).  When a pointer to a streambuf object is
- * coerced to an (_IO_FILE*), then _IO_JUMPS on the result just
+ * coerced to an (FILE*), then _IO_JUMPS on the result just
  * happens to point to the virtual function table of the streambuf.
  * Thus the _IO_JUMPS function table used for C stdio/libio does
  * double duty as the virtual function table for C++ streambuf.
@@ -130,14 +130,14 @@
 /* The 'finish' function does any final cleaning up of an _IO_FILE object.
    It does not delete (free) it, but does everything else to finalize it.
    It matches the streambuf::~streambuf virtual destructor.  */
-typedef void (*_IO_finish_t) (_IO_FILE *, int); /* finalize */
+typedef void (*_IO_finish_t) (FILE *, int); /* finalize */
 #define _IO_FINISH(FP) JUMP1 (__finish, FP, 0)
 #define _IO_WFINISH(FP) WJUMP1 (__finish, FP, 0)
 
 /* The 'overflow' hook flushes the buffer.
    The second argument is a character, or EOF.
    It matches the streambuf::overflow virtual function. */
-typedef int (*_IO_overflow_t) (_IO_FILE *, int);
+typedef int (*_IO_overflow_t) (FILE *, int);
 #define _IO_OVERFLOW(FP, CH) JUMP1 (__overflow, FP, CH)
 #define _IO_WOVERFLOW(FP, CH) WJUMP1 (__overflow, FP, CH)
 
@@ -145,7 +145,7 @@ typedef int (*_IO_overflow_t) (_IO_FILE *, int);
    It returns the next character (as an unsigned char) or EOF.  The next
    character remains in the get buffer, and the get position is not changed.
    It matches the streambuf::underflow virtual function. */
-typedef int (*_IO_underflow_t) (_IO_FILE *);
+typedef int (*_IO_underflow_t) (FILE *);
 #define _IO_UNDERFLOW(FP) JUMP0 (__underflow, FP)
 #define _IO_WUNDERFLOW(FP) WJUMP0 (__underflow, FP)
 
@@ -159,22 +159,22 @@ typedef int (*_IO_underflow_t) (_IO_FILE *);
 
 /* The 'pbackfail' hook handles backing up.
    It matches the streambuf::pbackfail virtual function. */
-typedef int (*_IO_pbackfail_t) (_IO_FILE *, int);
+typedef int (*_IO_pbackfail_t) (FILE *, int);
 #define _IO_PBACKFAIL(FP, CH) JUMP1 (__pbackfail, FP, CH)
 #define _IO_WPBACKFAIL(FP, CH) WJUMP1 (__pbackfail, FP, CH)
 
 /* The 'xsputn' hook writes upto N characters from buffer DATA.
    Returns EOF or the number of character actually written.
    It matches the streambuf::xsputn virtual function. */
-typedef _IO_size_t (*_IO_xsputn_t) (_IO_FILE *FP, const void *DATA,
-				    _IO_size_t N);
+typedef size_t (*_IO_xsputn_t) (FILE *FP, const void *DATA,
+				    size_t N);
 #define _IO_XSPUTN(FP, DATA, N) JUMP2 (__xsputn, FP, DATA, N)
 #define _IO_WXSPUTN(FP, DATA, N) WJUMP2 (__xsputn, FP, DATA, N)
 
 /* The 'xsgetn' hook reads upto N characters into buffer DATA.
    Returns the number of character actually read.
    It matches the streambuf::xsgetn virtual function. */
-typedef _IO_size_t (*_IO_xsgetn_t) (_IO_FILE *FP, void *DATA, _IO_size_t N);
+typedef size_t (*_IO_xsgetn_t) (FILE *FP, void *DATA, size_t N);
 #define _IO_XSGETN(FP, DATA, N) JUMP2 (__xsgetn, FP, DATA, N)
 #define _IO_WXSGETN(FP, DATA, N) WJUMP2 (__xsgetn, FP, DATA, N)
 
@@ -183,7 +183,7 @@ typedef _IO_size_t (*_IO_xsgetn_t) (_IO_FILE *FP, void *DATA, _IO_size_t N);
    (MODE==1), or the end of the file (MODE==2).
    It matches the streambuf::seekoff virtual function.
    It is also used for the ANSI fseek function. */
-typedef _IO_off64_t (*_IO_seekoff_t) (_IO_FILE *FP, _IO_off64_t OFF, int DIR,
+typedef off64_t (*_IO_seekoff_t) (FILE *FP, off64_t OFF, int DIR,
 				      int MODE);
 #define _IO_SEEKOFF(FP, OFF, DIR, MODE) JUMP3 (__seekoff, FP, OFF, DIR, MODE)
 #define _IO_WSEEKOFF(FP, OFF, DIR, MODE) WJUMP3 (__seekoff, FP, OFF, DIR, MODE)
@@ -193,27 +193,27 @@ typedef _IO_off64_t (*_IO_seekoff_t) (_IO_FILE *FP, _IO_off64_t OFF, int DIR,
    It matches the streambuf::seekpos virtual function.
    It is also used for the ANSI fgetpos and fsetpos functions.  */
 /* The _IO_seek_cur and _IO_seek_end options are not allowed. */
-typedef _IO_off64_t (*_IO_seekpos_t) (_IO_FILE *, _IO_off64_t, int);
+typedef off64_t (*_IO_seekpos_t) (FILE *, off64_t, int);
 #define _IO_SEEKPOS(FP, POS, FLAGS) JUMP2 (__seekpos, FP, POS, FLAGS)
 #define _IO_WSEEKPOS(FP, POS, FLAGS) WJUMP2 (__seekpos, FP, POS, FLAGS)
 
 /* The 'setbuf' hook gives a buffer to the file.
    It matches the streambuf::setbuf virtual function. */
-typedef _IO_FILE* (*_IO_setbuf_t) (_IO_FILE *, char *, _IO_ssize_t);
+typedef FILE* (*_IO_setbuf_t) (FILE *, char *, ssize_t);
 #define _IO_SETBUF(FP, BUFFER, LENGTH) JUMP2 (__setbuf, FP, BUFFER, LENGTH)
 #define _IO_WSETBUF(FP, BUFFER, LENGTH) WJUMP2 (__setbuf, FP, BUFFER, LENGTH)
 
 /* The 'sync' hook attempts to synchronize the internal data structures
    of the file with the external state.
    It matches the streambuf::sync virtual function. */
-typedef int (*_IO_sync_t) (_IO_FILE *);
+typedef int (*_IO_sync_t) (FILE *);
 #define _IO_SYNC(FP) JUMP0 (__sync, FP)
 #define _IO_WSYNC(FP) WJUMP0 (__sync, FP)
 
 /* The 'doallocate' hook is used to tell the file to allocate a buffer.
    It matches the streambuf::doallocate virtual function, which is not
    in the ANSI/ISO C++ standard, but is part traditional implementations. */
-typedef int (*_IO_doallocate_t) (_IO_FILE *);
+typedef int (*_IO_doallocate_t) (FILE *);
 #define _IO_DOALLOCATE(FP) JUMP0 (__doallocate, FP)
 #define _IO_WDOALLOCATE(FP) WJUMP0 (__doallocate, FP)
 
@@ -221,7 +221,7 @@ typedef int (*_IO_doallocate_t) (_IO_FILE *);
    sysstat) are low-level hooks specific to this implementation.
    There is no correspondence in the ANSI/ISO C++ standard library.
    The hooks basically correspond to the Unix system functions
-   (read, write, close, lseek, and stat) except that a _IO_FILE*
+   (read, write, close, lseek, and stat) except that a FILE*
    parameter is used instead of an integer file descriptor;  the default
    implementation used for normal files just calls those functions.
    The advantage of overriding these functions instead of the higher-level
@@ -232,7 +232,7 @@ typedef int (*_IO_doallocate_t) (_IO_FILE *);
    an existing buffer.  It generalizes the Unix read(2) function.
    It matches the streambuf::sys_read virtual function, which is
    specific to this implementation. */
-typedef _IO_ssize_t (*_IO_read_t) (_IO_FILE *, void *, _IO_ssize_t);
+typedef ssize_t (*_IO_read_t) (FILE *, void *, ssize_t);
 #define _IO_SYSREAD(FP, DATA, LEN) JUMP2 (__read, FP, DATA, LEN)
 #define _IO_WSYSREAD(FP, DATA, LEN) WJUMP2 (__read, FP, DATA, LEN)
 
@@ -240,7 +240,7 @@ typedef _IO_ssize_t (*_IO_read_t) (_IO_FILE *, void *, _IO_ssize_t);
    to an external file.  It generalizes the Unix write(2) function.
    It matches the streambuf::sys_write virtual function, which is
    specific to this implementation. */
-typedef _IO_ssize_t (*_IO_write_t) (_IO_FILE *, const void *, _IO_ssize_t);
+typedef ssize_t (*_IO_write_t) (FILE *, const void *, ssize_t);
 #define _IO_SYSWRITE(FP, DATA, LEN) JUMP2 (__write, FP, DATA, LEN)
 #define _IO_WSYSWRITE(FP, DATA, LEN) WJUMP2 (__write, FP, DATA, LEN)
 
@@ -248,7 +248,7 @@ typedef _IO_ssize_t (*_IO_write_t) (_IO_FILE *, const void *, _IO_ssize_t);
    It generalizes the Unix lseek(2) function.
    It matches the streambuf::sys_seek virtual function, which is
    specific to this implementation. */
-typedef _IO_off64_t (*_IO_seek_t) (_IO_FILE *, _IO_off64_t, int);
+typedef off64_t (*_IO_seek_t) (FILE *, off64_t, int);
 #define _IO_SYSSEEK(FP, OFFSET, MODE) JUMP2 (__seek, FP, OFFSET, MODE)
 #define _IO_WSYSSEEK(FP, OFFSET, MODE) WJUMP2 (__seek, FP, OFFSET, MODE)
 
@@ -256,7 +256,7 @@ typedef _IO_off64_t (*_IO_seek_t) (_IO_FILE *, _IO_off64_t, int);
    external file.  It generalizes the Unix close(2) function.
    It matches the streambuf::sys_close virtual function, which is
    specific to this implementation. */
-typedef int (*_IO_close_t) (_IO_FILE *); /* finalize */
+typedef int (*_IO_close_t) (FILE *); /* finalize */
 #define _IO_SYSCLOSE(FP) JUMP0 (__close, FP)
 #define _IO_WSYSCLOSE(FP) WJUMP0 (__close, FP)
 
@@ -264,20 +264,20 @@ typedef int (*_IO_close_t) (_IO_FILE *); /* finalize */
    into a struct stat buffer.  It generalizes the Unix fstat(2) call.
    It matches the streambuf::sys_stat virtual function, which is
    specific to this implementation. */
-typedef int (*_IO_stat_t) (_IO_FILE *, void *);
+typedef int (*_IO_stat_t) (FILE *, void *);
 #define _IO_SYSSTAT(FP, BUF) JUMP1 (__stat, FP, BUF)
 #define _IO_WSYSSTAT(FP, BUF) WJUMP1 (__stat, FP, BUF)
 
 /* The 'showmany' hook can be used to get an image how much input is
    available.  In many cases the answer will be 0 which means unknown
    but some cases one can provide real information.  */
-typedef int (*_IO_showmanyc_t) (_IO_FILE *);
+typedef int (*_IO_showmanyc_t) (FILE *);
 #define _IO_SHOWMANYC(FP) JUMP0 (__showmanyc, FP)
 #define _IO_WSHOWMANYC(FP) WJUMP0 (__showmanyc, FP)
 
 /* The 'imbue' hook is used to get information about the currently
    installed locales.  */
-typedef void (*_IO_imbue_t) (_IO_FILE *, void *);
+typedef void (*_IO_imbue_t) (FILE *, void *);
 #define _IO_IMBUE(FP, LOCALE) JUMP1 (__imbue, FP, LOCALE)
 #define _IO_WIMBUE(FP, LOCALE) WJUMP1 (__imbue, FP, LOCALE)
 
@@ -322,7 +322,7 @@ struct _IO_jump_t
 
 struct _IO_FILE_plus
 {
-  _IO_FILE file;
+  FILE file;
   const struct _IO_jump_t *vtable;
 };
 
@@ -342,71 +342,71 @@ struct _IO_cookie_file
 {
   struct _IO_FILE_plus __fp;
   void *__cookie;
-  _IO_cookie_io_functions_t __io_functions;
+  cookie_io_functions_t __io_functions;
 };
 
-_IO_FILE *_IO_fopencookie (void *cookie, const char *mode,
-			   _IO_cookie_io_functions_t io_functions);
+FILE *_IO_fopencookie (void *cookie, const char *mode,
+                       cookie_io_functions_t io_functions);
 
 
 /* Iterator type for walking global linked list of _IO_FILE objects. */
 
-typedef struct _IO_FILE *_IO_ITER;
+typedef FILE *_IO_ITER;
 
 /* Generic functions */
 
-extern void _IO_switch_to_main_get_area (_IO_FILE *) __THROW;
-extern void _IO_switch_to_backup_area (_IO_FILE *) __THROW;
-extern int _IO_switch_to_get_mode (_IO_FILE *);
+extern void _IO_switch_to_main_get_area (FILE *) __THROW;
+extern void _IO_switch_to_backup_area (FILE *) __THROW;
+extern int _IO_switch_to_get_mode (FILE *);
 libc_hidden_proto (_IO_switch_to_get_mode)
-extern void _IO_init_internal (_IO_FILE *, int) attribute_hidden;
-extern int _IO_sputbackc (_IO_FILE *, int) __THROW;
+extern void _IO_init_internal (FILE *, int) attribute_hidden;
+extern int _IO_sputbackc (FILE *, int) __THROW;
 libc_hidden_proto (_IO_sputbackc)
-extern int _IO_sungetc (_IO_FILE *) __THROW;
+extern int _IO_sungetc (FILE *) __THROW;
 extern void _IO_un_link (struct _IO_FILE_plus *) __THROW;
 libc_hidden_proto (_IO_un_link)
 extern void _IO_link_in (struct _IO_FILE_plus *) __THROW;
 libc_hidden_proto (_IO_link_in)
-extern void _IO_doallocbuf (_IO_FILE *) __THROW;
+extern void _IO_doallocbuf (FILE *) __THROW;
 libc_hidden_proto (_IO_doallocbuf)
-extern void _IO_unsave_markers (_IO_FILE *) __THROW;
+extern void _IO_unsave_markers (FILE *) __THROW;
 libc_hidden_proto (_IO_unsave_markers)
-extern void _IO_setb (_IO_FILE *, char *, char *, int) __THROW;
+extern void _IO_setb (FILE *, char *, char *, int) __THROW;
 libc_hidden_proto (_IO_setb)
 extern unsigned _IO_adjust_column (unsigned, const char *, int) __THROW;
 libc_hidden_proto (_IO_adjust_column)
 #define _IO_sputn(__fp, __s, __n) _IO_XSPUTN (__fp, __s, __n)
 
-_IO_ssize_t _IO_least_wmarker (_IO_FILE *, wchar_t *) __THROW;
+ssize_t _IO_least_wmarker (FILE *, wchar_t *) __THROW;
 libc_hidden_proto (_IO_least_wmarker)
-extern void _IO_switch_to_main_wget_area (_IO_FILE *) __THROW;
+extern void _IO_switch_to_main_wget_area (FILE *) __THROW;
 libc_hidden_proto (_IO_switch_to_main_wget_area)
-extern void _IO_switch_to_wbackup_area (_IO_FILE *) __THROW;
+extern void _IO_switch_to_wbackup_area (FILE *) __THROW;
 libc_hidden_proto (_IO_switch_to_wbackup_area)
-extern int _IO_switch_to_wget_mode (_IO_FILE *);
+extern int _IO_switch_to_wget_mode (FILE *);
 libc_hidden_proto (_IO_switch_to_wget_mode)
-extern void _IO_wsetb (_IO_FILE *, wchar_t *, wchar_t *, int) __THROW;
+extern void _IO_wsetb (FILE *, wchar_t *, wchar_t *, int) __THROW;
 libc_hidden_proto (_IO_wsetb)
-extern wint_t _IO_sputbackwc (_IO_FILE *, wint_t) __THROW;
+extern wint_t _IO_sputbackwc (FILE *, wint_t) __THROW;
 libc_hidden_proto (_IO_sputbackwc)
-extern wint_t _IO_sungetwc (_IO_FILE *) __THROW;
-extern void _IO_wdoallocbuf (_IO_FILE *) __THROW;
+extern wint_t _IO_sungetwc (FILE *) __THROW;
+extern void _IO_wdoallocbuf (FILE *) __THROW;
 libc_hidden_proto (_IO_wdoallocbuf)
-extern void _IO_unsave_wmarkers (_IO_FILE *) __THROW;
+extern void _IO_unsave_wmarkers (FILE *) __THROW;
 extern unsigned _IO_adjust_wcolumn (unsigned, const wchar_t *, int) __THROW;
-extern _IO_off64_t get_file_offset (_IO_FILE *fp);
+extern off64_t get_file_offset (FILE *fp);
 
 /* Marker-related function. */
 
-extern void _IO_init_marker (struct _IO_marker *, _IO_FILE *);
-extern void _IO_init_wmarker (struct _IO_marker *, _IO_FILE *);
+extern void _IO_init_marker (struct _IO_marker *, FILE *);
+extern void _IO_init_wmarker (struct _IO_marker *, FILE *);
 extern void _IO_remove_marker (struct _IO_marker *) __THROW;
 extern int _IO_marker_difference (struct _IO_marker *, struct _IO_marker *)
      __THROW;
 extern int _IO_marker_delta (struct _IO_marker *) __THROW;
 extern int _IO_wmarker_delta (struct _IO_marker *) __THROW;
-extern int _IO_seekmark (_IO_FILE *, struct _IO_marker *, int) __THROW;
-extern int _IO_seekwmark (_IO_FILE *, struct _IO_marker *, int) __THROW;
+extern int _IO_seekmark (FILE *, struct _IO_marker *, int) __THROW;
+extern int _IO_seekwmark (FILE *, struct _IO_marker *, int) __THROW;
 
 /* Functions for iterating global list and dealing with its lock */
 
@@ -416,7 +416,7 @@ extern _IO_ITER _IO_iter_end (void) __THROW;
 libc_hidden_proto (_IO_iter_end)
 extern _IO_ITER _IO_iter_next (_IO_ITER) __THROW;
 libc_hidden_proto (_IO_iter_next)
-extern _IO_FILE *_IO_iter_file (_IO_ITER) __THROW;
+extern FILE *_IO_iter_file (_IO_ITER) __THROW;
 libc_hidden_proto (_IO_iter_file)
 extern void _IO_list_lock (void) __THROW;
 libc_hidden_proto (_IO_list_lock)
@@ -429,43 +429,43 @@ libc_hidden_proto (_IO_enable_locks)
 
 /* Default jumptable functions. */
 
-extern int _IO_default_underflow (_IO_FILE *) __THROW;
-extern int _IO_default_uflow (_IO_FILE *);
+extern int _IO_default_underflow (FILE *) __THROW;
+extern int _IO_default_uflow (FILE *);
 libc_hidden_proto (_IO_default_uflow)
-extern wint_t _IO_wdefault_uflow (_IO_FILE *);
+extern wint_t _IO_wdefault_uflow (FILE *);
 libc_hidden_proto (_IO_wdefault_uflow)
-extern int _IO_default_doallocate (_IO_FILE *) __THROW;
+extern int _IO_default_doallocate (FILE *) __THROW;
 libc_hidden_proto (_IO_default_doallocate)
-extern int _IO_wdefault_doallocate (_IO_FILE *) __THROW;
+extern int _IO_wdefault_doallocate (FILE *) __THROW;
 libc_hidden_proto (_IO_wdefault_doallocate)
-extern void _IO_default_finish (_IO_FILE *, int) __THROW;
+extern void _IO_default_finish (FILE *, int) __THROW;
 libc_hidden_proto (_IO_default_finish)
-extern void _IO_wdefault_finish (_IO_FILE *, int) __THROW;
+extern void _IO_wdefault_finish (FILE *, int) __THROW;
 libc_hidden_proto (_IO_wdefault_finish)
-extern int _IO_default_pbackfail (_IO_FILE *, int) __THROW;
+extern int _IO_default_pbackfail (FILE *, int) __THROW;
 libc_hidden_proto (_IO_default_pbackfail)
-extern wint_t _IO_wdefault_pbackfail (_IO_FILE *, wint_t) __THROW;
+extern wint_t _IO_wdefault_pbackfail (FILE *, wint_t) __THROW;
 libc_hidden_proto (_IO_wdefault_pbackfail)
-extern _IO_FILE* _IO_default_setbuf (_IO_FILE *, char *, _IO_ssize_t);
-extern _IO_size_t _IO_default_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern FILE* _IO_default_setbuf (FILE *, char *, ssize_t);
+extern size_t _IO_default_xsputn (FILE *, const void *, size_t);
 libc_hidden_proto (_IO_default_xsputn)
-extern _IO_size_t _IO_wdefault_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern size_t _IO_wdefault_xsputn (FILE *, const void *, size_t);
 libc_hidden_proto (_IO_wdefault_xsputn)
-extern _IO_size_t _IO_default_xsgetn (_IO_FILE *, void *, _IO_size_t);
+extern size_t _IO_default_xsgetn (FILE *, void *, size_t);
 libc_hidden_proto (_IO_default_xsgetn)
-extern _IO_size_t _IO_wdefault_xsgetn (_IO_FILE *, void *, _IO_size_t);
+extern size_t _IO_wdefault_xsgetn (FILE *, void *, size_t);
 libc_hidden_proto (_IO_wdefault_xsgetn)
-extern _IO_off64_t _IO_default_seekoff (_IO_FILE *, _IO_off64_t, int, int)
+extern off64_t _IO_default_seekoff (FILE *, off64_t, int, int)
      __THROW;
-extern _IO_off64_t _IO_default_seekpos (_IO_FILE *, _IO_off64_t, int);
-extern _IO_ssize_t _IO_default_write (_IO_FILE *, const void *, _IO_ssize_t);
-extern _IO_ssize_t _IO_default_read (_IO_FILE *, void *, _IO_ssize_t);
-extern int _IO_default_stat (_IO_FILE *, void *) __THROW;
-extern _IO_off64_t _IO_default_seek (_IO_FILE *, _IO_off64_t, int) __THROW;
-extern int _IO_default_sync (_IO_FILE *) __THROW;
+extern off64_t _IO_default_seekpos (FILE *, off64_t, int);
+extern ssize_t _IO_default_write (FILE *, const void *, ssize_t);
+extern ssize_t _IO_default_read (FILE *, void *, ssize_t);
+extern int _IO_default_stat (FILE *, void *) __THROW;
+extern off64_t _IO_default_seek (FILE *, off64_t, int) __THROW;
+extern int _IO_default_sync (FILE *) __THROW;
 #define _IO_default_close ((_IO_close_t) _IO_default_sync)
-extern int _IO_default_showmanyc (_IO_FILE *) __THROW;
-extern void _IO_default_imbue (_IO_FILE *, void *) __THROW;
+extern int _IO_default_showmanyc (FILE *) __THROW;
+extern void _IO_default_imbue (FILE *, void *) __THROW;
 
 extern const struct _IO_jump_t _IO_file_jumps;
 libc_hidden_proto (_IO_file_jumps)
@@ -481,11 +481,11 @@ extern const struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_str_jumps attribute_hidden;
 extern const struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
 extern const struct _IO_codecvt __libio_codecvt attribute_hidden;
-extern int _IO_do_write (_IO_FILE *, const char *, _IO_size_t);
+extern int _IO_do_write (FILE *, const char *, size_t);
 libc_hidden_proto (_IO_do_write)
-extern int _IO_new_do_write (_IO_FILE *, const char *, _IO_size_t);
-extern int _IO_old_do_write (_IO_FILE *, const char *, _IO_size_t);
-extern int _IO_wdo_write (_IO_FILE *, const wchar_t *, _IO_size_t);
+extern int _IO_new_do_write (FILE *, const char *, size_t);
+extern int _IO_old_do_write (FILE *, const char *, size_t);
+extern int _IO_wdo_write (FILE *, const wchar_t *, size_t);
 libc_hidden_proto (_IO_wdo_write)
 extern int _IO_flush_all_lockp (int);
 extern int _IO_flush_all (void);
@@ -493,15 +493,15 @@ libc_hidden_proto (_IO_flush_all)
 extern int _IO_cleanup (void);
 extern void _IO_flush_all_linebuffered (void);
 libc_hidden_proto (_IO_flush_all_linebuffered)
-extern int _IO_new_fgetpos (_IO_FILE *, _IO_fpos_t *);
-extern int _IO_old_fgetpos (_IO_FILE *, _IO_fpos_t *);
-extern int _IO_new_fsetpos (_IO_FILE *, const _IO_fpos_t *);
-extern int _IO_old_fsetpos (_IO_FILE *, const _IO_fpos_t *);
-extern int _IO_new_fgetpos64 (_IO_FILE *, _IO_fpos64_t *);
-extern int _IO_old_fgetpos64 (_IO_FILE *, _IO_fpos64_t *);
-extern int _IO_new_fsetpos64 (_IO_FILE *, const _IO_fpos64_t *);
-extern int _IO_old_fsetpos64 (_IO_FILE *, const _IO_fpos64_t *);
-extern void _IO_old_init (_IO_FILE *fp, int flags) __THROW;
+extern int _IO_new_fgetpos (FILE *, __fpos_t *);
+extern int _IO_old_fgetpos (FILE *, __fpos_t *);
+extern int _IO_new_fsetpos (FILE *, const __fpos_t *);
+extern int _IO_old_fsetpos (FILE *, const __fpos_t *);
+extern int _IO_new_fgetpos64 (FILE *, __fpos64_t *);
+extern int _IO_old_fgetpos64 (FILE *, __fpos64_t *);
+extern int _IO_new_fsetpos64 (FILE *, const __fpos64_t *);
+extern int _IO_old_fsetpos64 (FILE *, const __fpos64_t *);
+extern void _IO_old_init (FILE *fp, int flags) __THROW;
 
 
 #define _IO_do_flush(_f) \
@@ -539,144 +539,144 @@ extern void _IO_old_init (_IO_FILE *fp, int flags) __THROW;
 
 /* Jumptable functions for files. */
 
-extern int _IO_file_doallocate (_IO_FILE *) __THROW;
+extern int _IO_file_doallocate (FILE *) __THROW;
 libc_hidden_proto (_IO_file_doallocate)
-extern _IO_FILE* _IO_file_setbuf (_IO_FILE *, char *, _IO_ssize_t);
+extern FILE* _IO_file_setbuf (FILE *, char *, ssize_t);
 libc_hidden_proto (_IO_file_setbuf)
-extern _IO_off64_t _IO_file_seekoff (_IO_FILE *, _IO_off64_t, int, int);
+extern off64_t _IO_file_seekoff (FILE *, off64_t, int, int);
 libc_hidden_proto (_IO_file_seekoff)
-extern _IO_off64_t _IO_file_seekoff_mmap (_IO_FILE *, _IO_off64_t, int, int)
+extern off64_t _IO_file_seekoff_mmap (FILE *, off64_t, int, int)
      __THROW;
-extern _IO_size_t _IO_file_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern size_t _IO_file_xsputn (FILE *, const void *, size_t);
 libc_hidden_proto (_IO_file_xsputn)
-extern _IO_size_t _IO_file_xsgetn (_IO_FILE *, void *, _IO_size_t);
+extern size_t _IO_file_xsgetn (FILE *, void *, size_t);
 libc_hidden_proto (_IO_file_xsgetn)
-extern int _IO_file_stat (_IO_FILE *, void *) __THROW;
+extern int _IO_file_stat (FILE *, void *) __THROW;
 libc_hidden_proto (_IO_file_stat)
-extern int _IO_file_close (_IO_FILE *) __THROW;
+extern int _IO_file_close (FILE *) __THROW;
 libc_hidden_proto (_IO_file_close)
-extern int _IO_file_close_mmap (_IO_FILE *) __THROW;
-extern int _IO_file_underflow (_IO_FILE *);
+extern int _IO_file_close_mmap (FILE *) __THROW;
+extern int _IO_file_underflow (FILE *);
 libc_hidden_proto (_IO_file_underflow)
-extern int _IO_file_underflow_mmap (_IO_FILE *);
-extern int _IO_file_underflow_maybe_mmap (_IO_FILE *);
-extern int _IO_file_overflow (_IO_FILE *, int);
+extern int _IO_file_underflow_mmap (FILE *);
+extern int _IO_file_underflow_maybe_mmap (FILE *);
+extern int _IO_file_overflow (FILE *, int);
 libc_hidden_proto (_IO_file_overflow)
 #define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
-extern _IO_FILE* _IO_file_attach (_IO_FILE *, int);
+extern FILE* _IO_file_attach (FILE *, int);
 libc_hidden_proto (_IO_file_attach)
-extern _IO_FILE* _IO_file_open (_IO_FILE *, const char *, int, int, int, int);
+extern FILE* _IO_file_open (FILE *, const char *, int, int, int, int);
 libc_hidden_proto (_IO_file_open)
-extern _IO_FILE* _IO_file_fopen (_IO_FILE *, const char *, const char *, int);
+extern FILE* _IO_file_fopen (FILE *, const char *, const char *, int);
 libc_hidden_proto (_IO_file_fopen)
-extern _IO_ssize_t _IO_file_write (_IO_FILE *, const void *, _IO_ssize_t);
-extern _IO_ssize_t _IO_file_read (_IO_FILE *, void *, _IO_ssize_t);
+extern ssize_t _IO_file_write (FILE *, const void *, ssize_t);
+extern ssize_t _IO_file_read (FILE *, void *, ssize_t);
 libc_hidden_proto (_IO_file_read)
-extern int _IO_file_sync (_IO_FILE *);
+extern int _IO_file_sync (FILE *);
 libc_hidden_proto (_IO_file_sync)
-extern int _IO_file_close_it (_IO_FILE *);
+extern int _IO_file_close_it (FILE *);
 libc_hidden_proto (_IO_file_close_it)
-extern _IO_off64_t _IO_file_seek (_IO_FILE *, _IO_off64_t, int) __THROW;
+extern off64_t _IO_file_seek (FILE *, off64_t, int) __THROW;
 libc_hidden_proto (_IO_file_seek)
-extern void _IO_file_finish (_IO_FILE *, int);
+extern void _IO_file_finish (FILE *, int);
 libc_hidden_proto (_IO_file_finish)
 
-extern _IO_FILE* _IO_new_file_attach (_IO_FILE *, int);
-extern int _IO_new_file_close_it (_IO_FILE *);
-extern void _IO_new_file_finish (_IO_FILE *, int);
-extern _IO_FILE* _IO_new_file_fopen (_IO_FILE *, const char *, const char *,
+extern FILE* _IO_new_file_attach (FILE *, int);
+extern int _IO_new_file_close_it (FILE *);
+extern void _IO_new_file_finish (FILE *, int);
+extern FILE* _IO_new_file_fopen (FILE *, const char *, const char *,
 				     int);
-extern void _IO_no_init (_IO_FILE *, int, int, struct _IO_wide_data *,
+extern void _IO_no_init (FILE *, int, int, struct _IO_wide_data *,
 			 const struct _IO_jump_t *) __THROW;
 extern void _IO_new_file_init_internal (struct _IO_FILE_plus *)
   __THROW attribute_hidden;
-extern _IO_FILE* _IO_new_file_setbuf (_IO_FILE *, char *, _IO_ssize_t);
-extern _IO_FILE* _IO_file_setbuf_mmap (_IO_FILE *, char *, _IO_ssize_t);
-extern int _IO_new_file_sync (_IO_FILE *);
-extern int _IO_new_file_underflow (_IO_FILE *);
-extern int _IO_new_file_overflow (_IO_FILE *, int);
-extern _IO_off64_t _IO_new_file_seekoff (_IO_FILE *, _IO_off64_t, int, int);
-extern _IO_ssize_t _IO_new_file_write (_IO_FILE *, const void *, _IO_ssize_t);
-extern _IO_size_t _IO_new_file_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern FILE* _IO_new_file_setbuf (FILE *, char *, ssize_t);
+extern FILE* _IO_file_setbuf_mmap (FILE *, char *, ssize_t);
+extern int _IO_new_file_sync (FILE *);
+extern int _IO_new_file_underflow (FILE *);
+extern int _IO_new_file_overflow (FILE *, int);
+extern off64_t _IO_new_file_seekoff (FILE *, off64_t, int, int);
+extern ssize_t _IO_new_file_write (FILE *, const void *, ssize_t);
+extern size_t _IO_new_file_xsputn (FILE *, const void *, size_t);
 
-extern _IO_FILE* _IO_old_file_setbuf (_IO_FILE *, char *, _IO_ssize_t);
-extern _IO_off64_t _IO_old_file_seekoff (_IO_FILE *, _IO_off64_t, int, int);
-extern _IO_size_t _IO_old_file_xsputn (_IO_FILE *, const void *, _IO_size_t);
-extern int _IO_old_file_underflow (_IO_FILE *);
-extern int _IO_old_file_overflow (_IO_FILE *, int);
+extern FILE* _IO_old_file_setbuf (FILE *, char *, ssize_t);
+extern off64_t _IO_old_file_seekoff (FILE *, off64_t, int, int);
+extern size_t _IO_old_file_xsputn (FILE *, const void *, size_t);
+extern int _IO_old_file_underflow (FILE *);
+extern int _IO_old_file_overflow (FILE *, int);
 extern void _IO_old_file_init_internal (struct _IO_FILE_plus *)
   __THROW attribute_hidden;
-extern _IO_FILE* _IO_old_file_attach (_IO_FILE *, int);
-extern _IO_FILE* _IO_old_file_fopen (_IO_FILE *, const char *, const char *);
-extern _IO_ssize_t _IO_old_file_write (_IO_FILE *, const void *, _IO_ssize_t);
-extern int _IO_old_file_sync (_IO_FILE *);
-extern int _IO_old_file_close_it (_IO_FILE *);
-extern void _IO_old_file_finish (_IO_FILE *, int);
+extern FILE* _IO_old_file_attach (FILE *, int);
+extern FILE* _IO_old_file_fopen (FILE *, const char *, const char *);
+extern ssize_t _IO_old_file_write (FILE *, const void *, ssize_t);
+extern int _IO_old_file_sync (FILE *);
+extern int _IO_old_file_close_it (FILE *);
+extern void _IO_old_file_finish (FILE *, int);
 
-extern int _IO_wfile_doallocate (_IO_FILE *) __THROW;
-extern _IO_size_t _IO_wfile_xsputn (_IO_FILE *, const void *, _IO_size_t);
+extern int _IO_wfile_doallocate (FILE *) __THROW;
+extern size_t _IO_wfile_xsputn (FILE *, const void *, size_t);
 libc_hidden_proto (_IO_wfile_xsputn)
-extern _IO_FILE* _IO_wfile_setbuf (_IO_FILE *, wchar_t *, _IO_ssize_t);
-extern wint_t _IO_wfile_sync (_IO_FILE *);
+extern FILE* _IO_wfile_setbuf (FILE *, wchar_t *, ssize_t);
+extern wint_t _IO_wfile_sync (FILE *);
 libc_hidden_proto (_IO_wfile_sync)
-extern wint_t _IO_wfile_underflow (_IO_FILE *);
+extern wint_t _IO_wfile_underflow (FILE *);
 libc_hidden_proto (_IO_wfile_underflow)
-extern wint_t _IO_wfile_overflow (_IO_FILE *, wint_t);
+extern wint_t _IO_wfile_overflow (FILE *, wint_t);
 libc_hidden_proto (_IO_wfile_overflow)
-extern _IO_off64_t _IO_wfile_seekoff (_IO_FILE *, _IO_off64_t, int, int);
+extern off64_t _IO_wfile_seekoff (FILE *, off64_t, int, int);
 libc_hidden_proto (_IO_wfile_seekoff)
 
 /* Jumptable functions for proc_files. */
-extern _IO_FILE* _IO_proc_open (_IO_FILE *, const char *, const char *)
+extern FILE* _IO_proc_open (FILE *, const char *, const char *)
      __THROW;
-extern _IO_FILE* _IO_new_proc_open (_IO_FILE *, const char *, const char *)
+extern FILE* _IO_new_proc_open (FILE *, const char *, const char *)
      __THROW;
-extern _IO_FILE* _IO_old_proc_open (_IO_FILE *, const char *, const char *);
-extern int _IO_proc_close (_IO_FILE *) __THROW;
-extern int _IO_new_proc_close (_IO_FILE *) __THROW;
-extern int _IO_old_proc_close (_IO_FILE *);
+extern FILE* _IO_old_proc_open (FILE *, const char *, const char *);
+extern int _IO_proc_close (FILE *) __THROW;
+extern int _IO_new_proc_close (FILE *) __THROW;
+extern int _IO_old_proc_close (FILE *);
 
 /* Jumptable functions for strfiles. */
-extern int _IO_str_underflow (_IO_FILE *) __THROW;
+extern int _IO_str_underflow (FILE *) __THROW;
 libc_hidden_proto (_IO_str_underflow)
-extern int _IO_str_overflow (_IO_FILE *, int) __THROW;
+extern int _IO_str_overflow (FILE *, int) __THROW;
 libc_hidden_proto (_IO_str_overflow)
-extern int _IO_str_pbackfail (_IO_FILE *, int) __THROW;
+extern int _IO_str_pbackfail (FILE *, int) __THROW;
 libc_hidden_proto (_IO_str_pbackfail)
-extern _IO_off64_t _IO_str_seekoff (_IO_FILE *, _IO_off64_t, int, int) __THROW;
+extern off64_t _IO_str_seekoff (FILE *, off64_t, int, int) __THROW;
 libc_hidden_proto (_IO_str_seekoff)
-extern void _IO_str_finish (_IO_FILE *, int) __THROW;
+extern void _IO_str_finish (FILE *, int) __THROW;
 
 /* Other strfile functions */
 struct _IO_strfile_;
-extern _IO_ssize_t _IO_str_count (_IO_FILE *) __THROW;
+extern ssize_t _IO_str_count (FILE *) __THROW;
 
 /* And the wide character versions.  */
-extern void _IO_wstr_init_static (_IO_FILE *, wchar_t *, _IO_size_t, wchar_t *)
+extern void _IO_wstr_init_static (FILE *, wchar_t *, size_t, wchar_t *)
      __THROW;
-extern _IO_ssize_t _IO_wstr_count (_IO_FILE *) __THROW;
-extern _IO_wint_t _IO_wstr_overflow (_IO_FILE *, _IO_wint_t) __THROW;
-extern _IO_wint_t _IO_wstr_underflow (_IO_FILE *) __THROW;
-extern _IO_off64_t _IO_wstr_seekoff (_IO_FILE *, _IO_off64_t, int, int)
+extern ssize_t _IO_wstr_count (FILE *) __THROW;
+extern wint_t _IO_wstr_overflow (FILE *, wint_t) __THROW;
+extern wint_t _IO_wstr_underflow (FILE *) __THROW;
+extern off64_t _IO_wstr_seekoff (FILE *, off64_t, int, int)
      __THROW;
-extern _IO_wint_t _IO_wstr_pbackfail (_IO_FILE *, _IO_wint_t) __THROW;
-extern void _IO_wstr_finish (_IO_FILE *, int) __THROW;
+extern wint_t _IO_wstr_pbackfail (FILE *, wint_t) __THROW;
+extern void _IO_wstr_finish (FILE *, int) __THROW;
 
 extern int _IO_vasprintf (char **result_ptr, const char *format,
-			  _IO_va_list args) __THROW;
-extern int _IO_vdprintf (int d, const char *format, _IO_va_list arg);
-extern int _IO_vsnprintf (char *string, _IO_size_t maxlen,
-			  const char *format, _IO_va_list args) __THROW;
+			  va_list args) __THROW;
+extern int _IO_vdprintf (int d, const char *format, va_list arg);
+extern int _IO_vsnprintf (char *string, size_t maxlen,
+			  const char *format, va_list args) __THROW;
 
 
-extern _IO_size_t _IO_getline (_IO_FILE *,char *, _IO_size_t, int, int);
+extern size_t _IO_getline (FILE *,char *, size_t, int, int);
 libc_hidden_proto (_IO_getline)
-extern _IO_size_t _IO_getline_info (_IO_FILE *,char *, _IO_size_t,
+extern size_t _IO_getline_info (FILE *,char *, size_t,
 				    int, int, int *);
 libc_hidden_proto (_IO_getline_info)
-extern _IO_ssize_t _IO_getdelim (char **, _IO_size_t *, int, _IO_FILE *);
-extern _IO_size_t _IO_getwline (_IO_FILE *,wchar_t *, _IO_size_t, wint_t, int);
-extern _IO_size_t _IO_getwline_info (_IO_FILE *,wchar_t *, _IO_size_t,
+extern ssize_t _IO_getdelim (char **, size_t *, int, FILE *);
+extern size_t _IO_getwline (FILE *,wchar_t *, size_t, wint_t, int);
+extern size_t _IO_getwline_info (FILE *,wchar_t *, size_t,
 				     wint_t, int, wint_t *);
 
 extern struct _IO_FILE_plus *_IO_list_all;
@@ -684,10 +684,10 @@ libc_hidden_proto (_IO_list_all)
 extern void (*_IO_cleanup_registration_needed) (void);
 
 extern void _IO_str_init_static_internal (struct _IO_strfile_ *, char *,
-					  _IO_size_t, char *) __THROW;
-extern _IO_off64_t _IO_seekoff_unlocked (_IO_FILE *, _IO_off64_t, int, int)
+					  size_t, char *) __THROW;
+extern off64_t _IO_seekoff_unlocked (FILE *, off64_t, int, int)
      attribute_hidden;
-extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
+extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
      attribute_hidden;
 
 #ifndef EOF
@@ -712,19 +712,19 @@ extern _IO_off64_t _IO_seekpos_unlocked (_IO_FILE *, _IO_off64_t, int)
 
 #endif /* _G_HAVE_MMAP */
 
-extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
+extern int _IO_vscanf (const char *, va_list) __THROW;
 
-/* _IO_pos_BAD is an _IO_off64_t value indicating error, unknown, or EOF. */
+/* _IO_pos_BAD is an off64_t value indicating error, unknown, or EOF. */
 #ifndef _IO_pos_BAD
-# define _IO_pos_BAD ((_IO_off64_t) -1)
+# define _IO_pos_BAD ((off64_t) -1)
 #endif
-/* _IO_pos_adjust adjust an _IO_off64_t by some number of bytes. */
+/* _IO_pos_adjust adjust an off64_t by some number of bytes. */
 #ifndef _IO_pos_adjust
 # define _IO_pos_adjust(pos, delta) ((pos) += (delta))
 #endif
-/* _IO_pos_0 is an _IO_off64_t value indicating beginning of file. */
+/* _IO_pos_0 is an off64_t value indicating beginning of file. */
 #ifndef _IO_pos_0
-# define _IO_pos_0 ((_IO_off64_t) 0)
+# define _IO_pos_0 ((off64_t) 0)
 #endif
 
 #ifdef _IO_MTSAFE_IO
@@ -732,12 +732,12 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock, _IO_pos_BAD,\
 	 NULL, WDP, 0 }
 # endif
@@ -745,12 +745,12 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 # ifdef _IO_USE_OLD_IO_FILE
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD }
 # else
 #  define FILEBUF_LITERAL(CHAIN, FLAGS, FD, WDP) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (_IO_FILE *) CHAIN, FD, \
+	 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (FILE *) CHAIN, FD, \
 	 0, _IO_pos_BAD, 0, 0, { 0 }, 0, _IO_pos_BAD, \
 	 NULL, WDP, 0 }
 # endif
@@ -787,18 +787,18 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 
 static inline void
 __attribute__ ((__always_inline__))
-_IO_acquire_lock_fct (_IO_FILE **p)
+_IO_acquire_lock_fct (FILE **p)
 {
-  _IO_FILE *fp = *p;
+  FILE *fp = *p;
   if ((fp->_flags & _IO_USER_LOCK) == 0)
     _IO_funlockfile (fp);
 }
 
 static inline void
 __attribute__ ((__always_inline__))
-_IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
+_IO_acquire_lock_clear_flags2_fct (FILE **p)
 {
-  _IO_FILE *fp = *p;
+  FILE *fp = *p;
   fp->_flags2 &= ~(_IO_FLAGS2_FORTIFY | _IO_FLAGS2_SCANF_STD);
   if ((fp->_flags & _IO_USER_LOCK) == 0)
     _IO_funlockfile (fp);
@@ -807,10 +807,10 @@ _IO_acquire_lock_clear_flags2_fct (_IO_FILE **p)
 #if !defined _IO_MTSAFE_IO && IS_IN (libc)
 # define _IO_acquire_lock(_fp)						      \
   do {									      \
-    _IO_FILE *_IO_acquire_lock_file = NULL
+    FILE *_IO_acquire_lock_file = NULL
 # define _IO_acquire_lock_clear_flags2(_fp)				      \
   do {									      \
-    _IO_FILE *_IO_acquire_lock_file = (_fp)
+    FILE *_IO_acquire_lock_file = (_fp)
 # define _IO_release_lock(_fp)						      \
     if (_IO_acquire_lock_file != NULL)					      \
       _IO_acquire_lock_file->_flags2 &= ~(_IO_FLAGS2_FORTIFY		      \

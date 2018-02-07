@@ -4,63 +4,63 @@
 #include <stdio.h>
 #include <libio/libio.h>
 
-/* These emulate stdio functionality, but with a different name
-   (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
+/* Alternative names for many of the stdio.h functions, used
+   internally and exposed for backward compatibility's sake.  */
 
-extern int _IO_fclose (_IO_FILE*);
-extern int _IO_new_fclose (_IO_FILE*);
-extern int _IO_old_fclose (_IO_FILE*);
-extern _IO_FILE *_IO_fdopen (int, const char*) __THROW;
+extern int _IO_fclose (FILE*);
+extern int _IO_new_fclose (FILE*);
+extern int _IO_old_fclose (FILE*);
+extern FILE *_IO_fdopen (int, const char*) __THROW;
 libc_hidden_proto (_IO_fdopen)
-extern _IO_FILE *_IO_old_fdopen (int, const char*) __THROW;
-extern _IO_FILE *_IO_new_fdopen (int, const char*) __THROW;
-extern int _IO_fflush (_IO_FILE*);
+extern FILE *_IO_old_fdopen (int, const char*) __THROW;
+extern FILE *_IO_new_fdopen (int, const char*) __THROW;
+extern int _IO_fflush (FILE*);
 libc_hidden_proto (_IO_fflush)
-extern int _IO_fgetpos (_IO_FILE*, _IO_fpos_t*);
-extern int _IO_fgetpos64 (_IO_FILE*, _IO_fpos64_t*);
-extern char* _IO_fgets (char*, int, _IO_FILE*);
-extern _IO_FILE *_IO_fopen (const char*, const char*);
-extern _IO_FILE *_IO_old_fopen (const char*, const char*);
-extern _IO_FILE *_IO_new_fopen (const char*, const char*);
-extern _IO_FILE *_IO_fopen64 (const char*, const char*);
-extern _IO_FILE *__fopen_internal (const char*, const char*, int)
+extern int _IO_fgetpos (FILE*, __fpos_t*);
+extern int _IO_fgetpos64 (FILE*, __fpos64_t*);
+extern char* _IO_fgets (char*, int, FILE*);
+extern FILE *_IO_fopen (const char*, const char*);
+extern FILE *_IO_old_fopen (const char*, const char*);
+extern FILE *_IO_new_fopen (const char*, const char*);
+extern FILE *_IO_fopen64 (const char*, const char*);
+extern FILE *__fopen_internal (const char*, const char*, int)
 	attribute_hidden;
-extern _IO_FILE *__fopen_maybe_mmap (_IO_FILE *) __THROW attribute_hidden;
-extern int _IO_fprintf (_IO_FILE*, const char*, ...);
-extern int _IO_fputs (const char*, _IO_FILE*);
+extern FILE *__fopen_maybe_mmap (FILE *) __THROW attribute_hidden;
+extern int _IO_fprintf (FILE*, const char*, ...);
+extern int _IO_fputs (const char*, FILE*);
 libc_hidden_proto (_IO_fputs)
-extern int _IO_fsetpos (_IO_FILE*, const _IO_fpos_t *);
-extern int _IO_fsetpos64 (_IO_FILE*, const _IO_fpos64_t *);
-extern long int _IO_ftell (_IO_FILE*);
+extern int _IO_fsetpos (FILE*, const __fpos_t *);
+extern int _IO_fsetpos64 (FILE*, const __fpos64_t *);
+extern long int _IO_ftell (FILE*);
 libc_hidden_proto (_IO_ftell)
-extern _IO_size_t _IO_fread (void*, _IO_size_t, _IO_size_t, _IO_FILE*);
+extern size_t _IO_fread (void*, size_t, size_t, FILE*);
 libc_hidden_proto (_IO_fread)
-extern _IO_size_t _IO_fwrite (const void*, _IO_size_t, _IO_size_t, _IO_FILE*);
+extern size_t _IO_fwrite (const void*, size_t, size_t, FILE*);
 libc_hidden_proto (_IO_fwrite)
 extern char* _IO_gets (char*);
 extern void _IO_perror (const char*) __THROW;
 extern int _IO_printf (const char*, ...);
 extern int _IO_puts (const char*);
 extern int _IO_scanf (const char*, ...);
-extern void _IO_setbuffer (_IO_FILE *, char*, _IO_size_t) __THROW;
+extern void _IO_setbuffer (FILE *, char*, size_t) __THROW;
 libc_hidden_proto (_IO_setbuffer)
-extern int _IO_setvbuf (_IO_FILE*, char*, int, _IO_size_t) __THROW;
+extern int _IO_setvbuf (FILE*, char*, int, size_t) __THROW;
 libc_hidden_proto (_IO_setvbuf)
 extern int _IO_sscanf (const char*, const char*, ...) __THROW;
 extern int _IO_sprintf (char *, const char*, ...) __THROW;
-extern int _IO_ungetc (int, _IO_FILE*) __THROW;
-extern int _IO_vsscanf (const char *, const char *, _IO_va_list) __THROW;
-extern int _IO_vsprintf (char*, const char*, _IO_va_list) __THROW;
+extern int _IO_ungetc (int, FILE*) __THROW;
+extern int _IO_vsscanf (const char *, const char *, __gnuc_va_list) __THROW;
+extern int _IO_vsprintf (char*, const char*, __gnuc_va_list) __THROW;
 libc_hidden_proto (_IO_vsprintf)
-extern int _IO_vswprintf (wchar_t*, _IO_size_t, const wchar_t*, _IO_va_list)
+extern int _IO_vswprintf (wchar_t*, size_t, const wchar_t*, __gnuc_va_list)
        __THROW;
 
 struct obstack;
-extern int _IO_obstack_vprintf (struct obstack *, const char *, _IO_va_list)
+extern int _IO_obstack_vprintf (struct obstack *, const char *, __gnuc_va_list)
        __THROW;
 extern int _IO_obstack_printf (struct obstack *, const char *, ...) __THROW;
 #ifndef _IO_pos_BAD
-#define _IO_pos_BAD ((_IO_off64_t)(-1))
+#define _IO_pos_BAD ((off64_t)(-1))
 #endif
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
@@ -79,16 +79,16 @@ extern int _IO_obstack_printf (struct obstack *, const char *, ...) __THROW;
   (_IO_file_close_it (FP), \
    _IO_file_fopen (FP, FILENAME, MODE, 0))
 #define _IO_fileno(FP) ((FP)->_fileno)
-extern _IO_FILE* _IO_popen (const char*, const char*) __THROW;
-extern _IO_FILE* _IO_new_popen (const char*, const char*) __THROW;
-extern _IO_FILE* _IO_old_popen (const char*, const char*) __THROW;
-extern int __new_pclose (_IO_FILE *) __THROW;
-extern int __old_pclose (_IO_FILE *) __THROW;
+extern FILE* _IO_popen (const char*, const char*) __THROW;
+extern FILE* _IO_new_popen (const char*, const char*) __THROW;
+extern FILE* _IO_old_popen (const char*, const char*) __THROW;
+extern int __new_pclose (FILE *) __THROW;
+extern int __old_pclose (FILE *) __THROW;
 #define _IO_pclose _IO_fclose
-#define _IO_setbuf(_FP, _BUF) _IO_setbuffer (_FP, _BUF, _IO_BUFSIZ)
+#define _IO_setbuf(_FP, _BUF) _IO_setbuffer (_FP, _BUF, BUFSIZ)
 #define _IO_setlinebuf(_FP) _IO_setvbuf (_FP, NULL, 1, 0)
 
-_IO_FILE *__new_freopen (const char *, const char *, _IO_FILE *) __THROW;
-_IO_FILE *__old_freopen (const char *, const char *, _IO_FILE *) __THROW;
+FILE *__new_freopen (const char *, const char *, FILE *) __THROW;
+FILE *__old_freopen (const char *, const char *, FILE *) __THROW;
 
 #endif /* iolibio.h.  */

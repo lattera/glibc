@@ -30,9 +30,9 @@
 /* ANSI explicily requires setting errno to a positive value on failure. */
 
 long int
-_IO_ftell (_IO_FILE *fp)
+_IO_ftell (FILE *fp)
 {
-  _IO_off64_t pos;
+  off64_t pos;
   CHECK_FILE (fp, -1L);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
@@ -48,7 +48,7 @@ _IO_ftell (_IO_FILE *fp)
 	__set_errno (EIO);
       return -1L;
     }
-  if ((_IO_off64_t) (long int) pos != pos)
+  if ((off64_t) (long int) pos != pos)
     {
       __set_errno (EOVERFLOW);
       return -1L;

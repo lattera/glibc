@@ -40,7 +40,7 @@ struct _IO_proc_file
 {
   struct _IO_FILE_plus file;
   /* Following fields must match those in class procbuf (procbuf.h) */
-  _IO_pid_t pid;
+  pid_t pid;
   struct _IO_proc_file *next;
 };
 typedef struct _IO_proc_file _IO_proc_file;
@@ -59,13 +59,13 @@ unlock (void *not_used)
 }
 #endif
 
-_IO_FILE *
-_IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
+FILE *
+_IO_new_proc_open (FILE *fp, const char *command, const char *mode)
 {
   int read_or_write;
   int parent_end, child_end;
   int pipe_fds[2];
-  _IO_pid_t child_pid;
+  pid_t child_pid;
 
   int do_read = 0;
   int do_write = 0;
@@ -136,7 +136,7 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
 	 in the new child process." */
       for (p = proc_file_chain; p; p = p->next)
 	{
-	  int fd = _IO_fileno ((_IO_FILE *) p);
+	  int fd = _IO_fileno ((FILE *) p);
 
 	  /* If any stream from previous popen() calls has fileno
 	     child_std_end, it has been already closed by the dup2 syscall
@@ -178,7 +178,7 @@ _IO_new_proc_open (_IO_FILE *fp, const char *command, const char *mode)
   return fp;
 }
 
-_IO_FILE *
+FILE *
 _IO_new_popen (const char *command, const char *mode)
 {
   struct locked_FILE
@@ -188,7 +188,7 @@ _IO_new_popen (const char *command, const char *mode)
     _IO_lock_t lock;
 #endif
   } *new_f;
-  _IO_FILE *fp;
+  FILE *fp;
 
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)
@@ -204,19 +204,19 @@ _IO_new_popen (const char *command, const char *mode)
   new_f->fpx.file.vtable = NULL;
 #endif
   if (_IO_new_proc_open (fp, command, mode) != NULL)
-    return (_IO_FILE *) &new_f->fpx.file;
+    return (FILE *) &new_f->fpx.file;
   _IO_un_link (&new_f->fpx.file);
   free (new_f);
   return NULL;
 }
 
 int
-_IO_new_proc_close (_IO_FILE *fp)
+_IO_new_proc_close (FILE *fp)
 {
   /* This is not name-space clean. FIXME! */
   int wstatus;
   _IO_proc_file **ptr = &proc_file_chain;
-  _IO_pid_t wait_pid;
+  pid_t wait_pid;
   int status = -1;
 
   /* Unlink from proc_file_chain. */

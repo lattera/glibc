@@ -29,9 +29,9 @@
 #include <string.h>
 
 int
-__fputs_unlocked (const char *str, _IO_FILE *fp)
+__fputs_unlocked (const char *str, FILE *fp)
 {
-  _IO_size_t len = strlen (str);
+  size_t len = strlen (str);
   int result = EOF;
   CHECK_FILE (fp, EOF);
   if (_IO_fwide (fp, -1) == -1 && _IO_sputn (fp, str, len) == len)

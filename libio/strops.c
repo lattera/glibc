@@ -31,15 +31,15 @@
 #include <stdio_ext.h>
 
 void
-_IO_str_init_static_internal (_IO_strfile *sf, char *ptr, _IO_size_t size,
+_IO_str_init_static_internal (_IO_strfile *sf, char *ptr, size_t size,
 			      char *pstart)
 {
-  _IO_FILE *fp = &sf->_sbf._f;
+  FILE *fp = &sf->_sbf._f;
   char *end;
 
   if (size == 0)
     end = __rawmemchr (ptr, '\0');
-  else if ((_IO_size_t) ptr + size > (_IO_size_t) ptr)
+  else if ((size_t) ptr + size > (size_t) ptr)
     end = ptr + size;
   else
     end = (char *) -1;
@@ -78,10 +78,10 @@ _IO_str_init_readonly (_IO_strfile *sf, const char *ptr, int size)
 }
 
 int
-_IO_str_overflow (_IO_FILE *fp, int c)
+_IO_str_overflow (FILE *fp, int c)
 {
   int flush_only = c == EOF;
-  _IO_size_t pos;
+  size_t pos;
   if (fp->_flags & _IO_NO_WRITES)
       return flush_only ? 0 : EOF;
   if ((fp->_flags & _IO_TIED_PUT_GET) && !(fp->_flags & _IO_CURRENTLY_PUTTING))
@@ -91,7 +91,7 @@ _IO_str_overflow (_IO_FILE *fp, int c)
       fp->_IO_read_ptr = fp->_IO_read_end;
     }
   pos = fp->_IO_write_ptr - fp->_IO_write_base;
-  if (pos >= (_IO_size_t) (_IO_blen (fp) + flush_only))
+  if (pos >= (size_t) (_IO_blen (fp) + flush_only))
     {
       if (fp->_flags & _IO_USER_BUF) /* not allowed to enlarge */
 	return EOF;
@@ -100,7 +100,7 @@ _IO_str_overflow (_IO_FILE *fp, int c)
 	  char *new_buf;
 	  char *old_buf = fp->_IO_buf_base;
 	  size_t old_blen = _IO_blen (fp);
-	  _IO_size_t new_size = 2 * old_blen + 100;
+	  size_t new_size = 2 * old_blen + 100;
 	  if (new_size < old_blen)
 	    return EOF;
 	  new_buf
@@ -139,7 +139,7 @@ _IO_str_overflow (_IO_FILE *fp, int c)
 libc_hidden_def (_IO_str_overflow)
 
 int
-_IO_str_underflow (_IO_FILE *fp)
+_IO_str_underflow (FILE *fp)
 {
   if (fp->_IO_write_ptr > fp->_IO_read_end)
     fp->_IO_read_end = fp->_IO_write_ptr;
@@ -158,8 +158,8 @@ libc_hidden_def (_IO_str_underflow)
 
 /* The size of the valid part of the buffer.  */
 
-_IO_ssize_t
-_IO_str_count (_IO_FILE *fp)
+ssize_t
+_IO_str_count (FILE *fp)
 {
   return ((fp->_IO_write_ptr > fp->_IO_read_end
 	   ? fp->_IO_write_ptr : fp->_IO_read_end)
@@ -168,19 +168,19 @@ _IO_str_count (_IO_FILE *fp)
 
 
 static int
-enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
+enlarge_userbuf (FILE *fp, off64_t offset, int reading)
 {
-  if ((_IO_ssize_t) offset <= _IO_blen (fp))
+  if ((ssize_t) offset <= _IO_blen (fp))
     return 0;
 
-  _IO_ssize_t oldend = fp->_IO_write_end - fp->_IO_write_base;
+  ssize_t oldend = fp->_IO_write_end - fp->_IO_write_base;
 
   /* Try to enlarge the buffer.  */
   if (fp->_flags & _IO_USER_BUF)
     /* User-provided buffer.  */
     return 1;
 
-  _IO_size_t newsize = offset + 100;
+  size_t newsize = offset + 100;
   char *oldbuf = fp->_IO_buf_base;
   char *newbuf
     = (char *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize);
@@ -231,7 +231,7 @@ enlarge_userbuf (_IO_FILE *fp, _IO_off64_t offset, int reading)
 }
 
 static void
-_IO_str_switch_to_get_mode (_IO_FILE *fp)
+_IO_str_switch_to_get_mode (FILE *fp)
 {
   if (_IO_in_backup (fp))
     fp->_IO_read_base = fp->_IO_backup_base;
@@ -246,10 +246,10 @@ _IO_str_switch_to_get_mode (_IO_FILE *fp)
   fp->_flags &= ~_IO_CURRENTLY_PUTTING;
 }
 
-_IO_off64_t
-_IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
+off64_t
+_IO_str_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
-  _IO_off64_t new_pos;
+  off64_t new_pos;
 
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);
@@ -265,13 +265,13 @@ _IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
     }
   else
     {
-      _IO_ssize_t cur_size = _IO_str_count(fp);
+      ssize_t cur_size = _IO_str_count(fp);
       new_pos = EOF;
 
       /* Move the get pointer, if requested. */
       if (mode & _IOS_INPUT)
 	{
-	  _IO_ssize_t base;
+	  ssize_t base;
 	  switch (dir)
 	    {
 	    case _IO_seek_set:
@@ -284,7 +284,7 @@ _IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	      base = cur_size;
 	      break;
 	    }
-	  _IO_ssize_t maxval = SSIZE_MAX - base;
+	  ssize_t maxval = SSIZE_MAX - base;
 	  if (offset < -base || offset > maxval)
 	    {
 	      __set_errno (EINVAL);
@@ -302,7 +302,7 @@ _IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
       /* Move the put pointer, if requested. */
       if (mode & _IOS_OUTPUT)
 	{
-	  _IO_ssize_t base;
+	  ssize_t base;
 	  switch (dir)
 	    {
 	    case _IO_seek_set:
@@ -315,7 +315,7 @@ _IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 	      base = cur_size;
 	      break;
 	    }
-	  _IO_ssize_t maxval = SSIZE_MAX - base;
+	  ssize_t maxval = SSIZE_MAX - base;
 	  if (offset < -base || offset > maxval)
 	    {
 	      __set_errno (EINVAL);
@@ -334,7 +334,7 @@ _IO_str_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
 libc_hidden_def (_IO_str_seekoff)
 
 int
-_IO_str_pbackfail (_IO_FILE *fp, int c)
+_IO_str_pbackfail (FILE *fp, int c)
 {
   if ((fp->_flags & _IO_NO_WRITES) && c != EOF)
     return EOF;
@@ -343,7 +343,7 @@ _IO_str_pbackfail (_IO_FILE *fp, int c)
 libc_hidden_def (_IO_str_pbackfail)
 
 void
-_IO_str_finish (_IO_FILE *fp, int dummy)
+_IO_str_finish (FILE *fp, int dummy)
 {
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
     (((_IO_strfile *) fp)->_s._free_buffer) (fp->_IO_buf_base);

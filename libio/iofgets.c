@@ -28,9 +28,9 @@
 #include <stdio.h>
 
 char *
-_IO_fgets (char *buf, int n, _IO_FILE *fp)
+_IO_fgets (char *buf, int n, FILE *fp)
 {
-  _IO_size_t count;
+  size_t count;
   char *result;
   int old_error;
   CHECK_FILE (fp, NULL);

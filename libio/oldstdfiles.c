@@ -78,9 +78,9 @@ _IO_check_libio (void)
   if (&_IO_stdin_used == NULL)
     {
       /* We are using the old one. */
-      _IO_stdin = stdin = (_IO_FILE *) &_IO_stdin_;
-      _IO_stdout = stdout = (_IO_FILE *) &_IO_stdout_;
-      _IO_stderr = stderr = (_IO_FILE *) &_IO_stderr_;
+      _IO_stdin = stdin = (FILE *) &_IO_stdin_;
+      _IO_stdout = stdout = (FILE *) &_IO_stdout_;
+      _IO_stderr = stderr = (FILE *) &_IO_stderr_;
       _IO_list_all = &_IO_stderr_;
       _IO_stdin->_vtable_offset = _IO_stdout->_vtable_offset =
 	_IO_stderr->_vtable_offset = stdin->_vtable_offset =

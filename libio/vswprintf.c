@@ -28,10 +28,10 @@
 #include "strfile.h"
 
 
-static wint_t _IO_wstrn_overflow (_IO_FILE *fp, wint_t c) __THROW;
+static wint_t _IO_wstrn_overflow (FILE *fp, wint_t c) __THROW;
 
 static wint_t
-_IO_wstrn_overflow (_IO_FILE *fp, wint_t c)
+_IO_wstrn_overflow (FILE *fp, wint_t c)
 {
   /* When we come to here this means the user supplied buffer is
      filled.  But since we must return the number of characters which
@@ -89,8 +89,8 @@ const struct _IO_jump_t _IO_wstrn_jumps libio_vtable attribute_hidden =
 
 
 int
-_IO_vswprintf (wchar_t *string, _IO_size_t maxlen, const wchar_t *format,
-	       _IO_va_list args)
+_IO_vswprintf (wchar_t *string, size_t maxlen, const wchar_t *format,
+	       va_list args)
 {
   _IO_wstrnfile sf;
   int ret;
@@ -108,7 +108,7 @@ _IO_vswprintf (wchar_t *string, _IO_size_t maxlen, const wchar_t *format,
   _IO_fwide (&sf.f._sbf._f, 1);
   string[0] = L'\0';
   _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
-  ret = _IO_vfwprintf ((_IO_FILE *) &sf.f._sbf, format, args);
+  ret = _IO_vfwprintf ((FILE *) &sf.f._sbf, format, args);
 
   if (sf.f._sbf._f._wide_data->_IO_buf_base == sf.overflow_buf)
     /* ISO C99 requires swprintf/vswprintf to return an error if the

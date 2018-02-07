@@ -128,7 +128,7 @@ _IO_old_file_init (struct _IO_FILE_plus *fp)
 
 int
 attribute_compat_text_section
-_IO_old_file_close_it (_IO_FILE *fp)
+_IO_old_file_close_it (FILE *fp)
 {
   int write_status, close_status;
   if (!_IO_file_is_open (fp))
@@ -156,7 +156,7 @@ _IO_old_file_close_it (_IO_FILE *fp)
 
 void
 attribute_compat_text_section
-_IO_old_file_finish (_IO_FILE *fp, int dummy)
+_IO_old_file_finish (FILE *fp, int dummy)
 {
   if (_IO_file_is_open (fp))
     {
@@ -167,9 +167,9 @@ _IO_old_file_finish (_IO_FILE *fp, int dummy)
   _IO_default_finish (fp, 0);
 }
 
-_IO_FILE *
+FILE *
 attribute_compat_text_section
-_IO_old_file_fopen (_IO_FILE *fp, const char *filename, const char *mode)
+_IO_old_file_fopen (FILE *fp, const char *filename, const char *mode)
 {
   int oflags = 0, omode;
   int read_write, fdesc;
@@ -207,16 +207,16 @@ _IO_old_file_fopen (_IO_FILE *fp, const char *filename, const char *mode)
   fp->_fileno = fdesc;
   _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
   if (read_write & _IO_IS_APPENDING)
-    if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
+    if (_IO_SEEKOFF (fp, (off_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       return NULL;
   _IO_link_in ((struct _IO_FILE_plus *) fp);
   return fp;
 }
 
-_IO_FILE *
+FILE *
 attribute_compat_text_section
-_IO_old_file_attach (_IO_FILE *fp, int fd)
+_IO_old_file_attach (FILE *fp, int fd)
 {
   if (_IO_file_is_open (fp))
     return NULL;
@@ -226,15 +226,15 @@ _IO_old_file_attach (_IO_FILE *fp, int fd)
   /* Get the current position of the file. */
   /* We have to do that since that may be junk. */
   fp->_old_offset = _IO_pos_BAD;
-  if (_IO_SEEKOFF (fp, (_IO_off_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
+  if (_IO_SEEKOFF (fp, (off_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD && errno != ESPIPE)
     return NULL;
   return fp;
 }
 
-_IO_FILE *
+FILE *
 attribute_compat_text_section
-_IO_old_file_setbuf (_IO_FILE *fp, char *p, _IO_ssize_t len)
+_IO_old_file_setbuf (FILE *fp, char *p, ssize_t len)
 {
     if (_IO_default_setbuf (fp, p, len) == NULL)
       return NULL;
@@ -246,24 +246,24 @@ _IO_old_file_setbuf (_IO_FILE *fp, char *p, _IO_ssize_t len)
     return fp;
 }
 
-static int old_do_write (_IO_FILE *, const char *, _IO_size_t);
+static int old_do_write (FILE *, const char *, size_t);
 
 /* Write TO_DO bytes from DATA to FP.
    Then mark FP as having empty buffers. */
 
 int
 attribute_compat_text_section
-_IO_old_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
+_IO_old_do_write (FILE *fp, const char *data, size_t to_do)
 {
-  return (to_do == 0 || (_IO_size_t) old_do_write (fp, data, to_do) == to_do)
+  return (to_do == 0 || (size_t) old_do_write (fp, data, to_do) == to_do)
 	 ? 0 : EOF;
 }
 
 static int
 attribute_compat_text_section
-old_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
+old_do_write (FILE *fp, const char *data, size_t to_do)
 {
-  _IO_size_t count;
+  size_t count;
   if (fp->_flags & _IO_IS_APPENDING)
     /* On a system without a proper O_APPEND implementation,
        you would need to sys_seek(0, SEEK_END) here, but is
@@ -273,7 +273,7 @@ old_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
     fp->_old_offset = _IO_pos_BAD;
   else if (fp->_IO_read_end != fp->_IO_write_base)
     {
-      _IO_off_t new_pos
+      off_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
 	return 0;
@@ -291,9 +291,9 @@ old_do_write (_IO_FILE *fp, const char *data, _IO_size_t to_do)
 
 int
 attribute_compat_text_section
-_IO_old_file_underflow (_IO_FILE *fp)
+_IO_old_file_underflow (FILE *fp)
 {
-  _IO_ssize_t count;
+  ssize_t count;
 #if 0
   /* SysV does not make this test; take it out for compatibility */
   if (fp->_flags & _IO_EOF_SEEN)
@@ -355,7 +355,7 @@ _IO_old_file_underflow (_IO_FILE *fp)
 
 int
 attribute_compat_text_section
-_IO_old_file_overflow (_IO_FILE *f, int ch)
+_IO_old_file_overflow (FILE *f, int ch)
 {
   if (f->_flags & _IO_NO_WRITES) /* SET ERROR */
     {
@@ -405,9 +405,9 @@ _IO_old_file_overflow (_IO_FILE *f, int ch)
 
 int
 attribute_compat_text_section
-_IO_old_file_sync (_IO_FILE *fp)
+_IO_old_file_sync (FILE *fp)
 {
-  _IO_ssize_t delta;
+  ssize_t delta;
   int retval = 0;
 
   /*    char* ptr = cur_ptr(); */
@@ -420,8 +420,8 @@ _IO_old_file_sync (_IO_FILE *fp)
       if (_IO_in_backup (fp))
 	delta -= eGptr () - Gbase ();
 #endif
-      _IO_off_t new_pos = _IO_SYSSEEK (fp, delta, 1);
-      if (new_pos != (_IO_off_t) EOF)
+      off_t new_pos = _IO_SYSSEEK (fp, delta, 1);
+      if (new_pos != (off_t) EOF)
 	fp->_IO_read_end = fp->_IO_read_ptr;
       else if (errno == ESPIPE)
 	; /* Ignore error from unseekable devices. */
@@ -435,12 +435,12 @@ _IO_old_file_sync (_IO_FILE *fp)
   return retval;
 }
 
-_IO_off64_t
+off64_t
 attribute_compat_text_section
-_IO_old_file_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
+_IO_old_file_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
-  _IO_off_t result;
-  _IO_off64_t delta, new_offset;
+  off_t result;
+  off64_t delta, new_offset;
   long count;
   /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
      offset of the underlying file must be exact.  */
@@ -512,8 +512,8 @@ _IO_old_file_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
       && !_IO_in_backup (fp))
     {
       /* Offset relative to start of main get area. */
-      _IO_off_t rel_offset = (offset - fp->_old_offset
-			      + (fp->_IO_read_end - fp->_IO_read_base));
+      off_t rel_offset = (offset - fp->_old_offset
+                          + (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{
 #if 0
@@ -618,14 +618,14 @@ resync:
   return offset;
 }
 
-_IO_ssize_t
+ssize_t
 attribute_compat_text_section
-_IO_old_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
+_IO_old_file_write (FILE *f, const void *data, ssize_t n)
 {
-  _IO_ssize_t to_do = n;
+  ssize_t to_do = n;
   while (to_do > 0)
     {
-      _IO_ssize_t count = __write (f->_fileno, data, to_do);
+      ssize_t count = __write (f->_fileno, data, to_do);
       if (count == EOF)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
@@ -640,14 +640,14 @@ _IO_old_file_write (_IO_FILE *f, const void *data, _IO_ssize_t n)
   return n;
 }
 
-_IO_size_t
+size_t
 attribute_compat_text_section
-_IO_old_file_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
+_IO_old_file_xsputn (FILE *f, const void *data, size_t n)
 {
   const char *s = (char *) data;
-  _IO_size_t to_do = n;
+  size_t to_do = n;
   int must_flush = 0;
-  _IO_size_t count = 0;
+  size_t count = 0;
 
   if (n <= 0)
     return 0;
@@ -698,7 +698,7 @@ _IO_old_file_xsputn (_IO_FILE *f, const void *data, _IO_size_t n)
     }
   if (to_do + must_flush > 0)
     {
-      _IO_size_t block_size, do_write;
+      size_t block_size, do_write;
       /* Next flush the (full) buffer. */
       if (__overflow (f, EOF) == EOF)
 	return to_do == 0 ? EOF : n - to_do;

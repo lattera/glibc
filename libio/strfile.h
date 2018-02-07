@@ -25,8 +25,9 @@
    in files containing the exception.  */
 
 #include <stdio.h>
+#include "libioP.h"
 
-typedef void *(*_IO_alloc_type) (_IO_size_t);
+typedef void *(*_IO_alloc_type) (size_t);
 typedef void (*_IO_free_type) (void*);
 
 struct _IO_str_fields
@@ -42,7 +43,7 @@ struct _IO_str_fields
 
 struct _IO_streambuf
 {
-  struct _IO_FILE _f;
+  FILE _f;
   const struct _IO_jump_t *vtable;
 };
 

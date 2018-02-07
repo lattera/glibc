@@ -28,7 +28,7 @@
 #include <stdio.h>
 
 int
-__fileno (_IO_FILE *fp)
+__fileno (FILE *fp)
 {
   CHECK_FILE (fp, EOF);
 

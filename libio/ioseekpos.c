@@ -26,8 +26,8 @@
 
 #include <libioP.h>
 
-_IO_off64_t
-_IO_seekpos_unlocked (_IO_FILE *fp, _IO_off64_t pos, int mode)
+off64_t
+_IO_seekpos_unlocked (FILE *fp, off64_t pos, int mode)
 {
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.
@@ -47,10 +47,10 @@ _IO_seekpos_unlocked (_IO_FILE *fp, _IO_off64_t pos, int mode)
 }
 
 
-_IO_off64_t
-_IO_seekpos (_IO_FILE *fp, _IO_off64_t pos, int mode)
+off64_t
+_IO_seekpos (FILE *fp, off64_t pos, int mode)
 {
-  _IO_off64_t retval;
+  off64_t retval;
 
   _IO_acquire_lock (fp);
   retval = _IO_seekpos_unlocked (fp, pos, mode);

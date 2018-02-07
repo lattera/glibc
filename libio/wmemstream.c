@@ -26,12 +26,12 @@ struct _IO_FILE_wmemstream
 {
   _IO_strfile _sf;
   wchar_t **bufloc;
-  _IO_size_t *sizeloc;
+  size_t *sizeloc;
 };
 
 
-static int _IO_wmem_sync (_IO_FILE* fp) __THROW;
-static void _IO_wmem_finish (_IO_FILE* fp, int) __THROW;
+static int _IO_wmem_sync (FILE* fp) __THROW;
+static void _IO_wmem_finish (FILE* fp, int) __THROW;
 
 
 static const struct _IO_jump_t _IO_wmem_jumps libio_vtable =
@@ -61,8 +61,8 @@ static const struct _IO_jump_t _IO_wmem_jumps libio_vtable =
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
-_IO_FILE *
-open_wmemstream (wchar_t **bufloc, _IO_size_t *sizeloc)
+FILE *
+open_wmemstream (wchar_t **bufloc, size_t *sizeloc)
 {
   struct locked_FILE
   {
@@ -81,7 +81,7 @@ open_wmemstream (wchar_t **bufloc, _IO_size_t *sizeloc)
   new_f->fp._sf._sbf._f._lock = &new_f->lock;
 #endif
 
-  buf = calloc (1, _IO_BUFSIZ);
+  buf = calloc (1, BUFSIZ);
   if (buf == NULL)
     {
       free (new_f);
@@ -90,7 +90,7 @@ open_wmemstream (wchar_t **bufloc, _IO_size_t *sizeloc)
   _IO_no_init (&new_f->fp._sf._sbf._f, 0, 0, &new_f->wd, &_IO_wmem_jumps);
   _IO_fwide (&new_f->fp._sf._sbf._f, 1);
   _IO_wstr_init_static (&new_f->fp._sf._sbf._f, buf,
-			_IO_BUFSIZ / sizeof (wchar_t), buf);
+			BUFSIZ / sizeof (wchar_t), buf);
   new_f->fp._sf._sbf._f._flags2 &= ~_IO_FLAGS2_USER_WBUF;
   new_f->fp._sf._s._allocate_buffer = (_IO_alloc_type) malloc;
   new_f->fp._sf._s._free_buffer = (_IO_free_type) free;
@@ -101,12 +101,12 @@ open_wmemstream (wchar_t **bufloc, _IO_size_t *sizeloc)
   /* Disable single thread optimization.  BZ 21735.  */
   new_f->fp._sf._sbf._f._flags2 |= _IO_FLAGS2_NEED_LOCK;
 
-  return (_IO_FILE *) &new_f->fp._sf._sbf;
+  return (FILE *) &new_f->fp._sf._sbf;
 }
 
 
 static int
-_IO_wmem_sync (_IO_FILE *fp)
+_IO_wmem_sync (FILE *fp)
 {
   struct _IO_FILE_wmemstream *mp = (struct _IO_FILE_wmemstream *) fp;
 
@@ -125,7 +125,7 @@ _IO_wmem_sync (_IO_FILE *fp)
 
 
 static void
-_IO_wmem_finish (_IO_FILE *fp, int dummy)
+_IO_wmem_finish (FILE *fp, int dummy)
 {
   struct _IO_FILE_wmemstream *mp = (struct _IO_FILE_wmemstream *) fp;
 

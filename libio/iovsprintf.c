@@ -28,7 +28,7 @@
 #include "strfile.h"
 
 int
-__IO_vsprintf (char *string, const char *format, _IO_va_list args)
+__IO_vsprintf (char *string, const char *format, va_list args)
 {
   _IO_strfile sf;
   int ret;

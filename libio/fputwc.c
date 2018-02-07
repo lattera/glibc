@@ -28,7 +28,7 @@
 #include <wchar.h>
 
 wint_t
-fputwc (wchar_t wc, _IO_FILE *fp)
+fputwc (wchar_t wc, FILE *fp)
 {
   wint_t result;
   CHECK_FILE (fp, EOF);

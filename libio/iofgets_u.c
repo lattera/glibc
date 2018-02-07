@@ -28,9 +28,9 @@
 #include <stdio.h>
 
 char *
-__fgets_unlocked (char *buf, int n, _IO_FILE *fp)
+__fgets_unlocked (char *buf, int n, FILE *fp)
 {
-  _IO_size_t count;
+  size_t count;
   char *result;
   int old_error;
   CHECK_FILE (fp, NULL);

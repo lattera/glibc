@@ -58,19 +58,6 @@ typedef union
   } __combined;
 } _IO_iconv_t;
 
-/* Map the names used in libio to the names used in libc generally.  */
-#define _IO_fpos_t __fpos_t
-#define _IO_fpos64_t __fpos64_t
-#define _IO_size_t size_t
-#define _IO_ssize_t __ssize_t
-#define _IO_off_t __off_t
-#define _IO_off64_t __off64_t
-#define _IO_pid_t __pid_t
-#define _IO_uid_t __uid_t
-#define _IO_BUFSIZ BUFSIZ
-#define _IO_wint_t wint_t
-#define _IO_va_list __gnuc_va_list
-
 #include <shlib-compat.h>
 
 /* compatibility defines */
@@ -150,7 +137,7 @@ struct _IO_jump_t;
 
 struct _IO_marker {
   struct _IO_marker *_next;
-  struct _IO_FILE *_sbuf;
+  FILE *_sbuf;
   /* If _pos >= 0
  it points to _buf->Gbase()+_pos. FIXME comment */
   /* if _pos < 0, it points to _buf->eBptr()+_pos. FIXME comment */
@@ -188,7 +175,7 @@ struct _IO_codecvt
   int (*__codecvt_do_encoding) (struct _IO_codecvt *);
   int (*__codecvt_do_always_noconv) (struct _IO_codecvt *);
   int (*__codecvt_do_length) (struct _IO_codecvt *, __mbstate_t *,
-			      const char *, const char *, _IO_size_t);
+			      const char *, const char *, size_t);
   int (*__codecvt_do_max_length) (struct _IO_codecvt *);
 
   _IO_iconv_t __cd_in;
@@ -221,34 +208,25 @@ struct _IO_wide_data
   const struct _IO_jump_t *_wide_vtable;
 };
 
-typedef struct _IO_FILE _IO_FILE;
-
 struct _IO_FILE_plus;
 
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 extern struct _IO_FILE_plus _IO_2_1_stdout_;
 extern struct _IO_FILE_plus _IO_2_1_stderr_;
-extern _IO_FILE *_IO_stdin attribute_hidden;
-extern _IO_FILE *_IO_stdout attribute_hidden;
-extern _IO_FILE *_IO_stderr attribute_hidden;
-
-/* Compatibility names for cookie I/O functions.  */
-typedef cookie_read_function_t __io_read_fn;
-typedef cookie_write_function_t __io_write_fn;
-typedef cookie_seek_function_t __io_seek_fn;
-typedef cookie_close_function_t __io_close_fn;
-typedef cookie_io_functions_t _IO_cookie_io_functions_t;
+extern FILE *_IO_stdin attribute_hidden;
+extern FILE *_IO_stdout attribute_hidden;
+extern FILE *_IO_stderr attribute_hidden;
 
 struct _IO_cookie_file;
 
 /* Initialize one of those.  */
 extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
-			     void *__cookie, _IO_cookie_io_functions_t __fns);
+			     void *__cookie, cookie_io_functions_t __fns);
 
-extern int __underflow (_IO_FILE *);
-extern _IO_wint_t __wunderflow (_IO_FILE *);
-extern _IO_wint_t __wuflow (_IO_FILE *);
-extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
+extern int __underflow (FILE *);
+extern wint_t __wunderflow (FILE *);
+extern wint_t __wuflow (FILE *);
+extern wint_t __woverflow (FILE *, wint_t);
 
 #if  __GNUC__ >= 3
 # define _IO_BE(expr, res) __builtin_expect ((expr), res)
@@ -267,31 +245,31 @@ extern _IO_wint_t __woverflow (_IO_FILE *, _IO_wint_t);
   (_IO_BE ((_fp)->_wide_data == NULL					\
 	   || ((_fp)->_wide_data->_IO_read_ptr				\
 	       >= (_fp)->_wide_data->_IO_read_end), 0)			\
-   ? __wuflow (_fp) : (_IO_wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
+   ? __wuflow (_fp) : (wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
 # define _IO_putwc_unlocked(_wch, _fp) \
   (_IO_BE ((_fp)->_wide_data == NULL					\
 	   || ((_fp)->_wide_data->_IO_write_ptr				\
 	       >= (_fp)->_wide_data->_IO_write_end), 0)			\
    ? __woverflow (_fp, _wch)						\
-   : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
+   : (wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
 
 #define _IO_feof_unlocked(_fp) __feof_unlocked_body (_fp)
 #define _IO_ferror_unlocked(_fp) __ferror_unlocked_body (_fp)
 
-extern int _IO_getc (_IO_FILE *__fp);
-extern int _IO_putc (int __c, _IO_FILE *__fp);
-extern int _IO_feof (_IO_FILE *__fp) __THROW;
-extern int _IO_ferror (_IO_FILE *__fp) __THROW;
+extern int _IO_getc (FILE *__fp);
+extern int _IO_putc (int __c, FILE *__fp);
+extern int _IO_feof (FILE *__fp) __THROW;
+extern int _IO_ferror (FILE *__fp) __THROW;
 
-extern int _IO_peekc_locked (_IO_FILE *__fp);
+extern int _IO_peekc_locked (FILE *__fp);
 
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
 	((_fp)->_IO_write_ptr - (_fp)->_IO_write_base)
 
-extern void _IO_flockfile (_IO_FILE *) __THROW;
-extern void _IO_funlockfile (_IO_FILE *) __THROW;
-extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
+extern void _IO_flockfile (FILE *) __THROW;
+extern void _IO_funlockfile (FILE *) __THROW;
+extern int _IO_ftrylockfile (FILE *) __THROW;
 
 #define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
 #define _IO_flockfile(_fp) /**/
@@ -307,22 +285,22 @@ extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 #define _IO_need_lock(_fp) \
   (((_fp)->_flags2 & _IO_FLAGS2_NEED_LOCK) != 0)
 
-extern int _IO_vfscanf (_IO_FILE * __restrict, const char * __restrict,
-			_IO_va_list, int *__restrict);
-extern int _IO_vfprintf (_IO_FILE *__restrict, const char *__restrict,
-			 _IO_va_list);
-extern _IO_ssize_t _IO_padn (_IO_FILE *, int, _IO_ssize_t);
-extern _IO_size_t _IO_sgetn (_IO_FILE *, void *, _IO_size_t);
+extern int _IO_vfscanf (FILE * __restrict, const char * __restrict,
+			__gnuc_va_list, int *__restrict);
+extern int _IO_vfprintf (FILE *__restrict, const char *__restrict,
+			 __gnuc_va_list);
+extern __ssize_t _IO_padn (FILE *, int, __ssize_t);
+extern size_t _IO_sgetn (FILE *, void *, size_t);
 
-extern _IO_off64_t _IO_seekoff (_IO_FILE *, _IO_off64_t, int, int);
-extern _IO_off64_t _IO_seekpos (_IO_FILE *, _IO_off64_t, int);
+extern off64_t _IO_seekoff (FILE *, off64_t, int, int);
+extern off64_t _IO_seekpos (FILE *, off64_t, int);
 
-extern void _IO_free_backup_area (_IO_FILE *) __THROW;
+extern void _IO_free_backup_area (FILE *) __THROW;
 
 
-extern _IO_wint_t _IO_getwc (_IO_FILE *__fp);
-extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp);
-extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
+extern wint_t _IO_getwc (FILE *__fp);
+extern wint_t _IO_putwc (wchar_t __wc, FILE *__fp);
+extern int _IO_fwide (FILE *__fp, int __mode) __THROW;
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #  define _IO_fwide_maybe_incompatible \
@@ -350,12 +328,12 @@ weak_extern (_IO_stdin_used);
        __result = _IO_fwide (__fp, __result);				      \
      __result; })
 
-extern int _IO_vfwscanf (_IO_FILE * __restrict, const wchar_t * __restrict,
-			 _IO_va_list, int *__restrict);
-extern int _IO_vfwprintf (_IO_FILE *__restrict, const wchar_t *__restrict,
-			  _IO_va_list);
-extern _IO_ssize_t _IO_wpadn (_IO_FILE *, wint_t, _IO_ssize_t);
-extern void _IO_free_wbackup_area (_IO_FILE *) __THROW;
+extern int _IO_vfwscanf (FILE * __restrict, const wchar_t * __restrict,
+			 __gnuc_va_list, int *__restrict);
+extern int _IO_vfwprintf (FILE *__restrict, const wchar_t *__restrict,
+			  __gnuc_va_list);
+extern __ssize_t _IO_wpadn (FILE *, wint_t, __ssize_t);
+extern void _IO_free_wbackup_area (FILE *) __THROW;
 
 #ifdef __LDBL_COMPAT
 __LDBL_REDIR_DECL (_IO_vfscanf)

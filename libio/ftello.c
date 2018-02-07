@@ -31,9 +31,9 @@
 
 
 off_t
-__ftello (_IO_FILE *fp)
+__ftello (FILE *fp)
 {
-  _IO_off64_t pos;
+  off64_t pos;
   CHECK_FILE (fp, -1L);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
@@ -49,7 +49,7 @@ __ftello (_IO_FILE *fp)
 	__set_errno (EIO);
       return -1L;
     }
-  if ((_IO_off64_t) (off_t) pos != pos)
+  if ((off64_t) (off_t) pos != pos)
     {
       __set_errno (EOVERFLOW);
       return -1L;

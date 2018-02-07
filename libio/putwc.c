@@ -19,7 +19,7 @@
 #include <wchar.h>
 
 wint_t
-putwc (wchar_t wc, _IO_FILE *fp)
+putwc (wchar_t wc, FILE *fp)
 {
   wint_t result;
   CHECK_FILE (fp, WEOF);

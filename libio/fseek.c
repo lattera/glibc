@@ -28,7 +28,7 @@
 #include <stdio.h>
 
 int
-fseek (_IO_FILE *fp, long int offset, int whence)
+fseek (FILE *fp, long int offset, int whence)
 {
   int result;
   CHECK_FILE (fp, -1);

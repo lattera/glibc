@@ -333,8 +333,7 @@ __nldbl_wprintf (const wchar_t *fmt, ...)
 
 int
 attribute_compat_text_section
-__nldbl__IO_vfscanf (FILE *s, const char *fmt, _IO_va_list ap,
-		    int *errp)
+__nldbl__IO_vfscanf (FILE *s, const char *fmt, va_list ap, int *errp)
 {
   int res;
   set_no_long_double ();

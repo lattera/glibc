@@ -29,9 +29,9 @@
 #include <wchar.h>
 
 int
-fputws_unlocked (const wchar_t *str, _IO_FILE *fp)
+fputws_unlocked (const wchar_t *str, FILE *fp)
 {
-  _IO_size_t len = __wcslen (str);
+  size_t len = __wcslen (str);
   int result = EOF;
   CHECK_FILE (fp, EOF);
   if (_IO_fwide (fp, 1) == 1

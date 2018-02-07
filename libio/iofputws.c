@@ -28,9 +28,9 @@
 #include <wchar.h>
 
 int
-fputws (const wchar_t *str, _IO_FILE *fp)
+fputws (const wchar_t *str, FILE *fp)
 {
-  _IO_size_t len = __wcslen (str);
+  size_t len = __wcslen (str);
   int result = EOF;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);

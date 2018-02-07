@@ -92,7 +92,7 @@ typedef const char *THOUSANDS_SEP_T;
   do {									      \
     if (width > 0)							      \
       {									      \
-	_IO_ssize_t written = _IO_padn (s, (Padchar), width);		      \
+	ssize_t written = _IO_padn (s, (Padchar), width);		      \
 	if (__glibc_unlikely (written != width))			      \
 	  {								      \
 	    done = -1;							      \
@@ -122,7 +122,7 @@ typedef wchar_t THOUSANDS_SEP_T;
   do {									      \
     if (width > 0)							      \
       {									      \
-	_IO_ssize_t written = _IO_wpadn (s, (Padchar), width);		      \
+	ssize_t written = _IO_wpadn (s, (Padchar), width);		      \
 	if (__glibc_unlikely (written != width))			      \
 	  {								      \
 	    done = -1;							      \
@@ -1218,7 +1218,7 @@ static int buffered_vfprintf (FILE *stream, const CHAR_T *fmt, va_list)
      __THROW __attribute__ ((noinline));
 
 /* Handle positional format specifiers.  */
-static int printf_positional (_IO_FILE *s,
+static int printf_positional (FILE *s,
 			      const CHAR_T *format, int readonly_format,
 			      va_list ap, va_list *ap_savep, int done,
 			      int nspecs_done, const UCHAR_T *lead_str_end,
@@ -1695,7 +1695,7 @@ do_positional:
 }
 
 static int
-printf_positional (_IO_FILE *s, const CHAR_T *format, int readonly_format,
+printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 		   va_list ap, va_list *ap_savep, int done, int nspecs_done,
 		   const UCHAR_T *lead_str_end,
 		   CHAR_T *work_buffer, int save_errno,
@@ -2201,22 +2201,21 @@ struct helper_file
 #ifdef COMPILE_WPRINTF
     struct _IO_wide_data _wide_data;
 #endif
-    _IO_FILE *_put_stream;
+    FILE *_put_stream;
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
   };
 
 static int
-_IO_helper_overflow (_IO_FILE *s, int c)
+_IO_helper_overflow (FILE *s, int c)
 {
-  _IO_FILE *target = ((struct helper_file*) s)->_put_stream;
+  FILE *target = ((struct helper_file*) s)->_put_stream;
 #ifdef COMPILE_WPRINTF
   int used = s->_wide_data->_IO_write_ptr - s->_wide_data->_IO_write_base;
   if (used)
     {
-      _IO_size_t written = _IO_sputn (target, s->_wide_data->_IO_write_base,
-				      used);
+      size_t written = _IO_sputn (target, s->_wide_data->_IO_write_base, used);
       if (written == 0 || written == WEOF)
 	return WEOF;
       __wmemmove (s->_wide_data->_IO_write_base,
@@ -2228,7 +2227,7 @@ _IO_helper_overflow (_IO_FILE *s, int c)
   int used = s->_IO_write_ptr - s->_IO_write_base;
   if (used)
     {
-      _IO_size_t written = _IO_sputn (target, s->_IO_write_base, used);
+      size_t written = _IO_sputn (target, s->_IO_write_base, used);
       if (written == 0 || written == EOF)
 	return EOF;
       memmove (s->_IO_write_base, s->_IO_write_base + written,
@@ -2286,12 +2285,11 @@ static const struct _IO_jump_t _IO_helper_jumps libio_vtable =
 #endif
 
 static int
-buffered_vfprintf (_IO_FILE *s, const CHAR_T *format,
-		   _IO_va_list args)
+buffered_vfprintf (FILE *s, const CHAR_T *format, va_list args)
 {
-  CHAR_T buf[_IO_BUFSIZ];
+  CHAR_T buf[BUFSIZ];
   struct helper_file helper;
-  _IO_FILE *hp = (_IO_FILE *) &helper._f;
+  FILE *hp = (FILE *) &helper._f;
   int result, to_flush;
 
   /* Orient the stream.  */

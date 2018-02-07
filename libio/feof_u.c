@@ -30,7 +30,7 @@
 #undef feof_unlocked
 
 int
-__feof_unlocked (_IO_FILE *fp)
+__feof_unlocked (FILE *fp)
 {
   CHECK_FILE (fp, EOF);
   return _IO_feof_unlocked (fp);

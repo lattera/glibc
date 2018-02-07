@@ -28,8 +28,8 @@
 #include <string.h>
 #include <wchar.h>
 
-_IO_size_t
-_IO_getwline (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
+size_t
+_IO_getwline (FILE *fp, wchar_t *buf, size_t n, wint_t delim,
 	      int extract_delim)
 {
   return _IO_getwline_info (fp, buf, n, delim, extract_delim, (wint_t *) 0);
@@ -43,8 +43,8 @@ _IO_getwline (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
    If extract_delim < 0, leave delimiter unread.
    If extract_delim > 0, insert delim in output. */
 
-_IO_size_t
-_IO_getwline_info (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
+size_t
+_IO_getwline_info (FILE *fp, wchar_t *buf, size_t n, wint_t delim,
 		   int extract_delim, wint_t *eof)
 {
   wchar_t *ptr = buf;
@@ -54,8 +54,8 @@ _IO_getwline_info (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
     _IO_fwide (fp, 1);
   while (n != 0)
     {
-      _IO_ssize_t len = (fp->_wide_data->_IO_read_end
-			 - fp->_wide_data->_IO_read_ptr);
+      ssize_t len = (fp->_wide_data->_IO_read_end
+                     - fp->_wide_data->_IO_read_ptr);
       if (len <= 0)
 	{
 	  wint_t wc = __wuflow (fp);
@@ -81,12 +81,12 @@ _IO_getwline_info (_IO_FILE *fp, wchar_t *buf, _IO_size_t n, wint_t delim,
       else
 	{
 	  wchar_t *t;
-	  if ((_IO_size_t) len >= n)
+	  if ((size_t) len >= n)
 	    len = n;
 	  t = wmemchr ((void *) fp->_wide_data->_IO_read_ptr, delim, len);
 	  if (t != NULL)
 	    {
-	      _IO_size_t old_len = ptr - buf;
+	      size_t old_len = ptr - buf;
 	      len = t - fp->_wide_data->_IO_read_ptr;
 	      if (extract_delim >= 0)
 		{

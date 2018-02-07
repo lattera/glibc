@@ -30,7 +30,7 @@
 char *
 __gets_chk (char *buf, size_t size)
 {
-  _IO_size_t count;
+  size_t count;
   int ch;
   char *retval;
 

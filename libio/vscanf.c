@@ -30,7 +30,7 @@
 #undef vscanf
 
 int
-_IO_vscanf (const char *format, _IO_va_list args)
+_IO_vscanf (const char *format, va_list args)
 {
   return _IO_vfscanf (_IO_stdin, format, args, NULL);
 }

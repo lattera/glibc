@@ -30,9 +30,9 @@
 #undef stdin
 #undef stdout
 #undef stderr
-_IO_FILE *stdin = (FILE *) &_IO_2_1_stdin_;
-_IO_FILE *stdout = (FILE *) &_IO_2_1_stdout_;
-_IO_FILE *stderr = (FILE *) &_IO_2_1_stderr_;
+FILE *stdin = (FILE *) &_IO_2_1_stdin_;
+FILE *stdout = (FILE *) &_IO_2_1_stdout_;
+FILE *stderr = (FILE *) &_IO_2_1_stderr_;
 
 #undef _IO_stdin
 #undef _IO_stdout

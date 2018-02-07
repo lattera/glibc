@@ -30,7 +30,7 @@
 
 #include <shlib-compat.h>
 
-_IO_FILE *
+FILE *
 _IO_new_fdopen (int fd, const char *mode)
 {
   int read_write;
@@ -157,7 +157,7 @@ _IO_new_fdopen (int fd, const char *mode)
   if (do_seek && ((read_write & (_IO_IS_APPENDING | _IO_NO_READS))
 		  == (_IO_IS_APPENDING | _IO_NO_READS)))
     {
-      _IO_off64_t new_pos = _IO_SYSSEEK (&new_f->fp.file, 0, _IO_seek_end);
+      off64_t new_pos = _IO_SYSSEEK (&new_f->fp.file, 0, _IO_seek_end);
       if (new_pos == _IO_pos_BAD && errno != ESPIPE)
 	return NULL;
     }

@@ -27,7 +27,7 @@
 #include "libioP.h"
 
 int
-_IO_ungetc (int c, _IO_FILE *fp)
+_IO_ungetc (int c, FILE *fp)
 {
   int result;
   CHECK_FILE (fp, EOF);

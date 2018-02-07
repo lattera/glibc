@@ -30,7 +30,7 @@
 #include <shlib-compat.h>
 
 int
-_IO_new_fclose (_IO_FILE *fp)
+_IO_new_fclose (FILE *fp)
 {
   int status;
 

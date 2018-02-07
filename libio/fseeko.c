@@ -28,7 +28,7 @@
 #include "stdio.h"
 
 int
-fseeko (_IO_FILE *fp, off_t offset, int whence)
+fseeko (FILE *fp, off_t offset, int whence)
 {
   int result;
   CHECK_FILE (fp, -1);

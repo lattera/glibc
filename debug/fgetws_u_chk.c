@@ -29,9 +29,9 @@
 #include <sys/param.h>
 
 wchar_t *
-__fgetws_unlocked_chk (wchar_t *buf, size_t size, int n, _IO_FILE *fp)
+__fgetws_unlocked_chk (wchar_t *buf, size_t size, int n, FILE *fp)
 {
-  _IO_size_t count;
+  size_t count;
   wchar_t *result;
   int old_error;
   CHECK_FILE (fp, NULL);

@@ -30,7 +30,7 @@
 #undef fputc_unlocked
 
 int
-fputc_unlocked (int c, _IO_FILE *fp)
+fputc_unlocked (int c, FILE *fp)
 {
   CHECK_FILE (fp, EOF);
   return _IO_putc_unlocked (c, fp);

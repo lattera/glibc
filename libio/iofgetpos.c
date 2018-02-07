@@ -42,9 +42,9 @@
 #include <shlib-compat.h>
 
 int
-_IO_new_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
+_IO_new_fgetpos (FILE *fp, __fpos_t *posp)
 {
-  _IO_off64_t pos;
+  off64_t pos;
   int result = 0;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
@@ -62,7 +62,7 @@ _IO_new_fgetpos (_IO_FILE *fp, _IO_fpos_t *posp)
 	__set_errno (EIO);
       result = EOF;
     }
-  else if ((_IO_off64_t) (__typeof (posp->__pos)) pos != pos)
+  else if ((off64_t) (__typeof (posp->__pos)) pos != pos)
     {
       __set_errno (EOVERFLOW);
       result = EOF;

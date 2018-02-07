@@ -73,9 +73,6 @@
 #include <locale/localeinfo.h>
 #include <libioP.h>
 
-#undef va_list
-#define va_list	_IO_va_list
-
 #ifdef COMPILE_WSCANF
 # define ungetc(c, s)	((void) (c == WEOF				      \
 				 || (--read_in,				      \
@@ -270,11 +267,11 @@ char_buffer_add (struct char_buffer *buffer, CHAR_T ch)
    Return the number of assignments made, or -1 for an input error.  */
 #ifdef COMPILE_WSCANF
 int
-_IO_vfwscanf (_IO_FILE *s, const wchar_t *format, _IO_va_list argptr,
+_IO_vfwscanf (FILE *s, const wchar_t *format, va_list argptr,
 	      int *errp)
 #else
 int
-_IO_vfscanf_internal (_IO_FILE *s, const char *format, _IO_va_list argptr,
+_IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		      int *errp)
 #endif
 {

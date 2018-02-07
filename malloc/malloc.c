@@ -4980,8 +4980,8 @@ __malloc_stats (void)
   if (__malloc_initialized < 0)
     ptmalloc_init ();
   _IO_flockfile (stderr);
-  int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-  ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+  int old_flags2 = stderr->_flags2;
+  stderr->_flags2 |= _IO_FLAGS2_NOTCANCEL;
   for (i = 0, ar_ptr = &main_arena;; i++)
     {
       struct mallinfo mi;
@@ -5009,7 +5009,7 @@ __malloc_stats (void)
   fprintf (stderr, "max mmap regions = %10u\n", (unsigned int) mp_.max_n_mmaps);
   fprintf (stderr, "max mmap bytes   = %10lu\n",
            (unsigned long) mp_.max_mmapped_mem);
-  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
+  stderr->_flags2 = old_flags2;
   _IO_funlockfile (stderr);
 }
 

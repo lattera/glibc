@@ -29,18 +29,8 @@
 #include <stdlib.h>
 #include <shlib-compat.h>
 
-/* Prototyped for local functions.  */
-static _IO_ssize_t _IO_cookie_read (_IO_FILE* fp, void* buf,
-				    _IO_ssize_t size);
-static _IO_ssize_t _IO_cookie_write (_IO_FILE* fp,
-				     const void* buf, _IO_ssize_t size);
-static _IO_off64_t _IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir);
-static _IO_off64_t _IO_cookie_seekoff (_IO_FILE *fp, _IO_off64_t offset,
-				       int dir, int mode);
-static int _IO_cookie_close (_IO_FILE* fp);
-
-static _IO_ssize_t
-_IO_cookie_read (_IO_FILE *fp, void *buf, _IO_ssize_t size)
+static ssize_t
+_IO_cookie_read (FILE *fp, void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_read_function_t *read_cb = cfile->__io_functions.read;
@@ -54,8 +44,8 @@ _IO_cookie_read (_IO_FILE *fp, void *buf, _IO_ssize_t size)
   return read_cb (cfile->__cookie, buf, size);
 }
 
-static _IO_ssize_t
-_IO_cookie_write (_IO_FILE *fp, const void *buf, _IO_ssize_t size)
+static ssize_t
+_IO_cookie_write (FILE *fp, const void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_write_function_t *write_cb = cfile->__io_functions.write;
@@ -69,15 +59,15 @@ _IO_cookie_write (_IO_FILE *fp, const void *buf, _IO_ssize_t size)
       return 0;
     }
 
-  _IO_ssize_t n = write_cb (cfile->__cookie, buf, size);
+  ssize_t n = write_cb (cfile->__cookie, buf, size);
   if (n < size)
     fp->_flags |= _IO_ERR_SEEN;
 
   return n;
 }
 
-static _IO_off64_t
-_IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
+static off64_t
+_IO_cookie_seek (FILE *fp, off64_t offset, int dir)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_seek_function_t *seek_cb = cfile->__io_functions.seek;
@@ -88,12 +78,12 @@ _IO_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
   return ((seek_cb == NULL
 	   || (seek_cb (cfile->__cookie, &offset, dir)
 	       == -1)
-	   || offset == (_IO_off64_t) -1)
+	   || offset == (off64_t) -1)
 	  ? _IO_pos_BAD : offset);
 }
 
 static int
-_IO_cookie_close (_IO_FILE *fp)
+_IO_cookie_close (FILE *fp)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_close_function_t *close_cb = cfile->__io_functions.close;
@@ -108,8 +98,8 @@ _IO_cookie_close (_IO_FILE *fp)
 }
 
 
-static _IO_off64_t
-_IO_cookie_seekoff (_IO_FILE *fp, _IO_off64_t offset, int dir, int mode)
+static off64_t
+_IO_cookie_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
   /* We must force the fileops code to always use seek to determine
      the position.  */
@@ -145,8 +135,8 @@ static const struct _IO_jump_t _IO_cookie_jumps libio_vtable = {
 /* Copy the callbacks from SOURCE to *TARGET, with pointer
    mangling.  */
 static void
-set_callbacks (_IO_cookie_io_functions_t *target,
-	       _IO_cookie_io_functions_t source)
+set_callbacks (cookie_io_functions_t *target,
+	       cookie_io_functions_t source)
 {
 #ifdef PTR_MANGLE
   PTR_MANGLE (source.read);
@@ -159,7 +149,7 @@ set_callbacks (_IO_cookie_io_functions_t *target,
 
 void
 _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
-		 void *cookie, _IO_cookie_io_functions_t io_functions)
+		 void *cookie, cookie_io_functions_t io_functions)
 {
   _IO_init_internal (&cfile->__fp.file, 0);
   _IO_JUMPS (&cfile->__fp) = &_IO_cookie_jumps;
@@ -181,9 +171,9 @@ _IO_cookie_init (struct _IO_cookie_file *cfile, int read_write,
 }
 
 
-_IO_FILE *
+FILE *
 _IO_fopencookie (void *cookie, const char *mode,
-		 _IO_cookie_io_functions_t io_functions)
+		 cookie_io_functions_t io_functions)
 {
   int read_write;
   struct locked_FILE
@@ -221,25 +211,20 @@ _IO_fopencookie (void *cookie, const char *mode,
 
   _IO_cookie_init (&new_f->cfile, read_write, cookie, io_functions);
 
-  return (_IO_FILE *) &new_f->cfile.__fp;
+  return (FILE *) &new_f->cfile.__fp;
 }
 
 versioned_symbol (libc, _IO_fopencookie, fopencookie, GLIBC_2_2);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 
-static _IO_off64_t _IO_old_cookie_seek (_IO_FILE *fp, _IO_off64_t offset,
-					int dir);
-_IO_FILE * _IO_old_fopencookie (void *cookie, const char *mode,
-				_IO_cookie_io_functions_t io_functions);
-
-static _IO_off64_t
+static off64_t
 attribute_compat_text_section
-_IO_old_cookie_seek (_IO_FILE *fp, _IO_off64_t offset, int dir)
+_IO_old_cookie_seek (FILE *fp, off64_t offset, int dir)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
-  int (*seek_cb) (_IO_FILE *, _IO_off_t, int)
-    = (int (*) (_IO_FILE *, _IO_off_t, int)) cfile->__io_functions.seek;;
+  int (*seek_cb) (FILE *, off_t, int)
+    = (int (*) (FILE *, off_t, int)) cfile->__io_functions.seek;
 #ifdef PTR_DEMANGLE
   PTR_DEMANGLE (seek_cb);
 #endif
@@ -275,12 +260,12 @@ static const struct _IO_jump_t _IO_old_cookie_jumps libio_vtable = {
   JUMP_INIT(imbue, _IO_default_imbue),
 };
 
-_IO_FILE *
+FILE *
 attribute_compat_text_section
 _IO_old_fopencookie (void *cookie, const char *mode,
-		     _IO_cookie_io_functions_t io_functions)
+		     cookie_io_functions_t io_functions)
 {
-  _IO_FILE *ret;
+  FILE *ret;
 
   ret = _IO_fopencookie (cookie, mode, io_functions);
   if (ret != NULL)

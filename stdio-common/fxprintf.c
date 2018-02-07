@@ -87,12 +87,12 @@ __fxprintf_nocancel (FILE *fp, const char *fmt, ...)
   va_list ap;
   va_start (ap, fmt);
   _IO_flockfile (fp);
-  int save_flags2 = ((_IO_FILE *)fp)->_flags2;
-  ((_IO_FILE *)fp)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+  int save_flags2 = fp->_flags2;
+  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
 
   int res = locked_vfxprintf (fp, fmt, ap);
 
-  ((_IO_FILE *)fp)->_flags2 = save_flags2;
+  fp->_flags2 = save_flags2;
   _IO_funlockfile (fp);
   va_end (ap);
   return res;

@@ -28,7 +28,7 @@
 #include <wchar.h>
 
 wint_t
-ungetwc (wint_t c, _IO_FILE *fp)
+ungetwc (wint_t c, FILE *fp)
 {
   wint_t result;
   CHECK_FILE (fp, WEOF);
