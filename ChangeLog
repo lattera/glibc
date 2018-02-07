@@ -1,3 +1,9 @@
+2018-02-07  Igor Gnatenko  <ignatenko@redhat.com>
+
+	[BZ #22797]
+	* sysdeps/unix/sysv/linux/bits/mman-shared.h (pkey_get): Add
+	missing second underscore to parameter name.
+
 2018-02-06  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #14508]

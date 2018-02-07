@@ -61,7 +61,7 @@ int pkey_set (int __key, unsigned int __access_rights) __THROW;
 
 /* Return the access rights for the current thread for KEY, which must
    have been allocated using pkey_alloc.  */
-int pkey_get (int _key) __THROW;
+int pkey_get (int __key) __THROW;
 
 /* Free an allocated protection key, which must have been allocated
    using pkey_alloc.  */
