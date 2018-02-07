@@ -29,16 +29,18 @@
 #include <_itoa.h>
 
 /* Check if DEV corresponds to a master pseudo terminal device.  */
-#define MASTER_P(Dev)                                                         \
-  (major ((Dev)) == 2                                                         \
-   || (major ((Dev)) == 4 && minor ((Dev)) >= 128 && minor ((Dev)) < 192)     \
-   || (major ((Dev)) >= 128 && major ((Dev)) < 136))
+#define MASTER_P(Dev)							\
+  (__gnu_dev_major ((Dev)) == 2						\
+   || (__gnu_dev_major ((Dev)) == 4					\
+       && __gnu_dev_minor ((Dev)) >= 128 && __gnu_dev_minor ((Dev)) < 192) \
+   || (__gnu_dev_major ((Dev)) >= 128 && __gnu_dev_major ((Dev)) < 136))
 
 /* Check if DEV corresponds to a slave pseudo terminal device.  */
-#define SLAVE_P(Dev)                                                          \
-  (major ((Dev)) == 3                                                         \
-   || (major ((Dev)) == 4 && minor ((Dev)) >= 192 && minor ((Dev)) < 256)     \
-   || (major ((Dev)) >= 136 && major ((Dev)) < 144))
+#define SLAVE_P(Dev)							\
+  (__gnu_dev_major ((Dev)) == 3						\
+   || (__gnu_dev_major ((Dev)) == 4					\
+       && __gnu_dev_minor ((Dev)) >= 192 && __gnu_dev_minor ((Dev)) < 256) \
+   || (__gnu_dev_major ((Dev)) >= 136 && __gnu_dev_major ((Dev)) < 144))
 
 /* Note that major number 4 corresponds to the old BSD style pseudo
    terminal devices.  As of Linux 2.1.115 these are no longer
@@ -122,7 +124,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 	  return ENOTTY;
 	}
 
-      ptyno = minor (stp->st_rdev);
+      ptyno = __gnu_dev_minor (stp->st_rdev);
 
       if (ptyno / 16 >= strlen (__libc_ptyname1))
 	{

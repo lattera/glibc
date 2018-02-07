@@ -81,9 +81,9 @@ __xmknodat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
 
       bp = buf + sizeof (buf);
       *--bp = '\0';
-      bp = _itoa (minor (*dev), bp, 10, 0);
+      bp = _itoa (__gnu_dev_minor (*dev), bp, 10, 0);
       *--bp = '\0';
-      bp = _itoa (major (*dev), bp, 10, 0);
+      bp = _itoa (__gnu_dev_major (*dev), bp, 10, 0);
       memcpy (bp - len, translator, len);
       translator = bp - len;
       len = buf + sizeof (buf) - translator;

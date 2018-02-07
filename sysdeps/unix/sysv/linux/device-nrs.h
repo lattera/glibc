@@ -39,7 +39,7 @@
 
 /* Test whether given device is a tty.  */
 #define DEV_TTY_P(statp) \
-  ({ int __dev_major = major ((statp)->st_rdev);			      \
+  ({ int __dev_major = __gnu_dev_major ((statp)->st_rdev);		      \
      __dev_major >= DEV_TTY_LOW_MAJOR && __dev_major <= DEV_TTY_HIGH_MAJOR; })
 
 #endif	/* device-nrs.h */

@@ -1,5 +1,46 @@
 2018-02-07  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #15105]
+	[BZ #19463]
+	* include/sys/sysmacros.h [!_ISOMAC]
+	(__SYSMACROS_NEED_IMPLEMENTATION): Define macro.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC]
+	(_SYS_SYSMACROS_H_WRAPPER): Likewise.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (gnu_dev_major): Use
+	libc_hidden_proto.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (gnu_dev_minor): Likewise.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (gnu_dev_makedev):
+	Likewise.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (__SYSMACROS_DECL_TEMPL):
+	Undefine and redefine to add use __gnu_dev_ prefix.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (__SYSMACROS_IMPL_TEMPL):
+	Likewise.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (__gnu_dev_major): Declare
+	and define as hidden inline function.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (__gnu_dev_minor):
+	Likewise.
+	[!_SYS_SYSMACROS_H_WRAPPER && !_ISOMAC] (__gnu_dev_makedev):
+	Likewise.
+	* misc/makedev.c (OUT_OF_LINE_IMPL_TEMPL): Use __gnu_dev_ prefix.
+	(gnu_dev_major): Use weak_alias and libc_hidden_weak.
+	(gnu_dev_minor): Likewise.
+	(gnu_dev_makedev): Likewise.
+	* csu/check_fds.c (check_one_fd): Use __gnu_dev_makedev instead of
+	makedev.
+	* posix/wordexp.c (exec_comm_child): Likewise.
+	* sysdeps/mach/hurd/xmknodat.c (__xmknodat): Use __gnu_dev_minor
+	instead of minor and __gnu_dev_major instead of major.
+	* sysdeps/unix/sysv/linux/device-nrs.h (DEV_TTY_P): Use
+	__gnu_dev_major instead of major.
+	* sysdeps/unix/sysv/linux/pathconf.c (distinguish_extX): Use
+	__gnu_dev_major instead of gnu_dev_major and __gnu_dev_minor
+	instead of gnu_dev_minor.
+	* sysdeps/unix/sysv/linux/ptsname.c (MASTER_P): Likewise.
+	(SLAVE_P): Likewise.
+	(__ptsname_internal): Use __gnu_dev_minor instead of minor.
+	* sysdeps/unix/sysv/linux/ttyname.h (is_pty): Use __gnu_dev_major
+	instead of major.
+
 	[BZ #21313]
 	* locale/weight.h (findidx): Disable -Wmaybe-uninitialized for -Os
 	in another place.

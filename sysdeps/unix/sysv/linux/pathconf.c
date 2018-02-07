@@ -73,7 +73,7 @@ distinguish_extX (const struct statfs *fsbuf, const char *file, int fd)
     return EXT2_LINK_MAX;
 
   __snprintf (buf, sizeof (buf), "/sys/dev/block/%u:%u",
-	      gnu_dev_major (st.st_dev), gnu_dev_minor (st.st_dev));
+	      __gnu_dev_major (st.st_dev), __gnu_dev_minor (st.st_dev));
 
   ssize_t n = __readlink (buf, path, sizeof (path));
   if (n != -1 && n < sizeof (path))

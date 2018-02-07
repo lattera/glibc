@@ -50,12 +50,12 @@ check_one_fd (int fd, int mode)
       if ((mode & O_ACCMODE) == O_WRONLY)
 	{
 	  name = _PATH_DEV "full";
-	  dev = makedev (DEV_FULL_MAJOR, DEV_FULL_MINOR);
+	  dev = __gnu_dev_makedev (DEV_FULL_MAJOR, DEV_FULL_MINOR);
 	}
       else
 	{
 	  name = _PATH_DEVNULL;
-	  dev = makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR);
+	  dev = __gnu_dev_makedev (DEV_NULL_MAJOR, DEV_NULL_MINOR);
 	}
 
       /* Something is wrong with this descriptor, it's probably not

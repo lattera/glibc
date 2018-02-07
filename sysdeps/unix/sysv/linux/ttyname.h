@@ -28,7 +28,7 @@ static inline bool
 is_pty (struct stat64 *sb)
 {
 #ifdef _STATBUF_ST_RDEV
-  int m = major (sb->st_rdev);
+  int m = __gnu_dev_major (sb->st_rdev);
   return (136 <= m && m <= 143);
 #else
   return false;
