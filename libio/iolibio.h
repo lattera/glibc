@@ -7,10 +7,6 @@
 /* These emulate stdio functionality, but with a different name
    (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int _IO_fclose (_IO_FILE*);
 extern int _IO_new_fclose (_IO_FILE*);
 extern int _IO_old_fclose (_IO_FILE*);
@@ -94,9 +90,5 @@ extern int __old_pclose (_IO_FILE *) __THROW;
 
 _IO_FILE *__new_freopen (const char *, const char *, _IO_FILE *) __THROW;
 _IO_FILE *__old_freopen (const char *, const char *, _IO_FILE *) __THROW;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* iolibio.h.  */

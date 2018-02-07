@@ -52,10 +52,6 @@
    adjusts the libio configuration.  */
 #include <_G_config.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define _IO_seek_set 0
 #define _IO_seek_cur 1
 #define _IO_seek_end 2
@@ -729,10 +725,6 @@ extern int _IO_vscanf (const char *, _IO_va_list) __THROW;
 /* _IO_pos_0 is an _IO_off64_t value indicating beginning of file. */
 #ifndef _IO_pos_0
 # define _IO_pos_0 ((_IO_off64_t) 0)
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #ifdef _IO_MTSAFE_IO

@@ -1,3 +1,10 @@
+2018-02-21  Zack Weinberg  <zackw@panix.com>
+
+	* libio/iolibio.h, libio/libioP.h: Remove extern "C".
+	* libio/libio.h: Remove __BEGIN_DECLS and __END_DECLS.
+	Remove preprocessor conditionals on _LIBC and __USE_GNU,
+	which are always true, and __cplusplus, which is always false.
+
 2018-02-21  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]

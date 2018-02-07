@@ -73,8 +73,6 @@ typedef union
 
 #include <shlib-compat.h>
 
-__BEGIN_DECLS
-
 /* compatibility defines */
 #define _STDIO_USES_IOSTREAM
 #define _IO_UNIFIED_JUMPTABLES 1
@@ -119,16 +117,12 @@ __BEGIN_DECLS
 
 #define _IO_FLAGS2_MMAP 1
 #define _IO_FLAGS2_NOTCANCEL 2
-#ifdef _LIBC
-# define _IO_FLAGS2_FORTIFY 4
-#endif
+#define _IO_FLAGS2_FORTIFY 4
 #define _IO_FLAGS2_USER_WBUF 8
-#ifdef _LIBC
-# define _IO_FLAGS2_SCANF_STD 16
-# define _IO_FLAGS2_NOCLOSE 32
-# define _IO_FLAGS2_CLOEXEC 64
-# define _IO_FLAGS2_NEED_LOCK 128
-#endif
+#define _IO_FLAGS2_SCANF_STD 16
+#define _IO_FLAGS2_NOCLOSE 32
+#define _IO_FLAGS2_CLOEXEC 64
+#define _IO_FLAGS2_NEED_LOCK 128
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
 #define _IO_SKIPWS 01
@@ -227,29 +221,18 @@ struct _IO_wide_data
   const struct _IO_jump_t *_wide_vtable;
 };
 
-
-#ifndef __cplusplus
 typedef struct _IO_FILE _IO_FILE;
-#endif
 
 struct _IO_FILE_plus;
 
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 extern struct _IO_FILE_plus _IO_2_1_stdout_;
 extern struct _IO_FILE_plus _IO_2_1_stderr_;
-#ifndef _LIBC
-#define _IO_stdin ((_IO_FILE*)(&_IO_2_1_stdin_))
-#define _IO_stdout ((_IO_FILE*)(&_IO_2_1_stdout_))
-#define _IO_stderr ((_IO_FILE*)(&_IO_2_1_stderr_))
-#else
 extern _IO_FILE *_IO_stdin attribute_hidden;
 extern _IO_FILE *_IO_stdout attribute_hidden;
 extern _IO_FILE *_IO_stderr attribute_hidden;
-#endif
-
 
 /* Compatibility names for cookie I/O functions.  */
-#ifdef __USE_GNU
 typedef cookie_read_function_t __io_read_fn;
 typedef cookie_write_function_t __io_write_fn;
 typedef cookie_seek_function_t __io_seek_fn;
@@ -261,7 +244,6 @@ struct _IO_cookie_file;
 /* Initialize one of those.  */
 extern void _IO_cookie_init (struct _IO_cookie_file *__cfile, int __read_write,
 			     void *__cookie, _IO_cookie_io_functions_t __fns);
-#endif
 
 extern int __underflow (_IO_FILE *);
 extern _IO_wint_t __wunderflow (_IO_FILE *);
@@ -342,8 +324,6 @@ extern _IO_wint_t _IO_getwc (_IO_FILE *__fp);
 extern _IO_wint_t _IO_putwc (wchar_t __wc, _IO_FILE *__fp);
 extern int _IO_fwide (_IO_FILE *__fp, int __mode) __THROW;
 
-/* While compiling glibc we have to handle compatibility with very old
-   versions.  */
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #  define _IO_fwide_maybe_incompatible \
   (__builtin_expect (&_IO_stdin_used == NULL, 0))
@@ -415,7 +395,5 @@ libc_hidden_proto (_IO_vfscanf)
   if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_funlockfile (_fp)
 # endif
 #endif /* _IO_MTSAFE_IO */
-
-__END_DECLS
 
 #endif /* _LIBIO_H */
