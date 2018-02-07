@@ -1,5 +1,31 @@
 2018-02-07  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #17979]
+	* posix/bits/types.h (__int_least8_t): New typedef.
+	(__uint_least8_t): Likewise.
+	(__int_least16_t): Likewise.
+	(__uint_least16_t): Likewise.
+	(__int_least32_t): Likewise.
+	(__uint_least32_t): Likewise.
+	(__int_least64_t): Likewise.
+	(__uint_least64_t): Likewise.
+	* sysdeps/generic/stdint.h (int_least8_t): Define using
+	__int_least8_t.
+	(int_least16_t): Define using __int_least16_t.
+	(int_least32_t): Define using __int_least32_t.
+	(int_least64_t): Define using __int_least64_t.
+	(uint_least8_t): Define using __uint_least8_t.
+	(uint_least16_t): Define using __uint_least16_t.
+	(uint_least32_t): Define using __uint_least32_t.
+	(uint_least64_t): Define using __uint_least64_t.
+	* wcsmbs/uchar.h: Include <bits/types.h>.
+	(char16_t): Define using __uint_least16_t conditional only on
+	[!__USE_ISOCXX11].
+	(char32_t): Define using __uint_least32_t conditional only on
+	[!__USE_ISOCXX11].
+	* wcsmbs/test-char-types.c: New file.
+	* wcsmbs/Makefile (tests): Add test-char-types.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default MPFR
 	version to 4.0.1.
 
