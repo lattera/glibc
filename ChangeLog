@@ -1,3 +1,10 @@
+2018-02-07  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* manual/probes.texi (slowlog): Delete documentation of removed probe.
+	(slowlog_inexact): Likewise
+	* sysdeps/ieee754/dbl-64/e_log.c (__ieee754_log): Remove slow paths.
+	* sysdeps/ieee754/dbl-64/ulog.h: Remove unused declarations.
+
 2018-02-07  Igor Gnatenko  <ignatenko@redhat.com>
 
 	[BZ #22797]

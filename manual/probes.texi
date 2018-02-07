@@ -288,23 +288,6 @@ input that results in multiple precision computation with precision
 and @code{$arg4} is the final accurate value.
 @end deftp
 
-@deftp Probe slowlog (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is triggered when the @code{log} function is called with an
-input that results in multiple precision computation.  Argument
-@var{$arg1} is the precision with which the computation succeeded.
-Argument @var{$arg2} is the input and @var{$arg3} is the computed
-output.
-@end deftp
-
-@deftp Probe slowlog_inexact (int @var{$arg1}, double @var{$arg2}, double @var{$arg3})
-This probe is triggered when the @code{log} function is called with an
-input that results in multiple precision computation and none of the
-multiple precision computations result in an accurate result.
-Argument @var{$arg1} is the maximum precision with which computations
-were performed.  Argument @var{$arg2} is the input and @var{$arg3} is
-the computed output.
-@end deftp
-
 @deftp Probe slowatan2 (int @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
 This probe is triggered when the @code{atan2} function is called with
 an input that results in multiple precision computation.  Argument
