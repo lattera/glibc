@@ -132,7 +132,15 @@ findidx (const int32_t *table,
 	      do
 		{
 		  offset <<= 8;
+		  /* With GCC 7 when compiling with -Os the compiler
+		     warns that seq1.back_us and seq2.back_us, which
+		     become usrc, might be used uninitialized.  This
+		     is impossible for the same reason as described
+		     above.  */
+		  DIAG_PUSH_NEEDS_COMMENT;
+		  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
 		  offset += usrc[cnt] - cp[cnt];
+		  DIAG_POP_NEEDS_COMMENT;
 		}
 	      while (++cnt < nhere);
 	    }

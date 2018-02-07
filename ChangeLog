@@ -1,3 +1,10 @@
+2018-02-07  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #21313]
+	* locale/weight.h (findidx): Disable -Wmaybe-uninitialized for -Os
+	in another place.
+	* locale/weightwc.h (findidx): Likewise.
+
 2018-02-07  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* manual/probes.texi (slowlog): Delete documentation of removed probe.
