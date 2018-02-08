@@ -200,9 +200,6 @@ _IO_new_popen (const char *command, const char *mode)
   _IO_init_internal (fp, 0);
   _IO_JUMPS (&new_f->fpx.file) = &_IO_proc_jumps;
   _IO_new_file_init_internal (&new_f->fpx.file);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fpx.file.vtable = NULL;
-#endif
   if (_IO_new_proc_open (fp, command, mode) != NULL)
     return (FILE *) &new_f->fpx.file;
   _IO_un_link (&new_f->fpx.file);

@@ -52,9 +52,6 @@ _IO_old_fopen (const char *filename, const char *mode)
   _IO_old_init (&new_f->fp.file._file, 0);
   _IO_JUMPS_FILE_plus (&new_f->fp) = &_IO_old_file_jumps;
   _IO_old_file_init_internal ((struct _IO_FILE_plus *) &new_f->fp);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.vtable = NULL;
-#endif
   if (_IO_old_file_fopen ((FILE *) &new_f->fp, filename, mode) != NULL)
     return (FILE *) &new_f->fp;
   _IO_un_link ((struct _IO_FILE_plus *) &new_f->fp);

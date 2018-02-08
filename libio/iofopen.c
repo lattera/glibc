@@ -72,9 +72,6 @@ __fopen_internal (const char *filename, const char *mode, int is32)
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   _IO_new_file_init_internal (&new_f->fp);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.vtable = NULL;
-#endif
   if (_IO_file_fopen ((FILE *) new_f, filename, mode, is32) != NULL)
     return __fopen_maybe_mmap (&new_f->fp.file);
 

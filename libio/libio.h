@@ -61,9 +61,6 @@ typedef union
 #include <shlib-compat.h>
 
 /* compatibility defines */
-#define _STDIO_USES_IOSTREAM
-#define _IO_UNIFIED_JUMPTABLES 1
-#define __HAVE_COLUMN
 #define _IO_file_flags _flags
 
 /* open modes */
@@ -228,28 +225,23 @@ extern wint_t __wunderflow (FILE *);
 extern wint_t __wuflow (FILE *);
 extern wint_t __woverflow (FILE *, wint_t);
 
-#if  __GNUC__ >= 3
-# define _IO_BE(expr, res) __builtin_expect ((expr), res)
-#else
-# define _IO_BE(expr, res) (expr)
-#endif
-
 #define _IO_getc_unlocked(_fp) __getc_unlocked_body (_fp)
-#define _IO_peekc_unlocked(_fp) \
-       (_IO_BE ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end, 0) \
-	  && __underflow (_fp) == EOF ? EOF \
-	: *(unsigned char *) (_fp)->_IO_read_ptr)
+#define _IO_peekc_unlocked(_fp)						\
+  (__glibc_unlikely ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end)	\
+   && __underflow (_fp) == EOF						\
+   ? EOF								\
+   : *(unsigned char *) (_fp)->_IO_read_ptr)
 #define _IO_putc_unlocked(_ch, _fp) __putc_unlocked_body (_ch, _fp)
 
-# define _IO_getwc_unlocked(_fp) \
-  (_IO_BE ((_fp)->_wide_data == NULL					\
-	   || ((_fp)->_wide_data->_IO_read_ptr				\
-	       >= (_fp)->_wide_data->_IO_read_end), 0)			\
+# define _IO_getwc_unlocked(_fp)					\
+  (__glibc_unlikely ((_fp)->_wide_data == NULL				\
+		     || ((_fp)->_wide_data->_IO_read_ptr		\
+			 >= (_fp)->_wide_data->_IO_read_end))		\
    ? __wuflow (_fp) : (wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
-# define _IO_putwc_unlocked(_wch, _fp) \
-  (_IO_BE ((_fp)->_wide_data == NULL					\
-	   || ((_fp)->_wide_data->_IO_write_ptr				\
-	       >= (_fp)->_wide_data->_IO_write_end), 0)			\
+# define _IO_putwc_unlocked(_wch, _fp)					\
+  (__glibc_unlikely ((_fp)->_wide_data == NULL				\
+		     || ((_fp)->_wide_data->_IO_write_ptr		\
+			 >= (_fp)->_wide_data->_IO_write_end))		\
    ? __woverflow (_fp, _wch)						\
    : (wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
 
@@ -304,7 +296,7 @@ extern int _IO_fwide (FILE *__fp, int __mode) __THROW;
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #  define _IO_fwide_maybe_incompatible \
-  (__builtin_expect (&_IO_stdin_used == NULL, 0))
+  (__glibc_unlikely (&_IO_stdin_used == NULL))
 extern const int _IO_stdin_used;
 weak_extern (_IO_stdin_used);
 #else

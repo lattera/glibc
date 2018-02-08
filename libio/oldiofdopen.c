@@ -102,9 +102,6 @@ _IO_old_fdopen (int fd, const char *mode)
   _IO_old_init (&new_f->fp.file._file, 0);
   _IO_JUMPS_FILE_plus (&new_f->fp) = &_IO_old_file_jumps;
   _IO_old_file_init_internal ((struct _IO_FILE_plus *) &new_f->fp);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.vtable = NULL;
-#endif
   if (_IO_old_file_attach (&new_f->fp.file._file, fd) == NULL)
     {
       _IO_un_link ((struct _IO_FILE_plus *) &new_f->fp);

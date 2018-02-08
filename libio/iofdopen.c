@@ -137,9 +137,6 @@ _IO_new_fdopen (int fd, const char *mode)
 #endif
       &_IO_file_jumps;
   _IO_new_file_init_internal (&new_f->fp);
-#if  !_IO_UNIFIED_JUMPTABLES
-  new_f->fp.vtable = NULL;
-#endif
   /* We only need to record the fd because _IO_file_init_internal will
      have unset the offset.  It is important to unset the cached
      offset because the real offset in the file could change between

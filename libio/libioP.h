@@ -690,10 +690,6 @@ extern off64_t _IO_seekoff_unlocked (FILE *, off64_t, int, int)
 extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
      attribute_hidden;
 
-#ifndef EOF
-# define EOF (-1)
-#endif
-
 #if _G_HAVE_MMAP
 
 # include <unistd.h>

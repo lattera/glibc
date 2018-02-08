@@ -1,5 +1,15 @@
 2018-02-21  Zack Weinberg  <zackw@panix.com>
 
+	* libio/libio.h (_IO_UNIFIED_JUMPTABLES, _STDIO_USES_IOSTREAM)
+	(__HAVE_COLUMN, _IO_BE): Don't define.
+	(_IO_peekc_unlocked, _IO_getwc_unlocked, _IO_putwc_unlocked)
+	(_IO_fwide_maybe_incompatible): Use __glibc_unlikely.
+	* libio/libioP.h (EOF): Don't define.
+	* libio/iofdopen.c, libio/iofopen.c, libio/iopopen.c
+	* libio/iovdprintf.c, libio/oldiofdopen.c, libio/oldiofopen.c
+	* libio/oldiopopen.c, debug/vdprintf_chk.c: Remove #if block
+	testing _IO_UNIFIED_JUMPTABLES.
+
 	* libio/libio.h (_IO_FILE): Delete; all uses changed to FILE.
 	(_IO_fpos_t): Delete; all uses changed to __fpos_t.
 	(_IO_fpos64_t): Delete; all uses changed to __fpos64_t.
