@@ -108,10 +108,10 @@ struct _IO_FILE_complete
    ? __overflow (_fp, (unsigned char) (_ch))				\
    : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
-#define _IO_EOF_SEEN 0x10
+#define _IO_EOF_SEEN 0x0010
 #define __feof_unlocked_body(_fp) (((_fp)->_flags & _IO_EOF_SEEN) != 0)
 
-#define _IO_ERR_SEEN 0x20
+#define _IO_ERR_SEEN 0x0020
 #define __ferror_unlocked_body(_fp) (((_fp)->_flags & _IO_ERR_SEEN) != 0)
 
 #define _IO_USER_LOCK 0x8000

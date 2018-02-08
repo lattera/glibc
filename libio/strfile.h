@@ -59,7 +59,7 @@ typedef struct _IO_strfile_
 
 /* frozen: set when the program has requested that the array object not
    be altered, reallocated, or freed. */
-#define _IO_STR_FROZEN(FP) ((FP)->_f._IO_file_flags & _IO_USER_BUF)
+#define _IO_STR_FROZEN(FP) ((FP)->_f._flags & _IO_USER_BUF)
 
 typedef struct
 {

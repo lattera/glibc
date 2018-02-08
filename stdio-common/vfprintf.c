@@ -62,7 +62,7 @@
 	  return -1;							      \
 	}								      \
     } while (0)
-#define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
+#define UNBUFFERED_P(S) ((S)->_flags & _IO_UNBUFFERED)
 
 #define done_add(val) \
   do {									      \
@@ -2307,7 +2307,7 @@ buffered_vfprintf (FILE *s, const CHAR_T *format, va_list args)
   _IO_setp (hp, buf, buf + sizeof buf);
   hp->_mode = -1;
 #endif
-  hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS|_IO_USER_LOCK;
+  hp->_flags = _IO_MAGIC|_IO_NO_READS|_IO_USER_LOCK;
 #if _IO_JUMPS_OFFSET
   hp->_vtable_offset = 0;
 #endif

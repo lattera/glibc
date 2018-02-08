@@ -39,7 +39,7 @@ _IO_setvbuf (FILE *fp, char *buf, int mode, size_t size)
   switch (mode)
     {
     case _IOFBF:
-      fp->_IO_file_flags &= ~(_IO_LINE_BUF|_IO_UNBUFFERED);
+      fp->_flags &= ~(_IO_LINE_BUF|_IO_UNBUFFERED);
       if (buf == NULL)
 	{
 	  if (fp->_IO_buf_base == NULL)
@@ -62,15 +62,15 @@ _IO_setvbuf (FILE *fp, char *buf, int mode, size_t size)
 		  result = EOF;
 		  goto unlock_return;
 		}
-	      fp->_IO_file_flags &= ~_IO_LINE_BUF;
+	      fp->_flags &= ~_IO_LINE_BUF;
 	    }
 	  result = 0;
 	  goto unlock_return;
 	}
       break;
     case _IOLBF:
-      fp->_IO_file_flags &= ~_IO_UNBUFFERED;
-      fp->_IO_file_flags |= _IO_LINE_BUF;
+      fp->_flags &= ~_IO_UNBUFFERED;
+      fp->_flags |= _IO_LINE_BUF;
       if (buf == NULL)
 	{
 	  result = 0;
@@ -78,8 +78,8 @@ _IO_setvbuf (FILE *fp, char *buf, int mode, size_t size)
 	}
       break;
     case _IONBF:
-      fp->_IO_file_flags &= ~_IO_LINE_BUF;
-      fp->_IO_file_flags |= _IO_UNBUFFERED;
+      fp->_flags &= ~_IO_LINE_BUF;
+      fp->_flags |= _IO_UNBUFFERED;
       buf = NULL;
       size = 0;
       break;

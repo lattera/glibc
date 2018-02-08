@@ -47,20 +47,19 @@ __fgets_unlocked (char *buf, int n, FILE *fp)
   /* This is very tricky since a file descriptor may be in the
      non-blocking mode. The error flag doesn't mean much in this
      case. We return an error only when there is a new error. */
-  old_error = fp->_IO_file_flags & _IO_ERR_SEEN;
-  fp->_IO_file_flags &= ~_IO_ERR_SEEN;
+  old_error = fp->_flags & _IO_ERR_SEEN;
+  fp->_flags &= ~_IO_ERR_SEEN;
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   /* If we read in some bytes and errno is EAGAIN, that error will
      be reported for next read. */
-  if (count == 0 || ((fp->_IO_file_flags & _IO_ERR_SEEN)
-		     && errno != EAGAIN))
+  if (count == 0 || ((fp->_flags & _IO_ERR_SEEN) && errno != EAGAIN))
     result = NULL;
   else
     {
       buf[count] = '\0';
       result = buf;
     }
-  fp->_IO_file_flags |= old_error;
+  fp->_flags |= old_error;
   return result;
 }
 libc_hidden_def (__fgets_unlocked)

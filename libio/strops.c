@@ -74,7 +74,7 @@ void
 _IO_str_init_readonly (_IO_strfile *sf, const char *ptr, int size)
 {
   _IO_str_init_static_internal (sf, (char *) ptr, size < 0 ? -1 : size, NULL);
-  sf->_sbf._f._IO_file_flags |= _IO_NO_WRITES;
+  sf->_sbf._f._flags |= _IO_NO_WRITES;
 }
 
 int

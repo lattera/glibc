@@ -32,8 +32,8 @@ __fgetws_chk (wchar_t *buf, size_t size, int n, FILE *fp)
   /* This is very tricky since a file descriptor may be in the
      non-blocking mode. The error flag doesn't mean much in this
      case. We return an error only when there is a new error. */
-  old_error = fp->_IO_file_flags & _IO_ERR_SEEN;
-  fp->_IO_file_flags &= ~_IO_ERR_SEEN;
+  old_error = fp->_flags & _IO_ERR_SEEN;
+  fp->_flags &= ~_IO_ERR_SEEN;
   count = _IO_getwline (fp, buf, MIN ((size_t) n - 1, size), L'\n', 1);
   /* If we read in some bytes and errno is EAGAIN, that error will
      be reported for next read. */
@@ -46,7 +46,7 @@ __fgetws_chk (wchar_t *buf, size_t size, int n, FILE *fp)
       buf[count] = '\0';
       result = buf;
     }
-  fp->_IO_file_flags |= old_error;
+  fp->_flags |= old_error;
   _IO_release_lock (fp);
   return result;
 }

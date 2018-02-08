@@ -761,7 +761,7 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 #else
 /* This is part of the kludge for binary compatibility with old stdio. */
 # define COERCE_FILE(FILE) \
-  (((FILE)->_IO_file_flags & _IO_MAGIC_MASK) == _OLD_MAGIC_MASK \
+  (((FILE)->_flags & _IO_MAGIC_MASK) == _OLD_MAGIC_MASK \
     && (FILE) = *(FILE**)&((int*)fp)[1])
 #endif
 
@@ -775,7 +775,7 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 # define CHECK_FILE(FILE, RET) \
 	if ((FILE) == NULL) { MAYBE_SET_EINVAL; return RET; } \
 	else { COERCE_FILE(FILE); \
-	       if (((FILE)->_IO_file_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
+	       if (((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
 	  { MAYBE_SET_EINVAL; return RET; }}
 #else
 # define CHECK_FILE(FILE, RET) COERCE_FILE (FILE)

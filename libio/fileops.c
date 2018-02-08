@@ -109,7 +109,7 @@ _IO_new_file_init_internal (struct _IO_FILE_plus *fp)
      of our file descriptor.  Hence we actually don't know the actual
      position before we do the first fseek (and until a following fflush). */
   fp->file._offset = _IO_pos_BAD;
-  fp->file._IO_file_flags |= CLOSED_FILEBUF_FLAGS;
+  fp->file._flags |= CLOSED_FILEBUF_FLAGS;
 
   _IO_link_in (fp);
   fp->file._fileno = -1;

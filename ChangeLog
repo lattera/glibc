@@ -1,5 +1,19 @@
 2018-02-21  Zack Weinberg  <zackw@panix.com>
 
+	* libio/libio.h (_IOS_ATEND, _IOS_APPEND, _IOS_TRUNC)
+	(_IOS_NOCREATE, _IOS_NOREPLACE, _IOS_BIN, _OLD_STDIO_MAGIC)
+	(_IO_SKIPWS, _IO_LEFT, _IO_RIGHT, _IO_INTERNAL, _IO_DEC)
+	(_IO_OCT, _IO_HEX, _IO_SHOWBASE, _IO_SHOWPOINT, _IO_UPPERCASE)
+	(_IO_SHOWPOS, _IO_SCIENTIFIC, _IO_FIXED, _IO_UNITBUF, _IO_STDIO)
+	(_IO_DONT_CLOSE, _IO_BOOLALPHA, _IO_BAD_SEEN): Remove, unused.
+	Reformat bit flags for _flags field to make occupancy clearer.
+	Update commentary.
+	* libio/bits/types/struct_FILE.h (_IO_EOF_SEEN, _IO_ERR_SEEN):
+	Keep definitions consistent with those in libio/libio.h.
+
+	* libio/libio.h (_IO_file_flags): Remove macro.
+	All uses changed to _flags.
+
 	* libio/libio.h (_IO_UNIFIED_JUMPTABLES, _STDIO_USES_IOSTREAM)
 	(__HAVE_COLUMN, _IO_BE): Don't define.
 	(_IO_peekc_unlocked, _IO_getwc_unlocked, _IO_putwc_unlocked)
