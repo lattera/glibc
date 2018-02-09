@@ -29,7 +29,7 @@ headers		:= math.h bits/mathcalls.h bits/mathinline.h \
 		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
 		   bits/flt-eval-method.h bits/fp-fast.h bits/fp-logb.h \
 		   bits/long-double.h bits/mathcalls-helper-functions.h \
-		   bits/floatn.h bits/floatn-common.h
+		   bits/floatn.h bits/floatn-common.h bits/mathcalls-narrow.h
 
 # FPU support code.
 aux		:= setfpucw fpu_control
@@ -88,6 +88,16 @@ libm-compat-calls =							\
 	w_sinhF_compat w_sqrtF_compat w_tgammaF_compat			\
 	w_lgammaF_r_compat w_lgammaF_compat2 w_expF_compat		\
 	w_lgamma_compatF k_standardF
+
+libm-narrow-fns =
+libm-narrow-types-basic = s_fF s_f32xFf64
+libm-narrow-types-ldouble-yes = s_fFl s_dFl
+libm-narrow-types-float128-yes = s_f32Ff128 s_f64Ff128 s_f64xFf128
+libm-narrow-types-float128-alias-yes = s_f64xFf128
+libm-narrow-types = $(libm-narrow-types-basic) \
+		    $(libm-narrow-types-ldouble-$(long-double-fcts)) \
+		    $(libm-narrow-types-float128-$(float128-fcts)) \
+		    $(libm-narrow-types-float128-alias-$(float128-alias-fcts))
 
 # Type specific routine support.
 #
@@ -148,6 +158,8 @@ libm-routines = $(strip $(libm-support)					\
 			       $(libm-compat-calls))			\
 			$(call type-foreach, $(libm-calls))		\
 			$(foreach t, $(types), $(type-$(t)-routines))) 	\
+			$(foreach f,$(libm-narrow-fns),			\
+				    $(subst F,$(f),$(libm-narrow-types)))
 
 # These functions are in libc instead of libm because __printf_fp
 # calls them, so any program using printf will need them linked in,

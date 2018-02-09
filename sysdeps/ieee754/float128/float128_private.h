@@ -54,6 +54,16 @@
 # define SET_RESTORE_ROUNDL(RM) SET_RESTORE_ROUNDF128 (RM)
 #endif
 
+#ifdef libc_feholdexcept_setroundf128
+# undef libc_feholdexcept_setroundl
+# define libc_feholdexcept_setroundl(ENV, RM)	\
+  libc_feholdexcept_setroundf128 (ENV, RM)
+#endif
+
+#ifdef libc_feupdateenv_testf128
+# undef libc_feupdateenv_testl
+# define libc_feupdateenv_testl(ENV, EX) libc_feupdateenv_testf128 (ENV, EX)
+#endif
 
 /* misc macros from the header below.  */
 #include <fix-fp-int-convert-overflow.h>
@@ -120,6 +130,13 @@
 #include <libm-alias-float128.h>
 #undef libm_alias_ldouble_r
 #define libm_alias_ldouble_r(from, to, r) libm_alias_float128_r (from, to, r)
+
+
+#include <math/math-narrow.h>
+#undef libm_alias_float_ldouble
+#define libm_alias_float_ldouble(func) libm_alias_float32_float128 (func)
+#undef libm_alias_double_ldouble
+#define libm_alias_double_ldouble(func) libm_alias_float64_float128 (func)
 
 
 /* IEEE function renames.  */

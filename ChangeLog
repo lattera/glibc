@@ -1,5 +1,37 @@
 2018-02-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/bits/mathcalls-narrow.h: New file.
+	* include/bits/mathcalls-narrow.h: Likewise.
+	* math/math-narrow.h: Likewise.
+	* math/math.h (__MATHCALL_NARROW_ARGS_1): New macro.
+	(__MATHCALL_NARROW_ARGS_2): Likewise.
+	(__MATHCALL_NARROW_ARGS_3): Likewise.
+	(__MATHCALL_NARROW_NORMAL): Likewise.
+	(__MATHCALL_NARROW_REDIR): Likewise.
+	(__MATHCALL_NARROW): Likewise.
+	[__GLIBC_USE (IEC_60559_BFP_EXT)]: Repeatedly include
+	<bits/mathcalls-narrow.h> with _Mret_, _Marg_ and __MATHCALL_NAME
+	defined.
+	[__GLIBC_USE (IEC_60559_TYPES_EXT)]: Likewise.
+	* math/Makefile (headers): Add bits/mathcalls-narrow.h.
+	(libm-narrow-fns): New variable.
+	(libm-narrow-types-basic): Likewise.
+	(libm-narrow-types-ldouble-yes): Likewise.
+	(libm-narrow-types-float128-yes): Likewise.
+	(libm-narrow-types-float128-alias-yes): Likewise.
+	(libm-narrow-types): Likewise.
+	(libm-routines): Add narrowing functions.
+	* sysdeps/i386/fpu/fenv_private.h [__x86_64__]
+	(libc_feholdexcept_setroundf128): New macro.
+	[__x86_64__] (libc_feupdateenv_testf128): Likewise.
+	* sysdeps/ieee754/float128/float128_private.h: Include
+	<math/math-narrow.h>.
+	[libc_feholdexcept_setroundf128] (libc_feholdexcept_setroundl):
+	Undefine and redefine.
+	[libc_feupdateenv_testf128] (libc_feupdateenv_testl): Likewise.
+	(libm_alias_float_ldouble): Undefine and redefine.
+	(libm_alias_double_ldouble): Likewise.
+
 	* math/Makefile [$(PERL) != no] (libm-test-incs): Remove variable.
 
 2018-02-09  Wilco Dijkstra  <wdijkstr@arm.com>

@@ -483,6 +483,290 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #undef	__MATHDECL
 #undef	__MATHCALL
 
+/* Declare functions returning a narrower type.  */
+#define __MATHCALL_NARROW_ARGS_1 (_Marg_ __x)
+#define __MATHCALL_NARROW_ARGS_2 (_Marg_ __x, _Marg_ __y)
+#define __MATHCALL_NARROW_ARGS_3 (_Marg_ __x, _Marg_ __y, _Marg_ __z)
+#define __MATHCALL_NARROW_NORMAL(func, nargs)			\
+  extern _Mret_ func __MATHCALL_NARROW_ARGS_ ## nargs __THROW
+#define __MATHCALL_NARROW_REDIR(func, redir, nargs)			\
+  extern _Mret_ __REDIRECT_NTH (func, __MATHCALL_NARROW_ARGS_ ## nargs, \
+				redir)
+#define __MATHCALL_NARROW(func, redir, nargs)	\
+  __MATHCALL_NARROW_NORMAL (func, nargs)
+
+#if __GLIBC_USE (IEC_60559_BFP_EXT)
+
+# define _Mret_ float
+# define _Marg_ double
+# define __MATHCALL_NAME(name) f ## name
+# include <bits/mathcalls-narrow.h>
+# undef _Mret_
+# undef _Marg_
+# undef __MATHCALL_NAME
+
+# define _Mret_ float
+# define _Marg_ long double
+# define __MATHCALL_NAME(name) f ## name ## l
+# ifdef __LDBL_COMPAT
+#  define __MATHCALL_REDIR_NAME(name) f ## name
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+# endif
+# include <bits/mathcalls-narrow.h>
+# undef _Mret_
+# undef _Marg_
+# undef __MATHCALL_NAME
+# ifdef __LDBL_COMPAT
+#  undef __MATHCALL_REDIR_NAME
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_NORMAL (func, nargs)
+# endif
+
+# define _Mret_ double
+# define _Marg_ long double
+# define __MATHCALL_NAME(name) d ## name ## l
+# ifdef __LDBL_COMPAT
+#  define __MATHCALL_REDIR_NAME(name) __nldbl_d ## name ## l
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_REDIR (func, redir, nargs)
+# endif
+# include <bits/mathcalls-narrow.h>
+# undef _Mret_
+# undef _Marg_
+# undef __MATHCALL_NAME
+# ifdef __LDBL_COMPAT
+#  undef __MATHCALL_REDIR_NAME
+#  undef __MATHCALL_NARROW
+#  define __MATHCALL_NARROW(func, redir, nargs) \
+  __MATHCALL_NARROW_NORMAL (func, nargs)
+# endif
+
+#endif
+
+#if __GLIBC_USE (IEC_60559_TYPES_EXT)
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT32
+#  define _Mret_ _Float16
+#  define _Marg_ _Float32
+#  define __MATHCALL_NAME(name) f16 ## name ## f32
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT32X
+#  define _Mret_ _Float16
+#  define _Marg_ _Float32x
+#  define __MATHCALL_NAME(name) f16 ## name ## f32x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT64
+#  define _Mret_ _Float16
+#  define _Marg_ _Float64
+#  define __MATHCALL_NAME(name) f16 ## name ## f64
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT64X
+#  define _Mret_ _Float16
+#  define _Marg_ _Float64x
+#  define __MATHCALL_NAME(name) f16 ## name ## f64x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT128
+#  define _Mret_ _Float16
+#  define _Marg_ _Float128
+#  define __MATHCALL_NAME(name) f16 ## name ## f128
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT16 && __HAVE_FLOAT128X
+#  define _Mret_ _Float16
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f16 ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32 && __HAVE_FLOAT32X
+#  define _Mret_ _Float32
+#  define _Marg_ _Float32x
+#  define __MATHCALL_NAME(name) f32 ## name ## f32x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32 && __HAVE_FLOAT64
+#  define _Mret_ _Float32
+#  define _Marg_ _Float64
+#  define __MATHCALL_NAME(name) f32 ## name ## f64
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32 && __HAVE_FLOAT64X
+#  define _Mret_ _Float32
+#  define _Marg_ _Float64x
+#  define __MATHCALL_NAME(name) f32 ## name ## f64x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32 && __HAVE_FLOAT128
+#  define _Mret_ _Float32
+#  define _Marg_ _Float128
+#  define __MATHCALL_NAME(name) f32 ## name ## f128
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32 && __HAVE_FLOAT128X
+#  define _Mret_ _Float32
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f32 ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32X && __HAVE_FLOAT64
+#  define _Mret_ _Float32x
+#  define _Marg_ _Float64
+#  define __MATHCALL_NAME(name) f32x ## name ## f64
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32X && __HAVE_FLOAT64X
+#  define _Mret_ _Float32x
+#  define _Marg_ _Float64x
+#  define __MATHCALL_NAME(name) f32x ## name ## f64x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32X && __HAVE_FLOAT128
+#  define _Mret_ _Float32x
+#  define _Marg_ _Float128
+#  define __MATHCALL_NAME(name) f32x ## name ## f128
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT32X && __HAVE_FLOAT128X
+#  define _Mret_ _Float32x
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f32x ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT64 && __HAVE_FLOAT64X
+#  define _Mret_ _Float64
+#  define _Marg_ _Float64x
+#  define __MATHCALL_NAME(name) f64 ## name ## f64x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT64 && __HAVE_FLOAT128
+#  define _Mret_ _Float64
+#  define _Marg_ _Float128
+#  define __MATHCALL_NAME(name) f64 ## name ## f128
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT64 && __HAVE_FLOAT128X
+#  define _Mret_ _Float64
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f64 ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT64X && __HAVE_FLOAT128
+#  define _Mret_ _Float64x
+#  define _Marg_ _Float128
+#  define __MATHCALL_NAME(name) f64x ## name ## f128
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT64X && __HAVE_FLOAT128X
+#  define _Mret_ _Float64x
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f64x ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+# if __HAVE_FLOAT128 && __HAVE_FLOAT128X
+#  define _Mret_ _Float128
+#  define _Marg_ _Float128x
+#  define __MATHCALL_NAME(name) f128 ## name ## f128x
+#  include <bits/mathcalls-narrow.h>
+#  undef _Mret_
+#  undef _Marg_
+#  undef __MATHCALL_NAME
+# endif
+
+#endif
+
+#undef __MATHCALL_NARROW_ARGS_1
+#undef __MATHCALL_NARROW_ARGS_2
+#undef __MATHCALL_NARROW_ARGS_3
+#undef __MATHCALL_NARROW_NORMAL
+#undef __MATHCALL_NARROW_REDIR
+#undef __MATHCALL_NARROW
 
 #if defined __USE_MISC || defined __USE_XOPEN
 /* This variable is used by `gamma' and `lgamma'.  */
