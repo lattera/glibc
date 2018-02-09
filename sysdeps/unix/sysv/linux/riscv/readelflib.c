@@ -43,6 +43,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 {
   ElfW(Ehdr) *elf_header = (ElfW(Ehdr) *) file_contents;
   Elf32_Ehdr *elf32_header = (Elf32_Ehdr *) elf_header;
+  Elf64_Ehdr *elf64_header = (Elf64_Ehdr *) elf_header;
   int ret;
   long flags;
 
@@ -59,7 +60,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     {
       ret = process_elf64_file (file_name, lib, flag, osversion, soname,
 				file_contents, file_length);
-      flags = elf32_header->e_flags;
+      flags = elf64_header->e_flags;
     }
 
   /* RISC-V linkers encode the floating point ABI as part of the ELF headers.  */

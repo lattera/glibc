@@ -1,3 +1,9 @@
+2018-02-09  DJ Delorie  <dj@redhat.com>
+
+	[BZ #22827]
+	* sysdeps/unix/sysv/linux/riscv/readelflib.c (process_elf_file): Use
+	64-bit ELF type for 64-bit ELF objects.
+
 2018-02-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-driver.c (snan_tests_arg): New variable.
