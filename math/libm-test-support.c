@@ -985,7 +985,8 @@ enable_test (int exceptions)
     return 0;
   if (flag_test_finite && (exceptions & NON_FINITE) != 0)
     return 0;
-  if (!SNAN_TESTS (FLOAT) && (exceptions & TEST_SNAN) != 0)
+  if ((!SNAN_TESTS (FLOAT) || !snan_tests_arg)
+      && (exceptions & TEST_SNAN) != 0)
     return 0;
   if (flag_test_mathvec && (exceptions & NO_TEST_MATHVEC) != 0)
     return 0;

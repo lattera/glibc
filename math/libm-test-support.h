@@ -37,6 +37,7 @@ extern const int flag_test_exceptions;
 extern const int flag_test_finite;
 extern const int flag_test_inline;
 extern const int flag_test_mathvec;
+extern const int snan_tests_arg;
 extern const char test_msg[];
 extern const char qtype_str[];
 extern const char doc[];

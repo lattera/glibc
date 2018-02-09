@@ -1,5 +1,9 @@
 2018-02-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/libm-test-driver.c (snan_tests_arg): New variable.
+	* math/libm-test-support.h (snan_tests_arg): New declaration.
+	* math/libm-test-support.c (enable_test): Check snan_tests_arg.
+
 	* math/Makefile (test-type-pairs): New variable.
 	(test-type-pairs-f64xf128-yes): Likewise.
 	(tests): Add test-narrow-macros.

@@ -27,6 +27,12 @@ const int flag_test_finite = TEST_FINITE;
 const int flag_test_inline = TEST_INLINE;
 const int flag_test_mathvec = TEST_MATHVEC;
 
+#if TEST_NARROW
+const int snan_tests_arg = SNAN_TESTS (ARG_FLOAT);
+#else
+const int snan_tests_arg = SNAN_TESTS (FLOAT);
+#endif
+
 #define STRX(x) #x
 #define STR(x) STRX (x)
 #define STR_FLOAT STR (FLOAT)
