@@ -41,3 +41,4 @@
 #define LITM(x) x ## f64x
 #define FTOSTR strfromf64x
 #define snan_value_MACRO SNANF64X
+#define FUNC_NARROW_PREFIX f64x

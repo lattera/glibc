@@ -145,6 +145,21 @@ test-types = $(test-types-basic) $(type-float128-$(float128-fcts)) \
 	     float32 float64 $(type-float128-$(float128-alias-fcts)) \
 	     float32x $(type-float64x-$(float64x-alias-fcts))
 
+# Pairs of types for which narrowing functions should be tested (this
+# variable has more entries than libm-narrow-types because it includes
+# pairs for which the functions sometimes or always alias functions
+# for other types). This definition embeds the assumption that if
+# _Float64x is supported, so is _Float128, and vice versa (they may or
+# may not have the same format).
+test-type-pairs = float-double float-ldouble double-ldouble \
+		  float32-float64 float32-float32x float32x-float64 \
+		  $(test-type-pairs-f64xf128-$(float128-fcts)) \
+		  $(test-type-pairs-f64xf128-$(float128-alias-fcts))
+test-type-pairs-f64xf128-yes = float32-float64x float32-float128 \
+			       float64-float64x float64-float128 \
+			       float32x-float64x float32x-float128 \
+			       float64x-float128
+
 # For each of the basic types (float, double, long double), replace the
 # occurrences of 'F' in arg 1 with the appropriate suffix for the type.
 type-basic-foreach = $(foreach t, $(types-basic), \
@@ -219,7 +234,8 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-femode-traps test-iszero-excess-precision \
 	test-iseqsig-excess-precision test-flt-eval-method \
 	test-fp-ilogb-constants test-fp-llogb-constants \
-	test-fe-snans-always-signal test-finite-macros $(tests-static)
+	test-fe-snans-always-signal test-finite-macros test-narrow-macros \
+	$(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
@@ -268,14 +284,19 @@ libm-test-funcs-noauto = canonicalize ceil cimag conj copysign cproj creal \
 			 scalbln scalbn setpayload setpayloadsig signbit \
 			 significand totalorder totalordermag trunc ufromfp \
 			 ufromfpx
+libm-test-funcs-narrow =
 libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
 libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
 libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)
-generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto)
+libm-test-c-narrow = $(foreach f,$(libm-test-funcs-narrow),\
+				 libm-test-narrow-$(f).c)
+generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto) \
+	     $(libm-test-c-narrow)
 
 libm-tests-base-normal = $(foreach t,$(test-types),test-$(t))
 libm-tests-base-finite = $(foreach t,$(test-types),test-$(t)-finite)
 libm-tests-base-inline = $(foreach t,$(test-types),test-i$(t))
+libm-tests-base-narrow = $(foreach t,$(test-type-pairs),test-$(t))
 libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-finite) \
 		  $(libm-tests-base-inline) $(libm-vec-tests)
 libm-tests-normal = $(foreach t,$(libm-tests-base-normal),\
@@ -287,14 +308,18 @@ libm-tests-finite = $(foreach t,$(libm-tests-base-finite),\
 libm-tests-inline = $(foreach t,$(libm-tests-base-inline),\
 				$(foreach f,$(libm-test-funcs-all),\
 					    $(t)-$(f)))
+libm-tests-narrow = $(foreach t,$(libm-tests-base-narrow),\
+				$(foreach f,$(libm-test-funcs-narrow),\
+					    $(t)-$(f)))
 libm-tests-vector = $(foreach t,$(libmvec-tests),\
 				$(foreach f,$($(t)-funcs),test-$(t)-$(f)))
 libm-tests = $(libm-tests-normal) $(libm-tests-finite) $(libm-tests-inline) \
-	     $(libm-tests-vector)
+	     $(libm-tests-narrow) $(libm-tests-vector)
 libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
 				  test-$(1)-$(f) test-$(1)-finite-$(f) \
 				  test-i$(1)-$(f)) \
-		      $(filter test-$(1)-%,$(libm-tests-vector))
+		      $(filter test-$(1)-%,$(libm-tests-vector) \
+					   $(libm-tests-narrow))
 
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
@@ -304,6 +329,7 @@ generated += $(addsuffix .c,$(libm-tests)) \
 
 libm-test-c-auto-obj = $(addprefix $(objpfx),$(libm-test-c-auto))
 libm-test-c-noauto-obj = $(addprefix $(objpfx),$(libm-test-c-noauto))
+libm-test-c-narrow-obj = $(addprefix $(objpfx),$(libm-test-c-narrow))
 
 $(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 						  gen-libm-test.pl
@@ -313,6 +339,12 @@ $(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 $(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 						gen-libm-test.pl \
 						auto-libm-test-out%
+	$(make-target-directory)
+	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
+
+$(libm-test-c-narrow-obj): $(objpfx)libm-test%.c: libm-test%.inc \
+						  gen-libm-test.pl \
+						  auto-libm-test-out%
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
 endif
@@ -457,6 +489,22 @@ $(foreach t,$(libm-tests-inline),$(objpfx)$(t).c): $(objpfx)test-i%.c:
 	  echo "#include <libm-test-$$func.c>"; \
 	) > $@
 
+$(foreach t,$(libm-tests-narrow),$(objpfx)$(t).c): $(objpfx)test-%.c:
+	type_pair_func=$*; \
+	type_pair=$${type_pair_func%-*}; \
+	func=$${type_pair_func##*-}; \
+	ret_type=$${type_pair%%-*}; \
+	arg_type=$${type_pair#*-}; \
+	( \
+	  echo "#include <test-$$ret_type.h>"; \
+	  echo "#include <test-arg-$$arg_type.h>"; \
+	  echo "#include <test-math-no-finite.h>"; \
+	  echo "#include <test-math-no-inline.h>"; \
+	  echo "#include <test-math-errno.h>"; \
+	  echo "#include <test-math-narrow.h>"; \
+	  echo "#include <libm-test-narrow-$$func.c>"; \
+	) > $@
+
 $(foreach t,$(libm-tests-vector),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	type_func=$*; \
 	type=$${type_func%-*}; \
@@ -486,6 +534,14 @@ object-suffixes-left := $(libm-tests-base)
 include $(o-iterator)
 
 define o-iterator-doit
+$(foreach f,$(libm-test-funcs-narrow),\
+	    $(objpfx)$(o)-$(f).o): $(objpfx)$(o)%.o: \
+				   $(objpfx)libm-test-narrow%.c
+endef
+object-suffixes-left := $(libm-tests-base-narrow)
+include $(o-iterator)
+
+define o-iterator-doit
 $(foreach f,$(libm-test-funcs-all),\
 	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-no-inline-cflags)
 endef
@@ -504,6 +560,13 @@ $(foreach f,$(libm-test-funcs-all),\
 	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-inline-cflags)
 endef
 object-suffixes-left := $(libm-tests-base-inline)
+include $(o-iterator)
+
+define o-iterator-doit
+$(foreach f,$(libm-test-funcs-narrow),\
+	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-no-inline-cflags)
+endef
+object-suffixes-left := $(libm-tests-base-narrow)
 include $(o-iterator)
 
 define o-iterator-doit

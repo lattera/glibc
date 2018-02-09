@@ -35,3 +35,4 @@
 #define LITM(x) x ## f32x
 #define FTOSTR strfromf32x
 #define snan_value_MACRO SNANF32X
+#define FUNC_NARROW_PREFIX f32x

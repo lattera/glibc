@@ -1,5 +1,5 @@
-/* Common definitions for libm tests for double.
-   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+/* Common definitions for libm tests for narrowing scalar functions.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function
-#define FLOAT double
-#define CFLOAT __complex__ double
-#define BUILD_COMPLEX(real, imag) (CMPLX ((real), (imag)))
-#define PREFIX DBL
-#define LIT(x) (x)
-#define TYPE_STR "double"
-#define ULP_IDX ULP_DBL
-#define ULP_I_IDX ULP_I_DBL
-#define LITM(x) x
-#define FTOSTR strfromd
-#define snan_value_MACRO SNAN
-#define TEST_FLOATN 0
-#define FUNC_NARROW_PREFIX d
+#define FUNC_TEST(function)						\
+  FUNC_TEST_CONCAT (FUNC_NARROW_PREFIX, function, FUNC_NARROW_SUFFIX)
+#define FUNC_TEST_CONCAT(prefix, function, suffix)	\
+  _FUNC_TEST_CONCAT (prefix, function, suffix)
+#define _FUNC_TEST_CONCAT(prefix, function, suffix)	\
+  prefix ## function ## suffix
+#define TEST_MATHVEC 0
+#define TEST_NARROW 1

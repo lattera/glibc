@@ -163,4 +163,7 @@ CFLAGS-nldbl-y0.c = -fno-builtin-y0l
 CFLAGS-nldbl-y1.c = -fno-builtin-y1l
 CFLAGS-nldbl-yn.c = -fno-builtin-ynl
 
+tests += test-narrow-macros-ldbl-64
+CFLAGS-test-narrow-macros-ldbl-64.c += -mlong-double-64
+
 endif

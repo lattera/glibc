@@ -1,5 +1,89 @@
 2018-02-09  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/Makefile (test-type-pairs): New variable.
+	(test-type-pairs-f64xf128-yes): Likewise.
+	(tests): Add test-narrow-macros.
+	(libm-test-funcs-narrow): New variable.
+	(libm-test-c-narrow): Likewise.
+	(generated): Add $(libm-test-c-narrow).
+	(libm-tests-base-narrow): New variable.
+	(libm-tests-narrow): Likewise.
+	(libm-tests): Add $(libm-tests-narrow).
+	(libm-tests-for-type): Handle $(libm-tests-narrow).
+	(libm-test-c-narrow-obj): New variable.
+	($(libm-test-c-narrow-obj)): New rule.
+	($(foreach t,$(libm-tests-narrow),$(objpfx)$(t).c)): Likewise.
+	($(foreach f,$(libm-test-funcs-narrow),$(objpfx)$(o)-$(f).o)): Use
+	$(o-iterator) to set dependencies and CFLAGS.
+	* math/gen-auto-libm-tests.c: Document use for narrowing
+	functions.
+	(output_for_one_input_case): Take argument NARROW.
+	(generate_output): Likewise.  Update call to
+	output_for_one_input_case.
+	(main): Take --narrow option.  Update call to generate_output.
+	* math/gen-libm-test.pl (_apply_lit): Take macro name as argument.
+	(apply_lit): Update call to _apply_lit.
+	(apply_arglit): New function.
+	(parse_args): Handle "a" arguments.
+	(parse_auto_input): Handle format names using ":".
+	* math/README.libm-test: Document "a" parameter type.
+	* math/libm-test-support.h (ARG_TYPE_MIN): New macro.
+	(ARG_TYPE_TRUE_MIN): Likewise.
+	(ARG_TYPE_MAX): Likwise.
+	(ARG_MIN_EXP): Likewise.
+	(ARG_MAX_EXP): Likewise.
+	(ARG_MANT_DIG): Likewise.
+	(TEST_COND_arg_ibm128): Likewise.
+	(TEST_COND_ibm128_libgcc): Define conditional on [ARG_FLOAT].
+	(TEST_COND_arg_fmt): New macro.
+	(init_max_error): Update prototype.
+	* math/libm-test-support.c (test_ibm128): New variable.
+	(init_max_error): Take argument testing_ibm128 and set test_ibm128
+	instead of using [TEST_COND_ibm128] conditional.
+	(test_exceptions): Use test_ibm128 instead of TEST_COND_ibm128.
+	* math/libm-test-driver.c (STR_ARG_FLOAT): New macro.
+	[TEST_NARROW] (TEST_MSG): New definition.
+	(arg_plus_zero): New macro.
+	(arg_minus_zero): Likewise.
+	(arg_plus_infty): Likewise.
+	(arg_minus_infty): Likewise.
+	(arg_qnan_value_pl): Likewise.
+	(arg_qnan_value): Likewise.
+	(arg_snan_value_pl): Likewise.
+	(arg_snan_value): Likewise.
+	(arg_max_value): Likewise.
+	(arg_min_value): Likewise.
+	(arg_min_subnorm_value): Likewise.
+	[ARG_FLOAT] (struct test_aa_f_data): New struct type.
+	(RUN_TEST_LOOP_aa_f): New macro.
+	(TEST_SUFF): New macro.
+	(TEST_SUFF_STR): Likewise.
+	[!TEST_MATHVEC] (VEC_SUFF): Don't define.
+	(TEST_COND_any_ibm128): New macro.
+	(START): Use TEST_SUFF and TEST_SUFF_STR in initializer for
+	this_func.  Update call to init_max_error.
+	* math/test-double.h (FUNC_NARROW_PREFIX): New macro.
+	* math/test-float.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-float128.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-float32.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-float32x.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-float64.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-float64x.h (FUNC_NARROW_PREFIX): Likewise.
+	* math/test-math-scalar.h (TEST_NARROW): Likewise.
+	* math/test-math-vector.h (TEST_NARROW): Likewise.
+	* math/test-arg-double.h: New file.
+	* math/test-arg-float128.h: Likewise.
+	* math/test-arg-float32x.h: Likewise.
+	* math/test-arg-float64.h: Likewise.
+	* math/test-arg-float64x.h: Likewise.
+	* math/test-arg-ldouble.h: Likewise.
+	* math/test-math-narrow.h: Likewise.
+	* math/test-narrow-macros.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/test-narrow-macros-ldbl-64.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (tests): Add
+	test-narrow-macros-ldbl-64.
+	(CFLAGS-test-narrow-macros-ldbl-64.c): New variable.
+
 	* math/bits/mathcalls-narrow.h: New file.
 	* include/bits/mathcalls-narrow.h: Likewise.
 	* math/math-narrow.h: Likewise.

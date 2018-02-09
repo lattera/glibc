@@ -165,10 +165,10 @@ sub show_exceptions {
   }
 }
 
-# Apply the LIT(x) macro to a literal floating point constant
+# Apply the LIT(x) or ARG_LIT(x) macro to a literal floating point constant
 # and strip any existing suffix.
 sub _apply_lit {
-  my ($lit) = @_;
+  my ($macro, $lit) = @_;
   my $exp_re = "([+-])?[[:digit:]]+";
   # Don't wrap something that does not look like a:
   #  * Hexadecimal FP value
@@ -181,7 +181,7 @@ sub _apply_lit {
   # Strip any existing literal suffix.
   $lit =~ s/[lLfF]$//;
 
-  return "LIT (${lit})";
+  return "$macro (${lit})";
 }
 
 # Apply LIT macro to individual tokens within an expression.
@@ -194,7 +194,17 @@ sub apply_lit {
   my ($lit) = @_;
   my @toks = split (/ /, $lit);
   foreach (@toks) {
-    $_ = _apply_lit ($_);
+    $_ = _apply_lit ("LIT", $_);
+  }
+  return join (' ', @toks);
+}
+
+# Likewise, but apply ARG_LIT for arguments to narrowing functions.
+sub apply_arglit {
+  my ($lit) = @_;
+  my @toks = split (/ /, $lit);
+  foreach (@toks) {
+    $_ = _apply_lit ("ARG_LIT", $_);
   }
   return join (' ', @toks);
 }
@@ -228,8 +238,8 @@ sub parse_args {
     if ($current_arg > 1) {
       $comma = ', ';
     }
-    # FLOAT, long double, int, unsigned int, long int, long long int
-    if ($descr[$i] =~ /f|j|i|u|l|L/) {
+    # FLOAT, ARG_FLOAT, long double, int, unsigned int, long int, long long int
+    if ($descr[$i] =~ /f|a|j|i|u|l|L/) {
       $call_args .= $comma . &beautify ($args[$current_arg]);
       ++$current_arg;
       next;
@@ -293,10 +303,12 @@ sub parse_args {
   $cline = "{ \"$call_args\"";
   @descr = split //,$descr_args;
   for ($i=0; $i <= $#descr; $i++) {
-    # FLOAT, int, long int, long long int
-    if ($descr[$i] =~ /f|j|i|u|l|L/) {
+    # FLOAT, ARG_FLOAT, long double, int, unsigned int, long int, long long int
+    if ($descr[$i] =~ /f|a|j|i|u|l|L/) {
       if ($descr[$i] eq "f") {
         $cline .= ", " . &apply_lit ($args[$current_arg]);
+      } elsif ($descr[$i] eq "a") {
+        $cline .= ", " . &apply_arglit ($args[$current_arg]);
       } else {
         $cline .= ", $args[$current_arg]";
       }
@@ -420,7 +432,9 @@ sub convert_condition {
   my (@conds, $ret);
   @conds = split /:/, $cond;
   foreach (@conds) {
-    s/-/_/g;
+    if ($_ !~ /^arg_fmt\(/) {
+      s/-/_/g;
+    }
     s/^/TEST_COND_/;
   }
   $ret = join " && ", @conds;
@@ -822,7 +836,7 @@ sub parse_auto_input {
     chop;
     next if !/^= /;
     s/^= //;
-    if (/^(\S+) (\S+) ([^:]*) : (.*)$/) {
+    if (/^(\S+) (\S+) ([^: ][^ ]* [^:]*) : (.*)$/) {
       $auto_tests{$1}{$2}{$3} = $4;
     } else {
       die ("bad automatic test line: $_\n");

@@ -1,4 +1,4 @@
-/* Common definitions for libm tests for scalar functions.
+/* Common definitions for libm tests for scalar (non-narrowing) functions.
    Copyright (C) 1997-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,3 +18,4 @@
 
 #define FUNC_TEST(function) FUNC (function)
 #define TEST_MATHVEC 0
+#define TEST_NARROW 0

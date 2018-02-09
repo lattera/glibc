@@ -30,6 +30,7 @@ const int flag_test_mathvec = TEST_MATHVEC;
 #define STRX(x) #x
 #define STR(x) STRX (x)
 #define STR_FLOAT STR (FLOAT)
+#define STR_ARG_FLOAT STR (ARG_FLOAT)
 #define STR_VEC_LEN STR (VEC_LEN)
 
 /* Informal description of the functions being tested.  */
@@ -39,6 +40,8 @@ const int flag_test_mathvec = TEST_MATHVEC;
 # define TEST_MSG "testing " STR_FLOAT " (inline functions)\n"
 #elif TEST_FINITE
 # define TEST_MSG "testing " STR_FLOAT " (finite-math-only)\n"
+#elif TEST_NARROW
+# define TEST_MSG "testing " STR_FLOAT " (argument " STR_ARG_FLOAT ")\n"
 #else
 # define TEST_MSG "testing " STR_FLOAT " (without inline functions)\n"
 #endif
@@ -108,6 +111,18 @@ const char qtype_str[] = TYPE_STR;
 #define min_value	TYPE_MIN
 #define min_subnorm_value TYPE_TRUE_MIN
 
+#define arg_plus_zero	ARG_LIT (0.0)
+#define arg_minus_zero	ARG_LIT (-0.0)
+#define arg_plus_infty	ARG_FUNC (__builtin_inf) ()
+#define arg_minus_infty	-(ARG_FUNC (__builtin_inf) ())
+#define arg_qnan_value_pl(S)	ARG_FUNC (__builtin_nan) (S)
+#define arg_qnan_value	arg_qnan_value_pl ("")
+#define arg_snan_value_pl(S)	ARG_FUNC (__builtin_nans) (S)
+#define arg_snan_value	arg_snan_value_pl ("")
+#define arg_max_value	ARG_TYPE_MAX
+#define arg_min_value	ARG_TYPE_MIN
+#define arg_min_subnorm_value ARG_TYPE_TRUE_MIN
+
 /* For nexttoward tests.  */
 #define snan_value_ld	__builtin_nansl ("")
 
@@ -147,6 +162,18 @@ struct test_fj_f_data
     int exceptions;
   } rd, rn, rz, ru;
 };
+#ifdef ARG_FLOAT
+struct test_aa_f_data
+{
+  const char *arg_str;
+  ARG_FLOAT arg1, arg2;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
+};
+#endif
 struct test_fi_f_data
 {
   const char *arg_str;
@@ -467,6 +494,7 @@ struct test_Ff_b1_data
 #define RUN_TEST_ff_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_ff_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_LOOP_fj_f RUN_TEST_LOOP_2_f
+#define RUN_TEST_LOOP_aa_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fi_f RUN_TEST_2_f
 #define RUN_TEST_LOOP_fi_f RUN_TEST_LOOP_2_f
 #define RUN_TEST_fl_f RUN_TEST_2_f
@@ -945,18 +973,32 @@ struct test_Ff_b1_data
 		       (ARRAY)[i].RM_##ROUNDING_MODE.extra2_expected);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
 
-#if !TEST_MATHVEC
-# define VEC_SUFF
+#if TEST_MATHVEC
+# define TEST_SUFF VEC_SUFF
+# define TEST_SUFF_STR
+#elif TEST_NARROW
+# define TEST_SUFF
+# define TEST_SUFF_STR "_" ARG_TYPE_STR
+#else
+# define TEST_SUFF
+# define TEST_SUFF_STR
 #endif
 
 #define STR_CONCAT(a, b, c) __STRING (a##b##c)
 #define STR_CON3(a, b, c) STR_CONCAT (a, b, c)
 
+#if TEST_NARROW
+# define TEST_COND_any_ibm128 (TEST_COND_ibm128 || TEST_COND_arg_ibm128)
+#else
+# define TEST_COND_any_ibm128 TEST_COND_ibm128
+#endif
+
 /* Start and end the tests for a given function.  */
 #define START(FUN, SUFF, EXACT)					\
   CHECK_ARCH_EXT;						\
-  const char *this_func = STR_CON3 (FUN, SUFF, VEC_SUFF);	\
-  init_max_error (this_func, EXACT)
+  const char *this_func						\
+    = STR_CON3 (FUN, SUFF, TEST_SUFF) TEST_SUFF_STR;		\
+  init_max_error (this_func, EXACT, TEST_COND_any_ibm128)
 #define END					\
   print_max_error (this_func)
 #define END_COMPLEX				\

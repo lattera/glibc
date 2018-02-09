@@ -81,6 +81,13 @@ extern const char doc[];
 #define MAX_EXP __CONCATX (PREFIX, _MAX_EXP)
 #define MANT_DIG __CONCATX (PREFIX, _MANT_DIG)
 
+#define ARG_TYPE_MIN __CONCATX (ARG_PREFIX, _MIN)
+#define ARG_TYPE_TRUE_MIN __CONCATX (ARG_PREFIX, _TRUE_MIN)
+#define ARG_TYPE_MAX __CONCATX (ARG_PREFIX, _MAX)
+#define ARG_MIN_EXP __CONCATX (ARG_PREFIX, _MIN_EXP)
+#define ARG_MAX_EXP __CONCATX (ARG_PREFIX, _MAX_EXP)
+#define ARG_MANT_DIG __CONCATX (ARG_PREFIX, _MANT_DIG)
+
 /* Format specific test macros.  */
 #define TEST_COND_binary32 (MANT_DIG == 24	\
 			    && MIN_EXP == -125	\
@@ -96,6 +103,8 @@ extern const char doc[];
 
 #define TEST_COND_ibm128 (MANT_DIG == 106)
 
+#define TEST_COND_arg_ibm128 (ARG_MANT_DIG == 106)
+
 #define TEST_COND_intel96 (MANT_DIG == 64	\
 			   && MIN_EXP == -16381	\
 			   && MAX_EXP == 16384)
@@ -108,7 +117,11 @@ extern const char doc[];
    where in principle the glibc code is OK but the tests fail because
    of limitations of the libgcc support for that format (e.g. GCC bug
    59666, in non-default rounding modes).  */
-#define TEST_COND_ibm128_libgcc TEST_COND_ibm128
+#ifdef ARG_FLOAT
+# define TEST_COND_ibm128_libgcc (TEST_COND_ibm128 || TEST_COND_arg_ibm128)
+#else
+# define TEST_COND_ibm128_libgcc TEST_COND_ibm128
+#endif
 
 /* Mark a test as expected to fail for ibm128-libgcc.  This is used
    via XFAIL_ROUNDING_IBM128_LIBGCC, which gen-libm-test.pl transforms
@@ -132,6 +145,16 @@ extern const char doc[];
 # define PAYLOAD_DIG (MANT_DIG - 2)
 #endif
 
+/* For narrowing functions, whether the argument format can represent
+   all the given argument values.  */
+#define TEST_COND_arg_fmt(MAX_EXP, NUM_ONES, MIN_EXP, MAX_PREC) \
+  (((MAX_EXP) < ARG_MAX_EXP)					\
+   && (!TEST_COND_arg_ibm128					\
+       || (MAX_EXP) < ARG_MAX_EXP - 1				\
+       || (NUM_ONES) <= 53)					\
+   && (MIN_EXP) >= ARG_MIN_EXP - ARG_MANT_DIG			\
+   && (MAX_PREC) <= ARG_MANT_DIG)
+
 /* Values underflowing on architectures detecting tininess before
    rounding, but not on those detecting tininess after rounding.  */
 #define UNDERFLOW_EXCEPTION_BEFORE_ROUNDING	(TININESS_AFTER_ROUNDING \
@@ -149,7 +172,7 @@ extern const char doc[];
 #define TEST_COND_after_rounding	TININESS_AFTER_ROUNDING
 
 int enable_test (int);
-void init_max_error (const char *, int);
+void init_max_error (const char *, int, int);
 void print_max_error (const char *);
 void print_complex_max_error (const char *);
 void check_float (const char *, FLOAT, FLOAT, int);

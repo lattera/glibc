@@ -1,5 +1,6 @@
-/* Common definitions for libm tests for double.
-   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+/* Common definitions for libm tests for _Float128 arguments to
+   narrowing functions.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +17,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FUNC(function) function
-#define FLOAT double
-#define CFLOAT __complex__ double
-#define BUILD_COMPLEX(real, imag) (CMPLX ((real), (imag)))
-#define PREFIX DBL
-#define LIT(x) (x)
-#define TYPE_STR "double"
-#define ULP_IDX ULP_DBL
-#define ULP_I_IDX ULP_I_DBL
-#define LITM(x) x
-#define FTOSTR strfromd
-#define snan_value_MACRO SNAN
-#define TEST_FLOATN 0
-#define FUNC_NARROW_PREFIX d
+#include <bits/floatn.h>
+#include <float.h>
+
+#define ARG_FUNC(function) function ## f128
+#define ARG_FLOAT _Float128
+#define ARG_PREFIX FLT128
+#define ARG_LIT(x) __f128 (x)
+#if FLT128_MANT_DIG == LDBL_MANT_DIG
+# define ARG_TYPE_STR "ldouble"
+#else
+# define ARG_TYPE_STR "float128"
+#endif
+#define FUNC_NARROW_SUFFIX f128

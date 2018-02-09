@@ -120,6 +120,7 @@ parameter.
 The accepted parameter types are:
 - "f" for FLOAT
 - "j" for long double.
+- "a" for ARG_FLOAT, the argument type for narrowing functions.
 - "b" for boolean - just tests if the output parameter evaluates to 0
   or 1 (only for output).
 - "c" for complex.  This parameter needs two values, first the real,
