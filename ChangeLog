@@ -1,3 +1,8 @@
+2018-02-09  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/fpu_control.h: Use builtins for accessing
+	FPCR/FPSR.
+
 2018-02-09  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/creature.texi: Convert references to gcc.info to gcc.
