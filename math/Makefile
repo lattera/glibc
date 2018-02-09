@@ -303,8 +303,6 @@ $(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 						auto-libm-test-out%
 	$(make-target-directory)
 	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
-
-libm-test-incs = $(foreach f,$(libm-test-funcs-all),libm-test-$(f).inc)
 endif
 
 ifdef PYTHON

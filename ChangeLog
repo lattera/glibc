@@ -1,3 +1,7 @@
+2018-02-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile [$(PERL) != no] (libm-test-incs): Remove variable.
+
 2018-02-09  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/fpu_control.h: Use builtins for accessing
