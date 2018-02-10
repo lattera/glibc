@@ -1,3 +1,7 @@
+2018-02-10  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/fpu/fpu_control.h: Add features.h to fix build error.
+
 2018-02-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/Makefile (libm-narrow-fns): Add add.
