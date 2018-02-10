@@ -1,3 +1,13 @@
+2018-02-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/powerpc64le/Makefile [$(subdir) = math]
+	(f128-pairs): New variable.
+	[$(subdir) = math] ($(foreach suf,$(all-object-suffixes),$(foreach
+	pair,$(f128-pairs),$(objpfx)test-$(pair)%$(suf)))): Add -mfloat128
+	to CFLAGS.
+	[$(subdir) = math] ($(foreach pair,$(f128-pairs),test-$(pair)%)):
+	Also make tests add $(f128-loader-link) to gnulib-tests.
+
 2018-02-09  DJ Delorie  <dj@redhat.com>
 
 	[BZ #22827]

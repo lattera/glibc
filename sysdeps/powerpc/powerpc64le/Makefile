@@ -17,6 +17,11 @@ $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat64x%$(suf)): CFLAGS += -mfloat128
+# Pairs of types with _Float128 / _Float64x as the wider type but not
+# the narrower one.
+f128-pairs = float32-float64x float32-float128 float64-float64x \
+	     float64-float128 float32x-float64x float32x-float128
+$(foreach suf,$(all-object-suffixes),$(foreach pair,$(f128-pairs),$(objpfx)test-$(pair)%$(suf))): CFLAGS += -mfloat128
 CFLAGS-libm-test-support-float128.c += -mfloat128
 CFLAGS-libm-test-support-float64x.c += -mfloat128
 CFLAGS-test-math-iscanonical.cc += -mfloat128
@@ -25,6 +30,7 @@ CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
 $(foreach test, \
 	  test-float128% test-ifloat128% test-float64x% test-ifloat64x% \
+	  $(foreach pair,$(f128-pairs),test-$(pair)%) \
 	  test-math-iscanonical test-math-iseqsig test-math-issignaling \
 	  test-math-iszero, \
 	  $(objpfx)$(test)): \
