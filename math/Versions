@@ -551,4 +551,13 @@ libm {
     y1f32; y1f64; y1f32x;
     ynf32; ynf64; ynf32x;
   }
+  GLIBC_2.28 {
+    # Functions not involving _Float64x or _Float128, for all configurations.
+    fadd; faddl; daddl;
+    f32addf32x; f32addf64; f32xaddf64;
+    # Functions involving _Float64x or _Float128, for some configurations.
+    f32addf64x; f32addf128;
+    f32xaddf64x; f32xaddf128; f64addf64x; f64addf128;
+    f64xaddf128;
+  }
 }

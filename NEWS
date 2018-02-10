@@ -9,7 +9,11 @@ Version 2.28
 
 Major new features:
 
-  [Add new features here]
+* <math.h> functions that round their results to a narrower type are added
+  from TS 18661-1:2014 and TS 18661-3:2015:
+
+  - fadd, faddl, daddl and corresponding fMaddfN, fMaddfNx, fMxaddfN and
+    fMxaddfNx functions.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

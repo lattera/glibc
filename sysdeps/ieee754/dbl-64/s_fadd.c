@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Add double values, narrowing the result to float.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,9 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
-#endif
+#define f32addf64 __hide_f32addf64
+#define f32addf32x __hide_f32addf32x
+#define faddl __hide_faddl
+#include <math.h>
+#undef f32addf64
+#undef f32addf32x
+#undef faddl
 
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
+#include <math-narrow.h>
+
+float
+__fadd (double x, double y)
+{
+  NARROW_ADD_ROUND_TO_ODD (x, y, float, union ieee754_double, , mantissa1);
+}
+libm_alias_float_double (add)

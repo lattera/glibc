@@ -79,6 +79,10 @@ ifloat128: 2
 ildouble: 3
 ldouble: 4
 
+Function: "add_ldouble":
+double: 1
+float: 1
+
 Function: "asin":
 float: 1
 float128: 1

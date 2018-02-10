@@ -97,4 +97,10 @@ libm {
     sincosl; tanl; tanhl; truncl; expl; __finitel; __signbitl;
     __fpclassifyl; nexttowardf; nexttoward; __nldbl_nexttowardf;
   }
+  GLIBC_2.28 {
+    # Functions taking long double = double argument and rounding
+    # result to double (same as f32x*f64 functions, but those names
+    # are not reserved in TS 18661-1).
+    __nldbl_daddl;
+  }
 }

@@ -256,6 +256,9 @@
 #define __truncl __truncf128
 #define __x2y2m1l __x2y2m1f128
 
+#define __faddl __f32addf128
+#define __daddl __f64addf128
+
 /* __nexttowardf128 is not _Float128 API. */
 #define __nexttowardl __nexttowardf128_do_not_use
 #define nexttowardl nexttowardf128_do_not_use
