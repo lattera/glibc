@@ -37,6 +37,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc-tcache-leak \
 	 tst-malloc_info \
 	 tst-malloc-too-large \
+	 tst-malloc-stats-cancellation \
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -96,6 +97,7 @@ $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
+$(objpfx)tst-malloc-stats-cancellation: $(shared-thread-library)
 
 # Export the __malloc_initialize_hook variable to libc.so.
 LDFLAGS-tst-mallocstate = -rdynamic

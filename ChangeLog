@@ -1,3 +1,11 @@
+2018-02-10  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #22830]
+	* malloc/malloc.c (__malloc_stats): Restore stderr->_flags2
+	correctly.
+	* malloc/tst-malloc-stats-cancellation.c: New test case.
+	* malloc/Makefile: Add new test case.
+
 2018-02-10  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/fpu_control.h: Add features.h to fix build error.

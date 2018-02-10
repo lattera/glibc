@@ -5009,7 +5009,7 @@ __malloc_stats (void)
   fprintf (stderr, "max mmap regions = %10u\n", (unsigned int) mp_.max_n_mmaps);
   fprintf (stderr, "max mmap bytes   = %10lu\n",
            (unsigned long) mp_.max_mmapped_mem);
-  ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+  ((_IO_FILE *) stderr)->_flags2 = old_flags2;
   _IO_funlockfile (stderr);
 }
 
