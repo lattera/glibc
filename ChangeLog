@@ -1,3 +1,14 @@
+2018-02-26  Dmitry V. Levin  <ldv@altlinux.org>
+
+	[BZ #22433]
+	[BZ #22807]
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h (__ptrace_request): Add
+	PTRACE_GETREGS, PTRACE_SETREGS, PTRACE_GETFPREGS, PTRACE_SETFPREGS,
+	PTRACE_GETVRREGS, PTRACE_SETVRREGS, PTRACE_GETEVRREGS,
+	PTRACE_SETEVRREGS, PTRACE_GETREGS64, PTRACE_SETREGS64,
+	PTRACE_GET_DEBUGREG, PTRACE_SET_DEBUGREG, PTRACE_GETVSRREGS,
+	PTRACE_SETVSRREGS, and PTRACE_SINGLEBLOCK.
+
 2018-02-26  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Undefine Linux

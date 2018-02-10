@@ -112,6 +112,22 @@ enum __ptrace_request
   PTRACE_SINGLESTEP = 9,
 #define PT_STEP PTRACE_SINGLESTEP
 
+  /* Get all general purpose registers used by a process.  */
+  PTRACE_GETREGS = 12,
+#define PT_GETREGS PTRACE_GETREGS
+
+  /* Set all general purpose registers used by a process.  */
+  PTRACE_SETREGS = 13,
+#define PT_SETREGS PTRACE_SETREGS
+
+  /* Get all floating point registers used by a process.  */
+  PTRACE_GETFPREGS = 14,
+#define PT_GETFPREGS PTRACE_GETFPREGS
+
+  /* Set all floating point registers used by a process.  */
+  PTRACE_SETFPREGS = 15,
+#define PT_SETFPREGS PTRACE_SETFPREGS
+
   /* Attach to a process that is already running. */
   PTRACE_ATTACH = 16,
 #define PT_ATTACH PTRACE_ATTACH
@@ -120,9 +136,55 @@ enum __ptrace_request
   PTRACE_DETACH = 17,
 #define PT_DETACH PTRACE_DETACH
 
+  /* Get all altivec registers used by a process.  */
+  PTRACE_GETVRREGS = 18,
+#define PT_GETVRREGS PTRACE_GETVRREGS
+
+  /* Set all altivec registers used by a process.  */
+  PTRACE_SETVRREGS = 19,
+#define PT_SETVRREGS PTRACE_SETVRREGS
+
+  /* Get all SPE registers used by a process.  */
+  PTRACE_GETEVRREGS = 20,
+#define PT_GETEVRREGS PTRACE_GETEVRREGS
+
+  /* Set all SPE registers used by a process.  */
+  PTRACE_SETEVRREGS = 21,
+#define PT_SETEVRREGS PTRACE_SETEVRREGS
+
+  /* Same as PTRACE_GETREGS except a 32-bit process will obtain
+     the full 64-bit registers.  Implemented by 64-bit kernels only.  */
+  PTRACE_GETREGS64 = 22,
+#define PT_GETREGS64 PTRACE_GETREGS64
+
+  /* Same as PTRACE_SETREGS except a 32-bit process will set
+     the full 64-bit registers.  Implemented by 64-bit kernels only.  */
+  PTRACE_SETREGS64 = 23,
+#define PT_SETREGS64 PTRACE_SETREGS64
+
   /* Continue and stop at the next entry to or return from syscall.  */
   PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
+
+  /* Get a debug register of a process.  */
+  PTRACE_GET_DEBUGREG = 25,
+#define PT_GET_DEBUGREG PTRACE_GET_DEBUGREG
+
+  /* Set a debug register of a process.  */
+  PTRACE_SET_DEBUGREG = 26,
+#define PT_SET_DEBUGREG PTRACE_SET_DEBUGREG
+
+  /* Get the first 32 VSX registers of a process.  */
+  PTRACE_GETVSRREGS = 27,
+#define PT_GETVSRREGS PTRACE_GETVSRREGS
+
+  /* Set the first 32 VSX registers of a process.  */
+  PTRACE_SETVSRREGS = 28,
+#define PT_SETVSRREGS PTRACE_SETVSRREGS
+
+  /* Execute process until next taken branch.  */
+  PTRACE_SINGLEBLOCK = 256,
+#define PT_STEPBLOCK PTRACE_SINGLEBLOCK
 
   /* Set ptrace filter options.  */
   PTRACE_SETOPTIONS = 0x4200,
