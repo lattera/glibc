@@ -30,7 +30,7 @@
 #include "mydefs.h"
 
 const static double zero = 0.0, hhuge = 1.0e300, tiny = 1.0e-300,
-err_0 = 1.000014, err_1 = 0.000016;
+err_0 = 1.000014;
 const static int4 bigint = 0x40862002,
              badint = 0x40876000,smallint = 0x3C8fffff;
 const static int4 hugeint = 0x7FFFFFFF, infint = 0x7ff00000;

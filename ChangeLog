@@ -1,3 +1,40 @@
+2018-02-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #13932]
+	* sysdeps/ieee754/dbl-64/uexp.h (err_1): Remove.
+	* benchtests/pow-inputs: Update comment for slow path cases.
+	* manual/probes.texi (slowpow_p10): Delete removed probe.
+	(slowpow_p10): Likewise.
+	* math/Makefile: Remove halfulp.c and slowpow.c.
+	* sysdeps/aarch64/libm-test-ulps: Set ULP of pow to 1.
+	* sysdeps/generic/math_private.h (__exp1): Remove error argument.
+	(__halfulp): Remove.
+	(__slowpow): Remove.
+	* sysdeps/i386/fpu/halfulp.c: Delete file.
+	* sysdeps/i386/fpu/slowpow.c: Likewise.
+	* sysdeps/ia64/fpu/halfulp.c: Likewise.
+	* sysdeps/ia64/fpu/slowpow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c (__exp1): Remove error argument,
+	improve comments and add error analysis.
+	* sysdeps/ieee754/dbl-64/e_pow.c (__ieee754_pow): Add error analysis.
+	(power1): Remove function:
+	(log1): Remove error argument, add error analysis.
+	(my_log2): Remove function.
+	* sysdeps/ieee754/dbl-64/halfulp.c: Delete file.
+	* sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/halfulp.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/slowpow.c: Likewise.
+	* sysdeps/powerpc/power4/fpu/Makefile: Remove CPPFLAGS-slowpow.c.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Set ULP of pow to 1.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Remove slowpow-fma.c,
+	slowpow-fma4.c, halfulp-fma.c, halfulp-fma4.c.
+	* sysdeps/x86_64/fpu/multiarch/e_pow-fma.c (__slowpow): Remove define.
+	* sysdeps/x86_64/fpu/multiarch/e_pow-fma4.c (__slowpow): Likewise.
+	* sysdeps/x86_64/fpu/multiarch/halfulp-fma.c: Delete file.
+	* sysdeps/x86_64/fpu/multiarch/halfulp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/slowpow-fma4.c: Likewise.
+
 2018-02-11  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* nscd/connections.c (RWLOCK_INITIALIZER): Define to

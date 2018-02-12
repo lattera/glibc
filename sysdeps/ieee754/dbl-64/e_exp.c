@@ -233,13 +233,10 @@ ret:
 strong_alias (__ieee754_exp, __exp_finite)
 #endif
 
-/* Compute e^(x+xx).  The routine also receives bound of error of previous
-   calculation.  If after computing exp the error exceeds the allowed bounds,
-   the routine returns a non-positive number.  Otherwise it returns the
-   computed result, which is always positive.  */
+/* Compute e^(x+xx).  */
 double
 SECTION
-__exp1 (double x, double xx, double error)
+__exp1 (double x, double xx)
 {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
   mynumber junk1, junk2, binexp = {{0, 0}};
@@ -249,6 +246,7 @@ __exp1 (double x, double xx, double error)
   m = junk1.i[HIGH_HALF];
   n = m & hugeint;		/* no sign */
 
+  /* fabs (x) > 5.551112e-17 and fabs (x) < 7.080010e+02.  */
   if (n > smallint && n < bigint)
     {
       y = x * log2e.x + three51.x;
@@ -276,11 +274,9 @@ __exp1 (double x, double xx, double error)
 
       rem = (bet + bet * eps) + al * eps;
       res = al + rem;
-      cor = (al - res) + rem;
-      if (res == (res + cor * (1.0 + error + err_1)))
-	return res * binexp.x;
-      else
-	return -10.0;
+      /* Maximum relative error before rounding is 8.8e-22 (69.9 bits).
+	 Maximum ULP error is 0.500008.  */
+      return res * binexp.x;
     }
 
   if (n <= smallint)
@@ -318,6 +314,7 @@ __exp1 (double x, double xx, double error)
   cor = (al - res) + rem;
   if (m >> 31)
     {
+      /* x < 0.  */
       ex = junk1.i[LOW_HALF];
       if (res < 1.0)
 	{
@@ -328,34 +325,25 @@ __exp1 (double x, double xx, double error)
       if (ex >= -1022)
 	{
 	  binexp.i[HIGH_HALF] = (1023 + ex) << 20;
-	  if (res == (res + cor * (1.0 + error + err_1)))
-	    return res * binexp.x;
-	  else
-	    return -10.0;
+	  /* Maximum ULP error is 0.500008.  */
+	  return res * binexp.x;
 	}
+      /* Denormal case - ex < -1022.  */
       ex = -(1022 + ex);
       binexp.i[HIGH_HALF] = (1023 - ex) << 20;
       res *= binexp.x;
       cor *= binexp.x;
-      eps = 1.00000000001 + (error + err_1) * binexp.x;
       t = 1.0 + res;
       y = ((1.0 - t) + res) + cor;
       res = t + y;
-      cor = (t - res) + y;
-      if (res == (res + eps * cor))
-	{
-	  binexp.i[HIGH_HALF] = 0x00100000;
-	  return (res - 1.0) * binexp.x;
-	}
-      else
-	return -10.0;
+      binexp.i[HIGH_HALF] = 0x00100000;
+      /* Maximum ULP error is 0.500004.  */
+      return (res - 1.0) * binexp.x;
     }
   else
     {
       binexp.i[HIGH_HALF] = (junk1.i[LOW_HALF] + 767) << 20;
-      if (res == (res + cor * (1.0 + error + err_1)))
-	return res * binexp.x * t256.x;
-      else
-	return -10.0;
+      /* Maximum ULP error is 0.500008.  */
+      return res * binexp.x * t256.x;
     }
 }

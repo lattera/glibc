@@ -272,22 +272,6 @@ input that results in multiple precision computation with precision
 computed output.
 @end deftp
 
-@deftp Probe slowpow_p10 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is triggered when the @code{pow} function is called with
-inputs that result in multiple precision computation with precision
-10.  Arguments @var{$arg1} and @var{$arg2} are the input values,
-@code{$arg3} is the value computed in the fast phase of the algorithm
-and @code{$arg4} is the final accurate value.
-@end deftp
-
-@deftp Probe slowpow_p32 (double @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
-This probe is triggered when the @code{pow} function is called with an
-input that results in multiple precision computation with precision
-32.  Arguments @var{$arg1} and @var{$arg2} are the input values,
-@code{$arg3} is the value computed in the fast phase of the algorithm
-and @code{$arg4} is the final accurate value.
-@end deftp
-
 @deftp Probe slowatan2 (int @var{$arg1}, double @var{$arg2}, double @var{$arg3}, double @var{$arg4})
 This probe is triggered when the @code{atan2} function is called with
 an input that results in multiple precision computation.  Argument

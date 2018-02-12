@@ -2468,8 +2468,10 @@ Function: "log_vlen8_avx2":
 float: 2
 
 Function: "pow":
+double: 1
 float: 1
 float128: 2
+idouble: 1
 ifloat: 1
 ifloat128: 2
 ildouble: 1

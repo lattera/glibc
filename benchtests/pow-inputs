@@ -302,8 +302,7 @@
 0x1.c004d2256a5b8p402, -0x1.a01df480fdcb7p98
 0x1.52b9d41aaa1e9p-589, -0x1.292cb15f1459dp46
 -0x1.ea9ca6fa0919ep-279, -0x1.601e44b6a588cp40
-# pow slow path at 240 bits
-# Implemented in sysdeps/ieee754/dbl-64/slowpow.c
+# old pow slow path at 240 bits
 ## name: 240bits
 0x1.01fcd33493ea3p596, -0x1.724bd4e887783p-14
 0x1.032ff59ab34fdp-540, -0x1.61e3632080b87p-24
@@ -405,8 +404,7 @@
 0x1.fae913d4f952ep-809, -0x1.4b649402fce63p-6
 0x1.fe6d725408f24p484, -0x1.25f4f6441d2e4p-12
 0x1.ff6393f9150ccp-718, 0x1.a0cb50a9bf2f3p-31
-# pow slowest path at 768 bits
-# Implemented in sysdeps/ieee754/dbl-64/slowpow.c
+# old pow slowest path at 768 bits
 ## name: 768bits
 1.0000000000000020, 1.5
 0x1.006777b4b61dep843, -0x1.67e3145491872p-1
