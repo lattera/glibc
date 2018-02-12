@@ -1,3 +1,8 @@
+2018-02-12  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps (pow): Increase double and
+	idouble to 1 ULP.
+
 2018-02-12  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #19239]
