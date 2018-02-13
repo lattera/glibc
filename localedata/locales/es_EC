@@ -85,42 +85,7 @@ copy "es_ES"
 END LC_NUMERIC
 
 LC_TIME
-abday   "dom";"lun";/
-	"mar";"mi<U00E9>";/
-	"jue";"vie";/
-	"s<U00E1>b"
-day     "domingo";/
-	"lunes";/
-	"martes";/
-	"mi<U00E9>rcoles";/
-	"jueves";/
-	"viernes";/
-	"s<U00E1>bado"
-abmon   "ene";"feb";/
-	"mar";"abr";/
-	"may";"jun";/
-	"jul";"ago";/
-	"sep";"oct";/
-	"nov";"dic"
-mon     "enero";/
-	"febrero";/
-	"marzo";/
-	"abril";/
-	"mayo";/
-	"junio";/
-	"julio";/
-	"agosto";/
-	"septiembre";/
-	"octubre";/
-	"noviembre";/
-	"diciembre"
-d_t_fmt "%a %d %b %Y %T %Z"
-d_fmt   "%d//%m//%y"
-t_fmt   "%T"
-am_pm   "";""
-t_fmt_ampm ""
-week 7;19971130;1
-first_weekday 2
+copy "es_BO"
 END LC_TIME
 
 LC_PAPER

@@ -1,3 +1,10 @@
+2018-02-23  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22646]
+	* localedata/locales/es_CL (LC_TIME): copy "es_BO".
+	* localedata/locales/es_CU (LC_TIME): copy "es_BO".
+	* localedata/locales/es_EC (LC_TIME): copy "es_BO".
+
 2018-02-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.
