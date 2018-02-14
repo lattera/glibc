@@ -1,5 +1,12 @@
 2018-02-23  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #17438]
+	* localedata/locales/pt_BR (LC_TIME): use / instead of -
+	in d_fmt.
+	* localedata/locales/pt_PT (LC_TIME): likewise
+
+2018-02-23  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #22646]
 	* localedata/locales/es_CL (LC_TIME): copy "es_BO".
 	* localedata/locales/es_CU (LC_TIME): copy "es_BO".
