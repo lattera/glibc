@@ -59,10 +59,21 @@ but the normal setting to install as the standard system library is
 @samp{--prefix=/usr} for @gnulinuxsystems{} and @samp{--prefix=} (an
 empty prefix) for @gnuhurdsystems{}.
 
-It may also be useful to set the @var{CC} and @var{CFLAGS} variables in
-the environment when running @code{configure}.  @var{CC} selects the C
-compiler that will be used, and @var{CFLAGS} sets optimization options
-for the compiler.
+It may also be useful to pass @samp{CC=@var{compiler}} and
+@code{CFLAGS=@var{flags}} arguments to @code{configure}.  @code{CC}
+selects the C compiler that will be used, and @code{CFLAGS} sets
+optimization options for the compiler.  Any compiler options required
+for all compilations, such as options selecting an ABI or a processor
+for which to generate code, should be included in @code{CC}.  Options
+that may be overridden by the @glibcadj{} build system for particular
+files, such as for optimization and debugging, should go in
+@code{CFLAGS}.  The default value of @code{CFLAGS} is @samp{-g -O2},
+and @theglibc{} cannot be compiled without optimization, so if
+@code{CFLAGS} is specified it must enable optimization.  For example:
+
+@smallexample
+$ ../glibc-@var{version}/configure CC="gcc -m32" CFLAGS="-O3"
+@end smallexample
 
 The following list describes all of the available options for
  @code{configure}:
@@ -241,7 +252,7 @@ if @code{configure} guesses your machine as @code{i686-pc-linux-gnu} but
 you want to compile a library for 586es, give
 @samp{--host=i586-pc-linux-gnu} or just @samp{--host=i586-linux} and add
 the appropriate compiler flags (@samp{-mcpu=i586} will do the trick) to
-@var{CFLAGS}.
+@code{CC}.
 
 If you specify just @samp{--build}, @code{configure} will get confused.
 
@@ -339,8 +350,8 @@ It is easy to configure @theglibc{} for cross-compilation by
 setting a few variables in @file{configparms}.  Set @code{CC} to the
 cross-compiler for the target you configured the library for; it is
 important to use this same @code{CC} value when running
-@code{configure}, like this: @samp{CC=@var{target}-gcc configure
-@var{target}}.  Set @code{BUILD_CC} to the compiler to use for programs
+@code{configure}, like this: @samp{configure @var{target}
+CC=@var{target}-gcc}.  Set @code{BUILD_CC} to the compiler to use for programs
 run on the build system as part of compiling the library.  You may need to
 set @code{AR} to cross-compiling versions of @code{ar}
 if the native tools are not configured to work with

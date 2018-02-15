@@ -36,9 +36,18 @@ normal setting to install as the standard system library is
 '--prefix=/usr' for GNU/Linux systems and '--prefix=' (an empty prefix)
 for GNU/Hurd systems.
 
-   It may also be useful to set the CC and CFLAGS variables in the
-environment when running 'configure'.  CC selects the C compiler that
-will be used, and CFLAGS sets optimization options for the compiler.
+   It may also be useful to pass 'CC=COMPILER' and 'CFLAGS=FLAGS'
+arguments to 'configure'.  'CC' selects the C compiler that will be
+used, and 'CFLAGS' sets optimization options for the compiler.  Any
+compiler options required for all compilations, such as options
+selecting an ABI or a processor for which to generate code, should be
+included in 'CC'.  Options that may be overridden by the GNU C Library
+build system for particular files, such as for optimization and
+debugging, should go in 'CFLAGS'.  The default value of 'CFLAGS' is '-g
+-O2', and the GNU C Library cannot be compiled without optimization, so
+if 'CFLAGS' is specified it must enable optimization.  For example:
+
+     $ ../glibc-VERSION/configure CC="gcc -m32" CFLAGS="-O3"
 
    The following list describes all of the available options for
 'configure':
@@ -210,7 +219,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      but you want to compile a library for 586es, give
      '--host=i586-pc-linux-gnu' or just '--host=i586-linux' and add the
      appropriate compiler flags ('-mcpu=i586' will do the trick) to
-     CFLAGS.
+     'CC'.
 
      If you specify just '--build', 'configure' will get confused.
 
@@ -304,7 +313,7 @@ makefiles.
 setting a few variables in 'configparms'.  Set 'CC' to the
 cross-compiler for the target you configured the library for; it is
 important to use this same 'CC' value when running 'configure', like
-this: 'CC=TARGET-gcc configure TARGET'.  Set 'BUILD_CC' to the compiler
+this: 'configure TARGET CC=TARGET-gcc'.  Set 'BUILD_CC' to the compiler
 to use for programs run on the build system as part of compiling the
 library.  You may need to set 'AR' to cross-compiling versions of 'ar'
 if the native tools are not configured to work with object files for the

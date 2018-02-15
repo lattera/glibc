@@ -1,5 +1,14 @@
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #20980]
+	[BZ #21234]
+	* manual/install.texi (Configuring and compiling): Describe
+	passing CC and CFLAGS on configure command line, not as
+	environment variables.  Use @code markup on those variables.
+	Specify what options go in CC and what go in CFLAGS.  Note the
+	requirement to compile with optimization.
+	* INSTALL: Regenerated.
+
 	[BZ #18124]
 	* sysdeps/hppa/bsd-setjmp.S: Include <sysdep.h>.
 	(setjmp): Use HIDDEN_JUMPTARGET with __sigsetjmp.
