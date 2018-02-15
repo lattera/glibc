@@ -1,3 +1,27 @@
+2018-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/Makefile: Remove mpexp.c and mplog.c
+	* sysdeps/i386/fpu/mpexp.c: Delete file.
+	* sysdeps/i386/fpu/mplog.c: Likewise.
+	* sysdeps/ia64/fpu/mpexp.c: Likewise.
+	* sysdeps/ia64/fpu/mplog.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Remove mention of mpexp and mplog.
+	* sysdeps/ieee754/dbl-64/mpa.h (__pow_mp): Remove unused function.
+	* sysdeps/ieee754/dbl-64/mpexp.c: Delete file.
+	* sysdeps/ieee754/dbl-64/mplog.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/mpexp.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/mplog.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/Makefile: Remove mpexp* and mplog*.
+	* sysdeps/x86_64/fpu/multiarch/e_log-avx.c: Remove unused defines.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/e_log-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-avx.c: Delete file.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mpexp-fma4.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-avx.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma.c: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/mplog-fma4.c: Likewise.
+
 2018-02-15  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

@@ -23,7 +23,6 @@
 /*           exp1                                                          */
 /*                                                                         */
 /* FILES NEEDED:dla.h endian.h mpa.h mydefs.h uexp.h                       */
-/*              mpa.c mpexp.x                                              */
 /*                                                                         */
 /* An ultimate exp routine. Given an IEEE double machine number x          */
 /* it computes an almost correctly rounded (to nearest) value of e^x       */
