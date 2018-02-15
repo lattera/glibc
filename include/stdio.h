@@ -140,6 +140,10 @@ extern int _IO_new_fclose (_IO_FILE*);
 #   define fclose(fp) _IO_new_fclose (fp)
 extern int _IO_fputs (const char*, _IO_FILE*);
 libc_hidden_proto (_IO_fputs)
+/* The compiler may optimize calls to fprintf into calls to fputs.
+   Use libc_hidden_proto to ensure that those calls, not redirected by
+   the fputs macro, also do not go through the PLT.  */
+libc_hidden_proto (fputs)
 #   define fputs(str, fp) _IO_fputs (str, fp)
 extern int _IO_new_fsetpos (_IO_FILE *, const _IO_fpos_t *);
 #   define fsetpos(fp, posp) _IO_new_fsetpos (fp, posp)

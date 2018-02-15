@@ -1,6 +1,11 @@
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]
+	* include/stdio.h [!_ISOMAC && IS_IN (libc)] (fputs): Use
+	libc_hidden_proto.
+	* libio/iofputs.c (fputs): Use libc_hidden_weak.
+
+	[BZ #15105]
 	[BZ #19463]
 	* libio/feof_u.c (feof_unlocked): Rename to __feof_unlocked and
 	define as weak alias of __feof_unlocked.  Use libc_hidden_weak.
