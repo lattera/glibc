@@ -154,5 +154,7 @@ libc_hidden_proto (__libc_sa_len)
 # define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
 #endif
 
+libc_hidden_proto (__cmsg_nxthdr)
+
 #endif
 #endif

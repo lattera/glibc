@@ -1,6 +1,12 @@
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]
+	* include/sys/socket.h [!_ISOMAC] (__cmsg_nxthdr): Use
+	libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Use
+	libc_hidden_def.
+
+	[BZ #15105]
 	* include/stdio.h [!_ISOMAC && IS_IN (libc)] (fputs): Use
 	libc_hidden_proto.
 	* libio/iofputs.c (fputs): Use libc_hidden_weak.

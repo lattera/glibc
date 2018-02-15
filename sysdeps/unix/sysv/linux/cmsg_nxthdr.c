@@ -37,3 +37,4 @@ __cmsg_nxthdr (struct msghdr *mhdr, struct cmsghdr *cmsg)
     return NULL;
   return cmsg;
 }
+libc_hidden_def (__cmsg_nxthdr)
