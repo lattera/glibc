@@ -1,5 +1,9 @@
 2018-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/fpu_control.h: Use <> in include.
+
+2018-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* math/Makefile: Remove mpexp.c and mplog.c
 	* sysdeps/i386/fpu/mpexp.c: Delete file.
 	* sysdeps/i386/fpu/mplog.c: Likewise.
