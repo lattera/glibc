@@ -160,7 +160,7 @@ ENTRY(__getcontext)
 	/* sigprocmask(SIG_BLOCK, NULL, &ucp->uc_sigmask);  */
 	ldo	oSIGMASK(%r26), %r24
 	copy	%r0, %r25
-	bl	sigprocmask, %r2
+	bl	__sigprocmask, %r2
 	ldi	SIG_BLOCK, %r26
 
 	/* Epilogue */

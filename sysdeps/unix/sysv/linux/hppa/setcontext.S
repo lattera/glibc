@@ -43,7 +43,7 @@ ENTRY(__setcontext)
 	/* sigprocmask(SIG_BLOCK, &ucp->uc_sigmask, NULL);  */
 	copy	%r0, %r24
 	ldo	oSIGMASK(%r3), %r25
-	bl	sigprocmask, %r2
+	bl	__sigprocmask, %r2
 	ldi	SIG_SETMASK, %r26
 
 	comib,<>,n 0,%ret0,.Lerror

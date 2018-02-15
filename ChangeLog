@@ -1,5 +1,15 @@
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #18124]
+	* sysdeps/hppa/bsd-setjmp.S: Include <sysdep.h>.
+	(setjmp): Use HIDDEN_JUMPTARGET with __sigsetjmp.
+	* sysdeps/unix/sysv/linux/hppa/getcontext.S (__getcontext): Call
+	__sigprocmask instead of sigprocmask.
+	* sysdeps/unix/sysv/linux/hppa/setcontext.S (__setcontext):
+	Likewise.
+	* sysdeps/unix/sysv/linux/hppa/localplt.data: Remove entries for
+	__sigsetjmp and sigprocmask.
+
 	[BZ #15105]
 	* include/argz.h (argz_next): Use libc_hidden_proto.
 	(__argz_next): Likewise.
