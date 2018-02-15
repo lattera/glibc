@@ -1,6 +1,12 @@
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]
+	* include/argz.h (argz_next): Use libc_hidden_proto.
+	(__argz_next): Likewise.
+	* string-argz-next.c (__argz_next): Use libc_hidden_def.
+	(argz_next): Use libc_hidden_weak.
+
+	[BZ #15105]
 	* include/sys/socket.h [!_ISOMAC] (__cmsg_nxthdr): Use
 	libc_hidden_proto.
 	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Use

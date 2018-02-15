@@ -39,6 +39,8 @@ extern error_t __argz_replace (char **__restrict __argz,
 libc_hidden_proto (argz_delete)
 libc_hidden_proto (__argz_count)
 libc_hidden_proto (__argz_stringify)
+libc_hidden_proto (argz_next)
+libc_hidden_proto (__argz_next)
 
 # endif /* !_ISOMAC */
 #endif

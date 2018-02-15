@@ -36,4 +36,6 @@ __argz_next (const char *argz, size_t argz_len, const char *entry)
     else
       return NULL;
 }
+libc_hidden_def (__argz_next)
 weak_alias (__argz_next, argz_next)
+libc_hidden_weak (argz_next)
