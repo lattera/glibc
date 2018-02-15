@@ -53,7 +53,7 @@ __readonly_area (const char *ptr, size_t size)
   char *line = NULL;
   size_t linelen = 0;
 
-  while (! feof_unlocked (fp))
+  while (! __feof_unlocked (fp))
     {
       if (_IO_getdelim (&line, &linelen, '\n', fp) <= 0)
 	break;

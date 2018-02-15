@@ -179,6 +179,8 @@ libc_hidden_proto (__fgets_unlocked)
 libc_hidden_proto (fputs_unlocked)
 extern __typeof (fputs_unlocked) __fputs_unlocked;
 libc_hidden_proto (__fputs_unlocked)
+libc_hidden_proto (feof_unlocked)
+extern __typeof (feof_unlocked) __feof_unlocked attribute_hidden;
 libc_hidden_proto (fmemopen)
 /* The prototype needs repeating instead of using __typeof to use
    __THROW in C++ tests.  */
@@ -198,6 +200,14 @@ libc_hidden_proto (__fmemopen)
 
 extern int __gen_tempfd (int flags);
 libc_hidden_proto (__gen_tempfd)
+
+#  ifdef __USE_EXTERN_INLINES
+__extern_inline int
+__NTH (__feof_unlocked (FILE *__stream))
+{
+  return __feof_unlocked_body (__stream);
+}
+#  endif
 
 # endif /* not _ISOMAC */
 #endif /* stdio.h */

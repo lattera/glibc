@@ -198,7 +198,7 @@ __getdate_r (const char *string, struct tm *tp)
       if (result && *result == '\0')
 	break;
     }
-  while (!feof_unlocked (fp));
+  while (!__feof_unlocked (fp));
 
   free (instr);
 

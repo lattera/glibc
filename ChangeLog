@@ -1,3 +1,22 @@
+2018-02-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15105]
+	[BZ #19463]
+	* libio/feof_u.c (feof_unlocked): Rename to __feof_unlocked and
+	define as weak alias of __feof_unlocked.  Use libc_hidden_weak.
+	* include/stdio.h (feof_unlocked): Use libc_hidden_proto.
+	(__feof_unlocked): New declaration, and inline function if
+	[__USE_EXTERN_INLINES].
+	* iconv/gconv_conf.c (read_conf_file): Call __feof_unlocked
+	instead of feof_unlocked.
+	* intl/localealias.c [_LIBC] (FEOF): Likewise.
+	* nss/nsswitch.c (nss_parse_file): Likewise.
+	* sysdeps/unix/sysv/linux/readonly-area.c (__readonly_area):
+	Likewise.
+	* time/getdate.c (__getdate_r): Likewise.
+	* sysdeps/posix/getaddrinfo.c [IS_IN (libc)] (feof_unlocked):
+	Define as macro to call __feof_unlocked.
+
 2018-02-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/aarch64/fpu/fpu_control.h: Use <> in include.

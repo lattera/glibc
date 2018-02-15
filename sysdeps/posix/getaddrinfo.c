@@ -89,6 +89,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # include <idna.h>
 #endif
 
+#if IS_IN (libc)
+# define feof_unlocked(fp) __feof_unlocked (fp)
+#endif
+
 struct gaih_service
   {
     const char *name;

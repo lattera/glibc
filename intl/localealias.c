@@ -90,7 +90,7 @@ char *alloca ();
 
 /* Some optimizations for glibc.  */
 #ifdef _LIBC
-# define FEOF(fp)		feof_unlocked (fp)
+# define FEOF(fp)		__feof_unlocked (fp)
 # define FGETS(buf, n, fp)	__fgets_unlocked (buf, n, fp)
 #else
 # define FEOF(fp)		feof (fp)
