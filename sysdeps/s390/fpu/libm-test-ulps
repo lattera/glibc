@@ -40,9 +40,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
-double: 2
+double: 1
 float: 2
-idouble: 2
+idouble: 1
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -769,9 +769,9 @@ ldouble: 1
 
 Function: Real part of "ccosh_downward":
 double: 1
-float: 3
+float: 2
 idouble: 1
-ifloat: 3
+ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -1006,32 +1006,24 @@ ildouble: 2
 ldouble: 2
 
 Function: "cos":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_downward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 3
 ldouble: 3
 
 Function: "cos_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_upward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 2
 ldouble: 2
 
@@ -1205,9 +1197,9 @@ ldouble: 1
 
 Function: Real part of "csinh_downward":
 double: 2
-float: 2
+float: 1
 idouble: 2
-ifloat: 2
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1325,9 +1317,9 @@ ldouble: 3
 
 Function: Imaginary part of "ctan":
 double: 2
-float: 2
+float: 1
 idouble: 2
-ifloat: 2
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
@@ -1373,9 +1365,9 @@ ldouble: 5
 
 Function: Imaginary part of "ctan_upward":
 double: 2
-float: 3
+float: 1
 idouble: 2
-ifloat: 3
+ifloat: 1
 ildouble: 5
 ldouble: 5
 
@@ -1429,9 +1421,9 @@ ldouble: 3
 
 Function: Real part of "ctanh_upward":
 double: 2
-float: 3
+float: 2
 idouble: 2
-ifloat: 3
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
@@ -1508,8 +1500,6 @@ ildouble: 5
 ldouble: 5
 
 Function: "exp":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1545,25 +1535,19 @@ ldouble: 3
 
 Function: "exp2":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "exp2_downward":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "exp2_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1627,9 +1611,9 @@ ldouble: 3
 
 Function: "gamma":
 double: 3
-float: 4
+float: 3
 idouble: 3
-ifloat: 4
+ifloat: 3
 ildouble: 5
 ldouble: 5
 
@@ -1779,9 +1763,9 @@ ldouble: 7
 
 Function: "lgamma":
 double: 3
-float: 4
+float: 3
 idouble: 3
-ifloat: 4
+ifloat: 3
 ildouble: 5
 ldouble: 5
 
@@ -1810,8 +1794,6 @@ ildouble: 8
 ldouble: 8
 
 Function: "log":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1833,9 +1815,9 @@ ldouble: 1
 
 Function: "log10_towardzero":
 double: 2
-float: 2
+float: 1
 idouble: 2
-ifloat: 2
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1889,51 +1871,37 @@ ldouble: 2
 
 Function: "log2_downward":
 double: 3
-float: 3
 idouble: 3
-ifloat: 3
 ildouble: 3
 ldouble: 3
 
 Function: "log2_towardzero":
 double: 2
-float: 2
 idouble: 2
-ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "log2_upward":
 double: 3
-float: 3
 idouble: 3
-ifloat: 3
 ildouble: 1
 ldouble: 1
 
 Function: "log_downward":
-float: 2
-ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "log_towardzero":
-float: 2
-ifloat: 2
 ildouble: 2
 ldouble: 2
 
 Function: "log_upward":
-double: 1
-float: 2
-idouble: 1
-ifloat: 2
 ildouble: 1
 ldouble: 1
 
 Function: "pow":
-float: 1
-ifloat: 1
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 
@@ -1962,62 +1930,46 @@ ildouble: 2
 ldouble: 2
 
 Function: "sin":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sin_downward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 3
 ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sin_upward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 3
 ldouble: 3
 
 Function: "sincos":
-float: 1
-ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "sincos_downward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 3
 ldouble: 3
 
 Function: "sincos_towardzero":
 double: 1
-float: 1
 idouble: 1
-ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sincos_upward":
 double: 1
-float: 2
 idouble: 1
-ifloat: 2
 ildouble: 3
 ldouble: 3
 
