@@ -726,10 +726,6 @@ endif
 
 $(objpfx)tst-compat-forwarder: $(objpfx)tst-compat-forwarder-mod.so
 
-# Disable elision for tst-mutex8 so it can verify error case for
-# destroying a mutex.
-tst-mutex8-ENV = GLIBC_TUNABLES=glibc.elision.enable=0
-
 # The tests here better do not run in parallel
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)
 .NOTPARALLEL:

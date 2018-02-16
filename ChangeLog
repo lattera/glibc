@@ -1,3 +1,9 @@
+2018-02-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* nptl/Makefile (tst-mutex8-ENV): Delete.
+	* nptl/tst-mutex8.c (check_type):
+	Add runtime check if mutex will be elided.
+
 2018-02-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20980]

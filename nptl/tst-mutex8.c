@@ -22,7 +22,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <unistd.h>
+#include <elf/dl-tunables.h>
 
 static pthread_mutex_t *m;
 static pthread_barrier_t b;
@@ -95,6 +96,30 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
 {
   int e;
 
+  /* Check if a mutex will be elided.  Lock elision can only be activated via
+     the tunables framework.  By default, lock elision is disabled.  */
+  bool assume_elided_mutex = false;
+#if HAVE_TUNABLES
+  int ma_type = PTHREAD_MUTEX_TIMED_NP;
+  if (ma != NULL)
+    {
+      e = pthread_mutexattr_gettype (ma, &ma_type);
+      if (e != 0)
+	{
+	  printf ("pthread_mutexattr_gettype failed with %d (%m)\n", e);
+	  return 1;
+	}
+    }
+  if (ma_type == PTHREAD_MUTEX_TIMED_NP)
+    {
+      /* This type of mutex can be elided if elision is enabled via the tunables
+	 framework.  Some tests below are failing if the mutex is elided.
+	 Thus we only run those if we assume that the mutex won't be elided.  */
+      if (TUNABLE_GET_FULL (glibc, elision, enable, int32_t, NULL) == 1)
+	assume_elided_mutex = true;
+    }
+#endif
+
   e = pthread_mutex_init (m, ma);
   if (e != 0)
     {
@@ -127,19 +152,23 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
       return 1;
     }
 
-  /* Elided mutexes don't fail destroy, but this test is run with
-     elision disabled so we can test them.  */
-  e = pthread_mutex_destroy (m);
-  if (e == 0)
+  /* Elided mutexes don't fail destroy, thus only test this if we don't assume
+     elision.  */
+  if (assume_elided_mutex == false)
     {
-      printf ("mutex_destroy of self-locked mutex succeeded for %s\n", mas);
-      return 1;
-    }
-  if (e != EBUSY)
-    {
-      printf ("mutex_destroy of self-locked mutex did not return EBUSY %s\n",
-	      mas);
-      return 1;
+      e = pthread_mutex_destroy (m);
+      if (e == 0)
+	{
+	  printf ("mutex_destroy of self-locked mutex succeeded for %s\n", mas);
+	  return 1;
+	}
+      if (e != EBUSY)
+	{
+	  printf ("\
+mutex_destroy of self-locked mutex did not return EBUSY %s\n",
+		  mas);
+	  return 1;
+	}
     }
 
   if (pthread_mutex_unlock (m) != 0)
@@ -155,18 +184,22 @@ check_type (const char *mas, pthread_mutexattr_t *ma)
     }
 
   /* Elided mutexes don't fail destroy.  */
-  e = pthread_mutex_destroy (m);
-  if (e == 0)
+  if (assume_elided_mutex == false)
     {
-      printf ("mutex_destroy of self-trylocked mutex succeeded for %s\n", mas);
-      return 1;
-    }
-  if (e != EBUSY)
-    {
-      printf ("\
+      e = pthread_mutex_destroy (m);
+      if (e == 0)
+	{
+	  printf ("mutex_destroy of self-trylocked mutex succeeded for %s\n",
+		  mas);
+	  return 1;
+	}
+      if (e != EBUSY)
+	{
+	  printf ("\
 mutex_destroy of self-trylocked mutex did not return EBUSY %s\n",
-	      mas);
-      return 1;
+		  mas);
+	  return 1;
+	}
     }
 
   if (pthread_mutex_unlock (m) != 0)
@@ -203,17 +236,21 @@ mutex_destroy of self-trylocked mutex did not return EBUSY %s\n",
     }
 
   /* Elided mutexes don't fail destroy.  */
-  e = pthread_mutex_destroy (m);
-  if (e == 0)
+  if (assume_elided_mutex == false)
     {
-      printf ("mutex_destroy of condvar-used mutex succeeded for %s\n", mas);
-      return 1;
-    }
-  if (e != EBUSY)
-    {
-      printf ("\
+      e = pthread_mutex_destroy (m);
+      if (e == 0)
+	{
+	  printf ("mutex_destroy of condvar-used mutex succeeded for %s\n",
+		  mas);
+	  return 1;
+	}
+      if (e != EBUSY)
+	{
+	  printf ("\
 mutex_destroy of condvar-used mutex did not return EBUSY for %s\n", mas);
-      return 1;
+	  return 1;
+	}
     }
 
   done = true;
@@ -274,19 +311,22 @@ mutex_destroy of condvar-used mutex did not return EBUSY for %s\n", mas);
     }
 
   /* Elided mutexes don't fail destroy.  */
-  e = pthread_mutex_destroy (m);
-  if (e == 0)
+  if (assume_elided_mutex == false)
     {
-      printf ("2nd mutex_destroy of condvar-used mutex succeeded for %s\n",
-	      mas);
-      return 1;
-    }
-  if (e != EBUSY)
-    {
-      printf ("\
+      e = pthread_mutex_destroy (m);
+      if (e == 0)
+	{
+	  printf ("2nd mutex_destroy of condvar-used mutex succeeded for %s\n",
+		  mas);
+	  return 1;
+	}
+      if (e != EBUSY)
+	{
+	  printf ("\
 2nd mutex_destroy of condvar-used mutex did not return EBUSY for %s\n",
-	      mas);
-      return 1;
+		  mas);
+	  return 1;
+	}
     }
 
   if (pthread_cancel (th) != 0)
