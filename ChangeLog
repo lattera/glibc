@@ -1,3 +1,8 @@
+2018-02-16  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/platform.texi (__riscv_flush_icache): Fix @deftypefun
+	syntax.
+
 2018-02-16  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* nptl/Makefile (tst-mutex8-ENV): Delete.

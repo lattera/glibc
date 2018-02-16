@@ -123,7 +123,7 @@ when it is not allowed, the priority is set to medium.
 Cache management facilities specific to RISC-V systems that implement the Linux
 ABI are declared in @file{sys/cachectl.h}.
 
-@deftypefun {void} __riscv_flush_icache(void *@var{start}, void *@var{end}, unsigned long int @var{flags})
+@deftypefun {void} __riscv_flush_icache (void *@var{start}, void *@var{end}, unsigned long int @var{flags})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Enforce ordering between stores and instruction cache fetches.  The range of
 addresses over which ordering is enforced is specified by @var{start} and
