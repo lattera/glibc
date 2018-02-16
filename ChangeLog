@@ -1,3 +1,8 @@
+2018-02-19  Rical Jasan  <ricaljasan@pacific.net>
+
+	[BZ #6889]
+	* manual/filesys.texi (get_current_dir_name): Clarify behaviour.
+
 2018-02-18  Aurelien Jarno  <aurelien@aurel32.net>
 
 	[BZ #22818]

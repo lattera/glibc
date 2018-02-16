@@ -147,19 +147,20 @@ necessarily enough space to contain the directory name.  That is why
 this function is deprecated.
 @end deftypefn
 
+@vindex PWD
 @deftypefun {char *} get_current_dir_name (void)
 @standards{GNU, unistd.h}
 @safety{@prelim{}@mtsafe{@mtsenv{}}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{} @acsfd{}}}
 @c Besides getcwd, which this function calls as a fallback, it calls
 @c getenv, with the potential thread-safety issues that brings about.
-@vindex PWD
-This @code{get_current_dir_name} function is basically equivalent to
-@w{@code{getcwd (NULL, 0)}}.  The only difference is that the value of
-the @code{PWD} variable is returned if this value is correct.  This is a
-subtle difference which is visible if the path described by the
-@code{PWD} value is using one or more symbol links in which case the
-value returned by @code{getcwd} can resolve the symbol links and
-therefore yield a different result.
+The @code{get_current_dir_name} function is basically equivalent to
+@w{@code{getcwd (NULL, 0)}}, except the value of the @env{PWD}
+environment variable is first examined, and if it does in fact
+correspond to the current directory, that value is returned.  This is
+a subtle difference which is visible if the path described by the
+value in @env{PWD} is using one or more symbolic links, in which case
+the value returned by @code{getcwd} would resolve the symbolic links
+and therefore yield a different result.
 
 This function is a GNU extension.
 @end deftypefun
