@@ -1,3 +1,9 @@
+2018-02-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* mach/Makefile (headers): Add mach/param.h.
+	* sysdeps/mach/hurd/bits/param.h: Include <mach/param.h>.
+	* sysdeps/mach/i386/mach/param.h: New file, defines EXEC_PAGESIZE
+
 2018-02-17  John David Anglin  <danglin@gcc.gnu.org>
 
 	* sysdeps/hppa/fpu/libm-test-ulps (pow): Increase double and
