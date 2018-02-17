@@ -1,3 +1,8 @@
+2018-02-17  John David Anglin  <danglin@gcc.gnu.org>
+
+	* sysdeps/hppa/fpu/libm-test-ulps (pow): Increase double and
+	idouble to 1 ULP.
+
 2018-02-16  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/platform.texi (__riscv_flush_icache): Fix @deftypefun
