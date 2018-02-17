@@ -3,6 +3,10 @@
 	* mach/Makefile (headers): Add mach/param.h.
 	* sysdeps/mach/hurd/bits/param.h: Include <mach/param.h>.
 	* sysdeps/mach/i386/mach/param.h: New file, defines EXEC_PAGESIZE
+	* sysdeps/mach/hurd/ptsname.c: Include <sys/stat.h>.
+	(__ptsname_r): Move implementation to...
+	(__ptsname_internal): ... new function.  Add filling the STP
+	structure.
 
 2018-02-17  John David Anglin  <danglin@gcc.gnu.org>
 
