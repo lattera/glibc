@@ -29,7 +29,7 @@
 #include <sys/syscall.h>
 
 #include "posix-timer.h"
-#include <nptl/pthreadP.h>
+#include <internaltypes.h>
 
 
 /* Number of threads used.  */
@@ -481,31 +481,6 @@ __timer_thread_wakeup (struct thread_node *thread)
   pthread_cond_broadcast (&thread->cond);
 }
 
-
-/* Compare two pthread_attr_t thread attributes for exact equality.
-   Returns 1 if they are equal, otherwise zero if they are not equal
-   or contain illegal values.  This version is NPTL-specific for
-   performance reason.  One could use the access functions to get the
-   values of all the fields of the attribute structure.  */
-static int
-thread_attr_compare (const pthread_attr_t *left, const pthread_attr_t *right)
-{
-  struct pthread_attr *ileft = (struct pthread_attr *) left;
-  struct pthread_attr *iright = (struct pthread_attr *) right;
-
-  return (ileft->flags == iright->flags
-	  && ileft->schedpolicy == iright->schedpolicy
-	  && (ileft->schedparam.sched_priority
-	      == iright->schedparam.sched_priority)
-	  && ileft->guardsize == iright->guardsize
-	  && ileft->stackaddr == iright->stackaddr
-	  && ileft->stacksize == iright->stacksize
-	  && ((ileft->cpuset == NULL && iright->cpuset == NULL)
-	      || (ileft->cpuset != NULL && iright->cpuset != NULL
-		  && ileft->cpusetsize == iright->cpusetsize
-		  && memcmp (ileft->cpuset, iright->cpuset,
-			     ileft->cpusetsize) == 0)));
-}
 
 
 /* Search the list of active threads and find one which has matching

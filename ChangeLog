@@ -1,3 +1,10 @@
+2018-02-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/pthread/timer_routines.c: Include <timer_routines.h> instead
+	of <nptl/pthreadP.h>
+	(thread_attr_compare): Move function to...
+	* sysdeps/nptl/timer_routines.h: ... new header.
+
 2018-02-26  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/strcoll_l.c: Include <libc-diag.h>.
