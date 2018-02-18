@@ -120,7 +120,11 @@ $(objpfx)tst-gettext6.out: $(gen-locales)
 $(objpfx)tst-translit.out: $(gen-locales)
 endif
 
-$(objpfx)msgs.h: po2test.awk ../po/de.po
+$(objpfx)tst-gettext-de.po: ../po/de.po
+	$(make-target-directory)
+	LC_ALL=C $(AWK) '!/^"POT-Creation-Date: [0-9-]+ [0-9:+-]+\\n"$$/' $^ > $@
+
+$(objpfx)msgs.h: po2test.awk $(objpfx)tst-gettext-de.po
 	$(make-target-directory)
 	LC_ALL=C $(AWK) -f $^ > $@
 

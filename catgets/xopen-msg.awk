@@ -58,6 +58,11 @@ $1 ~ "msg(id|str)" {
     next
 }
 
+/^"POT-Creation-Date: [0-9-]+ [0-9:+-]+\\n"/ {
+    # Ignore POT-Creation-Date to match what is done in intl/Makefile.
+    next
+}
+
 /^".*"/ {
     # Append to current message
     sub(/^"/, "", $0)

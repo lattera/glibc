@@ -1,3 +1,15 @@
+2018-02-18  Aurelien Jarno  <aurelien@aurel32.net>
+
+	[BZ #21508]
+	* catgets/xopen-msg.awk: Ignore POT-Creation-Date line.
+	* intl/Makefile ($(objpfx)tst-gettext-de.po): Generate
+	intl/tst-gettext-de.po from po/de.po by removing the
+	POT-Creation-Date line.
+	($(objpfx)msgs.h): Depend on $(objpfx)tst-gettext-de.po instead of
+	../po/de.po.
+	* intl/tst-gettext.sh: Use ${objpfx}tst-gettext-de.po instead of
+	../po/de.po.
+
 2018-02-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* mach/Makefile (headers): Add mach/param.h.
