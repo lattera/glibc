@@ -103,6 +103,8 @@ reorder-after <w>
 <U00FC> <u-diaresis>;<BAS>;<MIN>;IGNORE % ü
 <U00DC> <u-diaresis>;<BAS>;<CAP>;IGNORE % Ü
 
+reorder-end
+
 END LC_COLLATE
 
 LC_CTYPE

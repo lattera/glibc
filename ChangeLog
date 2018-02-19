@@ -1,3 +1,8 @@
+2018-02-21  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #22517]
+	* localedata/locales/et_EE (LC_COLLATE): add missing “reorder-end”
+
 2018-02-21  Rical Jasan  <ricaljasan@pacific.net>
 
 	* io/fcntl.h: Fix a typo in a comment.
