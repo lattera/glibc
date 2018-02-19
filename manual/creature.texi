@@ -167,10 +167,9 @@ This macro was introduced as part of the Large File Support extension
 
 @defvr Macro _ISOC99_SOURCE
 @standards{GNU, (none)}
-Until the revised @w{ISO C} standard is widely adopted the new features
-are not automatically enabled.  @Theglibc{} nevertheless has a complete
-implementation of the new standard and to enable the new features the
-macro @code{_ISOC99_SOURCE} should be defined.
+If this macro is defined, features from ISO C99 are included.  Since
+these features are included by default, this macro is mostly relevant
+when the compiler uses an earlier language version.
 @end defvr
 
 @defvr Macro _ISOC11_SOURCE
