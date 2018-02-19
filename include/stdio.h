@@ -185,6 +185,8 @@ extern __typeof (fputs_unlocked) __fputs_unlocked;
 libc_hidden_proto (__fputs_unlocked)
 libc_hidden_proto (feof_unlocked)
 extern __typeof (feof_unlocked) __feof_unlocked attribute_hidden;
+libc_hidden_proto (ferror_unlocked)
+extern __typeof (ferror_unlocked) __ferror_unlocked attribute_hidden;
 libc_hidden_proto (fmemopen)
 /* The prototype needs repeating instead of using __typeof to use
    __THROW in C++ tests.  */
@@ -210,6 +212,12 @@ __extern_inline int
 __NTH (__feof_unlocked (FILE *__stream))
 {
   return __feof_unlocked_body (__stream);
+}
+
+__extern_inline int
+__NTH (__ferror_unlocked (FILE *__stream))
+{
+  return __ferror_unlocked_body (__stream);
 }
 #  endif
 

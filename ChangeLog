@@ -1,3 +1,17 @@
+2018-02-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15105]
+	[BZ #19463]
+	* libio/ferror_u.c (ferror_unlocked): Rename to __ferror_unlocked
+	and define as weak alias of __ferror_unlocked.  Use
+	libc_hidden_weak.
+	* include/stdio.h [!_ISOMAC] (ferror_unlocked): Use
+	libc_hidden_proto.
+	[!_ISOMAC] (__ferror_unlocked) New declaration, and inline
+	function if [__USE_EXTERN_INLINES].
+	* time/getdate.c (__getdate_r): Call __ferror_unlocked instead of
+	ferror_unlocked.
+
 2018-02-19  Rical Jasan  <ricaljasan@pacific.net>
 
 	[BZ #6889]

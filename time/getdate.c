@@ -206,7 +206,7 @@ __getdate_r (const char *string, struct tm *tp)
   free (line);
 
   /* Check for errors. */
-  if (ferror_unlocked (fp))
+  if (__ferror_unlocked (fp))
     {
       fclose (fp);
       return 5;
