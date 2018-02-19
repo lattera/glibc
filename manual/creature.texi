@@ -221,13 +221,20 @@ precedence.
 If you define this macro, most features are included apart from
 X/Open, LFS and GNU extensions: the effect is to enable features from
 the 2008 edition of POSIX, as well as certain BSD and SVID features
-without a separate feature test macro to control them.  Defining this
-macro, on its own and without using compiler options such as
-@option{-ansi} or @option{-std=c99}, has the same effect as not
-defining any feature test macros; defining it together with other
-feature test macros, or when options such as @option{-ansi} are used,
-enables those features even when the other options would otherwise
-cause them to be disabled.
+without a separate feature test macro to control them.
+
+Be aware that compiler options also affect included features:
+
+@itemize
+@item
+If you use a strict conformance option, features beyond those from the
+compiler's language version will be disabled, though feature test
+macros may be used to enable them.
+
+@item
+Features enabled by compiler options are not overridden by feature
+test macros.
+@end itemize
 @end defvr
 
 @defvr Macro _ATFILE_SOURCE

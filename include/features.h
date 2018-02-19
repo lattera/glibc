@@ -214,7 +214,7 @@
    define _DEFAULT_SOURCE.  */
 #if (defined _DEFAULT_SOURCE					\
      || (!defined __STRICT_ANSI__				\
-	 && !defined _ISOC99_SOURCE				\
+	 && !defined _ISOC99_SOURCE && !defined _ISOC11_SOURCE	\
 	 && !defined _POSIX_SOURCE && !defined _POSIX_C_SOURCE	\
 	 && !defined _XOPEN_SOURCE))
 # undef  _DEFAULT_SOURCE

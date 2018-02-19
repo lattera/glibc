@@ -1,3 +1,10 @@
+2018-02-21  Rical Jasan  <ricaljasan@pacific.net>
+
+	[BZ #22862]
+	* include/features.h: Add _ISOC11_SOURCE to test for whether to
+	define _DEFAULT_SOURCE.
+	* manual/creature.texi (_DEFAULT_SOURCE): Improve documentation.
+
 2018-02-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #20890]
