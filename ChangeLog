@@ -1,3 +1,12 @@
+2018-02-20  Rical Jasan  <ricaljasan@pacific.net>
+
+	* manual/creature.texi (_POSIX_C_SOURCE): Document special values
+	of 199606L, 200112L, and 200809L.
+	(_XOPEN_SOURCE): Document special values of 600 and 700.
+	(_ISOC11_SOURCE): Document macro.
+	(_ATFILE_SOURCE): Likewise.
+	(_FORTIFY_SOURCE): Likewise.
+
 2018-02-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]
