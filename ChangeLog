@@ -1,5 +1,10 @@
 2018-02-23  Mike FABIAN  <mfabian@redhat.com>
 
+	* localedata/Makefile: Remove --quiet argument when
+	installing locales
+
+2018-02-23  Mike FABIAN  <mfabian@redhat.com>
+
 	[BZ #17438]
 	* localedata/locales/pt_BR (LC_TIME): use / instead of -
 	in d_fmt.

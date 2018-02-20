@@ -212,7 +212,7 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	@locale=`echo $@ | sed -e 's/^install-//'`; \
 	charset=`echo $$locale | sed -e 's,.*/,,'`; \
 	locale=`echo $$locale | sed -e 's,/[^/]*,,'`; \
-	flags="--quiet -c"; \
+	flags="-c"; \
 	if [ "$$charset" = 'SHIFT_JIS' ] \
 	   || [ "$$charset" = 'SHIFT_JISX0213' ]; then \
 	   flags="$$flags --no-warnings=ascii"; \
