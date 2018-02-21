@@ -60,7 +60,6 @@ do_test (void)
   printf ("feof = %d, ferror = %d immediately after fgets\n",
 	  feof (f), ferror (f));
 
-#if 1
   c = fgetc (f);
   if (c == EOF)
     printf ("fgetc -> EOF (feof = %d, ferror = %d)\n",
@@ -71,7 +70,6 @@ do_test (void)
 	      c, feof (f), ferror (f));
       result = 1;
     }
-#endif
 
   c = write (temp_fd, text2, sizeof text2 - 1);
   if (c == sizeof text2 - 1)

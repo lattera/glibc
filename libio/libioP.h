@@ -309,10 +309,6 @@ struct _IO_jump_t
     JUMP_FIELD(_IO_stat_t, __stat);
     JUMP_FIELD(_IO_showmanyc_t, __showmanyc);
     JUMP_FIELD(_IO_imbue_t, __imbue);
-#if 0
-    get_column;
-    set_column;
-#endif
 };
 
 /* We always allocate an extra word following an _IO_FILE.
@@ -710,19 +706,6 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
 
 extern int _IO_vscanf (const char *, va_list) __THROW;
 
-/* _IO_pos_BAD is an off64_t value indicating error, unknown, or EOF. */
-#ifndef _IO_pos_BAD
-# define _IO_pos_BAD ((off64_t) -1)
-#endif
-/* _IO_pos_adjust adjust an off64_t by some number of bytes. */
-#ifndef _IO_pos_adjust
-# define _IO_pos_adjust(pos, delta) ((pos) += (delta))
-#endif
-/* _IO_pos_0 is an off64_t value indicating beginning of file. */
-#ifndef _IO_pos_0
-# define _IO_pos_0 ((off64_t) 0)
-#endif
-
 #ifdef _IO_MTSAFE_IO
 /* check following! */
 # ifdef _IO_USE_OLD_IO_FILE
@@ -752,33 +735,19 @@ extern int _IO_vscanf (const char *, va_list) __THROW;
 # endif
 #endif
 
-#define _IO_va_start(args, last) va_start(args, last)
-
 extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 
-#if 1
-# define COERCE_FILE(FILE) /* Nothing */
-#else
-/* This is part of the kludge for binary compatibility with old stdio. */
-# define COERCE_FILE(FILE) \
-  (((FILE)->_flags & _IO_MAGIC_MASK) == _OLD_MAGIC_MASK \
-    && (FILE) = *(FILE**)&((int*)fp)[1])
-#endif
-
-#ifdef EINVAL
-# define MAYBE_SET_EINVAL __set_errno (EINVAL)
-#else
-# define MAYBE_SET_EINVAL /* nothing */
-#endif
-
 #ifdef IO_DEBUG
-# define CHECK_FILE(FILE, RET) \
-	if ((FILE) == NULL) { MAYBE_SET_EINVAL; return RET; } \
-	else { COERCE_FILE(FILE); \
-	       if (((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
-	  { MAYBE_SET_EINVAL; return RET; }}
+# define CHECK_FILE(FILE, RET) do {			\
+    if ((FILE) == NULL ||				\
+	((FILE)->_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
+      {							\
+	__set_errno (EINVAL);				\
+	return RET;					\
+      }							\
+  } while (0)
 #else
-# define CHECK_FILE(FILE, RET) COERCE_FILE (FILE)
+# define CHECK_FILE(FILE, RET) do { } while (0)
 #endif
 
 static inline void

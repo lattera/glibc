@@ -59,9 +59,6 @@ struct obstack;
 extern int _IO_obstack_vprintf (struct obstack *, const char *, __gnuc_va_list)
        __THROW;
 extern int _IO_obstack_printf (struct obstack *, const char *, ...) __THROW;
-#ifndef _IO_pos_BAD
-#define _IO_pos_BAD ((off64_t)(-1))
-#endif
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
   (_IO_seekoff_unlocked (__fp, __offset, __whence, _IOS_INPUT|_IOS_OUTPUT) \

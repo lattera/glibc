@@ -194,24 +194,6 @@ _IO_free_backup_area (FILE *fp)
 }
 libc_hidden_def (_IO_free_backup_area)
 
-#if 0
-int
-_IO_switch_to_put_mode (FILE *fp)
-{
-  fp->_IO_write_base = fp->_IO_read_ptr;
-  fp->_IO_write_ptr = fp->_IO_read_ptr;
-  /* Following is wrong if line- or un-buffered? */
-  fp->_IO_write_end = (fp->_flags & _IO_IN_BACKUP
-		       ? fp->_IO_read_end : fp->_IO_buf_end);
-
-  fp->_IO_read_ptr = fp->_IO_read_end;
-  fp->_IO_read_base = fp->_IO_read_end;
-
-  fp->_flags |= _IO_CURRENTLY_PUTTING;
-  return 0;
-}
-#endif
-
 int
 __overflow (FILE *f, int ch)
 {
@@ -465,15 +447,6 @@ _IO_default_xsgetn (FILE *fp, void *data, size_t n)
 }
 libc_hidden_def (_IO_default_xsgetn)
 
-#if 0
-/* Seems not to be needed. --drepper */
-int
-_IO_sync (FILE *fp)
-{
-  return 0;
-}
-#endif
-
 FILE *
 _IO_default_setbuf (FILE *fp, char *p, ssize_t len)
 {
@@ -697,28 +670,6 @@ _IO_sungetc (FILE *fp)
   return result;
 }
 
-#if 0 /* Work in progress */
-/* Seems not to be needed.  */
-#if 0
-void
-_IO_set_column (FILE *fp, int c)
-{
-  if (c == -1)
-    fp->_column = -1;
-  else
-    fp->_column = c - (fp->_IO_write_ptr - fp->_IO_write_base);
-}
-#else
-int
-_IO_set_column (FILE *fp, int i)
-{
-  fp->_cur_column = i + 1;
-  return 0;
-}
-#endif
-#endif
-
-
 unsigned
 _IO_adjust_column (unsigned start, const char *line, int count)
 {
@@ -729,20 +680,6 @@ _IO_adjust_column (unsigned start, const char *line, int count)
   return start + count;
 }
 libc_hidden_def (_IO_adjust_column)
-
-#if 0
-/* Seems not to be needed. --drepper */
-int
-_IO_get_column (FILE *fp)
-{
-  if (fp->_cur_column)
-    return _IO_adjust_column (fp->_cur_column - 1,
-			      fp->_IO_write_base,
-			      fp->_IO_write_ptr - fp->_IO_write_base);
-  return -1;
-}
-#endif
-
 
 int
 _IO_flush_all_lockp (int do_lock)
@@ -964,10 +901,8 @@ _IO_remove_marker (struct _IO_marker *marker)
 	  return;
 	}
     }
-#if 0
-    if _sbuf has a backup area that is no longer needed, should we delete
-    it now, or wait until the next underflow?
-#endif
+  /* FIXME: if _sbuf has a backup area that is no longer needed,
+     should we delete it now, or wait until the next underflow? */
 }
 
 #define BAD_DELTA EOF
@@ -1018,20 +953,6 @@ _IO_unsave_markers (FILE *fp)
   struct _IO_marker *mark = fp->_markers;
   if (mark)
     {
-#ifdef TODO
-      streampos offset = seekoff (0, ios::cur, ios::in);
-      if (offset != EOF)
-	{
-	  offset += eGptr () - Gbase ();
-	  for ( ; mark != NULL; mark = mark->_next)
-	    mark->set_streampos (mark->_pos + offset);
-	}
-    else
-      {
-	for ( ; mark != NULL; mark = mark->_next)
-	  mark->set_streampos (EOF);
-      }
-#endif
       fp->_markers = 0;
     }
 
@@ -1039,19 +960,6 @@ _IO_unsave_markers (FILE *fp)
     _IO_free_backup_area (fp);
 }
 libc_hidden_def (_IO_unsave_markers)
-
-#if 0
-/* Seems not to be needed. --drepper */
-int
-_IO_nobackup_pbackfail (FILE *fp, int c)
-{
-  if (fp->_IO_read_ptr > fp->_IO_read_base)
-	fp->_IO_read_ptr--;
-  if (c != EOF && *fp->_IO_read_ptr != c)
-      *fp->_IO_read_ptr = c;
-  return (unsigned char) c;
-}
-#endif
 
 int
 _IO_default_pbackfail (FILE *fp, int c)
@@ -1200,24 +1108,4 @@ _IO_list_resetlock (void)
 }
 libc_hidden_def (_IO_list_resetlock)
 
-
-#ifdef TODO
-#if defined(linux)
-#define IO_CLEANUP ;
-#endif
-
-#ifdef IO_CLEANUP
-  IO_CLEANUP
-#else
-struct __io_defs {
-    __io_defs() { }
-    ~__io_defs() { _IO_cleanup (); }
-};
-__io_defs io_defs__;
-#endif
-
-#endif /* TODO */
-
-#ifdef text_set_element
 text_set_element(__libc_atexit, _IO_cleanup);
-#endif

@@ -58,7 +58,7 @@
 	}								      \
       if (Format == NULL)						      \
 	{								      \
-	  MAYBE_SET_EINVAL;						      \
+	  __set_errno (EINVAL);						      \
 	  return -1;							      \
 	}								      \
     } while (0)

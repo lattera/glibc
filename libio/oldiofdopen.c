@@ -60,7 +60,7 @@ _IO_old_fdopen (int fd, const char *mode)
       read_write = _IO_NO_READS|_IO_IS_APPENDING;
       break;
     default:
-      MAYBE_SET_EINVAL;
+      __set_errno (EINVAL);
       return NULL;
   }
   if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))

@@ -196,13 +196,9 @@ _IO_wfile_underflow (FILE *fp)
       _IO_wdoallocbuf (fp);
     }
 
-  /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
   if (fp->_flags & (_IO_LINE_BUF | _IO_UNBUFFERED))
     {
-#if 0
-      _IO_flush_all_linebuffered ();
-#else
       /* We used to flush all line-buffered stream.  This really isn't
 	 required by any standard.  My recollection is that
 	 traditional Unix systems did this for stdout.  stderr better
@@ -215,7 +211,6 @@ _IO_wfile_underflow (FILE *fp)
 	_IO_OVERFLOW (_IO_stdout, EOF);
 
       _IO_release_lock (_IO_stdout);
-#endif
     }
 
   _IO_switch_to_get_mode (fp);

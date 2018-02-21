@@ -29,15 +29,12 @@
 #include <errno.h>
 #include <shlib-compat.h>
 
+/* POSIX does not require us to check that a stream passed to pclose()
+   was created by popen().  Instead we rely on _IO_SYSCLOSE to call
+   _proc_close when appropriate.  */
 int
 __new_pclose (FILE *fp)
 {
-#if 0
-  /* Does not actually test that stream was created by popen(). Instead,
-     it depends on the filebuf::sys_close() virtual to Do The Right Thing. */
-  if (fp is not a proc_file)
-    return -1;
-#endif
   return _IO_new_fclose (fp);
 }
 

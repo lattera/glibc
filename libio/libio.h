@@ -97,6 +97,14 @@ typedef union
 #define _IO_FLAGS2_CLOEXEC 64
 #define _IO_FLAGS2_NEED_LOCK 128
 
+/* _IO_pos_BAD is an off64_t value indicating error, unknown, or EOF.  */
+#define _IO_pos_BAD ((off64_t) -1)
+
+/* _IO_pos_adjust adjusts an off64_t by some number of bytes.  */
+#define _IO_pos_adjust(pos, delta) ((pos) += (delta))
+
+/* _IO_pos_0 is an off64_t value indicating beginning of file.  */
+#define _IO_pos_0 ((off64_t) 0)
 
 struct _IO_jump_t;
 

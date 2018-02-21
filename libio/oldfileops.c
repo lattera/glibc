@@ -516,10 +516,6 @@ _IO_old_file_seekoff (FILE *fp, off64_t offset, int dir, int mode)
                           + (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{
-#if 0
-	  if (_IO_in_backup (fp))
-	    _IO_switch_to_main_get_area (fp);
-#endif
 	  if (rel_offset <= fp->_IO_read_end - fp->_IO_read_base)
 	    {
 	      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + rel_offset,

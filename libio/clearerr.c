@@ -27,6 +27,6 @@ clearerr (FILE *fp)
   _IO_funlockfile (fp);
 }
 
-#if defined weak_alias && !defined _IO_MTSAFE_IO
+#ifndef _IO_MTSAFE_IO
 weak_alias (clearerr, clearerr_unlocked)
 #endif

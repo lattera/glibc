@@ -40,7 +40,7 @@ fputc (int c, FILE *fp)
   return result;
 }
 
-#if defined weak_alias && !defined _IO_MTSAFE_IO
+#ifndef _IO_MTSAFE_IO
 #undef fputc_unlocked
 weak_alias (fputc, fputc_unlocked)
 #endif

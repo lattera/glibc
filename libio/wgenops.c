@@ -426,26 +426,6 @@ _IO_free_wbackup_area (FILE *fp)
 }
 libc_hidden_def (_IO_free_wbackup_area)
 
-#if 0
-int
-_IO_switch_to_wput_mode (FILE *fp)
-{
-  fp->_wide_data->_IO_write_base = fp->_wide_data->_IO_read_ptr;
-  fp->_wide_data->_IO_write_ptr = fp->_wide_data->_IO_read_ptr;
-  /* Following is wrong if line- or un-buffered? */
-  fp->_wide_data->_IO_write_end = (fp->_flags & _IO_IN_BACKUP
-				   ? fp->_wide_data->_IO_read_end
-				   : fp->_wide_data->_IO_buf_end);
-
-  fp->_wide_data->_IO_read_ptr = fp->_wide_data->_IO_read_end;
-  fp->_wide_data->_IO_read_base = fp->_wide_data->_IO_read_end;
-
-  fp->_flags |= _IO_CURRENTLY_PUTTING;
-  return 0;
-}
-#endif
-
-
 static int
 save_for_wbackup (FILE *fp, wchar_t *end_p)
 {
@@ -624,20 +604,6 @@ _IO_unsave_wmarkers (FILE *fp)
   struct _IO_marker *mark = fp->_markers;
   if (mark)
     {
-#ifdef TODO
-      streampos offset = seekoff (0, ios::cur, ios::in);
-      if (offset != EOF)
-	{
-	  offset += eGptr () - Gbase ();
-	  for ( ; mark != NULL; mark = mark->_next)
-	    mark->set_streampos (mark->_pos + offset);
-	}
-    else
-      {
-	for ( ; mark != NULL; mark = mark->_next)
-	  mark->set_streampos (EOF);
-      }
-#endif
       fp->_markers = 0;
     }
 

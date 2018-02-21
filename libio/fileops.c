@@ -494,13 +494,9 @@ _IO_new_file_underflow (FILE *fp)
       _IO_doallocbuf (fp);
     }
 
-  /* Flush all line buffered files before reading. */
   /* FIXME This can/should be moved to genops ?? */
   if (fp->_flags & (_IO_LINE_BUF|_IO_UNBUFFERED))
     {
-#if 0
-      _IO_flush_all_linebuffered ();
-#else
       /* We used to flush all line-buffered stream.  This really isn't
 	 required by any standard.  My recollection is that
 	 traditional Unix systems did this for stdout.  stderr better
@@ -513,7 +509,6 @@ _IO_new_file_underflow (FILE *fp)
 	_IO_OVERFLOW (_IO_stdout, EOF);
 
       _IO_release_lock (_IO_stdout);
-#endif
     }
 
   _IO_switch_to_get_mode (fp);
@@ -813,10 +808,6 @@ _IO_new_file_sync (FILE *fp)
   delta = fp->_IO_read_ptr - fp->_IO_read_end;
   if (delta != 0)
     {
-#ifdef TODO
-      if (_IO_in_backup (fp))
-	delta -= eGptr () - Gbase ();
-#endif
       off64_t new_pos = _IO_SYSSEEK (fp, delta, 1);
       if (new_pos != (off64_t) EOF)
 	fp->_IO_read_end = fp->_IO_read_ptr;
@@ -838,10 +829,6 @@ _IO_file_sync_mmap (FILE *fp)
 {
   if (fp->_IO_read_ptr != fp->_IO_read_end)
     {
-#ifdef TODO
-      if (_IO_in_backup (fp))
-	delta -= eGptr () - Gbase ();
-#endif
       if (__lseek64 (fp->_fileno, fp->_IO_read_ptr - fp->_IO_buf_base,
 		     SEEK_SET)
 	  != fp->_IO_read_ptr - fp->_IO_buf_base)

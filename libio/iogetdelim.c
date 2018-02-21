@@ -45,7 +45,7 @@ _IO_getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 
   if (lineptr == NULL || n == NULL)
     {
-      MAYBE_SET_EINVAL;
+      __set_errno (EINVAL);
       return -1;
     }
   CHECK_FILE (fp, -1);

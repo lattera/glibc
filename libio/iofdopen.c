@@ -62,7 +62,7 @@ _IO_new_fdopen (int fd, const char *mode)
       read_write = _IO_NO_READS|_IO_IS_APPENDING;
       break;
     default:
-      MAYBE_SET_EINVAL;
+      __set_errno (EINVAL);
       return NULL;
   }
   for (i = 1; i < 5; ++i)
@@ -92,7 +92,7 @@ _IO_new_fdopen (int fd, const char *mode)
   if (((fd_flags & O_ACCMODE) == O_RDONLY && !(read_write & _IO_NO_WRITES))
       || ((fd_flags & O_ACCMODE) == O_WRONLY && !(read_write & _IO_NO_READS)))
     {
-      MAYBE_SET_EINVAL;
+      __set_errno (EINVAL);
       return NULL;
     }
 

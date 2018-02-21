@@ -172,7 +172,7 @@
 	}								      \
       else if (format == NULL)						      \
 	{								      \
-	  MAYBE_SET_EINVAL;						      \
+	  __set_errno (EINVAL);						      \
 	  return EOF;							      \
 	}								      \
     } while (0)

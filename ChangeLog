@@ -1,5 +1,25 @@
 2018-02-21  Zack Weinberg  <zackw@panix.com>
 
+	* libio/libio.h (_IO_pos_BAD, _IO_pos_0, _IO_pos_adjust):
+	Define here, unconditionally.
+	* libio/iolibio.h (_IO_pos_BAD): Don't define here.
+	* libio/libioP.h: Remove #if 0 blocks.
+	(_IO_pos_BAD, _IO_pos_0, _IO_pos_adjust): Don't define here.
+	(_IO_va_start, COERCE_FILE, MAYBE_SET_EINVAL): Don't define.
+	(CHECK_FILE): Don't use MAYBE_SET_EINVAL or COERCE_FILE.  Fix style.
+
+	* libio/clearerr.c, libio/fputc.c, libio/getchar.c:
+	Assume weak_alias is always defined.
+
+	* libio/fileops.c, libio/genops.c, libio/oldfileops.c
+	* libio/oldpclose.c, libio/pclose.c, libio/wfileops.c:
+	Remove #if 0 and #ifdef TODO blocks.
+	Assume text_set_element is always defined.
+
+	* libio/iofdopen.c, libio/iogetdelim.c, libio/oldiofdopen.c
+	Use __set_errno (EINVAL) instead of MAYBE_SET_EINVAL.
+	* libio/tst-mmap-eofsync.c: Make #if 1 block unconditional.
+
 	* libio/libio.h (_IOS_ATEND, _IOS_APPEND, _IOS_TRUNC)
 	(_IOS_NOCREATE, _IOS_NOREPLACE, _IOS_BIN, _OLD_STDIO_MAGIC)
 	(_IO_SKIPWS, _IO_LEFT, _IO_RIGHT, _IO_INTERNAL, _IO_DEC)
