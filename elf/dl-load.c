@@ -33,7 +33,6 @@
 #include "dynamic-link.h"
 #include <abi-tag.h>
 #include <stackinfo.h>
-#include <caller.h>
 #include <sysdep.h>
 #include <stap-probe.h>
 #include <libc-pointer-arith.h>
@@ -1183,12 +1182,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 
   if (__glibc_unlikely ((stack_flags &~ GL(dl_stack_flags)) & PF_X))
     {
-      if (__glibc_unlikely (__check_caller (RETURN_ADDRESS (0), allow_ldso) != 0))
-	{
-	  errstring = N_("invalid caller");
-	  goto call_lose;
-	}
-
       /* The stack is presently not executable, but this module
 	 requires that it be executable.  We must change the
 	 protection of the variable which contains the flags used in

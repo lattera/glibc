@@ -28,7 +28,6 @@
 #include <sys/param.h>
 #include <libc-lock.h>
 #include <ldsodefs.h>
-#include <caller.h>
 #include <sysdep-cancel.h>
 #include <tls.h>
 #include <stap-probe.h>
@@ -47,8 +46,6 @@ struct dl_open_args
   int mode;
   /* This is the caller of the dlopen() function.  */
   const void *caller_dlopen;
-  /* This is the caller of _dl_open().  */
-  const void *caller_dl_open;
   struct link_map *map;
   /* Namespace ID.  */
   Lmid_t nsid;
@@ -186,11 +183,6 @@ dl_open_worker (void *a)
   const char *file = args->file;
   int mode = args->mode;
   struct link_map *call_map = NULL;
-
-  /* Check whether _dl_open() has been called from a valid DSO.  */
-  if (__check_caller (args->caller_dl_open,
-		      allow_libc|allow_libdl|allow_ldso) != 0)
-    _dl_signal_error (0, "dlopen", NULL, N_("invalid caller"));
 
   /* Determine the caller's map if necessary.  This is needed in case
      we have a DST, when we don't know the namespace ID we have to put
@@ -583,7 +575,6 @@ no more namespaces available for dlmopen()"));
   args.file = file;
   args.mode = mode;
   args.caller_dlopen = caller_dlopen;
-  args.caller_dl_open = RETURN_ADDRESS (0);
   args.map = NULL;
   args.nsid = nsid;
   args.argc = argc;

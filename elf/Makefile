@@ -32,7 +32,7 @@ routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
 				  runtime init fini debug misc \
 				  version profile tls origin scope \
-				  execstack caller open close trampoline \
+				  execstack open close trampoline \
 				  exception sort-maps)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
@@ -54,7 +54,6 @@ all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
 		    dl-sysdep dl-exception dl-reloc-static-pie
-shared-only-routines += dl-caller
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.

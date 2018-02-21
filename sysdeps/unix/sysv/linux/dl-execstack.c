@@ -22,7 +22,6 @@
 #include <libintl.h>
 #include <stdbool.h>
 #include <stackinfo.h>
-#include <caller.h>
 #include <sysdep.h>
 
 
@@ -36,12 +35,6 @@ _dl_make_stack_executable (void **stack_endp)
   uintptr_t page = ((uintptr_t) *stack_endp
 		    & -(intptr_t) GLRO(dl_pagesize));
   int result = 0;
-
-  /* Challenge the caller.  */
-  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
-					allow_ldso|allow_libpthread) != 0, 0)
-      || __builtin_expect (*stack_endp != __libc_stack_end, 0))
-    return EPERM;
 
   if (__builtin_expect (__mprotect ((void *) page, GLRO(dl_pagesize),
 				    __stack_prot) == 0, 1))

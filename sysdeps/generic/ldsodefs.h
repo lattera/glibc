@@ -596,7 +596,6 @@ struct rtld_global_ro
 				   const ElfW(Sym) **, struct r_scope_elem *[],
 				   const struct r_found_version *, int, int,
 				   struct link_map *);
-  int (*_dl_check_caller) (const void *, enum allowmask);
   void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
 		     Lmid_t nsid, int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
@@ -1101,10 +1100,6 @@ extern size_t _dl_dst_count (const char *name) attribute_hidden;
 /* Substitute DST values.  */
 extern char *_dl_dst_substitute (struct link_map *l, const char *name,
 				 char *result) attribute_hidden;
-
-/* Check validity of the caller.  */
-extern int _dl_check_caller (const void *caller, enum allowmask mask)
-     attribute_hidden;
 
 /* Open the shared object NAME, relocate it, and run its initializer if it
    hasn't already been run.  MODE is as for `dlopen' (see <dlfcn.h>).  If

@@ -1,3 +1,24 @@
+2018-02-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #22787]
+	* include/caller.h: Remove file.
+	* elf/dl-caller.c: Likewise.
+	* elf/Makefile (dl-routines): Remove dl-caller.
+	(shared-only-routines): Do not add dl-caller.
+	* elf/dl-load.c (_dl_map_object_from_fd): Do not call
+	__check_caller.
+	* elf/dl-open.c (struct dl_open_args): Remove caller_dl_open
+	member.
+	(dl_open_worker): Do not call __check_caller.
+	(_dl_open): Do not set caller_dl_open member.
+	* elf/rtld.c (_rtld_global_ro): Do not initialize
+	_dl_check_caller member.
+	* sysdeps/generic/ldsodefs.h (rtld_global): Remove
+	_dl_check_caller member.
+	(_dl_check_caller): Remove declaration.
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Do not call __check_caller.
+
 2018-02-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_random): New variable.
