@@ -1,5 +1,13 @@
 2018-02-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #20890]
+	* elf/cache.c (save_cache): Call fsync on temporary file before
+	renaming it.
+	(save_aux_cache): Call fdatasync on temporary file before renaming
+	it.
+
+2018-02-21  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #22787]
 	* include/caller.h: Remove file.
 	* elf/dl-caller.c: Likewise.
