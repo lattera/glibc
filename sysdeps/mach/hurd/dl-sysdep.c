@@ -64,6 +64,8 @@ rtld_hidden_data_def(__libc_stack_end)
 hp_timing_t _dl_cpuclock_offset;
 #endif
 
+/* TODO: Initialize.  */
+void *_dl_random attribute_relro = NULL;
 
 struct hurd_startup_data *_dl_hurd_data;
 

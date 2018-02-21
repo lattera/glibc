@@ -1,3 +1,7 @@
+2018-02-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_random): New variable.
+
 2018-02-20  Rical Jasan  <ricaljasan@pacific.net>
 
 	* manual/creature.texi (_ISOC99_SOURCE): Update the dated
