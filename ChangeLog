@@ -153,6 +153,7 @@
 2018-02-21  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-sysdep.c (_dl_random): New variable.
+	* sysdeps/mach/hurd/sysdep-cancel.h: New file.
 
 2018-02-20  Rical Jasan  <ricaljasan@pacific.net>
 
