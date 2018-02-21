@@ -1,3 +1,15 @@
+2018-02-21  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15105]
+	[BZ #19463]
+	* libio/getc_u.c (getc_unlocked): Use libc_hidden_weak.
+	* include/stdio.h [!_ISOMAC] (__getc_unlocked): Use
+	attribute_hidden, and define inline if [__USE_EXTERN_INLINES].
+	[!_ISOMAC] (getc_unlocked): Use libc_hidden_proto.
+	* misc/getttyent.c (__getttyent): Call __getc_unlocked instead of
+	getc_unlocked.
+	* time/tzfile.c (__tzfile_read): Likewise.
+
 2018-02-21  Mike FABIAN  <mfabian@redhat.com>
 
 	[BZ #22517]

@@ -343,11 +343,11 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 					      sizeof (x), f) != sizeof (x),
 			    0))
 	goto lose;
-      c = getc_unlocked (f);
+      c = __getc_unlocked (f);
       if (__glibc_unlikely ((unsigned int) c > 1u))
 	goto lose;
       types[i].isdst = c;
-      c = getc_unlocked (f);
+      c = __getc_unlocked (f);
       if (__glibc_unlikely ((size_t) c > chars))
 	/* Bogus index in data file.  */
 	goto lose;
@@ -376,7 +376,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   for (i = 0; i < num_isstd; ++i)
     {
-      int c = getc_unlocked (f);
+      int c = __getc_unlocked (f);
       if (__glibc_unlikely (c == EOF))
 	goto lose;
       types[i].isstd = c != 0;
@@ -386,7 +386,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   for (i = 0; i < num_isgmt; ++i)
     {
-      int c = getc_unlocked (f);
+      int c = __getc_unlocked (f);
       if (__glibc_unlikely (c == EOF))
 	goto lose;
       types[i].isgmt = c != 0;
@@ -398,7 +398,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   if (sizeof (time_t) == 8 && tzspec != NULL)
     {
       /* Skip over the newline first.  */
-      if (getc_unlocked (f) != '\n'
+      if (__getc_unlocked (f) != '\n'
 	  || (__fread_unlocked (tzspec, 1, tzspec_len - 1, f)
 	      != tzspec_len - 1))
 	tzspec = NULL;
@@ -440,7 +440,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       char *tzstr = malloc (tzspec_len);
       if (tzstr == NULL)
 	goto lose;
-      if (getc_unlocked (f) != '\n'
+      if (__getc_unlocked (f) != '\n'
 	  || (__fread_unlocked (tzstr, 1, tzspec_len - 1, f)
 	      != tzspec_len - 1))
 	{

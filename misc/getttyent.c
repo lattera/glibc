@@ -79,7 +79,7 @@ __getttyent (void)
 		}
 		/* skip lines that are too big */
 		if (!strchr (p, '\n')) {
-			while ((c = getc_unlocked(tf)) != '\n' && c != EOF)
+			while ((c = __getc_unlocked(tf)) != '\n' && c != EOF)
 				;
 			continue;
 		}
