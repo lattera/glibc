@@ -188,6 +188,9 @@ extern __typeof (feof_unlocked) __feof_unlocked attribute_hidden;
 libc_hidden_proto (ferror_unlocked)
 extern __typeof (ferror_unlocked) __ferror_unlocked attribute_hidden;
 libc_hidden_proto (getc_unlocked)
+libc_hidden_proto (fputc_unlocked)
+libc_hidden_proto (putc_unlocked)
+extern __typeof (putc_unlocked) __putc_unlocked attribute_hidden;
 libc_hidden_proto (fmemopen)
 /* The prototype needs repeating instead of using __typeof to use
    __THROW in C++ tests.  */
@@ -225,6 +228,12 @@ __extern_inline int
 __getc_unlocked (FILE *__fp)
 {
   return __getc_unlocked_body (__fp);
+}
+
+__extern_inline int
+__putc_unlocked (int __c, FILE *__stream)
+{
+  return __putc_unlocked_body (__c, __stream);
 }
 #  endif
 

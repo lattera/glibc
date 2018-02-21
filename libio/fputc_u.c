@@ -35,3 +35,4 @@ fputc_unlocked (int c, _IO_FILE *fp)
   CHECK_FILE (fp, EOF);
   return _IO_putc_unlocked (c, fp);
 }
+libc_hidden_def (fputc_unlocked)

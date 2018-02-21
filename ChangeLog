@@ -2,6 +2,19 @@
 
 	[BZ #15105]
 	[BZ #19463]
+	* libio/fputc_u.c (fputc_unlocked): Use libc_hidden_def.
+	* libio/putc_u.c (putc_unlocked): Rename to __putc_unlocked and
+	define as weak alias of __putc_unlocked.  Use libc_hidden_weak.
+	* include/stdio.h [!_ISOMAC] (fputc_unlocked): Use
+	libc_hidden_proto.
+	[!_ISOMAC] (putc_unlocked): Likewise.
+	[!_ISOMAC] (__putc_unlocked): Declare as hidden function, and
+	define inline if [__USE_EXTERN_INLINES].
+	* misc/syslog.c (__vsyslog_chk): Call __putc_unlocked instead of
+	putc_unlocked.
+
+	[BZ #15105]
+	[BZ #19463]
 	* libio/getc_u.c (getc_unlocked): Use libc_hidden_weak.
 	* include/stdio.h [!_ISOMAC] (__getc_unlocked): Use
 	attribute_hidden, and define inline if [__USE_EXTERN_INLINES].

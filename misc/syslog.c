@@ -207,8 +207,8 @@ __vsyslog_chk(int pri, int flag, const char *fmt, va_list ap)
 	      fprintf (f, "[%d]", (int) __getpid ());
 	    if (LogTag != NULL)
 	      {
-		putc_unlocked (':', f);
-		putc_unlocked (' ', f);
+		__putc_unlocked (':', f);
+		__putc_unlocked (' ', f);
 	      }
 
 	    /* Restore errno for %m format.  */
