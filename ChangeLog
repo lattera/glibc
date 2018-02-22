@@ -1,5 +1,7 @@
 2018-02-22  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* nptl/Makefile (routines): Remove unregister-atfork.
 	* nptl/register-atfork.c (fork_handler_pool): Remove variable.
 	(fork_handler_alloc): Remove function.
