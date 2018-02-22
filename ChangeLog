@@ -1,3 +1,10 @@
+2018-02-22  Andrew Waterman <andrew@sifive.com>
+
+	* sysdeps/riscv/rvd/s_fmax.c (__fmax): Handle sNaNs correctly.
+	* sysdeps/riscv/rvd/s_fmin.c (__fmin): Likewise.
+	* sysdeps/riscv/rvf/s_fmaxf.c (__fmaxf): Likewise.
+	* sysdeps/riscv/rvf/s_fminf.c (__fminf): Likewise.
+
 2018-02-22  DJ Delorie  <dj@delorie.com>
 
 	* sysdeps/riscv/tls-macros.h: Do not initialize $gp.

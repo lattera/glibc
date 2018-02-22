@@ -17,12 +17,19 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math_private.h>
 #include <libm-alias-double.h>
 
 double
 __fmin (double x, double y)
 {
-  asm ("fmin.d %0, %1, %2" : "=f" (x) : "f" (x), "f" (y));
-  return x;
+  double res;
+
+  if (__glibc_unlikely ((_FCLASS (x) | _FCLASS (y)) & _FCLASS_SNAN))
+    return x + y;
+  else
+    asm ("fmin.d %0, %1, %2" : "=f" (res) : "f" (x), "f" (y));
+
+  return res;
 }
 libm_alias_double (__fmin, fmin)
