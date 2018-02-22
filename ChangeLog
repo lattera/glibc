@@ -1,5 +1,17 @@
 2018-03-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* nptl/tst-cancel4-common.h (set_socket_buffer): New function.
+	* nptl/tst-cancel4-common.c (do_test): Call set_socket_buffer
+	for socketpair endpoint.
+	* nptl/tst-cancel4.c (tf_send): Call set_socket_buffer and use
+	WRITE_BUFFER_SIZE as buffer size for sending socket.
+	(tf_sendto): Use SOCK_STREAM instead of SOCK_DGRAM and fix an
+	issue on system where send is implemented with sendto syscall.
+	* sysdeps/unix/sysv/linux/mips/mips64/Makefile [$(subdir) = socket]
+	(CFLAGS-recv.c, CFLAGS-send.c): Remove rules.
+	[$(subdir) = nptl] (CFLAGS-recv.c, CFLAGS-send.c): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/Makefile: Remove file.
+
 	[BZ #21269]
 	* sysdeps/unix/sysv/linux/i386/Makefile (tests): Add tst-bz21269.
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (SET_SA_RESTORER): Clear

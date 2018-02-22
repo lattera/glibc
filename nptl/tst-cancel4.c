@@ -726,6 +726,8 @@ tf_send (void *arg)
   if (tempfd2 == -1)
     FAIL_EXIT1 ("socket (AF_UNIX, SOCK_STREAM, 0): %m");
 
+  set_socket_buffer (tempfd2);
+
   if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
     FAIL_EXIT1 ("connect: %m");
 
@@ -738,8 +740,7 @@ tf_send (void *arg)
 
   pthread_cleanup_push (cl, NULL);
 
-  /* Very large block, so that the send call blocks.  */
-  char mem[700000];
+  char mem[WRITE_BUFFER_SIZE];
 
   send (tempfd2, mem, arg == NULL ? sizeof (mem) : 1, 0);
 
@@ -1230,16 +1231,11 @@ tf_msync (void *arg)
 static void *
 tf_sendto (void *arg)
 {
-  if (arg == NULL)
-    // XXX If somebody can provide a portable test case in which sendto()
-    // blocks we can enable this test to run in both rounds.
-    abort ();
-
   struct sockaddr_un sun;
 
-  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+  tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
   if (tempfd == -1)
-    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
+    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_STREAM, 0): %m");
 
   int tries = 0;
   do
@@ -1254,23 +1250,30 @@ tf_sendto (void *arg)
   while (bind (tempfd, (struct sockaddr *) &sun,
 	       offsetof (struct sockaddr_un, sun_path)
 	       + strlen (sun.sun_path) + 1) != 0);
-  tempfname = strdup (sun.sun_path);
 
-  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
+  listen (tempfd, 5);
+
+  tempfd2 = socket (AF_UNIX, SOCK_STREAM, 0);
   if (tempfd2 == -1)
-    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_DGRAM, 0): %m");
+    FAIL_EXIT1 ("socket (AF_UNIX, SOCK_STREAM, 0): %m");
+
+  set_socket_buffer (tempfd2);
+
+  if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
+    FAIL_EXIT1 ("connect: %m");
+
+  unlink (sun.sun_path);
 
   xpthread_barrier_wait (&b2);
 
-  xpthread_barrier_wait (&b2);
+  if (arg != NULL)
+    xpthread_barrier_wait (&b2);
 
   pthread_cleanup_push (cl, NULL);
 
-  char mem[1];
+  char mem[WRITE_BUFFER_SIZE];
 
-  sendto (tempfd2, mem, arg == NULL ? sizeof (mem) : 1, 0,
-	  (struct sockaddr *) &sun,
-	  offsetof (struct sockaddr_un, sun_path) + strlen (sun.sun_path) + 1);
+  sendto (tempfd2, mem, arg == NULL ? sizeof (mem) : 1, 0, NULL, 0);
 
   pthread_cleanup_pop (0);
 

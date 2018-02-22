@@ -20,29 +20,13 @@
 static int
 do_test (void)
 {
-  int val;
-  socklen_t len;
-
   if (socketpair (AF_UNIX, SOCK_STREAM, PF_UNIX, fds) != 0)
     {
       perror ("socketpair");
       exit (1);
     }
 
-  val = 1;
-  len = sizeof(val);
-  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
-  if (getsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, &len) < 0)
-    {
-      perror ("getsockopt");
-      exit (1);
-    }
-  if (val >= WRITE_BUFFER_SIZE)
-    {
-      puts ("minimum write buffer size too large");
-      exit (1);
-    }
-  setsockopt (fds[1], SOL_SOCKET, SO_SNDBUF, &val, sizeof(val));
+  set_socket_buffer (fds[1]);
 
   if (mktemp (fifoname) == NULL)
     {

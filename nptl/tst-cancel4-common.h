@@ -62,6 +62,20 @@ static pthread_barrier_t b2;
 
 #define WRITE_BUFFER_SIZE 16384
 
+/* Set the send buffer of socket S to 1 byte so any send operation
+   done with WRITE_BUFFER_SIZE bytes will force syscall blocking.  */
+static void
+set_socket_buffer (int s)
+{
+  int val = 1;
+  socklen_t len = sizeof(val);
+
+  TEST_VERIFY_EXIT (setsockopt (s, SOL_SOCKET, SO_SNDBUF, &val,
+		    sizeof(val)) == 0);
+  TEST_VERIFY_EXIT (getsockopt (s, SOL_SOCKET, SO_SNDBUF, &val, &len) == 0);
+  TEST_VERIFY_EXIT (val < WRITE_BUFFER_SIZE);
+}
+
 /* Cleanup handling test.  */
 static int cl_called;
 
