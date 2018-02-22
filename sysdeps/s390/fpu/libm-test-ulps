@@ -40,9 +40,9 @@ ildouble: 2
 ldouble: 2
 
 Function: "acosh_downward":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 3
 ldouble: 3
@@ -1317,9 +1317,9 @@ ldouble: 3
 
 Function: Imaginary part of "ctan":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 3
 ldouble: 3
 
@@ -1365,9 +1365,9 @@ ldouble: 5
 
 Function: Imaginary part of "ctan_upward":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 ildouble: 5
 ldouble: 5
 
