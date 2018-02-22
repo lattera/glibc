@@ -1,3 +1,8 @@
+2018-02-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strcmp.S (do_misaligned): Jump back to
+	do_misaligned, not misaligned8.
+
 2018-02-22  Steve Ellcey  <sellcey@cavium.com>
 
 	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):

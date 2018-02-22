@@ -158,7 +158,7 @@ L(do_misaligned):
 	ccmp	data1w, data2w, #0, cs	/* NZCV = 0b0000.  */
 	b.ne	L(done)
 	tst	src1, #7
-	b.ne	L(misaligned8)
+	b.ne	L(do_misaligned)
 
 L(loop_misaligned):
 	/* Test if we are within the last dword of the end of a 4K page.  If
