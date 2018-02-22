@@ -23,19 +23,9 @@
 #include <sysdep.h>
 #include "dl-tls.h"
 
-#define LOAD_GP						\
-	".option push\n\t"				\
-	".option norelax\n\t"				\
-	"la gp, __global_pointer$\n\t"			\
-	".option pop\n\t"
-
-#define UNLOAD_GP
-
 #define TLS_GD(x)					\
 	({ void *__result;				\
-	asm (LOAD_GP					\
-	     "la.tls.gd %0, " #x "\n\t"			\
-	     UNLOAD_GP					\
+	asm ("la.tls.gd %0, " #x "\n\t"			\
 	     : "=r" (__result));			\
 	__tls_get_addr (__result); })
 
@@ -43,19 +33,15 @@
 
 #define TLS_IE(x)					\
 	({ void *__result;				\
-	asm (LOAD_GP					\
-	     "la.tls.ie %0, " #x "\n\t"			\
+	asm ("la.tls.ie %0, " #x "\n\t"			\
 	     "add %0, %0, tp\n\t"			\
-	     UNLOAD_GP					\
 	     : "=r" (__result));			\
 	__result; })
 
 #define TLS_LE(x)					\
 	({ void *__result;				\
-	asm (LOAD_GP					\
-	     "lui %0, %%tprel_hi(" #x ")\n\t"		\
+	asm ("lui %0, %%tprel_hi(" #x ")\n\t"		\
 	     "add %0, %0, tp, %%tprel_add(" #x ")\n\t"	\
 	     "addi %0, %0, %%tprel_lo(" #x ")\n\t"	\
-	     UNLOAD_GP					\
 	     : "=r" (__result));			\
 	__result; })

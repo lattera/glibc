@@ -1,3 +1,7 @@
+2018-02-22  DJ Delorie  <dj@delorie.com>
+
+	* sysdeps/riscv/tls-macros.h: Do not initialize $gp.
+
 2018-02-22  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strcmp.S (do_misaligned): Jump back to
