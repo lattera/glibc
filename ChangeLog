@@ -166,6 +166,7 @@
 
 2018-02-20  Rical Jasan  <ricaljasan@pacific.net>
 
+	[BZ #16335]
 	* manual/creature.texi (_POSIX_C_SOURCE): Document special values
 	of 199606L, 200112L, and 200809L.
 	(_XOPEN_SOURCE): Document special values of 600 and 700.
