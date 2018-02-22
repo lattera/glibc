@@ -52,6 +52,7 @@ libsupport-routines = \
   support_format_hostent \
   support_format_netent \
   support_isolate_in_subprocess \
+  support_openpty \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \

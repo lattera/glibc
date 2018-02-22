@@ -1,3 +1,20 @@
+2018-03-12  Zack Weinberg  <zackw@panix.com>
+
+	[BZ #1190]
+	[BZ #19476]
+	* libio/fileops.c (_IO_new_file_underflow): Return EOF immediately
+	if the _IO_EOF_SEEN bit is already set; update commentary.
+	* libio/oldfileops.c (_IO_old_file_underflow): Likewise.
+	* libio/wfileops.c (_IO_wfile_underflow): Likewise.
+
+	* support/support_openpty.c, support/tty.h: New files.
+	* support/Makefile (libsupport-routines): Add support_openpty.
+
+	* libio/tst-fgetc-after-eof.c, wcsmbs/test-fgetwc-after-eof.c:
+	New test cases.
+	* libio/Makefile (tests): Add tst-fgetc-after-eof.
+	* wcsmbs/Makefile (tests): Add tst-fgetwc-after-eof.
+
 2018-03-12  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* po/pt_BR.po: Update translations.

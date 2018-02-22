@@ -28,6 +28,14 @@ Deprecated and removed features, and other changes affecting compatibility:
    investigate using (f)getc_unlocked and (f)putc_unlocked, and, if
    necessary, flockfile and funlockfile.
 
+ * All stdio functions now treat end-of-file as a sticky condition.  If you
+   read from a file until EOF, and then the file is enlarged by another
+   process, you must call clearerr or another function with the same effect
+   (e.g. fseek, rewind) before you can read the additional data.  This
+   corrects a longstanding C99 conformance bug.  It is most likely to affect
+   programs that use stdio to read interactive input from a terminal.
+   (Bug #1190.)
+
  * The macros 'major', 'minor', and 'makedev' are now only available from
    the header <sys/sysmacros.h>; not from <sys/types.h> or various other
    headers that happen to include <sys/types.h>.  These macros are rarely

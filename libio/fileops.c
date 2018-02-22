@@ -468,11 +468,10 @@ int
 _IO_new_file_underflow (FILE *fp)
 {
   ssize_t count;
-#if 0
-  /* SysV does not make this test; take it out for compatibility */
+
+  /* C99 requires EOF to be "sticky".  */
   if (fp->_flags & _IO_EOF_SEEN)
-    return (EOF);
-#endif
+    return EOF;
 
   if (fp->_flags & _IO_NO_READS)
     {

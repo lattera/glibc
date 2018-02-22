@@ -50,7 +50,7 @@ strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb tst-wcpncpy tst-mbsrtowcs tst-wchar-h tst-mbrtowc2 \
 	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
-	 tst-wcstod-round test-char-types \
+	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
 	 $(addprefix test-,$(strop-tests))
 
 include ../Rules

@@ -116,6 +116,10 @@ _IO_wfile_underflow (FILE *fp)
   enum __codecvt_result status;
   ssize_t count;
 
+  /* C99 requires EOF to be "sticky".  */
+  if (fp->_flags & _IO_EOF_SEEN)
+    return WEOF;
+
   if (__glibc_unlikely (fp->_flags & _IO_NO_READS))
     {
       fp->_flags |= _IO_ERR_SEEN;
