@@ -30,6 +30,7 @@ extern __typeof (__redirect_memcpy) __libc_memcpy;
 
 extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_thunderx attribute_hidden;
+extern __typeof (__redirect_memcpy) __memcpy_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_falkor attribute_hidden;
 
 libc_ifunc (__libc_memcpy,
@@ -37,7 +38,9 @@ libc_ifunc (__libc_memcpy,
 	     ? __memcpy_thunderx
 	     : (IS_FALKOR (midr)
 		? __memcpy_falkor
-		: __memcpy_generic)));
+		: (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr)
+		  ? __memcpy_thunderx2
+		  : __memcpy_generic))));
 
 # undef memcpy
 strong_alias (__libc_memcpy, memcpy);

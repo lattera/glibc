@@ -1,3 +1,20 @@
+2018-02-22  Steve Ellcey  <sellcey@cavium.com>
+
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines):
+	Add memcpy_thunderx2.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c (MAX_IFUNC):
+	Increment to 4.
+	(__libc_ifunc_impl_list): Add __memcpy_thunderx2.
+	* sysdeps/aarch64/multiarch/memcpy.c (libc_ifunc): Add IS_THUNDERX2
+	and IS_THUNDERX2PA checks.
+	* sysdeps/aarch64/multiarch/memcpy_thunderx.S (USE_THUNDERX2):
+	Use macro to set name appropriately.
+	(memcpy): Use USE_THUNDERX2 macro to modify prefetches.
+	* sysdeps/aarch64/multiarch/memcpy_thunderx2.S: New file.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_THUNDERX2PA):
+	New macro.
+	(IS_THUNDERX2): New macro.
+
 2018-02-22  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.

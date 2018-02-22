@@ -74,11 +74,13 @@
 
 #if IS_IN (libc)
 
-# undef MEMCPY
-# define MEMCPY __memcpy_thunderx
-# undef MEMMOVE
-# define MEMMOVE __memmove_thunderx
-# define USE_THUNDERX
+# ifndef USE_THUNDERX2
+#  undef MEMCPY
+#  define MEMCPY __memcpy_thunderx
+#  undef MEMMOVE
+#  define MEMMOVE __memmove_thunderx
+#  define USE_THUNDERX
+# endif
 
 ENTRY_ALIGN (MEMMOVE, 6)
 
@@ -180,7 +182,7 @@ L(copy96):
 	.p2align 4
 L(copy_long):
 
-# ifdef USE_THUNDERX
+# if defined(USE_THUNDERX) || defined (USE_THUNDERX2)
 
 	/* On thunderx, large memcpy's are helped by software prefetching.
 	   This loop is identical to the one below it but with prefetching
@@ -194,7 +196,11 @@ L(copy_long):
 	bic	dst, dstin, 15
 	ldp	D_l, D_h, [src]
 	sub	src, src, tmp1
+#  if defined(USE_THUNDERX)
 	prfm	pldl1strm, [src, 384]
+#  elif defined(USE_THUNDERX2)
+	prfm	pldl1strm, [src, 256]
+#  endif
 	add	count, count, tmp1	/* Count is now 16 too large.  */
 	ldp	A_l, A_h, [src, 16]
 	stp	D_l, D_h, [dstin]
@@ -204,9 +210,13 @@ L(copy_long):
 	subs	count, count, 128 + 16	/* Test and readjust count.  */
 
 L(prefetch_loop64):
+#  if defined(USE_THUNDERX)
 	tbz	src, #6, 1f
 	prfm	pldl1strm, [src, 512]
 1:
+#  elif defined(USE_THUNDERX2)
+	prfm	pldl1strm, [src, 256]
+#  endif
 	stp	A_l, A_h, [dst, 16]
 	ldp	A_l, A_h, [src, 16]
 	stp	B_l, B_h, [dst, 32]

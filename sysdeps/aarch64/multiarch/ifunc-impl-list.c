@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 /* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	3
+#define MAX_IFUNC	4
 
 size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
@@ -40,6 +40,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/aarch64/multiarch/memcpy.c and memmove.c.  */
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx2)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_falkor)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))
   IFUNC_IMPL (i, name, memmove,
