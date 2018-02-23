@@ -1,3 +1,11 @@
+2018-02-23  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15105]
+	* ctype/ctype.c (tolower): Use libc_hidden_def.
+	(toupper): Likewise.
+	* include/ctype.h [!_ISOMAC] (tolower): Use libc_hidden_proto.
+	[!_ISOMAC] (toupper): Likewise.
+
 2018-02-23  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/Makefile: Remove --quiet argument when

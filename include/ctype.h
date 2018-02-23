@@ -11,6 +11,9 @@ libc_hidden_proto (__ctype_init)
    So defeat macro expansion with parens for this declaration.  */
 extern int (__isctype) (int __c, int __mask);
 
+libc_hidden_proto (tolower)
+libc_hidden_proto (toupper)
+
 # if IS_IN (libc)
 
 /* These accessors are used by the optimized macros to find the
