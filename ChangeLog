@@ -71,6 +71,7 @@
 
 2018-02-22  Andrew Waterman <andrew@sifive.com>
 
+	[BZ # 22884]
 	* sysdeps/riscv/rvd/s_fmax.c (__fmax): Handle sNaNs correctly.
 	* sysdeps/riscv/rvd/s_fmin.c (__fmin): Likewise.
 	* sysdeps/riscv/rvf/s_fmaxf.c (__fmaxf): Likewise.
