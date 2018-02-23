@@ -26,7 +26,14 @@
 # include <sys/param.h>
 # include <bits/pthreadtypes.h>
 # include <kernel-features.h>
-# include <tcb-offsets.h>
+/* <tcb-offsets.h> is generated from tcb-offsets.sym to define offsets
+   and sizes of types in <tls.h> as well as <pthread.h> which includes
+   <lowlevellock.h> via nptl/descr.h.  Don't include <tcb-offsets.h>
+   when generating <tcb-offsets.h> to avoid circular dependency which
+   may lead to build hang on a many-core machine.  */
+# ifndef GEN_AS_CONST_HEADERS
+#  include <tcb-offsets.h>
+# endif
 
 # ifndef LOCK_INSTR
 #  ifdef UP

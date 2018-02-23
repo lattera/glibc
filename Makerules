@@ -276,10 +276,17 @@ ifdef gen-as-const-headers
 # Generating headers for assembly constants.
 # We need this defined early to get into before-compile before
 # it's used in sysd-rules, below.
+# Define GEN_AS_CONST_HEADERS to avoid circular dependency [BZ #22792].
+# NB: <tcb-offsets.h> is generated from tcb-offsets.sym to define
+# offsets and sizes of types in <tls.h> and maybe <pthread.h> which
+# may include <tcb-offsets.h>.  Target header files can check if
+# GEN_AS_CONST_HEADERS is defined to avoid circular dependency which
+# may lead to build hang on a many-core machine.
 $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 					   %.sym $(common-before-compile)
 	$(AWK) -f $< $(filter %.sym,$^) \
-	| $(CC) -S -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) -x c - \
+	| $(CC) -S -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) \
+		-DGEN_AS_CONST_HEADERS -x c - \
 		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)'
 	sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' \
 		$(@:.h.d=.h)T3 > $(@:.h.d=.h)T

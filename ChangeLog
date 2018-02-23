@@ -1,3 +1,13 @@
+2018-02-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22792]
+	* Makerules ($(common-objpfx)%.h): Pass -DGEN_AS_CONST_HEADERS
+	to $(CC).
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Include
+	<tcb-offsets.h> only if GEN_AS_CONST_HEADERS isn't defined.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Don't include
+	<tcb-offsets.h>.
+
 2018-02-23  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #15105]
