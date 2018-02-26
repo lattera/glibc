@@ -210,6 +210,8 @@ libc_hidden_proto (strtoll)
 libc_hidden_proto (strtoul)
 libc_hidden_proto (strtoull)
 
+libc_hidden_proto (atoi)
+
 extern float __strtof_nan (const char *, char **, char);
 extern double __strtod_nan (const char *, char **, char);
 extern long double __strtold_nan (const char *, char **, char);

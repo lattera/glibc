@@ -1,3 +1,9 @@
+2018-02-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #15105]
+	* stdlib/atoi.c (atoi): Use libc_hidden_def.
+	* include/stdlib.h [!_ISOMAC] (atoi): Use libc_hidden_proto.
+
 2018-02-26  Dmitry V. Levin  <ldv@altlinux.org>
 
 	[BZ #22433]
