@@ -16163,7 +16163,7 @@
 
 2017-08-14  H.J. Lu  <hongjiu.lu@intel.com>
 
-	* sysdeps/x86/cpu-features.h (bit_cpu_BIT): New.
+	* sysdeps/x86/cpu-features.h (bit_cpu_IBT): New.
 	(bit_cpu_SHSTK): Likewise.
 	(index_cpu_IBT): Likewise.
 	(index_cpu_SHSTK): Likewise.
