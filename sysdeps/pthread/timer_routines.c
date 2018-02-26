@@ -31,6 +31,9 @@
 #include "posix-timer.h"
 #include <internaltypes.h>
 
+#ifndef DELAYTIMER_MAX
+# define DELAYTIMER_MAX INT_MAX
+#endif
 
 /* Number of threads used.  */
 #define THREAD_MAXNODES	16
