@@ -24,6 +24,49 @@
 
 __BEGIN_DECLS
 
+#if defined _LINUX_PTRACE_H || defined _ASM_POWERPC_PTRACE_H
+/* Do not let Linux headers macros interfere with enum __ptrace_request.  */
+# undef PTRACE_ATTACH
+# undef PTRACE_CONT
+# undef PTRACE_DETACH
+# undef PTRACE_GET_DEBUGREG
+# undef PTRACE_GETEVENTMSG
+# undef PTRACE_GETEVRREGS
+# undef PTRACE_GETFPREGS
+# undef PTRACE_GETREGS
+# undef PTRACE_GETREGS64
+# undef PTRACE_GETREGSET
+# undef PTRACE_GETSIGINFO
+# undef PTRACE_GETSIGMASK
+# undef PTRACE_GETVRREGS
+# undef PTRACE_GETVSRREGS
+# undef PTRACE_INTERRUPT
+# undef PTRACE_KILL
+# undef PTRACE_LISTEN
+# undef PTRACE_PEEKDATA
+# undef PTRACE_PEEKSIGINFO
+# undef PTRACE_PEEKTEXT
+# undef PTRACE_POKEDATA
+# undef PTRACE_POKETEXT
+# undef PTRACE_SECCOMP_GET_FILTER
+# undef PTRACE_SEIZE
+# undef PTRACE_SET_DEBUGREG
+# undef PTRACE_SETEVRREGS
+# undef PTRACE_SETFPREGS
+# undef PTRACE_SETOPTIONS
+# undef PTRACE_SETREGS
+# undef PTRACE_SETREGS64
+# undef PTRACE_SETREGSET
+# undef PTRACE_SETSIGINFO
+# undef PTRACE_SETSIGMASK
+# undef PTRACE_SETVRREGS
+# undef PTRACE_SETVSRREGS
+# undef PTRACE_SINGLEBLOCK
+# undef PTRACE_SINGLESTEP
+# undef PTRACE_SYSCALL
+# undef PTRACE_TRACEME
+#endif
+
 /* Type of the REQUEST argument to `ptrace.'  */
 enum __ptrace_request
 {

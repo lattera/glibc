@@ -1,3 +1,8 @@
+2018-02-26  Tulio Magno Quites Machado Filho  <tuliom@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h: Undefine Linux
+	macros used in __ptrace_request.
+
 2018-02-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22792]
