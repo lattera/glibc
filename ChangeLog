@@ -1,5 +1,9 @@
 2018-02-26  Joseph Myers  <joseph@codesourcery.com>
 
+	* string/strcoll_l.c: Include <libc-diag.h>.
+	(STRCOLL): Ignore -Wmaybe-uninitialized for -Os around
+	declarations of seq1 and seq2.
+
 	[BZ #15105]
 	* stdlib/atoi.c (atoi): Use libc_hidden_def.
 	* include/stdlib.h [!_ISOMAC] (atoi): Use libc_hidden_proto.

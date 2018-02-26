@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/param.h>
+#include <libc-diag.h>
 
 #ifndef STRING_TYPE
 # define STRING_TYPE char
@@ -291,7 +292,17 @@ STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, locale_t l)
 
   int result = 0, rule = 0;
 
+  /* With GCC 7 when compiling with -Os the compiler warns that
+     seq1.back_us and seq2.back_us might be used uninitialized.
+     Sometimes this warning appears at locations in locale/weightwc.h
+     where the actual use is, but on architectures other than x86_64,
+     x86 and s390x, a warning appears at the definitions of seq1 and
+     seq2.  This uninitialized use is impossible for the same reason
+     as described in comments in locale/weightwc.h.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
   coll_seq seq1, seq2;
+  DIAG_POP_NEEDS_COMMENT;
   seq1.len = 0;
   seq1.idxmax = 0;
   seq1.rule = 0;
