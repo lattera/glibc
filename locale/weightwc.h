@@ -28,7 +28,15 @@ findidx (const int32_t *table,
 	 const wint_t *extra,
 	 const wint_t **cpp, size_t len)
 {
+  /* With GCC 7 when compiling with -Os the compiler warns that
+     seq1.back_us and seq2.back_us, which become *cpp, might be used
+     uninitialized.  This is impossible as this function cannot be
+     called except in cases where those fields have been
+     initialized.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
   wint_t ch = *(*cpp)++;
+  DIAG_POP_NEEDS_COMMENT;
   int32_t i = __collidx_table_lookup ((const char *) table, ch);
 
   if (i >= 0)
@@ -107,11 +115,18 @@ findidx (const int32_t *table,
 	      continue;
 	    }
 
+	  /* With GCC 7 when compiling with -Os the compiler warns
+	     that seq1.back_us and seq2.back_us, which become usrc,
+	     might be used uninitialized.  This is impossible for the
+	     same reason as described above.  */
+	  DIAG_PUSH_NEEDS_COMMENT;
+	  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
 	  if (cp[nhere - 1] > usrc[nhere -1])
 	    {
 	      cp += 2 * nhere;
 	      continue;
 	    }
+	  DIAG_POP_NEEDS_COMMENT;
 
 	  if (cp[2 * nhere - 1] < usrc[nhere -1])
 	    {
