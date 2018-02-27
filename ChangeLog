@@ -5,6 +5,7 @@
 	(thread_attr_compare): Move function to...
 	[!defined DELAYTIMER_MAX] (DELAYTIMER_MAX): Define to INT_MAX.
 	* sysdeps/nptl/timer_routines.h: ... new header.
+	* sysdeps/mach/hurd/gai_misc.h: New file.
 
 2018-02-26  Joseph Myers  <joseph@codesourcery.com>
 
