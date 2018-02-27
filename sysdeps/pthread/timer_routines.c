@@ -29,7 +29,7 @@
 #include <sys/syscall.h>
 
 #include "posix-timer.h"
-#include <internaltypes.h>
+#include <timer_routines.h>
 
 #ifndef DELAYTIMER_MAX
 # define DELAYTIMER_MAX INT_MAX
