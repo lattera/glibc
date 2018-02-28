@@ -25,3 +25,4 @@ strtoumax (const char *__restrict nptr, char **__restrict endptr, int base)
 {
   return __strtoul_internal (nptr, endptr, base, 0);
 }
+libc_hidden_def (strtoumax)
