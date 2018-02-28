@@ -1,3 +1,29 @@
+2018-04-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/alpha/getdents.c: Add comments with alpha
+	requirements.
+	 (_DIRENT_MATCHES_DIRENT64): Undef
+	* sysdeps/unix/sysv/linux/alpha/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getdents64.c: Remove file.
+	* sysdeps/unix/sysv/linux/generic/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/wordsize-32/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/getdents.c: Simplify implementation by
+	use getdents64 syscalls as base.
+	* sysdeps/unix/sysv/linux/getdents64.c: Likewise and add compatibility
+	symbol if required.
+	* sysdeps/unix/sysv/linux/hppa/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdents64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/get_clockfreq.c
+	(__get_clockfreq_via_proc_openprom): Use __getdents64.
+	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c: New file.
+
 2018-04-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	* scripts/test_printers_common.py (init_test): Disable lock elision.
