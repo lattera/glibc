@@ -53,7 +53,7 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-% CLDR collation rules for Ukrainian:
+% CLDR collation rules for Bulgarian:
 % (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/bg.xml)
 %
 % 		<collation type="standard">

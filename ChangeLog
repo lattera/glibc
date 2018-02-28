@@ -1,3 +1,8 @@
+2018-03-01  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/locales/bg_BG (LC_COLLATE): The comment mentioned
+	Ukrainian instead of Bulgarian.
+
 2018-03-01  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/Makefile (libpthread.so): Drop libpthread_nonshared.a
