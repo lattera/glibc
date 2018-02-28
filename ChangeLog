@@ -1,5 +1,10 @@
 2018-02-28  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22902]
+	* sysdeps/i386/fpu/fenv_private.h [!__x86_64__]
+	(libc_feholdexcept_setroundf128): New macro.
+	[!__x86_64__] (libc_feupdateenv_testf128): Likewise.
+
 	[BZ #15105]
 	* sysdeps/wordsize-32/strtoumax.c (strtoumax): Use
 	libc_hidden_def.
