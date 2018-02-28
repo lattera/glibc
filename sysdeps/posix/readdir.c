@@ -120,3 +120,8 @@ __READDIR (DIR *dirp)
 #ifdef __READDIR_ALIAS
 weak_alias (__readdir, readdir)
 #endif
+
+#undef __READDIR
+#undef __GETDENTS
+#undef DIRENT_TYPE
+#undef __READDIR_ALIAS

@@ -1,5 +1,30 @@
 2018-04-06  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/posix/readdir.c (__READDIR, __GETDENTS, DIRENTY_TYPE,
+	__READDIR_ALIAS): Undefine after usage.
+	* sysdeps/posix/readdir_r.c (__READDIR_R, __GETDENTS, DIRENT_TYPE,
+	__READDIR_R_ALIAS): Likewise.
+	* sysdeps/unix/sysv/linux/arm/readdir64.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir64_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/readdir_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/readdir.c: New file.
+	* sysdeps/unix/sysv/linux/readdir_r.c: Likewise.
+	* sysdeps/unix/sysv/linux/readdir64.c: Add compat symbol if required.
+	* sysdeps/unix/sysv/linux/readdir64_r.c: Likewise.
+
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Update.
 
 2018-04-06  Andreas Schwab  <schwab@linux-m68k.org>

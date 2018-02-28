@@ -152,3 +152,8 @@ __READDIR_R (DIR *dirp, DIRENT_TYPE *entry, DIRENT_TYPE **result)
 #ifdef __READDIR_R_ALIAS
 weak_alias (__readdir_r, readdir_r)
 #endif
+
+#undef __READDIR_R
+#undef __GETDENTS
+#undef DIRENT_TYPE
+#undef __READDIR_R_ALIAS
