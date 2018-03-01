@@ -1,5 +1,10 @@
 2018-03-01  Florian Weimer  <fweimer@redhat.com>
 
+	* nptl/Makefile (libpthread.so): Drop libpthread_nonshared.a
+	reference.
+
+2018-03-01  Florian Weimer  <fweimer@redhat.com>
+
 	Move pthread_atfork to libc.  Remove libpthread_nonshared.a.
 	* nptl/Makefile (routines): Add pthread_atfork.
 	(static-only-routines): Set to pthread_atfork.

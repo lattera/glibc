@@ -488,7 +488,6 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 	 echo '   the static library, so try that secondarily.  */';\
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libpthread.so$(libpthread.so-version)' \
-	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)pthread)'\
 	      ')' \
 	) > $@.new
 	mv -f $@.new $@
