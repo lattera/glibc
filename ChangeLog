@@ -1,5 +1,12 @@
 2018-03-01  Mike FABIAN  <mfabian@redhat.com>
 
+	[BZ #22896]
+	* localedata/locales/an_ES: update month and day names,
+	improve d_fmt, improve postal_fmt, add country_post,
+	add country_isbn
+
+2018-03-01  Mike FABIAN  <mfabian@redhat.com>
+
 	* localedata/locales/bg_BG (LC_COLLATE): The comment mentioned
 	Ukrainian instead of Bulgarian.
 
