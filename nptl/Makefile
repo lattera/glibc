@@ -26,7 +26,6 @@ headers := pthread.h semaphore.h bits/semaphore.h
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
-install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
@@ -473,24 +472,6 @@ ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.
 lib-noranlib: $(addprefix $(objpfx),$(extra-objs))
-
-# What we install as libpthread.so for programs to link against is in fact a
-# link script.  It contains references for the various libraries we need.
-# We need to use absolute paths since otherwise local copies (if they exist)
-# of the files are taken by the linker.
-install: $(inst_libdir)/libpthread.so
-
-$(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
-			      $(objpfx)libpthread.so$(libpthread.so-version) \
-			      $(+force)
-	(echo '/* GNU ld script';\
-	 echo '   Use the shared library, but some functions are only in';\
-	 echo '   the static library, so try that secondarily.  */';\
-	 cat $<; \
-	 echo 'GROUP ( $(slibdir)/libpthread.so$(libpthread.so-version)' \
-	      ')' \
-	) > $@.new
-	mv -f $@.new $@
 endif
 
 
