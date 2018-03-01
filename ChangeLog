@@ -1,3 +1,13 @@
+2018-04-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/getdirentries.c (getdirentries): Build iff
+	_DIRENT_MATCHES_DIRENT64 is not defined.
+	* sysdeps/unix/sysv/linux/getdirentries64.c (getdirentries64): Open
+	implementation and alias to getdirentries if _DIRENT_MATCHES_DIRENT64
+	is defined.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdirentries.c: Remove file.
+	* sysdeps/unix/sysv/linux/wordsize-64/getdirentries64.c: Remove file.
+
 2018-04-25  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default GCC
