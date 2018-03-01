@@ -18,9 +18,7 @@
 
 #include <dirent.h>
 
-#if !_DIRENT_MATCHES_DIRENT64
-# define SCANDIR_TAIL   __scandir64_tail
-# define READDIR        __readdir64
-# define DIRENT_TYPE    struct dirent64
-# include <scandir-tail.c>
-#endif
+#define SCANDIR_TAIL   __scandir64_tail
+#define READDIR        __readdir64
+#define DIRENT_TYPE    struct dirent64
+#include <scandir-tail-common.c>

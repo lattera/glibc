@@ -15,31 +15,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* We need to avoid the header declaration of scandir64, because
-   the types don't match scandir and then the compiler will
-   complain about the mismatch when we do the alias below.  */
-#define scandir64       __renamed_scandir64
-
 #include <dirent.h>
 
-#undef  scandir64
-
-#ifndef SCANDIR
-# define SCANDIR        scandir
-# define SCANDIR_TAIL   __scandir_tail
-# define DIRENT_TYPE    struct dirent
-#endif
-
-
+#if !_DIRENT_MATCHES_DIRENT64
 int
-SCANDIR (const char *dir,
-	 DIRENT_TYPE ***namelist,
-	 int (*select) (const DIRENT_TYPE *),
-	 int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **))
+scandir (const char *dir, struct dirent ***namelist,
+	 int (*select) (const struct dirent *),
+	 int (*cmp) (const struct dirent **, const struct dirent **))
 {
-  return SCANDIR_TAIL (__opendir (dir), namelist, select, cmp);
+  return __scandir_tail (__opendir (dir), namelist, select, cmp);
 }
-
-#if _DIRENT_MATCHES_DIRENT64
-weak_alias (scandir, scandir64)
 #endif

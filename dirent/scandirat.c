@@ -15,35 +15,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* We need to avoid the header declaration of scandir64, because
-   the types don't match scandir and then the compiler will
-   complain about the mismatch when we do the alias below.  */
-#define scandirat64       __renamed_scandirat64
-
 #include <dirent.h>
 
-#undef  scandirat64
-
-#ifndef SCANDIRAT
-# define SCANDIRAT	__scandirat
-# define SCANDIR_TAIL	__scandir_tail
-# define DIRENT_TYPE	struct dirent
-# define SCANDIRAT_WEAK_ALIAS
-#endif
-
+#if !_DIRENT_MATCHES_DIRENT64
 int
-SCANDIRAT (int dfd, const char *dir,
-	   DIRENT_TYPE ***namelist,
-	   int (*select) (const DIRENT_TYPE *),
-	   int (*cmp) (const DIRENT_TYPE **, const DIRENT_TYPE **))
+__scandirat (int dfd, const char *dir, struct dirent ***namelist,
+	     int (*select) (const struct dirent *),
+	     int (*cmp) (const struct dirent **, const struct dirent **))
 {
-  return SCANDIR_TAIL (__opendirat (dfd, dir), namelist, select, cmp);
+  return __scandir_tail (__opendirat (dfd, dir), namelist, select, cmp);
 }
-libc_hidden_def (SCANDIRAT)
-#ifdef SCANDIRAT_WEAK_ALIAS
 weak_alias (__scandirat, scandirat)
-#endif
-
-#if _DIRENT_MATCHES_DIRENT64
-weak_alias (scandirat, scandirat64)
 #endif

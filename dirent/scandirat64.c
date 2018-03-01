@@ -15,15 +15,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define scandirat __no_scandirat_decl
 #include <dirent.h>
+#undef scandirat
 
-/* scandirat.c defines scandirat64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
-#if !_DIRENT_MATCHES_DIRENT64
+int
+scandirat64 (int dfd, const char *dir, struct dirent64 ***namelist,
+	     int (*select) (const struct dirent64 *),
+	     int (*cmp) (const struct dirent64 **, const struct dirent64 **))
+{
+  return __scandir64_tail (__opendirat (dfd, dir), namelist, select, cmp);
+}
 
-# define SCANDIRAT      scandirat64
-# define SCANDIR_TAIL   __scandir64_tail
-# define DIRENT_TYPE    struct dirent64
-
-# include <scandirat.c>
-
+#if _DIRENT_MATCHES_DIRENT64
+weak_alias (scandirat64, scandirat)
 #endif

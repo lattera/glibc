@@ -1,3 +1,26 @@
+2018-04-20  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* dirent/scandir-tail-common.c: New file.
+	* dirent/scandir-tail.c: Use scandir-tail-common.c.
+	(__scandir_tail): Build iff _DIRENT_MATCHES_DIRENT64 is not defined.
+	* dirent/scandir.c: Use scandir-tail-common.c.
+	* dirent/scandirat.c: Likewise.
+	* dirent/scandir64-tail.c: Use scandir-tail-common.c.
+	* dirent/scandir64.c (scandir64): Always build and alias to scandir
+	if _DIRENT_MATCHES_DIRENT64 is defined.
+	* dirent/scandirat64.c (scandirat64): Likewise.
+	* include/dirent.h (__scandir_tail): Only define iff
+	_DIRENT_MATCHES_DIRENT64 is not defined.
+	(__scandir64_tail): Define regardless.
+	(__scandirat, scandirat64): Remove libc_hidden_proto.
+	* sysdeps/unix/sysv/linux/arm/scandir64.c: Remove file.
+	* sysdeps/unix/sysv/linux/m68k/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/scandir64.c: Likewise.
+	* sysdeps/unix/sysv/linux/scandir64.c: New file.
+
 2018-04-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_ASIMDFHM):
