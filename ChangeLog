@@ -1,3 +1,11 @@
+2018-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/posix/opendir.c (o_directory_works, tryopen_o_directory):
+	Remove definitions.
+	(opendir_oflags): Use O_DIRECTORY regardless.
+	(__opendir, __opendirat): Remove need_isdir_precheck usage.
+	* sysdeps/unix/sysv/linux/opendir.c: Remove file.
+
 2018-04-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/local_lim.h (_POSIX_THREAD_KEYS_MAX,
