@@ -23,7 +23,7 @@
 static td_err_e
 iterate_thread_list (td_thragent_t *ta, td_thr_iter_f *callback,
 		     void *cbdata_p, td_thr_state_e state, int ti_pri,
-		     psaddr_t head, bool fake_empty, pid_t match_pid)
+		     psaddr_t head, bool fake_empty)
 {
   td_err_e err;
   psaddr_t next, ofs;
@@ -133,18 +133,17 @@ td_ta_thr_iter (const td_thragent_t *ta_arg, td_thr_iter_f *callback,
      have to iterate over both lists separately.  We start with the
      list of threads with user-defined stacks.  */
 
-  pid_t pid = ps_getpid (ta->ph);
   err = DB_GET_SYMBOL (list, ta, __stack_user);
   if (err == TD_OK)
     err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-			       list, true, pid);
+			       list, true);
 
   /* And the threads with stacks allocated by the implementation.  */
   if (err == TD_OK)
     err = DB_GET_SYMBOL (list, ta, stack_used);
   if (err == TD_OK)
     err = iterate_thread_list (ta, callback, cbdata_p, state, ti_pri,
-			       list, false, pid);
+			       list, false);
 
   return err;
 }
