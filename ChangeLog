@@ -1,3 +1,26 @@
+2018-04-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* dirent/alphasort.c (alphasort): Build iff _DIRENT_MATCHES_DIRENT64 is
+	defined.
+	* dirent/versionsort.c (versionsort): Likewise.
+	* dirent/alphasort64.c (alphasort64): Build regardless and alias to
+	alphasort if _DIRENT_MATCHES_DIRENT64 is defined.
+	* dirent/versionsort64.c (versionsort64): Likewise.
+	* sysdeps/unix/sysv/linux/i386/alphasort64.c: Remove file.
+	* sysdeps/unix/sysv/linux/arm/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/alphasort64.c: New file.
+	* sysdeps/unix/sysv/linux/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/versionsort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/alphasort64.c: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/versionsort64.c: Likewise.
+
 2018-04-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* elf/elf.h (NT_PPC_PKEY): New macro.

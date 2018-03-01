@@ -15,11 +15,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define alphasort __no_alphasort_decl
 #include <dirent.h>
+#undef alphasort
 #include <string.h>
-
-/* alphasort.c defines alphasort64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
-#if !_DIRENT_MATCHES_DIRENT64
 
 int
 alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
@@ -27,4 +26,6 @@ alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
   return strcoll ((*a)->d_name, (*b)->d_name);
 }
 
+#if _DIRENT_MATCHES_DIRENT64
+weak_alias (alphasort64, alphasort)
 #endif

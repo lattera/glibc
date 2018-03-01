@@ -15,34 +15,34 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define versionsort __no_versionsort_decl
 #include <dirent.h>
+#undef versionsort
 #include <string.h>
 
 int
-__alphasort64 (const struct dirent64 **a, const struct dirent64 **b)
+__versionsort64 (const struct dirent64 **a, const struct dirent64 **b)
 {
-  return strcoll ((*a)->d_name, (*b)->d_name);
+  return __strverscmp ((*a)->d_name, (*b)->d_name);
 }
 
-#include <shlib-compat.h>
-
-versioned_symbol (libc, __alphasort64, alphasort64, GLIBC_2_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-
-#include <olddirent.h>
-
-int
-__old_alphasort64 (const struct __old_dirent64 **a,
-		   const struct __old_dirent64 **b);
+#if _DIRENT_MATCHES_DIRENT64
+weak_alias (__versionsort64, versionsort64)
+weak_alias (__versionsort64, versionsort)
+#else
+# include <shlib-compat.h>
+versioned_symbol (libc, __versionsort64, versionsort64, GLIBC_2_2);
+# if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
+#  include <olddirent.h>
 
 int
 attribute_compat_text_section
-__old_alphasort64 (const struct __old_dirent64 **a,
-		   const struct __old_dirent64 **b)
+__old_versionsort64 (const struct __old_dirent64 **a,
+		     const struct __old_dirent64 **b)
 {
-  return strcoll ((*a)->d_name, (*b)->d_name);
+  return __strverscmp ((*a)->d_name, (*b)->d_name);
 }
 
-compat_symbol (libc, __old_alphasort64, alphasort64, GLIBC_2_1);
-#endif
+compat_symbol (libc, __old_versionsort64, versionsort64, GLIBC_2_1);
+# endif /* SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)  */
+#endif /* _DIRENT_MATCHES_DIRENT64  */

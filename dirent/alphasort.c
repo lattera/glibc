@@ -15,23 +15,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* We need to avoid the header declaration of alphasort64, because
-   the types don't match alphasort and then the compiler will
-   complain about the mismatch when we do the alias below.  */
-#define alphasort64     __renamed_alphasort64
-
 #include <dirent.h>
 
-#undef  alphasort64
-
-#include <string.h>
+#if !_DIRENT_MATCHES_DIRENT64
+# include <string.h>
 
 int
 alphasort (const struct dirent **a, const struct dirent **b)
 {
   return strcoll ((*a)->d_name, (*b)->d_name);
 }
-
-#if _DIRENT_MATCHES_DIRENT64
-weak_alias (alphasort, alphasort64)
 #endif

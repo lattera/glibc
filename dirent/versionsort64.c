@@ -15,11 +15,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define versionsort __no_versionsort_decl
 #include <dirent.h>
+#undef versionsort
 #include <string.h>
-
-/* versionsort.c defines a versionsort64 alias if _DIRENT_MATCHES_DIRENT64.  */
-#if !_DIRENT_MATCHES_DIRENT64
 
 int
 versionsort64 (const struct dirent64 **a, const struct dirent64 **b)
@@ -27,4 +26,6 @@ versionsort64 (const struct dirent64 **a, const struct dirent64 **b)
   return __strverscmp ((*a)->d_name, (*b)->d_name);
 }
 
+#if !_DIRENT_MATCHES_DIRENT64
+weak_alias (versionsort64, versionsort)
 #endif
