@@ -1,3 +1,18 @@
+2018-03-01  Florian Weimer  <fweimer@redhat.com>
+
+	Move pthread_atfork to libc.  Remove libpthread_nonshared.a.
+	* nptl/Makefile (routines): Add pthread_atfork.
+	(static-only-routines): Set to pthread_atfork.
+	(libpthread-routines): Remove pthread_atfork.
+	(libpthread-static-only-routines): Remove.
+	(install): Update comment.
+	(libpthread.so): Do not install libpthread_nonshared.a.
+	(tests): Do not link with libpthread_nonshared.a.
+	(generated): Remove libpthread_nonshared.a.
+	* nptl/pthread_atfork.c (pthread_atfork): Turn into weak alias.
+	* sysdeps/nptl/Makeconfig (shared-thread-library): Do not link
+	with libpthread_nonshared.a.
+
 2018-02-28  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22902]

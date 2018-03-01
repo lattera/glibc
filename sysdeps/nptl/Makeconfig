@@ -21,8 +21,7 @@
 
 have-thread-library = yes
 
-shared-thread-library = $(common-objpfx)nptl/libpthread_nonshared.a \
-			$(common-objpfx)nptl/libpthread.so
+shared-thread-library = $(common-objpfx)nptl/libpthread.so
 static-thread-library = $(common-objpfx)nptl/libpthread.a
 
 rpath-dirs += nptl

@@ -30,8 +30,9 @@ install-lib-ldscripts := libpthread.so
 
 routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
 	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork pthread_self
+	   register-atfork pthread_atfork pthread_self
 shared-only-routines = forward
+static-only-routines = pthread_atfork
 
 # We need to provide certain routines for compatibility with existing
 # binaries.
@@ -106,7 +107,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      pthread_cancel pthread_testcancel \
 		      pthread_setcancelstate pthread_setcanceltype \
 		      pthread_once \
-		      old_pthread_atfork pthread_atfork \
+		      old_pthread_atfork \
 		      pthread_getcpuclockid \
 		      pthread_clock_gettime pthread_clock_settime \
 		      shm-directory \
@@ -147,7 +148,6 @@ libpthread-routines = nptl-init vars events version pt-interp \
 
 libpthread-shared-only-routines = version pt-interp pt-allocrtsig \
 				  unwind-forcedunwind
-libpthread-static-only-routines = pthread_atfork
 
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some
@@ -476,16 +476,12 @@ lib-noranlib: $(addprefix $(objpfx),$(extra-objs))
 
 # What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
-# The libpthread.so object is not complete since some functions are only
-# defined in libpthread_nonshared.a.
 # We need to use absolute paths since otherwise local copies (if they exist)
 # of the files are taken by the linker.
 install: $(inst_libdir)/libpthread.so
 
 $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 			      $(objpfx)libpthread.so$(libpthread.so-version) \
-			      $(inst_libdir)/$(patsubst %,$(libtype.oS),\
-							$(libprefix)pthread) \
 			      $(+force)
 	(echo '/* GNU ld script';\
 	 echo '   Use the shared library, but some functions are only in';\
@@ -644,14 +640,12 @@ $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
     $(tests-nolibpthread), \
     $(tests) $(tests-internal) $(xtests) $(test-srcs))): \
-	$(objpfx)libpthread.so \
-	$(objpfx)libpthread_nonshared.a
+	$(objpfx)libpthread.so
 $(objpfx)tst-unload: $(libdl)
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
 $(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)../libc.so $(objpfx)libpthread.so \
-  $(objpfx)libpthread_nonshared.a
+  $(objpfx)../libc.so $(objpfx)libpthread.so
 $(objpfx)../libc.so: $(common-objpfx)libc.so ;
 $(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
 
@@ -681,8 +675,7 @@ $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)/
 	ln -f $< $@
 endif
 
-generated += libpthread_nonshared.a \
-	     multidir.mk tst-atfork2.mtrace tst-cancel-wrappers.out \
+generated += multidir.mk tst-atfork2.mtrace tst-cancel-wrappers.out \
 	     tst-tls6.out
 
 generated += $(objpfx)tst-atfork2.mtrace \

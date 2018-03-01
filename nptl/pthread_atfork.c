@@ -53,5 +53,5 @@ __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 #ifndef __pthread_atfork
 extern int pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			   void (*child) (void)) attribute_hidden;
-strong_alias (__pthread_atfork, pthread_atfork)
+weak_alias (__pthread_atfork, pthread_atfork)
 #endif
