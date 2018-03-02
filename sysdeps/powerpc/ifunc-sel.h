@@ -4,7 +4,7 @@
 
 extern int global;
 
-static inline void *
+static inline __attribute__ ((always_inline)) void *
 inhibit_stack_protector
 ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
 {
@@ -32,7 +32,7 @@ ifunc_sel (int (*f1) (void), int (*f2) (void), int (*f3) (void))
   return ret;
 }
 
-static inline void *
+static inline __attribute__ ((always_inline)) void *
 inhibit_stack_protector
 ifunc_one (int (*f1) (void))
 {

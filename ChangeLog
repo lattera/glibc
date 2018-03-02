@@ -1,3 +1,8 @@
+2018-03-02  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Make always_inline.
+	(ifunc_one): Likewise.
+
 2018-03-01  DJ Delorie  <dj@delorie.com>
 
 	[BZ #22342]
