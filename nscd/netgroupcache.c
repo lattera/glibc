@@ -480,7 +480,7 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 {
   const char *group = key;
   key = (char *) rawmemchr (key, '\0') + 1;
-  size_t group_len = key - group - 1;
+  size_t group_len = key - group;
   const char *host = *key++ ? key : NULL;
   if (host != NULL)
     key = (char *) rawmemchr (key, '\0') + 1;

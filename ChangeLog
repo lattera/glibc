@@ -1,3 +1,9 @@
+2018-03-01  DJ Delorie  <dj@delorie.com>
+
+	[BZ #22342]
+	* nscd/netgroupcache.c (addinnetgrX): Include trailing NUL in
+	key value.
+
 2018-03-01  Maciej W. Rozycki  <macro@mips.com>
 
 	* nptl_db/td_ta_thr_iter.c (iterate_thread_list): Remove
