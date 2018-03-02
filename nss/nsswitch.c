@@ -62,7 +62,7 @@ static service_library *nss_new_service (name_database *database,
 
 /* Declare external database variables.  */
 #define DEFINE_DATABASE(name)						      \
-  extern service_user *__nss_##name##_database attribute_hidden;	      \
+  service_user *__nss_##name##_database attribute_hidden;		      \
   weak_extern (__nss_##name##_database)
 #include "databases.def"
 #undef DEFINE_DATABASE

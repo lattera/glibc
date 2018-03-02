@@ -58,6 +58,7 @@ _res_hconf_init (void)
 #undef	USE_NSCD
 #include "../sysdeps/posix/getaddrinfo.c"
 
+service_user *__nss_hosts_database attribute_hidden;
 
 /* This is the beginning of the real test code.  The above defines
    (among other things) the function rfc3484_sort.  */

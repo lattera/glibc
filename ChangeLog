@@ -1,3 +1,13 @@
+2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
+
+	[BZ #22918]
+	* nss/nsswitch.h (DEFINE_DATABASE): Don't define __nss_*_database.
+	* nss/nsswitch.c (DEFINE_DATABASE): Define __nss_*_database here.
+	* nscd/gai.c (__nss_hosts_database): Readd definition.
+	* posix/tst-rfc3484.c (__nss_hosts_database): Likewise.
+	* posix/tst-rfc3484-3.c (__nss_hosts_database): Likewise.
+	* posix/tst-rfc3484-2.c (__nss_hosts_database): Likewise.
+
 2018-03-02  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/powerpc/ifunc-sel.h (ifunc_sel): Make always_inline.
