@@ -32,6 +32,6 @@ alphasort (const struct dirent **a, const struct dirent **b)
   return strcoll ((*a)->d_name, (*b)->d_name);
 }
 
-#ifdef _DIRENT_MATCHES_DIRENT64
+#if _DIRENT_MATCHES_DIRENT64
 weak_alias (alphasort, alphasort64)
 #endif

@@ -1,5 +1,20 @@
 2018-03-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* bits/dirent.h (__INO_T_MATCHES_INO64_T): Define regardless whether
+	__INO_T_MATCHES_INO64_T is defined.
+	* sysdeps/unix/sysv/linux/bits/dirent.h: Likewise.
+	* dirent/alphasort.c: Check _DIRENT_MATCHES_DIRENT64 value instead
+	of definition.
+	* dirent/alphasort64.c: Likewise.
+	* dirent/scandir.c: Likewise.
+	* dirent/scandir64-tail.c: Likewise.
+	* dirent/scandir64.c: Likewise.
+	* dirent/scandirat.c: Likewise.
+	* dirent/scandirat64.c: Likewise.
+	* dirent/versionsort.c: Likewise.
+	* dirent/versionsort64.c: Likewise.
+	* include/dirent.h: Likewise.
+
 	* nptl/tst-cancel4-common.h (set_socket_buffer): New function.
 	* nptl/tst-cancel4-common.c (do_test): Call set_socket_buffer
 	for socketpair endpoint.

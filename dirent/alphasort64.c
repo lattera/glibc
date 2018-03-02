@@ -19,7 +19,7 @@
 #include <string.h>
 
 /* alphasort.c defines alphasort64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
-#ifndef _DIRENT_MATCHES_DIRENT64
+#if !_DIRENT_MATCHES_DIRENT64
 
 int
 alphasort64 (const struct dirent64 **a, const struct dirent64 **b)

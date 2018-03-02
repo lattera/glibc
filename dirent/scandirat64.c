@@ -18,7 +18,7 @@
 #include <dirent.h>
 
 /* scandirat.c defines scandirat64 as an alias if _DIRENT_MATCHES_DIRENT64.  */
-#ifndef _DIRENT_MATCHES_DIRENT64
+#if !_DIRENT_MATCHES_DIRENT64
 
 # define SCANDIRAT      scandirat64
 # define SCANDIR_TAIL   __scandir64_tail

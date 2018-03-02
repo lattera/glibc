@@ -19,7 +19,7 @@
 #include <string.h>
 
 /* versionsort.c defines a versionsort64 alias if _DIRENT_MATCHES_DIRENT64.  */
-#ifndef _DIRENT_MATCHES_DIRENT64
+#if !_DIRENT_MATCHES_DIRENT64
 
 int
 versionsort64 (const struct dirent64 **a, const struct dirent64 **b)

@@ -32,6 +32,6 @@ versionsort (const struct dirent **a, const struct dirent **b)
   return __strverscmp ((*a)->d_name, (*b)->d_name);
 }
 
-#ifdef _DIRENT_MATCHES_DIRENT64
+#if _DIRENT_MATCHES_DIRENT64
 weak_alias (versionsort, versionsort64)
 #endif

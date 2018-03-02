@@ -54,4 +54,6 @@ struct dirent64
 #if defined __OFF_T_MATCHES_OFF64_T && defined __INO_T_MATCHES_INO64_T
 /* Inform libc code that these two types are effectively identical.  */
 # define _DIRENT_MATCHES_DIRENT64	1
+#else
+# define _DIRENT_MATCHES_DIRENT64	0
 #endif

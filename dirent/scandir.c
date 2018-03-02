@@ -40,6 +40,6 @@ SCANDIR (const char *dir,
   return SCANDIR_TAIL (__opendir (dir), namelist, select, cmp);
 }
 
-#ifdef _DIRENT_MATCHES_DIRENT64
+#if _DIRENT_MATCHES_DIRENT64
 weak_alias (scandir, scandir64)
 #endif

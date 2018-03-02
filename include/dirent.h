@@ -57,7 +57,7 @@ extern int __scandir_tail (DIR *dp,
 			   int (*cmp) (const struct dirent **,
 				       const struct dirent **))
   attribute_hidden;
-#  ifdef _DIRENT_MATCHES_DIRENT64
+#  if _DIRENT_MATCHES_DIRENT64
 #   define __scandir64_tail (dp, namelist, select, cmp)         \
   __scandir_tail (dp, (struct dirent ***) (namelist),           \
 		  (int (*) (const struct dirent *)) (select),   \

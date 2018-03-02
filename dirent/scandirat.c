@@ -44,6 +44,6 @@ libc_hidden_def (SCANDIRAT)
 weak_alias (__scandirat, scandirat)
 #endif
 
-#ifdef _DIRENT_MATCHES_DIRENT64
+#if _DIRENT_MATCHES_DIRENT64
 weak_alias (scandirat, scandirat64)
 #endif
