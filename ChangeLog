@@ -1,6 +1,9 @@
 2018-03-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* scripts/check-installed-headers.sh: Ignore Hurd and Mach headers.
+	* hurd/hurd/id.h: Include <hurd/hurd_types.h>
+	* hurd/hurd/ioctl.h: Include <mach/port.h>
+	* hurd/hurd/lookup.h: Include <hurd/hurd_types.h>
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 

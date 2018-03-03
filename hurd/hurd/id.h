@@ -20,6 +20,7 @@
 
 #define	_HURD_ID_H	1
 #include <features.h>
+#include <hurd/hurd_types.h>
 
 #include <cthreads.h>		/* For `struct mutex'.  */
 
