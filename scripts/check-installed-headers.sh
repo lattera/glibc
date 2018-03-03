@@ -126,6 +126,13 @@ EOF
                     fi
                 ;;
             esac
+	    ;;
+
+	# Hurd and Mach headers are not standard anyway
+	(hurd.h | hurd/*.h | faultexc_server.h | \
+	 mach.h | mach_init.h | mach_error.h | mach-shortcuts.h | mach/* | \
+	 device/* | lock-intern.h | spin-lock.h | machine-sp.h)
+	    continue;;
     esac
 
     echo :: "$header"

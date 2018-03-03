@@ -1,3 +1,7 @@
+2018-03-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* scripts/check-installed-headers.sh: Ignore Hurd and Mach headers.
+
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
 	[BZ #22918]
