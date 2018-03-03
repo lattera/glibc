@@ -6,6 +6,11 @@
 	* hurd/hurd/lookup.h: Include <hurd/hurd_types.h>
 	* mach/Makefile ($(objpfx)mach-shortcuts.h): Make it include
 	<mach/mach_types.h> and <mach/message.h>.
+	(headers): Move mach/param.h to bits/mach/param.h.
+	* sysdeps/mach/i386/mach/param.h: Move file to ...
+	* sysdeps/mach/i386/bits/mach/param.h: ... here.  Update path in #error.
+	* sysdeps/mach/hurd/bits/param.h: Include <bits/mach/param.h> instead
+	of <mach/param.h>.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 

@@ -17,7 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _SYS_PARAM_H
-# error "Never use <mach/param.h> directly; include <sys/param.h> instead."
+# error "Never use <bits/mach/param.h> directly; include <sys/param.h> instead."
 #endif
 
 #ifndef EXEC_PAGESIZE

@@ -20,7 +20,7 @@
 # error "Never use <bits/param.h> directly; include <sys/param.h> instead."
 #endif
 
-#include <mach/param.h>
+#include <bits/mach/param.h>
 
 /* This file is deprecated and is provided only for compatibility with
    Unix systems.  It is unwise to include this file on programs which
