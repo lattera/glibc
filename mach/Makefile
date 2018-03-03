@@ -146,9 +146,12 @@ $(objpfx)mach-shortcuts.h: $(mach-interface-list:%=$(objpfx)mach/%.h) \
 # The first line gets us one paragraph per line, with @s separating real lines.
 # The second line selects paragraphs for the shortcutted functions.
 # The third line removes `_rpc' from the names and reconstitutes the lines.
-	cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
-	| grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
-	| sed 's/_rpc//g' | tr @ \\012 > $@-new
+	( echo "#include <mach/mach_types.h>" ; \
+	  echo "#include <mach/message.h>" ; \
+	  echo ; \
+	  cat $^ | tr \\012 @ | sed s/@@/@%/g | tr % \\012 \
+	  | grep '^/\* Routine [a-z0-9_]*_rpc \*/' \
+	  | sed 's/_rpc//g' | tr @ \\012 ) > $@-new
 	mv -f $@-new $@
 generated += mach-shortcuts.h
 
