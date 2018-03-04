@@ -47,6 +47,7 @@
 	* hurd/hurd/resource.h: Include <bits/types/error_t.h>
 	* hurd/hurd/signal.h: Include <bits/types/error_t.h>
 	* hurd/hurd/sigpreempt.h: Include <bits/types/error_t.h>
+	* sysdeps/mach/hurd/futimens.c: New file.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
