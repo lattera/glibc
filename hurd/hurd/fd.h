@@ -179,7 +179,7 @@ _hurd_fd_error (int fd, error_t err)
   if (signo)
     {
       const struct hurd_signal_detail detail
-	= { code: fd, error: err, exc: 0 };
+	= { exc: 0, exc_code: 0, exc_subcode: 0, code: fd, error: err };
       _hurd_raise_signal (NULL, signo, &detail);
     }
   return err;
