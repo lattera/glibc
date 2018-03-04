@@ -17,6 +17,9 @@
 	* hurd/hurd/fd.h (_hurd_fd_error): Fix struct initializer to be
 	trivial, for C++ conformity.
 	* sysdeps/mach/hurd/dl-sysdep.c: Include <mach/machine/vm_param.h>.
+	* mach/Machrules ($(patsubst %,$(objpfx)%.h,$(user-interfaces)):
+	Process mig output through $(migheadersed).
+	* hurd/Makefile (migheadersed): Define variable.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
