@@ -20,6 +20,9 @@
 	* mach/Machrules ($(patsubst %,$(objpfx)%.h,$(user-interfaces)):
 	Process mig output through $(migheadersed).
 	* hurd/Makefile (migheadersed): Define variable.
+	* mach/mach/mig_support.h [defined __USE_GNU]: Do not #error out.
+	* scripts/check-installed-headers.sh: Do not ignore Hurd and Mach
+	headers.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
