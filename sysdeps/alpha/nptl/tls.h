@@ -103,6 +103,7 @@ typedef struct
   descr->member[idx] = (value)
 
 /* Get and set the global scope generation counter in struct pthread.  */
+#define THREAD_GSCOPE_IN_TCB      1
 #define THREAD_GSCOPE_FLAG_UNUSED 0
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2

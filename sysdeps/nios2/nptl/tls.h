@@ -137,6 +137,7 @@ register struct pthread *__thread_self __asm__("r23");
 # define NO_TLS_OFFSET		-1
 
 /* Get and set the global scope generation counter in struct pthread.  */
+#define THREAD_GSCOPE_IN_TCB      1
 #define THREAD_GSCOPE_FLAG_UNUSED 0
 #define THREAD_GSCOPE_FLAG_USED   1
 #define THREAD_GSCOPE_FLAG_WAIT   2

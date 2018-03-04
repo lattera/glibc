@@ -435,6 +435,9 @@ struct rtld_global
     size_t count;
     void *list[50];
   } *_dl_scope_free_list;
+#if !THREAD_GSCOPE_IN_TCB
+  EXTERN int _dl_thread_gscope_count;
+#endif
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
