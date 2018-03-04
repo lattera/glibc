@@ -23,6 +23,17 @@
 	* mach/mach/mig_support.h [defined __USE_GNU]: Do not #error out.
 	* scripts/check-installed-headers.sh: Do not ignore Hurd and Mach
 	headers.
+	* hurd/hurd.h: Include <bits/types/sigset_t.h>
+	* hurd/hurd/fd.h: Include <sys/select.h> and <bits/types/sigset_t.h>
+	(_hurd_fd_read, _hurd_fd_write): Use __loff_t instead of loff_t.
+	* hurd/hurd/signal.h: Include <bits/types/stack_t.h> and
+	<bits/types/sigset_t.h>.
+	[!defined __USE_GNU]: Do not #error out.
+	(struct hurd_sigstate): Use _NSIG instead of NSIG.
+	* hurd/hurd/sigpreempt.h (__need_size_t): Define.
+	Include <stddef.h> and <bits/types/sigset_t.h>
+	(struct hurd_signal_preemptor, hurd_catch_signal): Use __sighandler_t
+	instead of sighandler_t.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
