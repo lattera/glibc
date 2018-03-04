@@ -24,7 +24,6 @@
 #include <mach.h>
 #include <hurd/userlink.h>
 #include <spin-lock.h>
-#include <hurd/signal.h>
 
 
 /* Structure describing a cell containing a port.  With the lock held, a

@@ -24,7 +24,11 @@
 #define __need_NULL
 #include <stddef.h>
 
-#include <hurd/signal.h>
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+# if IS_IN (libc)
+#  include <hurd/signal.h>
+# endif
+#endif
 #include <setjmp.h>
 
 

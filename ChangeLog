@@ -11,6 +11,9 @@
 	* sysdeps/mach/i386/bits/mach/param.h: ... here.  Update path in #error.
 	* sysdeps/mach/hurd/bits/param.h: Include <bits/mach/param.h> instead
 	of <mach/param.h>.
+	* hurd/hurd/port.h: Do not include <hurd/signal.h>.
+	* hurd/hurd/userlink.h [!defined __USE_EXTERN_INLINES ||
+	!defined _LIBC || !IS_IN (libc)]: Do not include <hurd/signal.h>.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
