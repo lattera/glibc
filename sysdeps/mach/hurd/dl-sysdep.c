@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <sysdep.h>
 #include <mach/mig_support.h>
+#include <mach/machine/vm_param.h>
 #include "hurdstartup.h"
 #include <hurd/lookup.h>
 #include <hurd/auth.h>

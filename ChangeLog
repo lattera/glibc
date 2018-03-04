@@ -16,6 +16,7 @@
 	!defined _LIBC || !IS_IN (libc)]: Do not include <hurd/signal.h>.
 	* hurd/hurd/fd.h (_hurd_fd_error): Fix struct initializer to be
 	trivial, for C++ conformity.
+	* sysdeps/mach/hurd/dl-sysdep.c: Include <mach/machine/vm_param.h>.
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 
