@@ -34,6 +34,19 @@
 	Include <stddef.h> and <bits/types/sigset_t.h>
 	(struct hurd_signal_preemptor, hurd_catch_signal): Use __sighandler_t
 	instead of sighandler_t.
+	* stdlib/errno.h (error_t): Move definition to...
+	* bits/types/error_t.h: ... new header.
+	* stdlib/Makefile (headers): Add bits/types/error_t.h.
+	* sysdeps/mach/hurd/bits/errno.h (error_t): Move definition to...
+	* sysdeps/mach/hurd/bits/types/error_t.h: ... new header.
+	* sysdeps/mach/hurd/errnos.awk (error_t): Likewise.
+	* hurd/hurd.h: Include <bits/types/error_t.h>
+	* hurd/hurd/fd.h: Include <bits/types/error_t.h>
+	* hurd/hurd/id.h: Include <errno.h> and <bits/types/error_t.h>
+	* hurd/hurd/lookup.h: Include <errno.h> and <bits/types/error_t.h>
+	* hurd/hurd/resource.h: Include <bits/types/error_t.h>
+	* hurd/hurd/signal.h: Include <bits/types/error_t.h>
+	* hurd/hurd/sigpreempt.h: Include <bits/types/error_t.h>
 
 2018-03-03  Andreas Schwab  <schwab@linux-m68k.org>
 

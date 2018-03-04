@@ -22,6 +22,7 @@
 #define __need_size_t
 #include <stddef.h>
 #include <errno.h>
+#include <bits/types/error_t.h>
 #include <signal.h>		/* For sighandler_t, SIG_ERR.  */
 #include <bits/types/sigset_t.h>
 struct hurd_sigstate;		/* <hurd/signal.h> */

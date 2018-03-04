@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <errno.h>
+#include <bits/types/error_t.h>
 #include <hurd/process.h>
 
 /* This array contains the current resource limits for the process.  */

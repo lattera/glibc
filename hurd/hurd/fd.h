@@ -142,6 +142,7 @@ _hurd_fd_get (int fd)
      __result; })
 
 #include <errno.h>
+#include <bits/types/error_t.h>
 
 /* Check if ERR should generate a signal.
    Returns the signal to take, or zero if none.  */

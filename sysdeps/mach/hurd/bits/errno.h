@@ -215,14 +215,6 @@ enum __error_t_codes
   __FORCE_ERROR_T_CODES_SIGNED = -1
 };
 
-/* User-visible type of error codes.  It is ok to use 'int' or
-   'kern_return_t' for these, but with 'error_t' the debugger prints
-   symbolic values.  */
-# if !defined __error_t_defined && defined __USE_GNU
-#  define __error_t_defined 1
-typedef enum __error_t_codes error_t;
-# endif
-
 #endif /* not __ASSEMBLER__ */
 
 /* The C standard requires that all of the E-constants be

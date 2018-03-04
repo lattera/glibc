@@ -19,6 +19,8 @@
 #ifndef _HURD_LOOKUP_H
 #define _HURD_LOOKUP_H	1
 
+#include <errno.h>
+#include <bits/types/error_t.h>
 #include <hurd/hurd_types.h>
 
 /* These functions all take two callback functions as the first two arguments.

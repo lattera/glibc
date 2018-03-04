@@ -31,6 +31,7 @@
 #include <hurd/hurd_types.h>
 #include <signal.h>
 #include <errno.h>
+#include <bits/types/error_t.h>
 #include <bits/types/stack_t.h>
 #include <bits/types/sigset_t.h>
 #include <hurd/msg.h>
