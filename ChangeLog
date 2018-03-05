@@ -1,5 +1,16 @@
 2018-03-07  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	[BZ #22926]
+	* sysdeps/powerpc/powerpc32/sysdep.h (ABORT_TRANSACTION_IMPL): Define
+	empty for __SPE__.
+	* sysdeps/powerpc/sysdep.h (ABORT_TRANSACTION): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-lock.c (__lll_lock_elision):
+	Do not build hardware transactional code for __SPE__.
+	* sysdeps/unix/sysv/linux/powerpc/elision-trylock.c
+	(__lll_trylock_elision): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
+	(__lll_unlock_elision): Likewise.
+
 	* sysdeps/nptl/fork.c (ARCH_FORK): Replace by auch_fork.
 	* sysdeps/unix/sysv/linux/alpha/arch-fork.h: Remove file.
 	* sysdeps/unix/sysv/linux/riscv/arch-fork.h: Likewise.

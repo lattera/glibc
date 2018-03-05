@@ -90,7 +90,7 @@ GOT_LABEL:			;					      \
   cfi_endproc;								      \
   ASM_SIZE_DIRECTIVE(name)
 
-#if ! IS_IN(rtld)
+#if !IS_IN(rtld) && !defined(__SPE__)
 # define ABORT_TRANSACTION_IMPL \
     cmpwi    2,0;		\
     beq      1f;		\

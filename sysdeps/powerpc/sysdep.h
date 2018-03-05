@@ -174,7 +174,7 @@
    we abort transaction just before syscalls.
 
    [1] Documentation/powerpc/transactional_memory.txt [Syscalls]  */
-#if !IS_IN(rtld)
+#if !IS_IN(rtld) && !defined(__SPE__)
 # define ABORT_TRANSACTION \
   ({ 						\
     if (THREAD_GET_TM_CAPABLE ())		\
