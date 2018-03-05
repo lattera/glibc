@@ -27,24 +27,53 @@
 int
 __futimens (int fd, const struct timespec tsp[2])
 {
-  time_value_t atime, mtime;
+  struct timespec atime, mtime;
   error_t err;
 
   if (tsp == NULL)
     {
-      /* Setting the number of microseconds to `-1' tells the
+      /* Setting the number of nanoseconds to UTIME_NOW tells the
          underlying filesystems to use the current time.  */
-      atime.microseconds = mtime.microseconds = -1;
+      atime.tv_sec = 0;
+      atime.tv_nsec = UTIME_NOW;
+      mtime.tv_sec = 0;
+      mtime.tv_nsec = UTIME_NOW;
     }
   else
     {
-      atime.seconds = tsp[0].tv_sec;
-      atime.microseconds = tsp[0].tv_nsec / 1000;
-      mtime.seconds = tsp[1].tv_sec;
-      mtime.microseconds = tsp[1].tv_nsec / 1000;
+      atime = tsp[0];
+      mtime = tsp[1];
     }
 
-  err = HURD_DPORT_USE (fd, __file_utimes (port, atime, mtime));
+  err = HURD_DPORT_USE (fd, __file_utimens (port, atime, mtime));
+
+  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+    {
+      time_value_t atim, mtim;
+
+      if (tsp == NULL)
+        /* Setting the number of microseconds to `-1' tells the
+           underlying filesystems to use the current time.  */
+        atim.microseconds = mtim.microseconds = -1;
+      else
+        {
+          if (tsp[0].tv_nsec == UTIME_NOW)
+            atim.microseconds = -1;
+          else if (tsp[0].tv_nsec == UTIME_OMIT)
+            atim.microseconds = -2;
+          else
+            TIMESPEC_TO_TIME_VALUE (&atim, &(tsp[0]));
+          if (tsp[1].tv_nsec == UTIME_NOW)
+            mtim.microseconds = -1;
+          else if (tsp[1].tv_nsec == UTIME_OMIT)
+            mtim.microseconds = -2;
+          else
+            TIMESPEC_TO_TIME_VALUE (&mtim, &(tsp[1]));
+        }
+
+      err = HURD_DPORT_USE (fd, __file_utimes (port, atim, mtim));
+  }
+
   return err ? __hurd_dfail (fd, err) : 0;
 }
 weak_alias (__futimens, futimens)

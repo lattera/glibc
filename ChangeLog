@@ -1,3 +1,18 @@
+2018-03-05  Flávio Cruz  <flaviocruz@gmail.com>
+
+	* sysdeps/mach/hurd/bits/stat.h [__USE_ATFILE] (UTIME_NOW,
+	UTIME_OMIT): New macros.
+	* sysdeps/mach/hurd/futimens.c (__futimens): Try to use __file_utimens
+	before reverting to converting time spec to time value and calling
+	__file_utimes.
+	* sysdeps/mach/hurd/utime-helper.c: New file.
+	* sysdeps/mach/hurd/futimes.c: Include "utime-helper.c".
+	(__futimes): Try to use utime_ts_from_tval and __file_utimens before
+	reverting to utime_tvalue_from_tval and __file_utimes.
+	* sysdeps/mach/hurd/lutimes.c: Include "utime-helper.c".
+	(__lutimes): Just call hurd_futimens after lookup.
+	* sysdeps/mach/hurd/utimes.c: Likewise.
+
 2018-03-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* bits/sigaction.h: Add include guard.

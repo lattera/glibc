@@ -22,33 +22,22 @@
 #include <hurd.h>
 #include <fcntl.h>
 
+#include "utime-helper.c"
+
 /* Change the access time of FILE to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
 __lutimes (const char *file, const struct timeval tvp[2])
 {
-  union tv
-  {
-    struct timeval tv;
-    time_value_t tvt;
-  };
-  const union tv *u = (const union tv *) tvp;
-  union tv nulltv[2];
   error_t err;
   file_t port;
-
-  if (tvp == NULL)
-    {
-      /* Setting the number of microseconds to `-1' tells the
-         underlying filesystems to use the current time.  */
-      nulltv[0].tvt.microseconds = nulltv[1].tvt.microseconds = -1;
-      u = nulltv;
-    }
 
   port = __file_name_lookup (file, O_NOLINK, 0);
   if (port == MACH_PORT_NULL)
     return -1;
-  err = __file_utimes (port, u[0].tvt, u[1].tvt);
+
+  err = hurd_futimens (port, tvp);
+
   __mach_port_deallocate (__mach_task_self (), port);
   if (err)
     return __hurd_fail (err);

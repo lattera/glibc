@@ -22,29 +22,29 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#include "utime-helper.c"
+
 /* Change the access time of FD to TVP[0] and
    the modification time of FD to TVP[1].  */
 int
 __futimes (int fd, const struct timeval tvp[2])
 {
-  union tv
-  {
-    struct timeval tv;
-    time_value_t tvt;
-  };
-  const union tv *u = (const union tv *) tvp;
-  union tv nulltv[2];
+  struct timespec atime, mtime;
   error_t err;
 
-  if (tvp == NULL)
+  utime_ts_from_tval (tvp, &atime, &mtime);
+
+  err = HURD_DPORT_USE (fd, __file_utimens (port, atime, mtime));
+
+  if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
     {
-      /* Setting the number of microseconds to `-1' tells the
-         underlying filesystems to use the current time.  */
-      nulltv[0].tvt.microseconds = nulltv[1].tvt.microseconds = -1;
-      u = nulltv;
+      time_value_t atim, mtim;
+
+      utime_tvalue_from_tval (tvp, &atim, &mtim);
+
+      err = HURD_DPORT_USE (fd, __file_utimes (port, atim, mtim));
     }
 
-  err = HURD_DPORT_USE (fd, __file_utimes (port, u[0].tvt, u[1].tvt));
   return err ? __hurd_dfail (fd, err) : 0;
 }
 weak_alias (__futimes, futimes)
