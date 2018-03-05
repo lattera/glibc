@@ -34,7 +34,7 @@ __utimes (const char *file, const struct timeval tvp[2])
   if (port == MACH_PORT_NULL)
     return -1;
 
-  err = hurd_futimens (port, tvp);
+  err = hurd_futimes (port, tvp);
 
   __mach_port_deallocate (__mach_task_self (), port);
   if (err)

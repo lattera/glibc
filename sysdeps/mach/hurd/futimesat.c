@@ -1,5 +1,4 @@
-/* lutimes -- change access and modification times of a symlink.  Hurd version.
-   Copyright (C) 2002-2018 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,19 +19,19 @@
 #include <errno.h>
 #include <stddef.h>
 #include <hurd.h>
-#include <fcntl.h>
+#include <hurd/fd.h>
 
 #include "utime-helper.c"
 
-/* Change the access time of FILE to TVP[0] and
+/* Change the access time of FILE relative to FD to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
-__lutimes (const char *file, const struct timeval tvp[2])
+futimesat (int fd, const char *file, const struct timeval tvp[2])
 {
   error_t err;
   file_t port;
 
-  port = __file_name_lookup (file, O_NOLINK, 0);
+  port = __file_name_lookup_at (fd, 0, file, 0, 0);
   if (port == MACH_PORT_NULL)
     return -1;
 
@@ -43,4 +42,3 @@ __lutimes (const char *file, const struct timeval tvp[2])
     return __hurd_fail (err);
   return 0;
 }
-weak_alias (__lutimes, lutimes)

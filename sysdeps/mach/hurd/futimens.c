@@ -22,6 +22,8 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#include "utime-helper.c"
+
 /* Change the access time of FD to TSP[0] and
    the modification time of FD to TSP[1].  */
 int
@@ -30,20 +32,7 @@ __futimens (int fd, const struct timespec tsp[2])
   struct timespec atime, mtime;
   error_t err;
 
-  if (tsp == NULL)
-    {
-      /* Setting the number of nanoseconds to UTIME_NOW tells the
-         underlying filesystems to use the current time.  */
-      atime.tv_sec = 0;
-      atime.tv_nsec = UTIME_NOW;
-      mtime.tv_sec = 0;
-      mtime.tv_nsec = UTIME_NOW;
-    }
-  else
-    {
-      atime = tsp[0];
-      mtime = tsp[1];
-    }
+  utime_ts_from_tspec (tsp, &atime, &mtime);
 
   err = HURD_DPORT_USE (fd, __file_utimens (port, atime, mtime));
 
@@ -51,25 +40,7 @@ __futimens (int fd, const struct timespec tsp[2])
     {
       time_value_t atim, mtim;
 
-      if (tsp == NULL)
-        /* Setting the number of microseconds to `-1' tells the
-           underlying filesystems to use the current time.  */
-        atim.microseconds = mtim.microseconds = -1;
-      else
-        {
-          if (tsp[0].tv_nsec == UTIME_NOW)
-            atim.microseconds = -1;
-          else if (tsp[0].tv_nsec == UTIME_OMIT)
-            atim.microseconds = -2;
-          else
-            TIMESPEC_TO_TIME_VALUE (&atim, &(tsp[0]));
-          if (tsp[1].tv_nsec == UTIME_NOW)
-            mtim.microseconds = -1;
-          else if (tsp[1].tv_nsec == UTIME_OMIT)
-            mtim.microseconds = -2;
-          else
-            TIMESPEC_TO_TIME_VALUE (&mtim, &(tsp[1]));
-        }
+      utime_tvalue_from_tspec (tsp, &atim, &mtim);
 
       err = HURD_DPORT_USE (fd, __file_utimes (port, atim, mtim));
   }

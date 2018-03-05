@@ -1,3 +1,17 @@
+2018-03-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/utime-helper.c (hurd_futimens): Rename function to
+	hurd_futimes.
+	* sysdeps/mach/hurd/utimes.c (__utimes): Update call accordingly.
+	* sysdeps/mach/hurd/lutimes.c (__lutimes): Likewise.
+	* sysdeps/mach/hurd/futimens.c: Include "utime-helper.c".
+	(__futimens): Move implementation to...
+	* sysdeps/mach/hurd/utime-helper.c (utime_ts_from_tspec,
+	utime_tvalue_from_tspec): ... new helper functions.
+	(hurd_futimens): New function.
+	* sysdeps/mach/hurd/futimesat.c: New file.
+	* sysdeps/mach/hurd/utimensat.c: New file.
+
 2018-03-05  Flávio Cruz  <flaviocruz@gmail.com>
 
 	* sysdeps/mach/hurd/bits/stat.h [__USE_ATFILE] (UTIME_NOW,
