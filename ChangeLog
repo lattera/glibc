@@ -1,3 +1,16 @@
+2018-03-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/sigaction.h: Add include guard.
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/tile/bits/sigaction.h: Likewise.
+	* hurd/hurd/signal.h: Include <bits/sigaction.h>.
+
 2018-03-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* iconv/loop.c (UNICODE_TAG_HANDLER): Disable

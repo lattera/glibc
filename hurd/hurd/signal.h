@@ -34,6 +34,7 @@
 #include <bits/types/error_t.h>
 #include <bits/types/stack_t.h>
 #include <bits/types/sigset_t.h>
+#include <bits/sigaction.h>
 #include <hurd/msg.h>
 
 #include <cthreads.h>		/* For `struct mutex'.  */

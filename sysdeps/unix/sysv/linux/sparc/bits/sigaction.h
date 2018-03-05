@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_SIGACTION_H
+#define _BITS_SIGACTION_H 1
+
 #ifndef _SIGNAL_H
 # error "Never include <bits/sigaction.h> directly; use <signal.h> instead."
 #endif
@@ -82,3 +85,5 @@ struct sigaction
 #define	SIG_BLOCK     1		 /* Block signals.  */
 #define	SIG_UNBLOCK   2		 /* Unblock signals.  */
 #define	SIG_SETMASK   4		 /* Set the set of blocked signals.  */
+
+#endif

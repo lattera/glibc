@@ -16,6 +16,9 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef _BITS_SIGACTION_H
+#define _BITS_SIGACTION_H 1
+
 #ifndef _SIGNAL_H
 # error "Never include <bits/sigaction.h> directly; use <signal.h> instead."
 #endif
@@ -86,4 +89,6 @@ struct sigaction
 #ifdef __USE_MISC
 # define SIG_SETMASK32 256	/* Goodie from SGI for BSD compatibility:
 				   set only the low 32 bit of the sigset.  */
+#endif
+
 #endif
