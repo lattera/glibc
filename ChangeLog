@@ -1,3 +1,10 @@
+2018-03-05  Joseph Myers  <joseph@codesourcery.com>
+
+	* iconv/loop.c (UNICODE_TAG_HANDLER): Disable
+	-Wmaybe-uninitialized for -Os.
+	* sysdeps/s390/multiarch/8bit-generic.c (BODY): Add comment about
+	this disabling.
+
 2018-03-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* bits/dirent.h (__INO_T_MATCHES_INO64_T): Define regardless whether

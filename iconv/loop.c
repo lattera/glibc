@@ -254,6 +254,16 @@
   }
 
 
+/* With GCC 7 when compiling with -Os for 32-bit s390 the compiler
+   warns that the variable 'ch', in the definition of BODY in
+   sysdeps/s390/multiarch/8bit-generic.c, may be used uninitialized in
+   the call to UNICODE_TAG_HANDLER in that macro.  This variable is
+   actually always initialized before use, in the prior loop if INDEX
+   is nonzero and in the following 'if' if INDEX is zero.  That code
+   has a comment referencing this diagnostic disabling; updates in one
+   place may require updates in the other.  */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
 /* Handling of Unicode 3.1 TAG characters.  Unicode recommends
    "If language codes are not relevant to the particular processing
     operation, then they should be ignored."  This macro is usually
@@ -267,6 +277,7 @@
 	continue;							      \
       }									      \
   }
+DIAG_POP_NEEDS_COMMENT;
 
 
 /* The function returns the status, as defined in gconv.h.  */
