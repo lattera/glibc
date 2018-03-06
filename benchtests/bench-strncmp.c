@@ -139,8 +139,6 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
 
   if (n == 0)
     {
-      s1 = (CHAR *) (buf1 + page_size);
-      s2 = (CHAR *) (buf2 + page_size);
       json_element_object_begin (json_ctx);
       json_attr_uint (json_ctx, "strlen", (double) len);
       json_attr_uint (json_ctx, "len", (double) n);
@@ -149,7 +147,12 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
       json_array_begin (json_ctx, "timings");
 
       FOR_EACH_IMPL (impl, 0)
-	do_one_test (json_ctx, impl, s1, s2, n, 0);
+	{
+	  realloc_bufs ();
+	  s1 = (CHAR *) (buf1 + page_size);
+	  s2 = (CHAR *) (buf2 + page_size);
+	  do_one_test (json_ctx, impl, s1, s2, n, 0);
+	}
 
       json_array_end (json_ctx);
       json_element_object_end (json_ctx);
@@ -161,28 +164,6 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   align2 &= 15;
   align_n = (page_size - n * CHARBYTES) & 15;
 
-  s1 = (CHAR *) (buf1 + page_size - n * CHARBYTES);
-  s2 = (CHAR *) (buf2 + page_size - n * CHARBYTES);
-
-  if (align1 < align_n)
-    s1 = (CHAR *) ((char *) s1 - (align_n - align1));
-
-  if (align2 < align_n)
-    s2 = (CHAR *) ((char *) s2 - (align_n - align2));
-
-  for (i = 0; i < n; i++)
-    s1[i] = s2[i] = 1 + 23 * i % max_char;
-
-  if (len < n)
-    {
-      s1[len] = 0;
-      s2[len] = 0;
-      if (exp_result < 0)
-	s2[len] = 32;
-      else if (exp_result > 0)
-	s1[len] = 64;
-    }
-
   json_element_object_begin (json_ctx);
   json_attr_uint (json_ctx, "strlen", (double) len);
   json_attr_uint (json_ctx, "len", (double) n);
@@ -191,7 +172,32 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+    {
+      realloc_bufs ();
+      s1 = (CHAR *) (buf1 + page_size - n * CHARBYTES);
+      s2 = (CHAR *) (buf2 + page_size - n * CHARBYTES);
+
+      if (align1 < align_n)
+	s1 = (CHAR *) ((char *) s1 - (align_n - align1));
+
+      if (align2 < align_n)
+	s2 = (CHAR *) ((char *) s2 - (align_n - align2));
+
+      for (i = 0; i < n; i++)
+	s1[i] = s2[i] = 1 + 23 * i % max_char;
+
+      if (len < n)
+	{
+	  s1[len] = 0;
+	  s2[len] = 0;
+	  if (exp_result < 0)
+	    s2[len] = 32;
+	  else if (exp_result > 0)
+	    s1[len] = 64;
+	}
+
+      do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+    }
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);
@@ -215,23 +221,6 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, size_t
   if (align2 + (n + 1) * CHARBYTES >= page_size)
     return;
 
-  s1 = (CHAR *) (buf1 + align1);
-  s2 = (CHAR *) (buf2 + align2);
-
-  for (i = 0; i < n; i++)
-    s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
-
-  s1[n] = 24 + exp_result;
-  s2[n] = 23;
-  s1[len] = 0;
-  s2[len] = 0;
-  if (exp_result < 0)
-    s2[len] = 32;
-  else if (exp_result > 0)
-    s1[len] = 64;
-  if (len >= n)
-    s2[n - 1] -= exp_result;
-
   json_element_object_begin (json_ctx);
   json_attr_uint (json_ctx, "strlen", (double) len);
   json_attr_uint (json_ctx, "len", (double) n);
@@ -240,7 +229,27 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, size_t
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+    {
+      realloc_bufs ();
+      s1 = (CHAR *) (buf1 + align1);
+      s2 = (CHAR *) (buf2 + align2);
+
+      for (i = 0; i < n; i++)
+	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
+
+      s1[n] = 24 + exp_result;
+      s2[n] = 23;
+      s1[len] = 0;
+      s2[len] = 0;
+      if (exp_result < 0)
+	s2[len] = 32;
+      else if (exp_result > 0)
+	s1[len] = 64;
+      if (len >= n)
+	s2[n - 1] -= exp_result;
+
+      do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+    }
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);
