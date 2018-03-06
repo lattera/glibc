@@ -75,7 +75,7 @@ L(more16):
 	/* We overlap loads between 0-32 bytes at either side of SRC1 when we
 	   try to align, so limit it only to strings larger than 128 bytes.  */
 	cmp	limit, 96
-	b.ls	L(loop8)
+	b.ls	L(loop16)
 
 	/* Align src1 and adjust src2 with bytes not yet done.  */
 	and	tmp1, src1, 15

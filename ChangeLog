@@ -1,5 +1,7 @@
 2018-03-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/memcmp.S (more16): Fix loop16 branch target.
+
 	* sysdeps/aarch64/memcmp.S: Widen comparison to 16 bytes at a
 	time.
 
