@@ -1,3 +1,18 @@
+2018-03-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* io/futimens.c: Add missing start-of-file descriptive comment.
+	* io/utime.c: Likewise.
+	* misc/futimesat.c: Likewise.
+	* misc/utimes.c: Likewise.
+	* sysdeps/mach/hurd/futimesat.c: Likewise.
+	* sysdeps/mach/hurd/utimes.c: Likewise.
+	* sysdeps/posix/utime.c: Likewise.
+	* sysdeps/posix/utimes.c: Likewise.
+	* sysdeps/unix/sysv/linux/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/futimesat.c: Likewise.
+	* sysdeps/unix/sysv/linux/generic/utimes.c: Likewise.
+	* sysdeps/unix/sysv/linux/utimes.c: Likewise.
+
 2018-03-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/utime-helper.c (hurd_futimens): Rename function to

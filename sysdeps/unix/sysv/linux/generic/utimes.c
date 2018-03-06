@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2018 Free Software Foundation, Inc.
+/* utimes -- Change access and modification times of file.  Linux version.
+   Copyright (C) 2011-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 

@@ -1,4 +1,4 @@
-/* Change access and modification times of open file.  Linux version.
+/* Change access and modification times of open file.  Stub version.
    Copyright (C) 2007-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

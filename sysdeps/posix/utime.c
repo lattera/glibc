@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* utime -- Change access and modification times of file.  Posix version.
+   Copyright (C) 1991-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
