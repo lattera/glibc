@@ -1,3 +1,14 @@
+2018-03-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-strncmp.c (test_main): Remove 0 length tests.
+	(do_test_limit): Likewise.
+
+	* benchtests/bench-strncmp.c (do_test_limit): Reallocate buffers
+	for every implementation.
+	(do_test): Likewise.
+
+	* benchtests/bench-strncmp.c: Convert output to json.
+
 2018-03-06  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* io/futimens.c: Add missing start-of-file descriptive comment.
