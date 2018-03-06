@@ -137,29 +137,6 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   size_t i, align_n;
   CHAR *s1, *s2;
 
-  if (n == 0)
-    {
-      json_element_object_begin (json_ctx);
-      json_attr_uint (json_ctx, "strlen", (double) len);
-      json_attr_uint (json_ctx, "len", (double) n);
-      json_attr_uint (json_ctx, "align1", (double) 0);
-      json_attr_uint (json_ctx, "align2", (double) 0);
-      json_array_begin (json_ctx, "timings");
-
-      FOR_EACH_IMPL (impl, 0)
-	{
-	  realloc_bufs ();
-	  s1 = (CHAR *) (buf1 + page_size);
-	  s2 = (CHAR *) (buf2 + page_size);
-	  do_one_test (json_ctx, impl, s1, s2, n, 0);
-	}
-
-      json_array_end (json_ctx);
-      json_element_object_end (json_ctx);
-
-      return;
-    }
-
   align1 &= 15;
   align2 &= 15;
   align_n = (page_size - n * CHARBYTES) & 15;
@@ -315,7 +292,6 @@ test_main (void)
       do_test (&json_ctx, 2 * i, i, 8 << i, 16 << i, 255, 1);
     }
 
-  do_test_limit (&json_ctx, 0, 0, 0, 0, 127, 0);
   do_test_limit (&json_ctx, 4, 0, 21, 20, 127, 0);
   do_test_limit (&json_ctx, 0, 4, 21, 20, 127, 0);
   do_test_limit (&json_ctx, 8, 0, 25, 24, 127, 0);
