@@ -92,36 +92,67 @@ grouping             0;0
 END LC_NUMERIC
 
 LC_TIME
-abday   "dg";"dl";"dt";"dc";"dj";"dv";"ds"
-day     "diumenge";/
-        "dilluns";/
-        "dimarts";/
-        "dimecres";/
-        "dijous";/
-        "divendres";/
-        "dissabte"
-abmon   "gen";"feb";/
-        "mar";"abr";/
-        "mai";"jun";/
-        "jul";"ago";/
-        "set";"oct";/
-        "nov";"des"
-mon     "gener";/
-        "febrer";/
-        "mar<U00E7>";/
-        "abril";/
-        "maig";/
-        "juny";/
-        "juliol";/
-        "agost";/
-        "setembre";/
-        "octubre";/
-        "novembre";/
-        "desembre"
-d_t_fmt "%a %d %b %Y %T %Z"
-d_fmt   "%d//%m//%y"
-t_fmt   "%T"
-am_pm   "";""
+abday      "dg.";"dl.";"dt.";"dc.";"dj.";"dv.";"ds."
+day        "diumenge";/
+           "dilluns";/
+           "dimarts";/
+           "dimecres";/
+           "dijous";/
+           "divendres";/
+           "dissabte"
+ab_alt_mon "gen.";/
+           "febr.";/
+           "mar<U00E7>";/
+           "abr.";/
+           "maig";/
+           "juny";/
+           "jul.";/
+           "ag.";/
+           "set.";/
+           "oct.";/
+           "nov.";/
+           "des."
+abmon      "de gen.";/
+           "de febr.";/
+           "de mar<U00E7>";/
+           "d<U2019>abr.";/
+           "de maig";/
+           "de juny";/
+           "de jul.";/
+           "d<U2019>ag.";/
+           "de set.";/
+           "d<U2019>oct.";/
+           "de nov.";/
+           "de des."
+alt_mon    "gener";/
+           "febrer";/
+           "mar<U00E7>";/
+           "abril";/
+           "maig";/
+           "juny";/
+           "juliol";/
+           "agost";/
+           "setembre";/
+           "octubre";/
+           "novembre";/
+           "desembre"
+mon        "de gener";/
+           "de febrer";/
+           "de mar<U00E7>";/
+           "d<U2019>abril";/
+           "de maig";/
+           "de juny";/
+           "de juliol";/
+           "d<U2019>agost";/
+           "de setembre";/
+           "d<U2019>octubre";/
+           "de novembre";/
+           "de desembre"
+d_t_fmt    "%A, %-d %B de %Y, %T %Z"
+d_fmt      "%-d//%-m//%y"
+t_fmt      "%T"
+am_pm      "a. m.";/
+           "p. m."
 t_fmt_ampm ""
 week 7;19971130;4
 first_weekday 2
@@ -132,9 +163,9 @@ copy "i18n"
 END LC_PAPER
 
 LC_TELEPHONE
-tel_int_fmt    "+%c %a %l"
-int_prefix     "34"
-int_select     "00"
+tel_int_fmt  "+%c %a %l"
+int_prefix   "34"
+int_select   "00"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
@@ -142,19 +173,19 @@ copy "i18n"
 END LC_MEASUREMENT
 
 LC_NAME
-name_fmt    "%d%t%g%t%m%t%f"
+name_fmt     "%d%t%g%t%m%t%f"
 END LC_NAME
 
 LC_ADDRESS
-postal_fmt    "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
+postal_fmt   "%f%N%a%N%d%N%b%N%s %h %e %r%N%z %T%N%c%N"
 country_name "Espanya"
-country_ab2 "ES"
-country_ab3 "ESP"
-country_num 724
-country_car    "E"
+country_ab2  "ES"
+country_ab3  "ESP"
+country_num  724
+country_car  "E"
 % català
 lang_name    "catal<U00E0>"
 lang_ab      "ca"
 lang_term    "cat"
-lang_lib    "cat"
+lang_lib     "cat"
 END LC_ADDRESS

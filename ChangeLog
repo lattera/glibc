@@ -1,3 +1,23 @@
+2018-03-15  Robert Buj  <robert.buj@gmail.com>
+
+	[BZ #22848]
+	* localedata/locales/ca_ES (abmon): Rename to...
+	(ab_alt_mon): This, then synchronize with CLDR (nominative case).
+	(mon): Rename to...
+	(alt_mon): This.
+	(abmon): Import from CLDR (genitive case, month names preceded by
+	"de" or "d’").
+	(mon): Likewise.
+	(abday): Synchronize with CLDR.
+	(d_t_fmt): Likewise.
+	(d_fmt): Likewise.
+	(am_pm): Likewise.
+
+	(LC_TIME): Improve indentation.
+	(LC_TELEPHONE): Likewise.
+	(LC_NAME): Likewise.
+	(LC_ADDRESS): Likewise.
+
 2018-03-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/bits/mathinline.h [!__GNUC_PREREQ (3, 4)]
