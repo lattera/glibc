@@ -34,9 +34,12 @@
 /* Internal variables.  */
 #define data1		x3
 #define data1w		w3
-#define data2		x4
-#define data2w		w4
-#define tmp1		x5
+#define data1h		x4
+#define data2		x5
+#define data2w		w5
+#define data2h		x6
+#define tmp1		x7
+#define tmp2		x8
 
 ENTRY_ALIGN (memcmp, 6)
 	DELOUSE (0)
@@ -46,39 +49,70 @@ ENTRY_ALIGN (memcmp, 6)
 	subs	limit, limit, 8
 	b.lo	L(less8)
 
-	/* Limit >= 8, so check first 8 bytes using unaligned loads.  */
 	ldr	data1, [src1], 8
 	ldr	data2, [src2], 8
-	and	tmp1, src1, 7
-	add	limit, limit, tmp1
+	cmp	data1, data2
+	b.ne	L(return)
+
+	subs	limit, limit, 8
+	b.gt	L(more16)
+
+	ldr	data1, [src1, limit]
+	ldr	data2, [src2, limit]
+	b	L(return)
+
+L(more16):
+	ldr	data1, [src1], 8
+	ldr	data2, [src2], 8
 	cmp	data1, data2
 	bne	L(return)
 
+	/* Jump directly to comparing the last 16 bytes for 32 byte (or less)
+	   strings.  */
+	subs	limit, limit, 16
+	b.ls	L(last_bytes)
+
+	/* We overlap loads between 0-32 bytes at either side of SRC1 when we
+	   try to align, so limit it only to strings larger than 128 bytes.  */
+	cmp	limit, 96
+	b.ls	L(loop8)
+
 	/* Align src1 and adjust src2 with bytes not yet done.  */
+	and	tmp1, src1, 15
+	add	limit, limit, tmp1
 	sub	src1, src1, tmp1
 	sub	src2, src2, tmp1
 
-	subs	limit, limit, 8
-	b.ls	L(last_bytes)
-
-	/* Loop performing 8 bytes per iteration using aligned src1.
-	   Limit is pre-decremented by 8 and must be larger than zero.
-	   Exit if <= 8 bytes left to do or if the data is not equal.  */
+	/* Loop performing 16 bytes per iteration using aligned src1.
+	   Limit is pre-decremented by 16 and must be larger than zero.
+	   Exit if <= 16 bytes left to do or if the data is not equal.  */
 	.p2align 4
-L(loop8):
-	ldr	data1, [src1], 8
-	ldr	data2, [src2], 8
-	subs	limit, limit, 8
-	ccmp	data1, data2, 0, hi  /* NZCV = 0b0000.  */
-	b.eq	L(loop8)
+L(loop16):
+	ldp	data1, data1h, [src1], 16
+	ldp	data2, data2h, [src2], 16
+	subs	limit, limit, 16
+	ccmp	data1, data2, 0, hi
+	ccmp	data1h, data2h, 0, eq
+	b.eq	L(loop16)
 
 	cmp	data1, data2
 	bne	L(return)
+	mov	data1, data1h
+	mov	data2, data2h
+	cmp	data1, data2
+	bne	L(return)
 
-	/* Compare last 1-8 bytes using unaligned access.  */
+	/* Compare last 1-16 bytes using unaligned access.  */
 L(last_bytes):
-	ldr	data1, [src1, limit]
-	ldr	data2, [src2, limit]
+	add	src1, src1, limit
+	add	src2, src2, limit
+	ldp	data1, data1h, [src1]
+	ldp	data2, data2h, [src2]
+	cmp     data1, data2
+	bne	L(return)
+	mov	data1, data1h
+	mov	data2, data2h
+	cmp	data1, data2
 
 	/* Compare data bytes and set return value to 0, -1 or 1.  */
 L(return):
