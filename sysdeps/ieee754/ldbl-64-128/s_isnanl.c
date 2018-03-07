@@ -1,3 +1,5 @@
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 #if !IS_IN (libm)
 # undef weak_alias

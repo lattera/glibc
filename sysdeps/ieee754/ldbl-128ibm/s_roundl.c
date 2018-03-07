@@ -21,6 +21,7 @@
    when it's coded in C.  */
 
 #include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>
 #include <ieee754.h>

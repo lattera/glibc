@@ -1,5 +1,33 @@
 2018-03-10  Zack Weinberg  <zackw@panix.com>
 
+	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Don't include
+	math.h or math_private.h.
+
+	* sysdeps/alpha/fpu/s_isnan.c
+	* sysdeps/ieee754/ldbl-128ibm/s_ceill.c
+	* sysdeps/ieee754/ldbl-128ibm/s_floorl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_llrintl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_llroundl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_lrintl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_lroundl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_roundl.c
+	* sysdeps/ieee754/ldbl-128ibm/s_truncl.c
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypot.c
+	* sysdeps/powerpc/powerpc32/power4/fpu/multiarch/e_hypotf.c:
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_expf.c
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypot.c
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/e_hypotf.c:
+	Include math_private.h.
+
+	* sysdeps/ieee754/ldbl-64-128/s_finitel.c
+	* sysdeps/ieee754/ldbl-64-128/s_fpclassifyl.c
+	* sysdeps/ieee754/ldbl-64-128/s_isinfl.c
+	* sysdeps/ieee754/ldbl-64-128/s_isnanl.c
+	* sysdeps/ieee754/ldbl-64-128/s_signbitl.c
+	* sysdeps/powerpc/power7/fpu/s_logb.c:
+	Include math.h and math_private.h.
+
 	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Wrap manual
 	uses of $at in .set noat / .set at.
 

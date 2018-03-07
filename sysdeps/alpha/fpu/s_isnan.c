@@ -22,6 +22,7 @@
 #define __GI___isnanf	not__GI___isnanf
 
 #include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 
 #undef __isnanf

@@ -1,3 +1,5 @@
+#include <math.h>
+#include <math_private.h>
 #include <math_ldbl_opt.h>
 #undef weak_alias
 #define weak_alias(n,a)
