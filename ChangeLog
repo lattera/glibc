@@ -1,3 +1,8 @@
+2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #22932]
+	* localedata/locales/lt_LT (abmon): Synchronize with CLDR.
+
 2018-03-15  Robert Buj  <robert.buj@gmail.com>
 
 	[BZ #22848]

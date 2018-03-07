@@ -201,12 +201,12 @@ day       "Sekmadienis";/
           "Ketvirtadienis";/
           "Penktadienis";/
           "<U0160>e<U0161>tadienis"
-abmon     "Sau";"Vas";/
-          "Kov";"Bal";/
-          "Geg";"Bir";/
-          "Lie";"Rgp";/
-          "Rgs";"Spa";/
-          "Lap";"Grd"
+abmon     "saus.";"vas.";/
+          "kov.";"bal.";/
+          "geg.";"bir<U017E>.";/
+          "liep.";"rugp.";/
+          "rugs.";"spal.";/
+          "lapkr.";"gruod."
 alt_mon   "sausis";/
           "vasaris";/
           "kovas";/
