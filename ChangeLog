@@ -1,5 +1,15 @@
 2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
+	[BZ #22937]
+	* localedata/locales/el_CY (abmon): Rename to...
+	(ab_alt_mon): This.
+	(abmon): Import from CLDR (abbreviated genitive case).
+	* localedata/locales/el_GR (abmon): Rename to...
+	(ab_alt_mon): This.
+	(abmon): Import from CLDR (abbreviated genitive case).
+
+2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
 	[BZ #22932]
 	* localedata/locales/lt_LT (abmon): Synchronize with CLDR.
 
