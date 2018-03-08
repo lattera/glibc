@@ -95,6 +95,19 @@ END(__setcontext)
 
 weak_alias (__setcontext, setcontext)
 
+/* We add an NOP here to separate between __setcontext/__startcontext. The
+   wanted behavior that happens is: when unwinding from a function called
+   inside a makecontext() context, FDE lookup will use '&__startcontext - 1',
+   then returns NULL for no FDE found, and immediately ends the unwind, in
+   a normal fashion.
+
+   If this NOP word does not exist, FDE lookup just repeatedly finds
+   __setcontext's FDE in an infinite loop, due to the convention of using
+   'address - 1' for FDE lookup. Modifiying/deleting the below
+   __startcontext's FDE has no help on this.  */
+
+	nop
+
 /* This is the helper code which gets called if a function which is
    registered with 'makecontext' returns.  In this case we have to
    install the context listed in the uc_link element of the context
