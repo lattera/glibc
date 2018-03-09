@@ -1,3 +1,8 @@
+2018-03-10  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/unix/sysv/linux/alpha/clone.S (__clone): Wrap manual
+	uses of $at in .set noat / .set at.
+
 2018-03-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* include/setjmp.h (__libc_longjmp): Remove libc_hidden_proto.

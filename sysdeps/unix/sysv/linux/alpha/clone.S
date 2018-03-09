@@ -40,9 +40,11 @@
 	cfi_startproc
 __clone:
 #ifdef PROF
+	.set noat
 	ldgp	gp,0(pv)
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
+	.set at
 #endif
 
 	/* Sanity check arguments.  */
