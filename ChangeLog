@@ -1,3 +1,161 @@
+2018-04-27  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/preconfigure [machine == powerpc64] (machine): Define
+	to powerpc/powerpc64/be for big-endian.
+	[machine == powerpc64le]: Define to powerpc/powerpc64/le for
+	little-endian.
+
+	* sysdeps/powerpc/powerpc64/power4/Implies: Move to powerpc64/be.
+	* sysdeps/powerpc/powerpc64/power4/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power4/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5+/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power5/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power6x/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power7/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/power9/multiarch/Implies: Likewise.
+
+	* sysdeps/powerpc/powerpc64/be/power4/Implies: Move from powerpc64 and
+	adjusted to imply powerpc64 and older processors on powerpc64/be.
+	* sysdeps/powerpc/powerpc64/be/power4/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power4/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power4/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5+/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5+/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5+/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5+/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power5/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6x/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6x/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6x/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power6x/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power7/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power7/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power7/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power8/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power8/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power8/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power8/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power9/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power9/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/power9/multiarch/Implies: Likewise.
+
+	* sysdeps/powerpc/powerpc64/970/Implies: Move to powerpc64/be.
+	* sysdeps/powerpc/powerpc64/be/970/Implies: Move from powerpc64/be.
+	* sysdeps/powerpc/powerpc64/be/a2/Implies: New file.
+	* sysdeps/powerpc/powerpc64/be/cell/Implies: Likewise.
+
+	* sysdeps/powerpc/powerpc64/be/Implies: New file.
+	* sysdeps/powerpc/powerpc64/be/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/be/multiarch/Implies: Likewise.
+
+	* sysdeps/powerpc/powerpc64le/Implies: Move to powerpc64/le.
+	* sysdeps/powerpc/powerpc64le/Implies-before: Likewise.
+	* sysdeps/powerpc/powerpc64le/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc64le/configure: Likewise.
+	* sysdeps/powerpc/powerpc64le/configure.ac: Likewise.
+	* sysdeps/powerpc/powerpc64le/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/fpu/e_sqrtf128.c: Likewise.
+	* sysdeps/powerpc/powerpc64le/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/fpu/sfp-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64le/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/e_sqrtf128.c: Likewise.
+
+	* sysdeps/powerpc/powerpc64/le/Implies: Move from powerpc64le.
+	* sysdeps/powerpc/powerpc64/le/Implies-before: Likewise.
+	* sysdeps/powerpc/powerpc64/le/Makefile: Likewise.
+	* sysdeps/powerpc/powerpc64/le/configure: Likewise.
+	* sysdeps/powerpc/powerpc64/le/configure.ac: Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/e_sqrtf128.c: Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/sfp-machine.h: Likewise.
+	* sysdeps/powerpc/powerpc64/le/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power9/fpu/e_sqrtf128.c: Likewise.
+
+	* sysdeps/powerpc/powerpc64le/power7/Implies: Move to powerpc64/le.
+	* sysdeps/powerpc/powerpc64le/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power7/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power7/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power8/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power8/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power8/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power8/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power9/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64le/power9/multiarch/Implies: Likewise.
+
+	* sysdeps/powerpc/powerpc64/le/power7/Implies: Move from powerpc64le
+	and adjusted to imply olders processors.
+	* sysdeps/powerpc/powerpc64/le/power7/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power7/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power7/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power8/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power8/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power8/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power8/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power9/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power9/fpu/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power9/fpu/multiarch/Implies: Likewise.
+	* sysdeps/powerpc/powerpc64/le/power9/multiarch/Implies: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/Implies: Move to
+	powerpc64/le.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/float128-abi.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64le/fpu/Implies: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/Implies: Move from
+	powerpc64le.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/float128-abi.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/le/fpu/Implies: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/970/Implies: Move to
+	powerpc64/be.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/a2/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/cell/fpu/Implies: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/970/Implies: Move from
+	powerpc64 and adjusted.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/a2/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/cell/Implies: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/be/cell/fpu/Implies:
+	Likewise.
+
 2018-04-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/tile: Remove.
