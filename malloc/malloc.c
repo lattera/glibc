@@ -1287,13 +1287,13 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* Ptr to next physical malloc_chunk. */
 #define next_chunk(p) ((mchunkptr) (((char *) (p)) + chunksize (p)))
 
-/* Size of the chunk below P.  Only valid if prev_inuse (P).  */
+/* Size of the chunk below P.  Only valid if !prev_inuse (P).  */
 #define prev_size(p) ((p)->mchunk_prev_size)
 
-/* Set the size of the chunk below P.  Only valid if prev_inuse (P).  */
+/* Set the size of the chunk below P.  Only valid if !prev_inuse (P).  */
 #define set_prev_size(p, sz) ((p)->mchunk_prev_size = (sz))
 
-/* Ptr to previous physical malloc_chunk.  Only valid if prev_inuse (P).  */
+/* Ptr to previous physical malloc_chunk.  Only valid if !prev_inuse (P).  */
 #define prev_chunk(p) ((mchunkptr) (((char *) (p)) - prev_size (p)))
 
 /* Treat space at ptr + offset as a chunk */
