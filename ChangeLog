@@ -17,7 +17,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/elision-unlock.c
 	(__lll_unlock_elision): Likewise.
 
-	* sysdeps/nptl/fork.c (ARCH_FORK): Replace by auch_fork.
+	* sysdeps/nptl/fork.c (ARCH_FORK): Replace by arch_fork.
 	* sysdeps/unix/sysv/linux/alpha/arch-fork.h: Remove file.
 	* sysdeps/unix/sysv/linux/riscv/arch-fork.h: Likewise.
 	* sysdeps/unix/sysv/linux/aarch64/arch-fork.h: Likewise.
