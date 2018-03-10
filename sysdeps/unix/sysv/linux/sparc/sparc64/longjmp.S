@@ -45,7 +45,6 @@ END(__libc_siglongjmp)
 
 strong_alias(__libc_siglongjmp, __longjmp)
 strong_alias(__libc_siglongjmp, __libc_longjmp)
-libc_hidden_def (__libc_longjmp)
 weak_alias (__libc_siglongjmp, longjmp)
 weak_alias (__libc_siglongjmp, _longjmp)
 weak_alias (__libc_siglongjmp, siglongjmp)

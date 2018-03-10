@@ -1,3 +1,11 @@
+2018-03-10  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* include/setjmp.h (__libc_longjmp): Remove libc_hidden_proto.
+	* setjmp/longjmp.c (__libc_longjmp): Remove libc_hidden_def.
+	* sysdeps/s390/longjmp.c (__libc_longjmp): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/longjmp.S (__libc_longjmp):
+	Likewise.
+
 2018-03-09  Florian Weimer  <fweimer@redhat.com>
 
 	* malloc/malloc.c (prev_size, set_prev_size, prev_chunk): Fix typo

@@ -23,7 +23,6 @@ extern void __libc_siglongjmp (sigjmp_buf env, int val)
 	  __attribute__ ((noreturn));
 extern void __libc_longjmp (sigjmp_buf env, int val)
      __attribute__ ((noreturn));
-libc_hidden_proto (__libc_longjmp)
 
 libc_hidden_proto (_setjmp)
 libc_hidden_proto (__sigsetjmp)

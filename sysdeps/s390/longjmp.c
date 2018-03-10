@@ -33,7 +33,6 @@
    but were reverted before 2.20. Thus both versions are the same function.  */
 
 strong_alias (__libc_siglongjmp, __libc_longjmp)
-libc_hidden_def (__libc_longjmp)
 
 weak_alias (__libc_siglongjmp, __v1_longjmp)
 weak_alias (__libc_siglongjmp, __v2_longjmp)
