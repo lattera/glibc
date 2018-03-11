@@ -1,3 +1,9 @@
+2018-03-12  David Michael <fedora.dm0@gmail.com>
+
+	* sysdeps/mach/hurd/reboot.c: Include <hurd/paths.h>
+	(reboot): Lookup _SERVERS_STARTUP instead of calling proc_getmsgport to
+	get a port to the startup server.
+
 2018-03-11  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Include math.h
