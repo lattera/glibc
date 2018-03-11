@@ -1,3 +1,8 @@
+2018-03-11  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.c: Include math.h
+	before nldbl-compat.h.
+
 2018-03-10  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/ieee754/ldbl-opt/math_ldbl_opt.h: Don't include

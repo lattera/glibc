@@ -20,6 +20,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <libioP.h>
+#include <math.h>
 #include <wchar.h>
 #include <printf.h>
 #include <monetary.h>
