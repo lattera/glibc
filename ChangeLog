@@ -1,3 +1,7 @@
+2018-03-12  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* po/pt_BR.po: Update translations.
+
 2018-03-12  David Michael <fedora.dm0@gmail.com>
 
 	* sysdeps/mach/hurd/reboot.c: Include <hurd/paths.h>
