@@ -1,3 +1,10 @@
+2018-03-13  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (count): New macro.
+	(strncmp): Store misaligned length in SRC1 in COUNT.
+	(mutual_align): Adjust.
+	(misaligned8): Load dword at a time when it is safe.
+
 2018-03-12  Zack Weinberg  <zackw@panix.com>
 
 	[BZ #1190]
