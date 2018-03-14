@@ -26,219 +26,6 @@
 # define __MATH_INLINE __extern_always_inline
 #endif
 
-/* The gcc, version 2.7 or below, has problems with all this inlining
-   code.  So disable it for this version of the compiler.  */
-#if __GNUC_PREREQ (2, 8)
-# if !__GNUC_PREREQ (3, 4) && !defined __NO_MATH_INLINES \
-     && defined __OPTIMIZE__
-/* GCC 3.4 introduced builtins for all functions below, so
-   there's no need to define any of these inline functions.  */
-
-#  ifdef __USE_ISOC99
-
-/* Round to nearest integer.  */
-#   ifdef __SSE_MATH__
-__MATH_INLINE long int
-__NTH (lrintf (float __x))
-{
-  long int __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
-  return __res;
-}
-#   endif
-#   ifdef __SSE2_MATH__
-__MATH_INLINE long int
-__NTH (lrint (double __x))
-{
-  long int __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
-  return __res;
-}
-#   endif
-#   ifdef __x86_64__
-__extension__
-__MATH_INLINE long long int
-__NTH (llrintf (float __x))
-{
-  long long int __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("cvtss2si %1, %0" : "=r" (__res) : "xm" (__x));
-  return __res;
-}
-__extension__
-__MATH_INLINE long long int
-__NTH (llrint (double __x))
-{
-  long long int __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("cvtsd2si %1, %0" : "=r" (__res) : "xm" (__x));
-  return __res;
-}
-#   endif
-
-#   if defined __FINITE_MATH_ONLY__ && __FINITE_MATH_ONLY__ > 0 \
-       && defined __SSE2_MATH__
-/* Determine maximum of two values.  */
-__MATH_INLINE float
-__NTH (fmaxf (float __x, float __y))
-{
-#    ifdef __AVX__
-  float __res;
-  __asm ("vmaxss %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
-  return __res;
-#    else
-  __asm ("maxss %1, %0" : "+x" (__x) : "xm" (__y));
-  return __x;
-#    endif
-}
-__MATH_INLINE double
-__NTH (fmax (double __x, double __y))
-{
-#    ifdef __AVX__
-  float __res;
-  __asm ("vmaxsd %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
-  return __res;
-#    else
-  __asm ("maxsd %1, %0" : "+x" (__x) : "xm" (__y));
-  return __x;
-#    endif
-}
-
-/* Determine minimum of two values.  */
-__MATH_INLINE float
-__NTH (fminf (float __x, float __y))
-{
-#    ifdef __AVX__
-  float __res;
-  __asm ("vminss %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
-  return __res;
-#    else
-  __asm ("minss %1, %0" : "+x" (__x) : "xm" (__y));
-  return __x;
-#    endif
-}
-__MATH_INLINE double
-__NTH (fmin (double __x, double __y))
-{
-#    ifdef __AVX__
-  float __res;
-  __asm ("vminsd %2, %1, %0" : "=x" (__res) : "x" (x), "xm" (__y));
-  return __res;
-#    else
-  __asm ("minsd %1, %0" : "+x" (__x) : "xm" (__y));
-  return __x;
-#    endif
-}
-#   endif
-
-#  endif
-
-#  if defined __SSE4_1__ && defined __SSE2_MATH__
-#   if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
-
-/* Round to nearest integer.  */
-__MATH_INLINE double
-__NTH (rint (double __x))
-{
-  double __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("roundsd $4, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-__MATH_INLINE float
-__NTH (rintf (float __x))
-{
-  float __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("roundss $4, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-
-#    ifdef __USE_ISOC99
-/* Round to nearest integer without raising inexact exception.  */
-__MATH_INLINE double
-__NTH (nearbyint (double __x))
-{
-  double __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("roundsd $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-__MATH_INLINE float
-__NTH (nearbyintf (float __x))
-{
-  float __res;
-  /* Mark as volatile since the result is dependent on the state of
-     the SSE control register (the rounding mode).  Otherwise GCC might
-     remove these assembler instructions since it does not know about
-     the rounding mode change and cannot currently be told.  */
-  __asm __volatile__ ("roundss $0xc, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-#    endif
-
-#   endif
-
-/* Smallest integral value not less than X.  */
-__MATH_INLINE double
-__NTH (ceil (double __x))
-{
-  double __res;
-  __asm ("roundsd $2, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-
-__MATH_INLINE float
-__NTH (ceilf (float __x))
-{
-  float __res;
-  __asm ("roundss $2, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-
-/* Largest integer not greater than X.  */
-__MATH_INLINE double
-__NTH (floor (double __x))
-{
-  double __res;
-  __asm ("roundsd $1, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-
-__MATH_INLINE float
-__NTH (floorf (float __x))
-{
-  float __res;
-  __asm ("roundss $1, %1, %0" : "=x" (__res) : "xm" (__x));
-  return __res;
-}
-#  endif
-# endif
-#endif
-
 /* Disable x87 inlines when -fpmath=sse is passed and also when we're building
    on x86_64.  Older gcc (gcc-3.2 for example) does not define __SSE2_MATH__
    for x86_64.  */
@@ -486,17 +273,6 @@ __inline_mathcodeNP_ (long double, __expl, __x, return __builtin_expl (__x))
 __inline_mathcodeNP (exp, __x, __exp_code)
 __inline_mathcodeNP_ (long double, __expl, __x, __exp_code)
 #   endif
-
-
-#   if !__GNUC_PREREQ (3, 5)
-__inline_mathcodeNP (tan, __x, \
-  register long double __value;						      \
-  register long double __value2 __attribute__ ((__unused__));		      \
-  __asm __volatile__							      \
-    ("fptan"								      \
-     : "=t" (__value2), "=u" (__value) : "0" (__x));			      \
-  return __value)
-#   endif
 #  endif /* __FAST_MATH__ */
 
 
@@ -514,19 +290,6 @@ __inline_mathcodeNP2_ (long double, __atan2l, __y, __x,
 __inline_mathcodeNP2 (atan2, __y, __x, __atan2_code)
 #   endif
 __inline_mathcodeNP2_ (long double, __atan2l, __y, __x, __atan2_code)
-#  endif
-
-
-#  if defined __FAST_MATH__ && !__GNUC_PREREQ (3, 5)
-__inline_mathcodeNP2 (fmod, __x, __y, \
-  register long double __value;						      \
-  __asm __volatile__							      \
-    ("1:	fprem\n\t"						      \
-     "fnstsw	%%ax\n\t"						      \
-     "sahf\n\t"								      \
-     "jp	1b"							      \
-     : "=t" (__value) : "0" (__x), "u" (__y) : "ax", "cc");		      \
-  return __value)
 #  endif
 
 
@@ -551,28 +314,6 @@ __inline_mathcodeNP_ (long double, __fabsl, __x, return __builtin_fabsl (__x))
 __inline_mathop (fabs, "fabs")
 __inline_mathop_ (long double, __fabsl, "fabs")
 # endif
-
-#  ifdef __FAST_MATH__
-#   if !__GNUC_PREREQ (3, 4)
-/* The argument range of this inline version is reduced.  */
-__inline_mathopNP (sin, "fsin")
-/* The argument range of this inline version is reduced.  */
-__inline_mathopNP (cos, "fcos")
-
-__inline_mathop_declNP (log, "fldln2; fxch; fyl2x", "0" (__x) : "st(1)")
-#   endif
-
-#   if !__GNUC_PREREQ (3, 5)
-__inline_mathop_declNP (log10, "fldlg2; fxch; fyl2x", "0" (__x) : "st(1)")
-
-__inline_mathcodeNP (asin, __x, return __atan2l (__x, __libc_sqrtl (1.0 - __x * __x)))
-__inline_mathcodeNP (acos, __x, return __atan2l (__libc_sqrtl (1.0 - __x * __x), __x))
-#   endif
-
-#   if !__GNUC_PREREQ (3, 4)
-__inline_mathop_declNP (atan, "fld1; fpatan", "0" (__x) : "st(1)")
-#   endif
-#  endif /* __FAST_MATH__ */
 
 __inline_mathcode_ (long double, __sgn1l, __x, \
   __extension__ union { long double __xld; unsigned int __xi[3]; } __n =      \
@@ -656,25 +397,6 @@ __NTH (ldexp (double __x, int __y))
 #   ifdef __FAST_MATH__
 __inline_mathcodeNP (expm1, __x, __expm1_code)
 
-/* We cannot rely on M_SQRT being defined.  So we do it for ourself
-   here.  */
-#    define __M_SQRT2	1.41421356237309504880L	/* sqrt(2) */
-
-#    if !__GNUC_PREREQ (3, 5)
-__inline_mathcodeNP (log1p, __x, \
-  register long double __value;						      \
-  if (__fabsl (__x) >= 1.0 - 0.5 * __M_SQRT2)				      \
-    __value = logl (1.0 + __x);						      \
-  else									      \
-    __asm __volatile__							      \
-      ("fldln2\n\t"							      \
-       "fxch\n\t"							      \
-       "fyl2xp1"							      \
-       : "=t" (__value) : "0" (__x) : "st(1)");				      \
-  return __value)
-#    endif
-
-
 /* The argument range of the inline version of asinhl is slightly reduced.  */
 __inline_mathcodeNP (asinh, __x, \
   register long double  __y = __fabsl (__x);				      \
@@ -692,25 +414,11 @@ __inline_mathcodeNP (atanh, __x, \
 __inline_mathcodeNP2 (hypot, __x, __y,
 		      return __libc_sqrtl (__x * __x + __y * __y))
 
-#    if !__GNUC_PREREQ (3, 5)
-__inline_mathcodeNP(logb, __x, \
-  register long double __value;						      \
-  register long double __junk;						      \
-  __asm __volatile__							      \
-    ("fxtract\n\t"							      \
-     : "=t" (__junk), "=u" (__value) : "0" (__x));			      \
-  return __value)
-#    endif
-
 #   endif
 #  endif
 
 #  ifdef __USE_ISOC99
 #   ifdef __FAST_MATH__
-
-#    if !__GNUC_PREREQ (3, 5)
-__inline_mathop_declNP (log2, "fld1; fxch; fyl2x", "0" (__x) : "st(1)")
-#    endif
 
 __MATH_INLINE float
 __NTH (ldexpf (float __x, int __y))
@@ -780,20 +488,6 @@ __NTH (llrintl (long double __x))
 
 
 #  ifdef __USE_MISC
-
-#   if defined __FAST_MATH__ && !__GNUC_PREREQ (3, 5)
-__inline_mathcodeNP2 (drem, __x, __y, \
-  register double __value;						      \
-  register int __clobbered;						      \
-  __asm __volatile__							      \
-    ("1:	fprem1\n\t"						      \
-     "fstsw	%%ax\n\t"						      \
-     "sahf\n\t"								      \
-     "jp	1b"							      \
-     : "=t" (__value), "=&a" (__clobbered) : "0" (__x), "u" (__y) : "cc");    \
-  return __value)
-#  endif
-
 
 /* This function is used in the `isfinite' macro.  */
 __MATH_INLINE int

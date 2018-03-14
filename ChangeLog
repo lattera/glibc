@@ -1,3 +1,36 @@
+2018-03-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/bits/mathinline.h [!__GNUC_PREREQ (3, 4)]
+	(lrintf): Remove definitions used only with old GCC.
+	[!__GNUC_PREREQ (3, 4)] (lrint): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (llrintf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (llrint): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (fmaxf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (fmax): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (fminf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (fmin): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (rint): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (rintf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (nearbyint): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (nearbyintf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (ceil): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (ceilf): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (floor): Likewise.
+	[!__GNUC_PREREQ (3, 4)] (floorf): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (tan): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (fmod): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 4)] (sin): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 4)] (cos): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (log10): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (asin): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (acos): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 4)] (atan): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (log1p): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (logb): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (log2): Likewise.
+	[__FAST_MATH__ && !__GNUC_PREREQ (3, 5)] (drem): Likewise.
+	[__FAST_MATH__] (__M_SQRT2): Remove macro.
+
 2018-03-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strncmp.S (strncmp): Use a separate shift
