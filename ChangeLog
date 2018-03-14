@@ -1,3 +1,8 @@
+2018-03-14  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (strncmp): Use a separate shift
+	instruction to unbreak builds with binutils 2.26 and older.
+
 2018-03-13  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strncmp.S (count): New macro.

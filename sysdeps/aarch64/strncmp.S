@@ -208,13 +208,15 @@ L(done):
 	/* Align the SRC1 to a dword by doing a bytewise compare and then do
 	   the dword loop.  */
 L(try_misaligned_words):
-	mov	limit_wd, limit, lsr #3
+	mov	limit_wd, limit
+	lsr	limit_wd, limit_wd, #3
 	cbz	count, L(do_misaligned)
 
 	neg	count, count
 	and	count, count, #7
 	sub	limit, limit, count
-	mov	limit_wd, limit, lsr #3
+	mov	limit_wd, limit
+	lsr	limit_wd, limit_wd, #3
 
 L(page_end_loop):
 	ldrb	data1w, [src1], #1
