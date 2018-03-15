@@ -125,7 +125,7 @@ ifndef BENCH_DURATION
 BENCH_DURATION := 10
 endif
 
-CPPFLAGS-nonlib += -DDURATION=$(BENCH_DURATION)
+CPPFLAGS-nonlib += -DDURATION=$(BENCH_DURATION) -D_ISOMAC
 
 # Use clock_gettime to measure performance of functions.  The default is to use
 # HP_TIMING if it is available.

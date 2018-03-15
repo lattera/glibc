@@ -19,6 +19,16 @@
 #include <getopt.h>
 #include <sys/cdefs.h>
 
+/* We are compiled under _ISOMAC, so libc-symbols.h does not do this
+   for us.  */
+#include "config.h"
+#ifdef HAVE_CC_INHIBIT_LOOP_TO_LIBCALL
+# define inhibit_loop_to_libcall \
+    __attribute__ ((__optimize__ ("-fno-tree-loop-distribute-patterns")))
+#else
+# define inhibit_loop_to_libcall
+#endif
+
 typedef struct
 {
   const char *name;

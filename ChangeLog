@@ -1,3 +1,12 @@
+2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/Makefile: Define _ISOMAC.
+	* benchtests/bench-strcoll.c: Add missing sys/stat.h include.
+	* benchtests/bench-string.h: Define inhibit_loop_to_libcall macro.
+	* benchtests/bench-strstr.c: Define empty libc_hidden_builtin_def.
+	* benchtests/bench-strtok.c (oldstrtok): Use rawmemchr.
+	* benchtests/bench-timing.h: Define attribute_hidden.
+
 2018-03-15  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of

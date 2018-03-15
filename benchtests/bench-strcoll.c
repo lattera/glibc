@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "json-lib.h"
 #include "bench-timing.h"
 #include <string.h>

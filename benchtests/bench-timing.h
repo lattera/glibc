@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define attribute_hidden
 #include <hp-timing.h>
 #include <stdint.h>
 

@@ -42,7 +42,7 @@ oldstrtok (char *s, const char *delim)
   s = strpbrk (token, delim);
   if (s == NULL)
     /* This token finishes the string.  */
-    olds = __rawmemchr (token, '\0');
+    olds = rawmemchr (token, '\0');
   else
     {
       /* Terminate the token and make OLDS point past it.  */
