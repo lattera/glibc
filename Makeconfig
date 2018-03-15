@@ -831,6 +831,9 @@ endif
 # disable any optimization that assume default rounding mode.
 +math-flags = -frounding-math
 
+# Build libc/libm using -fno-math-errno, but run testsuite with -fmath-errno.
++extra-math-flags = $(if $(filter libnldbl nonlib testsuite,$(in-module)),-fmath-errno,-fno-math-errno)
+
 # We might want to compile with some stack-protection flag.
 ifneq ($(stack-protector),)
 +stack-protector=$(stack-protector)
@@ -966,6 +969,7 @@ endif
 
 override CFLAGS	= -std=gnu11 -fgnu89-inline $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
+		  $(+extra-math-flags) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
 		  $(CFLAGS-$(@F)) $(tls-model) \
 		  $(foreach lib,$(libof-$(basename $(@F))) \

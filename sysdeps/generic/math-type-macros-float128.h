@@ -19,9 +19,6 @@
 #ifndef _MATH_TYPE_MACROS_FLOAT128
 #define _MATH_TYPE_MACROS_FLOAT128
 
-#include <math.h>
-#include <complex.h>
-
 #define M_LIT(c) __f128 (c)
 #define M_PFX FLT128
 #define M_SUF(c) c ## f128

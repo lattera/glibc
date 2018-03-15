@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <math_private.h>
 #include <math-svid-compat.h>
