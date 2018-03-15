@@ -116,7 +116,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	    t1 = 0;
 	    SET_LDOUBLE_MSW64(t1,ha);
 	    t2 = a-t1;
-	    w  = __ieee754_sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
+	    w  = sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
 	} else {
 	    a  = a+a;
 	    y1 = 0;
@@ -125,7 +125,7 @@ __ieee754_hypotl(_Float128 x, _Float128 y)
 	    t1 = 0;
 	    SET_LDOUBLE_MSW64(t1,ha+0x0001000000000000LL);
 	    t2 = a - t1;
-	    w  = __ieee754_sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
+	    w  = sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
 	}
 	if(k!=0) {
 	    uint64_t high;

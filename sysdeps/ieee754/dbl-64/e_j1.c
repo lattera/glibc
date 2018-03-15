@@ -112,11 +112,11 @@ __ieee754_j1 (double x)
        * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
        */
       if (ix > 0x48000000)
-	z = (invsqrtpi * cc) / __ieee754_sqrt (y);
+	z = (invsqrtpi * cc) / sqrt (y);
       else
 	{
 	  u = pone (y); v = qone (y);
-	  z = invsqrtpi * (u * cc - v * ss) / __ieee754_sqrt (y);
+	  z = invsqrtpi * (u * cc - v * ss) / sqrt (y);
 	}
       if (hx < 0)
 	return -z;
@@ -203,11 +203,11 @@ __ieee754_y1 (double x)
        * to compute the worse one.
        */
       if (ix > 0x48000000)
-	z = (invsqrtpi * ss) / __ieee754_sqrt (x);
+	z = (invsqrtpi * ss) / sqrt (x);
       else
 	{
 	  u = pone (x); v = qone (x);
-	  z = invsqrtpi * (u * ss + v * cc) / __ieee754_sqrt (x);
+	  z = invsqrtpi * (u * ss + v * cc) / sqrt (x);
 	}
       return z;
     }

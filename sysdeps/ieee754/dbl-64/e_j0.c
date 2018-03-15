@@ -109,11 +109,11 @@ __ieee754_j0 (double x)
        * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
        */
       if (ix > 0x48000000)
-	z = (invsqrtpi * cc) / __ieee754_sqrt (x);
+	z = (invsqrtpi * cc) / sqrt (x);
       else
 	{
 	  u = pzero (x); v = qzero (x);
-	  z = invsqrtpi * (u * cc - v * ss) / __ieee754_sqrt (x);
+	  z = invsqrtpi * (u * cc - v * ss) / sqrt (x);
 	}
       return z;
     }
@@ -200,11 +200,11 @@ __ieee754_y0 (double x)
 	    ss = z / cc;
 	}
       if (ix > 0x48000000)
-	z = (invsqrtpi * ss) / __ieee754_sqrt (x);
+	z = (invsqrtpi * ss) / sqrt (x);
       else
 	{
 	  u = pzero (x); v = qzero (x);
-	  z = invsqrtpi * (u * ss + v * cc) / __ieee754_sqrt (x);
+	  z = invsqrtpi * (u * ss + v * cc) / sqrt (x);
 	}
       return z;
     }

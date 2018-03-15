@@ -53,10 +53,10 @@ __ieee754_acoshl(long double x)
 	    return 0.0;			/* acosh(1) = 0 */
 	} else if (hx > 0x4000000000000000LL) {	/* 2**56 > x > 2 */
 	    t=x*x;
-	    return __ieee754_logl(2.0*x-one/(x+__ieee754_sqrtl(t-one)));
+	    return __ieee754_logl(2.0*x-one/(x+sqrtl(t-one)));
 	} else {			/* 1<x<2 */
 	    t = x-one;
-	    return __log1pl(t+__ieee754_sqrtl(2.0*t+t*t));
+	    return __log1pl(t+sqrtl(2.0*t+t*t));
 	}
 }
 strong_alias (__ieee754_acoshl, __acoshl_finite)

@@ -27,6 +27,58 @@
 
 2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/e_acosh.c (__ieee754_acosh): Use sqrt.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Likewise.
+	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Likewise.
+	* sysdeps/ieee754/dbl-64/e_j0.c (__ieee754_j0): Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_j1): Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_jn): Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c (__asinh): Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/e_acosh.c (__ieee754_acosh):
+	Likewise.
+	* sysdeps/ieee754/flt-32/e_acosf.c (__ieee754_acosf): Likewise.
+	* sysdeps/ieee754/flt-32/e_acoshf.c (__ieee754_acoshf): Likewise.
+	* sysdeps/ieee754/flt-32/e_asinf.c (__ieee754_asinf): Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c (gammaf_positive): Likewise.
+	* sysdeps/ieee754/flt-32/e_hypotf.c (__ieee754_hypotf): Likewise.
+	* sysdeps/ieee754/flt-32/e_j0f.c (__ieee754_j0f): Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_j1f): Likewise.
+	* sysdeps/ieee754/flt-32/e_powf.c (__ieee754_powf): Likewise.
+	* sysdeps/ieee754/flt-32/s_asinhf.c (__asinhf): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_acoshl.c (__ieee754_acoshl): Use sqrtl.
+	* sysdeps/ieee754/ldbl-128/e_acosl.c (__ieee754_acosl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c (gammal_positive): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j0l.c (__ieee754_j0l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c (__ieee754_j1l): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c (__ieee754_asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_acoshl.c (__ieee754_acoshl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_acosl.c (__ieee754_acosl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c (gammal_positive): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j0l.c (__ieee754_j0l): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c (__ieee754_j1l): Likewise
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c (__ieee754_powl): Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c (__ieee754_asinhl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_acoshl.c (__ieee754_acoshl): Use sqrtl.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c (__ieee754_asinl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (gammal_positive): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c (__ieee754_hypotl): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c (__ieee754_j0l): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c (__ieee754_j1l): Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c (__ieee754_jnl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c (__ieee754_asinhl): Likewise.
+	* sysdeps/m68k/m680x0/fpu/e_pow.c (__ieee754_pow): Likewise.
+	* sysdeps/powerpc/fpu/e_hypot.c (__ieee754_hypot): Likewise.
+	* sysdeps/powerpc/fpu/e_hypotf.c (__ieee754_hypotf): Likewise.
+
+2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* include/math.h (sqrt): Declare with asm redirect.
 	(sqrtf): Likewise.
 	(sqrtl): Likewise.

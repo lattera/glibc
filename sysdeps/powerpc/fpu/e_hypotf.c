@@ -71,6 +71,6 @@ __ieee754_hypotf (float x, float y)
 {
   TEST_INF_NAN (x, y);
 
-  return __ieee754_sqrt ((double) x * x + (double) y * y);
+  return sqrt ((double) x * x + (double) y * y);
 }
 strong_alias (__ieee754_hypotf, __hypotf_finite)

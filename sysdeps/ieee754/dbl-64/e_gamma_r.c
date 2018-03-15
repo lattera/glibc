@@ -98,7 +98,7 @@ gamma_positive (double x, int *exp2_adj)
       double ret = (__ieee754_pow (x_adj_mant, x_adj)
 		    * __ieee754_exp2 (x_adj_log2 * x_adj_frac)
 		    * __ieee754_exp (-x_adj)
-		    * __ieee754_sqrt (2 * M_PI / x_adj)
+		    * sqrt (2 * M_PI / x_adj)
 		    / prod);
       exp_adj += x_eps * __ieee754_log (x_adj);
       double bsum = gamma_coeff[NCOEFF - 1];

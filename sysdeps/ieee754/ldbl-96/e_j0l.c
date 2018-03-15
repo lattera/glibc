@@ -133,12 +133,12 @@ __ieee754_j0l (long double x)
        * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
        */
       if (__glibc_unlikely (ix > 0x4080))      	/* 2^129 */
-	z = (invsqrtpi * cc) / __ieee754_sqrtl (x);
+	z = (invsqrtpi * cc) / sqrtl (x);
       else
 	{
 	  u = pzero (x);
 	  v = qzero (x);
-	  z = invsqrtpi * (u * cc - v * ss) / __ieee754_sqrtl (x);
+	  z = invsqrtpi * (u * cc - v * ss) / sqrtl (x);
 	}
       return z;
     }
@@ -235,12 +235,12 @@ __ieee754_y0l (long double x)
 	    ss = z / cc;
 	}
       if (__glibc_unlikely (ix > 0x4080))      	/* 1e39 */
-	z = (invsqrtpi * ss) / __ieee754_sqrtl (x);
+	z = (invsqrtpi * ss) / sqrtl (x);
       else
 	{
 	  u = pzero (x);
 	  v = qzero (x);
-	  z = invsqrtpi * (u * ss + v * cc) / __ieee754_sqrtl (x);
+	  z = invsqrtpi * (u * ss + v * cc) / sqrtl (x);
 	}
       return z;
     }

@@ -53,10 +53,10 @@ long double __asinhl(long double x)
 	    w = __ieee754_logl(fabsl(x))+ln2;
 	} else if (ix>0x4000000000000000LL) {	/* 2**56 >= |x| > 2.0 */
 	    t = fabs(x);
-	    w = __ieee754_logl(2.0*t+one/(__ieee754_sqrtl(x*x+one)+t));
+	    w = __ieee754_logl(2.0*t+one/(sqrtl(x*x+one)+t));
 	} else {		/* 2.0 >= |x| >= 2**-56 */
 	    t = x*x;
-	    w =__log1pl(fabsl(x)+t/(one+__ieee754_sqrtl(one+t)));
+	    w =__log1pl(fabsl(x)+t/(one+sqrtl(one+t)));
 	}
 	if(hx>0) return w; else return -w;
 }

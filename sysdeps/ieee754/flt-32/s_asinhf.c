@@ -40,10 +40,10 @@ __asinhf(float x)
 	} else {
 	    float xa = fabsf(x);
 	    if (ix>0x40000000) {	/* 2**14 > |x| > 2.0 */
-		w = __ieee754_logf(2.0f*xa+one/(__ieee754_sqrtf(xa*xa+one)+xa));
+		w = __ieee754_logf(2.0f*xa+one/(sqrtf(xa*xa+one)+xa));
 	    } else {		/* 2.0 > |x| > 2**-14 */
 		float t = xa*xa;
-		w =__log1pf(xa+t/(one+__ieee754_sqrtf(one+t)));
+		w =__log1pf(xa+t/(one+sqrtf(one+t)));
 	    }
 	}
 	return __copysignf(w, x);

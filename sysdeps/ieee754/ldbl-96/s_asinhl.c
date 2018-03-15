@@ -55,10 +55,10 @@ long double __asinhl(long double x)
 	} else {
 	    long double xa = fabsl(x);
 	    if (ix>0x4000) {	/* 2**34 > |x| > 2.0 */
-		w = __ieee754_logl(2.0*xa+one/(__ieee754_sqrtl(xa*xa+one)+xa));
+		w = __ieee754_logl(2.0*xa+one/(sqrtl(xa*xa+one)+xa));
 	    } else {		/* 2.0 > |x| > 2**-28 */
 		t = xa*xa;
-		w =__log1pl(xa+t/(one+__ieee754_sqrtl(one+t)));
+		w =__log1pl(xa+t/(one+sqrtl(one+t)));
 	    }
 	}
 	return __copysignl(w, x);

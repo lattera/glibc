@@ -51,7 +51,7 @@
  *      if x is NaN, return x itself;
  *      if |x|>1, return NaN with invalid signal.
  *
- * Functions needed: __ieee754_sqrtl.
+ * Functions needed: sqrtl.
  */
 
 #include <math.h>
@@ -270,7 +270,7 @@ __ieee754_acosl (_Float128 x)
   else
     {				/* |x| >= .625 */
       z = (one - u.value) * 0.5;
-      s = __ieee754_sqrtl (z);
+      s = sqrtl (z);
       /* Compute an extended precision square root from
 	 the Newton iteration  s -> 0.5 * (s + z / s).
 	 The change w from s to the improved value is

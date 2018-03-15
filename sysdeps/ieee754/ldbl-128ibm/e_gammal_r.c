@@ -106,7 +106,7 @@ gammal_positive (long double x, int *exp2_adj)
       long double ret = (__ieee754_powl (x_adj_mant, x_adj)
 			 * __ieee754_exp2l (x_adj_log2 * x_adj_frac)
 			 * __ieee754_expl (-x_adj)
-			 * __ieee754_sqrtl (2 * M_PIl / x_adj)
+			 * sqrtl (2 * M_PIl / x_adj)
 			 / prod);
       exp_adj += x_eps * __ieee754_logl (x_adj);
       long double bsum = gamma_coeff[NCOEFF - 1];

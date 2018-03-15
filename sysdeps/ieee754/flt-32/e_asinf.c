@@ -85,7 +85,7 @@ float __ieee754_asinf(float x)
 	w = one-fabsf(x);
 	t = w*0.5f;
 	p = t * (p0 + t * (p1 + t * (p2 + t * (p3 + t * p4))));
-	s = __ieee754_sqrtf(t);
+	s = sqrtf(t);
 	if(ix>=0x3F79999A) {	/* if |x| > 0.975 */
 	    t = pio2_hi-(2.0f*(s+s*p)-pio2_lo);
 	} else {

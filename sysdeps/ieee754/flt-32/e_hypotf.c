@@ -40,6 +40,6 @@ __ieee754_hypotf(float x, float y)
 	d_x = (double) x;
 	d_y = (double) y;
 
-	return (float) __ieee754_sqrt(d_x * d_x + d_y * d_y);
+	return (float) sqrt(d_x * d_x + d_y * d_y);
 }
 strong_alias (__ieee754_hypotf, __hypotf_finite)

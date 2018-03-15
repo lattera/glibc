@@ -132,7 +132,7 @@ __ieee754_asinl (long double x)
   t = w * 0.5;
   p = t * (pS0 + t * (pS1 + t * (pS2 + t * (pS3 + t * (pS4 + t * pS5)))));
   q = qS0 + t * (qS1 + t * (qS2 + t * (qS3 + t * (qS4 + t))));
-  s = __ieee754_sqrtl (t);
+  s = sqrtl (t);
   if (ix >= 0x3ffef999)
     {				/* if |x| > 0.975 */
       w = p / q;

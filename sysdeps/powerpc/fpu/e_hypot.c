@@ -110,7 +110,7 @@ __ieee754_hypot (double x, double y)
     {
       x *= twoM600;
       y *= twoM600;
-      return __ieee754_sqrt (x * x + y * y) / twoM600;
+      return sqrt (x * x + y * y) / twoM600;
     }
   if (y < twoM500)
     {
@@ -118,7 +118,7 @@ __ieee754_hypot (double x, double y)
 	{
 	  x *= two1022;
 	  y *= two1022;
-	  double ret = __ieee754_sqrt (x * x + y * y) / two1022;
+	  double ret = sqrt (x * x + y * y) / two1022;
 	  math_check_force_underflow_nonneg (ret);
 	  return ret;
 	}
@@ -126,9 +126,9 @@ __ieee754_hypot (double x, double y)
 	{
 	  x *= two600;
 	  y *= two600;
-	  return __ieee754_sqrt (x * x + y * y) / two600;
+	  return sqrt (x * x + y * y) / two600;
 	}
     }
-  return __ieee754_sqrt (x * x + y * y);
+  return sqrt (x * x + y * y);
 }
 strong_alias (__ieee754_hypot, __hypot_finite)

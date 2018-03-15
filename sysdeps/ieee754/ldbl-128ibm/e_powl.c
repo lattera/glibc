@@ -233,7 +233,7 @@ __ieee754_powl (long double x, long double y)
 	  if (hy == 0x3fe00000)
 	    {			/* y is  0.5 */
 	      if (hx >= 0)		/* x >= +0 */
-		return __ieee754_sqrtl (x);
+		return sqrtl (x);
 	    }
 	}
     }

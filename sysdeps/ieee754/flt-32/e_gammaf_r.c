@@ -91,7 +91,7 @@ gammaf_positive (float x, int *exp2_adj)
       float ret = (__ieee754_powf (x_adj_mant, x_adj)
 		   * __ieee754_exp2f (x_adj_log2 * x_adj_frac)
 		   * __ieee754_expf (-x_adj)
-		   * __ieee754_sqrtf (2 * (float) M_PI / x_adj)
+		   * sqrtf (2 * (float) M_PI / x_adj)
 		   / prod);
       exp_adj += x_eps * __ieee754_logf (x_adj);
       float bsum = gamma_coeff[NCOEFF - 1];

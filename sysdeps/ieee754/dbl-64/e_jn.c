@@ -107,7 +107,7 @@ __ieee754_jn (int n, double x)
 	      case 2: temp = -c - s; break;
 	      case 3: temp = c - s; break;
 	      }
-	    b = invsqrtpi * temp / __ieee754_sqrt (x);
+	    b = invsqrtpi * temp / sqrt (x);
 	  }
 	else
 	  {
@@ -314,7 +314,7 @@ __ieee754_yn (int n, double x)
 	  case 2: temp = -s + c; break;
 	  case 3: temp = s + c; break;
 	  }
-	b = invsqrtpi * temp / __ieee754_sqrt (x);
+	b = invsqrtpi * temp / sqrt (x);
       }
     else
       {

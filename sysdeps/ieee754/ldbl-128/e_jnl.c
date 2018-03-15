@@ -149,7 +149,7 @@ __ieee754_jnl (int n, _Float128 x)
 		temp = c - s;
 		break;
 	      }
-	    b = invsqrtpi * temp / __ieee754_sqrtl (x);
+	    b = invsqrtpi * temp / sqrtl (x);
 	  }
 	else
 	  {
@@ -385,7 +385,7 @@ __ieee754_ynl (int n, _Float128 x)
 	    temp = s + c;
 	    break;
 	  }
-	b = invsqrtpi * temp / __ieee754_sqrtl (x);
+	b = invsqrtpi * temp / sqrtl (x);
       }
     else
       {

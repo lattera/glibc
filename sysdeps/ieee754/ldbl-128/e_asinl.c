@@ -231,7 +231,7 @@ __ieee754_asinl (_Float128 x)
       return x + x * w;
     }
 
-  s = __ieee754_sqrtl (t);
+  s = sqrtl (t);
   if (ix >= 0x3ffef333) /* |x| > 0.975 */
     {
       w = p / q;

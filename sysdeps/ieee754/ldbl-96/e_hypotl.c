@@ -117,7 +117,7 @@ long double __ieee754_hypotl(long double x, long double y)
 	    GET_LDOUBLE_MSW(high,a);
 	    SET_LDOUBLE_WORDS(t1,ea,high,0);
 	    t2 = a-t1;
-	    w  = __ieee754_sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
+	    w  = sqrtl(t1*t1-(b*(-b)-t2*(a+t1)));
 	} else {
 	    uint32_t high;
 	    GET_LDOUBLE_MSW(high,b);
@@ -127,7 +127,7 @@ long double __ieee754_hypotl(long double x, long double y)
 	    GET_LDOUBLE_MSW(high,a);
 	    SET_LDOUBLE_WORDS(t1,ea+1,high,0);
 	    t2 = a - t1;
-	    w  = __ieee754_sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
+	    w  = sqrtl(t1*y1-(w*(-w)-(t1*y2+t2*b)));
 	}
 	if(k!=0) {
 	    uint32_t exp;

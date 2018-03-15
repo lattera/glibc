@@ -51,13 +51,13 @@ __ieee754_acosh (double x)
 
       /* 2**28 > x > 2 */
       double t = x * x;
-      return __ieee754_log (2.0 * x - one / (x + __ieee754_sqrt (t - one)));
+      return __ieee754_log (2.0 * x - one / (x + sqrt (t - one)));
     }
   else if (__glibc_likely (hx > INT64_C (0x3ff0000000000000)))
     {
       /* 1<x<2 */
       double t = x - one;
-      return __log1p (t + __ieee754_sqrt (2.0 * t + t * t));
+      return __log1p (t + sqrt (2.0 * t + t * t));
     }
   else if (__glibc_likely (hx == INT64_C (0x3ff0000000000000)))
     return 0.0;				/* acosh(1) = 0 */

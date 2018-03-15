@@ -55,13 +55,13 @@ __asinh (double x)
       double xa = fabs (x);
       if (ix > 0x40000000)              /* 2**28 > |x| > 2.0 */
 	{
-	  w = __ieee754_log (2.0 * xa + one / (__ieee754_sqrt (xa * xa + one) +
+	  w = __ieee754_log (2.0 * xa + one / (sqrt (xa * xa + one) +
               xa));
 	}
       else                      /* 2.0 > |x| > 2**-28 */
 	{
 	  double t = xa * xa;
-	  w = __log1p (xa + t / (one + __ieee754_sqrt (one + t)));
+	  w = __log1p (xa + t / (one + sqrt (one + t)));
 	}
     }
   return __copysign (w, x);

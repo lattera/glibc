@@ -650,7 +650,7 @@ __ieee754_j0l (long double x)
     }
 
   if (xx > 0x1p256L)
-    return ONEOSQPI * cc / __ieee754_sqrtl (xx);
+    return ONEOSQPI * cc / sqrtl (xx);
 
   xinv = 1 / xx;
   z = xinv * xinv;
@@ -713,7 +713,7 @@ __ieee754_j0l (long double x)
   p = 1 + z * p;
   q = z * xinv * q;
   q = q - 0.125L * xinv;
-  z = ONEOSQPI * (p * cc - q * ss) / __ieee754_sqrtl (xx);
+  z = ONEOSQPI * (p * cc - q * ss) / sqrtl (xx);
   return z;
 }
 strong_alias (__ieee754_j0l, __j0l_finite)
@@ -795,7 +795,7 @@ long double
     }
 
   if (xx > 0x1p256L)
-    return ONEOSQPI * ss / __ieee754_sqrtl (x);
+    return ONEOSQPI * ss / sqrtl (x);
 
   xinv = 1 / xx;
   z = xinv * xinv;
@@ -858,7 +858,7 @@ long double
   p = 1 + z * p;
   q = z * xinv * q;
   q = q - 0.125L * xinv;
-  z = ONEOSQPI * (p * ss + q * cc) / __ieee754_sqrtl (x);
+  z = ONEOSQPI * (p * ss + q * cc) / sqrtl (x);
   return z;
 }
 strong_alias (__ieee754_y0l, __y0l_finite)

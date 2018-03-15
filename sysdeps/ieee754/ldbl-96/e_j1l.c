@@ -137,12 +137,12 @@ __ieee754_j1l (long double x)
        * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
        */
       if (__glibc_unlikely (ix > 0x4080))
-	z = (invsqrtpi * cc) / __ieee754_sqrtl (y);
+	z = (invsqrtpi * cc) / sqrtl (y);
       else
 	{
 	  u = pone (y);
 	  v = qone (y);
-	  z = invsqrtpi * (u * cc - v * ss) / __ieee754_sqrtl (y);
+	  z = invsqrtpi * (u * cc - v * ss) / sqrtl (y);
 	}
       if (se & 0x8000)
 	return -z;
@@ -231,12 +231,12 @@ __ieee754_y1l (long double x)
        * to compute the worse one.
        */
       if (__glibc_unlikely (ix > 0x4080))
-	z = (invsqrtpi * ss) / __ieee754_sqrtl (x);
+	z = (invsqrtpi * ss) / sqrtl (x);
       else
 	{
 	  u = pone (x);
 	  v = qone (x);
-	  z = invsqrtpi * (u * ss + v * cc) / __ieee754_sqrtl (x);
+	  z = invsqrtpi * (u * ss + v * cc) / sqrtl (x);
 	}
       return z;
     }
