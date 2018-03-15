@@ -1,3 +1,30 @@
+2018-03-15  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86/fpu/bits/mathinline.h [__FAST_MATH__]
+	(__sincos_code): Remove define and undefine.
+	[__FAST_MATH__] (__sincos): Remove inline function.
+	[__FAST_MATH__] (__sincosf): Remove inline function.
+	[__FAST_MATH__] (__sincosl): Remove inline function.
+	(__atan2l): Remove inline functions.
+	[!__GNUC_PREREQ (3, 4)] (__atan2_code): Remove macro.
+	[!__GNUC_PREREQ (3, 4) && __FAST_MATH__] (atan2): Remove inline
+	function.
+	(floor): Remove inline function.
+	(ceil): Likewise.
+	[__FAST_MATH__] (__ldexp_code): Remove macro.
+	[__FAST_MATH__] (ldexp): Remove inline function.
+	[__FAST_MATH__ && __USE_ISOC99] (ldexpf): Likewise.
+	[__FAST_MATH__ && __USE_ISOC99] (ldexpl): Likewise.
+	[__FAST_MATH__ && __USE_ISOC99] (rint): Likewise.
+	[__USE_ISOC99] (__lrint_code): Remove macro.
+	[__USE_ISOC99] (__llrint_code): Likewise.
+	[__USE_ISOC99] (lrintf): Remove inline function.
+	[__USE_ISOC99] (lrint): Likewise.
+	[__USE_ISOC99] (lrintl): Likewise.
+	[__USE_ISOC99] (llrint): Likewise.
+	[__USE_ISOC99] (llrintf): Likewise.
+	[__USE_ISOC99] (llrintl): Likewise.
+
 2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/Makefile: Define _ISOMAC.

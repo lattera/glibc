@@ -174,50 +174,6 @@
 
 /* __FAST_MATH__ is defined by gcc -ffast-math.  */
 #  ifdef __FAST_MATH__
-#   ifdef __USE_GNU
-#    define __sincos_code \
-  register long double __cosr;						      \
-  register long double __sinr;						      \
-  register unsigned int __swtmp;					      \
-  __asm __volatile__							      \
-    ("fsincos\n\t"							      \
-     "fnstsw	%w2\n\t"						      \
-     "testl	$0x400, %2\n\t"						      \
-     "jz	1f\n\t"							      \
-     "fldpi\n\t"							      \
-     "fadd	%%st(0)\n\t"						      \
-     "fxch	%%st(1)\n\t"						      \
-     "2: fprem1\n\t"							      \
-     "fnstsw	%w2\n\t"						      \
-     "testl	$0x400, %2\n\t"						      \
-     "jnz	2b\n\t"							      \
-     "fstp	%%st(1)\n\t"						      \
-     "fsincos\n\t"							      \
-     "1:"								      \
-     : "=t" (__cosr), "=u" (__sinr), "=a" (__swtmp) : "0" (__x));	      \
-  *__sinx = __sinr;							      \
-  *__cosx = __cosr
-
-__MATH_INLINE void
-__NTH (__sincos (double __x, double *__sinx, double *__cosx))
-{
-  __sincos_code;
-}
-
-__MATH_INLINE void
-__NTH (__sincosf (float __x, float *__sinx, float *__cosx))
-{
-  __sincos_code;
-}
-
-__MATH_INLINE void
-__NTH (__sincosl (long double __x, long double *__sinx, long double *__cosx))
-{
-  __sincos_code;
-}
-#   endif
-
-
 /* Optimized inline implementation, sometimes with reduced precision
    and/or argument range.  */
 
@@ -276,23 +232,6 @@ __inline_mathcodeNP_ (long double, __expl, __x, __exp_code)
 #  endif /* __FAST_MATH__ */
 
 
-#  if __GNUC_PREREQ (3, 4)
-__inline_mathcodeNP2_ (long double, __atan2l, __y, __x,
-		       return __builtin_atan2l (__y, __x))
-#  else
-#   define __atan2_code \
-  register long double __value;						      \
-  __asm __volatile__							      \
-    ("fpatan"								      \
-     : "=t" (__value) : "0" (__x), "u" (__y) : "st(1)");		      \
-  return __value
-#   ifdef __FAST_MATH__
-__inline_mathcodeNP2 (atan2, __y, __x, __atan2_code)
-#   endif
-__inline_mathcodeNP2_ (long double, __atan2l, __y, __x, __atan2_code)
-#  endif
-
-
 #  ifdef __FAST_MATH__
 #   if !__GNUC_PREREQ (3,3)
 __inline_mathopNP (sqrt, "fsqrt")
@@ -339,57 +278,6 @@ __inline_mathcodeNP (tanh, __x, \
   return __exm1 / (__exm1 + 2.0) * __sgn1l (-__x))
 #  endif
 
-__inline_mathcodeNP (floor, __x, \
-  register long double __value;						      \
-  register int __ignore;						      \
-  unsigned short int __cw;						      \
-  unsigned short int __cwtmp;						      \
-  __asm __volatile ("fnstcw %3\n\t"					      \
-		    "movzwl %3, %1\n\t"					      \
-		    "andl $0xf3ff, %1\n\t"				      \
-		    "orl $0x0400, %1\n\t"	/* rounding down */	      \
-		    "movw %w1, %2\n\t"					      \
-		    "fldcw %2\n\t"					      \
-		    "frndint\n\t"					      \
-		    "fldcw %3"						      \
-		    : "=t" (__value), "=&q" (__ignore), "=m" (__cwtmp),	      \
-		      "=m" (__cw)					      \
-		    : "0" (__x));					      \
-  return __value)
-
-__inline_mathcodeNP (ceil, __x, \
-  register long double __value;						      \
-  register int __ignore;						      \
-  unsigned short int __cw;						      \
-  unsigned short int __cwtmp;						      \
-  __asm __volatile ("fnstcw %3\n\t"					      \
-		    "movzwl %3, %1\n\t"					      \
-		    "andl $0xf3ff, %1\n\t"				      \
-		    "orl $0x0800, %1\n\t"	/* rounding up */	      \
-		    "movw %w1, %2\n\t"					      \
-		    "fldcw %2\n\t"					      \
-		    "frndint\n\t"					      \
-		    "fldcw %3"						      \
-		    : "=t" (__value), "=&q" (__ignore), "=m" (__cwtmp),	      \
-		      "=m" (__cw)					      \
-		    : "0" (__x));					      \
-  return __value)
-
-#  ifdef __FAST_MATH__
-#   define __ldexp_code \
-  register long double __value;						      \
-  __asm __volatile__							      \
-    ("fscale"								      \
-     : "=t" (__value) : "0" (__x), "u" ((long double) __y));		      \
-  return __value
-
-__MATH_INLINE double
-__NTH (ldexp (double __x, int __y))
-{
-  __ldexp_code;
-}
-#  endif
-
 
 /* Optimized versions for some non-standardized functions.  */
 #  ifdef __USE_ISOC99
@@ -417,75 +305,6 @@ __inline_mathcodeNP2 (hypot, __x, __y,
 #   endif
 #  endif
 
-#  ifdef __USE_ISOC99
-#   ifdef __FAST_MATH__
-
-__MATH_INLINE float
-__NTH (ldexpf (float __x, int __y))
-{
-  __ldexp_code;
-}
-
-__MATH_INLINE long double
-__NTH (ldexpl (long double __x, int __y))
-{
-  __ldexp_code;
-}
-
-__inline_mathopNP (rint, "frndint")
-#   endif /* __FAST_MATH__ */
-
-#   define __lrint_code \
-  long int __lrintres;							      \
-  __asm__ __volatile__							      \
-    ("fistpl %0"							      \
-     : "=m" (__lrintres) : "t" (__x) : "st");				      \
-  return __lrintres
-__MATH_INLINE long int
-__NTH (lrintf (float __x))
-{
-  __lrint_code;
-}
-__MATH_INLINE long int
-__NTH (lrint (double __x))
-{
-  __lrint_code;
-}
-__MATH_INLINE long int
-__NTH (lrintl (long double __x))
-{
-  __lrint_code;
-}
-#   undef __lrint_code
-
-#   define __llrint_code \
-  long long int __llrintres;						      \
-  __asm__ __volatile__							      \
-    ("fistpll %0"							      \
-     : "=m" (__llrintres) : "t" (__x) : "st");				      \
-  return __llrintres
-__extension__
-__MATH_INLINE long long int
-__NTH (llrintf (float __x))
-{
-  __llrint_code;
-}
-__extension__
-__MATH_INLINE long long int
-__NTH (llrint (double __x))
-{
-  __llrint_code;
-}
-__extension__
-__MATH_INLINE long long int
-__NTH (llrintl (long double __x))
-{
-  __llrint_code;
-}
-#   undef __llrint_code
-
-# endif
-
 
 #  ifdef __USE_MISC
 
@@ -501,11 +320,9 @@ __NTH (__finite (double __x))
 #  endif /* __USE_MISC  */
 
 /* Undefine some of the large macros which are not used anymore.  */
-#  undef __atan2_code
 #  ifdef __FAST_MATH__
 #   undef __expm1_code
 #   undef __exp_code
-#   undef __sincos_code
 #  endif /* __FAST_MATH__ */
 
 # endif /* __NO_MATH_INLINES  */
