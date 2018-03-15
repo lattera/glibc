@@ -1,3 +1,8 @@
+2018-03-15  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of
+	mov + lsr.
+
 2018-03-15  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #22963]
