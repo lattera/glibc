@@ -27,6 +27,29 @@
 
 2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/aarch64/fpu/math_private.h (__ieee754_sqrt): Remove.
+	(__ieee754_sqrtf): Remove.
+	* sysdeps/alpha/fpu/math_private.h (__ieee754_sqrt): Remove.
+	(__ieee754_sqrtf): Remove.
+	* sysdeps/generic/math-type-macros.h (M_SQRT): Use sqrt.
+	* sysdeps/m68k/m680x0/fpu/mathimpl.h (__ieee754_sqrt): Remove.
+	* sysdeps/powerpc/fpu/math_private.h (__ieee754_sqrt): Remove.
+	(__ieee754_sqrtf): Remove.
+	* sysdeps/s390/fpu/bits/mathinline.h: Remove file.
+	* sysdeps/sparc/fpu/bits/mathinline.h (sqrt) Remove.
+	(sqrtf): Remove.
+	(sqrtl): Remove.
+	(__ieee754_sqrt): Remove.
+	(__ieee754_sqrtf): Remove.
+	(__ieee754_sqrtl): Remove.
+	* sysdeps/m68k/m680x0/fpu/mathimpl.h (__ieee754_sqrt): Remove.
+	* sysdeps/x86/fpu/math_private.h (__ieee754_sqrt): Remove.
+	* sysdeps/x86_64/fpu/math_private.h (__ieee754_sqrt): Remove.
+	(__ieee754_sqrtf): Remove.
+	(__ieee754_sqrtl): Remove.
+
+2018-03-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/dbl-64/e_acosh.c (__ieee754_acosh): Use sqrt.
 	* sysdeps/ieee754/dbl-64/e_gamma_r.c (gamma_positive): Likewise.
 	* sysdeps/ieee754/dbl-64/e_hypot.c (__ieee754_hypot): Likewise.

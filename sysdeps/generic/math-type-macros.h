@@ -91,7 +91,7 @@
 #define M_HYPOT M_SUF (__ieee754_hypot)
 #define M_LOG M_SUF (__ieee754_log)
 #define M_SINH M_SUF (__ieee754_sinh)
-#define M_SQRT M_SUF (__ieee754_sqrt)
+#define M_SQRT M_SUF (sqrt)
 
 /* Needed to evaluate M_MANT_DIG below.  */
 #include <float.h>

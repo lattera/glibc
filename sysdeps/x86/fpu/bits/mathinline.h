@@ -330,7 +330,6 @@ __NTH (__finite (double __x))
 
 /* This code is used internally in the GNU libc.  */
 # ifdef __LIBC_INTERNAL_MATH_INLINES
-__inline_mathop (__ieee754_sqrt, "fsqrt")
 __inline_mathcode2_ (long double, __ieee754_atan2l, __y, __x,
 		     register long double __value;
 		     __asm __volatile__ ("fpatan\n\t"

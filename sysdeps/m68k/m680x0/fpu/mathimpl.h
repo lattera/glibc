@@ -30,7 +30,6 @@ __inline_mathop	(__ieee754_exp10, tentox,)
 __inline_mathop	(__ieee754_log10, log10,)
 __inline_mathop	(__ieee754_log2, log2,)
 __inline_mathop	(__ieee754_log, logn,)
-__inline_mathop	(__ieee754_sqrt, sqrt,)
 __inline_mathop	(__ieee754_atanh, atanh,)
 
 __m81_defun (double, __ieee754_remainder, (double __x, double __y),)

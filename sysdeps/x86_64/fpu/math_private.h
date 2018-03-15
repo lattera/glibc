@@ -48,38 +48,6 @@
 #include <sysdeps/i386/fpu/fenv_private.h>
 #include_next <math_private.h>
 
-extern __always_inline double
-__ieee754_sqrt (double d)
-{
-  double res;
-#if defined __AVX__ || defined SSE2AVX
-  asm ("vsqrtsd %1, %0, %0" : "=x" (res) : "xm" (d));
-#else
-  asm ("sqrtsd %1, %0" : "=x" (res) : "xm" (d));
-#endif
-  return res;
-}
-
-extern __always_inline float
-__ieee754_sqrtf (float d)
-{
-  float res;
-#if defined __AVX__ || defined SSE2AVX
-  asm ("vsqrtss %1, %0, %0" : "=x" (res) : "xm" (d));
-#else
-  asm ("sqrtss %1, %0" : "=x" (res) : "xm" (d));
-#endif
-  return res;
-}
-
-extern __always_inline long double
-__ieee754_sqrtl (long double d)
-{
-  long double res;
-  asm ("fsqrt" : "=t" (res) : "0" (d));
-  return res;
-}
-
 #ifdef __SSE4_1__
 extern __always_inline double
 __rint (double d)
