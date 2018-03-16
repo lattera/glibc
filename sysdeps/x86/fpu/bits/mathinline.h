@@ -306,19 +306,6 @@ __inline_mathcodeNP2 (hypot, __x, __y,
 #  endif
 
 
-#  ifdef __USE_MISC
-
-/* This function is used in the `isfinite' macro.  */
-__MATH_INLINE int
-__NTH (__finite (double __x))
-{
-  return (__extension__
-	  (((((union { double __d; int __i[2]; }) {__d: __x}).__i[1]
-	     | 0x800fffffu) + 1) >> 31));
-}
-
-#  endif /* __USE_MISC  */
-
 /* Undefine some of the large macros which are not used anymore.  */
 #  ifdef __FAST_MATH__
 #   undef __expm1_code

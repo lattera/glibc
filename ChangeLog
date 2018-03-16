@@ -1,5 +1,8 @@
 2018-03-16  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/x86/fpu/bits/mathinline.h [__USE_MISC] (__finite):
+	Remove inline function.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Update.
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
 
