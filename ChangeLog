@@ -1,3 +1,8 @@
+2018-03-16  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/m68k/m680x0/fpu/mathimpl.h (__ieee754_sqrt): Revert previous
+	commit.
+
 2018-03-15  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/bits/mathinline.h [__FAST_MATH__]
