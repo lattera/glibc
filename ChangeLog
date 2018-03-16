@@ -1,3 +1,8 @@
+2018-03-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update.
+	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Likewise.
+
 2018-03-16  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/m68k/m680x0/fpu/mathimpl.h (__ieee754_sqrt): Revert previous
