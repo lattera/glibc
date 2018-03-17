@@ -63,7 +63,7 @@ typedef struct
 #define __LIBC_NO_TLS()							      \
   ({ unsigned short ds, gs;						      \
      asm ("movw %%ds,%w0; movw %%gs,%w1" : "=q" (ds), "=q" (gs));	      \
-     __builtin_expect(ds == gs, 0); })
+     __builtin_expect (ds == gs, 0); })
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
@@ -105,7 +105,7 @@ typedef struct
       | (((unsigned int) (tcb)) & 0xff000000) /* base 24..31 */		      \
     }
 
-# define HURD_SEL_LDT(sel) (__builtin_expect((sel) & 4, 0))
+# define HURD_SEL_LDT(sel) (__builtin_expect ((sel) & 4, 0))
 
 static inline const char * __attribute__ ((unused))
 _hurd_tls_init (tcbhead_t *tcb)
@@ -163,13 +163,13 @@ _hurd_tls_init (tcbhead_t *tcb)
      struct descriptor __desc, *___desc = &__desc;			      \
      unsigned int __count = 1;						      \
      kern_return_t __err;						      \
-     if (HURD_SEL_LDT(__sel))						      \
+     if (HURD_SEL_LDT (__sel))						      \
        __err = __i386_get_ldt ((thread), __sel, 1, &___desc, &__count);	      \
      else								      \
        __err = __i386_get_gdt ((thread), __sel, &__desc);		      \
      assert_perror (__err);						      \
      assert (__count == 1);						      \
-     HURD_DESC_TLS(___desc);})
+     HURD_DESC_TLS (___desc);})
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtvp)						      \
@@ -198,7 +198,7 @@ _hurd_tls_fork (thread_t child, thread_t orig, struct i386_thread_state *state)
   error_t err;
   unsigned int count = 1;
 
-  if (HURD_SEL_LDT(sel))
+  if (HURD_SEL_LDT (sel))
     err = __i386_get_ldt (orig, sel, 1, &_desc, &count);
   else
     err = __i386_get_gdt (orig, sel, &desc);
@@ -207,7 +207,7 @@ _hurd_tls_fork (thread_t child, thread_t orig, struct i386_thread_state *state)
   if (err)
     return err;
 
-  if (HURD_SEL_LDT(sel))
+  if (HURD_SEL_LDT (sel))
     err = __i386_set_ldt (child, sel, &desc, 1);
   else
     err = __i386_set_gdt (child, &sel, desc);
@@ -231,7 +231,7 @@ _hurd_tls_new (thread_t child, struct i386_thread_state *state, tcbhead_t *tcb)
   tcb->tcb = tcb;
   tcb->self = child;
 
-  if (HURD_SEL_LDT(sel))
+  if (HURD_SEL_LDT (sel))
     err = __i386_set_ldt (child, sel, &desc, 1);
   else
     err = __i386_set_gdt (child, &sel, desc);

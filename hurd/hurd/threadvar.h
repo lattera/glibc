@@ -49,6 +49,6 @@ extern mach_port_t __hurd_reply_port0;
 
 /* This returns either the TLS reply port variable, or a single-thread variable
    when TLS is not initialized yet.  */
-#define __hurd_local_reply_port (*(__LIBC_NO_TLS() ? &__hurd_reply_port0 : &THREAD_SELF->reply_port))
+#define __hurd_local_reply_port (*(__LIBC_NO_TLS () ? &__hurd_reply_port0 : &THREAD_SELF->reply_port))
 
 #endif	/* hurd/threadvar.h */

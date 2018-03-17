@@ -180,7 +180,7 @@ _hurd_critical_section_lock (void)
   struct hurd_sigstate *ss;
 
 #ifdef __LIBC_NO_TLS
-  if (__LIBC_NO_TLS())
+  if (__LIBC_NO_TLS ())
     /* TLS is currently initializing, no need to enter critical section.  */
     return NULL;
 #endif
