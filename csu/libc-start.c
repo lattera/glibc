@@ -194,7 +194,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   ARCH_SETUP_IREL ();
 
   /* The stack guard goes into the TCB, so initialize it early.  */
-  __libc_setup_tls ();
+  ARCH_SETUP_TLS ();
 
   /* In some architectures, IREL{,A} relocations happen after TLS setup in
      order to let IFUNC resolvers benefit from TCB information, e.g. powerpc's

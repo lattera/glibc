@@ -104,12 +104,12 @@ init1 (int argc, char *arg0, ...)
     ++envp;
   d = (void *) ++envp;
 
+#ifndef SHARED
   /* If we are the bootstrap task started by the kernel,
      then after the environment pointers there is no Hurd
      data block; the argument strings start there.  */
   if ((void *) d == argv[0] || d->phdr == 0)
     {
-#ifndef SHARED
       /* With a new enough linker (binutils-2.23 or better),
          the magic __ehdr_start symbol will be available and
          __libc_start_main will have done this that way already.  */
@@ -124,17 +124,26 @@ init1 (int argc, char *arg0, ...)
           _dl_phnum = ehdr->e_phnum;
           assert (ehdr->e_phentsize == sizeof (ElfW(Phdr)));
         }
-#endif
-      return;
+    }
+  else
+    {
+      __libc_enable_secure = d->flags & EXEC_SECURE;
+
+      _dl_phdr = (ElfW(Phdr) *) d->phdr;
+      _dl_phnum = d->phdrsz / sizeof (ElfW(Phdr));
+      assert (d->phdrsz % sizeof (ElfW(Phdr)) == 0);
     }
 
-#ifndef SHARED
-  __libc_enable_secure = d->flags & EXEC_SECURE;
-
-  _dl_phdr = (ElfW(Phdr) *) d->phdr;
-  _dl_phnum = d->phdrsz / sizeof (ElfW(Phdr));
-  assert (d->phdrsz % sizeof (ElfW(Phdr)) == 0);
+  __libc_setup_tls ();
 #endif
+
+  /* Initialize libpthread if linked in.  */
+  if (__pthread_initialize_minimal != NULL)
+    __pthread_initialize_minimal ();
+
+  if ((void *) d == argv[0])
+    /* No Hurd data block to process.  */
+    return;
 
   _hurd_init_dtable = d->dtable;
   _hurd_init_dtablesize = d->dtablesize;
