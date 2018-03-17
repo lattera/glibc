@@ -124,8 +124,8 @@ struct __libc_once
 #define __libc_mutex_unlock __mutex_unlock
 #endif
 
-#define __libc_key_create(KEY,DEST) cthread_keycreate (KEY)
-#define __libc_setspecific(KEY,VAL) cthread_setspecific (KEY, VAL)
+#define __libc_key_create(KEY,DEST) __cthread_keycreate (KEY)
+#define __libc_setspecific(KEY,VAL) __cthread_setspecific (KEY, VAL)
 void *__libc_getspecific (__libc_key_t key);
 
 /* XXX until cthreads supports recursive locks */

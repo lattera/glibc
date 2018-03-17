@@ -1258,8 +1258,8 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 
   /* Start the signal thread listening on the message port.  */
 
-#pragma weak cthread_fork
-  if (!cthread_fork)
+#pragma weak __cthread_fork
+  if (!__cthread_fork)
     {
       err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
       assert_perror (err);
@@ -1291,22 +1291,22 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
          we'll let the signal thread's per-thread variables be found as for
          any normal cthread, and just leave the magic __hurd_sigthread_*
          values all zero so they'll be ignored.  */
-#pragma weak cthread_detach
-#pragma weak pthread_getattr_np
-#pragma weak pthread_attr_getstack
-      cthread_t thread = cthread_fork ((cthread_fn_t) &_hurd_msgport_receive,
-				       0);
-      cthread_detach (thread);
+#pragma weak __cthread_detach
+#pragma weak __pthread_getattr_np
+#pragma weak __pthread_attr_getstack
+      __cthread_t thread = __cthread_fork (
+			     (cthread_fn_t) &_hurd_msgport_receive, 0);
+      __cthread_detach (thread);
 
-      if (pthread_getattr_np)
+      if (__pthread_getattr_np)
 	{
 	  /* Record signal thread stack layout for fork() */
 	  pthread_attr_t attr;
 	  void *addr;
 	  size_t size;
 
-	  pthread_getattr_np ((pthread_t) thread, &attr);
-	  pthread_attr_getstack (&attr, &addr, &size);
+	  __pthread_getattr_np ((pthread_t) thread, &attr);
+	  __pthread_attr_getstack (&attr, &addr, &size);
 	  __hurd_sigthread_stack_base = (uintptr_t) addr;
 	  __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + size;
 	}

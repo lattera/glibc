@@ -201,8 +201,8 @@ struct __libc_once
 /* Type for key of thread specific data.  */
 typedef cthread_key_t __libc_key_t;
 
-#define __libc_key_create(KEY,DEST) cthread_keycreate (KEY)
-#define __libc_setspecific(KEY,VAL) cthread_setspecific (KEY, VAL)
+#define __libc_key_create(KEY,DEST) __cthread_keycreate (KEY)
+#define __libc_setspecific(KEY,VAL) __cthread_setspecific (KEY, VAL)
 void *__libc_getspecific (__libc_key_t key);
 
 #endif /* _CTHREADS_ */

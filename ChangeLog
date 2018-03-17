@@ -78,6 +78,28 @@
 	(__mig_dealloc_reply_port): Likewise.
 	(__mig_init): Do not initialize threadvar.
 	* sysdeps/mach/hurd/profil.c: Fix comment.
+	* hurd/Versions (HURD_CTHREADS_0.3): Rename weak refs cthread_fork,
+	cthread_detach, pthread_getattr_np, pthread_attr_getstack,
+	cthread_keycreate, cthread_getspecific, cthread_setspecific to
+	__cthread_fork, __cthread_detach, __pthread_getattr_np,
+	__pthread_attr_getstack, __cthread_keycreate, __cthread_getspecific,
+	__cthread_setspecific.
+	* hurd/hurdsig.c (_hurdsig_init): Use __cthread_fork,
+	__cthread_detach, __pthread_getattr_np, __pthread_attr_getstack,
+	__cthread_t instead of cthread_fork, cthread_detach,
+	pthread_getattr_np, pthread_attr_getstack.
+	* sysdeps/mach/hurd/cthreads.c (cthread_keycreate): Rename to
+	__cthread_keycreate.
+	(cthread_getspecific): Rename to __cthread_getspecific.
+	(cthread_setspecific): Rename to __cthread_setspecific.
+	(__libc_getspecific): Use __cthread_getspecific instead of
+	cthread_getspecific.
+	* sysdeps/mach/hurd/libc-lock.h (__libc_key_create): Use
+	__cthread_keycreate instead of cthread_keycreate.
+	(__libc_setspecific): Use __cthread_setspecific instead of
+	cthread_setspecific.
+	* sysdeps/mach/libc-lock.h (__libc_key_create, __libc_setspecific):
+	Likewise.
 
 2018-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
