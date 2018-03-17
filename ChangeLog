@@ -1,3 +1,35 @@
+2018-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/generic/thread_state.h (MACHINE_NEW_THREAD_STATE_FLAVOR):
+	Define macro.
+	* sysdeps/mach/thread_state.h (MACHINE_THREAD_STATE_FIX_NEW): New macro.
+	* sysdeps/mach/i386/thread_state.h
+	(MACHINE_NEW_THREAD_STATE_FLAVOR): New macro, defined to
+	i386_THREAD_STATE.
+	(MACHINE_THREAD_STATE_FLAVOR): Define to i386_REGS_SEGS_STATE instead of
+	i386_THREAD_STATE.
+	(MACHINE_THREAD_STATE_FIX_NEW): New macro, reads segments.
+
+	* sysdeps/mach/hurd/i386/trampoline.c (_hurd_setup_sighandler): Use
+	i386_REGS_SEGS_STATE instead of i386_THREAD_STATE.
+
+	* sysdeps/mach/hurd/i386/tls.h (TCB_ALIGNMENT, HURD_SEL_LDT): New
+	macros.
+	(_hurd_tls_fork): Add original thread parameter, Duplicate existing LDT
+	descriptor instead of creating a new one.
+	(_hurd_tls_new): New function, creates a new descriptor and updates tcb.
+
+	* mach/setup-thread.c: Include <ldsodefs.h>.
+	(__mach_setup_thread): Call _dl_allocate_tls, pass
+	MACHINE_NEW_THREAD_STATE_FLAVOR to __thread_set_state instead of
+	MACHINE_THREAD_STATE_FLAVOR, before getting
+	MACHINE_THREAD_STATE_FLAVOR, calling _hurd_tls_new, and setting
+	MACHINE_THREAD_STATE_FLAVOR with the result.
+	* hurd/hurdfault.c (_hurdsig_fault_init): Call
+	MACHINE_THREAD_STATE_FIX_NEW.
+	* sysdeps/mach/hurd/fork.c (__fork): Call _hurd_tls_fork for sigthread
+	too.  Add original thread parameter.
+
 2018-03-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86/fpu/bits/mathinline.h [__USE_MISC] (__finite):

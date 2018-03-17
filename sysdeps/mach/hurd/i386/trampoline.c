@@ -62,7 +62,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 		  sizeof (state->basic));
 	  memcpy (&state->fpu, &ss->context->sc_i386_float_state,
 		  sizeof (state->fpu));
-	  state->set |= (1 << i386_THREAD_STATE) | (1 << i386_FLOAT_STATE);
+	  state->set |= (1 << i386_REGS_SEGS_STATE) | (1 << i386_FLOAT_STATE);
 	}
     }
 

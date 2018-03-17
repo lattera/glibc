@@ -19,6 +19,7 @@
 #include <thread_state.h>
 #include <string.h>
 #include <mach/machine/vm_param.h>
+#include <ldsodefs.h>
 #include "sysdep.h"		/* Defines stack direction.  */
 
 #define	STACK_SIZE	(16 * 1024 * 1024) /* 16MB, arbitrary.  */
@@ -41,6 +42,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   vm_address_t stack;
   vm_size_t size;
   int anywhere;
+  tcbhead_t *tcb;
 
   size = stack_size ? *stack_size ? : STACK_SIZE : STACK_SIZE;
   stack = stack_base ? *stack_base ? : 0 : 0;
@@ -49,6 +51,10 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere);
   if (error)
     return error;
+
+  tcb = _dl_allocate_tls(NULL);
+  if (tcb == NULL)
+    return KERN_RESOURCE_SHORTAGE;
 
   if (stack_size)
     *stack_size = size;
@@ -72,8 +78,21 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   if (error = __vm_protect (task, stack, __vm_page_size, 0, VM_PROT_NONE))
     return error;
 
-  return __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			     (natural_t *) &ts, tssize);
+  if (error = __thread_set_state (thread, MACHINE_NEW_THREAD_STATE_FLAVOR,
+			     (natural_t *) &ts, tssize))
+    return error;
+
+  if (error = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+			     (natural_t *) &ts, &tssize))
+    return error;
+  assert (tssize == MACHINE_THREAD_STATE_COUNT);
+
+  _hurd_tls_new(thread, &ts, tcb);
+
+  error = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
+			      (natural_t *) &ts, tssize);
+
+  return error;
 }
 
 weak_alias (__mach_setup_thread, mach_setup_thread)

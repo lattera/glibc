@@ -22,6 +22,11 @@
 
 /* Replace <machine> with "i386" or "mips" or whatever.  */
 
+/* This lets the kernel define architecture-specific registers for a new
+   thread.  */
+#define MACHINE_NEW_THREAD_STATE_FLAVOR	<machine>_NEW_THREAD_STATE
+/* This makes the kernel load all architectures-specific registers for the
+   thread.  */
 #define MACHINE_THREAD_STATE_FLAVOR	<machine>_THREAD_STATE
 #define MACHINE_THREAD_STATE_COUNT	<machine>_THREAD_STATE_COUNT
 

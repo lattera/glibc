@@ -204,6 +204,7 @@ _hurdsig_fault_init (void)
   /* This state will be restored when we fault.
      It runs the function above.  */
   memset (&state, 0, sizeof state);
+  MACHINE_THREAD_STATE_FIX_NEW (&state);
   MACHINE_THREAD_STATE_SET_PC (&state, faulted);
   MACHINE_THREAD_STATE_SET_SP (&state, faultstack, sizeof faultstack);
 

@@ -507,6 +507,11 @@ __fork (void)
 #endif
       MACHINE_THREAD_STATE_SET_PC (&state,
 				   (unsigned long int) _hurd_msgport_receive);
+
+      /* Do special signal thread setup for TLS if needed.  */
+      if (err = _hurd_tls_fork (sigthread, _hurd_msgport_thread, &state))
+	LOSE;
+
       if (err = __thread_set_state (sigthread, MACHINE_THREAD_STATE_FLAVOR,
 				    (natural_t *) &state, statecount))
 	LOSE;
@@ -517,7 +522,7 @@ __fork (void)
       _hurd_longjmp_thread_state (&state, env, 1);
 
       /* Do special thread setup for TLS if needed.  */
-      if (err = _hurd_tls_fork (thread, &state))
+      if (err = _hurd_tls_fork (thread, ss->thread, &state))
 	LOSE;
 
       if (err = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
