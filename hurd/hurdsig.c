@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include <pthread.h>
 #include <mach.h>
 #include <mach/thread_switch.h>
 
@@ -1297,7 +1298,24 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
          values all zero so they'll be ignored.  */
 #pragma weak cthread_fork
 #pragma weak cthread_detach
-      cthread_detach (cthread_fork ((cthread_fn_t) &_hurd_msgport_receive, 0));
+#pragma weak pthread_getattr_np
+#pragma weak pthread_attr_getstack
+      cthread_t thread = cthread_fork ((cthread_fn_t) &_hurd_msgport_receive,
+				       0);
+      cthread_detach (thread);
+
+      if (pthread_getattr_np)
+	{
+	  /* Record signal thread stack layout for fork() */
+	  pthread_attr_t attr;
+	  void *addr;
+	  size_t size;
+
+	  pthread_getattr_np ((pthread_t) thread, &attr);
+	  pthread_attr_getstack (&attr, &addr, &size);
+	  __hurd_sigthread_stack_base = (uintptr_t) addr;
+	  __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + size;
+	}
 
       /* XXX We need the thread port for the signal thread further on
          in this thread (see hurdfault.c:_hurdsigfault_init).

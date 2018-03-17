@@ -1,3 +1,9 @@
+2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* hurd/hurdsig.c: Include <pthread.h>.
+	(_hurdsig_init): Call pthread_getattr_np and pthread_attr_getstack to
+	get the signal thread stack layout.
+
 2018-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/generic/thread_state.h (MACHINE_NEW_THREAD_STATE_FLAVOR):
