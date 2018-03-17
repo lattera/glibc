@@ -6,6 +6,7 @@ libc {
   GLIBC_PRIVATE {
     # Functions shared with the dynamic linker
     __libc_read; __libc_write; __libc_lseek64;
+    __libc_lock_self0;
 
     _dl_init_first;
   }
@@ -14,8 +15,6 @@ libc {
 ld {
   GLIBC_2.0 {
     # variables that must be shared with libc
-    __hurd_sigthread_stack_base; __hurd_sigthread_stack_end;
-    __hurd_sigthread_variables;
     __hurd_threadvar_stack_mask;  __hurd_threadvar_stack_offset;
 
     # functions that must be shared with libc
@@ -33,5 +32,6 @@ ld {
 
     # functions that must be shared with libc
     __libc_read; __libc_write; __libc_lseek64;
+    __libc_lock_self0;
   }
 }

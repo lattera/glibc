@@ -23,7 +23,6 @@
 #include <hurd.h>
 #include <hurd/exec_startup.h>
 #include <sysdep.h>
-#include <hurd/threadvar.h>
 #include <unistd.h>
 #include <elf.h>
 #include <set-hooks.h>

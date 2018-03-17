@@ -285,7 +285,6 @@ GLIBC_2.2.6 __gettimeofday F
 GLIBC_2.2.6 __gmtime_r F
 GLIBC_2.2.6 __h_errno_location F
 GLIBC_2.2.6 __hurd_fail F
-GLIBC_2.2.6 __hurd_threadvar_max D 0x4
 GLIBC_2.2.6 __hurd_threadvar_stack_mask D 0x4
 GLIBC_2.2.6 __hurd_threadvar_stack_offset D 0x4
 GLIBC_2.2.6 __isalnum_l F

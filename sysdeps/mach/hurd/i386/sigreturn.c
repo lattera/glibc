@@ -68,7 +68,7 @@ __sigreturn (struct sigcontext *scp)
 
   if (scp->sc_onstack)
     {
-      ss->sigaltstack.ss_flags &= ~SS_ONSTACK; /* XXX threadvars */
+      ss->sigaltstack.ss_flags &= ~SS_ONSTACK;
       /* XXX cannot unlock until off sigstack */
       abort ();
     }
@@ -77,8 +77,7 @@ __sigreturn (struct sigcontext *scp)
 
   /* Destroy the MiG reply port used by the signal handler, and restore the
      reply port in use by the thread when interrupted.  */
-  reply_port =
-    (mach_port_t *) __hurd_threadvar_location (_HURD_THREADVAR_MIG_REPLY);
+  reply_port = &__hurd_local_reply_port;
   if (*reply_port)
     {
       mach_port_t port = *reply_port;

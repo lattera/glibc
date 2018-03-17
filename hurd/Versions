@@ -4,13 +4,7 @@ libc {
     _end;
 
     # variables used in macros & inline functions
-    __hurd_sigthread_stack_base; __hurd_sigthread_stack_end;
-    __hurd_sigthread_variables;
-    __hurd_threadvar_max;
     __hurd_threadvar_stack_mask; __hurd_threadvar_stack_offset;
-
-    # functions used in macros & inline functions
-    __hurd_errno_location;
 
     # functions used in libmachuser and libhurduser
     _S_catch_exception_raise;
@@ -146,6 +140,7 @@ libc {
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use
     cthread_fork; cthread_detach;
+    pthread_getattr_np; pthread_attr_getstack;
 
     # variables used for detecting cthreads
     _cthread_exit_routine; _cthread_init_routine;

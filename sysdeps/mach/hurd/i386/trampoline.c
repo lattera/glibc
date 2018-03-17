@@ -79,8 +79,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
     {
       sigsp = ss->sigaltstack.ss_sp + ss->sigaltstack.ss_size;
       ss->sigaltstack.ss_flags |= SS_ONSTACK;
-      /* XXX need to set up base of new stack for
-	 per-thread variables, cthreads.  */
     }
   /* This code has intimate knowledge of the special mach_msg system call
      done in intr-msg.c; that code does (see intr-msg.h):

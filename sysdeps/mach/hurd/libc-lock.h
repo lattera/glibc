@@ -21,7 +21,6 @@
 
 #if (_LIBC - 0) || (_CTHREADS_ - 0)
 #include <cthreads.h>
-#include <hurd/threadvar.h>
 
 /* The locking here is very inexpensive, even for inlining.  */
 #define _IO_lock_inexpensive  1
@@ -35,7 +34,8 @@ typedef struct
 } __libc_lock_recursive_t;
 typedef __libc_lock_recursive_t __rtld_lock_recursive_t;
 
-#define __libc_lock_owner_self() ((void *) __hurd_threadvar_location (0))
+extern char __libc_lock_self0[0];
+#define __libc_lock_owner_self() (__LIBC_NO_TLS() ? &__libc_lock_self0 : THREAD_SELF)
 
 #else
 typedef struct __libc_lock_opaque__ __libc_lock_t;

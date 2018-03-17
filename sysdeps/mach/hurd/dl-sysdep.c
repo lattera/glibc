@@ -70,25 +70,6 @@ void *_dl_random attribute_relro = NULL;
 
 struct hurd_startup_data *_dl_hurd_data;
 
-/* This is used only within ld.so, via dl-minimal.c's __errno_location.  */
-#undef errno
-int errno attribute_hidden;
-
-/* Defining these variables here avoids the inclusion of hurdsig.c.  */
-unsigned long int __hurd_sigthread_stack_base;
-unsigned long int __hurd_sigthread_stack_end;
-unsigned long int *__hurd_sigthread_variables;
-
-/* Defining these variables here avoids the inclusion of init-first.c.
-   We need to provide temporary storage for the per-thread variables
-   of the main user thread here, since it is used for storing the
-   `errno' variable.  Note that this information is lost once we
-   relocate the dynamic linker.  */
-static unsigned long int threadvars[_HURD_THREADVAR_MAX];
-unsigned long int __hurd_threadvar_stack_offset
-  = (unsigned long int) &threadvars;
-unsigned long int __hurd_threadvar_stack_mask;
-
 #define FMH defined(__i386__)
 #if ! FMH
 # define fmh()		((void)0)

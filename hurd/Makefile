@@ -21,10 +21,10 @@ include ../Makeconfig
 
 headers = hurd.h $(interface-headers) \
 	  $(addprefix hurd/,fd.h id.h port.h signal.h sigpreempt.h ioctl.h\
-			    userlink.h resource.h threadvar.h lookup.h)
+			    userlink.h resource.h lookup.h)
 
 inline-headers = hurd.h $(addprefix hurd/,fd.h signal.h \
-					  userlink.h threadvar.h port.h)
+					  userlink.h port.h)
 
 # The RPC interfaces go in a separate library.
 interface-library := libhurduser

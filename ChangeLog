@@ -3,6 +3,81 @@
 	* hurd/hurdsig.c: Include <pthread.h>.
 	(_hurdsig_init): Call pthread_getattr_np and pthread_attr_getstack to
 	get the signal thread stack layout.
+	* hurd/Makefile (headers): Remove threadvar.h.
+	(inline-headers): Remove threadvar.h.
+	* hurd/Versions (GLIBC_2.0: Remove __hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_variables,
+	__hurd_threadvar_max, __hurd_errno_location.
+	(HURD_CTHREADS_0.3): Add pthread_getattr_np, pthread_attr_getstack.
+	* hurd/hurd/signal.h: Do not include <hurd/threadvar.h>.
+	(_hurd_self_sigstate): Use THREAD_SELF to get _hurd_sigstate.
+	(_HURD_SIGNAL_H_EXTERN_INLINE): Use THREAD_SELF to get _hurd_sigstate,
+	unless TLS is not initialized yet, in which case we do not need a
+	critical section yet anyway.
+	* hurd/hurd/threadvar.h: Include <tls.h>, do not include
+	<machine-sp.h>.
+	(__hurd_sigthread_variables, __hurd_threadvar_max): Remove variables
+	declarations.
+	(__hurd_threadvar_index): Remove enum.
+	(_HURD_THREADVAR_H_EXTERN_INLINE): Remove macro.
+	(__hurd_threadvar_location_from_sp,__hurd_threadvar_location): Remove
+	inlines.
+	(__hurd_reply_port0): New variable declaration.
+	(__hurd_local_reply_port): New macro.
+	* hurd/hurdsig.c (__hurd_sigthread_variables): Remove variable.
+	(interrupted_reply_port_location): Add thread_t parameter.  Use it
+	with THREAD_TCB to access thread-local variables.
+	(_hurdsig_abort_rpcs): Pass ss->thread to
+	interrupted_reply_port_location.
+	(_hurd_internal_post_signal): Likewise.
+	(_hurdsig_init): Use presence of cthread_fork instead of
+	__hurd_threadvar_stack_mask to start signal thread by hand.
+	Remove signal thread threadvar initialization.
+	* hurd/hurdstartup.c: Do not include <hurd/threadvar.h>
+	* hurd/sigunwind.c: Include <hurd/threadvar.h>
+	(_hurdsig_longjmp_from_handler): Use __hurd_local_reply_port instead
+	of threadvar.
+	* sysdeps/mach/hurd/Versions (libc.GLIBC_PRIVATE): Add
+	__libc_lock_self0.
+	(ld.GLIBC_2.0): Remove __hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_variables.
+	(ld.GLIBC_PRIVATE): Add __libc_lock_self0.
+	* sysdeps/mach/hurd/cthreads.c: Add __libc_lock_self0.
+	* sysdeps/mach/hurd/dl-sysdep.c (errno, __hurd_sigthread_stack_base,
+	__hurd_sigthread_stack_end, __hurd_sigthread_variables, threadvars,
+	__hurd_threadvar_stack_offset, __hurd_threadvar_stack_mask): Do not
+	define variables.
+	* sysdeps/mach/hurd/errno-loc.c: Do not include <errno.h> and
+	<hurd/threadvar.h>.
+	[IS_IN(rtld)] (rtld_errno): New variable.
+	[IS_IN(rtld)] (__errno_location): New weak function.
+	[!IS_IN(rtld)]: Include "../../../csu/errno-loc.c".
+	* sysdeps/mach/hurd/errno.c: Remove file.
+	* sysdeps/mach/hurd/fork.c: Include <hurd/threadvar.h>
+	(__fork): Remove THREADVAR_SPACE macro and its use.
+	* sysdeps/mach/hurd/i386/init-first.c (__hurd_threadvar_max): Remove
+	variable.
+	(init): Do not initialize threadvar.
+	* sysdeps/mach/hurd/i386/libc.abilist (__hurd_threadvar_max): Remove
+	symbol.
+	* sysdeps/mach/hurd/i386/sigreturn.c (__sigreturn): Use
+	__hurd_local_reply_port instead of threadvar.
+	* sysdeps/mach/hurd/i386/tls.h (tcbhead_t): Add reply_port and
+	_hurd_sigstate fields.
+	(HURD_DESC_TLS, __LIBC_NO_TLS, THREAD_TCB): New macro.
+	* sysdeps/mach/hurd/i386/trampoline.c: Remove outdated comment.
+	* sysdeps/mach/hurd/libc-lock.h: Do not include <hurd/threadvar.h>.
+	(__libc_lock_owner_self): Use &__libc_lock_self0 and THREAD_SELF
+	instead of threadvar.
+	* sysdeps/mach/hurd/libc-tsd.h: Remove file.
+	* sysdeps/mach/hurd/mig-reply.c (GETPORT, reply_port): Remove macros.
+	(use_threadvar, global_reply_port): Remove variables.
+	(__hurd_reply_port0): New variable.
+	(__mig_get_reply_port): Use __hurd_local_reply_port and
+	__hurd_reply_port0 instead of threadvar.
+	(__mig_dealloc_reply_port): Likewise.
+	(__mig_init): Do not initialize threadvar.
+	* sysdeps/mach/hurd/profil.c: Fix comment.
 
 2018-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 

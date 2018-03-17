@@ -16,13 +16,21 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <hurd/threadvar.h>
-
-int *
+#if IS_IN (rtld)
+/*
+ * rtld can not access TLS too early, thus rtld_errno.
+ *
+ * Instead of making __open/__close pass errno from TLS to rtld_errno, simply
+ * use a weak __errno_location using rtld_errno, which will be overriden by the
+ * libc definition.
+ */
+static int rtld_errno;
+int * weak_function
 __errno_location (void)
 {
-  return (int *) __hurd_threadvar_location (_HURD_THREADVAR_ERRNO);
+  return &rtld_errno;
 }
-strong_alias (__errno_location, __hurd_errno_location)
-libc_hidden_def (__errno_location)
+libc_hidden_weak (__errno_location)
+#else
+#include "../../../csu/errno-loc.c"
+#endif

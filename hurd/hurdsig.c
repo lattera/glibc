@@ -49,7 +49,6 @@ thread_t _hurd_sigthread;
 /* These are set up by _hurdsig_init.  */
 unsigned long int __hurd_sigthread_stack_base;
 unsigned long int __hurd_sigthread_stack_end;
-unsigned long int *__hurd_sigthread_variables;
 
 /* Linked-list of per-thread signal state.  */
 struct hurd_sigstate *_hurd_sigstates;
@@ -235,14 +234,14 @@ abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
    that this location can be set without faulting, or else return NULL.  */
 
 static mach_port_t *
-interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
+interrupted_reply_port_location (thread_t thread,
+				 struct machine_thread_all_state *thread_state,
 				 int sigthread)
 {
-  mach_port_t *portloc = (mach_port_t *) __hurd_threadvar_location_from_sp
-    (_HURD_THREADVAR_MIG_REPLY, (void *) thread_state->basic.SP);
+  mach_port_t *portloc = &THREAD_TCB(thread, thread_state)->reply_port;
 
   if (sigthread && _hurdsig_catch_memory_fault (portloc))
-    /* Faulted trying to read the stack.  */
+    /* Faulted trying to read the TCB.  */
     return NULL;
 
   /* Fault now if this pointer is bogus.  */
@@ -324,7 +323,8 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 	   our nonzero return tells the trampoline code to finish the message
 	   receive operation before running the handler.  */
 
-	mach_port_t *reply = interrupted_reply_port_location (state,
+	mach_port_t *reply = interrupted_reply_port_location (ss->thread,
+							      state,
 							      sigthread);
 	error_t err = __interrupt_operation (intr_port, _hurdsig_interrupt_timeout);
 
@@ -836,7 +836,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 	    if (! machine_get_basic_state (ss->thread, &thread_state))
 	      goto sigbomb;
-	    loc = interrupted_reply_port_location (&thread_state, 1);
+	    loc = interrupted_reply_port_location (ss->thread,
+						   &thread_state, 1);
 	    if (loc && *loc != MACH_PORT_NULL)
 	      /* This is the reply port for the context which called
 		 sigreturn.  Since we are abandoning that context entirely
@@ -902,7 +903,8 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	{
 	  /* Fetch the thread variable for the MiG reply port,
 	     and set it to MACH_PORT_NULL.  */
-	  mach_port_t *loc = interrupted_reply_port_location (&thread_state,
+	  mach_port_t *loc = interrupted_reply_port_location (ss->thread,
+							      &thread_state,
 							      1);
 	  if (loc)
 	    {
@@ -1256,7 +1258,8 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 
   /* Start the signal thread listening on the message port.  */
 
-  if (__hurd_threadvar_stack_mask == 0)
+#pragma weak cthread_fork
+  if (!cthread_fork)
     {
       err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
       assert_perror (err);
@@ -1269,14 +1272,6 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
       assert_perror (err);
 
       __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
-      __hurd_sigthread_variables =
-	malloc (__hurd_threadvar_max * sizeof (unsigned long int));
-      if (__hurd_sigthread_variables == NULL)
-	__libc_fatal ("hurd: Can't allocate threadvars for signal thread\n");
-      memset (__hurd_sigthread_variables, 0,
-	      __hurd_threadvar_max * sizeof (unsigned long int));
-      __hurd_sigthread_variables[_HURD_THREADVAR_LOCALE]
-	= (unsigned long int) &_nl_global_locale;
 
       /* Reinitialize the MiG support routines so they will use a per-thread
 	 variable for the cached reply port.  */
@@ -1296,7 +1291,6 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
          we'll let the signal thread's per-thread variables be found as for
          any normal cthread, and just leave the magic __hurd_sigthread_*
          values all zero so they'll be ignored.  */
-#pragma weak cthread_fork
 #pragma weak cthread_detach
 #pragma weak pthread_getattr_np
 #pragma weak pthread_attr_getstack
