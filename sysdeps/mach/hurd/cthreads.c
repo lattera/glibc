@@ -18,6 +18,7 @@
 #include <libc-lock.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <cthreads.h>
 
 /* This serves as stub "self" pointer for libc locks when TLS is not initialized
    yet.  */

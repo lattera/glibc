@@ -1,3 +1,7 @@
+2018-03-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/cthreads.c: Include <cthreads.h>.
+
 2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* hurd/hurdsig.c: Include <pthread.h>.
