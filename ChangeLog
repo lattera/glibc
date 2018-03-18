@@ -62,6 +62,8 @@
 2018-03-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/cthreads.c: Include <cthreads.h>.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Return ELOOP
+	when opening a symlink with O_NOFOLLOW.
 
 2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
