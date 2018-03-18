@@ -6,6 +6,58 @@
 	__libc_cleanup_end): Rewrite implementation using
 	__attribute__ ((__cleanup__)).
 	(__libc_cleanup_push, __libc_cleanup_pop): New macros.
+	* hurd/Makefile (routines): Add hurdlock.
+	* hurd/Versions (GLIBC_PRIVATE): Added new entry to export the above
+	interface.
+	(HURD_CTHREADS_0.3): Remove __libc_getspecific.
+	* hurd/hurdpid.c: Include <lowlevellock.h>
+	(_S_msg_proc_newids): Use lll_wait to synchronize.
+	* hurd/hurdsig.c: (reauth_proc): Use __mutex_lock and __mutex_unlock.
+	* hurd/setauth.c: Include <hurdlock.h>, use integer for synchronization.
+	* mach/Makefile (lock-headers): Remove machine-lock.h.
+	* mach/lock-intern.h: Include <lowlevellock.h> instead of
+	<machine-lock.h>.
+	(__spin_lock_t): New type.
+	(__SPIN_LOCK_INITIALIZER): New macro.
+	(__spin_lock, __spin_unlock, __spin_try_lock, __spin_lock_locked,
+	__mutex_init, __mutex_lock_solid, __mutex_unlock_solid, __mutex_lock,
+	__mutex_unlock, __mutex_trylock): Use lll to implement locks.
+	* mach/mutex-init.c: Include <lowlevellock.h> instead of <cthreads.h>.
+	(__mutex_init): Initialize with lll.
+	* manual/errno.texi (EOWNERDEAD, ENOTRECOVERABLE): New errno values.
+	* sysdeps/mach/Makefile: Add libmachuser as dependencies for libs
+	needing lll.
+	* sysdeps/mach/hurd/bits/errno.h: Regenerate.
+	* sysdeps/mach/hurd/cthreads.c (__libc_getspecific): Remove function.
+	* sysdeps/mach/hurd/bits/libc-lock.h: Remove file.
+	* sysdeps/mach/hurd/setpgid.c: Include <lowlevellock.h>.
+	(__setpgid): Use lll for synchronization.
+	* sysdeps/mach/hurd/setsid.c: Likewise with __setsid.
+	* sysdeps/mach/bits/libc-lock.h: Include <tls.h> and <lowlevellock.h>
+	instead of <cthreads.h>.
+	(_IO_lock_inexpensive): New macro
+	(__libc_lock_recursive_t, __rtld_lock_recursive_t): New structures.
+	(__libc_lock_self0): New declaration.
+	(__libc_lock_owner_self): New macro.
+	(__libc_key_t): Remove type.
+	(_LIBC_LOCK_INITIALIZER): New macro.
+	(__libc_lock_define_initialized, __libc_lock_init, __libc_lock_fini,
+	__libc_lock_fini_recursive, __rtld_lock_fini_recursive,
+	__libc_lock_lock, __libc_lock_trylock, __libc_lock_unlock,
+	__libc_lock_define_initialized_recursive,
+	__rtld_lock_define_initialized_recursive,
+	__libc_lock_init_recursive, __libc_lock_trylock_recursive,
+	__libc_lock_lock_recursive, __libc_lock_unlock_recursive,
+	__rtld_lock_initialize, __rtld_lock_trylock_recursive,
+	__rtld_lock_lock_recursive, __rtld_lock_unlock_recursive
+	__libc_once_define, __libc_mutex_unlock): Reimplement with lll.
+	(__libc_lock_define_recursive, __rtld_lock_define_recursive,
+	_LIBC_LOCK_RECURSIVE_INITIALIZER, _RTLD_LOCK_RECURSIVE_INITIALIZER):
+	New macros.
+	Include <libc-lockP.h> to reimplement libc_key* with pthread_key*.
+	* hurd/hurdlock.c: New file.
+	* hurd/hurdlock.h: New file.
+	* mach/lowlevellock.h: New file
 
 2018-03-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 

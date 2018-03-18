@@ -20,14 +20,31 @@
 #define _LIBC_LOCK_H 1
 
 #ifdef _LIBC
-#include <cthreads.h>
-#define __libc_lock_t struct mutex
+
+#include <tls.h>
+#include <lowlevellock.h>
+
+/* The locking here is very inexpensive, even for inlining.  */
+#define _IO_lock_inexpensive   1
+
+typedef unsigned int __libc_lock_t;
+typedef struct
+{
+  __libc_lock_t lock;
+  int cnt;
+  void *owner;
+} __libc_lock_recursive_t;
+
+typedef __libc_lock_recursive_t __rtld_lock_recursive_t;
+
+extern char __libc_lock_self0[0];
+#define __libc_lock_owner_self()   \
+  (__LIBC_NO_TLS () ? (void *)&__libc_lock_self0 : THREAD_SELF)
+
 #else
 typedef struct __libc_lock_opaque__ __libc_lock_t;
+typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 #endif
-
-/* Type for key of thread specific data.  */
-typedef cthread_key_t __libc_key_t;
 
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
@@ -40,27 +57,97 @@ typedef cthread_key_t __libc_key_t;
   CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
+#define _LIBC_LOCK_INITIALIZER LLL_INITIALIZER
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = MUTEX_INITIALIZER;
+  CLASS __libc_lock_t NAME = LLL_INITIALIZER;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#define __libc_lock_init(NAME) __mutex_init (&(NAME))
+#define __libc_lock_init(NAME) (NAME) = LLL_INITIALIZER
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
    called on a lock variable before the containing storage is reused.  */
-#define __libc_lock_fini(NAME) __mutex_unlock (&(NAME))
+#define __libc_lock_fini             __libc_lock_unlock
+#define __libc_lock_fini_recursive   __libc_lock_unlock_recursive
+#define __rtld_lock_fini_recursive   __rtld_lock_unlock_recursive
 
 /* Lock the named lock variable.  */
-#define __libc_lock_lock(NAME) __mutex_lock (&(NAME))
+#define __libc_lock_lock(NAME)   \
+  ({ lll_lock (&(NAME), 0); 0; })
 
 /* Lock the named lock variable.  */
-#define __libc_lock_trylock(NAME) (!__mutex_trylock (&(NAME)))
+#define __libc_lock_trylock(NAME) lll_trylock (&(NAME))
 
 /* Unlock the named lock variable.  */
-#define __libc_lock_unlock(NAME) __mutex_unlock (&(NAME))
+#define __libc_lock_unlock(NAME)   \
+  ({ lll_unlock (&(NAME), 0); 0; })
 
+#define __libc_lock_define_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME;
+
+#define _LIBC_LOCK_RECURSIVE_INITIALIZER { LLL_INITIALIZER, 0, 0 }
+
+#define __libc_lock_define_initialized_recursive(CLASS,NAME) \
+  CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;
+
+#define __rtld_lock_define_recursive(CLASS,NAME) \
+  __libc_lock_define_recursive (CLASS, NAME)
+#define _RTLD_LOCK_RECURSIVE_INITIALIZER \
+  _LIBC_LOCK_RECURSIVE_INITIALIZER
+#define __rtld_lock_define_initialized_recursive(CLASS,NAME) \
+  __libc_lock_define_initialized_recursive (CLASS, NAME)
+
+#define __libc_lock_init_recursive(NAME)   \
+  ({   \
+     (NAME) = (__libc_lock_recursive_t)_LIBC_LOCK_RECURSIVE_INITIALIZER;   \
+     0;   \
+  })
+
+#define __libc_lock_trylock_recursive(NAME)   \
+  ({   \
+     __libc_lock_recursive_t *const __lock = &(NAME);   \
+     void *__self = __libc_lock_owner_self ();   \
+     int __r = 0;   \
+     if (__self == __lock->owner)   \
+       ++__lock->cnt;   \
+     else if ((__r = lll_trylock (&__lock->lock)) == 0)   \
+       __lock->owner = __self, __lock->cnt = 1;   \
+     __r;   \
+   })
+
+#define __libc_lock_lock_recursive(NAME)   \
+  ({   \
+     __libc_lock_recursive_t *const __lock = &(NAME);   \
+     void *__self = __libc_lock_owner_self ();   \
+     if (__self != __lock->owner)   \
+       {   \
+         lll_lock (&__lock->lock, 0);   \
+         __lock->owner = __self;   \
+       }   \
+     ++__lock->cnt;   \
+     (void)0;   \
+   })
+
+#define __libc_lock_unlock_recursive(NAME)   \
+  ({   \
+     __libc_lock_recursive_t *const __lock = &(NAME);   \
+     if (--__lock->cnt == 0)   \
+       {   \
+         __lock->owner = 0;   \
+         lll_unlock (&__lock->lock, 0);   \
+       }   \
+   })
+
+
+#define __rtld_lock_initialize(NAME) \
+  (void) ((NAME) = (__rtld_lock_recursive_t) _RTLD_LOCK_RECURSIVE_INITIALIZER)
+#define __rtld_lock_trylock_recursive(NAME) \
+  __libc_lock_trylock_recursive (NAME)
+#define __rtld_lock_lock_recursive(NAME) \
+  __libc_lock_lock_recursive(NAME)
+#define __rtld_lock_unlock_recursive(NAME) \
+  __libc_lock_unlock_recursive (NAME)
 
 /* XXX for now */
 #define __libc_rwlock_define		__libc_lock_define
@@ -95,7 +182,7 @@ __libc_cleanup_fct (struct __libc_cleanup_frame *framep)
         __attribute__ ((__cleanup__ (__libc_cleanup_fct))) =   \
         { .__fct = (FCT), .__argp = (ARG), .__doit = (DOIT) };
 
-/* This one closes the brace above. */
+/* This one closes the brace above.  */
 #define __libc_cleanup_region_end(DOIT)   \
       __cleanup.__doit = (DOIT);   \
     }   \
@@ -106,7 +193,7 @@ __libc_cleanup_fct (struct __libc_cleanup_frame *framep)
 #define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
 #define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)
 
-/* Use mutexes as once control variables. */
+/* Use mutexes as once control variables.  */
 
 struct __libc_once
   {
@@ -115,8 +202,7 @@ struct __libc_once
   };
 
 #define __libc_once_define(CLASS,NAME) \
-  CLASS struct __libc_once NAME = { MUTEX_INITIALIZER, 0 }
-
+  CLASS struct __libc_once NAME = { _LIBC_LOCK_INITIALIZER, 0 }
 
 /* Call handler iff the first call.  */
 #define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
@@ -134,25 +220,11 @@ struct __libc_once
 #ifdef _LIBC
 /* We need portable names for some functions.  E.g., when they are
    used as argument to __libc_cleanup_region_start.  */
-#define __libc_mutex_unlock __mutex_unlock
+#define __libc_mutex_unlock __libc_lock_unlock
+
+/* Hide the definitions which are only supposed to be used inside libc in
+   a separate file.  This file is not present in the installation!  */
+# include <libc-lockP.h>
 #endif
-
-#define __libc_key_create(KEY,DEST) __cthread_keycreate (KEY)
-#define __libc_setspecific(KEY,VAL) __cthread_setspecific (KEY, VAL)
-void *__libc_getspecific (__libc_key_t key);
-
-/* XXX until cthreads supports recursive locks */
-#define __libc_lock_define_initialized_recursive __libc_lock_define_initialized
-#define __libc_lock_init_recursive __libc_lock_init
-#define __libc_lock_fini_recursive __libc_lock_fini
-#define __libc_lock_trylock_recursive __libc_lock_trylock
-#define __libc_lock_unlock_recursive __libc_lock_unlock
-#define __libc_lock_lock_recursive __libc_lock_lock
-
-#define __rtld_lock_define_initialized_recursive __libc_lock_define_initialized
-#define __rtld_lock_fini_recursive __libc_lock_fini
-#define __rtld_lock_trylock_recursive __libc_lock_trylock
-#define __rtld_lock_unlock_recursive __libc_lock_unlock
-#define __rtld_lock_lock_recursive __libc_lock_lock
 
 #endif	/* libc-lock.h */

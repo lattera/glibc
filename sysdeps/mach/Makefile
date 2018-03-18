@@ -50,4 +50,30 @@ mach-before-compile:
 before-compile += $(mach-before-compile)
 endif
 
+ifeq (crypt,$(subdir))
+  LDLIBS-crypt.so += $(objdir)/mach/libmachuser.so
+else ifeq (dlfcn,$(subdir))
+  LDLIBS-dl.so += $(objdir)/mach/libmachuser.so
+else ifeq (nis,$(subdir))
+  LDLIBS-nsl.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_nis.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_nisplus.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_compat.so += $(objdir)/mach/libmachuser.so
+else ifeq (nss,$(subdir))
+  LDLIBS-nss.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_files.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_db.so += $(objdir)/mach/libmachuser.so
+  LDLIBS-nss_compat.so += $(objdir)/mach/libmachuser.so
+else ifeq (hesiod,$(subdir))
+  LDLIBS-nss_hesiod.so += $(objdir)/mach/libmachuser.so
+else ifeq (posix,$(subdir))
+  LDLIBS-tst-rfc3484 += $(objdir)/mach/libmachuser.so
+  LDLIBS-tst-rfc3484-2 += $(objdir)/mach/libmachuser.so
+  LDLIBS-tst-rfc3484-3 += $(objdir)/mach/libmachuser.so
+else ifeq (nscd,$(subdir))
+  LDLIBS-nscd += $(objdir)/mach/libmachuser.so
+endif
+
+LDLIBS-pthread.so += $(objdir)/mach/libmachuser.so
+
 endif	# in-Makerules

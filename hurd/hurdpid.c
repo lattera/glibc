@@ -16,6 +16,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <hurd.h>
+#include <lowlevellock.h>
+
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
 
@@ -66,6 +68,7 @@ _S_msg_proc_newids (mach_port_t me,
 
   /* Notify any waiting user threads that the id change as been completed.  */
   ++_hurd_pids_changed_stamp;
+  lll_wake (&_hurd_pids_changed_stamp, GSYNC_BROADCAST);
 
   return 0;
 }

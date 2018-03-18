@@ -882,6 +882,16 @@ the normal result is for the operations affected to complete with this
 error; @pxref{Cancel AIO Operations}.
 @end deftypevr
 
+@deftypevr Macro int EOWNERDEAD
+@standards{GNU, errno.h}
+@errno{EOWNERDEAD, 120, Owner died}
+@end deftypevr
+
+@deftypevr Macro int ENOTRECOVERABLE
+@standards{GNU, errno.h}
+@errno{ENOTRECOVERABLE, 121, State not recoverable}
+@end deftypevr
+
 
 @emph{The following error codes are defined by the Linux/i386 kernel.
 They are not yet documented.}

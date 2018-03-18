@@ -21,6 +21,7 @@
 #include <hurd/port.h>
 #include <hurd/fd.h>
 #include <hurd/ioctl.h>
+#include <lowlevellock.h>
 
 /* Create a new session with the calling process as its leader.
    The process group IDs of the session and the calling process
@@ -55,14 +56,7 @@ __setsid (void)
 	 returned by `getpgrp ()' in other threads) has been updated before
 	 we return.  */
       while (_hurd_pids_changed_stamp == stamp)
-	{
-#ifdef noteven
-	  /* XXX we have no need for a mutex, but cthreads demands one.  */
-	  __condition_wait (&_hurd_pids_changed_sync, NULL);
-#else
-	  __swtch_pri (0);
-#endif
-	}
+        lll_wait (&_hurd_pids_changed_stamp, stamp, 0);
     }
 
   HURD_CRITICAL_END;

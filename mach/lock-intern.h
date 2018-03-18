@@ -19,12 +19,19 @@
 #define	_LOCK_INTERN_H
 
 #include <sys/cdefs.h>
-#include <machine-lock.h>
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+# include <lowlevellock.h>
+#endif
 
 #ifndef _EXTERN_INLINE
 #define _EXTERN_INLINE __extern_inline
 #endif
 
+/* The type of a spin lock variable.  */
+typedef unsigned int __spin_lock_t;
+
+/* Static initializer for spinlocks.  */
+#define __SPIN_LOCK_INITIALIZER   LLL_INITIALIZER
 
 /* Initialize LOCK.  */
 
@@ -50,31 +57,47 @@ extern void __spin_lock (__spin_lock_t *__lock);
 _EXTERN_INLINE void
 __spin_lock (__spin_lock_t *__lock)
 {
-  if (! __spin_try_lock (__lock))
-    __spin_lock_solid (__lock);
+  lll_lock (__lock, 0);
+}
+#endif
+
+/* Unlock LOCK.  */
+extern void __spin_unlock (__spin_lock_t *__lock);
+
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+_EXTERN_INLINE void
+__spin_unlock (__spin_lock_t *__lock)
+{
+  lll_unlock (__lock, 0);
+}
+#endif
+
+/* Try to lock LOCK; return nonzero if we locked it, zero if another has.  */
+extern int __spin_try_lock (__spin_lock_t *__lock);
+
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+_EXTERN_INLINE int
+__spin_try_lock (__spin_lock_t *__lock)
+{
+  return (lll_trylock (__lock) == 0);
+}
+#endif
+
+/* Return nonzero if LOCK is locked.  */
+extern int __spin_lock_locked (__spin_lock_t *__lock);
+
+#if defined __USE_EXTERN_INLINES && defined _LIBC
+_EXTERN_INLINE int
+__spin_lock_locked (__spin_lock_t *__lock)
+{
+  return (*(volatile __spin_lock_t *)__lock != 0);
 }
 #endif
 
-/* Name space-clean internal interface to mutex locks.
-
-   Code internal to the C library uses these functions to lock and unlock
-   mutex locks.  These locks are of type `struct mutex', defined in
-   <cthreads.h>.  The functions here are name space-clean.  If the program
-   is linked with the cthreads library, `__mutex_lock_solid' and
-   `__mutex_unlock_solid' will invoke the corresponding cthreads functions
-   to implement real mutex locks.  If not, simple stub versions just use
-   spin locks.  */
-
+/* Name space-clean internal interface to mutex locks.  */
 
 /* Initialize the newly allocated mutex lock LOCK for further use.  */
 extern void __mutex_init (void *__lock);
-
-/* Lock LOCK, blocking if we can't get it.  */
-extern void __mutex_lock_solid (void *__lock);
-
-/* Finish unlocking LOCK, after the spin lock LOCK->held has already been
-   unlocked.  This function will wake up any thread waiting on LOCK.  */
-extern void __mutex_unlock_solid (void *__lock);
 
 /* Lock the mutex lock LOCK.  */
 
@@ -84,8 +107,7 @@ extern void __mutex_lock (void *__lock);
 _EXTERN_INLINE void
 __mutex_lock (void *__lock)
 {
-  if (! __spin_try_lock ((__spin_lock_t *) __lock))
-    __mutex_lock_solid (__lock);
+  __spin_lock ((__spin_lock_t *)__lock);
 }
 #endif
 
@@ -97,8 +119,7 @@ extern void __mutex_unlock (void *__lock);
 _EXTERN_INLINE void
 __mutex_unlock (void *__lock)
 {
-  __spin_unlock ((__spin_lock_t *) __lock);
-  __mutex_unlock_solid (__lock);
+  __spin_unlock ((__spin_lock_t *)__lock);
 }
 #endif
 
@@ -109,7 +130,7 @@ extern int __mutex_trylock (void *__lock);
 _EXTERN_INLINE int
 __mutex_trylock (void *__lock)
 {
-  return __spin_try_lock ((__spin_lock_t *) __lock);
+  return (__spin_try_lock ((__spin_lock_t *)__lock));
 }
 #endif
 

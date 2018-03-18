@@ -1362,14 +1362,14 @@ reauth_proc (mach_port_t new)
   __mach_port_destroy (__mach_task_self (), ref);
 
   /* Set the owner of the process here too. */
-  mutex_lock (&_hurd_id.lock);
+  __mutex_lock (&_hurd_id.lock);
   if (!_hurd_check_ids ())
     HURD_PORT_USE (&_hurd_ports[INIT_PORT_PROC],
 		   __proc_setowner (port,
 				    (_hurd_id.gen.nuids
 				     ? _hurd_id.gen.uids[0] : 0),
 				    !_hurd_id.gen.nuids));
-  mutex_unlock (&_hurd_id.lock);
+  __mutex_unlock (&_hurd_id.lock);
 
   (void) &reauth_proc;		/* Silence compiler warning.  */
 }

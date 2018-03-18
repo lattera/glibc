@@ -17,13 +17,10 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <lock-intern.h>
-#include <cthreads.h>
+#include <lowlevellock.h>
 
 void
 __mutex_init (void *lock)
 {
-  /* This happens to be name space-safe because it is a macro.
-     It invokes only spin_lock_init, which is a macro for __spin_lock_init;
-     and cthread_queue_init, which is a macro for some simple code.  */
-  mutex_init ((struct mutex *) lock);
+  *(int *)lock = LLL_INITIALIZER;
 }
