@@ -73,25 +73,38 @@ typedef cthread_key_t __libc_key_t;
 #define __libc_rwlock_trywrlock		__libc_lock_trylock
 #define __libc_rwlock_unlock		__libc_lock_unlock
 
+struct __libc_cleanup_frame
+{
+  void (*__fct) (void *);
+  void *__argp;
+  int __doit;
+};
 
-/* Start a critical region with a cleanup function */
-#define __libc_cleanup_region_start(DOIT, FCT, ARG)			    \
-{									    \
-  typeof (***(FCT)) *__save_FCT = (DOIT) ? (FCT) : 0;			    \
-  typeof (ARG) __save_ARG = ARG;					    \
-  /* close brace is in __libc_cleanup_region_end below. */
-
-/* End a critical region started with __libc_cleanup_region_start. */
-#define __libc_cleanup_region_end(DOIT)					    \
-  if ((DOIT) && __save_FCT != 0)					    \
-    (*__save_FCT)(__save_ARG);						    \
+__extern_inline void
+__libc_cleanup_fct (struct __libc_cleanup_frame *framep)
+{
+  if (framep->__doit)
+    framep->__fct (framep->__argp);
 }
 
-/* Sometimes we have to exit the block in the middle.  */
-#define __libc_cleanup_end(DOIT)					    \
-  if ((DOIT) && __save_FCT != 0)					    \
-    (*__save_FCT)(__save_ARG);						    \
+/* Start a critical region with a cleanup function */
+#define __libc_cleanup_region_start(DOIT, FCT, ARG)   \
+  do   \
+    {   \
+      struct __libc_cleanup_frame __cleanup   \
+        __attribute__ ((__cleanup__ (__libc_cleanup_fct))) =   \
+        { .__fct = (FCT), .__argp = (ARG), .__doit = (DOIT) };
 
+/* This one closes the brace above. */
+#define __libc_cleanup_region_end(DOIT)   \
+      __cleanup.__doit = (DOIT);   \
+    }   \
+  while (0)
+
+#define __libc_cleanup_end(DOIT)   __cleanup.__doit = (DOIT);
+
+#define __libc_cleanup_push(fct, arg) __libc_cleanup_region_start (1, fct, arg)
+#define __libc_cleanup_pop(execute) __libc_cleanup_region_end (execute)
 
 /* Use mutexes as once control variables. */
 

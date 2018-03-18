@@ -1,3 +1,12 @@
+2018-03-18  Agustina Arzille  <avarzille@riseup.net>
+
+	* sysdeps/mach/libc-lock.h (__libc_cleanup_frame): Define structure.
+	(__libc_cleanup_fct): Define function.
+	(__libc_cleanup_region_start, __libc_cleanup_region_end,
+	__libc_cleanup_end): Rewrite implementation using
+	__attribute__ ((__cleanup__)).
+	(__libc_cleanup_push, __libc_cleanup_pop): New macros.
+
 2018-03-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/cthreads.c: Include <cthreads.h>.
