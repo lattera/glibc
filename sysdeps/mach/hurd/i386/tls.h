@@ -111,36 +111,41 @@ static inline const char * __attribute__ ((unused))
 _hurd_tls_init (tcbhead_t *tcb)
 {
   HURD_TLS_DESC_DECL (desc, tcb);
+  thread_t self = __mach_thread_self ();
+  const char *msg = NULL;
 
   /* This field is used by TLS accesses to get our "thread pointer"
      from the TLS point of view.  */
   tcb->tcb = tcb;
 
-  /* Cache our thread port.  */
-  tcb->self = __mach_thread_self ();
-
   /* Get the first available selector.  */
   int sel = -1;
-  error_t err = __i386_set_gdt (tcb->self, &sel, desc);
+  error_t err = __i386_set_gdt (self, &sel, desc);
   if (err == MIG_BAD_ID)
     {
       /* Old kernel, use a per-thread LDT.  */
       sel = 0x27;
-      err = __i386_set_ldt (tcb->self, sel, &desc, 1);
+      err = __i386_set_ldt (self, sel, &desc, 1);
       assert_perror (err);
       if (err)
-	return "i386_set_ldt failed";
+      {
+	msg = "i386_set_ldt failed";
+	goto out;
+      }
     }
   else if (err)
     {
       assert_perror (err); /* Separate from above with different line #. */
-      return "i386_set_gdt failed";
+      msg = "i386_set_gdt failed";
+      goto out;
     }
 
   /* Now install the new selector.  */
   asm volatile ("mov %w0, %%gs" :: "q" (sel));
 
-  return 0;
+out:
+  __mach_port_deallocate (__mach_task_self (), self);
+  return msg;
 }
 
 /* Code to initially initialize the thread pointer.  This might need
