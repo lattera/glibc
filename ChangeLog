@@ -100,6 +100,9 @@
 	cthread_setspecific.
 	* sysdeps/mach/libc-lock.h (__libc_key_create, __libc_setspecific):
 	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h: Always include
+	<dl-sysdep.h>.  Test for value of RTLD_PRIVATE_ERRNO instead of
+	testing whether it is defined.
 
 2018-03-16  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
