@@ -70,6 +70,8 @@
 	if flags contains O_DIRECTORY and the result is a directory.
 	* sysdeps/mach/hurd/i386/init-first.c (init): Also find ELF headers by
 	oneself when the pointer given in D is nul (as set by ext2fs).
+	* sysdeps/mach/hurd/mlockall.c: New file.
+	* sysdeps/mach/hurd/munlockall.c: New file.
 
 2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
