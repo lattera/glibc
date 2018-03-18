@@ -68,6 +68,8 @@
 	path when flags contains O_NOFOLLOW.
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Return ENOTDIR
 	if flags contains O_DIRECTORY and the result is a directory.
+	* sysdeps/mach/hurd/i386/init-first.c (init): Also find ELF headers by
+	oneself when the pointer given in D is nul (as set by ext2fs).
 
 2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 

@@ -107,7 +107,7 @@ init1 (int argc, char *arg0, ...)
   /* If we are the bootstrap task started by the kernel,
      then after the environment pointers there is no Hurd
      data block; the argument strings start there.  */
-  if ((void *) d == argv[0])
+  if ((void *) d == argv[0] || d->phdr == NULL)
     {
 #ifndef SHARED
       /* With a new enough linker (binutils-2.23 or better),
