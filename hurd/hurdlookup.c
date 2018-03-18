@@ -72,7 +72,7 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   if (flags & O_NOFOLLOW)	/* See lookup-retry.c about O_NOFOLLOW.  */
     flags |= O_NOTRANS;
 
-  if (flags & O_DIRECTORY)
+  if (flags & O_DIRECTORY && (flags & O_NOFOLLOW) == 0)
     {
       /* The caller wants to require that the file we look up is a directory.
 	 We can do this without an extra RPC by appending a trailing slash

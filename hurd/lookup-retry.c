@@ -147,6 +147,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		  err = __io_stat (*result, &st);
 		  if (!err)
 		    {
+		      if (flags & O_DIRECTORY && !S_ISDIR (st.st_mode))
+			err = ENOTDIR;
 		      if (S_ISLNK (st.st_mode))
 			err = ELOOP;
 		      else if (st.st_mode & (S_IPTRANS|S_IATRANS))

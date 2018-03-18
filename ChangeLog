@@ -64,6 +64,10 @@
 	* sysdeps/mach/hurd/cthreads.c: Include <cthreads.h>.
 	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Return ELOOP
 	when opening a symlink with O_NOFOLLOW.
+	* hurd/hurdlookup.c (__hurd_file_name_lookup): Do not append '/' to
+	path when flags contains O_NOFOLLOW.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry): Return ENOTDIR
+	if flags contains O_DIRECTORY and the result is a directory.
 
 2018-03-17  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
