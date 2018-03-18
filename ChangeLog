@@ -1,3 +1,31 @@
+2018-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* NEWS: Add ustat.h deprecation entry.
+	* bits/ustat.h: Remove file.
+	* misc/sys/ustat.h: Likewise.
+	* misc/ustat.h: Likewise.
+	* sysdeps/unix/sysv/linux/generic/ustat.c: Likewise.
+	* misc/Makefile (headers): Remove ustat.h and sys/ustat.h.
+	* misc/ustat.c (__ustat): Rename to __old_ustat and export only in
+	compatibility mode.
+	* sysdeps/unix/sysv/linux/ustat.c (__ustat): Likewise.
+	* sysdeps/unix/sysv/linux/mips/ustat.c: Define DEV_TO_KDEV and use
+	generic Linux implementation.
+
+	* NEWS: Add sysctl.h deprecation entry.
+	* include/sys/sysctl.h: Remove file.
+	* sysdeps/unix/sysv/linux/bits/sysctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/generic/sysctl.c: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/sysctl.h: Likewise.
+	* manual/sysinfo.texi: Update sysctl documentation.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove
+	bits/sysctl.
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (sysctl_call): New function.
+	(init_iosys): Call syscall_call instead of sysctl.
+	* sysdeps/unix/sysv/linux/sysctl.c (__sysctl): Rename to __old_sysctl
+	and export only in compatibility mode.
+
 2018-04-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* math/w_exp_compat.c: Replace hidden_def with libm_hidden_def..

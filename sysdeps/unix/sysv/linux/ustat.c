@@ -1,4 +1,5 @@
-/* Copyright (C) 1997-2018 Free Software Foundation, Inc.
+/* Get filesystem statistics (deprecated).  Linux version.
+   Copyright (C) 1997-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -16,22 +17,41 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/ustat.h>
-#include <sys/sysmacros.h>
+#include <shlib-compat.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+/* This deprecated syscall is no longer used (replaced with {f}statfs).  */
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_28)
+
+# include <sysdep.h>
+# include <errno.h>
+
+# ifndef DEV_TO_KDEV
+#  define DEV_TO_KDEV(__dev)					\
+  ({								\
+    unsigned long long int k_dev;				\
+    k_dev = dev & ((1ULL << 32) - 1);				\
+    if (k_dev != dev)						\
+     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);		\
+    (unsigned int) k_dev;					\
+  })
+# endif
+
+struct ustat
+{
+  __daddr_t f_tfree;         /* Number of free blocks.  */
+  __ino_t f_tinode;          /* Number of free inodes.  */
+  char f_fname[6];
+  char f_fpack[6];
+};
 
 int
-ustat (dev_t dev, struct ustat *ubuf)
+__old_ustat (dev_t dev, struct ustat *ubuf)
 {
-  unsigned long long int k_dev;
-
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev =  dev & ((1ULL << 32) - 1);
-  if (k_dev != dev)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-  return INLINE_SYSCALL (ustat, 2, (unsigned int) k_dev, ubuf);
+# ifdef __NR_ustat
+  return INLINE_SYSCALL_CALL (ustat, DEV_TO_KDEV (dev), ubuf);
+# else
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
+# endif
 }
+compat_symbol (libc, __old_ustat, ustat, GLIBC_2_0);
+#endif /* SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_28)  */

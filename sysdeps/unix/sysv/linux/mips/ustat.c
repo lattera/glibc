@@ -16,20 +16,13 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/ustat.h>
 #include <sys/sysmacros.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+#define DEV_TO_KDEV(__dev)					\
+  ({								\
+    unsigned long k_dev;					\
+    k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);	\
+    k_dev;							\
+  })
 
-int
-ustat (dev_t dev, struct ustat *ubuf)
-{
-  unsigned long k_dev;
-
-  /* We must convert the value to dev_t type used by the kernel.  */
-  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
-
-  return INLINE_SYSCALL (ustat, 2, k_dev, ubuf);
-}
+#include <sysdeps/unix/sysv/linux/ustat.c>

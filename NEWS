@@ -59,6 +59,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * The tilegx*-*-linux-gnu configurations are no longer supported.
 
+* The obsolete function ustat is no longer available to newly linked
+  binaries; the headers <ustat.h> and <sys/ustat.h> have been removed.  This
+  function has been deprecated in favor of fstatfs and statfs.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
