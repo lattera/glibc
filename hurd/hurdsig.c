@@ -20,7 +20,7 @@
 #include <string.h>
 
 #include <cthreads.h>		/* For `struct mutex'.  */
-#include <pthread.h>
+#include <pthreadP.h>
 #include <mach.h>
 #include <mach/thread_switch.h>
 
