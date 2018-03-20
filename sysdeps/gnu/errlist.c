@@ -1090,6 +1090,22 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # define ERR_MAX ECANCELED
 # endif
 #endif
+#ifdef EOWNERDEAD
+/* */
+    [ERR_REMAP (EOWNERDEAD)] = N_("Owner died"),
+# if EOWNERDEAD > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX EOWNERDEAD
+# endif
+#endif
+#ifdef ENOTRECOVERABLE
+/* */
+    [ERR_REMAP (ENOTRECOVERABLE)] = N_("State not recoverable"),
+# if ENOTRECOVERABLE > ERR_MAX
+# undef ERR_MAX
+# define ERR_MAX ENOTRECOVERABLE
+# endif
+#endif
 #ifdef ERESTART
 /* */
     [ERR_REMAP (ERESTART)] = N_("Interrupted system call should be restarted"),
@@ -1432,22 +1448,6 @@ TRANS error; @pxref{Cancel AIO Operations}. */
 # if EKEYREJECTED > ERR_MAX
 # undef ERR_MAX
 # define ERR_MAX EKEYREJECTED
-# endif
-#endif
-#ifdef EOWNERDEAD
-/* */
-    [ERR_REMAP (EOWNERDEAD)] = N_("Owner died"),
-# if EOWNERDEAD > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX EOWNERDEAD
-# endif
-#endif
-#ifdef ENOTRECOVERABLE
-/* */
-    [ERR_REMAP (ENOTRECOVERABLE)] = N_("State not recoverable"),
-# if ENOTRECOVERABLE > ERR_MAX
-# undef ERR_MAX
-# define ERR_MAX ENOTRECOVERABLE
 # endif
 #endif
 #ifdef ERFKILL

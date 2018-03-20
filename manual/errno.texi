@@ -1111,16 +1111,6 @@ They are not yet documented.}
 @errno{EKEYREJECTED, ???/???, Key was rejected by service}
 @end deftypevr
 
-@deftypevr Macro int EOWNERDEAD
-@standards{Linux, errno.h}
-@errno{EOWNERDEAD, ???/???, Owner died}
-@end deftypevr
-
-@deftypevr Macro int ENOTRECOVERABLE
-@standards{Linux, errno.h}
-@errno{ENOTRECOVERABLE, ???/???, State not recoverable}
-@end deftypevr
-
 @deftypevr Macro int ERFKILL
 @standards{Linux, errno.h}
 @errno{ERFKILL, ???/???, Operation not possible due to RF-kill}
