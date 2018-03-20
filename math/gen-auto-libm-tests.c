@@ -584,6 +584,7 @@ static test_function test_functions[] =
     FUNC ("sincos", ARGS1 (type_fp), RET2 (type_fp, type_fp), false, false,
 	  false, CALC (mpfr_f_11, mpfr_sin_cos)),
     FUNC_mpfr_f_f ("sinh", mpfr_sinh, false),
+    FUNC_mpfr_ff_f ("sub", mpfr_sub, true),
     FUNC_mpfr_f_f ("sqrt", mpfr_sqrt, true),
     FUNC_mpfr_f_f ("tan", mpfr_tan, false),
     FUNC_mpfr_f_f ("tanh", mpfr_tanh, false),

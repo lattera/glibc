@@ -107,6 +107,64 @@
     }						\
   while (0)
 
+/* Check for error conditions from a narrowing subtract function
+   returning RET with arguments X and Y and set errno as needed.
+   Overflow and underflow can occur for finite arguments and a domain
+   error for infinite ones.  */
+#define CHECK_NARROW_SUB(RET, X, Y)			\
+  do							\
+    {							\
+      if (!isfinite (RET))				\
+	{						\
+	  if (isnan (RET))				\
+	    {						\
+	      if (!isnan (X) && !isnan (Y))		\
+		__set_errno (EDOM);			\
+	    }						\
+	  else if (isfinite (X) && isfinite (Y))	\
+	    __set_errno (ERANGE);			\
+	}						\
+      else if ((RET) == 0 && (X) != (Y))		\
+	__set_errno (ERANGE);				\
+    }							\
+  while (0)
+
+/* Implement narrowing subtract using round-to-odd.  The arguments are
+   X and Y, the return type is TYPE and UNION, MANTISSA and SUFFIX are
+   as for ROUND_TO_ODD.  */
+#define NARROW_SUB_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA)	\
+  do									\
+    {									\
+      TYPE ret;								\
+									\
+      /* Ensure a zero result is computed in the original rounding	\
+	 mode.  */							\
+      if ((X) == (Y))							\
+	ret = (TYPE) ((X) - (Y));					\
+      else								\
+	ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) - (Y),		\
+				   UNION, SUFFIX, MANTISSA);		\
+									\
+      CHECK_NARROW_SUB (ret, (X), (Y));					\
+      return ret;							\
+    }									\
+  while (0)
+
+/* Implement a narrowing subtract function that is not actually
+   narrowing or where no attempt is made to be correctly rounding (the
+   latter only applies to IBM long double).  The arguments are X and Y
+   and the return type is TYPE.  */
+#define NARROW_SUB_TRIVIAL(X, Y, TYPE)		\
+  do						\
+    {						\
+      TYPE ret;					\
+						\
+      ret = (TYPE) ((X) - (Y));			\
+      CHECK_NARROW_SUB (ret, (X), (Y));		\
+      return ret;				\
+    }						\
+  while (0)
+
 /* The following macros declare aliases for a narrowing function.  The
    sole argument is the base name of a family of functions, such as
    "add".  If any platform changes long double format after the

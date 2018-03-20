@@ -1,3 +1,76 @@
+2018-03-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile (libm-narrow-fns): Add sub.
+	(libm-test-funcs-narrow): Likewise.
+	* math/Versions (GLIBC_2.28): Add narrowing subtract functions.
+	* math/bits/mathcalls-narrow.h (sub): Use __MATHCALL_NARROW.
+	* math/gen-auto-libm-tests.c (test_functions): Add sub.
+	* math/math-narrow.h (CHECK_NARROW_SUB): New macro.
+	(NARROW_SUB_ROUND_TO_ODD): Likewise.
+	(NARROW_SUB_TRIVIAL): Likewise.
+	* sysdeps/ieee754/float128/float128_private.h (__fsubl): New
+	macro.
+	(__dsubl): Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add fsub and
+	dsub.
+	(CFLAGS-nldbl-dsub.c): New variable.
+	(CFLAGS-nldbl-fsub.c): Likewise.
+	* sysdeps/ieee754/ldbl-opt/Versions (GLIBC_2.28): Add
+	__nldbl_dsubl.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (__nldbl_dsubl): New
+	prototype.
+	* manual/arith.texi (Misc FP Arithmetic): Document fsub, fsubl,
+	dsubl, fMsubfN, fMsubfNx, fMxsubfN and fMxsubfNx.
+	* math/auto-libm-test-in: Add tests of sub.
+	* math/auto-libm-test-out-narrow-sub: New generated file.
+	* math/libm-test-narrow-sub.inc: New file.
+	* sysdeps/i386/fpu/s_f32xsubf64.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_f32xsubf64.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fsub.c: Likewise.
+	* sysdeps/ieee754/float128/s_f32subf128.c: Likewise.
+	* sysdeps/ieee754/float128/s_f64subf128.c: Likewise.
+	* sysdeps/ieee754/float128/s_f64xsubf128.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_dsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_f64xsubf128.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_dsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_dsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fsubl.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-dsub.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fsub.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_dsubl.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fsub.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fsubl.c: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/mach/hurd/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/tile/tilegx64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2018-03-19  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #20079]

@@ -2635,6 +2635,10 @@ Function: "sqrt_upward":
 ildouble: 1
 ldouble: 1
 
+Function: "sub_ldouble":
+double: 1
+float: 1
+
 Function: "tan":
 float: 3
 float128: 1

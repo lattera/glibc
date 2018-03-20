@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Subtract long double (ldbl-96) values, narrowing the result to double.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,18 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
-#endif
+#define f32xsubf64x __hide_f32xsubf64x
+#define f64subf64x __hide_f64subf64x
+#include <math.h>
+#undef f32xsubf64x
+#undef f64subf64x
 
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
+#include <math-narrow.h>
 
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+double
+__dsubl (long double x, long double y)
+{
+  NARROW_SUB_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
+			   mantissa1);
+}
+libm_alias_double_ldouble (sub)

@@ -7195,6 +7195,101 @@ sinh 0x2.c5d37700c6bb03a8p+12 no-test-inline
 sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
 sinh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
 
+sub 0 0
+sub 0 -0
+sub -0 0
+sub -0 -0
+sub max max
+sub max -max
+sub -max max
+sub -max -max
+sub min min missing-underflow:arg-ibm128
+sub min -min missing-underflow:arg-ibm128
+sub -min min missing-underflow:arg-ibm128
+sub -min -min missing-underflow:arg-ibm128
+sub min_subnorm min_subnorm missing-underflow:arg-ibm128
+sub min_subnorm -min_subnorm missing-underflow:arg-ibm128
+sub -min_subnorm min_subnorm missing-underflow:arg-ibm128
+sub -min_subnorm -min_subnorm missing-underflow:arg-ibm128
+sub 1 2
+sub 1 -2
+sub -1 2
+sub -1 -2
+sub 100.5 0.75
+sub 100.5 -0.75
+sub -100.5 0.75
+sub -100.5 -0.75
+sub 1 0x1p-23
+sub 1 0x1.7fp-23
+sub 1 0x1.8p-23
+sub 1 0x1.81p-23
+sub 1 0x1p-24
+sub 1 0x1.1p-24
+sub 1 0x0.fp-24
+sub 1 min
+sub 1 -min
+sub 1 min_subnorm
+sub 1 -min_subnorm
+sub -1 min
+sub -1 -min
+sub -1 min_subnorm
+sub -1 -min_subnorm
+# Cases where larger argument is half way between two values of a
+# floating-point format, so that double rounding would sometimes yield
+# the wrong result.
+sub 0x1.000001p0 min
+sub 0x1.000001p0 -min
+sub 0x1.000001p0 min_subnorm
+sub 0x1.000001p0 -min_subnorm
+sub -0x1.000001p0 min
+sub -0x1.000001p0 -min
+sub -0x1.000001p0 min_subnorm
+sub -0x1.000001p0 -min_subnorm
+sub 0x1.00000000000008p0 min
+sub 0x1.00000000000008p0 -min
+sub 0x1.00000000000008p0 min_subnorm
+sub 0x1.00000000000008p0 -min_subnorm
+sub -0x1.00000000000008p0 min
+sub -0x1.00000000000008p0 -min
+sub -0x1.00000000000008p0 min_subnorm
+sub -0x1.00000000000008p0 -min_subnorm
+sub 0x1.0000000000000001p0 min
+sub 0x1.0000000000000001p0 -min
+sub 0x1.0000000000000001p0 min_subnorm
+sub 0x1.0000000000000001p0 -min_subnorm
+sub -0x1.0000000000000001p0 min
+sub -0x1.0000000000000001p0 -min
+sub -0x1.0000000000000001p0 min_subnorm
+sub -0x1.0000000000000001p0 -min_subnorm
+# Two values representable in the same format with difference very
+# close to half way between two representable values.  In particular,
+# verify that there is no intermediate rounding to 64 bits when
+# subtracting two double values.
+sub 1 0x1.000002p-24
+sub 1 -0x1.000002p-24
+sub 1 0x0.ffffffp-24
+sub 1 -0x0.ffffffp-24
+sub 0x1.000002p0 0x1.000002p-24
+sub 0x1.000002p0 -0x1.000002p-24
+sub 0x1.000002p0 0x0.ffffffp-24
+sub 0x1.000002p0 -0x0.ffffffp-24
+sub 1 0x1.0000000000001p-53
+sub 1 -0x1.0000000000001p-53
+sub 1 0x0.fffffffffffff8p-53
+sub 1 -0x0.fffffffffffff8p-53
+sub 0x1.0000000000001p0 0x1.0000000000001p-53
+sub 0x1.0000000000001p0 -0x1.0000000000001p-53
+sub 0x1.0000000000001p0 0x0.fffffffffffff8p-53
+sub 0x1.0000000000001p0 -0x0.fffffffffffff8p-53
+sub 1 0x1.0000000000000002p-64
+sub 1 -0x1.0000000000000002p-64
+sub 1 0x0.ffffffffffffffffp-64
+sub 1 -0x0.ffffffffffffffffp-64
+sub 0x1.0000000000000002p0 0x1.0000000000000002p-64
+sub 0x1.0000000000000002p0 -0x1.0000000000000002p-64
+sub 0x1.0000000000000002p0 0x0.ffffffffffffffffp-64
+sub 0x1.0000000000000002p0 -0x0.ffffffffffffffffp-64
+
 sqrt 0
 sqrt -0
 sqrt 2209

@@ -258,6 +258,8 @@
 
 #define __faddl __f32addf128
 #define __daddl __f64addf128
+#define __fsubl __f32subf128
+#define __dsubl __f64subf128
 
 /* __nexttowardf128 is not _Float128 API. */
 #define __nexttowardl __nexttowardf128_do_not_use
