@@ -1,5 +1,11 @@
 2018-03-20  Joseph Myers  <joseph@codesourcery.com>
 
+	[BZ #22987]
+	* sysdeps/powerpc/bits/mathinline.h (fdim): Remove inline
+	function.
+	(fdimf): Likewise.
+	* sysdeps/sparc/fpu/bits/mathinline.h: Remove file.
+
 	[BZ #17343]
 	* stdlib/random_r.c (__random_r): Use unsigned arithmetic for
 	possibly overflowing computations.

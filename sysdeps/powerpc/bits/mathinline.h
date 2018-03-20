@@ -53,20 +53,6 @@ __NTH (lrintf (float __x))
 }
 # endif
 
-__MATH_INLINE double fdim (double __x, double __y) __THROW;
-__MATH_INLINE double
-__NTH (fdim (double __x, double __y))
-{
-  return __x <= __y ? 0 : __x - __y;
-}
-
-__MATH_INLINE float fdimf (float __x, float __y) __THROW;
-__MATH_INLINE float
-__NTH (fdimf (float __x, float __y))
-{
-  return __x <= __y ? 0 : __x - __y;
-}
-
 #endif /* __USE_ISOC99 */
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 #endif /* __GNUC__ && !_SOFT_FLOAT && !__NO_FPRS__ */
