@@ -17,13 +17,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if IS_IN (rtld)
-/*
- * rtld can not access TLS too early, thus rtld_errno.
- *
- * Instead of making __open/__close pass errno from TLS to rtld_errno, simply
- * use a weak __errno_location using rtld_errno, which will be overriden by the
- * libc definition.
- */
+/* rtld can not access TLS too early, thus rtld_errno.
+
+   Instead of making __open/__close pass errno from TLS to rtld_errno, simply
+   use a weak __errno_location using rtld_errno, which will be overriden by the
+   libc definition.  */
 static int rtld_errno;
 int * weak_function
 __errno_location (void)

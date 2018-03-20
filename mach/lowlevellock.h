@@ -24,11 +24,11 @@
 
 /* Gsync flags.  */
 #ifndef GSYNC_SHARED
-  #define GSYNC_SHARED      0x01
-  #define GSYNC_QUAD        0x02
-  #define GSYNC_TIMED       0x04
-  #define GSYNC_BROADCAST   0x08
-  #define GSYNC_MUTATE      0x10
+# define GSYNC_SHARED      0x01
+# define GSYNC_QUAD        0x02
+# define GSYNC_TIMED       0x04
+# define GSYNC_BROADCAST   0x08
+# define GSYNC_MUTATE      0x10
 #endif
 
 /* Static initializer for low-level locks.  */

@@ -40,57 +40,58 @@ compute_reltime (const struct timespec *abstime, clockid_t clk)
       ts.tv_nsec += 1000000000;
     }
 
-  return (ts.tv_sec < 0 ? -1 :
-    (int)(ts.tv_sec * 1000 + ts.tv_nsec / 1000000));
+  return ts.tv_sec < 0 ? -1 : (int)(ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
 }
 
-int __lll_abstimed_wait (void *ptr, int val,
+int
+__lll_abstimed_wait (void *ptr, int val,
   const struct timespec *tsp, int flags, int clk)
 {
   int mlsec = compute_reltime (tsp, clk);
-  return (mlsec < 0 ? KERN_TIMEDOUT :
-    lll_timed_wait (ptr, val, mlsec, flags));
+  return mlsec < 0 ? KERN_TIMEDOUT : lll_timed_wait (ptr, val, mlsec, flags);
 }
 
-int __lll_abstimed_xwait (void *ptr, int lo, int hi,
+int
+__lll_abstimed_xwait (void *ptr, int lo, int hi,
   const struct timespec *tsp, int flags, int clk)
 {
   int mlsec = compute_reltime (tsp, clk);
-  return (mlsec < 0 ? KERN_TIMEDOUT :
-    lll_timed_xwait (ptr, lo, hi, mlsec, flags));
+  return mlsec < 0 ? KERN_TIMEDOUT : lll_timed_xwait (ptr, lo, hi, mlsec,
+	                                              flags);
 }
 
-int __lll_abstimed_lock (void *ptr,
+int
+__lll_abstimed_lock (void *ptr,
   const struct timespec *tsp, int flags, int clk)
 {
   if (lll_trylock (ptr) == 0)
-    return (0);
+    return 0;
 
   while (1)
     {
       if (atomic_exchange_acq ((int *)ptr, 2) == 0)
-        return (0);
+        return 0;
       else if (tsp->tv_nsec < 0 || tsp->tv_nsec >= 1000000000)
-        return (EINVAL);
+        return EINVAL;
 
       int mlsec = compute_reltime (tsp, clk);
-      if (mlsec < 0 || lll_timed_wait (ptr,
-          2, mlsec, flags) == KERN_TIMEDOUT)
-        return (ETIMEDOUT);
+      if (mlsec < 0 || lll_timed_wait (ptr, 2, mlsec, flags) == KERN_TIMEDOUT)
+        return ETIMEDOUT;
     }
 }
 
 /* Robust locks.  */
 
 /* Test if a given process id is still valid.  */
-static inline int valid_pid (int pid)
+static inline int
+valid_pid (int pid)
 {
   task_t task = __pid2task (pid);
   if (task == MACH_PORT_NULL)
-    return (0);
+    return 0;
 
   __mach_port_deallocate (__mach_task_self (), task);
-  return (1);
+  return 1;
 }
 
 /* Robust locks have currently no support from the kernel; they
@@ -98,7 +99,8 @@ static inline int valid_pid (int pid)
    maximum blocking time is determined by this constant.  */
 #define MAX_WAIT_TIME   1500
 
-int __lll_robust_lock (void *ptr, int flags)
+int
+__lll_robust_lock (void *ptr, int flags)
 {
   int *iptr = (int *)ptr;
   int id = __getpid ();
@@ -111,9 +113,9 @@ int __lll_robust_lock (void *ptr, int flags)
     {
       val = *iptr;
       if (!val && atomic_compare_and_exchange_bool_acq (iptr, id, 0) == 0)
-        return (0);
+        return 0;
       else if (atomic_compare_and_exchange_bool_acq (iptr,
-          val | LLL_WAITERS, val) == 0)
+               val | LLL_WAITERS, val) == 0)
         break;
     }
 
@@ -121,11 +123,11 @@ int __lll_robust_lock (void *ptr, int flags)
     {
       val = *iptr;
       if (!val && atomic_compare_and_exchange_bool_acq (iptr, id, 0) == 0)
-        return (0);
+        return 0;
       else if (val && !valid_pid (val & LLL_OWNER_MASK))
         {
           if (atomic_compare_and_exchange_bool_acq (iptr, id, val) == 0)
-            return (EOWNERDEAD);
+            return EOWNERDEAD;
         }
       else
         {
@@ -136,7 +138,8 @@ int __lll_robust_lock (void *ptr, int flags)
     }
 }
 
-int __lll_robust_abstimed_lock (void *ptr,
+int
+__lll_robust_abstimed_lock (void *ptr,
   const struct timespec *tsp, int flags, int clk)
 {
   int *iptr = (int *)ptr;
@@ -148,7 +151,7 @@ int __lll_robust_abstimed_lock (void *ptr,
     {
       val = *iptr;
       if (!val && atomic_compare_and_exchange_bool_acq (iptr, id, 0) == 0)
-        return (0);
+        return 0;
       else if (atomic_compare_and_exchange_bool_acq (iptr,
           val | LLL_WAITERS, val) == 0)
         break;
@@ -158,30 +161,31 @@ int __lll_robust_abstimed_lock (void *ptr,
     {
       val = *iptr;
       if (!val && atomic_compare_and_exchange_bool_acq (iptr, id, 0) == 0)
-        return (0);
+        return 0;
       else if (val && !valid_pid (val & LLL_OWNER_MASK))
         {
           if (atomic_compare_and_exchange_bool_acq (iptr, id, val) == 0)
-            return (EOWNERDEAD);
+            return EOWNERDEAD;
         }
       else
         {
           int mlsec = compute_reltime (tsp, clk);
           if (mlsec < 0)
-            return (ETIMEDOUT);
+            return ETIMEDOUT;
           else if (mlsec > wait_time)
             mlsec = wait_time;
 
           int res = lll_timed_wait (iptr, val, mlsec, flags);
           if (res == KERN_TIMEDOUT)
-            return (ETIMEDOUT);
+            return ETIMEDOUT;
           else if (wait_time < MAX_WAIT_TIME)
             wait_time <<= 1;
         }
     }
 }
 
-int __lll_robust_trylock (void *ptr)
+int
+__lll_robust_trylock (void *ptr)
 {
   int *iptr = (int *)ptr;
   int id = __getpid ();
@@ -190,18 +194,19 @@ int __lll_robust_trylock (void *ptr)
   if (!val)
     {
       if (atomic_compare_and_exchange_bool_acq (iptr, id, 0) == 0)
-        return (0);
+        return 0;
     }
-  else if (!valid_pid (val & LLL_OWNER_MASK) &&
-      atomic_compare_and_exchange_bool_acq (iptr, id, val) == 0)
-    return (EOWNERDEAD);
+  else if (!valid_pid (val & LLL_OWNER_MASK)
+           && atomic_compare_and_exchange_bool_acq (iptr, id, val) == 0)
+    return EOWNERDEAD;
 
-  return (EBUSY);
+  return EBUSY;
 }
 
-void __lll_robust_unlock (void *ptr, int flags)
+void
+__lll_robust_unlock (void *ptr, int flags)
 {
-  unsigned int val = atomic_load_relaxed((unsigned int *)ptr);
+  unsigned int val = atomic_load_relaxed ((unsigned int *)ptr);
   while (1)
     {
       if (val & LLL_WAITERS)
