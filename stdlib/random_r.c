@@ -361,8 +361,7 @@ __random_r (struct random_data *buf, int32_t *result)
 
   if (buf->rand_type == TYPE_0)
     {
-      int32_t val = state[0];
-      val = ((state[0] * 1103515245) + 12345) & 0x7fffffff;
+      int32_t val = ((state[0] * 1103515245U) + 12345U) & 0x7fffffff;
       state[0] = val;
       *result = val;
     }
@@ -371,11 +370,11 @@ __random_r (struct random_data *buf, int32_t *result)
       int32_t *fptr = buf->fptr;
       int32_t *rptr = buf->rptr;
       int32_t *end_ptr = buf->end_ptr;
-      int32_t val;
+      uint32_t val;
 
-      val = *fptr += *rptr;
+      val = *fptr += (uint32_t) *rptr;
       /* Chucking least random bit.  */
-      *result = (val >> 1) & 0x7fffffff;
+      *result = val >> 1;
       ++fptr;
       if (fptr >= end_ptr)
 	{
