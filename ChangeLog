@@ -1,3 +1,17 @@
+2018-03-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/x86_64/backtrace.c: Move to ....
+	* debug/backtrace.c: ... here.
+	* sysdeps/aarch64/backtrace.c: Remove file.
+	* sysdeps/alpha/backtrace.c: Likewise.
+	* sysdeps/hppa/backtrace.c: Likewise.
+	* sysdeps/ia64/backtrace.c: Likewise.
+	* sysdeps/mips/backtrace.c: Likewise.
+	* sysdeps/nios2/backtrace.c: Likewise.
+	* sysdeps/riscv/backtrace.c: Likewise.
+	* sysdeps/sh/backtrace.c: Likewise.
+	* sysdeps/tile/backtrace.c: Likewise.
+
 2018-03-20  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #22987]

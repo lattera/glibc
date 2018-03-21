@@ -1,7 +1,7 @@
-/* Return backtrace of current program state.  Generic version.
-   Copyright (C) 1998-2018 Free Software Foundation, Inc.
+/* Return backtrace of current program state.
+   Copyright (C) 2003-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,74 +17,118 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libc-lock.h>
+#include <dlfcn.h>
 #include <execinfo.h>
-#include <signal.h>
-#include <frame.h>
-#include <sigcontextinfo.h>
-#include <ldsodefs.h>
+#include <gnu/lib-names.h>
+#include <stdlib.h>
+#include <unwind.h>
 
-/* This implementation assumes a stack layout that matches the defaults
-   used by gcc's `__builtin_frame_address' and `__builtin_return_address'
-   (FP is the frame pointer register):
+struct trace_arg
+{
+  void **array;
+  _Unwind_Word cfa;
+  int cnt;
+  int size;
+};
 
-	  +-----------------+     +-----------------+
-    FP -> | previous FP --------> | previous FP ------>...
-	  |                 |     |                 |
-	  | return address  |     | return address  |
-	  +-----------------+     +-----------------+
+#ifdef SHARED
+static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
+static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
+static _Unwind_Word (*unwind_getcfa) (struct _Unwind_Context *);
+static void *libgcc_handle;
 
-  */
 
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#ifndef CURRENT_STACK_FRAME
-# define CURRENT_STACK_FRAME  ({ char __csf; &__csf; })
+/* Dummy version in case libgcc_s does not contain the real code.  */
+static _Unwind_Word
+dummy_getcfa (struct _Unwind_Context *ctx __attribute__ ((unused)))
+{
+  return 0;
+}
+
+
+static void
+init (void)
+{
+  libgcc_handle = __libc_dlopen (LIBGCC_S_SO);
+
+  if (libgcc_handle == NULL)
+    return;
+
+  unwind_backtrace = __libc_dlsym (libgcc_handle, "_Unwind_Backtrace");
+  unwind_getip = __libc_dlsym (libgcc_handle, "_Unwind_GetIP");
+  if (unwind_getip == NULL)
+    unwind_backtrace = NULL;
+  unwind_getcfa = (__libc_dlsym (libgcc_handle, "_Unwind_GetCFA")
+		  ?: dummy_getcfa);
+}
+#else
+# define unwind_backtrace _Unwind_Backtrace
+# define unwind_getip _Unwind_GetIP
+# define unwind_getcfa _Unwind_GetCFA
 #endif
 
-/* By default we assume that the stack grows downward.  */
-#ifndef INNER_THAN
-# define INNER_THAN <
-#endif
+static _Unwind_Reason_Code
+backtrace_helper (struct _Unwind_Context *ctx, void *a)
+{
+  struct trace_arg *arg = a;
 
-/* By default assume the `next' pointer in struct layout points to the
-   next struct layout.  */
-#ifndef ADVANCE_STACK_FRAME
-# define ADVANCE_STACK_FRAME(next) ((struct layout *) (next))
-#endif
+  /* We are first called with address in the __backtrace function.
+     Skip it.  */
+  if (arg->cnt != -1)
+    {
+      arg->array[arg->cnt] = (void *) unwind_getip (ctx);
 
-/* By default, the frame pointer is just what we get from gcc.  */
-#ifndef FIRST_FRAME_POINTER
-# define FIRST_FRAME_POINTER  __builtin_frame_address (0)
-#endif
+      /* Check whether we make any progress.  */
+      _Unwind_Word cfa = unwind_getcfa (ctx);
+
+      if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt]
+	 && cfa == arg->cfa)
+       return _URC_END_OF_STACK;
+      arg->cfa = cfa;
+    }
+  if (++arg->cnt == arg->size)
+    return _URC_END_OF_STACK;
+  return _URC_NO_REASON;
+}
 
 int
 __backtrace (void **array, int size)
 {
-  struct layout *current;
-  void *top_frame;
-  void *top_stack;
-  int cnt = 0;
+  struct trace_arg arg = { .array = array, .cfa = 0, .size = size, .cnt = -1 };
 
-  top_frame = FIRST_FRAME_POINTER;
-  top_stack = CURRENT_STACK_FRAME;
+  if (size <= 0)
+    return 0;
 
-  /* We skip the call to this function, it makes no sense to record it.  */
-  current = ((struct layout *) top_frame);
-  while (cnt < size)
-    {
-      if ((void *) current INNER_THAN top_stack
-	  || !((void *) current INNER_THAN __libc_stack_end))
-       /* This means the address is out of range.  Note that for the
-	  toplevel we see a frame pointer with value NULL which clearly is
-	  out of range.  */
-	break;
+#ifdef SHARED
+  __libc_once_define (static, once);
 
-      array[cnt++] = current->return_address;
+  __libc_once (once, init);
+  if (unwind_backtrace == NULL)
+    return 0;
+#endif
 
-      current = ADVANCE_STACK_FRAME (current->next);
-    }
+  unwind_backtrace (backtrace_helper, &arg);
 
-  return cnt;
+  /* _Unwind_Backtrace seems to put NULL address above
+     _start.  Fix it up here.  */
+  if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
+    --arg.cnt;
+  return arg.cnt != -1 ? arg.cnt : 0;
 }
 weak_alias (__backtrace, backtrace)
 libc_hidden_def (__backtrace)
+
+
+#ifdef SHARED
+/* Free all resources if necessary.  */
+libc_freeres_fn (free_mem)
+{
+  unwind_backtrace = NULL;
+  if (libgcc_handle != NULL)
+    {
+      __libc_dlclose (libgcc_handle);
+      libgcc_handle = NULL;
+    }
+}
+#endif
