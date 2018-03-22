@@ -19,21 +19,12 @@
 #include <sys/ucontext.h>
 
 #define SIGCONTEXT siginfo_t *_si, ucontext_t *
-#define SIGCONTEXT_EXTRA_ARGS _si,
 
 /* The sigcontext structure changed between 2.0 and 2.1 kernels.  On any
    modern system we should be able to assume that the "new" format will be
    in use.  */
 
 #define GET_PC(ctx)	((void *) (ctx)->uc_mcontext.arm_pc)
-#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME ((void *) ctx->uc_mcontext.arm_fp)
-#define GET_STACK(ctx)	((void *) (ctx)->uc_mcontext.arm_sp)
-
-#define ADVANCE_STACK_FRAME(frm)	\
-			((struct layout *)frm - 1)
-
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
 
 /* There is no reliable way to get the sigcontext unless we use a
    three-argument signal handler.  */

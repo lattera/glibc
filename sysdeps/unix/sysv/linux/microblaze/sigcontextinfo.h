@@ -17,9 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define SIGCONTEXT int _code, ucontext_t *
-#define SIGCONTEXT_EXTRA_ARGS _code,
 #define GET_PC(ctx)    ((void *) (ctx)->uc_mcontext.regs.pc)
-#define GET_FRAME(ctx) ((void *) (ctx)->uc_mcontext.regs.sp)
-#define GET_STACK(ctx) ((void *) (ctx)->uc_mcontext.regs.sp)
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

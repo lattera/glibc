@@ -1,3 +1,98 @@
+2018-03-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/frame.h: Remove file.
+	* sysdeps/arm/frame.h: Likewise.
+	* sysdeps/hppa/frame.h: Likewise.
+	* sysdeps/generic/sigcontextinfo.h (SIGCONTEXT_EXTRA_ARGS): Remove
+	macro.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/mach/hurd/i386/sigcontextinfo.h (SIGCONTEXT_EXTRA_ARGS):
+	Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(ADVANCE_STACK_FRAME): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/mips/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/sh/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(FIRST_FRAME_POINTER): Likewise.
+	(ADVANCE_STACK_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(GET_FRAME): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(ADVANCE_STACK_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(GET_FRAME): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h
+	(SIGCONTEXT_EXTRA_ARGS): Likewise.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+	(CALL_SIGHANDLER): Likewise.
+
 2018-03-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/x86_64/backtrace.c: Move to ....

@@ -19,9 +19,4 @@
 #include <signal.h>
 
 #define SIGCONTEXT struct sigcontext *
-#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(ctx)	((void *)((ctx)->sregs->regs.psw.addr))
-#define GET_FRAME(ctx)	(*(void **)((ctx)->sregs->regs.gprs[11]))
-#define GET_STACK(ctx)	((void *)((ctx)->sregs->regs.gprs[15]))
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

@@ -16,9 +16,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define SIGCONTEXT struct sigcontext
-#define SIGCONTEXT_EXTRA_ARGS
 #define GET_PC(ctx)	((void *) (ctx).sc_eip)
-#define GET_FRAME(ctx)	((void *) (ctx).sc_ebp)
-#define GET_STACK(ctx)	((void *) (ctx).sc_uesp)
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

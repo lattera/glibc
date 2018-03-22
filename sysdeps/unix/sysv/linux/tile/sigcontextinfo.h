@@ -19,9 +19,4 @@
 #include <arch/abi.h>
 
 #define SIGCONTEXT siginfo_t *_si, ucontext_t *
-#define SIGCONTEXT_EXTRA_ARGS _si,
 #define GET_PC(ctx)	((void *) (long) ctx->uc_mcontext.pc)
-#define GET_FRAME(ctx)	((void *) (long) ctx->uc_mcontext.regs[TREG_FP])
-#define GET_STACK(ctx)	((void *) (long) ctx->uc_mcontext.sp)
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

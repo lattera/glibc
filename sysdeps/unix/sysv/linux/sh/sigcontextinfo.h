@@ -18,9 +18,4 @@
 
 #define SIGCONTEXT int _a2, int _a3, int _a4, struct sigcontext
 
-#define SIGCONTEXT_EXTRA_ARGS _a2, _a3, _a4,
 #define GET_PC(ctx)	((void *) ctx.sc_pc)
-#define GET_FRAME(ctx)	((void *) ctx.sc_regs[14])
-#define GET_STACK(ctx)	((void *) ctx.sc_regs[15])
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

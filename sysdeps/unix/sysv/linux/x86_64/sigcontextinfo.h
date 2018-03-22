@@ -18,13 +18,5 @@
 #include <stdint.h>
 
 #define SIGCONTEXT siginfo_t *_si, ucontext_t *
-#define SIGCONTEXT_EXTRA_ARGS _si,
 #define GET_PC(ctx)	\
   ((void *) (uintptr_t) (ctx)->uc_mcontext.gregs[REG_RIP])
-#define GET_FRAME(ctx)	\
-  ((void *) (uintptr_t) (ctx)->uc_mcontext.gregs[REG_RBP])
-#define GET_STACK(ctx)	\
-  ((void *) (uintptr_t) (ctx)->uc_mcontext.gregs[REG_RSP])
-
-#define CALL_SIGHANDLER(handler, signo, ctx) \
-  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
