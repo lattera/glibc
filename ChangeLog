@@ -1,3 +1,11 @@
+2018-03-23  Andrew Senkevich  <andrew.senkevich@intel.com>
+	    Max Horn  <max@quendi.de>
+
+	[BZ #22644]
+	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S: Fixed
+	branch conditions.
+	* string/test-memmove.c (do_test2): New testcase.
+
 2018-03-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/frame.h: Remove file.

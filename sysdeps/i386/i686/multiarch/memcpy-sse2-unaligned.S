@@ -72,7 +72,7 @@ ENTRY (MEMCPY)
 	cmp	%edx, %eax
 
 # ifdef USE_AS_MEMMOVE
-	jg	L(check_forward)
+	ja	L(check_forward)
 
 L(mm_len_0_or_more_backward):
 /* Now do checks for lengths. We do [0..16], [16..32], [32..64], [64..128]
@@ -81,7 +81,7 @@ L(mm_len_0_or_more_backward):
 	jbe	L(mm_len_0_16_bytes_backward)
 
 	cmpl	$32, %ecx
-	jg	L(mm_len_32_or_more_backward)
+	ja	L(mm_len_32_or_more_backward)
 
 /* Copy [0..32] and return.  */
 	movdqu	(%eax), %xmm0
@@ -92,7 +92,7 @@ L(mm_len_0_or_more_backward):
 
 L(mm_len_32_or_more_backward):
 	cmpl	$64, %ecx
-	jg	L(mm_len_64_or_more_backward)
+	ja	L(mm_len_64_or_more_backward)
 
 /* Copy [0..64] and return.  */
 	movdqu	(%eax), %xmm0
@@ -107,7 +107,7 @@ L(mm_len_32_or_more_backward):
 
 L(mm_len_64_or_more_backward):
 	cmpl	$128, %ecx
-	jg	L(mm_len_128_or_more_backward)
+	ja	L(mm_len_128_or_more_backward)
 
 /* Copy [0..128] and return.  */
 	movdqu	(%eax), %xmm0
@@ -132,7 +132,7 @@ L(mm_len_128_or_more_backward):
 	add	%ecx, %eax
 	cmp	%edx, %eax
 	movl	SRC(%esp), %eax
-	jle	L(forward)
+	jbe	L(forward)
 	PUSH (%esi)
 	PUSH (%edi)
 	PUSH (%ebx)
@@ -269,7 +269,7 @@ L(check_forward):
 	add	%edx, %ecx
 	cmp	%eax, %ecx
 	movl	LEN(%esp), %ecx
-	jle	L(forward)
+	jbe	L(forward)
 
 /* Now do checks for lengths. We do [0..16], [0..32], [0..64], [0..128]
 	separately.  */
