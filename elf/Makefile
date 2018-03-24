@@ -174,7 +174,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls4 tst-tls5 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
-	 tst-align tst-align2 $(tests-execstack-$(have-z-execstack)) \
+	 tst-align tst-align2 \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen3 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
@@ -202,6 +202,7 @@ ifneq ($(selinux-enabled),1)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 endif
+tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-leaks1-mem.out \
 		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out \
