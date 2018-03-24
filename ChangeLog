@@ -8,11 +8,13 @@
 	(ARCH_SETUP_TLS): Likewise.
 	* sysdeps/mach/hurd/libc-start.h: New file copied from
 	sysdeps/generic/libc-start.h, but define ARCH_SETUP_TLS to empty.
-	* csu/libc-start.c [!SHARED] (LIBC_START_MAIN): Call ARCH_SETUP_TLS instead
-	of __libc_setup_tls.
+	* csu/libc-start.c [!SHARED] (LIBC_START_MAIN): Call ARCH_SETUP_TLS
+	instead of __libc_setup_tls.
 	* sysdeps/mach/hurd/i386/init-first.c [!SHARED] (init1): Call
-	__libc_setup_tls before initializing libpthread and running _hurd_init which
-	starts the signal thread.
+	__libc_setup_tls before initializing libpthread and running _hurd_init
+	which starts the signal thread.
+	* sysdeps/generic/ldsodefs.h [SHARED] (__pthread_initialize_minimal):
+	Declare function.
 
 2018-03-24  H.J. Lu  <hongjiu.lu@intel.com>
 

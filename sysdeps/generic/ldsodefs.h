@@ -1067,11 +1067,11 @@ extern struct link_map * _dl_get_dl_main_map (void)
 # else
 #  define _dl_relocate_static_pie()
 # endif
+#endif
 
 /* Initialization of libpthread for statically linked applications.
    If libpthread is not linked in, this is an empty function.  */
 void __pthread_initialize_minimal (void) weak_function;
-#endif
 
 /* Allocate memory for static TLS block (unless MEM is nonzero) and dtv.  */
 extern void *_dl_allocate_tls (void *mem);
