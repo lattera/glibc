@@ -1,3 +1,8 @@
+2018-03-25  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/errno.h [IS_IN(rtld) && !RTLD_PRIVATE_ERRNO]: Do not use the
+	TLS declaration of errno.
+
 2018-03-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22998]
