@@ -127,8 +127,8 @@ enum __error_t_codes
   EPROTO                         = 0x40000074,	/* Protocol error */
   ETIME                          = 0x40000075,	/* Timer expired */
   ECANCELED                      = 0x40000077,	/* Operation canceled */
-  EOWNERDEAD                     = 0x40000078,	/* Robust mutex owner died */
-  ENOTRECOVERABLE                = 0x40000079,	/* Robust mutex irrecoverable */
+  EOWNERDEAD                     = 0x40000078,	/* Owner died */
+  ENOTRECOVERABLE                = 0x40000079,	/* State not recoverable */
 
 /* Errors from <mach/message.h>.  */
   EMACH_SEND_IN_PROGRESS         = 0x10000001,

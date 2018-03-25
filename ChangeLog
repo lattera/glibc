@@ -15,6 +15,7 @@
 	which starts the signal thread.
 	* sysdeps/generic/ldsodefs.h [SHARED] (__pthread_initialize_minimal):
 	Declare function.
+	* sysdeps/mach/hurd/bits/errno.h: Regenerate.
 
 2018-03-24  H.J. Lu  <hongjiu.lu@intel.com>
 
