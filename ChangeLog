@@ -1,3 +1,16 @@
+2018-03-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #16552]
+	* sysdeps/unix/sysv/linux/generic/umount.c: Move to ....
+	* sysdeps/unix/sysv/linux/umount.c: ... here.
+	* sysdeps/unix/sysv/linux/arm/umount.c: Remove file.
+	* sysdeps/unix/sysv/linux/hppa/umount.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/umount.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/umount.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/umount.c: Likewise.
+	* sysdeps/unix/sysv/linux/umount.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/umount.c: Likewise.
+
 2018-03-26  Andreas Schwab  <schwab@suse.de>
 
 	* elf/elf.h (R_RISCV_BRANCH, R_RISCV_JAL, R_RISCV_CALL)
