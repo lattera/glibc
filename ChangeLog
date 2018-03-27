@@ -1,3 +1,8 @@
+2018-03-27  Jesse Hathaway  <jesse@mbuki-mvuki.org>
+
+	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Return
+	early when linux sentinel value is set.
+
 2018-03-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_MEMLOCK): Define.

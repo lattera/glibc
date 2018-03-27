@@ -55,6 +55,15 @@ __getlogin_r_loginuid (char *name, size_t namesize)
 	  endp == uidbuf || *endp != '\0'))
     return -1;
 
+  /* If there is no login uid, linux sets /proc/self/loginid to the sentinel
+     value of, (uid_t) -1, so check if that value is set and return early to
+     avoid making unneeded nss lookups. */
+  if (uid == (uid_t) -1)
+    {
+      __set_errno (ENXIO);
+      return ENXIO;
+    }
+
   struct passwd pwd;
   struct passwd *tpwd;
   int result = 0;
