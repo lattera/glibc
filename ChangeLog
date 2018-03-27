@@ -1,3 +1,9 @@
+2018-03-27  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23005]
+	* resolv/res_send.c (__res_context_send): Return ENOMEM if
+	allocation of private copy of nsaddr_list fails.
+
 2018-03-26  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #16552]
