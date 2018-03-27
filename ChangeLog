@@ -1,3 +1,7 @@
+2018-03-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_MEMLOCK): Define.
+
 2018-03-27  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23005]

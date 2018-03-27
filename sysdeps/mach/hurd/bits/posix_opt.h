@@ -42,8 +42,8 @@
 /* Mapping of files to memory is supported.  */
 #define	_POSIX_MAPPED_FILES	200809L
 
-/* Locking of all memory could be supported in future.  */
-#define	_POSIX_MEMLOCK	0
+/* Locking of all memory is supported.  */
+#define	_POSIX_MEMLOCK	200809L
 
 /* Locking of ranges of memory is supported.  */
 #define	_POSIX_MEMLOCK_RANGE	200809L
