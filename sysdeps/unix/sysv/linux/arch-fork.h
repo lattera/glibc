@@ -34,7 +34,11 @@ arch_fork (void *ctid)
   const int flags = CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD;
   long int ret;
 #ifdef __ASSUME_CLONE_BACKWARDS
+# ifdef INLINE_CLONE_SYSCALL
+  ret = INLINE_CLONE_SYSCALL (flags, 0, NULL, 0, ctid);
+# else
   ret = INLINE_SYSCALL_CALL (clone, flags, 0, NULL, 0, ctid);
+# endif
 #elif defined(__ASSUME_CLONE_BACKWARDS2)
   ret = INLINE_SYSCALL_CALL (clone, 0, flags, NULL, ctid, 0);
 #elif defined(__ASSUME_CLONE_BACKWARDS3)

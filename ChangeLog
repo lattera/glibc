@@ -1,3 +1,10 @@
+2018-03-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arch-fork.h [__ASSUME_CLONE_BACKWARDS]
+	(arch_fork): Issue INLINE_CLONE_SYSCALL if defined.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	(__ASSUME_CLONE_BACKWARDS): Define.
+
 2018-03-27  Jesse Hathaway  <jesse@mbuki-mvuki.org>
 
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Return
