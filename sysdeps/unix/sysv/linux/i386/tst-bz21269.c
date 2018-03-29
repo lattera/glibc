@@ -177,6 +177,8 @@ do_test (void)
   xsethandler (SIGSEGV, sigsegv_handler, 0);
   /* 32-bit kernels send SIGILL instead of SIGSEGV on IRET faults.  */
   xsethandler (SIGILL, sigsegv_handler, 0);
+  /* Some kernels send SIGBUS instead.  */
+  xsethandler (SIGBUS, sigsegv_handler, 0);
 
   thread = xpthread_create (0, threadproc, 0);
 

@@ -1,3 +1,8 @@
+2018-03-29  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c (do_test): Also
+	capture SIGBUS.
+
 2018-03-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/arch-fork.h [__ASSUME_CLONE_BACKWARDS]
