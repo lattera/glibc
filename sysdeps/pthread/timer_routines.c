@@ -463,9 +463,13 @@ int
 __timer_thread_start (struct thread_node *thread)
 {
   int retval = 1;
+  sigset_t set, oset;
 
   assert (!thread->exists);
   thread->exists = 1;
+
+  sigfillset (&set);
+  pthread_sigmask (SIG_SETMASK, &set, &oset);
 
   if (pthread_create (&thread->id, &thread->attr,
 		      (void *(*) (void *)) thread_func, thread) != 0)
@@ -473,6 +477,8 @@ __timer_thread_start (struct thread_node *thread)
       thread->exists = 0;
       retval = -1;
     }
+
+  pthread_sigmask (SIG_SETMASK, &oset, NULL);
 
   return retval;
 }

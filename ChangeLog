@@ -1,3 +1,8 @@
+2018-04-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/pthread/timer_routines.c (__timer_thread_start): Block all
+	signals in thread created for runing timers.
+
 2018-04-01  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support_format_addrinfo.c (support_format_addrinfo):
