@@ -1,3 +1,27 @@
+2018-04-02  Agustina Arzille  <avarzille@riseup.net>
+            Amos Jeffries  <squid3@treenet.co.nz>
+            David Michael  <fedora.dm0@gmail.com>
+            Marco Gerards  <marco@gnu.org>
+            Marcus Brinkmann  <marcus@gnu.org>
+            Neal H. Walfield  <neal@gnu.org>
+            Pino Toscano  <toscano.pino@tiscali.it>
+            Richard Braun  <rbraun@sceen.net>
+            Roland McGrath  <roland@gnu.org>
+            Samuel Thibault  <samuel.thibault@ens-lyon.org>
+            Thomas DiModica  <ricinwich@yahoo.com>
+            Thomas Schwinge  <tschwinge@gnu.org>
+
+	* htl: New directory.
+	* sysdeps/htl: New directory.
+	* sysdeps/hurd/htl: New directory.
+	* sysdeps/i386/htl: New directory.
+	* sysdeps/mach/htl: New directory.
+	* sysdeps/mach/hurd/htl: New directory.
+	* sysdeps/mach/hurd/i386/htl: New directory.
+	* nscd/Depend, resolv/Depend, rt/Depend: Add htl dependency.
+	* sysdeps/mach/hurd/i386/Implies: Add mach/hurd/i386/htl imply.
+	* sysdeps/mach/hurd/i386/libpthread.abilist: New file.
+
 2018-04-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/pthread/timer_routines.c (__timer_thread_start): Block all
