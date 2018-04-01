@@ -32,3 +32,12 @@
    suitable, and `sysconf' will return a number at least as large.  */
 
 #define NGROUPS_MAX	256
+
+/* The number of data keys per process.  */
+#define _POSIX_THREAD_KEYS_MAX	128
+
+/* Controlling the iterations of destructors for thread-specific data.  */
+#define _POSIX_THREAD_DESTRUCTOR_ITERATIONS	4
+
+/* The number of threads per process.  */
+#define _POSIX_THREAD_THREADS_MAX	64

@@ -1,3 +1,13 @@
+2018-04-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/bits/local_lim.h (_POSIX_THREAD_KEYS_MAX,
+	_POSIX_THREAD_DESTRUCTOR_ITERATIONS, _POSIX_THREAD_THREADS_MAX): Define
+	macros.
+	* sysdeps/mach/hurd/bits/posix_opt.h (_POSIX_THREADS,
+	_POSIX_THREAD_ATTR_STACKSIZE, _POSIX_THREAD_ATTR_STACKADDR,
+	_POSIX_SEMAPHORES, _POSIX_READER_WRITER_LOCKS, _POSIX_TIMEOUTS,
+	_POSIX_SPIN_LOCKS, _POSIX_BARRIERS): Define macros to 200809L.
+
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
             Amos Jeffries  <squid3@treenet.co.nz>
             David Michael  <fedora.dm0@gmail.com>

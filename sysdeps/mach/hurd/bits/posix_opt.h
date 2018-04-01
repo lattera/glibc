@@ -71,24 +71,38 @@
 /* XPG4.2 shared memory is not supported.  */
 #undef	_XOPEN_SHM
 
-/* We do not have the POSIX threads interface.  */
-#define _POSIX_THREADS	-1
+/* Tell we have POSIX threads.  */
+#define _POSIX_THREADS	200809L
 
 /* We have the reentrant functions described in POSIX.  */
 #define _POSIX_REENTRANT_FUNCTIONS      1
 #define _POSIX_THREAD_SAFE_FUNCTIONS	200809L
 
-/* These are all things that won't be supported when _POSIX_THREADS is not.  */
+/* We do not provide priority scheduling for threads.  */
 #define _POSIX_THREAD_PRIORITY_SCHEDULING	-1
-#define _POSIX_THREAD_ATTR_STACKSIZE		-1
-#define _POSIX_THREAD_ATTR_STACKADDR		-1
+
+/* We support user-defined stack sizes.  */
+#define _POSIX_THREAD_ATTR_STACKSIZE	200809L
+
+/* We support user-defined stacks.  */
+#define _POSIX_THREAD_ATTR_STACKADDR	200809L
+
+/* We do not support priority inheritence.  */
 #define _POSIX_THREAD_PRIO_INHERIT		-1
+
+/* We do not support priority protection.  */
 #define _POSIX_THREAD_PRIO_PROTECT		-1
+
 #ifdef __USE_XOPEN2K8
+/* We do not support priority inheritence for robust mutexes.  */
 # define _POSIX_THREAD_ROBUST_PRIO_INHERIT	-1
+
+/* We do not support priority protection for robust mutexes.  */
 # define _POSIX_THREAD_ROBUST_PRIO_PROTECT	-1
 #endif
-#define _POSIX_SEMAPHORES			-1
+
+/* We support POSIX.1b semaphores.  */
+#define _POSIX_SEMAPHORES			200809L
 
 /* Real-time signals are not yet supported.  */
 #define _POSIX_REALTIME_SIGNALS	-1
@@ -121,17 +135,17 @@
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
 
-/* Reader/Writer locks are not available.  */
-#define _POSIX_READER_WRITER_LOCKS	-1
+/* Reader/Writer locks are available.  */
+#define _POSIX_READER_WRITER_LOCKS	200809L
 
 /* We have a POSIX shell.  */
 #define _POSIX_SHELL	1
 
-/* We cannot support the Timeouts option without _POSIX_THREADS.  */
-#define _POSIX_TIMEOUTS	-1
+/* We support the Timeouts option.  */
+#define _POSIX_TIMEOUTS	200809L
 
-/* We do not support spinlocks.  */
-#define _POSIX_SPIN_LOCKS	-1
+/* We support spinlocks.  */
+#define _POSIX_SPIN_LOCKS	200809L
 
 /* The `spawn' function family is supported.  */
 #define _POSIX_SPAWN	200809L
@@ -139,8 +153,8 @@
 /* We do not have POSIX timers, but could in future without ABI change.  */
 #define _POSIX_TIMERS	0
 
-/* The barrier functions are not available.  */
-#define _POSIX_BARRIERS	-1
+/* The barrier functions are available.  */
+#define _POSIX_BARRIERS	200809L
 
 /* POSIX message queues could be available in future.  */
 #define	_POSIX_MESSAGE_PASSING	0
