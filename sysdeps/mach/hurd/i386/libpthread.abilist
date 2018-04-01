@@ -5,6 +5,7 @@ GLIBC_2.12 __pthread_get_cleanup_stack F
 GLIBC_2.12 __pthread_key_create F
 GLIBC_2.12 __pthread_kill F
 GLIBC_2.12 __pthread_mutex_transfer_np F
+GLIBC_2.12 __pthread_self F
 GLIBC_2.12 __pthread_spin_destroy F
 GLIBC_2.12 __pthread_spin_init F
 GLIBC_2.12 __pthread_spin_lock F
