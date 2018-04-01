@@ -220,7 +220,11 @@ support_format_addrinfo (struct addrinfo *ai, int ret)
   xopen_memstream (&mem);
   if (ret != 0)
     {
-      fprintf (mem.out, "error: %s\n", gai_strerror (ret));
+      const char *errmsg = gai_strerror (ret);
+      if (strcmp (errmsg, "Unknown error") == 0)
+        fprintf (mem.out, "error: Unknown error %d\n", ret);
+      else
+        fprintf (mem.out, "error: %s\n", errmsg);
       if (ret == EAI_SYSTEM)
         {
           errno = errno_copy;

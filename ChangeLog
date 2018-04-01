@@ -1,3 +1,8 @@
+2018-04-01  Florian Weimer  <fweimer@redhat.com>
+
+	* support/support_format_addrinfo.c (support_format_addrinfo):
+	Include unknown error number in formatted result.
+
 2018-03-29  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/tst-bz21269.c (do_test): Also
