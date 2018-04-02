@@ -59,6 +59,7 @@ mach_error_type(mach_error_t err)
 	||  sub >= errors[system].max_sub ) return( "(?/?)" );
 	return( errors[system].subsystem[sub].subsys_name );
 }
+libc_hidden_def (mach_error_type)
 
 boolean_t mach_error_full_diag = FALSE;
 

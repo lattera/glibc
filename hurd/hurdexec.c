@@ -435,3 +435,4 @@ _hurd_exec_paths (task_t task, file_t file,
   free (env);
   return err;
 }
+libc_hidden_def (_hurd_exec_paths)

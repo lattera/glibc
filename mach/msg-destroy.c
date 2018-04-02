@@ -189,6 +189,7 @@ __mach_msg_destroy (mach_msg_header_t *msg)
 }
 
 weak_alias (__mach_msg_destroy, mach_msg_destroy)
+libc_hidden_def (__mach_msg_destroy)
 
 static void
 mach_msg_destroy_port (mach_port_t port, mach_msg_type_name_t type)

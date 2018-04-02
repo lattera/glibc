@@ -47,3 +47,4 @@ _hurd_intern_fd (io_t port, int flags, int dealloc)
 
   return fd;
 }
+libc_hidden_def (_hurd_intern_fd)

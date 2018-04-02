@@ -22,10 +22,10 @@
 #include <assert.h>
 
 error_t
-hurd_catch_signal (sigset_t sigset,
-		   unsigned long int first, unsigned long int last,
-		   error_t (*operate) (struct hurd_signal_preemptor *),
-		   sighandler_t handler)
+__hurd_catch_signal (sigset_t sigset,
+		     unsigned long int first, unsigned long int last,
+		     error_t (*operate) (struct hurd_signal_preemptor *),
+		     sighandler_t handler)
 {
   /* We need to restore the signal mask, because otherwise the
      signal-handling code will have blocked the caught signal and for
@@ -73,6 +73,7 @@ hurd_catch_signal (sigset_t sigset,
 
   return error;
 }
+strong_alias (__hurd_catch_signal, hurd_catch_signal)
 
 
 error_t
@@ -83,9 +84,9 @@ hurd_safe_memset (void *dest, int byte, size_t nbytes)
       memset (dest, byte, nbytes);
       return 0;
     }
-  return hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
-			    (vm_address_t) dest, (vm_address_t) dest + nbytes,
-			    &operate, SIG_ERR);
+  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+			      (vm_address_t) dest, (vm_address_t) dest + nbytes,
+			      &operate, SIG_ERR);
 }
 
 
@@ -97,9 +98,9 @@ hurd_safe_copyout (void *dest, const void *src, size_t nbytes)
       memcpy (dest, src, nbytes);
       return 0;
     }
-  return hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
-			    (vm_address_t) dest, (vm_address_t) dest + nbytes,
-			    &operate, SIG_ERR);
+  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+			      (vm_address_t) dest, (vm_address_t) dest + nbytes,
+			      &operate, SIG_ERR);
 }
 
 error_t
@@ -110,9 +111,9 @@ hurd_safe_copyin (void *dest, const void *src, size_t nbytes)
       memcpy (dest, src, nbytes);
       return 0;
     }
-  return hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
-			    (vm_address_t) src, (vm_address_t) src + nbytes,
-			    &operate, SIG_ERR);
+  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+			      (vm_address_t) src, (vm_address_t) src + nbytes,
+			      &operate, SIG_ERR);
 }
 
 error_t

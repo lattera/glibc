@@ -422,3 +422,4 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 
   return err;
 }
+libc_hidden_def (_hurd_intr_rpc_mach_msg)

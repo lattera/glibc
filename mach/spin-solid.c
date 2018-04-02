@@ -26,3 +26,4 @@ __spin_lock_solid (spin_lock_t *lock)
     __swtch_pri (0);
 }
 weak_alias (__spin_lock_solid, spin_lock_solid);
+libc_hidden_def (__spin_lock_solid)

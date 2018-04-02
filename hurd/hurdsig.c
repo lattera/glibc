@@ -23,6 +23,7 @@
 #include <pthreadP.h>
 #include <mach.h>
 #include <mach/thread_switch.h>
+#include <mach/mig_support.h>
 
 #include <hurd.h>
 #include <hurd/id.h>
@@ -120,6 +121,7 @@ _hurd_thread_sigstate (thread_t thread)
   __mutex_unlock (&_hurd_siglock);
   return ss;
 }
+libc_hidden_def (_hurd_thread_sigstate)
 
 /* Signal delivery itself is on this page.  */
 
@@ -1018,7 +1020,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		      || ss->actions[signo].sa_handler == SIG_IGN
 		      || ss->actions[signo].sa_handler == SIG_DFL))
 		{
-		  mutex_unlock (&_hurd_siglock);
+		  __mutex_unlock (&_hurd_siglock);
 		  goto deliver_pending;
 		}
 	    __spin_unlock (&ss->lock);

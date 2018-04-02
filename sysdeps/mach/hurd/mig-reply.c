@@ -16,6 +16,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <mach.h>
+#include <mach/mig_support.h>
 #include <hurd/threadvar.h>
 
 /* These functions are called by MiG-generated code.  */
@@ -34,6 +35,7 @@ __mig_get_reply_port (void)
   return __hurd_local_reply_port;
 }
 weak_alias (__mig_get_reply_port, mig_get_reply_port)
+libc_hidden_def (__mig_get_reply_port)
 
 /* Called by MiG to deallocate the reply port.  */
 void
@@ -47,6 +49,7 @@ __mig_dealloc_reply_port (mach_port_t arg)
 			  MACH_PORT_RIGHT_RECEIVE, -1);
 }
 weak_alias (__mig_dealloc_reply_port, mig_dealloc_reply_port)
+libc_hidden_def (__mig_dealloc_reply_port)
 
 /* Called by mig interfaces when done with a port.  Used to provide the
    same interface as needed when a custom allocator is used.  */
@@ -66,3 +69,4 @@ __mig_init (void *stack)
   /* Do nothing.  */
 }
 weak_alias (__mig_init, mig_init)
+libc_hidden_def (__mig_init)

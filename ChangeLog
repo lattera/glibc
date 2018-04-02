@@ -345,6 +345,48 @@
 	* sysdeps/unix/clock_nanosleep.c (__clock_nanosleep): Call
 	__clock_gettime and __nanosleep instead of clock_gettime and
 	nanosleep.
+	* hurd/catch-signal.c (hurd_catch_signal): Rename to
+	__hurd_catch_signal.
+	(hurd_catch_signal): New strong alias.
+	(hurd_safe_memset, hurd_safe_copyout, hurd_safe_copyin): Call
+	__hurd_catch_signal instead of hurd_catch_signal.
+	* hurd/exc2signal.c (_hurd_exception2signal): Add hidden def.
+	* hurd/hurdexec.c (_hurd_init): Add hidden def.
+	* hurd/hurdinit.c (_hurd_init): Add hidden def.
+	* hurd/hurdsig.c: Include <mach/mig_support.h>.
+	(_hurd_thread_sigstate): Add hidden def.
+	(_hurd_internal_post_signal): Use __mutex_unlock instead of
+	mutex_unlock.
+	* hurd/intern-fd.c (_hurd_intern_fd): Add hidden def.
+	* hurd/intr-msg.c (_hurd_intr_rpc_mach_msg): Add hidden def.
+	* hurd/path-lookup.c (hurd_file_name_path_lookup): Rename to
+	__hurd_file_name_path_lookup.
+	(hurd_file_name_path_lookup): New strong alias.
+	(file_name_path_lookup): Call __hurd_file_name_path_lookup instead of
+	hurd_file_name_path_lookup.
+	* mach/errstring.c (mach_error_type): Add hidden def.
+	* mach/msg-destroy.c (__mach_msg_destroy): Add hidden def.
+	* mach/mutex-init.c (__mutex_init): Add hidden def.
+	* mach/spin-lock.c (__spin_lock_locked, __spin_lock, __spin_unlock,
+	__spin_try_lock, __mutex_lock, __mutex_trylock): Add hidden defs.
+	* mach/spin-solid.c (__spin_lock_solid): Add hidden def.
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Rename to
+	__hurd_canonicalize_directory_name_internal.
+	(_hurd_canonicalize_directory_name_internal): New strong alias.
+	(__canonicalize_directory_name_internal, __getcwd): Call
+	__hurd_canonicalize_directory_name_internal instead of
+	_hurd_canonicalize_directory_name_internal.
+	* sysdeps/mach/hurd/mig-reply.c: Include <mach/mig_support.h>.
+	(__mig_get_reply_port, __mig_dealloc_reply_port, __mig_init): Add
+	hidden defs.
+	* sysdeps/hurd/include/hurd.h: New file.
+	* sysdeps/hurd/include/hurd/fd.h: New file.
+	* sysdeps/hurd/include/hurd/signal.h: New file.
+	* sysdeps/mach/include/lock-intern.h: New file.
+	* sysdeps/mach/include/mach.h: New file.
+	* sysdeps/mach/include/mach/mig_support.h: New file.
+	* sysdeps/mach/include/mach_error.h: New file.
 
 	* sysdeps/mach/hurd/localplt.data: New file.
 
