@@ -18,3 +18,4 @@ ld.so: __strtoul_internal
 ld.so: _exit
 ld.so: abort
 ld.so: _hurd_intr_rpc_mach_msg
+ld.so: __errno_location
