@@ -39,3 +39,15 @@ ld.so: __getpid
 ld.so: abort
 ld.so: _hurd_intr_rpc_mach_msg
 ld.so: __errno_location
+# rtld_hidden is currently disabled to avoid having to special-case the
+# functions above which do need a PLT.  These are thus currently expected.
+ld.so: _dl_allocate_tls
+ld.so: _dl_allocate_tls_init
+ld.so: _dl_exception_create
+ld.so: _dl_exception_create_format
+ld.so: _dl_exception_free
+ld.so: _dl_find_dso_for_object
+ld.so: _dl_init_first
+ld.so: _dl_mcount
+ld.so: ___tls_get_addr
+ld.so: __tunable_get_val
