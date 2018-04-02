@@ -79,6 +79,7 @@ shared-only-routines = compat-20
 $(inlines:%=$(objpfx)%.c): $(objpfx)%-inlines.c: %.h
 	(h="`echo $(subst /,_,$*) | tr '[a-z]' '[A-Z]'`"; \
 	 echo "#define _$${h}_H_EXTERN_INLINE /* Define real function.  */"; \
+	 echo "#define _$${h}_H_HIDDEN_DEF    /* Declare hidden definition.  */"; \
 	 echo '#include "$<"') > $@-new
 	mv -f $@-new $@
 generated += $(inlines:=.c)

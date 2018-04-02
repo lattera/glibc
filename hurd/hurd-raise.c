@@ -48,3 +48,4 @@ _hurd_raise_signal (struct hurd_sigstate *ss,
      other thread.  */
   return __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
 }
+libc_hidden_def (_hurd_raise_signal)

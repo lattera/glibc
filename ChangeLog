@@ -387,6 +387,15 @@
 	* sysdeps/mach/include/mach.h: New file.
 	* sysdeps/mach/include/mach/mig_support.h: New file.
 	* sysdeps/mach/include/mach_error.h: New file.
+	* sysdeps/hurd/include/hurd/signal.h (_hurd_raise_signal): Add hidden
+	prototype.
+	* hurd/hurd-raise.c (_hurd_raise_signal): Add hidden def.
+	* hurd/Makefile ($(inlines:%=$(objpfx)%.c): Define
+	_HEADER_H_HIDDEN_DEF macro.
+	* sysdeps/hurd/include/hurd/fd.h (_hurd_fd_error,
+	_hurd_fd_error_signal): Add hidden prototype.
+	[_HURD_FD_H_HIDDEN_DEF] (_hurd_fd_error, _hurd_fd_error_signal): Add
+	hidden def.
 
 	* sysdeps/mach/hurd/localplt.data: New file.
 
