@@ -22,6 +22,9 @@ Major new features:
   Czech languages.  The Catalan and Greek languages now support abbreviated
   alternative month names.
 
+* Building and running on GNU/Hurd systems now works without out-of-tree
+  patches.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
  * The nonstandard header files <libio.h> and <_G_config.h> are no longer
