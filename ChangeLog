@@ -317,7 +317,6 @@
 	(_hurd_siginfo_handler): Call _IO_puts instead of puts.
 	* hurd/xattr.c (_hurd_xattr_get, _hurd_xattr_set): Call __munmap instead of
 	munmap.
-	* io/fts.c (fts_build): Call __dirfd instead of dirfd.
 	* mach/devstream.c: Include <libioP.h>.
 	(dealloc_ref): Call __mach_port_deallocate instead of
 	mach_port_deallocate.
