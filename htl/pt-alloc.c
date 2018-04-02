@@ -91,7 +91,7 @@ __pthread_alloc (struct __pthread **pthread)
   int max_threads;
   int new_max_threads;
 
-  pthread_mutex_lock (&__pthread_free_threads_lock);
+  __pthread_mutex_lock (&__pthread_free_threads_lock);
   for (new = __pthread_free_threads; new; new = new->next)
     {
       /* There is no need to take NEW->STATE_LOCK: if NEW is on this
@@ -105,7 +105,7 @@ __pthread_alloc (struct __pthread **pthread)
 	  break;
 	}
     }
-  pthread_mutex_unlock (&__pthread_free_threads_lock);
+  __pthread_mutex_unlock (&__pthread_free_threads_lock);
 
   if (new)
     {

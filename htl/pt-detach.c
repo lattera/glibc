@@ -25,7 +25,7 @@
 /* Indicate that the storage for THREAD can be reclaimed when it
    terminates.  */
 int
-pthread_detach (pthread_t thread)
+__pthread_detach (pthread_t thread)
 {
   struct __pthread *pthread;
   int err = 0;
@@ -47,7 +47,7 @@ pthread_detach (pthread_t thread)
       /* Broadcast the condition.  This will make threads that are
          waiting to join THREAD continue with hopefully disastrous
          consequences instead of blocking indefinitely.  */
-      pthread_cond_broadcast (&pthread->state_cond);
+      __pthread_cond_broadcast (&pthread->state_cond);
       __pthread_mutex_unlock (&pthread->state_lock);
 
       __pthread_dealloc (pthread);
@@ -77,3 +77,4 @@ pthread_detach (pthread_t thread)
 
   return err;
 }
+strong_alias (__pthread_detach, pthread_detach)

@@ -21,6 +21,7 @@
 #include <assert.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 pthread_mutex_t __pthread_key_lock;
 
@@ -106,3 +107,4 @@ do_search:
   return 0;
 }
 strong_alias (__pthread_key_create, pthread_key_create)
+hidden_def (__pthread_key_create)

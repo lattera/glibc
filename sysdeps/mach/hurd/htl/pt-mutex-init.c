@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <pt-internal.h>
+#include <pthreadP.h>
 #include "pt-mutex.h"
 #include <hurdlock.h>
 
@@ -53,3 +54,4 @@ _pthread_mutex_init (pthread_mutex_t *mtxp, const pthread_mutexattr_t *attrp)
 }
 
 strong_alias (_pthread_mutex_init, pthread_mutex_init)
+hidden_def (_pthread_mutex_init)

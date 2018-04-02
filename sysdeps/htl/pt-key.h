@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <libc-lockP.h>
+#include <pthreadP.h>
 
 #define PTHREAD_KEY_MEMBERS \
   void **thread_specifics;		/* This is only resized by the thread, and always growing */ \

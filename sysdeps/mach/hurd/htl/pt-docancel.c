@@ -19,11 +19,12 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 static void
 call_exit (void)
 {
-  pthread_exit (0);
+  __pthread_exit (0);
 }
 
 int

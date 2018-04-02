@@ -21,7 +21,8 @@
 #include <pt-internal.h>
 
 struct __pthread_cancelation_handler **
-__pthread_get_cleanup_stack (void)
+___pthread_get_cleanup_stack (void)
 {
   return &_pthread_self ()->cancelation_handlers;
 }
+strong_alias (___pthread_get_cleanup_stack, __pthread_cleanup_stack)

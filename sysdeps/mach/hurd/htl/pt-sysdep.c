@@ -24,6 +24,7 @@
 #include <mach/mig_support.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 __thread struct __pthread *___pthread_self;
 
@@ -57,8 +58,8 @@ _init_routine (void *stack)
          while the main program was not linked against libpthread.  */
       /* Avoid allocating another stack */
       attrp = &attr;
-      pthread_attr_init (attrp);
-      pthread_attr_setstack (attrp, stack, __vm_page_size);
+      __pthread_attr_init (attrp);
+      __pthread_attr_setstack (attrp, stack, __vm_page_size);
     }
 
   /* Create the pthread structure for the main thread (i.e. us).  */

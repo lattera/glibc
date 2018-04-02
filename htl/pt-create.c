@@ -26,6 +26,7 @@
 #include <hurd/resource.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 #if IS_IN (libpthread)
 # include <ctype.h>
@@ -58,14 +59,14 @@ entry_point (struct __pthread *self, void *(*start_routine) (void *), void *arg)
 
   __pthread_startup ();
 
-  pthread_exit (start_routine (arg));
+  __pthread_exit (start_routine (arg));
 }
 
 /* Create a thread with attributes given by ATTR, executing
    START_ROUTINE with argument ARG.  */
 int
-pthread_create (pthread_t * thread, const pthread_attr_t * attr,
-		void *(*start_routine) (void *), void *arg)
+__pthread_create (pthread_t * thread, const pthread_attr_t * attr,
+		  void *(*start_routine) (void *), void *arg)
 {
   int err;
   struct __pthread *pthread;
@@ -78,6 +79,7 @@ pthread_create (pthread_t * thread, const pthread_attr_t * attr,
 
   return err;
 }
+strong_alias (__pthread_create, pthread_create)
 
 /* Internal version of pthread_create.  See comment in
    pt-internal.h.  */

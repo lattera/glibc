@@ -19,6 +19,7 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 extern int __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 					      pthread_mutex_t *mutex,
@@ -115,7 +116,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
   __pthread_mutex_unlock (&self->cancel_lock);
 
   if (cancelled)
-    pthread_exit (PTHREAD_CANCELED);
+    __pthread_exit (PTHREAD_CANCELED);
 
   /* Release MUTEX before blocking.  */
   __pthread_mutex_unlock (mutex);
@@ -171,7 +172,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
   __pthread_mutex_lock (mutex);
 
   if (cancelled)
-    pthread_exit (PTHREAD_CANCELED);
+    __pthread_exit (PTHREAD_CANCELED);
 
   return err;
 }

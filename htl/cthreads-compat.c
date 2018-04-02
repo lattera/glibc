@@ -26,7 +26,7 @@ __cthread_detach (__cthread_t thread)
 {
   int err;
 
-  err = pthread_detach ((pthread_t) thread);
+  err = __pthread_detach ((pthread_t) thread);
   assert_perror (err);
 }
 weak_alias (__cthread_detach, cthread_detach)
@@ -37,7 +37,7 @@ __cthread_fork (__cthread_fn_t func, void *arg)
   pthread_t thread;
   int err;
 
-  err = pthread_create (&thread, NULL, func, arg);
+  err = __pthread_create (&thread, NULL, func, arg);
   assert_perror (err);
 
   return (__cthread_t) thread;
@@ -49,7 +49,7 @@ __cthread_keycreate (__cthread_key_t *key)
 {
   error_t err;
 
-  err = pthread_key_create (key, 0);
+  err = __pthread_key_create (key, 0);
   if (err)
     {
       errno = err;
@@ -64,7 +64,7 @@ weak_alias (__cthread_keycreate, cthread_keycreate)
 int
 __cthread_getspecific (__cthread_key_t key, void **val)
 {
-  *val = pthread_getspecific (key);
+  *val = __pthread_getspecific (key);
   return 0;
 }
 weak_alias (__cthread_getspecific, cthread_getspecific)
@@ -74,7 +74,7 @@ __cthread_setspecific (__cthread_key_t key, void *val)
 {
   error_t err;
 
-  err = pthread_setspecific (key, (const void *) val);
+  err = __pthread_setspecific (key, (const void *) val);
   if (err)
     {
       errno = err;

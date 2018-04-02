@@ -226,6 +226,85 @@
 	* sysdeps/mach/hurd/bits/stat.h [!__USE_MISC && __USE_ATFILE]
 	(UTIME_NOW, UTIME_OMIT): Define macros.
 
+	* htl/cthreads-compat.c (__cthread_detach): Call __pthread_detach
+	instead of pthread_detach.
+	(__cthread_fork): Call __pthread_create instead of pthread_create.
+	(__cthread_keycreate): Call __pthread_key_create instead of
+	pthread_key_create.
+	(__cthread_getspecific): Call __pthread_getspecific instead of
+	pthread_getspecific.
+	(__cthread_setspecific): Call __pthread_setspecific instead of
+	pthread_setspecific.
+	* htl/pt-alloc.c (__pthread_alloc): Call __pthread_mutex_lock and
+	__pthread_mutex_unlock instead of pthread_mutex_lock and
+	pthread_mutex_unlock.
+	* htl/pt-cleanup.c (__pthread_get_cleanup_stack): Rename to
+	___pthread_get_cleanup_stack.
+	(__pthread_get_cleanup_stack): New strong alias.
+	* htl/pt-create.c: Include <pthreadP.h>.
+	(entry_point): Call __pthread_exit instead of pthread_exit.
+	(pthread_create): Rename to __pthread_create.
+	(pthread_create): New strong alias.
+	* htl/pt-detach.c (pthread_detach): Rename to __pthread_detach.
+	(pthread_detach): New strong alias.
+	(__pthread_detach): Call __pthread_cond_broadcast instead of
+	pthread_cond_broadcast.
+	* htl/pt-exit.c (__pthread_exit): Call __pthread_setcancelstate
+	instead of pthread_setcancelstate.
+	* htl/pt-testcancel.c: Include <pthreadP.h>.
+	(pthread_testcancel): Call __pthread_exit instead of pthread_exit.
+	* sysdeps/htl/pt-attr-getstack.c: Include <pthreadP.h>
+	(__pthread_attr_getstack): Call __pthread_attr_getstackaddr and
+	__pthread_attr_getstacksize instead of pthread_attr_getstackaddr and
+	pthread_attr_getstacksize.
+	* sysdeps/htl/pt-attr-getstackaddr.c (pthread_attr_getstackaddr):
+	Rename to __pthread_attr_getstackaddr.
+	(pthread_attr_getstackaddr): New strong alias.
+	* sysdeps/htl/pt-attr-getstacksize.c (pthread_attr_getstacksize):
+	Rename to __pthread_attr_getstacksize.
+	(pthread_attr_getstacksize): New strong alias.
+	* sysdeps/htl/pt-attr-setstack.c: Include <pthreadP.h>.
+	(pthread_attr_setstack): Rename to __pthread_attr_setstack.
+	(pthread_attr_setstack): New strong alias.
+	(__pthread_attr_setstack): Call __pthread_attr_getstacksize,
+	__pthread_attr_setstacksize and __pthread_attr_setstackaddr instead of
+	pthread_attr_getstacksize, pthread_attr_setstacksize and
+	pthread_attr_setstackaddr.
+	* sysdeps/htl/pt-attr-setstackaddr.c (pthread_attr_setstackaddr):
+	Rename to __pthread_attr_setstackaddr.
+	(pthread_attr_setstackaddr): New strong alias.
+	* sysdeps/htl/pt-attr-setstacksize.c (pthread_attr_setstacksize):
+	Rename to __pthread_attr_setstacksize.
+	(pthread_attr_setstacksize): New strong alias.
+	* sysdeps/htl/pt-cond-timedwait.c: Include <pthreadP.h>.
+	(__pthread_cond_timedwait_internal): Use __pthread_exit instead of
+	pthread_exit.
+	* sysdeps/htl/pt-key-create.c: Include <pthreadP.h>.
+	(__pthread_key_create): New hidden def.
+	* sysdeps/htl/pt-key.h: Include <pthreadP.h>.
+	* sysdeps/htl/pthreadP.h (_pthread_mutex_init,
+	__pthread_cond_broadcast, __pthread_create, __pthread_detach,
+	__pthread_exit, __pthread_key_create, __pthread_getspecific,
+	__pthread_setspecific, __pthread_setcancelstate,
+	__pthread_attr_getstackaddr, __pthread_attr_setstackaddr,
+	__pthread_attr_getstacksize, __pthread_attr_setstacksize,
+	__pthread_attr_setstack, ___pthread_get_cleanup_stack): New
+	declarations.
+	(__pthread_key_create, _pthread_mutex_init): New hidden declarations.
+	* sysdeps/mach/hurd/htl/pt-attr-setstackaddr.c
+	(pthread_attr_setstackaddr): Rename to __pthread_attr_setstackaddr.
+	(pthread_attr_setstackaddr): New strong alias.
+	* sysdeps/mach/hurd/htl/pt-attr-setstacksize.c
+	(pthread_attr_setstacksize): Rename to __pthread_attr_setstacksize.
+	(pthread_attr_setstacksize): New strong alias.
+	* sysdeps/mach/hurd/htl/pt-docancel.c: Include <pthreadP.h>.
+	(call_exit): Call __pthread_exit instead of pthread_exit.
+	* sysdeps/mach/hurd/htl/pt-mutex-init.c: Include <pthreadP.h>.
+	(_pthread_mutex_init): New hidden definition.
+	* sysdeps/mach/hurd/htl/pt-sysdep.c: Include <pthreadP.h>.
+	(_init_routine): Call __pthread_attr_init and __pthread_attr_setstack
+	instead of pthread_attr_init and pthread_attr_setstack.
+
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
             Amos Jeffries  <squid3@treenet.co.nz>
             David Michael  <fedora.dm0@gmail.com>

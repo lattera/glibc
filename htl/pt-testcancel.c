@@ -19,6 +19,7 @@
 #include <pthread.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 void
 pthread_testcancel (void)
@@ -31,5 +32,5 @@ pthread_testcancel (void)
   __pthread_mutex_unlock (&p->cancel_lock);
 
   if (cancelled)
-    pthread_exit (PTHREAD_CANCELED);
+    __pthread_exit (PTHREAD_CANCELED);
 }

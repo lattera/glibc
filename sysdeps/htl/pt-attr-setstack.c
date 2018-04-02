@@ -20,25 +20,26 @@
 #include <assert.h>
 
 #include <pt-internal.h>
+#include <pthreadP.h>
 
 int
-pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
+__pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
 {
   int err;
   size_t s;
 
   /* pthread_attr_setstack should always succeed, thus we set the size
      first as it is more discriminating.  */
-  pthread_attr_getstacksize (attr, &s);
+  __pthread_attr_getstacksize (attr, &s);
 
-  err = pthread_attr_setstacksize (attr, stacksize);
+  err = __pthread_attr_setstacksize (attr, stacksize);
   if (err)
     return err;
 
-  err = pthread_attr_setstackaddr (attr, stackaddr);
+  err = __pthread_attr_setstackaddr (attr, stackaddr);
   if (err)
     {
-      int e = pthread_attr_setstacksize (attr, s);
+      int e = __pthread_attr_setstacksize (attr, s);
       assert_perror (e);
 
       return err;
@@ -46,3 +47,4 @@ pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr, size_t stacksize)
 
   return 0;
 }
+strong_alias (__pthread_attr_setstack, pthread_attr_setstack)
