@@ -1,21 +1,41 @@
+# See scripts/check-localplt.awk for how this file is processed.
+# PLT use is required for the malloc family and for matherr because
+# users can define their own functions and have library internals call them.
+libc.so: calloc
+libc.so: free
+libc.so: malloc
+libc.so: memalign
+libc.so: realloc
+libm.so: matherr
+# The main malloc is interposed into the dynamic linker, for
+# allocations after the initial link (when dlopen is used).
+ld.so: malloc
+ld.so: calloc
+ld.so: realloc
+ld.so: free
+# The TLS-enabled version of these functions is interposed from libc.so.
+ld.so: _dl_signal_error
+ld.so: _dl_catch_error
+ld.so: _dl_signal_exception
+ld.so: _dl_catch_exception
 # The dynamic linker has its own versions of basic functions for initial loading
 # of shared libraries.  These need to be overriden by libc once loaded.
 ld.so: __open
 ld.so: __close
 ld.so: __libc_read
 ld.so: __libc_write
-ld.so: __writev
+#ld.so: __writev
 ld.so: __libc_lseek64
-ld.so: __map
+ld.so: __mmap
 ld.so: __fxstat64
 ld.so: __xstat64
-ld.so: __access
-ld.so: __access_noerrno
+#ld.so: __access
+#ld.so: __access_noerrno
 ld.so: __getpid
-ld.so: __getcwd
-ld.so: __sbrk
-ld.so: __strtoul_internal
-ld.so: _exit
+#ld.so: __getcwd
+#ld.so: __sbrk
+#ld.so: __strtoul_internal
+#ld.so: _exit
 ld.so: abort
 ld.so: _hurd_intr_rpc_mach_msg
 ld.so: __errno_location
