@@ -22,5 +22,5 @@
 int
 stty (int fd, const struct sgttyb *params)
 {
-  return ioctl (fd, TIOCSETP, (void *) params);
+  return __ioctl (fd, TIOCSETP, (void *) params);
 }

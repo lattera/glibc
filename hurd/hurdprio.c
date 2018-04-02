@@ -50,7 +50,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 
     case PRIO_USER:
       if (who == 0)
-	who = geteuid ();
+	who = __geteuid ();
       err = __USEPORT (PROC, __proc_getallpids (port, &pids, &npids));
       for (i = 0; !err && i < npids; ++i)
 	{

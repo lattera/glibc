@@ -82,7 +82,7 @@ __socketpair (int domain, int type, int protocol, int fds[2])
   if (d2 < 0)
     {
       err = errno;
-      (void) close (d1);
+      (void) __close (d1);
       return __hurd_fail (err);
     }
 

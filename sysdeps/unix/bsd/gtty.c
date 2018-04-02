@@ -22,5 +22,5 @@
 int
 gtty (int fd, struct sgttyb *params)
 {
-  return ioctl (fd, TIOCGETP, (void *) params);
+  return __ioctl (fd, TIOCGETP, (void *) params);
 }

@@ -376,7 +376,7 @@ thread_func (void *arg)
 
 	  /* This assumes that the elements of the list of one thread
 	     are all for the same clock.  */
-	  clock_gettime (timer->clock, &now);
+	  __clock_gettime (timer->clock, &now);
 
 	  while (1)
 	    {

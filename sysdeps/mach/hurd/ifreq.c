@@ -53,7 +53,7 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 
       if (len % sizeof (struct ifreq) != 0)
 	{
-	  munmap (data, len);
+	  __munmap (data, len);
 	  errno = EGRATUITOUS;
 	  goto out;
 	}

@@ -50,7 +50,7 @@ timer_gettime (timer_t timerid, struct itimerspec *value)
     {
       if (armed)
 	{
-	  clock_gettime (clock, &now);
+	  __clock_gettime (clock, &now);
 	  if (timespec_compare (&now, &expiry) < 0)
 	    timespec_sub (&value->it_value, &expiry, &now);
 	  else

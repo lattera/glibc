@@ -58,7 +58,7 @@ hp_timing_getres (struct timespec *res)
 static inline int
 realtime_getres (struct timespec *res)
 {
-  long int clk_tck = sysconf (_SC_CLK_TCK);
+  long int clk_tck = __sysconf (_SC_CLK_TCK);
 
   if (__glibc_likely (clk_tck != -1))
     {

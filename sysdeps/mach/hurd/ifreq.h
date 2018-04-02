@@ -28,5 +28,5 @@
 static inline void
 __if_freereq (struct ifreq *ifreqs, int num_ifs)
 {
-  munmap (ifreqs, num_ifs * sizeof (struct ifreq));
+  __munmap (ifreqs, num_ifs * sizeof (struct ifreq));
 }

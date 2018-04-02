@@ -155,7 +155,7 @@ ptrace (enum __ptrace_request request, ... )
       va_end (ap);
       /* SIGKILL always just terminates the task,
 	 so normal kill is just the same when traced.  */
-      return kill (pid, SIGKILL);
+      return __kill (pid, SIGKILL);
 
     case PTRACE_SINGLESTEP:
       /* This is a machine-dependent kernel RPC on

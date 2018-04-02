@@ -305,6 +305,48 @@
 	(_init_routine): Call __pthread_attr_init and __pthread_attr_setstack
 	instead of pthread_attr_init and pthread_attr_setstack.
 
+	* hurd/hurdauth.c (_S_msg_add_auth): Call __vm_allocate and
+	__vm_deallocate instead of vm_allocate and vm_deallocate.
+	* hurd/hurdmsg.c (_S_msg_set_env_variable): Call __setenv instead of
+	setenv.
+	* hurd/hurdprio.c (_hurd_priority_which_map): Call __geteuid instead
+	of geteuid.
+	* hurd/path-lookup.c (file_name_path_scan): Call __strdup instead of
+	strdup.
+	* hurd/siginfo.c: Include <libioP.h>.
+	(_hurd_siginfo_handler): Call _IO_puts instead of puts.
+	* hurd/xattr.c (_hurd_xattr_get, _hurd_xattr_set): Call __munmap instead of
+	munmap.
+	* io/fts.c (fts_build): Call __dirfd instead of dirfd.
+	* mach/devstream.c: Include <libioP.h>.
+	(dealloc_ref): Call __mach_port_deallocate instead of
+	mach_port_deallocate.
+	(mach_open_devstream): Call _IO_fopencookie instead of fopencookie.
+	Call __mach_port_deallocate instead of mach_port_deallocate.
+	* stdlib/canonicalize.c (__realpath): Call __pathconf instead of
+	pathconf.
+	* sysdeps/mach/hurd/ifreq.c (__ifreq): Call __munmap instead of
+	munmap.
+	* sysdeps/mach/hurd/ifreq.h (__if_freereq): Likewise.
+	* sysdeps/mach/hurd/ptrace.c (ptrace): Call __kill instead of kill.
+	* sysdeps/mach/hurd/sendfile64.c (sendfile64): Call __munmap instead
+	of munmap.
+	* sysdeps/mach/hurd/socketpair.c (__socketpair): Call __close instead
+	of close.
+	* sysdeps/posix/clock_getres.c (realtime_getres): Call __sysconf
+	instead of sysconf.
+	* sysdeps/pthread/timer_gettime.c (timer_gettime): Call
+	__clock_gettime instead of clock_gettime.
+	* sysdeps/pthread/timer_routines.c (thread_func): Likewise.
+	* sysdeps/pthread/timer_settime.c (timer_settime): Likewise.
+	* sysdeps/unix/bsd/gtty.c (gtty): Call __ioctl instead of ioctl.
+	* sysdeps/unix/bsd/stty.c (stty): Likewise.
+	* sysdeps/unix/bsd/tcflow.c (tcflow): Call __tcgetattr instead of
+	tcgetattr.
+	* sysdeps/unix/clock_nanosleep.c (__clock_nanosleep): Call
+	__clock_gettime and __nanosleep instead of clock_gettime and
+	nanosleep.
+
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
             Amos Jeffries  <squid3@treenet.co.nz>
             David Michael  <fedora.dm0@gmail.com>

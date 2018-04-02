@@ -55,7 +55,7 @@ timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
 
   if ((flags & TIMER_ABSTIME) == 0)
     {
-      clock_gettime (timer->clock, &now);
+      __clock_gettime (timer->clock, &now);
       have_now = 1;
     }
 
@@ -80,7 +80,7 @@ timer_settime (timer_t timerid, int flags, const struct itimerspec *value,
 	  if (! have_now)
 	    {
 	      pthread_mutex_unlock (&__timer_mutex);
-	      clock_gettime (timer->clock, &now);
+	      __clock_gettime (timer->clock, &now);
 	      have_now = 1;
 	      pthread_mutex_lock (&__timer_mutex);
 	      timer_addref (timer);

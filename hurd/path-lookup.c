@@ -63,7 +63,7 @@ file_name_path_scan (const char *file_name, const char *path,
 	  if (err == 0)
 	    {
 	      if (prefixed_name)
-		*prefixed_name = strdup (pfxed_name);
+		*prefixed_name = __strdup (pfxed_name);
 	      return 0;
 	    }
 	  if (!real_err && err != ENOENT)
