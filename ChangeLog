@@ -7,6 +7,8 @@
 	_POSIX_THREAD_ATTR_STACKSIZE, _POSIX_THREAD_ATTR_STACKADDR,
 	_POSIX_SEMAPHORES, _POSIX_READER_WRITER_LOCKS, _POSIX_TIMEOUTS,
 	_POSIX_SPIN_LOCKS, _POSIX_BARRIERS): Define macros to 200809L.
+	* sysdeps/mach/hurd/net/if_ppp.h: Remove file.
+	* sysdeps/mach/hurd/Makefile (sysdep_headers): Remove net/if_ppp.h.
 
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
             Amos Jeffries  <squid3@treenet.co.nz>
