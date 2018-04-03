@@ -249,8 +249,10 @@
 	(pthread_detach): New strong alias.
 	(__pthread_detach): Call __pthread_cond_broadcast instead of
 	pthread_cond_broadcast.
-	* htl/pt-exit.c (__pthread_exit): Call __pthread_setcancelstate
-	instead of pthread_setcancelstate.
+	* htl/pt-exit.c: Include <pthreadP.h>.
+	(__pthread_exit): Call __pthread_setcancelstate and
+	___pthread_get_cleanup_stack instead of pthread_setcancelstate and
+	__pthread_get_cleanup_stack.
 	* htl/pt-testcancel.c: Include <pthreadP.h>.
 	(pthread_testcancel): Call __pthread_exit instead of pthread_exit.
 	* sysdeps/htl/pt-attr-getstack.c: Include <pthreadP.h>
