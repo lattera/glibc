@@ -533,8 +533,6 @@
 	defs.
 	* sysdeps/mach/hurd/sigwait.c (__sigwait): Call __libc_longjmp instead
 	of longjmp.
-	* sysdeps/s390/longjmp.c (__libc_longjmp, __libc_siglongjmp): New
-	hidden defs.
 
 	* sysdeps/mach/hurd/localplt.data: New file.
 
