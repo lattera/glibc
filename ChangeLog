@@ -1,5 +1,14 @@
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_sincos_2): Remove function.
+	(do_sincos_2): Likewise.
+	(__sin): Remove middle range reduction case.
+	(__cos): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Remove middle range
+	reduction case.
+
+2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/aarch64/libm-test-ulps: Update ULP for sin, cos, sincos.
 	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Remove slow paths for small
 	inputs.

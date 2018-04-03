@@ -362,80 +362,6 @@ do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
   return retval;
 }
 
-static inline int4
-__always_inline
-reduce_sincos_2 (double x, double *a, double *da)
-{
-  mynumber v;
-
-  double t = (x * hpinv + toint);
-  double xn = t - toint;
-  v.x = t;
-  double xn1 = (xn + 8.0e22) - 8.0e22;
-  double xn2 = xn - xn1;
-  double y = ((((x - xn1 * mp1) - xn1 * mp2) - xn2 * mp1) - xn2 * mp2);
-  int4 n = v.i[LOW_HALF] & 3;
-  double db = xn1 * pp3;
-  t = y - db;
-  db = (y - t) - db;
-  db = (db - xn2 * pp3) - xn * pp4;
-  double b = t + db;
-  db = (t - b) + db;
-
-  *a = b;
-  *da = db;
-
-  return n;
-}
-
-/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
-   true, which results in shifting the quadrant N clockwise.  */
-static double
-__always_inline
-do_sincos_2 (double a, double da, double x, int4 n, bool shift_quadrant)
-{
-  double res, retval, cor, xx;
-
-  double eps = 1.0e-24;
-
-  int4 k = (n + shift_quadrant) & 3;
-
-  switch (k)
-    {
-    case 2:
-      a = -a;
-      da = -da;
-      /* Fall through.  */
-    case 0:
-      xx = a * a;
-      if (xx < 0.01588)
-	{
-	  /* Taylor series.  */
-	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = 1.02 * cor + __copysign (eps, cor);
-	  retval = (res == res + cor) ? res : bsloww (a, da, x, n);
-	}
-      else
-	{
-	  res = do_sin (a, da, &cor);
-	  cor = 1.035 * cor + __copysign (eps, cor);
-	  retval = ((res == res + cor) ? __copysign (res, a)
-		    : bsloww1 (a, da, x, n));
-	}
-      break;
-
-    case 1:
-    case 3:
-      res = do_cos (a, da, &cor);
-      cor = 1.025 * cor + __copysign (eps, cor);
-      retval = ((res == res + cor) ? ((n & 2) ? -res : res)
-		: bsloww2 (a, da, x, n));
-      break;
-    }
-
-  return retval;
-}
-
 /*******************************************************************/
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
@@ -498,16 +424,7 @@ __sin (double x)
       retval = do_sincos_1 (a, da, x, n, false);
     }				/*   else  if (k <  0x419921FB )    */
 
-/*---------------------105414350 <|x|< 281474976710656 --------------------*/
-  else if (k < 0x42F00000)
-    {
-      double a, da;
-
-      int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, false);
-    }				/*   else  if (k <  0x42F00000 )   */
-
-/* -----------------281474976710656 <|x| <2^1024----------------------------*/
+/* --------------------105414350 <|x| <2^1024------------------------------*/
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, false);
 
@@ -584,15 +501,7 @@ __cos (double x)
       retval = do_sincos_1 (a, da, x, n, true);
     }				/*   else  if (k <  0x419921FB )    */
 
-  else if (k < 0x42F00000)
-    {
-      double a, da;
-
-      int4 n = reduce_sincos_2 (x, &a, &da);
-      retval = do_sincos_2 (a, da, x, n, true);
-    }				/*   else  if (k <  0x42F00000 )    */
-
-  /* 281474976710656 <|x| <2^1024 */
+  /* 105414350 <|x| <2^1024 */
   else if (k < 0x7ff00000)
     retval = reduce_and_compute (x, true);
 

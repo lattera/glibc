@@ -86,16 +86,6 @@ __sincos (double x, double *sinx, double *cosx)
 
       return;
     }
-  if (k < 0x42F00000)
-    {
-      double a, da;
-      int4 n = reduce_sincos_2 (x, &a, &da);
-
-      *sinx = do_sincos_2 (a, da, x, n, false);
-      *cosx = do_sincos_2 (a, da, x, n, true);
-
-      return;
-    }
   if (k < 0x7ff00000)
     {
       reduce_and_compute_sincos (x, sinx, cosx);
