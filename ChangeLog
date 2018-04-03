@@ -35,8 +35,8 @@
 
 2018-04-03  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-	* sysdeps/mach/hurd/if_index.c (__if_nametoindex): Always end
-	ifr.fr_name with a NUL caracter.
+	* sysdeps/mach/hurd/if_index.c (__if_nametoindex): Return ENODEV if
+	ifname is too long.
 
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
