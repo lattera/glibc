@@ -59,7 +59,7 @@ __sigwait (const sigset_t *set, int *sig)
     handler (int sig)
     {
       assert (sig == signo);
-      __libc_longjmp (buf, 1);
+      longjmp (buf, 1);
     }
 
   wait = __mach_reply_port ();

@@ -521,19 +521,8 @@
 	_hurd_fd_error_signal): Add hidden prototype.
 	[_HURD_FD_H_HIDDEN_DEF] (_hurd_fd_error, _hurd_fd_error_signal): Add
 	hidden def.
-	* hurd/catch-signal.c (__hurd_catch_signal): Call __libc_siglongjmp
-	instead if siglongjmp.
-	(hurd_safe_memmove): Call __libc_longjmp instead of longjmp.
-	* hurd/hurdfault.c (faulted): Call __libc_longjmp instead of longjmp.
-	* include/setjmp.h (__libc_siglongjmp, __libc_longjmp): New hidden
-	prototypes.
 	* libio/iolibio.h (_IO_puts): New hidden prototype.
 	* libio/ioputs.c (_IO_puts): New hidden def.
-	* setjmp/longjmp.c (__libc_longjmp, __libc_siglongjmp): New hidden
-	defs.
-	* sysdeps/mach/hurd/sigwait.c (__sigwait): Call __libc_longjmp instead
-	of longjmp.
-
 	* sysdeps/mach/hurd/localplt.data: New file.
 
 2018-04-02  Agustina Arzille  <avarzille@riseup.net>
