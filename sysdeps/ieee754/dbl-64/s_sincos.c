@@ -79,10 +79,10 @@ __sincos (double x, double *sinx, double *cosx)
   if (k < 0x419921FB)
     {
       double a, da;
-      int4 n = reduce_sincos_1 (x, &a, &da);
+      int4 n = reduce_sincos (x, &a, &da);
 
-      *sinx = do_sincos_1 (a, da, x, n, false);
-      *cosx = do_sincos_1 (a, da, x, n, true);
+      *sinx = do_sincos (a, da, n);
+      *cosx = do_sincos (a, da, n + 1);
 
       return;
     }

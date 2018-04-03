@@ -295,9 +295,13 @@ reduce_and_compute (double x, bool shift_quadrant)
   return retval;
 }
 
+/* Reduce range of x to within PI/2 with abs (x) < 105414350.  The high part
+   is written to *a, the low part to *da.  Range reduction is accurate to 136
+   bits so that when x is large and *a very close to zero, all 53 bits of *a
+   are correct.  */
 static inline int4
 __always_inline
-reduce_sincos_1 (double x, double *a, double *da)
+reduce_sincos (double x, double *a, double *da)
 {
   mynumber v;
 
@@ -306,61 +310,44 @@ reduce_sincos_1 (double x, double *a, double *da)
   v.x = t;
   double y = (x - xn * mp1) - xn * mp2;
   int4 n = v.i[LOW_HALF] & 3;
-  double db = xn * mp3;
-  double b = y - db;
-  db = (y - b) - db;
+
+  double b, db, t1, t2;
+  t1 = xn * pp3;
+  t2 = y - t1;
+  db = (y - t2) - t1;
+
+  t1 = xn * pp4;
+  b = t2 - t1;
+  db += (t2 - b) - t1;
 
   *a = b;
   *da = db;
-
   return n;
 }
 
-/* Compute sin (A + DA).  cos can be computed by passing SHIFT_QUADRANT as
-   true, which results in shifting the quadrant N clockwise.  */
+/* Compute sin or cos (A + DA) for the given quadrant N.  */
 static double
 __always_inline
-do_sincos_1 (double a, double da, double x, int4 n, bool shift_quadrant)
+do_sincos (double a, double da, int4 n)
 {
-  double xx, retval, res, cor;
-  double eps = fabs (x) * 1.2e-30;
+  double retval, cor;
 
-  int k1 = (n + shift_quadrant) & 3;
-  switch (k1)
-    {			/* quarter of unit circle */
-    case 2:
-      a = -a;
-      da = -da;
-      /* Fall through.  */
-    case 0:
-      xx = a * a;
+  if (n & 1)
+    /* Max ULP is 0.513.  */
+    retval = do_cos (a, da, &cor);
+  else
+    {
+      double xx = a * a;
+      /* Max ULP is 0.501 if xx < 0.01588, otherwise ULP is 0.518.  */
       if (xx < 0.01588)
-	{
-	  /* Taylor series.  */
-	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = 1.02 * cor + __copysign (eps, cor);
-	  retval = (res == res + cor) ? res : sloww (a, da, x, shift_quadrant);
-	}
+	retval = TAYLOR_SIN (xx, a, da, cor);
       else
-	{
-	  res = do_sin (a, da, &cor);
-	  cor = 1.035 * cor + __copysign (eps, cor);
-	  retval = ((res == res + cor) ? __copysign (res, a)
-		    : sloww1 (a, da, x, shift_quadrant));
-	}
-      break;
-
-    case 1:
-    case 3:
-      res = do_cos (a, da, &cor);
-      cor = 1.025 * cor + __copysign (eps, cor);
-      retval = ((res == res + cor) ? ((n & 2) ? -res : res)
-		: sloww2 (a, da, x, n));
-      break;
+	retval = __copysign (do_sin (a, da, &cor), a);
     }
 
-  return retval;
+  return (n & 2) ? -retval : retval;
 }
+
 
 /*******************************************************************/
 /* An ultimate sin routine. Given an IEEE double machine number x   */
@@ -374,13 +361,18 @@ SECTION
 #endif
 __sin (double x)
 {
+#ifndef IN_SINCOS
+  double xx, t, a, da, cor;
+  mynumber u;
+  int4 k, m, n;
+  double retval = 0;
+
+  SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
+#else
   double xx, t, cor;
   mynumber u;
   int4 k, m;
   double retval = 0;
-
-#ifndef IN_SINCOS
-  SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
 #endif
 
   u.x = x;
@@ -419,9 +411,8 @@ __sin (double x)
 /*-------------------------- 2.426265<|x|< 105414350 ----------------------*/
   else if (k < 0x419921FB)
     {
-      double a, da;
-      int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, false);
+      n = reduce_sincos (x, &a, &da);
+      retval = do_sincos (a, da, n);
     }				/*   else  if (k <  0x419921FB )    */
 
 /* --------------------105414350 <|x| <2^1024------------------------------*/
@@ -456,7 +447,11 @@ __cos (double x)
 {
   double y, xx, cor, a, da;
   mynumber u;
+#ifndef IN_SINCOS
+  int4 k, m, n;
+#else
   int4 k, m;
+#endif
 
   double retval = 0;
 
@@ -496,9 +491,8 @@ __cos (double x)
 #ifndef IN_SINCOS
   else if (k < 0x419921FB)
     {				/* 2.426265<|x|< 105414350 */
-      double a, da;
-      int4 n = reduce_sincos_1 (x, &a, &da);
-      retval = do_sincos_1 (a, da, x, n, true);
+      n = reduce_sincos (x, &a, &da);
+      retval = do_sincos (a, da, n + 1);
     }				/*   else  if (k <  0x419921FB )    */
 
   /* 105414350 <|x| <2^1024 */
