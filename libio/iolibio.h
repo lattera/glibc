@@ -41,6 +41,7 @@ extern char* _IO_gets (char*);
 extern void _IO_perror (const char*) __THROW;
 extern int _IO_printf (const char*, ...);
 extern int _IO_puts (const char*);
+libc_hidden_proto (_IO_puts)
 extern int _IO_scanf (const char*, ...);
 extern void _IO_setbuffer (FILE *, char*, size_t) __THROW;
 libc_hidden_proto (_IO_setbuffer)

@@ -152,7 +152,7 @@ faulted (void)
     __libc_fatal ("BUG: unexpected fault in signal thread\n");
 
   _hurdsig_fault_preemptor.signals = 0;
-  longjmp (_hurdsig_fault_env, 1);
+  __libc_longjmp (_hurdsig_fault_env, 1);
 }
 
 static char faultstack[1024];

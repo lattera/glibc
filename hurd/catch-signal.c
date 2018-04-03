@@ -32,7 +32,7 @@ __hurd_catch_signal (sigset_t sigset,
      instance calling hurd_catch_signal again would then dump core.  */
   sigjmp_buf buf;
   void throw (int signo, long int sigcode, struct sigcontext *scp)
-    { siglongjmp (buf, scp->sc_error ?: EGRATUITOUS); }
+    { __libc_siglongjmp (buf, scp->sc_error ?: EGRATUITOUS); }
 
   struct hurd_signal_preemptor preemptor =
     {
@@ -121,7 +121,7 @@ hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
 {
   jmp_buf buf;
   void throw (int signo, long int sigcode, struct sigcontext *scp)
-    { longjmp (buf, scp->sc_error ?: EGRATUITOUS); }
+    { __libc_longjmp (buf, scp->sc_error ?: EGRATUITOUS); }
 
   struct hurd_signal_preemptor src_preemptor =
     {

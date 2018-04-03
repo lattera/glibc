@@ -46,3 +46,4 @@ _IO_puts (const char *str)
 }
 
 weak_alias (_IO_puts, puts)
+libc_hidden_def (_IO_puts)
