@@ -197,27 +197,17 @@ do_sincos (double a, double da, int4 n)
 /* An ultimate sin routine. Given an IEEE double machine number x   */
 /* it computes the correctly rounded (to nearest) value of sin(x)  */
 /*******************************************************************/
-#ifdef IN_SINCOS
-static double
-#else
+#ifndef IN_SINCOS
 double
 SECTION
-#endif
 __sin (double x)
 {
-#ifndef IN_SINCOS
   double t, a, da;
   mynumber u;
   int4 k, m, n;
   double retval = 0;
 
   SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
-#else
-  double xx, t, cor;
-  mynumber u;
-  int4 k, m;
-  double retval = 0;
-#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -242,7 +232,6 @@ __sin (double x)
       retval = __copysign (do_cos (t, hp1), x);
     }				/*   else  if (k < 0x400368fd)    */
 
-#ifndef IN_SINCOS
 /*-------------------------- 2.426265<|x|< 105414350 ----------------------*/
   else if (k < 0x419921FB)
     {
@@ -263,7 +252,6 @@ __sin (double x)
 	__set_errno (EDOM);
       retval = x / x;
     }
-#endif
 
   return retval;
 }
@@ -274,27 +262,17 @@ __sin (double x)
 /* it computes the correctly rounded (to nearest) value of cos(x)  */
 /*******************************************************************/
 
-#ifdef IN_SINCOS
-static double
-#else
 double
 SECTION
-#endif
 __cos (double x)
 {
   double y, a, da;
   mynumber u;
-#ifndef IN_SINCOS
   int4 k, m, n;
-#else
-  int4 k, m;
-#endif
 
   double retval = 0;
 
-#ifndef IN_SINCOS
   SET_RESTORE_ROUND_53BIT (FE_TONEAREST);
-#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -320,8 +298,6 @@ __cos (double x)
       retval = do_sin (a, da);
     }				/*   else  if (k < 0x400368fd)    */
 
-
-#ifndef IN_SINCOS
   else if (k < 0x419921FB)
     {				/* 2.426265<|x|< 105414350 */
       n = reduce_sincos (x, &a, &da);
@@ -341,7 +317,6 @@ __cos (double x)
 	__set_errno (EDOM);
       retval = x / x;		/* |x| > 2^1024 */
     }
-#endif
 
   return retval;
 }
@@ -351,4 +326,6 @@ libm_alias_double (__cos, cos)
 #endif
 #ifndef __sin
 libm_alias_double (__sin, sin)
+#endif
+
 #endif

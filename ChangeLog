@@ -1,5 +1,12 @@
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Cleanup ifdefs.
+	(__cos): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sincos): Refactor using the same
+	logic as sin and cos.
+
+2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (do_sin): Use TAYLOR_SIN for small
 	inputs.  Return correct sign.
 	(do_sincos): Remove small input check before do_sin, let do_sin set
