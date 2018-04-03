@@ -1,5 +1,22 @@
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (TAYLOR_SLOW): Remove.
+	(do_cos_slow): Likewise.
+	(do_sin_slow): Likewise.
+	(reduce_and_compute): Likewise.
+	(slow): Likewise.
+	(slow1): Likewise.
+	(slow2): Likewise.
+	(sloww): Likewise.
+	(sloww1): Likewise.
+	(sloww2): Likewise.
+	(bslow): Likewise.
+	(bslow1): Likewise.
+	(bslow2): Likewise.
+	(cslow2): Likewise.
+
+2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (TAYLOR_SIN): Remove cor parameter.
 	(do_cos): Remove corp parameter and calculations.
 	(do_sin): Likewise.
