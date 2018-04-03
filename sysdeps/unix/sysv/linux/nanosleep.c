@@ -1,4 +1,4 @@
-/* Linux high resolution nanosleep implementation.
+/* Linux nanosleep syscall implementation.
    Copyright (C) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,11 +29,3 @@ __nanosleep (const struct timespec *requested_time,
 }
 hidden_def (__nanosleep)
 weak_alias (__nanosleep, nanosleep)
-
-int
-__nanosleep_nocancel (const struct timespec *requested_time,
-		      struct timespec *remaining)
-{
-  return INLINE_SYSCALL_CALL (nanosleep, requested_time, remaining);
-}
-hidden_def (__nanosleep_nocancel)

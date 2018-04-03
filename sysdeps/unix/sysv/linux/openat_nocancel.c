@@ -1,5 +1,5 @@
-/* Linux read syscall implementation.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Linux openat syscall implementation, non-LFS, non-cancellable.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,28 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
+#include <fcntl.h>
+#include <stdarg.h>
+
 #include <sysdep-cancel.h>
+#include <not-cancel.h>
 
-/* Read NBYTES into BUF from FD.  Return the number read or -1.  */
-ssize_t
-__libc_read (int fd, void *buf, size_t nbytes)
+#ifndef __OFF_T_MATCHES_OFF64_T
+
+int
+__openat_nocancel (int fd, const char *file, int oflag, ...)
 {
-  return SYSCALL_CANCEL (read, fd, buf, nbytes);
-}
-libc_hidden_def (__libc_read)
+  mode_t mode = 0;
+  if (__OPEN_NEEDS_MODE (oflag))
+    {
+      va_list arg;
+      va_start (arg, oflag);
+      mode = va_arg (arg, mode_t);
+      va_end (arg);
+    }
 
-libc_hidden_def (__read)
-weak_alias (__libc_read, __read)
-libc_hidden_def (read)
-weak_alias (__libc_read, read)
+  return INLINE_SYSCALL_CALL (openat, fd, file, oflag, mode);
+}
+hidden_def (__openat_nocancel)
+
+#endif

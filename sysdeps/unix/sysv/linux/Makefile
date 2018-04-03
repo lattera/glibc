@@ -167,7 +167,12 @@ endif
 
 ifeq ($(subdir),io)
 sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
-		   sync_file_range fallocate fallocate64
+		   sync_file_range fallocate fallocate64 \
+		   close_nocancel fcntl_nocancel nanosleep_nocancel \
+		   open_nocancel open64_nocancel \
+		   openat_nocancel openat64_nocancel \
+		   pause_nocancel read_nocancel waitpid_nocancel write_nocancel
+
 sysdep_headers += bits/fcntl-linux.h
 
 tests += tst-fallocate tst-fallocate64

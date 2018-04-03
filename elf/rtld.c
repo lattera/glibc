@@ -41,6 +41,7 @@
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
+#include <not-cancel.h>
 
 #include <assert.h>
 
@@ -2673,7 +2674,7 @@ process_envvars (enum mode *modep)
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
-      GLRO(dl_debug_fd) = __open (startp, flags, DEFFILEMODE);
+      GLRO(dl_debug_fd) = __open64_nocancel (startp, flags, DEFFILEMODE);
       if (GLRO(dl_debug_fd) == -1)
 	/* We use standard output if opening the file failed.  */
 	GLRO(dl_debug_fd) = STDOUT_FILENO;

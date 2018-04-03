@@ -30,31 +30,24 @@
 
 /* Non cancellable open syscall.  */
 __typeof (open) __open_nocancel;
-libc_hidden_proto (__open_nocancel)
 
 /* Non cancellable open syscall (LFS version).  */
 __typeof (open64) __open64_nocancel;
-libc_hidden_proto (__open64_nocancel)
 
 /* Non cancellable openat syscall.  */
 __typeof (openat) __openat_nocancel;
-libc_hidden_proto (__openat_nocancel)
 
 /* Non cacellable openat syscall (LFS version).  */
 __typeof (openat64) __openat64_nocancel;
-libc_hidden_proto (__openat64_nocancel)
 
 /* Non cancellable read syscall.  */
 __typeof (__read) __read_nocancel;
-libc_hidden_proto (__read_nocancel)
 
 /* Uncancelable write.  */
 __typeof (__write) __write_nocancel;
-libc_hidden_proto (__write_nocancel)
 
 /* Uncancelable close.  */
 __typeof (__close) __close_nocancel;
-libc_hidden_proto (__close_nocancel)
 
 /* Non cancellable close syscall that does not also set errno in case of
    failure.  */
@@ -75,18 +68,28 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 
 /* Uncancelable waitpid.  */
 __typeof (waitpid) __waitpid_nocancel;
-libc_hidden_proto (__waitpid_nocancel)
 
 /* Uncancelable pause.  */
 __typeof (pause) __pause_nocancel;
-libc_hidden_proto (__pause_nocancel)
 
 /* Uncancelable nanosleep.  */
 __typeof (__nanosleep) __nanosleep_nocancel;
-hidden_proto (__nanosleep_nocancel)
 
 /* Uncancelable fcntl.  */
 __typeof (__fcntl) __fcntl_nocancel;
-libc_hidden_proto (__fcntl_nocancel)
+
+#if IS_IN (libc) || IS_IN (rtld)
+hidden_proto (__open_nocancel)
+hidden_proto (__open64_nocancel)
+hidden_proto (__openat_nocancel)
+hidden_proto (__openat64_nocancel)
+hidden_proto (__read_nocancel)
+hidden_proto (__write_nocancel)
+hidden_proto (__close_nocancel)
+hidden_proto (__waitpid_nocancel)
+hidden_proto (__pause_nocancel)
+hidden_proto (__nanosleep_nocancel)
+hidden_proto (__fcntl_nocancel)
+#endif
 
 #endif /* NOT_CANCEL_H  */

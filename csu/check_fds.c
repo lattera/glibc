@@ -39,8 +39,7 @@
 static void
 check_one_fd (int fd, int mode)
 {
-  /* Note that fcntl() with this parameter is not a cancellation point.  */
-  if (__builtin_expect (__libc_fcntl (fd, F_GETFD), 0) == -1
+  if (__builtin_expect (__fcntl_nocancel (fd, F_GETFD), 0) == -1
       && errno == EBADF)
     {
       const char *name;

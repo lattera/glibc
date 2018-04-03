@@ -38,7 +38,7 @@ __fdopendir (int fd)
     }
 
   /* Make sure the descriptor allows for reading.  */
-  int flags = __fcntl (fd, F_GETFL);
+  int flags = __fcntl_nocancel (fd, F_GETFL);
   if (__glibc_unlikely (flags == -1))
     return NULL;
   if (__glibc_unlikely ((flags & O_ACCMODE) == O_WRONLY))

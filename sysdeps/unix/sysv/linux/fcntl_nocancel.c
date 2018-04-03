@@ -1,5 +1,5 @@
-/* Linux fcntl syscall implementation.
-   Copyright (C) 2000-2018 Free Software Foundation, Inc.
+/* Linux fcntl syscall implementation -- non-cancellable.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 #endif
 
 int
-__libc_fcntl (int fd, int cmd, ...)
+__fcntl_nocancel (int fd, int cmd, ...)
 {
   va_list ap;
   void *arg;
@@ -42,13 +42,24 @@ __libc_fcntl (int fd, int cmd, ...)
 
   cmd = FCNTL_ADJUST_CMD (cmd);
 
-  if (cmd == F_SETLKW || cmd == F_SETLKW64)
-    return SYSCALL_CANCEL (fcntl64, fd, cmd, (void *) arg);
-
   return __fcntl_nocancel_adjusted (fd, cmd, arg);
 }
-libc_hidden_def (__libc_fcntl)
+hidden_def (__fcntl_nocancel)
 
-weak_alias (__libc_fcntl, __fcntl)
-libc_hidden_weak (__fcntl)
-weak_alias (__libc_fcntl, fcntl)
+int
+__fcntl_nocancel_adjusted (int fd, int cmd, void *arg)
+{
+  if (cmd == F_GETOWN)
+    {
+      INTERNAL_SYSCALL_DECL (err);
+      struct f_owner_ex fex;
+      int res = INTERNAL_SYSCALL_CALL (fcntl64, err, fd, F_GETOWN_EX, &fex);
+      if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+	return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
+
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE
+        (INTERNAL_SYSCALL_ERRNO (res, err));
+    }
+
+  return INLINE_SYSCALL_CALL (fcntl64, fd, cmd, (void *) arg);
+}

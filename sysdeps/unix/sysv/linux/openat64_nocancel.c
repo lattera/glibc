@@ -1,5 +1,5 @@
-/* Linux openat syscall implementation, LFS.
-   Copyright (C) 2007-2018 Free Software Foundation, Inc.
+/* Linux openat syscall implementation, LFS, non-cancellable.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #include <stdarg.h>
 
 #include <sysdep-cancel.h>
+#include <not-cancel.h>
 
 #ifdef __OFF_T_MATCHES_OFF64_T
 # define EXTRA_OPEN_FLAGS 0
@@ -27,11 +28,8 @@
 # define EXTRA_OPEN_FLAGS O_LARGEFILE
 #endif
 
-/* Open FILE with access OFLAG.  Interpret relative paths relative to
-   the directory associated with FD.  If OFLAG includes O_CREAT or
-   O_TMPFILE, a fourth argument is the file protection.  */
 int
-__libc_openat64 (int fd, const char *file, int oflag, ...)
+__openat64_nocancel (int fd, const char *file, int oflag, ...)
 {
   mode_t mode = 0;
   if (__OPEN_NEEDS_MODE (oflag))
@@ -42,15 +40,12 @@ __libc_openat64 (int fd, const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  return SYSCALL_CANCEL (openat, fd, file, oflag | EXTRA_OPEN_FLAGS, mode);
+  return INLINE_SYSCALL_CALL (openat, fd, file, oflag | EXTRA_OPEN_FLAGS,
+			      mode);
 }
-
-strong_alias (__libc_openat64, __openat64)
-libc_hidden_weak (__openat64)
-weak_alias (__libc_openat64, openat64)
+hidden_def (__openat64_nocancel)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-strong_alias (__libc_openat64, __openat)
-libc_hidden_weak (__openat)
-weak_alias (__libc_openat64, openat)
+strong_alias (__openat64_nocancel, __openat_nocancel)
+hidden_def (__openat_nocancel)
 #endif

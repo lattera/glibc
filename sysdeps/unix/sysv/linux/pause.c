@@ -19,7 +19,6 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sysdep-cancel.h>
-#include <not-cancel.h>
 
 /* Suspend the process until a signal arrives.
    This always returns -1 and sets errno to EINTR.  */
@@ -33,14 +32,3 @@ __libc_pause (void)
 #endif
 }
 weak_alias (__libc_pause, pause)
-
-int
-__pause_nocancel (void)
-{
-#ifdef __NR_pause
-  return INLINE_SYSCALL_CALL (pause);
-#else
-  return INLINE_SYSCALL_CALL (ppoll, NULL, 0, NULL, NULL);
-#endif
-}
-libc_hidden_def (__pause_nocancel)

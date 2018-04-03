@@ -18,7 +18,6 @@
 
 #include <unistd.h>
 #include <sysdep-cancel.h>
-#include <not-cancel.h>
 
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
 ssize_t
@@ -32,14 +31,3 @@ weak_alias (__libc_write, __write)
 libc_hidden_weak (__write)
 weak_alias (__libc_write, write)
 libc_hidden_weak (write)
-
-#if !IS_IN (rtld)
-ssize_t
-__write_nocancel (int fd, const void *buf, size_t nbytes)
-{
-  return INLINE_SYSCALL_CALL (write, fd, buf, nbytes);
-}
-#else
-strong_alias (__libc_write, __write_nocancel)
-#endif
-libc_hidden_def (__write_nocancel)

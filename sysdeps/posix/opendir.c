@@ -99,7 +99,7 @@ __alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
   /* We have to set the close-on-exit flag if the user provided the
      file descriptor.  */
   if (!close_fd
-      && __builtin_expect (__fcntl (fd, F_SETFD, FD_CLOEXEC), 0) < 0)
+      && __glibc_unlikely (__fcntl_nocancel (fd, F_SETFD, FD_CLOEXEC) < 0))
 	goto lose;
 
   const size_t default_allocation = (4 * BUFSIZ < sizeof (struct dirent64)

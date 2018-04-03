@@ -36,7 +36,7 @@ static-only-routines = pthread_atfork
 # We need to provide certain routines for compatibility with existing
 # binaries.
 pthread-compat-wrappers = \
-		      write read close fcntl accept \
+		      write read close accept \
 		      connect recv recvfrom send \
 		      sendto fsync lseek lseek64 \
 		      msync nanosleep open open64 pause \
@@ -120,7 +120,7 @@ libpthread-routines = nptl-init vars events version pt-interp \
 		      cancellation \
 		      lowlevellock \
 		      lll_timedlock_wait lll_timedwait_tid \
-		      pt-fork pt-vfork \
+		      pt-fork pt-vfork pt-fcntl \
 		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \

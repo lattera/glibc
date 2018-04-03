@@ -1,3 +1,78 @@
+2018-06-12  Zack Weinberg  <zackw@panix.com>
+
+	* elf/dl-load.c, elf/dl-misc.c, elf/dl-profile.c, elf/rtld.c
+	* sysdeps/unix/sysv/linux/dl-sysdep.c
+	Include not-cancel.h.  Use __close_nocancel instead of __close,
+	__open64_nocancel instead of __open, __read_nocancel instead of
+	__libc_read, and __write_nocancel instead of __libc_write.
+
+	* csu/check_fds.c (check_one_fd)
+	* sysdeps/posix/fdopendir.c (__fdopendir)
+	* sysdeps/posix/opendir.c (__alloc_dir): Use __fcntl_nocancel
+        instead of __fcntl and/or __libc_fcntl.
+
+	* sysdeps/unix/sysv/linux/pthread_setname.c (pthread_setname_np)
+	* sysdeps/unix/sysv/linux/pthread_getname.c (pthread_getname_np)
+        * sysdeps/unix/sysv/linux/i386/smp.h (is_smp_system):
+	Use __open64_nocancel instead of __open_nocancel.
+
+	* sysdeps/unix/sysv/linux/not-cancel.h: Move all of the
+	hidden_proto declarations to the end and issue them if either
+	IS_IN(libc) or IS_IN(rtld).
+	* sysdeps/unix/sysv/linux/Makefile [subdir=io] (sysdep_routines):
+	Add close_nocancel, fcntl_nocancel, nanosleep_nocancel,
+	open_nocancel, open64_nocancel, openat_nocancel, pause_nocancel,
+	read_nocancel, waitpid_nocancel, write_nocancel.
+
+        * io/Versions [GLIBC_PRIVATE]: Add __libc_fcntl,
+        __fcntl_nocancel, __open64_nocancel, __write_nocancel.
+        * posix/Versions: Add __nanosleep_nocancel, __pause_nocancel.
+
+        * nptl/pt-fcntl.c: New file.
+        * nptl/Makefile (pthread-compat-wrappers): Remove fcntl.
+        (libpthread-routines): Add pt-fcntl.
+        * include/fcntl.h (__fcntl_nocancel_adjusted): New function.
+        (__libc_fcntl): Remove attribute_hidden.
+	* sysdeps/unix/sysv/linux/fcntl.c (__libc_fcntl): Call
+	__fcntl_nocancel_adjusted, not fcntl_common.
+        (__fcntl_nocancel): Move to new file fcntl_nocancel.c.
+	(fcntl_common): Rename to __fcntl_nocancel_adjusted; also move
+	to fcntl_nocancel.c.
+	* sysdeps/unix/sysv/linux/fcntl_nocancel.c: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fcntl.c: Remove file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h:
+	Define FCNTL_ADJUST_CMD here, as a self-contained macro.
+
+	* sysdeps/unix/sysv/linux/close.c: Move __close_nocancel to...
+	* sysdeps/unix/sysv/linux/close_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/nanosleep.c: Move __nanosleep_nocancel to...
+	* sysdeps/unix/sysv/linux/nanosleep_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/open.c: Move __open_nocancel to...
+	* sysdeps/unix/sysv/linux/open_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/open64.c: Move __open64_nocancel to...
+	* sysdeps/unix/sysv/linux/open64_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/openat.c: Move __openat_nocancel to...
+	* sysdeps/unix/sysv/linux/openat_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/openat64.c: Move __openat64_nocancel to...
+	* sysdeps/unix/sysv/linux/openat64_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/pause.c: Move __pause_nocancel to...
+	* sysdeps/unix/sysv/linux/pause_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/read.c: Move __read_nocancel to...
+	* sysdeps/unix/sysv/linux/read_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/waitpid.c: Move __waitpid_nocancel to...
+	* sysdeps/unix/sysv/linux/waitpid_nocancel.c: ...this new file.
+	* sysdeps/unix/sysv/linux/write.c: Move __write_nocancel to...
+	* sysdeps/unix/sysv/linux/write_nocancel.c: ...this new file.
+
+        * sysdeps/unix/sysv/linux/nios2/Makefile: Don't override
+        libpthread-routines.
+        * sysdeps/unix/sysv/linux/nios2/pt-vfork.S: New file which
+        defines nothing.
+
+        * sysdeps/mach/hurd/dl-sysdep.c: Define __read instead of
+        __libc_read, and __write instead of __libc_write.  Define
+        __open64 in addition to __open.
+
 2018-06-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23250]

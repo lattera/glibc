@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2018 Free Software Foundation, Inc.
+/* Linux read syscall implementation -- non-cancellable.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +17,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
-#include <fcntl.h>
+#include <sysdep-cancel.h>
+#include <not-cancel.h>
 
-static inline int
-fcntl_adjust_cmd (int cmd)
+ssize_t
+__read_nocancel (int fd, void *buf, size_t nbytes)
 {
-  if (cmd >= F_GETLK64 && cmd <= F_SETLKW64)
-    cmd -= F_GETLK64 - F_GETLK;
-  return cmd;
+  return INLINE_SYSCALL_CALL (read, fd, buf, nbytes);
 }
-
-#define FCNTL_ADJUST_CMD(__cmd) \
-  fcntl_adjust_cmd (__cmd)
-
-#include <sysdeps/unix/sysv/linux/fcntl.c>
+hidden_def (__read_nocancel)

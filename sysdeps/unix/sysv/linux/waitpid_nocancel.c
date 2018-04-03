@@ -1,5 +1,5 @@
-/* Linux read syscall implementation.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Linux waitpid syscall implementation -- non-cancellable.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
+#include <errno.h>
 #include <sysdep-cancel.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <not-cancel.h>
 
-/* Read NBYTES into BUF from FD.  Return the number read or -1.  */
-ssize_t
-__libc_read (int fd, void *buf, size_t nbytes)
+__pid_t
+__waitpid_nocancel (__pid_t pid, int *stat_loc, int options)
 {
-  return SYSCALL_CANCEL (read, fd, buf, nbytes);
+#ifdef __NR_waitpid
+  return INLINE_SYSCALL_CALL (waitpid, pid, stat_loc, options);
+#else
+  return INLINE_SYSCALL_CALL (wait4, pid, stat_loc, options, NULL);
+#endif
 }
-libc_hidden_def (__libc_read)
-
-libc_hidden_def (__read)
-weak_alias (__libc_read, __read)
-libc_hidden_def (read)
-weak_alias (__libc_read, read)
+libc_hidden_def (__waitpid_nocancel)

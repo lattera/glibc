@@ -128,4 +128,10 @@ libc {
   GLIBC_2.27 {
     copy_file_range;
   }
+  GLIBC_PRIVATE {
+    __libc_fcntl;
+    __fcntl_nocancel;
+    __open64_nocancel;
+    __write_nocancel;
+  }
 }

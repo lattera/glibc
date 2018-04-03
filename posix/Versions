@@ -139,5 +139,6 @@ libc {
   }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pread; __libc_pwrite;
+    __nanosleep_nocancel; __pause_nocancel;
   }
 }

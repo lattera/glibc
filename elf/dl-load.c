@@ -44,7 +44,7 @@
 #include <dl-unmap-segments.h>
 #include <dl-machine-reject-phdr.h>
 #include <dl-sysdep-open.h>
-
+#include <not-cancel.h>
 
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
@@ -776,7 +776,7 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 {
   /* The file might already be closed.  */
   if (fd != -1)
-    (void) __close (fd);
+    (void) __close_nocancel (fd);
   if (l != NULL && l->l_origin != (char *) -1l)
     free ((char *) l->l_origin);
   free (l);
@@ -835,7 +835,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
-	__close (fd);
+	__close_nocancel (fd);
 
 	/* If the name is not in the list of names for this object add
 	   it.  */
@@ -863,7 +863,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 
       /* No need to bump the refcount of the real object, ld.so will
 	 never be unloaded.  */
-      __close (fd);
+      __close_nocancel (fd);
 
       /* Add the map for the mirrored object to the object list.  */
       _dl_add_to_namespace_list (l, nsid);
@@ -877,7 +877,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       /* We are not supposed to load the object unless it is already
 	 loaded.  So return now.  */
       free (realname);
-      __close (fd);
+      __close_nocancel (fd);
       return NULL;
     }
 
@@ -896,7 +896,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       if (_dl_zerofd == -1)
 	{
 	  free (realname);
-	  __close (fd);
+	  __close_nocancel (fd);
 	  _dl_signal_error (errno, NULL, NULL,
 			    N_("cannot open zero fill device"));
 	}
@@ -962,7 +962,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     {
       phdr = alloca (maplength);
       __lseek (fd, header->e_phoff, SEEK_SET);
-      if ((size_t) __libc_read (fd, (void *) phdr, maplength) != maplength)
+      if ((size_t) __read_nocancel (fd, (void *) phdr, maplength) != maplength)
 	{
 	  errstring = N_("cannot read file data");
 	  goto call_lose_errno;
@@ -1232,7 +1232,7 @@ cannot enable executable stack as shared object requires");
     l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
-  if (__glibc_unlikely (__close (fd) != 0))
+  if (__glibc_unlikely (__close_nocancel (fd) != 0))
     {
       errstring = N_("cannot close file descriptor");
       goto call_lose_errno;
@@ -1447,7 +1447,7 @@ open_verify (const char *name, int fd,
         {
           /* An audit library changed what we're supposed to open,
              so FD no longer matches it.  */
-          __close (fd);
+          __close_nocancel (fd);
           fd = -1;
         }
     }
@@ -1455,7 +1455,7 @@ open_verify (const char *name, int fd,
 
   if (fd == -1)
     /* Open the file.  We always open files read-only.  */
-    fd = __open (name, O_RDONLY | O_CLOEXEC);
+    fd = __open64_nocancel (name, O_RDONLY | O_CLOEXEC);
 
   if (fd != -1)
     {
@@ -1474,8 +1474,8 @@ open_verify (const char *name, int fd,
       /* Read in the header.  */
       do
 	{
-	  ssize_t retlen = __libc_read (fd, fbp->buf + fbp->len,
-					sizeof (fbp->buf) - fbp->len);
+	  ssize_t retlen = __read_nocancel (fd, fbp->buf + fbp->len,
+					    sizeof (fbp->buf) - fbp->len);
 	  if (retlen <= 0)
 	    break;
 	  fbp->len += retlen;
@@ -1598,7 +1598,8 @@ open_verify (const char *name, int fd,
 	{
 	  phdr = alloca (maplength);
 	  __lseek (fd, ehdr->e_phoff, SEEK_SET);
-	  if ((size_t) __libc_read (fd, (void *) phdr, maplength) != maplength)
+	  if ((size_t) __read_nocancel (fd, (void *) phdr, maplength)
+	      != maplength)
 	    {
 	    read_error:
 	      errval = errno;
@@ -1648,7 +1649,7 @@ open_verify (const char *name, int fd,
 		    abi_note = abi_note_malloced;
 		  }
 		__lseek (fd, ph->p_offset, SEEK_SET);
-		if (__libc_read (fd, (void *) abi_note, size) != size)
+		if (__read_nocancel (fd, (void *) abi_note, size) != size)
 		  {
 		    free (abi_note_malloced);
 		    goto read_error;
@@ -1680,7 +1681,7 @@ open_verify (const char *name, int fd,
 		|| (GLRO(dl_osversion) && GLRO(dl_osversion) < osversion))
 	      {
 	      close_and_out:
-		__close (fd);
+		__close_nocancel (fd);
 		__set_errno (ENOENT);
 		fd = -1;
 	      }
@@ -1797,7 +1798,7 @@ open_path (const char *name, size_t namelen, int mode,
 		  /* The shared object cannot be tested for being SUID
 		     or this bit is not set.  In this case we must not
 		     use this object.  */
-		  __close (fd);
+		  __close_nocancel (fd);
 		  fd = -1;
 		  /* We simply ignore the file, signal this by setting
 		     the error value which would have been set by `open'.  */
@@ -1818,7 +1819,7 @@ open_path (const char *name, size_t namelen, int mode,
 	    {
 	      /* No memory for the name, we certainly won't be able
 		 to load and link it.  */
-	      __close (fd);
+	      __close_nocancel (fd);
 	      return -1;
 	    }
 	}

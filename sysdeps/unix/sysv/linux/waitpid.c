@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* Linux waitpid syscall implementation.
+   Copyright (C) 1991-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,7 +20,6 @@
 #include <sysdep-cancel.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include <not-cancel.h>
 
 __pid_t
 __waitpid (__pid_t pid, int *stat_loc, int options)
@@ -32,14 +32,3 @@ __waitpid (__pid_t pid, int *stat_loc, int options)
 }
 libc_hidden_def (__waitpid)
 weak_alias (__waitpid, waitpid)
-
-__pid_t
-__waitpid_nocancel (__pid_t pid, int *stat_loc, int options)
-{
-#ifdef __NR_waitpid
-  return INLINE_SYSCALL_CALL (waitpid, pid, stat_loc, options);
-#else
-  return INLINE_SYSCALL_CALL (wait4, pid, stat_loc, options, NULL);
-#endif
-}
-libc_hidden_def (__waitpid_nocancel)

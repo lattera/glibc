@@ -25,6 +25,7 @@
 #include <sys/param.h>
 #include <sys/utsname.h>
 #include <ldsodefs.h>
+#include <not-cancel.h>
 
 #ifdef SHARED
 # define DL_SYSDEP_INIT frob_brk ()
@@ -87,11 +88,11 @@ _dl_discover_osversion (void)
   if (__uname (&uts))
     {
       /* This was not successful.  Now try reading the /proc filesystem.  */
-      int fd = __open ("/proc/sys/kernel/osrelease", O_RDONLY);
+      int fd = __open64_nocancel ("/proc/sys/kernel/osrelease", O_RDONLY);
       if (fd < 0)
 	return -1;
-      ssize_t reslen = __read (fd, bufmem, sizeof (bufmem));
-      __close (fd);
+      ssize_t reslen = __read_nocancel (fd, bufmem, sizeof (bufmem));
+      __close_nocancel (fd);
       if (reslen <= 0)
 	/* This also didn't work.  We give up since we cannot
 	   make sure the library can actually work.  */

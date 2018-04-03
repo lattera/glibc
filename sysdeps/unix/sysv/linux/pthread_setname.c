@@ -46,7 +46,7 @@ pthread_setname_np (pthread_t th, const char *name)
   char fname[sizeof (FMT) + 8];
   sprintf (fname, FMT, (unsigned int) pd->tid);
 
-  int fd = __open_nocancel (fname, O_RDWR);
+  int fd = __open64_nocancel (fname, O_RDWR);
   if (fd == -1)
     return errno;
 
