@@ -1,7 +1,15 @@
+2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/libm-test-ulps: Update ULP for sin, cos, sincos.
+	* sysdeps/ieee754/dbl-64/s_sin.c (__sin): Remove slow paths for small
+	inputs.
+	(__cos): Likewise.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update ULP for sin, cos, sincos.
+
 2018-04-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
-	version to 4.16.
+	version to 4.16
 
 2018-04-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 

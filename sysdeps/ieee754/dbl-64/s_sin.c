@@ -448,7 +448,7 @@ SECTION
 #endif
 __sin (double x)
 {
-  double xx, res, t, cor;
+  double xx, t, cor;
   mynumber u;
   int4 k, m;
   double retval = 0;
@@ -471,26 +471,22 @@ __sin (double x)
       xx = x * x;
       /* Taylor series.  */
       t = POLYNOMIAL (xx) * (xx * x);
-      res = x + t;
-      cor = (x - res) + t;
-      retval = (res == res + 1.07 * cor) ? res : slow (x);
+      /* Max ULP of x + t is 0.535.  */
+      retval = x + t;
     }				/*  else  if (k < 0x3fd00000)    */
 /*---------------------------- 0.25<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
     {
-      res = do_sin (x, 0, &cor);
-      retval = (res == res + 1.096 * cor) ? res : slow1 (x);
-      retval = __copysign (retval, x);
+      /* Max ULP is 0.548.  */
+      retval = __copysign (do_sin (x, 0, &cor), x);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
   else if (k < 0x400368fd)
     {
-
       t = hp0 - fabs (x);
-      res = do_cos (t, hp1, &cor);
-      retval = (res == res + 1.020 * cor) ? res : slow2 (x);
-      retval = __copysign (retval, x);
+      /* Max ULP is 0.51.  */
+      retval = __copysign (do_cos (t, hp1, &cor), x);
     }				/*   else  if (k < 0x400368fd)    */
 
 #ifndef IN_SINCOS
@@ -541,7 +537,7 @@ SECTION
 #endif
 __cos (double x)
 {
-  double y, xx, res, cor, a, da;
+  double y, xx, cor, a, da;
   mynumber u;
   int4 k, m;
 
@@ -561,8 +557,8 @@ __cos (double x)
 
   else if (k < 0x3feb6000)
     {				/* 2^-27 < |x| < 0.855469 */
-      res = do_cos (x, 0, &cor);
-      retval = (res == res + 1.020 * cor) ? res : cslow2 (x);
+      /* Max ULP is 0.51.  */
+      retval = do_cos (x, 0, &cor);
     }				/*   else  if (k < 0x3feb6000)    */
 
   else if (k < 0x400368fd)
@@ -571,20 +567,12 @@ __cos (double x)
       a = y + hp1;
       da = (y - a) + hp1;
       xx = a * a;
+      /* Max ULP is 0.501 if xx < 0.01588 or 0.518 otherwise.
+	 Range reduction uses 106 bits here which is sufficient.  */
       if (xx < 0.01588)
-	{
-	  res = TAYLOR_SIN (xx, a, da, cor);
-	  cor = 1.02 * cor + __copysign (1.0e-31, cor);
-	  retval = (res == res + cor) ? res : sloww (a, da, x, true);
-	}
+	retval = TAYLOR_SIN (xx, a, da, cor);
       else
-	{
-	  res = do_sin (a, da, &cor);
-	  cor = 1.035 * cor + __copysign (1.0e-31, cor);
-	  retval = ((res == res + cor) ? __copysign (res, a)
-		    : sloww1 (a, da, x, true));
-	}
-
+	retval = __copysign (do_sin (a, da, &cor), a);
     }				/*   else  if (k < 0x400368fd)    */
 
 
