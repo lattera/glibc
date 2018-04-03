@@ -1,3 +1,12 @@
+2018-04-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22947]
+	* bits/uio-ext.h (RWF_APPEND): New.
+	* sysdeps/unix/sysv/linux/bits/uio-ext.h (RWF_APPEND): Likewise.
+	* manual/llio.texi: Document RWF_APPEND.
+	* misc/tst-preadvwritev2-common.c (RWF_APPEND): New.
+	(RWF_SUPPORTED): Add RWF_APPEND.
+
 2018-04-03 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #22391]

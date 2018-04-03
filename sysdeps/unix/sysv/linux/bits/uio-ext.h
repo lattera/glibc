@@ -46,6 +46,7 @@ extern ssize_t process_vm_writev (pid_t __pid, const struct iovec *__lvec,
 #define RWF_DSYNC	0x00000002 /* per-IO O_DSYNC.  */
 #define RWF_SYNC	0x00000004 /* per-IO O_SYNC.  */
 #define RWF_NOWAIT	0x00000008 /* per-IO nonblocking mode.  */
+#define RWF_APPEND	0x00000010 /* per-IO O_APPEND.  */
 
 __END_DECLS
 
