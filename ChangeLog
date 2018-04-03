@@ -1,5 +1,16 @@
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/dbl-64/s_sin.c (TAYLOR_SIN): Remove cor parameter.
+	(do_cos): Remove corp parameter and calculations.
+	(do_sin): Likewise.
+	(do_sincos): Remove cor variable.
+	(__sin): Use do_sincos for huge inputs.
+	(__cos): Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c (__sincos): Likewise.
+	(reduce_and_compute_sincos): Remove unused function.
+
+2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/dbl-64/s_sin.c (reduce_sincos_1): Rename to
 	reduce_sincos, improve accuracy to 136 bits.
 	(do_sincos_1): Rename to do_sincos, remove fallbacks to slow functions.

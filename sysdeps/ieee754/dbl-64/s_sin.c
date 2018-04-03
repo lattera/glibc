@@ -66,12 +66,11 @@
    a - a^3/3! + a^5/5! - a^7/7! + a^9/9! + (1 - a^2) * da / 2
 
    The constants s1, s2, s3, etc. are pre-computed values of 1/3!, 1/5! and so
-   on.  The result is returned to LHS and correction in COR.  */
-#define TAYLOR_SIN(xx, a, da, cor) \
+   on.  The result is returned to LHS.  */
+#define TAYLOR_SIN(xx, a, da) \
 ({									      \
   double t = ((POLYNOMIAL (xx)  * (a) - 0.5 * (da))  * (xx) + (da));	      \
   double res = (a) + t;							      \
-  (cor) = ((a) - res) + t;						      \
   res;									      \
 })
 
@@ -145,10 +144,10 @@ static double cslow2 (double x);
 /* Given a number partitioned into X and DX, this function computes the cosine
    of the number by combining the sin and cos of X (as computed by a variation
    of the Taylor series) with the values looked up from the sin/cos table to
-   get the result in RES and a correction value in COR.  */
+   get the result.  */
 static inline double
 __always_inline
-do_cos (double x, double dx, double *corp)
+do_cos (double x, double dx)
 {
   mynumber u;
 
@@ -158,16 +157,13 @@ do_cos (double x, double dx, double *corp)
   u.x = big + fabs (x);
   x = fabs (x) - (u.x - big) + dx;
 
-  double xx, s, sn, ssn, c, cs, ccs, res, cor;
+  double xx, s, sn, ssn, c, cs, ccs, cor;
   xx = x * x;
   s = x + x * xx * (sn3 + xx * sn5);
   c = xx * (cs2 + xx * (cs4 + xx * cs6));
   SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   cor = (ccs - s * ssn - cs * c) - sn * s;
-  res = cs + cor;
-  cor = (cs - res) + cor;
-  *corp = cor;
-  return res;
+  return cs + cor;
 }
 
 /* A more precise variant of DO_COS.  EPS is the adjustment to the correction
@@ -207,10 +203,10 @@ do_cos_slow (double x, double dx, double eps, double *corp)
 /* Given a number partitioned into X and DX, this function computes the sine of
    the number by combining the sin and cos of X (as computed by a variation of
    the Taylor series) with the values looked up from the sin/cos table to get
-   the result in RES and a correction value in COR.  */
+   the result.  */
 static inline double
 __always_inline
-do_sin (double x, double dx, double *corp)
+do_sin (double x, double dx)
 {
   mynumber u;
 
@@ -219,16 +215,13 @@ do_sin (double x, double dx, double *corp)
   u.x = big + fabs (x);
   x = fabs (x) - (u.x - big);
 
-  double xx, s, sn, ssn, c, cs, ccs, cor, res;
+  double xx, s, sn, ssn, c, cs, ccs, cor;
   xx = x * x;
   s = x + (dx + x * xx * (sn3 + xx * sn5));
   c = x * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
   SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   cor = (ssn + s * ccs - sn * c) + cs * s;
-  res = sn + cor;
-  cor = (sn - res) + cor;
-  *corp = cor;
-  return res;
+  return sn + cor;
 }
 
 /* A more precise variant of DO_SIN.  EPS is the adjustment to the correction
@@ -330,19 +323,19 @@ static double
 __always_inline
 do_sincos (double a, double da, int4 n)
 {
-  double retval, cor;
+  double retval;
 
   if (n & 1)
     /* Max ULP is 0.513.  */
-    retval = do_cos (a, da, &cor);
+    retval = do_cos (a, da);
   else
     {
       double xx = a * a;
       /* Max ULP is 0.501 if xx < 0.01588, otherwise ULP is 0.518.  */
       if (xx < 0.01588)
-	retval = TAYLOR_SIN (xx, a, da, cor);
+	retval = TAYLOR_SIN (xx, a, da);
       else
-	retval = __copysign (do_sin (a, da, &cor), a);
+	retval = __copysign (do_sin (a, da), a);
     }
 
   return (n & 2) ? -retval : retval;
@@ -362,7 +355,7 @@ SECTION
 __sin (double x)
 {
 #ifndef IN_SINCOS
-  double xx, t, a, da, cor;
+  double xx, t, a, da;
   mynumber u;
   int4 k, m, n;
   double retval = 0;
@@ -396,7 +389,7 @@ __sin (double x)
   else if (k < 0x3feb6000)
     {
       /* Max ULP is 0.548.  */
-      retval = __copysign (do_sin (x, 0, &cor), x);
+      retval = __copysign (do_sin (x, 0), x);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
@@ -404,7 +397,7 @@ __sin (double x)
     {
       t = hp0 - fabs (x);
       /* Max ULP is 0.51.  */
-      retval = __copysign (do_cos (t, hp1, &cor), x);
+      retval = __copysign (do_cos (t, hp1), x);
     }				/*   else  if (k < 0x400368fd)    */
 
 #ifndef IN_SINCOS
@@ -417,8 +410,10 @@ __sin (double x)
 
 /* --------------------105414350 <|x| <2^1024------------------------------*/
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, false);
-
+    {
+      n = __branred (x, &a, &da);
+      retval = do_sincos (a, da, n);
+    }
 /*--------------------- |x| > 2^1024 ----------------------------------*/
   else
     {
@@ -445,7 +440,7 @@ SECTION
 #endif
 __cos (double x)
 {
-  double y, xx, cor, a, da;
+  double y, xx, a, da;
   mynumber u;
 #ifndef IN_SINCOS
   int4 k, m, n;
@@ -470,7 +465,7 @@ __cos (double x)
   else if (k < 0x3feb6000)
     {				/* 2^-27 < |x| < 0.855469 */
       /* Max ULP is 0.51.  */
-      retval = do_cos (x, 0, &cor);
+      retval = do_cos (x, 0);
     }				/*   else  if (k < 0x3feb6000)    */
 
   else if (k < 0x400368fd)
@@ -482,9 +477,9 @@ __cos (double x)
       /* Max ULP is 0.501 if xx < 0.01588 or 0.518 otherwise.
 	 Range reduction uses 106 bits here which is sufficient.  */
       if (xx < 0.01588)
-	retval = TAYLOR_SIN (xx, a, da, cor);
+	retval = TAYLOR_SIN (xx, a, da);
       else
-	retval = __copysign (do_sin (a, da, &cor), a);
+	retval = __copysign (do_sin (a, da), a);
     }				/*   else  if (k < 0x400368fd)    */
 
 
@@ -497,7 +492,10 @@ __cos (double x)
 
   /* 105414350 <|x| <2^1024 */
   else if (k < 0x7ff00000)
-    retval = reduce_and_compute (x, true);
+    {
+      n = __branred (x, &a, &da);
+      retval = do_sincos (a, da, n + 1);
+    }
 
   else
     {
