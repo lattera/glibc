@@ -124,6 +124,11 @@ static inline double
 __always_inline
 do_sin (double x, double dx)
 {
+  double xold = x;
+  /* Max ULP is 0.501 if |x| < 0.126, otherwise ULP is 0.518.  */
+  if (fabs (x) < 0.126)
+    return TAYLOR_SIN (x * x, x, dx);
+
   mynumber u;
 
   if (x <= 0)
@@ -137,7 +142,7 @@ do_sin (double x, double dx)
   c = x * dx + xx * (cs2 + xx * (cs4 + xx * cs6));
   SINCOS_TABLE_LOOKUP (u, sn, ssn, cs, ccs);
   cor = (ssn + s * ccs - sn * c) + cs * s;
-  return sn + cor;
+  return __copysign (sn + cor, xold);
 }
 
 /* Reduce range of x to within PI/2 with abs (x) < 105414350.  The high part
@@ -181,14 +186,8 @@ do_sincos (double a, double da, int4 n)
     /* Max ULP is 0.513.  */
     retval = do_cos (a, da);
   else
-    {
-      double xx = a * a;
-      /* Max ULP is 0.501 if xx < 0.01588, otherwise ULP is 0.518.  */
-      if (xx < 0.01588)
-	retval = TAYLOR_SIN (xx, a, da);
-      else
-	retval = __copysign (do_sin (a, da), a);
-    }
+    /* Max ULP is 0.501 if xx < 0.01588, otherwise ULP is 0.518.  */
+    retval = do_sin (a, da);
 
   return (n & 2) ? -retval : retval;
 }
@@ -207,7 +206,7 @@ SECTION
 __sin (double x)
 {
 #ifndef IN_SINCOS
-  double xx, t, a, da;
+  double t, a, da;
   mynumber u;
   int4 k, m, n;
   double retval = 0;
@@ -228,20 +227,11 @@ __sin (double x)
       math_check_force_underflow (x);
       retval = x;
     }
- /*---------------------------- 2^-26 < |x|< 0.25 ----------------------*/
-  else if (k < 0x3fd00000)
-    {
-      xx = x * x;
-      /* Taylor series.  */
-      t = POLYNOMIAL (xx) * (xx * x);
-      /* Max ULP of x + t is 0.535.  */
-      retval = x + t;
-    }				/*  else  if (k < 0x3fd00000)    */
-/*---------------------------- 0.25<|x|< 0.855469---------------------- */
+/*--------------------------- 2^-26<|x|< 0.855469---------------------- */
   else if (k < 0x3feb6000)
     {
       /* Max ULP is 0.548.  */
-      retval = __copysign (do_sin (x, 0), x);
+      retval = do_sin (x, 0);
     }				/*   else  if (k < 0x3feb6000)    */
 
 /*----------------------- 0.855469  <|x|<2.426265  ----------------------*/
@@ -292,7 +282,7 @@ SECTION
 #endif
 __cos (double x)
 {
-  double y, xx, a, da;
+  double y, a, da;
   mynumber u;
 #ifndef IN_SINCOS
   int4 k, m, n;
@@ -325,13 +315,9 @@ __cos (double x)
       y = hp0 - fabs (x);
       a = y + hp1;
       da = (y - a) + hp1;
-      xx = a * a;
       /* Max ULP is 0.501 if xx < 0.01588 or 0.518 otherwise.
 	 Range reduction uses 106 bits here which is sufficient.  */
-      if (xx < 0.01588)
-	retval = TAYLOR_SIN (xx, a, da);
-      else
-	retval = __copysign (do_sin (a, da), a);
+      retval = do_sin (a, da);
     }				/*   else  if (k < 0x400368fd)    */
 
 
