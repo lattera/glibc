@@ -463,6 +463,7 @@
 
 2018-03-27  Jesse Hathaway  <jesse@mbuki-mvuki.org>
 
+	[BZ #23024]
 	* sysdeps/unix/sysv/linux/getlogin_r.c (__getlogin_r_loginuid): Return
 	early when linux sentinel value is set.
 
