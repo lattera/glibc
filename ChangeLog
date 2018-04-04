@@ -1,3 +1,8 @@
+2018-04-04  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* sysdeps/powerpc/fpu/libm-test-ulps: Increase double-precision
+	sin, cos and sincos to 1 ULP.
+
 2018-04-04  Maciej W. Rozycki  <macro@mips.com>
 
 	[BZ #19818]

@@ -1272,8 +1272,10 @@ ildouble: 4
 ldouble: 4
 
 Function: "cos":
+double: 1
 float: 3
 float128: 1
+idouble: 1
 ifloat: 3
 ifloat128: 1
 ildouble: 4
@@ -2504,8 +2506,10 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin":
+double: 1
 float: 1
 float128: 1
+idouble: 1
 ifloat: 1
 ifloat128: 1
 ildouble: 1
@@ -2542,8 +2546,10 @@ ildouble: 5
 ldouble: 5
 
 Function: "sincos":
+double: 1
 float: 1
 float128: 1
+idouble: 1
 ifloat: 1
 ifloat128: 1
 ildouble: 1
