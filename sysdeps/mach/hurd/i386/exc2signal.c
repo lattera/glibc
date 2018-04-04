@@ -163,3 +163,4 @@ _hurd_exception2signal (struct hurd_signal_detail *detail, int *signo)
       break;
     }
 }
+libc_hidden_def (_hurd_exception2signal)
