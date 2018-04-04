@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <sigsetops.h>
 #include <internal-signals.h>
 
 /* Add SIGNO to SET.  */
