@@ -2093,3 +2093,4 @@ GLIBC_2.27 xdrstdio_create F
 GLIBC_2.27 xencrypt F
 GLIBC_2.27 xprt_register F
 GLIBC_2.27 xprt_unregister F
+GLIBC_2.28 fcntl64 F

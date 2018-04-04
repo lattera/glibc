@@ -1,3 +1,71 @@
+2018-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #20251]
+	* NEWS: Mention fcntl64 addition.
+	* csu/check_fds.c: Replace __fcntl_nocancel by __fcntl64_nocancel.
+	* login/utmp_file.c: Likewise.
+	* sysdeps/posix/fdopendir.c: Likewise.
+	* sysdeps/posix/opendir.c: Likewise.
+	* sysdeps/unix/pt-fcntl.c: Likewise.
+	* include/fcntl.h (__libc_fcntl64, __fcntl64,
+	__fcntl64_nocancel_adjusted): New prototype.
+	(__fcntl_nocancel_adjusted): Remove prototype.
+	* io/Makefile (routines): Add fcntl64.
+	(CFLAGS-fcntl64.c): New rule.
+	* io/Versions [GLIBC_2.28] (fcntl64): New symbol.
+	[GLIBC_PRIVATE] (__libc_fcntl): Rename to __libc_fcntl64.
+	* io/fcntl.h (fcntl64): Add prototype and redirect if
+	__USE_FILE_OFFSET64 is defined.
+	* io/fcntl64.c: New file.
+	* manual/llio.text: Add a note for which commands fcntl acts a
+	cancellation point.
+	* nptl/Makefile (CFLAGS-fcntl64.c): New rule.
+	* sysdeps/mach/hurd/fcntl.c: Alias fcntl to fcntl64 symbols.
+	* sysdeps/mach/hurd/i386/libc.abilist [GLIBC_2.28] (fcntl, fcntl64):
+	New symbols.
+	* sysdeps/unix/sysv/linux/fcntl.c (__libc_fcntl): Fix F_GETLK64,
+	F_OFD_GETLK, F_SETLK64, F_SETLKW64, F_OFD_SETLK, and F_OFD_SETLKW for
+	non-LFS case.
+	* sysdeps/unix/sysv/linux/fcntl64.c: New file.
+	* sysdeps/unix/sysv/linux/fcntl_nocancel.c (__fcntl_nocancel): Rename
+	to __fcntl64_nocancel.
+	(__fcntl_nocancel_adjusted): Rename to __fcntl64_nocancel_adjusted.
+	* sysdeps/unix/sysv/linux/not-cancel.h (__fcntl_nocancel): Rename
+	to __fcntl64_nocancel.
+	* sysdeps/generic/not-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/tst-ofdlocks.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile (tests): Add tst-ofdlocks.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist [GLIBC_2.28]
+	(fcntl64): New symbol.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist [GLIBC_2.28] (fcntl,
+	fcntl64): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilis: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
 	Run thread shutdown functions in an explicit order.

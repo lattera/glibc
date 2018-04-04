@@ -51,7 +51,7 @@
   __pause ()
 #define __nanosleep_nocancel(requested_time, remaining) \
   __nanosleep (requested_time, remaining)
-#define __fcntl_nocancel(fd, cmd, ...) \
-  __fcntl (fd, cmd, __VA_ARGS__)
+#define __fcntl64_nocancel(fd, cmd, ...) \
+  __fcntl64 (fd, cmd, __VA_ARGS__)
 
 #endif /* NOT_CANCEL_H  */

@@ -40,7 +40,7 @@ routines :=								\
 	mkdir mkdirat							\
 	open open_2 open64 open64_2 openat openat_2 openat64 openat64_2	\
 	read write lseek lseek64 access euidaccess faccessat		\
-	fcntl flock lockf lockf64					\
+	fcntl fcntl64 flock lockf lockf64				\
 	close dup dup2 dup3 pipe pipe2					\
 	creat creat64							\
 	chdir fchdir							\
@@ -89,6 +89,7 @@ CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-creat.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-creat64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fcntl64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-poll.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-ppoll.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c += -fexceptions

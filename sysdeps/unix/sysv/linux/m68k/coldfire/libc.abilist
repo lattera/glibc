@@ -116,6 +116,8 @@ GLIBC_2.27 wcstof32x F
 GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
+GLIBC_2.28 fcntl F
+GLIBC_2.28 fcntl64 F
 GLIBC_2.4 _Exit F
 GLIBC_2.4 _IO_2_1_stderr_ D 0x98
 GLIBC_2.4 _IO_2_1_stdin_ D 0x98

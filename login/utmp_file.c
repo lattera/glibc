@@ -82,7 +82,7 @@ static void timeout_handler (int signum) {};
   memset (&fl, '\0', sizeof (struct flock));				      \
   fl.l_type = (type);							      \
   fl.l_whence = SEEK_SET;						      \
-  if (__fcntl_nocancel ((fd), F_SETLKW, &fl) < 0)
+  if (__fcntl64_nocancel ((fd), F_SETLKW, &fl) < 0)
 
 #define LOCKING_FAILED() \
   goto unalarm_return
@@ -90,7 +90,7 @@ static void timeout_handler (int signum) {};
 #define UNLOCK_FILE(fd) \
   /* Unlock the file.  */						      \
   fl.l_type = F_UNLCK;							      \
-  __fcntl_nocancel ((fd), F_SETLKW, &fl);				      \
+  __fcntl64_nocancel ((fd), F_SETLKW, &fl);				      \
 									      \
  unalarm_return:							      \
   /* Reset the signal handler and alarm.  We must reset the alarm	      \

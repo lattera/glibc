@@ -1,4 +1,4 @@
-/* ABI compatibility for 'fcntl' symbol in libpthread ABI.
+/* Manipulate file descriptor.  Linux LFS version.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,34 +16,48 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define fcntl __no_decl_fcntl
+#define __fcntl __no_decl___fcntl
 #include <fcntl.h>
+#undef fcntl
+#undef __fcntl
 #include <stdarg.h>
-#include <shlib-compat.h>
+#include <errno.h>
+#include <sysdep-cancel.h>
 
-/* libpthread once had its own fcntl, though there was no apparent reason
-   for it.  There is no use in having a separate symbol in libpthread, but
-   the historical ABI requires it.  For static linking, there is no need to
-   provide anything here--the libc version will be linked in.  For shared
-   library ABI compatibility, there must be __fcntl and fcntl symbols in
-   libpthread.so.  */
+#ifndef __NR_fcntl64
+# define __NR_fcntl64 __NR_fcntl
+#endif
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_28)
+#ifndef FCNTL_ADJUST_CMD
+# define FCNTL_ADJUST_CMD(__cmd) __cmd
+#endif
 
-static int
-fcntl_compat (int fd, int cmd, ...)
+int
+__libc_fcntl64 (int fd, int cmd, ...)
 {
-  void *arg;
   va_list ap;
+  void *arg;
+
   va_start (ap, cmd);
   arg = va_arg (ap, void *);
   va_end (ap);
-  return __libc_fcntl64 (fd, cmd, arg);
+
+  cmd = FCNTL_ADJUST_CMD (cmd);
+
+  if (cmd == F_SETLKW || cmd == F_SETLKW64 || cmd == F_OFD_SETLKW)
+    return SYSCALL_CANCEL (fcntl64, fd, cmd, arg);
+
+  return __fcntl64_nocancel_adjusted (fd, cmd, arg);
 }
+libc_hidden_def (__libc_fcntl64)
+weak_alias (__libc_fcntl64, __fcntl64)
+libc_hidden_weak (__fcntl64)
+weak_alias (__libc_fcntl64, fcntl64)
 
-weak_alias (fcntl_compat, fcntl_alias)
-compat_symbol (libpthread, fcntl_alias, fcntl, GLIBC_2_0);
-
-weak_alias (fcntl_compat, __fcntl_alias)
-compat_symbol (libpthread, __fcntl_alias, __fcntl, GLIBC_2_0);
-
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (__libc_fcntl64, __libc_fcntl)
+weak_alias (__libc_fcntl64, __fcntl)
+weak_alias (__libc_fcntl64, __GI___fcntl)
+weak_alias (__libc_fcntl64, fcntl)
 #endif

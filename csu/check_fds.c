@@ -39,7 +39,7 @@
 static void
 check_one_fd (int fd, int mode)
 {
-  if (__builtin_expect (__fcntl_nocancel (fd, F_GETFD), 0) == -1
+  if (__builtin_expect (__fcntl64_nocancel (fd, F_GETFD), 0) == -1
       && errno == EBADF)
     {
       const char *name;

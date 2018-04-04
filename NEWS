@@ -110,6 +110,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   restriction (rejecting '_' in host names, among other things) has been
   removed, for increased compatibility with non-IDN name resolution.
 
+* The fcntl function now have a Long File Support variant named fcntl64.  It
+  is added to fix some Linux Open File Description (OFD) locks usage on non
+  LFS mode.  As for others *64 functions, fcntl64 semantics are analogous with
+  fcntl and LFS support is handled transparently.  Also for Linux, the OFD
+  locks act as a cancellation entrypoint.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

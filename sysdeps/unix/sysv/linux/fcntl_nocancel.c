@@ -31,7 +31,7 @@
 #endif
 
 int
-__fcntl_nocancel (int fd, int cmd, ...)
+__fcntl64_nocancel (int fd, int cmd, ...)
 {
   va_list ap;
   void *arg;
@@ -42,12 +42,12 @@ __fcntl_nocancel (int fd, int cmd, ...)
 
   cmd = FCNTL_ADJUST_CMD (cmd);
 
-  return __fcntl_nocancel_adjusted (fd, cmd, arg);
+  return __fcntl64_nocancel_adjusted (fd, cmd, arg);
 }
-hidden_def (__fcntl_nocancel)
+hidden_def (__fcntl64_nocancel)
 
 int
-__fcntl_nocancel_adjusted (int fd, int cmd, void *arg)
+__fcntl64_nocancel_adjusted (int fd, int cmd, void *arg)
 {
   if (cmd == F_GETOWN)
     {

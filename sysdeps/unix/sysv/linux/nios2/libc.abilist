@@ -2163,3 +2163,5 @@ GLIBC_2.27 wcstof32x F
 GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
+GLIBC_2.28 fcntl F
+GLIBC_2.28 fcntl64 F

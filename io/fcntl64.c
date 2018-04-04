@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2018 Free Software Foundation, Inc.
+/* Manipulate file descriptor.  Stub LFS version.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,38 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <stddef.h>
-#include <sys/stat.h>
 
-#include <not-cancel.h>
-
-
-DIR *
-__fdopendir (int fd)
+/* Perform file control operations on FD.  */
+int
+__fcntl64 (int fd, int cmd, ...)
 {
-  struct stat64 statbuf;
-
-  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
-    return NULL;
-  if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
+  if (fd < 0)
     {
-      __set_errno (ENOTDIR);
-      return NULL;
+      __set_errno (EBADF);
+      return -1;
     }
 
-  /* Make sure the descriptor allows for reading.  */
-  int flags = __fcntl64_nocancel (fd, F_GETFL);
-  if (__glibc_unlikely (flags == -1))
-    return NULL;
-  if (__glibc_unlikely ((flags & O_ACCMODE) == O_WRONLY))
-    {
-      __set_errno (EINVAL);
-      return NULL;
-    }
-
-  return __alloc_dir (fd, false, flags, &statbuf);
+  __set_errno (ENOSYS);
+  return -1;
 }
-weak_alias (__fdopendir, fdopendir)
+libc_hidden_def (__fcntl64)
+stub_warning (fcntl64)
+
+weak_alias (__fcntl64, fcntl64)

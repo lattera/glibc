@@ -76,7 +76,7 @@ __typeof (pause) __pause_nocancel;
 __typeof (__nanosleep) __nanosleep_nocancel;
 
 /* Uncancelable fcntl.  */
-__typeof (__fcntl) __fcntl_nocancel;
+__typeof (__fcntl) __fcntl64_nocancel;
 
 #if IS_IN (libc) || IS_IN (rtld)
 hidden_proto (__open_nocancel)
@@ -89,7 +89,7 @@ hidden_proto (__close_nocancel)
 hidden_proto (__waitpid_nocancel)
 hidden_proto (__pause_nocancel)
 hidden_proto (__nanosleep_nocancel)
-hidden_proto (__fcntl_nocancel)
+hidden_proto (__fcntl64_nocancel)
 #endif
 
 #endif /* NOT_CANCEL_H  */
