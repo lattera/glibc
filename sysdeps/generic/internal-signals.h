@@ -19,6 +19,10 @@
 #ifndef __INTERNAL_SIGNALS_H
 # define __INTERNAL_SIGNALS_H
 
+#include <signal.h>
+#include <sigsetops.h>
+#include <stdbool.h>
+
 static inline bool
 __is_internal_signal (int sig)
 {
@@ -33,20 +37,25 @@ __clear_internal_signals (sigset_t *set)
 static inline int
 __libc_signal_block_all (sigset_t *set)
 {
-  return 0;
+  sigset_t allset;
+  __sigfillset (&allset);
+  return __sigprocmask (SIG_BLOCK, &allset, set);
 }
 
 static inline int
 __libc_signal_block_app (sigset_t *set)
 {
-  return 0;
+  sigset_t allset;
+  __sigfillset (&allset);
+  __clear_internal_signals (&allset);
+  return __sigprocmask (SIG_BLOCK, &allset, set);
 }
 
 /* Restore current process signal mask.  */
 static inline int
 __libc_signal_restore_set (const sigset_t *set)
 {
-  return 0;
+  return __sigprocmask (SIG_SETMASK, set, NULL);
 }
 
 

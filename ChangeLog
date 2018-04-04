@@ -1,3 +1,11 @@
+2018-04-04  Zack Weinberg  <zackw@panix.com>
+
+	* sysdeps/generic/internal-signals.h: Include signal.h,
+	sigsetops.h, and stdbool.h.
+	(__libc_signal_block_all): Actually block all signals.
+	(__libc_signal_block_app): Likewise.
+	(__libc_signal_restore_set): Actually restore the signal mask.
+
 2018-04-04  Florian Weimer  <fweimer@redhat.com>
 
 	inet: Actually build and run tst-deadline.
