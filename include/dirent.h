@@ -49,6 +49,7 @@ extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
 extern __typeof (rewinddir) __rewinddir;
 extern __typeof (seekdir) __seekdir;
 extern __typeof (dirfd) __dirfd;
+libc_hidden_proto (dirfd);
 
 extern void __scandir_cancel_handler (void *arg) attribute_hidden;
 extern int __scandir_tail (DIR *dp,
