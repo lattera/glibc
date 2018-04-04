@@ -23,7 +23,7 @@ void *
 _dl_symbol_address (struct link_map *map, const ElfW(Sym) *ref)
 {
   /* Find the "ip" from the "map" and symbol "ref" */
-  Elf32_Addr value = (map ? map->l_addr : 0) + ref->st_value;
+  Elf32_Addr value = SYMBOL_ADDRESS (map, ref, false);
 
   /* On hppa, we have to return the pointer to function descriptor.
      This involves an "| 2" to inform $$dyncall that this is a plabel32  */

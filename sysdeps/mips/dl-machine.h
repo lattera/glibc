@@ -220,7 +220,7 @@ do {									\
   while (i--)								\
     {									\
       if (sym->st_shndx == SHN_UNDEF || sym->st_shndx == SHN_COMMON)	\
-	*got = map->l_addr + sym->st_value;				\
+	*got = SYMBOL_ADDRESS (map, sym, true);				\
       else if (ELFW(ST_TYPE) (sym->st_info) == STT_FUNC			\
 	       && *got != sym->st_value)				\
 	*got += map->l_addr;						\
@@ -230,7 +230,7 @@ do {									\
 	    *got += map->l_addr;					\
 	}								\
       else								\
-	*got = map->l_addr + sym->st_value;				\
+	*got = SYMBOL_ADDRESS (map, sym, true);				\
 									\
       got++;								\
       sym++;								\
@@ -598,7 +598,7 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 #ifndef RTLD_BOOTSTRAP
 		if (map != &GL(dl_rtld_map))
 #endif
-		  reloc_value += sym->st_value + map->l_addr;
+		  reloc_value += SYMBOL_ADDRESS (map, sym, true);
 	      }
 	    else
 	      {
@@ -663,7 +663,7 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 			    "found jump slot relocation with non-zero addend");
 
 	sym_map = RESOLVE_MAP (&sym, version, r_type);
-	value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+	value = SYMBOL_ADDRESS (sym_map, sym, true);
 	*addr_field = value;
 
 	break;
@@ -677,7 +677,7 @@ elf_machine_reloc (struct link_map *map, ElfW(Addr) r_info,
 
 	/* Calculate the address of the symbol.  */
 	sym_map = RESOLVE_MAP (&sym, version, r_type);
-	value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+	value = SYMBOL_ADDRESS (sym_map, sym, true);
 
 	if (__builtin_expect (sym == NULL, 0))
 	  /* This can happen in trace mode if an object could not be
@@ -798,7 +798,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	= vernum ? &map->l_versions[vernum[sym_index] & 0x7fff] : NULL;	  \
       struct link_map *sym_map;						  \
       sym_map = RESOLVE_MAP (&ref, version, reloc);			  \
-      ref ? sym_map->l_addr + ref->st_value : 0;			  \
+      SYMBOL_ADDRESS (sym_map, ref, true);				  \
     })
 
   if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
@@ -842,7 +842,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
 	      && !(sym->st_other & STO_MIPS_PLT))
 	    {
 	      if (lazy)
-		*got = sym->st_value + map->l_addr;
+		*got = SYMBOL_ADDRESS (map, sym, true);
 	      else
 		/* This is a lazy-binding stub, so we don't need the
 		   canonical address.  */

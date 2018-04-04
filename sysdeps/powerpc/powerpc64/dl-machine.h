@@ -708,8 +708,7 @@ elf_machine_rela (struct link_map *map,
   /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
      and STT_GNU_IFUNC.  */
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-  Elf64_Addr value = ((sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value)
-		      + reloc->r_addend);
+  Elf64_Addr value = SYMBOL_ADDRESS (sym_map, sym, true) + reloc->r_addend;
 
   if (sym != NULL
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)

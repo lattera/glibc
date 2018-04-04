@@ -562,7 +562,7 @@ elf_machine_rela (struct link_map *map,
 
   if (sym_map)
     {
-      value = sym ? sym_map->l_addr + sym->st_value : 0;
+      value = SYMBOL_ADDRESS (sym_map, sym, true);
       value += reloc->r_addend;
     }
   else
@@ -586,8 +586,8 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_DIR21L:
       {
 	unsigned int insn = *(unsigned int *)reloc_addr;
-	value = sym_map->l_addr + sym->st_value
-		+ ((reloc->r_addend + 0x1000) & -0x2000);
+	value = (SYMBOL_ADDRESS (sym_map, sym, true)
+		 + ((reloc->r_addend + 0x1000) & -0x2000));
 	value = value >> 11;
 	insn = (insn &~ 0x1fffff) | reassemble_21 (value);
 	*(unsigned int *)reloc_addr = insn;
@@ -597,8 +597,8 @@ elf_machine_rela (struct link_map *map,
     case R_PARISC_DIR14R:
       {
 	unsigned int insn = *(unsigned int *)reloc_addr;
-	value = ((sym_map->l_addr + sym->st_value) & 0x7ff)
-		+ (((reloc->r_addend & 0x1fff) ^ 0x1000) - 0x1000);
+	value = ((SYMBOL_ADDRESS (sym_map, sym, true) & 0x7ff)
+		 + (((reloc->r_addend & 0x1fff) ^ 0x1000) - 0x1000));
 	insn = (insn &~ 0x3fff) | reassemble_14 (value);
 	*(unsigned int *)reloc_addr = insn;
       }

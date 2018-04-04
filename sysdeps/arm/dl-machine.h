@@ -392,7 +392,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
     {
       const Elf32_Sym *const refsym = sym;
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
@@ -452,7 +452,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 binding found in the user program or a loaded library
 		 rather than the dynamic linker's built-in definitions
 		 used while loading those libraries.  */
-	      value -= map->l_addr + refsym->st_value;
+	      value -= SYMBOL_ADDRESS (map, refsym, true);
 # endif
 	    /* Support relocations on mis-aligned offsets.  */
 	    ((struct unaligned *) reloc_addr)->x += value;
@@ -553,7 +553,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       const Elf32_Sym *const refsym = sym;
 # endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf32_Addr value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)

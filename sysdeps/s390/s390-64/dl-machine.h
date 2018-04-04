@@ -305,7 +305,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       const Elf64_Sym *const refsym = sym;
 #endif
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf64_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      Elf64_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
 	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC,

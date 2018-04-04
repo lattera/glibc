@@ -419,7 +419,7 @@ elf_machine_rela (struct link_map *map,
       /* RESOLVE_MAP() will return NULL if it fail to locate the symbol.  */
       if ((sym_map = RESOLVE_MAP (&sym, version, r_type)))
 	{
-	  value = sym_map->l_addr + sym->st_value + reloc->r_addend;
+	  value = SYMBOL_ADDRESS (sym_map, sym, true) + reloc->r_addend;
 
 	  if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_DIR64LSB))
 	    ;/* No adjustment.  */

@@ -124,14 +124,13 @@ _dl_fixup (
 	 of the object that defines sym.  Now add in the symbol
 	 offset.  */
       value = DL_FIXUP_MAKE_VALUE (result,
-				   sym ? (LOOKUP_VALUE_ADDRESS (result)
-					  + sym->st_value) : 0);
+				   SYMBOL_ADDRESS (result, sym, false));
     }
   else
     {
       /* We already found the symbol.  The module (and therefore its load
 	 address) is also known.  */
-      value = DL_FIXUP_MAKE_VALUE (l, l->l_addr + sym->st_value);
+      value = DL_FIXUP_MAKE_VALUE (l, SYMBOL_ADDRESS (l, sym, true));
       result = l;
     }
 
@@ -241,9 +240,7 @@ _dl_profile_fixup (
 	     of the object that defines sym.  Now add in the symbol
 	     offset.  */
 	  value = DL_FIXUP_MAKE_VALUE (result,
-				       defsym != NULL
-				       ? LOOKUP_VALUE_ADDRESS (result)
-					 + defsym->st_value : 0);
+				       SYMBOL_ADDRESS (result, defsym, false));
 
 	  if (defsym != NULL
 	      && __builtin_expect (ELFW(ST_TYPE) (defsym->st_info)
@@ -254,7 +251,7 @@ _dl_profile_fixup (
 	{
 	  /* We already found the symbol.  The module (and therefore its load
 	     address) is also known.  */
-	  value = DL_FIXUP_MAKE_VALUE (l, l->l_addr + refsym->st_value);
+	  value = DL_FIXUP_MAKE_VALUE (l, SYMBOL_ADDRESS (l, refsym, true));
 
 	  if (__builtin_expect (ELFW(ST_TYPE) (refsym->st_info)
 				== STT_GNU_IFUNC, 0))

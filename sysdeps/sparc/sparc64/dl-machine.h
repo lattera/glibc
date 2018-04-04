@@ -409,7 +409,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   else
     {
       sym_map = RESOLVE_MAP (&sym, version, r_type);
-      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      value = SYMBOL_ADDRESS (sym_map, sym, true);
     }
 #else
   value = 0;

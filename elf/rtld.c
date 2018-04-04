@@ -1916,7 +1916,7 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
 					  NULL, ELF_RTYPE_CLASS_PLT,
 					  DL_LOOKUP_ADD_DEPENDENCY, NULL);
 
-	    loadbase = LOOKUP_VALUE_ADDRESS (result);
+	    loadbase = LOOKUP_VALUE_ADDRESS (result, false);
 
 	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
 			_dl_argv[i],

@@ -320,7 +320,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
       const Elf32_Sym *const refsym = sym;
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
 
-      value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      value = SYMBOL_ADDRESS (sym_map, sym, true);
       value += reloc->r_addend;
 
       switch (r_type)
@@ -406,7 +406,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 binding found in the user program or a loaded library
 		 rather than the dynamic linker's built-in definitions
 		 used while loading those libraries.  */
-	      value -= map->l_addr + refsym->st_value + reloc->r_addend;
+	      value -= SYMBOL_ADDRESS (map, refsym, true) + reloc->r_addend;
 #endif
 	    COPY_UNALIGNED_WORD (&value, reloc_addr_arg,
 				 (int) reloc_addr_arg & 3);

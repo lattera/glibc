@@ -1,3 +1,49 @@
+2018-04-04  Maciej W. Rozycki  <macro@mips.com>
+
+	[BZ #19818]
+	* sysdeps/generic/ldsodefs.h (LOOKUP_VALUE_ADDRESS): Add `set'
+	parameter.
+	(SYMBOL_ADDRESS): New macro.
+	[!ELF_FUNCTION_PTR_IS_SPECIAL] (DL_SYMBOL_ADDRESS): Use
+	SYMBOL_ADDRESS for symbol address calculation.
+	* elf/dl-runtime.c (_dl_fixup): Likewise.
+	(_dl_profile_fixup): Likewise.
+	* elf/dl-symaddr.c (_dl_symbol_address): Likewise.
+	* elf/rtld.c (dl_main): Likewise.
+	* sysdeps/aarch64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_rela): Likewise.
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/hppa/dl-symaddr.c (_dl_symbol_address): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	(elf_machine_rela): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/microblaze/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_BEFORE_RTLD_RELOC):
+	Likewise.
+	(elf_machine_reloc): Likewise.
+	(elf_machine_got_rel): Likewise.
+	* sysdeps/mips/dl-trampoline.c (__dl_runtime_resolve): Likewise.
+	* sysdeps/nios2/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/riscv/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela):
+	Likewise.
+	* sysdeps/tile/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela): Likewise.
+
 2018-04-04  Zack Weinberg  <zackw@panix.com>
 
 	* sysdeps/generic/internal-signals.h: Include signal.h,

@@ -250,7 +250,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     {
       const Elf32_Sym *const refsym = sym;
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       switch (r_type)
 	{

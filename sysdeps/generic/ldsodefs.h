@@ -66,14 +66,20 @@ __BEGIN_DECLS
 /* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;
 #define LOOKUP_VALUE(map) map
-#define LOOKUP_VALUE_ADDRESS(map) ((map) ? (map)->l_addr : 0)
+#define LOOKUP_VALUE_ADDRESS(map, set) ((set) || (map) ? (map)->l_addr : 0)
+
+/* Calculate the address of symbol REF using the base address from map MAP,
+   if non-NULL.  Don't check for NULL map if MAP_SET is TRUE.  */
+#define SYMBOL_ADDRESS(map, ref, map_set)				\
+  ((ref) == NULL ? 0							\
+   : LOOKUP_VALUE_ADDRESS (map, map_set) + (ref)->st_value)
 
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
    specific descriptor. */
 #ifndef ELF_FUNCTION_PTR_IS_SPECIAL
 # define DL_SYMBOL_ADDRESS(map, ref) \
- (void *) (LOOKUP_VALUE_ADDRESS (map) + ref->st_value)
+ (void *) SYMBOL_ADDRESS (map, ref, false)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
 # define DL_CALL_DT_INIT(map, start, argc, argv, env) \
  ((init_t) (start)) (argc, argv, env)

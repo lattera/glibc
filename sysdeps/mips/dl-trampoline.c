@@ -192,12 +192,12 @@ __dl_runtime_resolve (ElfW(Word) sym_index,
 
       /* Currently value contains the base load address of the object
 	 that defines sym.  Now add in the symbol offset.  */
-      value = (sym ? sym_map->l_addr + sym->st_value : 0);
+      value = SYMBOL_ADDRESS (sym_map, sym, true);
     }
   else
     /* We already found the symbol.  The module (and therefore its load
        address) is also known.  */
-    value = l->l_addr + sym->st_value;
+    value = SYMBOL_ADDRESS (l, sym, true);
 
   /* Apply the relocation with that value.  */
   *(got + local_gotno + sym_index - gotsym) = value;

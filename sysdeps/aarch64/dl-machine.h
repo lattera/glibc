@@ -254,7 +254,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     {
       const ElfW(Sym) *const refsym = sym;
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
-      ElfW(Addr) value = sym_map == NULL ? 0 : sym_map->l_addr + sym->st_value;
+      ElfW(Addr) value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
 	  && __glibc_unlikely (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC)

@@ -430,7 +430,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   else if (ELFW_ST_TYPE (sym->st_info) == STT_SECTION)
     value = map->l_addr;  /* like a RELATIVE reloc */
   else
-    value = sym_map->l_addr + sym->st_value;
+    value = SYMBOL_ADDRESS (sym_map, sym, true);
 
   if (sym != NULL
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)

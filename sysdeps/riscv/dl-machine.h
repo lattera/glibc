@@ -172,7 +172,7 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
   ElfW(Addr) value = 0;
   if (sym_map != NULL)
-    value = sym_map->l_addr + sym->st_value + reloc->r_addend;
+    value = SYMBOL_ADDRESS (sym_map, sym, true) + reloc->r_addend;
 
   switch (r_type)
     {

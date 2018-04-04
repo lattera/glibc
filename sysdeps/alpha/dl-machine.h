@@ -419,7 +419,7 @@ elf_machine_rela (struct link_map *map,
       if (sym_map)
 	{
 	  sym_raw_value += sym->st_value;
-	  sym_value = sym_raw_value + sym_map->l_addr;
+	  sym_value += SYMBOL_ADDRESS (sym_map, sym, true);
 	}
 
       if (r_type == R_ALPHA_GLOB_DAT)
