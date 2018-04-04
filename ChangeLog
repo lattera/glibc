@@ -37,6 +37,8 @@
 
 	* sysdeps/mach/hurd/if_index.c (__if_nametoindex): Return ENODEV if
 	ifname is too long.
+	* hurd/hurdsig.c (interrupted_reply_port_location): Use
+	DIAG_IGNORE_NEEDS_COMMENT to silence warning with GCC 6 and before.
 
 2018-04-03  Wilco Dijkstra  <wdijkstr@arm.com>
 

@@ -33,6 +33,8 @@
 #include "hurdmalloc.h"		/* XXX */
 #include "../locale/localeinfo.h"
 
+#include <libc-diag.h>
+
 const char *_hurdsig_getenv (const char *);
 
 struct mutex _hurd_siglock;
@@ -246,8 +248,14 @@ interrupted_reply_port_location (thread_t thread,
     /* Faulted trying to read the TCB.  */
     return NULL;
 
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* GCC 6 and before seem to be confused by the setjmp call inside
+     _hurdsig_catch_memory_fault and think that we may be returning a second
+     time to here with portloc uninitialized (but we never do). */
+  DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
   /* Fault now if this pointer is bogus.  */
   *(volatile mach_port_t *) portloc = *portloc;
+  DIAG_POP_NEEDS_COMMENT;
 
   if (sigthread)
     _hurdsig_end_catch_fault ();
