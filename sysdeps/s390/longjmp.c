@@ -43,9 +43,11 @@ weak_alias (__libc_siglongjmp, __v1longjmp)
 weak_alias (__libc_siglongjmp, __v2longjmp)
 versioned_symbol (libc, __v1longjmp, longjmp, GLIBC_2_0);
 compat_symbol (libc, __v2longjmp, longjmp, GLIBC_2_19);
+libc_hidden_def (longjmp)
 
 weak_alias (__libc_siglongjmp, __v1siglongjmp)
 weak_alias (__libc_siglongjmp, __v2siglongjmp)
 versioned_symbol (libc, __v1siglongjmp, siglongjmp, GLIBC_2_0);
 compat_symbol (libc, __v2siglongjmp, siglongjmp, GLIBC_2_19);
+libc_hidden_def (siglongjmp)
 #endif /* SHARED && SHLIB_COMPAT (libc, GLIBC_2_19, GLIBC_2_20)  */
