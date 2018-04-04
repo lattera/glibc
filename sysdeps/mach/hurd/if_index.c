@@ -43,7 +43,7 @@ __if_nametoindex (const char *ifname)
       return 0;
     }
 
-  strncpy (ifr.ifr_name, ifname, IFNAMESIZ);
+  strncpy (ifr.ifr_name, ifname, IFNAMSIZ);
   if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
       int saved_errno = errno;
