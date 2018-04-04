@@ -59,6 +59,7 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
 		     we can omit that test here.  */
 		  if ((symtab[symndx].st_shndx != SHN_UNDEF
 		       || symtab[symndx].st_value != 0)
+		      && symtab[symndx].st_shndx != SHN_ABS
 		      && ELFW(ST_TYPE) (symtab[symndx].st_info) != STT_TLS
 		      && DL_ADDR_SYM_MATCH (match, &symtab[symndx],
 					    matchsym, addr)
@@ -91,6 +92,7 @@ determine_info (const ElfW(Addr) addr, struct link_map *match, Dl_info *info,
 	    && ELFW(ST_TYPE) (symtab->st_info) != STT_TLS
 	    && (symtab->st_shndx != SHN_UNDEF
 		|| symtab->st_value != 0)
+	    && symtab->st_shndx != SHN_ABS
 	    && DL_ADDR_SYM_MATCH (match, symtab, matchsym, addr)
 	    && symtab->st_name < strtabsize)
 	  matchsym = (ElfW(Sym) *) symtab;

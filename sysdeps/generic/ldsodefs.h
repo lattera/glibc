@@ -72,7 +72,8 @@ typedef struct link_map *lookup_t;
    if non-NULL.  Don't check for NULL map if MAP_SET is TRUE.  */
 #define SYMBOL_ADDRESS(map, ref, map_set)				\
   ((ref) == NULL ? 0							\
-   : LOOKUP_VALUE_ADDRESS (map, map_set) + (ref)->st_value)
+   : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? 0			\
+      : LOOKUP_VALUE_ADDRESS (map, map_set)) + (ref)->st_value)
 
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture

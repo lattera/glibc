@@ -1,6 +1,19 @@
 2018-04-04  Maciej W. Rozycki  <macro@mips.com>
 
 	[BZ #19818]
+	* sysdeps/generic/ldsodefs.h (SYMBOL_ADDRESS): Handle SHN_ABS
+	symbols.
+	* elf/dl-addr.c (determine_info): Ignore SHN_ABS symbols.
+	* elf/tst-absolute-sym.c: New file.
+	* elf/tst-absolute-sym-lib.c: New file.
+	* elf/tst-absolute-sym-lib.lds: New file.
+	* elf/Makefile (tests): Add `tst-absolute-sym'.
+	(modules-names): Add `tst-absolute-sym-lib'.
+	(LDLIBS-tst-absolute-sym-lib.so): New variable.
+	($(objpfx)tst-absolute-sym-lib.so): New dependency.
+	($(objpfx)tst-absolute-sym): New dependency.
+
+	[BZ #19818]
 	* sysdeps/generic/ldsodefs.h (LOOKUP_VALUE_ADDRESS): Add `set'
 	parameter.
 	(SYMBOL_ADDRESS): New macro.
