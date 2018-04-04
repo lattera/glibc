@@ -1,3 +1,10 @@
+2018-04-04  Florian Weimer  <fweimer@redhat.com>
+
+	inet: Actually build and run tst-deadline.
+	* inet/Makefile (tests-internal): Add tst-deadline and do not
+	overwrite the variable.
+	(tests-static-internal): Remove variable.
+
 2018-04-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #22947]

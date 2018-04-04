@@ -57,11 +57,11 @@ tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network \
 # tst-deadline must be linked statically so that we can access
 # internal functions.
 tests-static += tst-deadline
-tests-static-internal := tst-deadline
+tests-internal += tst-deadline
 
 # tst-inet6_scopeid_pton also needs internal functions but does not
 # need to be linked statically.
-tests-internal := tst-inet6_scopeid_pton
+tests-internal += tst-inet6_scopeid_pton
 
 include ../Rules
 
