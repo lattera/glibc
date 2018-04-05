@@ -1,3 +1,7 @@
+2018-04-05  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/s390/fpu/libm-test-ulps: Regenerated.
+
 2018-04-05  Florian Weimer  <fweimer@redhat.com>
 
 	* manual/examples/mbstouwcs.c (mbstouwcs): Fix loop termination,
