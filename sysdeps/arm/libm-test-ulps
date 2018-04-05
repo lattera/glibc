@@ -750,7 +750,9 @@ idouble: 1
 ifloat: 2
 
 Function: "cos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "cos_downward":
@@ -1440,7 +1442,9 @@ idouble: 1
 ifloat: 2
 
 Function: "pow":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "pow_downward":
@@ -1462,7 +1466,9 @@ idouble: 1
 ifloat: 1
 
 Function: "sin":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "sin_downward":
@@ -1484,7 +1490,9 @@ idouble: 1
 ifloat: 2
 
 Function: "sincos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "sincos_downward":
