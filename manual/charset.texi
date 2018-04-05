@@ -686,28 +686,7 @@ converting all lowercase characters into uppercase could look like this
 checking, and sometimes leaks memory):
 
 @smallexample
-wchar_t *
-mbstouwcs (const char *s)
-@{
-  size_t len = strlen (s);
-  wchar_t *result = malloc ((len + 1) * sizeof (wchar_t));
-  wchar_t *wcp = result;
-  wchar_t tmp[1];
-  mbstate_t state;
-  size_t nbytes;
-
-  memset (&state, '\0', sizeof (state));
-  while ((nbytes = mbrtowc (tmp, s, len, &state)) > 0)
-    @{
-      if (nbytes >= (size_t) -2)
-        /* Invalid input string.  */
-        return NULL;
-      *wcp++ = towupper (tmp[0]);
-      len -= nbytes;
-      s += nbytes;
-    @}
-  return result;
-@}
+@include mbstouwcs.c.texi
 @end smallexample
 
 The use of @code{mbrtowc} should be clear.  A single wide character is
