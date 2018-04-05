@@ -1,5 +1,7 @@
 2018-04-05 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
+	* sysdeps/sparc/fpu/libm-test-ulps: Update.
+
 	* sysdeps/arm/libm-test-ulps: Update.
 
 	* sysdeps/unix/sysv/linux/aarch64/sigaction.c: Use default Linux version
