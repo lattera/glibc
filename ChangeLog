@@ -1,8 +1,5 @@
 2018-04-05  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
-	* include/setjmp.h (longjmp, siglongjmp): Add hidden protos.
-	* setjmp/longjmp.c (longjmp, siglongjmp): Add hidden defs.
-	* sysdeps/s390/longjmp.c (longjmp, siglongjmp): Add hidden defs.
 	* include/dirent.h (dirfd): Add hidden proto.
 	* dirent/dirfd.c (dirfd): Add hidden def.
 	* sysdeps/mach/hurd/dirfd.c (dirfd): Add hidden def.

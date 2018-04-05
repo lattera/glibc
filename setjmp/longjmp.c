@@ -45,7 +45,5 @@ __libc_siglongjmp (sigjmp_buf env, int val)
 strong_alias (__libc_siglongjmp, __libc_longjmp)
 weak_alias (__libc_siglongjmp, _longjmp)
 weak_alias (__libc_siglongjmp, longjmp)
-libc_hidden_def (longjmp)
 weak_alias (__libc_siglongjmp, siglongjmp)
-libc_hidden_def (siglongjmp)
 #endif
