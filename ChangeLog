@@ -1,5 +1,16 @@
 2018-04-05  Florian Weimer  <fweimer@redhat.com>
 
+	* manual/examples/mbstouwcs.c (mbstouwcs): Fix loop termination,
+	integer overflow, memory leak on error, and indeterminate errno
+	value.  Add a null wide character to terminate the result string.
+	* manual/charset.texi (Converting a Character): Mention embedded
+	null bytes in the mbrtowc input string.  Explain what happens in
+	the -2 result case.  Do not claim that mbrtowc is simple or
+	obvious to use.  Adjust the description of the code example.  Use
+	@code, not @var, for concrete variables.
+
+2018-04-05  Florian Weimer  <fweimer@redhat.com>
+
 	* manual/examples/mbstouwcs.c: New file.
 	* manual/charset.texi (Converting a Character): Include it.
 

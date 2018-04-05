@@ -643,8 +643,8 @@ and they also do not require it to be in the initial state.
 @cindex stateful
 The @code{mbrtowc} function (``multibyte restartable to wide
 character'') converts the next multibyte character in the string pointed
-to by @var{s} into a wide character and stores it in the wide character
-string pointed to by @var{pwc}.  The conversion is performed according
+to by @var{s} into a wide character and stores it in the location
+pointed to by @var{pwc}.  The conversion is performed according
 to the locale currently selected for the @code{LC_CTYPE} category.  If
 the conversion for the character set used in the locale requires a state,
 the multibyte string is interpreted in the state represented by the
@@ -652,7 +652,7 @@ object pointed to by @var{ps}.  If @var{ps} is a null pointer, a static,
 internal state variable used only by the @code{mbrtowc} function is
 used.
 
-If the next multibyte character corresponds to the NUL wide character,
+If the next multibyte character corresponds to the null wide character,
 the return value of the function is @math{0} and the state object is
 afterwards in the initial state.  If the next @var{n} or fewer bytes
 form a correct multibyte character, the return value is the number of
@@ -665,50 +665,59 @@ by @var{pwc} if @var{pwc} is not null.
 If the first @var{n} bytes of the multibyte string possibly form a valid
 multibyte character but there are more than @var{n} bytes needed to
 complete it, the return value of the function is @code{(size_t) -2} and
-no value is stored.  Please note that this can happen even if @var{n}
-has a value greater than or equal to @code{MB_CUR_MAX} since the input
-might contain redundant shift sequences.
+no value is stored in @code{*@var{pwc}}.  The conversion state is
+updated and all @var{n} input bytes are consumed and should not be
+submitted again.  Please note that this can happen even if @var{n} has a
+value greater than or equal to @code{MB_CUR_MAX} since the input might
+contain redundant shift sequences.
 
 If the first @code{n} bytes of the multibyte string cannot possibly form
 a valid multibyte character, no value is stored, the global variable
 @code{errno} is set to the value @code{EILSEQ}, and the function returns
 @code{(size_t) -1}.  The conversion state is afterwards undefined.
 
+As specified, the @code{mbrtowc} function could deal with multibyte
+sequences which contain embedded null bytes (which happens in Unicode
+encodings such as UTF-16), but @theglibc{} does not support such
+multibyte encodings.  When encountering a null input byte, the function
+will either return zero, or return @code{(size_t) -1)} and report a
+@code{EILSEQ} error.  The @code{iconv} function can be used for
+converting between arbitrary encodings.  @xref{Generic Conversion
+Interface}.
+
 @pindex wchar.h
 @code{mbrtowc} was introduced in @w{Amendment 1} to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
-Use of @code{mbrtowc} is straightforward.  A function that copies a
-multibyte string into a wide character string while at the same time
-converting all lowercase characters into uppercase could look like this
-(this is not the final version, just an example; it has no error
-checking, and sometimes leaks memory):
+A function that copies a multibyte string into a wide character string
+while at the same time converting all lowercase characters into
+uppercase could look like this:
 
 @smallexample
 @include mbstouwcs.c.texi
 @end smallexample
 
-The use of @code{mbrtowc} should be clear.  A single wide character is
-stored in @code{@var{tmp}[0]}, and the number of consumed bytes is stored
-in the variable @var{nbytes}.  If the conversion is successful, the
-uppercase variant of the wide character is stored in the @var{result}
-array and the pointer to the input string and the number of available
-bytes is adjusted.
+In the inner loop, a single wide character is stored in @code{wc}, and
+the number of consumed bytes is stored in the variable @code{nbytes}.
+If the conversion is successful, the uppercase variant of the wide
+character is stored in the code{result} array and the pointer to the
+input string and the number of available bytes is adjusted.  If the
+@code{mbrtowc} function returns zero, the null input byte has not been
+converted, so it must be stored explicitly in the result.
 
-The only non-obvious thing about @code{mbrtowc} might be the way memory
-is allocated for the result.  The above code uses the fact that there
-can never be more wide characters in the converted result than there are
-bytes in the multibyte input string.  This method yields a pessimistic
-guess about the size of the result, and if many wide character strings
-have to be constructed this way or if the strings are long, the extra
-memory required to be allocated because the input string contains
-multibyte characters might be significant.  The allocated memory block can
-be resized to the correct size before returning it, but a better solution
-might be to allocate just the right amount of space for the result right
-away.  Unfortunately there is no function to compute the length of the wide
-character string directly from the multibyte string.  There is, however, a
-function that does part of the work.
+The above code uses the fact that there can never be more wide
+characters in the converted result than there are bytes in the multibyte
+input string.  This method yields a pessimistic guess about the size of
+the result, and if many wide character strings have to be constructed
+this way or if the strings are long, the extra memory required to be
+allocated because the input string contains multibyte characters might
+be significant.  The allocated memory block can be resized to the
+correct size before returning it, but a better solution might be to
+allocate just the right amount of space for the result right away.
+Unfortunately there is no function to compute the length of the wide
+character string directly from the multibyte string.  There is, however,
+a function that does part of the work.
 
 @deftypefun size_t mbrlen (const char *restrict @var{s}, size_t @var{n}, mbstate_t *@var{ps})
 @standards{ISO, wchar.h}
