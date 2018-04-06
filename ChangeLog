@@ -1,3 +1,7 @@
+2018-04-06  Andreas Schwab  <schwab@linux-m68k.org>
+
+	* manual/charset.texi (Converting a Character): Fix typo.
+
 2018-04-05 Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/sparc/fpu/libm-test-ulps: Update.

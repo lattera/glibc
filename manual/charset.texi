@@ -701,7 +701,7 @@ uppercase could look like this:
 In the inner loop, a single wide character is stored in @code{wc}, and
 the number of consumed bytes is stored in the variable @code{nbytes}.
 If the conversion is successful, the uppercase variant of the wide
-character is stored in the code{result} array and the pointer to the
+character is stored in the @code{result} array and the pointer to the
 input string and the number of available bytes is adjusted.  If the
 @code{mbrtowc} function returns zero, the null input byte has not been
 converted, so it must be stored explicitly in the result.
