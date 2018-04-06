@@ -1230,7 +1230,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "cos":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -1626,10 +1628,10 @@ ildouble: 2
 ldouble: 2
 
 Function: Imaginary part of "ctan":
-double: 1
+double: 2
 float: 1
 float128: 3
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 3
 ildouble: 1
@@ -1696,10 +1698,10 @@ ildouble: 3
 ldouble: 3
 
 Function: Real part of "ctanh":
-double: 1
+double: 2
 float: 1
 float128: 3
-idouble: 1
+idouble: 2
 ifloat: 1
 ifloat128: 3
 ildouble: 1
@@ -2402,7 +2404,9 @@ ildouble: 4
 ldouble: 4
 
 Function: "sin":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
@@ -2432,7 +2436,9 @@ ildouble: 3
 ldouble: 3
 
 Function: "sincos":
+double: 1
 float128: 1
+idouble: 1
 ifloat128: 1
 ildouble: 1
 ldouble: 1
