@@ -1157,25 +1157,27 @@ send_dg(res_state statp,
 		if (have_sendmmsg >= 0 && nwritten == 0 && buf2 != NULL
 		    && !single_request)
 		  {
-		    struct iovec iov[2];
-		    struct mmsghdr reqs[2];
-		    reqs[0].msg_hdr.msg_name = NULL;
-		    reqs[0].msg_hdr.msg_namelen = 0;
-		    reqs[0].msg_hdr.msg_iov = &iov[0];
-		    reqs[0].msg_hdr.msg_iovlen = 1;
-		    iov[0].iov_base = (void *) buf;
-		    iov[0].iov_len = buflen;
-		    reqs[0].msg_hdr.msg_control = NULL;
-		    reqs[0].msg_hdr.msg_controllen = 0;
-
-		    reqs[1].msg_hdr.msg_name = NULL;
-		    reqs[1].msg_hdr.msg_namelen = 0;
-		    reqs[1].msg_hdr.msg_iov = &iov[1];
-		    reqs[1].msg_hdr.msg_iovlen = 1;
-		    iov[1].iov_base = (void *) buf2;
-		    iov[1].iov_len = buflen2;
-		    reqs[1].msg_hdr.msg_control = NULL;
-		    reqs[1].msg_hdr.msg_controllen = 0;
+		    struct iovec iov =
+		      { .iov_base = (void *) buf, .iov_len = buflen };
+		    struct iovec iov2 =
+		      { .iov_base = (void *) buf2, .iov_len = buflen2 };
+		    struct mmsghdr reqs[2] =
+		      {
+			{
+			  .msg_hdr =
+			    {
+			      .msg_iov = &iov,
+			      .msg_iovlen = 1,
+			    },
+			},
+			{
+			  .msg_hdr =
+			    {
+			      .msg_iov = &iov2,
+			      .msg_iovlen = 1,
+			    }
+			},
+		      };
 
 		    int ndg = __sendmmsg (pfd[0].fd, reqs, 2, MSG_NOSIGNAL);
 		    if (__glibc_likely (ndg == 2))
