@@ -1,3 +1,9 @@
+2018-04-12  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/kernel_sigaction.h
+	(struct kernel_sigaction): Use the same definition on 31bit as is used
+	on 64bit.
+
 2018-04-09  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23037]

@@ -11,15 +11,19 @@ struct kernel_sigaction
     void (*_sa_sigaction)(int, siginfo_t *, void *);
   } _u;
 #define k_sa_handler _u._sa_handler
-#ifndef __s390x__
-  sigset_t sa_mask;
+  /* The 'struct sigaction' definition in s390 kernel header
+     arch/s390/include/uapi/asm/signal.h is used for __NR_rt_sigaction
+     on 64 bits and for __NR_sigaction for 31 bits.
+
+     The expected layout for __NR_rt_sigaction for 31 bits is either
+     'struct sigaction' from include/linux/signal_types.h or
+     'struct compat_sigaction' from include/linux/compat.h.
+
+     So for __NR_rt_sigaction we can use the same layout for both s390x
+     and s390.  */
   unsigned long sa_flags;
   void (*sa_restorer)(void);
-#else
-  unsigned long sa_flags;
-  void (*sa_restorer)(void);
   sigset_t sa_mask;
-#endif
 };
 
 #define SET_SA_RESTORER(kact, act)             \
