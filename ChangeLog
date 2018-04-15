@@ -1,3 +1,8 @@
+2018-04-15  Patrick McGehearty <patrick.mcgehearty@oracle.com>
+
+	* sysdeps/ieee754/dbl-64/e_exp.c: faster __ieee754_exp()
+	* sysdeps/ieee754/dbl-64/eexp.tbl: New file for e_exp.c
+
 2018-04-12  DJ Delorie  <dj@redhat.com>
 
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel

@@ -40,6 +40,7 @@
 #include <math_private.h>
 #include <fenv.h>
 #include <float.h>
+#include "eexp.tbl"
 
 #ifndef SECTION
 # define SECTION
@@ -50,8 +51,10 @@ SECTION
 __ieee754_exp (double x)
 {
   double bexp, t, eps, del, base, y, al, bet, res, rem, cor;
+  double z;
   mynumber junk1, junk2, binexp = {{0, 0}};
   int4 i, j, m, n, ex;
+  int4 k;
   double retval;
 
   {
@@ -61,7 +64,42 @@ __ieee754_exp (double x)
     m = junk1.i[HIGH_HALF];
     n = m & hugeint;
 
-    if (n > smallint && n < bigint)
+    if (n < 0x3ff0a2b2)		/* |x| < 1.03972053527832 */
+      {
+	if (n < 0x3f862e42)	/* |x| < 3/2 ln 2 */
+	  {
+	    if (n < 0x3ed00000)	/* |x| < 1/64 ln 2 */
+	      {
+		if (n < 0x3e300000)	/* |x| < 2^18 */
+		  {
+		    retval = one + junk1.x;
+		    goto ret;
+		  }
+		retval = one + junk1.x * (one + half * junk1.x);
+		goto ret;
+	      }
+	    t = junk1.x * junk1.x;
+	    retval = junk1.x + (t * (half + junk1.x * t2) +
+				(t * t) * (t3 + junk1.x * t4 + t * t5));
+	    retval = one + retval;
+	    goto ret;
+	  }
+
+	/* Find the multiple of 2^-6 nearest x.  */
+	k = n >> 20;
+	j = (0x00100000 | (n & 0x000fffff)) >> (0x40c - k);
+	j = (j - 1) & ~1;
+	if (m < 0)
+	  j += 134;
+	z = junk1.x - TBL2[j];
+	t = z * z;
+	retval = z + (t * (half + (z * t2))
+		      + (t * t) * (t3 + z * t4 + t * t5));
+	retval = TBL2[j + 1] + TBL2[j + 1] * retval;
+	goto ret;
+      }
+
+    if (n < bigint)		/* && |x| >= 1.03972053527832 */
       {
 	y = x * log2e.x + three51.x;
 	bexp = y - three51.x;	/*  multiply the result by 2**bexp        */
@@ -91,12 +129,6 @@ __ieee754_exp (double x)
 	/* Maximum relative error is 7.8e-22 (70.1 bits).
 	   Maximum ULP error is 0.500007.  */
 	retval = res * binexp.x;
-	goto ret;
-      }
-
-    if (n <= smallint)
-      {
-	retval = 1.0;
 	goto ret;
       }
 

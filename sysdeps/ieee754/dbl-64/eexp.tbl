@@ -1,0 +1,172 @@
+/* EXP function tables - for use in computing double precision exponential
+   Copyright (C) 2018 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <http://www.gnu.org/licenses/>.  */
+
+/* For i = 0, ..., 66,
+     TBL2[2*i] is a double precision number near (i+1)*2^-6, and
+     TBL2[2*i+1] = exp(TBL2[2*i]) to within a relative error less
+     than 2^-60.
+
+   For i = 67, ..., 133,
+     TBL2[2*i] is a double precision number near -(i+1)*2^-6, and
+     TBL2[2*i+1] = exp(TBL2[2*i]) to within a relative error less
+     than 2^-60.  */
+
+static const double TBL2[268] = {
+    0x1.ffffffffffc82p-7,   0x1.04080ab55de32p+0,
+    0x1.fffffffffffdbp-6,   0x1.08205601127ecp+0,
+    0x1.80000000000a0p-5,   0x1.0c49236829e91p+0,
+    0x1.fffffffffff79p-5,   0x1.1082b577d34e9p+0,
+    0x1.3fffffffffffcp-4,   0x1.14cd4fc989cd6p+0,
+    0x1.8000000000060p-4,   0x1.192937074e0d4p+0,
+    0x1.c000000000061p-4,   0x1.1d96b0eff0e80p+0,
+    0x1.fffffffffffd6p-4,   0x1.2216045b6f5cap+0,
+    0x1.1ffffffffff58p-3,   0x1.26a7793f6014cp+0,
+    0x1.3ffffffffff75p-3,   0x1.2b4b58b372c65p+0,
+    0x1.5ffffffffff00p-3,   0x1.3001ecf601ad1p+0,
+    0x1.8000000000020p-3,   0x1.34cb8170b583ap+0,
+    0x1.9ffffffffa629p-3,   0x1.39a862bd3b344p+0,
+    0x1.c00000000000fp-3,   0x1.3e98deaa11dcep+0,
+    0x1.e00000000007fp-3,   0x1.439d443f5f16dp+0,
+    0x1.0000000000072p-2,   0x1.48b5e3c3e81abp+0,
+    0x1.0fffffffffecap-2,   0x1.4de30ec211dfbp+0,
+    0x1.1ffffffffff8fp-2,   0x1.5325180cfacd2p+0,
+    0x1.300000000003bp-2,   0x1.587c53c5a7b04p+0,
+    0x1.4000000000034p-2,   0x1.5de9176046007p+0,
+    0x1.4ffffffffff89p-2,   0x1.636bb9a98322fp+0,
+    0x1.5ffffffffffe7p-2,   0x1.690492cbf942ap+0,
+    0x1.6ffffffffff78p-2,   0x1.6eb3fc55b1e45p+0,
+    0x1.7ffffffffff65p-2,   0x1.747a513dbef32p+0,
+    0x1.8ffffffffffd5p-2,   0x1.7a57ede9ea22ep+0,
+    0x1.9ffffffffff6ep-2,   0x1.804d30347b50fp+0,
+    0x1.affffffffffc3p-2,   0x1.865a7772164aep+0,
+    0x1.c000000000053p-2,   0x1.8c802477b0030p+0,
+    0x1.d00000000004dp-2,   0x1.92be99a09bf1ep+0,
+    0x1.e000000000096p-2,   0x1.99163ad4b1e08p+0,
+    0x1.efffffffffefap-2,   0x1.9f876d8e8c4fcp+0,
+    0x1.fffffffffffd0p-2,   0x1.a61298e1e0688p+0,
+    0x1.0800000000002p-1,   0x1.acb82581eee56p+0,
+    0x1.100000000001fp-1,   0x1.b3787dc80f979p+0,
+    0x1.17ffffffffff8p-1,   0x1.ba540dba56e4fp+0,
+    0x1.1fffffffffffap-1,   0x1.c14b431256441p+0,
+    0x1.27fffffffffc4p-1,   0x1.c85e8d43f7c9bp+0,
+    0x1.2fffffffffffdp-1,   0x1.cf8e5d84758a6p+0,
+    0x1.380000000001fp-1,   0x1.d6db26d16cd84p+0,
+    0x1.3ffffffffffd8p-1,   0x1.de455df80e39bp+0,
+    0x1.4800000000052p-1,   0x1.e5cd799c6a59cp+0,
+    0x1.4ffffffffffc8p-1,   0x1.ed73f240dc10cp+0,
+    0x1.5800000000013p-1,   0x1.f539424d90f71p+0,
+    0x1.5ffffffffffbcp-1,   0x1.fd1de6182f885p+0,
+    0x1.680000000002dp-1,   0x1.02912df5ce741p+1,
+    0x1.7000000000040p-1,   0x1.06a39207f0a2ap+1,
+    0x1.780000000004fp-1,   0x1.0ac660691652ap+1,
+    0x1.7ffffffffff6fp-1,   0x1.0ef9db467dcabp+1,
+    0x1.87fffffffffe5p-1,   0x1.133e45d82e943p+1,
+    0x1.9000000000035p-1,   0x1.1793e4652cc6dp+1,
+    0x1.97fffffffffb3p-1,   0x1.1bfafc47bda48p+1,
+    0x1.a000000000000p-1,   0x1.2073d3f1bd518p+1,
+    0x1.a80000000004ap-1,   0x1.24feb2f105ce2p+1,
+    0x1.affffffffffedp-1,   0x1.299be1f3e7f11p+1,
+    0x1.b7ffffffffffbp-1,   0x1.2e4baacdb6611p+1,
+    0x1.c00000000001dp-1,   0x1.330e587b62b39p+1,
+    0x1.c800000000079p-1,   0x1.37e437282d538p+1,
+    0x1.cffffffffff51p-1,   0x1.3ccd943268248p+1,
+    0x1.d7fffffffff74p-1,   0x1.41cabe304cadcp+1,
+    0x1.e000000000011p-1,   0x1.46dc04f4e5343p+1,
+    0x1.e80000000001ep-1,   0x1.4c01b9950a124p+1,
+    0x1.effffffffff9ep-1,   0x1.513c2e6c73196p+1,
+    0x1.f7fffffffffedp-1,   0x1.568bb722dd586p+1,
+    0x1.0000000000034p+0,   0x1.5bf0a8b1457b0p+1,
+    0x1.03fffffffffe2p+0,   0x1.616b5967376dfp+1,
+    0x1.07fffffffff4bp+0,   0x1.66fc20f0337a9p+1,
+    0x1.0bffffffffffdp+0,   0x1.6ca35859290f5p+1,
+   -0x1.fffffffffffe4p-7,   0x1.f80feabfeefa5p-1,
+   -0x1.ffffffffffb0bp-6,   0x1.f03f56a88b5fep-1,
+   -0x1.7ffffffffffa7p-5,   0x1.e88dc6afecfc5p-1,
+   -0x1.ffffffffffea8p-5,   0x1.e0fabfbc702b8p-1,
+   -0x1.3ffffffffffb3p-4,   0x1.d985c89d041acp-1,
+   -0x1.7ffffffffffe3p-4,   0x1.d22e6a0197c06p-1,
+   -0x1.bffffffffff9ap-4,   0x1.caf42e73a4c89p-1,
+   -0x1.fffffffffff98p-4,   0x1.c3d6a24ed822dp-1,
+   -0x1.1ffffffffffe9p-3,   0x1.bcd553b9d7b67p-1,
+   -0x1.3ffffffffffe0p-3,   0x1.b5efd29f24c2dp-1,
+   -0x1.5fffffffff553p-3,   0x1.af25b0a61a9f4p-1,
+   -0x1.7ffffffffff8bp-3,   0x1.a876812c08794p-1,
+   -0x1.9fffffffffe51p-3,   0x1.a1e1d93d68828p-1,
+   -0x1.bffffffffff6ep-3,   0x1.9b674f8f2f3f5p-1,
+   -0x1.dffffffffff7fp-3,   0x1.95067c7837a0cp-1,
+   -0x1.fffffffffff7ap-3,   0x1.8ebef9eac8225p-1,
+   -0x1.0fffffffffffep-2,   0x1.8890636e31f55p-1,
+   -0x1.1ffffffffff41p-2,   0x1.827a56188975ep-1,
+   -0x1.2ffffffffffbap-2,   0x1.7c7c708877656p-1,
+   -0x1.3fffffffffff8p-2,   0x1.769652df22f81p-1,
+   -0x1.4ffffffffff90p-2,   0x1.70c79eba33c2fp-1,
+   -0x1.5ffffffffffdbp-2,   0x1.6b0ff72deb8aap-1,
+   -0x1.6ffffffffff9ap-2,   0x1.656f00bf5798ep-1,
+   -0x1.7ffffffffff9fp-2,   0x1.5fe4615e98eb0p-1,
+   -0x1.8ffffffffffeep-2,   0x1.5a6fc061433cep-1,
+   -0x1.9fffffffffc4ap-2,   0x1.5510c67cd26cdp-1,
+   -0x1.affffffffff30p-2,   0x1.4fc71dc13566bp-1,
+   -0x1.bfffffffffff0p-2,   0x1.4a9271936fd0ep-1,
+   -0x1.cfffffffffff3p-2,   0x1.45726ea84fb8cp-1,
+   -0x1.dfffffffffff3p-2,   0x1.4066c2ff3912bp-1,
+   -0x1.effffffffff80p-2,   0x1.3b6f1ddd05ab9p-1,
+   -0x1.fffffffffffdfp-2,   0x1.368b2fc6f9614p-1,
+   -0x1.0800000000000p-1,   0x1.31baaa7dca843p-1,
+   -0x1.0ffffffffffa4p-1,   0x1.2cfd40f8bdce4p-1,
+   -0x1.17fffffffff0ap-1,   0x1.2852a760d5ce7p-1,
+   -0x1.2000000000000p-1,   0x1.23ba930c1568bp-1,
+   -0x1.27fffffffffbbp-1,   0x1.1f34ba78d568dp-1,
+   -0x1.2fffffffffe32p-1,   0x1.1ac0d5492c1dbp-1,
+   -0x1.37ffffffff042p-1,   0x1.165e9c3e67ef2p-1,
+   -0x1.3ffffffffff77p-1,   0x1.120dc93499431p-1,
+   -0x1.47fffffffff6bp-1,   0x1.0dce171e34ecep-1,
+   -0x1.4fffffffffff1p-1,   0x1.099f41ffbe588p-1,
+   -0x1.57ffffffffe02p-1,   0x1.058106eb8a7aep-1,
+   -0x1.5ffffffffffe5p-1,   0x1.017323fd9002ep-1,
+   -0x1.67fffffffffb0p-1,   0x1.faeab0ae9386cp-2,
+   -0x1.6ffffffffffb2p-1,   0x1.f30ec837503d7p-2,
+   -0x1.77fffffffff7fp-1,   0x1.eb5210d627133p-2,
+   -0x1.7ffffffffffe8p-1,   0x1.e3b40ebefcd95p-2,
+   -0x1.87fffffffffc8p-1,   0x1.dc3448110dae2p-2,
+   -0x1.8fffffffffb30p-1,   0x1.d4d244cf4ef06p-2,
+   -0x1.97fffffffffefp-1,   0x1.cd8d8ed8ee395p-2,
+   -0x1.9ffffffffffa7p-1,   0x1.c665b1e1f1e5cp-2,
+   -0x1.a7fffffffffdcp-1,   0x1.bf5a3b6bf18d6p-2,
+   -0x1.affffffffff95p-1,   0x1.b86ababeef93bp-2,
+   -0x1.b7fffffffffcbp-1,   0x1.b196c0e24d256p-2,
+   -0x1.bffffffffff32p-1,   0x1.aadde095dadf7p-2,
+   -0x1.c7fffffffff6ap-1,   0x1.a43fae4b047c9p-2,
+   -0x1.cffffffffffb6p-1,   0x1.9dbbc01e182a4p-2,
+   -0x1.d7fffffffffcap-1,   0x1.9751adcfa81ecp-2,
+   -0x1.dffffffffffcdp-1,   0x1.910110be0699ep-2,
+   -0x1.e7ffffffffffbp-1,   0x1.8ac983dedbc69p-2,
+   -0x1.effffffffff88p-1,   0x1.84aaa3b8d51a9p-2,
+   -0x1.f7fffffffffbbp-1,   0x1.7ea40e5d6d92ep-2,
+   -0x1.fffffffffffdbp-1,   0x1.78b56362cef53p-2,
+   -0x1.03fffffffff00p+0,   0x1.72de43ddcb1f2p-2,
+   -0x1.07ffffffffe6fp+0,   0x1.6d1e525bed085p-2,
+   -0x1.0bfffffffffd6p+0,   0x1.677532dda1c57p-2};
+
+static const double
+  half = 0.5,
+  one = 1.0,
+/* t2-t5 terms used for polynomial computation.  */
+  t2 = 0x1.5555555555555p-3, /* 1.6666666666666665741e-1 */
+  t3 = 0x1.5555555555555p-5, /* 4.1666666666666664354e-2 */
+  t4 = 0x1.1111111111111p-7, /* 8.3333333333333332177e-3 */
+  t5 = 0x1.6c16c16c16c17p-10; /* 1.3888888888888889419e-3 */
