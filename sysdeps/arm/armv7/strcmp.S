@@ -83,8 +83,6 @@
 #define syndrome	tmp2
 
 
-#ifndef NO_THUMB
-/* This code is best on Thumb.  */
 	.thumb
 
 /* In Thumb code we can't use MVN with a register shift, but we do have ORN.  */
@@ -94,27 +92,6 @@
 .macro apply_mask data_reg, mask_reg
 	orn \data_reg, \data_reg, \mask_reg
 .endm
-#else
-/* In ARM code we don't have ORN, but we can use MVN with a register shift.  */
-.macro prepare_mask mask_reg, nbits_reg
-	mvn \mask_reg, const_m1, S2HI \nbits_reg
-.endm
-.macro apply_mask data_reg, mask_reg
-	orr \data_reg, \data_reg, \mask_reg
-.endm
-
-/* These clobber the condition codes, which the real Thumb cbz/cbnz
-   instructions do not.  But it doesn't matter for any of the uses here.  */
-.macro cbz reg, label
-	cmp \reg, #0
-	beq \label
-.endm
-.macro cbnz reg, label
-	cmp \reg, #0
-	bne \label
-.endm
-#endif
-
 
 	/* Macro to compute and return the result value for word-aligned
 	   cases.  */

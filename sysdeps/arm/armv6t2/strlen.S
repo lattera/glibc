@@ -21,7 +21,7 @@
 
  */
 
-#include <arm-features.h>               /* This might #define NO_THUMB.  */
+#include <arm-features.h>
 #include <sysdep.h>
 
 #ifdef __ARMEB__
@@ -32,24 +32,8 @@
 #define S2HI		lsl
 #endif
 
-#ifndef NO_THUMB
 /* This code is best on Thumb.  */
 	.thumb
-#else
-/* Using bne.w explicitly is desirable in Thumb mode because it helps
-   align the following label without a nop.  In ARM mode there is no
-   such difference.  */
-.macro bne.w label
-	bne \label
-.endm
-
-/* This clobbers the condition codes, which the real Thumb cbnz instruction
-   does not do.  But it doesn't matter for any of the uses here.  */
-.macro cbnz reg, label
-	cmp \reg, #0
-	bne \label
-.endm
-#endif
 
 /* Parameters and result.  */
 #define srcin		r0
@@ -146,16 +130,9 @@ ENTRY(strlen)
 	tst	tmp1, #4
 	pld	[src, #64]
 	S2HI	tmp2, const_m1, tmp2
-#ifdef NO_THUMB
-	mvn	tmp1, tmp2
-	orr	data1a, data1a, tmp1
-	itt	ne
-	orrne	data1b, data1b, tmp1
-#else
 	orn	data1a, data1a, tmp2
 	itt	ne
 	ornne	data1b, data1b, tmp2
-#endif
 	movne	data1a, const_m1
 	mov	const_0, #0
 	b	.Lstart_realigned

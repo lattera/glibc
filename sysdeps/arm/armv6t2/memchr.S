@@ -42,12 +42,8 @@
 	.syntax unified
 
 	.text
-#ifdef NO_THUMB
-	.arm
-#else
 	.thumb
 	.thumb_func
-#endif
 	.global memchr
 	.type memchr,%function
 ENTRY(memchr)
@@ -91,22 +87,14 @@ ENTRY(memchr)
 
 15:
 	ldrd 	r4,r5, [r0],#8
-#ifndef NO_THUMB
 	subs	r6, r6, #8
-#endif
 	eor	r4,r4, r1	@ Get it so that r4,r5 have 00's where the bytes match the target
 	eor	r5,r5, r1
 	uadd8	r4, r4, r7	@ Parallel add 0xff - sets the GE bits for anything that wasn't 0
 	sel	r4, r3, r7	@ bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
 	uadd8	r5, r5, r7	@ Parallel add 0xff - sets the GE bits for anything that wasn't 0
 	sel	r5, r4, r7	@ chained....bytes are 00 for none-00 bytes, or ff for 00 bytes - NOTE INVERSION
-#ifndef NO_THUMB
 	cbnz	r5, 60f
-#else
-	cmp	r5, #0
-	bne	60f
-	subs	r6, r6, #8
-#endif
 	bne	15b		@ (Flags from the subs above) If not run out of bytes then go around again
 
 	pop	{r4,r5,r6,r7}
@@ -120,24 +108,13 @@ ENTRY(memchr)
 	and	r2,r2,#7	@ Leave the count remaining as the number after the double words have been done
 
 20:
-#ifndef NO_THUMB
 	cbz	r2, 40f		@ 0 length or hit the end already then not found
-#else
-	cmp	r2, #0
-	beq	40f
-#endif
 
 21:  @ Post aligned section, or just a short call
 	ldrb	r3,[r0],#1
-#ifndef NO_THUMB
 	subs	r2,r2,#1
 	eor	r3,r3,r1	@ r3 = 0 if match - doesn't break flags from sub
 	cbz	r3, 50f
-#else
-	eors	r3, r3, r1
-	beq	50f
-	subs	r2, r2, #1
-#endif
 	bne	21b		@ on r2 flags
 
 40:

@@ -68,11 +68,7 @@
  * allows to identify exactly which byte has matched.
  */
 
-#ifndef NO_THUMB
 	.thumb_func
-#else
-	.arm
-#endif
 	.p2align 4,,15
 
 ENTRY(memchr)
@@ -132,12 +128,7 @@ ENTRY(memchr)
 	/* The first block can also be the last */
 	bls		.Lmasklast
 	/* Have we found something already? */
-#ifndef NO_THUMB
 	cbnz		synd, .Ltail
-#else
-	cmp		synd, #0
-	bne		.Ltail
-#endif
 
 
 .Lloopintro:
@@ -176,16 +167,9 @@ ENTRY(memchr)
 	vpadd.i8	vdata0_0, vdata0_0, vdata1_0
 	vpadd.i8	vdata0_0, vdata0_0, vdata0_0
 	vmov		synd, vdata0_0[0]
-#ifndef NO_THUMB
 	cbz		synd, .Lnotfound
 	bhi		.Ltail	/* Uses the condition code from
 				   subs cntin, cntin, #32 above.  */
-#else
-	cmp		synd, #0
-	beq		.Lnotfound
-	cmp		cntin, #0
-	bhi		.Ltail
-#endif
 
 
 .Lmasklast:
