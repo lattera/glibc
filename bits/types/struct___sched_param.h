@@ -1,5 +1,4 @@
-/* Definitions of constants and data structure for POSIX 1003.1b-1993
-   scheduling interface.
+/* Sched parameter structure.  Generic version.
    Copyright (C) 1996-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -14,21 +13,16 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library;  if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _BITS_SCHED_H
-#define _BITS_SCHED_H 1
+#ifndef _BITS_TYPES_STRUCT___SCHED_PARAM
+#define _BITS_TYPES_STRUCT___SCHED_PARAM	1
 
-#ifndef _SCHED_H
-# error "Never include <bits/sched.h> directly; use <sched.h> instead."
-#endif
+/* Data structure to describe a process' schedulability.  */
+struct __sched_param
+{
+  int __sched_priority;
+};
 
-/* Scheduling algorithms.  */
-#define SCHED_OTHER	0
-#define SCHED_FIFO	1
-#define SCHED_RR	2
-
-#include <bits/types/struct_sched_param.h>
-
-#endif /* bits/sched.h */
+#endif /* bits/types/struct___sched_param.h */
