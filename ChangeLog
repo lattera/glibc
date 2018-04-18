@@ -10,6 +10,11 @@
 	* sysdeps/mach/include/mach.h: Move to include/.
 	* sysdeps/mach/include/mach/mig_support.h: Move to include/mach/.
 	* sysdeps/mach/include/mach_error.h: Move to include/.
+	* include/lock-intern.h [!_ISOMAC]: Do not declare libc hidden
+	prototypes.
+	* include/mach.h [!_ISOMAC]: Likewise.
+	* include/mach/mig_support.h [!_ISOMAC]: Likewise.
+	* include/mach_error.h [!_ISOMAC]: Likewise.
 
 2018-04-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
