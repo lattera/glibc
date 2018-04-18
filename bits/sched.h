@@ -29,6 +29,10 @@
 #define SCHED_FIFO	1
 #define SCHED_RR	2
 
-#include <bits/types/struct_sched_param.h>
+/* Data structure to describe a process' schedulability.  */
+struct sched_param
+{
+  int sched_priority;
+};
 
 #endif /* bits/sched.h */

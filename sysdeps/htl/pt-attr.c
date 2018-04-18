@@ -24,7 +24,7 @@
 #include <pt-internal.h>
 
 const struct __pthread_attr __pthread_default_attr = {
-  __schedparam: { __sched_priority: 0 },
+  __schedparam: { sched_priority: 0 },
   __stacksize: 0,
   __stackaddr: NULL,
 #ifdef PAGESIZE

@@ -71,7 +71,11 @@
 # define CLONE_IO	0x80000000	/* Clone I/O context.  */
 #endif
 
-#include <bits/types/struct_sched_param.h>
+/* Data structure to describe a process' schedulability.  */
+struct sched_param
+{
+  int sched_priority;
+};
 
 __BEGIN_DECLS
 

@@ -45,7 +45,7 @@ typedef __pid_t pid_t;
 
 /* Backward compatibility.  */
 #define sched_priority    sched_priority
-#define __sched_priority  __sched_priority
+#define __sched_priority  sched_priority
 
 
 __BEGIN_DECLS
