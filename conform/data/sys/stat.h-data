@@ -27,7 +27,8 @@ type time_t
 type {struct stat}
 
 // Bug 17786: st_dev has wrong type.
-xfail[mips-o32-linux]-element {struct stat} dev_t st_dev
+// Bug 23084: st_dev has type unsigned long long instead of dev_t (unsigned).
+xfail[mips-o32-linux|i386-gnu]-element {struct stat} dev_t st_dev
 element {struct stat} ino_t st_ino
 element {struct stat} mode_t st_mode
 element {struct stat} nlink_t st_nlink

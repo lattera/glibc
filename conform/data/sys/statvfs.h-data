@@ -9,7 +9,8 @@ element {struct statvfs} fsblkcnt_t f_bavail
 element {struct statvfs} fsfilcnt_t f_files
 element {struct statvfs} fsfilcnt_t f_ffree
 element {struct statvfs} fsfilcnt_t f_favail
-element {struct statvfs} {unsigned long} f_fsid
+// Bug 23086: f_fsid has type unsigned long long instead of unsigned long
+xfail[i386-gnu]-element {struct statvfs} {unsigned long} f_fsid
 element {struct statvfs} {unsigned long} f_flag
 element {struct statvfs} {unsigned long} f_namemax
 

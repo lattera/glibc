@@ -78,8 +78,9 @@ constant POSIX_FADV_NOREUSE
 
 type {struct flock}
 
-element {struct flock} short l_type
-element {struct flock} short l_whence
+// Bug 23081: l_type and l_whence members of flock structure have type int instead of short
+xfail[i386-gnu]-element {struct flock} short l_type
+xfail[i386-gnu]-element {struct flock} short l_whence
 element {struct flock} off_t l_start
 element {struct flock} off_t l_len
 element {struct flock} pid_t l_pid

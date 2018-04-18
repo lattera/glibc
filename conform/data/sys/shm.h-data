@@ -9,8 +9,9 @@ type {struct shmid_ds}
 
 element {struct shmid_ds} {struct ipc_perm} shm_perm
 element {struct shmid_ds} size_t shm_segsz
-element {struct shmid_ds} pid_t shm_lpid
-element {struct shmid_ds} pid_t shm_cpid
+// Bug 23085: shm_lpid/shm_cpid have type unsigned short instead of pid_t
+xfail[i386-gnu]-element {struct shmid_ds} pid_t shm_lpid
+xfail[i386-gnu]-element {struct shmid_ds} pid_t shm_cpid
 element {struct shmid_ds} shmatt_t shm_nattch
 element {struct shmid_ds} time_t shm_atime
 element {struct shmid_ds} time_t shm_dtime

@@ -9,8 +9,9 @@ constant MSG_NOERROR
 element {struct msqid_ds} {struct ipc_perm} msg_perm
 element {struct msqid_ds} msgqnum_t msg_qnum
 element {struct msqid_ds} msglen_t msg_qbytes
-element {struct msqid_ds} pid_t msg_lspid
-element {struct msqid_ds} pid_t msg_lrpid
+// Bug 23083: msg_lspid/msg_lrpid have type unsigned short instead of pid_t.
+xfail[i386-gnu]-element {struct msqid_ds} pid_t msg_lspid
+xfail[i386-gnu]-element {struct msqid_ds} pid_t msg_lrpid
 element {struct msqid_ds} time_t msg_stime
 element {struct msqid_ds} time_t msg_rtime
 element {struct msqid_ds} time_t msg_ctime

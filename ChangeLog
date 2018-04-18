@@ -1,3 +1,18 @@
+2018-04-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = conform]
+	(conformtest-xfail-conds): Add i386-gnu.
+	* conform/data/fcntl.h-data (flock.l_type, flock.l_whence): XFAIL for
+	i386-gnu.
+	* conform/data/sys/ipc.h-data (ipc_perm.uid, ipc_perm.gid,
+	ipc_perm.cuid, ipc_perm.cgid): Likewise.
+	* conform/data/sys/msg.h-data (msqid_ds.msg_lspid,
+	msqid_ds.msg_lrpid): Likewise.
+	* conform/data/sys/shm.h-data (shmid_ds.shm_lpid, shmid_ds.shm_cpid):
+	Likewise.
+	* conform/data/sys/stat.h-data (stat.st_dev): Likewise.
+	* conform/data/sys/statvfs.h-data (statvfs.f_fsid): Likewise.
+
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.add_all_configs): Use
