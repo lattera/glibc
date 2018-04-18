@@ -2,6 +2,10 @@
 
 	* conform/data/sys/un.h-data (struct sockaddr_un): Allow sun_len
 	member.
+	* sysdeps/mach/include/lock-intern.h: Move to include/.
+	* sysdeps/mach/include/mach.h: Move to include/.
+	* sysdeps/mach/include/mach/mig_support.h: Move to include/mach/.
+	* sysdeps/mach/include/mach_error.h: Move to include/.
 
 2018-04-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
