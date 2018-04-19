@@ -92,4 +92,6 @@ allow IPV6_*
 allow IPPORT_*
 allow IPPROTO_*
 allow SOCK_*
+allow sin_*
+allow sin6_*
 #endif

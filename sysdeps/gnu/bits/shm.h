@@ -58,7 +58,7 @@ struct shmid_ds
     shmatt_t shm_nattch;		/* number of current attaches */
     unsigned short int __shm_npages;	/* size of segment (pages) */
     unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */
-    struct vm_area_struct *__attaches;	/* descriptors for attaches */
+    struct __vm_area_struct *__attaches;	/* descriptors for attaches */
   };
 
 #ifdef __USE_MISC

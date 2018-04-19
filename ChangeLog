@@ -54,6 +54,12 @@
 	(struct statvfs64): Likewise.
 	* sysdeps/mach/hurd/bits/statfs.h (struct statfs, struct statfs64):
 	Likewise.
+	* bits/in.h [!__USE_MISC]: Do not define struct ip_opts.
+	* conform/data/netinet/in.h-data: Allow sin_ and sin6_ prefix.
+	* sysdeps/gnu/bits/msq.h (struct msqid_ds): Use __wait_queue struct
+	instead of wait_queue.
+	* sysdeps/gnu/bits/shm.h (struct shmid_ds): Use __vm_area_struct
+	instead of vm_area_struct.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 

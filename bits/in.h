@@ -44,6 +44,7 @@
 #define IP_ADD_MEMBERSHIP 12	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 13	/* ip_mreq; drop an IP group membership */
 
+#ifdef __USE_MISC
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
    source route (this gets put into the header proper).  */
@@ -52,6 +53,7 @@ struct ip_opts
     struct in_addr ip_dst;	/* First hop; zero without source route.  */
     char ip_opts[40];		/* Actually variable in size.  */
   };
+#endif
 
 /* Socket-level values for IPv6.  */
 #define SOL_IPV6		41
