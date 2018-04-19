@@ -171,6 +171,9 @@ def init_test(test_bin, printer_files, printer_names):
     # Finally, load the test binary.
     test('file {0}'.format(test_bin))
 
+    # Disable lock elision.
+    test('set environment GLIBC_TUNABLES glibc.elision.enable=0')
+
 def go_to_main():
     """Executes a gdb 'start' command, which takes us to main."""
 

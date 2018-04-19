@@ -1,5 +1,9 @@
 2018-04-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
+	* scripts/test_printers_common.py (init_test): Disable lock elision.
+
+2018-04-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
 	* math/test-tgmath.c (count_double, count_float,
 	count_ldouble, count_cdouble, count_cfloat,
 	count_cldouble): Use volatile int.
