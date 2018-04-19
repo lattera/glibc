@@ -79,6 +79,10 @@
 	sigevent's sigev_notify_attributes field a pthread_attr_t*.
 	* bits/types/siginfo_t.h: Remove siginfo struct name, unused and
 	non-compliant.
+	* bits/termios.h [__USE_XOPEN || __USE_XOPEN2K8] (IXANY): Define.
+	[__USE_XOPEN && !__USE_XOPEN2K] (IUCLC, OLCUC): Define.
+	[__USE_XOPEN] (OFDEL): New macro.
+	[__USE_XOPEN && !__USE_XOPEN2K] (XCASE): New macro.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 

@@ -123,13 +123,13 @@ struct termios
 #define	ICRNL	(1 << 8)	/* Map CR to NL on input.  */
 #define	IXON	(1 << 9)	/* Enable start/stop output control.  */
 #define	IXOFF	(1 << 10)	/* Enable start/stop input control.  */
-#if defined __USE_MISC || defined __USE_UNIX98
+#if defined __USE_MISC || defined __USE_XOPEN || defined __USE_XOPEN2K8
 # define IXANY	(1 << 11)	/* Any character will restart after stop.  */
 #endif
 #ifdef	__USE_MISC
 # define IMAXBEL (1 << 13)	/* Ring bell when input queue is full.  */
 #endif
-#ifdef __USE_GNU
+#if defined __USE_GNU || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # define IUCLC	(1 << 14)	/* Translate upper case input to lower case. */
 #endif
 
@@ -172,11 +172,12 @@ struct termios
 # define VT0	(0 << 16)	/* VT delay type 0.  */
 # define VT1	(1 << 16)	/* VT delay type 1.  */
 #endif /* __USE_MISC || __USE_XOPEN */
-#ifdef __USE_GNU
+#if defined __USE_GNU || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 # define OLCUC	(1 << 17)	/* Translate lower case output to upper case */
 #endif
 #ifdef __USE_XOPEN
 # define OFILL	(1 << 18)	/* Send fill characters for delays.  */
+# define OFDEL	(1 << 19)	/* Fill is DEL.  */
 #endif
 
   /* Control modes.  */
@@ -237,6 +238,11 @@ struct termios
 #define	TOSTOP	_TOSTOP
 #ifdef	__USE_MISC
 # define FLUSHO	(1 << 23)	/* Output being flushed (state).  */
+#endif
+#if defined __USE_XOPEN && !defined __USE_XOPEN2K
+# define XCASE	(1 << 24)	/* Canonical upper/lower case.  */
+#endif
+#ifdef __USE_MISC
 # define NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
 # define PENDIN	(1 << 29)	/* Retype pending input (state).  */
 #endif
