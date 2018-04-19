@@ -84,6 +84,10 @@
 	[__USE_XOPEN] (OFDEL): New macro.
 	[__USE_XOPEN && !__USE_XOPEN2K] (XCASE): New macro.
 	* bits/resource.h (RLIM_SAVED_MAX, RLIM_SAVED_CUR): New macros.
+	* sysdeps/hurd/include/hurd.h [!_ISOMAC]: Do not declare libc hidden
+	prototypes.
+	* sysdeps/hurd/include/hurd/fd.h [!_ISOMAC]: Likewise.
+	* sysdeps/hurd/include/hurd/signal.h [!_ISOMAC]: Likewise.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
