@@ -107,4 +107,6 @@ __getdents64 (int fd, char *buf, size_t nbytes)
   scratch_buffer_free (&tmpbuf);
   return (char *) dp - buf;
 }
+#if _DIRENT_MATCHES_DIRENT64
 strong_alias (__getdents64, __getdents)
+#endif
