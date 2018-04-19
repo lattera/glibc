@@ -4,7 +4,7 @@
 #include <bits/types.h>
 #include <bits/types/__sigval_t.h>
 
-typedef struct siginfo
+typedef struct
   {
     int si_signo;		/* Signal number.  */
     int si_errno;		/* If non-zero, an errno value associated with

@@ -77,6 +77,8 @@
 	* sysdeps/pthread/bits/types/sigevent_t.h: New file, based on the
 	generic version but include <bits/pthreadtypes.h> to make struct
 	sigevent's sigev_notify_attributes field a pthread_attr_t*.
+	* bits/types/siginfo_t.h: Remove siginfo struct name, unused and
+	non-compliant.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
