@@ -1,3 +1,9 @@
+2018-04-19  Stefan Liebler  <stli@linux.vnet.ibm.com>
+
+	* math/test-tgmath.c (count_double, count_float,
+	count_ldouble, count_cdouble, count_cfloat,
+	count_cldouble): Use volatile int.
+
 2018-04-19  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = conform]
