@@ -50,7 +50,7 @@ typedef struct gregset
   } gregset_t;
 
 /* Container for all FPU registers.  */
-typedef struct fpregset
+typedef struct
   {
     double fp_dregs[32];
   } fpregset_t;

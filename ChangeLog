@@ -88,6 +88,12 @@
 	prototypes.
 	* sysdeps/hurd/include/hurd/fd.h [!_ISOMAC]: Likewise.
 	* sysdeps/hurd/include/hurd/signal.h [!_ISOMAC]: Likewise.
+	* sysdeps/arm/sys/ucontext.h: Remove fpregset struct name, unused and
+	non-compliant.
+	* sysdeps/i386/sys/ucontext.h: Likewise.
+	* sysdeps/m68k/sys/ucontext.h: Likewise.
+	* sysdeps/mips/sys/ucontext.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/sys/ucontext.h: Likewise.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 

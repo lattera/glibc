@@ -83,7 +83,7 @@ enum
 };
 
 /* Structure to describe FPU registers.  */
-typedef struct fpregset
+typedef struct
 {
   int f_pcr;
   int f_psr;

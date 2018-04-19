@@ -131,7 +131,7 @@ enum
 #endif
 
 /* Structure to describe FPU registers.  */
-typedef struct fpregset
+typedef struct
 {
   union
   {
