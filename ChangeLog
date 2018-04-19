@@ -1,3 +1,7 @@
+2018-04-19  Chung-Lin Tang  <cltang@codesourcery.com>
+
+	* sysdeps/nios2/libm-test-ulps: Update.
+
 2018-04-19  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/mips/mips64/getdents64.c (__getdents64):
