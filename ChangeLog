@@ -45,7 +45,7 @@
 
 	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = conform]
 	(conformtest-xfail-conds): Add i386-gnu.
-	* conform/data/fcntl.h-data (flock.l_type, flock.l_whence): XFAIL for
+	* conform/data/fcntl.h-data (flock.l_type, flock.l_whence): XFAIL on
 	i386-gnu.
 	* conform/data/sys/ipc.h-data (ipc_perm.uid, ipc_perm.gid,
 	ipc_perm.cuid, ipc_perm.cgid): Likewise.
@@ -162,6 +162,10 @@
 	(test-xfail-XOPEN2K8/sys/types.h/conform): Add.
 	(test-xfail-XOPEN2K8/stdlib.h/conform): Add.
 	(test-xfail-XOPEN2K8/arpa/inet.h/conform): Add.
+	* conform/data/signal.h-data (SA_SIGINFO, SA_NOCLDWAIT): XFAIL on
+	i386-gnu.
+	* conform/data/sys/wait.h-data (WIFCONTINUED, WEXITED, WSTOPPED,
+	WCONTINUED, WNOWAIT): XFAIL on i386-gnu.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 

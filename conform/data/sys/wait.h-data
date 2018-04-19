@@ -8,7 +8,7 @@ constant WUNTRACED
 
 macro WEXITSTATUS
 # if !defined XPG4 && !defined POSIX && !defined POSIX2008
-macro WIFCONTINUED
+xfail[i386-gnu]-macro WIFCONTINUED
 # endif
 macro WIFEXITED
 macro WIFSIGNALED
@@ -17,13 +17,13 @@ macro WSTOPSIG
 macro WTERMSIG
 
 # if !defined XPG4 && !defined POSIX
-constant WEXITED
-constant WSTOPPED
+xfail[i386-gnu]-constant WEXITED
+xfail[i386-gnu]-constant WSTOPPED
 #  ifndef POSIX2008
-constant WCONTINUED
+xfail[i386-gnu]-constant WCONTINUED
 #  endif
 constant WNOHANG
-constant WNOWAIT
+xfail[i386-gnu]-constant WNOWAIT
 # endif
 
 #if !defined XPG4 && !defined POSIX
