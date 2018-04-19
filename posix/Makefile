@@ -31,7 +31,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/local_lim.h tar.h bits/utsname.h bits/confname.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h bits/cpu-set.h re_comp.h wait.h bits/environments.h   \
-	   cpio.h spawn.h bits/unistd.h
+	   cpio.h spawn.h bits/unistd.h bits/types/struct_sched_param.h
 
 routines :=								      \
 	uname								      \
