@@ -67,13 +67,16 @@
 	instead of wait_queue.
 	* sysdeps/gnu/bits/shm.h (struct shmid_ds): Use __vm_area_struct
 	instead of vm_area_struct.
-	* bits/sched.h: Include <bits/types/struct_sched_param.h> and move struct
-	sched_param definition to it.
+	* bits/sched.h: Include <bits/types/struct_sched_param.h> and move
+	struct sched_param definition to it.
 	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
 	* bits/types/struct_sched_param.h: New file.
 	* sysdeps/htl/bits/types/struct___pthread_attr.h: Include
 	<bits/types/struct_sched_param.h> instead of <sched.h>.
 	* posix/Makefile (headers): Add bits/types/struct_sched_param.h.
+	* sysdeps/pthread/bits/types/sigevent_t.h: New file, based on the
+	generic version but include <bits/pthreadtypes.h> to make struct
+	sigevent's sigev_notify_attributes field a pthread_attr_t*.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
