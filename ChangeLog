@@ -83,6 +83,7 @@
 	[__USE_XOPEN && !__USE_XOPEN2K] (IUCLC, OLCUC): Define.
 	[__USE_XOPEN] (OFDEL): New macro.
 	[__USE_XOPEN && !__USE_XOPEN2K] (XCASE): New macro.
+	* bits/resource.h (RLIM_SAVED_MAX, RLIM_SAVED_CUR): New macros.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
