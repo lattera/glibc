@@ -12,6 +12,10 @@
 	Likewise.
 	* conform/data/sys/stat.h-data (stat.st_dev): Likewise.
 	* conform/data/sys/statvfs.h-data (statvfs.f_fsid): Likewise.
+	* sysdeps/mach/hurd/bits/statvfs.h (struct statvfs): Make f_bsize,
+	f_namemax, f_frsize, and f_flag fields unsigned long int instead of
+	unsigned int.
+	(struct statvfs64): Likewise.
 
 2018-04-18  Joseph Myers  <joseph@codesourcery.com>
 
