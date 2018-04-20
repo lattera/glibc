@@ -117,7 +117,7 @@ struct termios
 #define   VT1	00200000
 
 #ifdef __USE_MISC
-# define XTABS	01000000 /* Hmm.. Linux/i386 considers this part of TABDLY.. */
+# define XTABS	TAB3
 #endif
 
 /* c_cflag bit meaning */
