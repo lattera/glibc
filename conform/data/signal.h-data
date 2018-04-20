@@ -112,6 +112,7 @@ element {struct sigaction} {void(*} sa_sigaction )(int, siginfo_t*, void*)
 
 constant SA_NOCLDSTOP
 # ifndef XPG4
+// Bug 23089: hurd: missing siginfo support.
 xfail[i386-gnu]-constant SA_SIGINFO
 # endif
 constant SIG_BLOCK
@@ -123,6 +124,7 @@ constant SA_ONSTACK
 # if !defined XPG4 && !defined POSIX
 constant SA_RESETHAND
 constant SA_RESTART
+// Bug 23090: hurd: missing SA_NOCLDWAIT support.
 xfail[i386-gnu]-constant SA_NOCLDWAIT
 constant SA_NODEFER
 # endif
