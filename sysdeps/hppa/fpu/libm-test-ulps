@@ -1520,7 +1520,9 @@ idouble: 1
 ifloat: 1
 
 Function: "sin":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "sin_downward":
