@@ -57,7 +57,7 @@ PROCINFO_CLASS struct cpu_features _dl_aarch64_cpu_features
 #endif
 
 /* Number of HWCAP bits set.  */
-#define _DL_HWCAP_COUNT 23
+#define _DL_HWCAP_COUNT 24
 
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_aarch64_cap_flags
@@ -68,7 +68,8 @@ PROCINFO_CLASS const char _dl_aarch64_cap_flags[_DL_HWCAP_COUNT][10]
 /* Matches the names in arch/arm64/kernel/cpuinfo.c of Linux.  */
 = { "fp", "asimd", "evtstrm", "aes", "pmull", "sha1", "sha2", "crc32",
     "atomics", "fphp", "asimdhp", "cpuid", "asimdrdm", "jscvt", "fcma",
-    "lrcpc", "dcpop", "sha3", "sm3", "sm4", "asimddp", "sha512", "sve" }
+    "lrcpc", "dcpop", "sha3", "sm3", "sm4", "asimddp", "sha512", "sve",
+    "asimdfhm" }
 #endif
 #if !defined SHARED || defined PROCINFO_DECL
 ;

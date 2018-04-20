@@ -1,3 +1,11 @@
+2018-04-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_ASIMDFHM):
+	New macro.
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c (_DL_HWCAP_COUNT):
+	Increase to 24.
+	(_dl_aarch64_cap_flags): Add asimdfhm.
+
 2018-04-19  Chung-Lin Tang  <cltang@codesourcery.com>
 
 	* sysdeps/nios2/libm-test-ulps: Update.
