@@ -1,3 +1,8 @@
+2018-05-13  Alan Modra  <amodra@gmail.com>
+
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela): Add
+	R_PARISC_TLS_DTPOFF32 reloc addend.
+
 2018-05-11  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* bits/floatn-common.h: Define __HAVE_FLOAT128_UNLIKE_LDBL.

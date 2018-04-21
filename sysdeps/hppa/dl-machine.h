@@ -690,7 +690,7 @@ elf_machine_rela (struct link_map *map,
       /* During relocation all TLS symbols are defined and used.
 	 Therefore the offset is already correct.  */
       if (sym != NULL)
-	*reloc_addr = sym->st_value;
+	*reloc_addr = sym->st_value + reloc->r_addend;
       return;
 
     case R_PARISC_TLS_TPREL32:
