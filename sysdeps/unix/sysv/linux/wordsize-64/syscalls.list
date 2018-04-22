@@ -2,7 +2,6 @@
 
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
-readahead	-	readahead	i:iii	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 

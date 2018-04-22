@@ -16,31 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <sys/types.h>
-
+#include <errno.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
-
-
-#ifdef __NR_readahead
 
 ssize_t
 __readahead (int fd, off64_t offset, size_t count)
 {
-  return INLINE_SYSCALL (readahead, 4, fd,
-			 __LONG_LONG_PAIR ((off_t) (offset >> 32),
-					   (off_t) (offset & 0xffffffff)),
-			 count);
+  return INLINE_SYSCALL_CALL (readahead, fd,
+			      __ALIGNMENT_ARG SYSCALL_LL64 (offset),
+			      count);
 }
-#else
-ssize_t
-__readahead (int fd, off64_t offset, size_t count)
-{
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOSYS);
-}
-stub_warning (readahead)
-#endif
-
 weak_alias (__readahead, readahead)

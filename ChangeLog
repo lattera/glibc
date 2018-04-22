@@ -1,3 +1,16 @@
+2018-04-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/arm/readahead.c: Remove file.
+	* sysdeps/unix/sysv/linux/mips/mips32/readahead.c: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/syscalls.list (readahead):
+	Remove.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/wordsize-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/readahead.c (__readahead): Assume
+	__NR_readahead existence, and use INLINE_SYSCALL_CALL, __ALIGNMENT_ARG,
+	and SYSCALL_LL64.
+
 2018-04-27  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* math/e_exp2_template.c: Replace M_SUF (M_LN2) with M_MLIT (M_LN2).
