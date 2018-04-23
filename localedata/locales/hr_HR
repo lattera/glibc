@@ -174,7 +174,7 @@ LC_MONETARY
 int_curr_symbol           "HRK "
 currency_symbol           "kn"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         "."
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "-"
@@ -192,7 +192,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             ","
-thousands_sep             "<U202F>"
+thousands_sep             "."
 grouping                  3;3
 END LC_NUMERIC
 
