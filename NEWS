@@ -27,35 +27,35 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
- * The nonstandard header files <libio.h> and <_G_config.h> are no longer
-   installed.  Software that was using either header should be updated to
-   use standard <stdio.h> interfaces instead.
+* The nonstandard header files <libio.h> and <_G_config.h> are no longer
+  installed.  Software that was using either header should be updated to
+  use standard <stdio.h> interfaces instead.
 
- * The stdio.h functions 'getc' and 'putc' are no longer defined as macros.
-   This was never required by the C standard, and the macros just expanded
-   to call alternative names for the same functions.  If you hoped getc and
-   putc would provide performance improvements over fgetc and fputc, instead
-   investigate using (f)getc_unlocked and (f)putc_unlocked, and, if
-   necessary, flockfile and funlockfile.
+* The stdio functions 'getc' and 'putc' are no longer defined as macros.
+  This was never required by the C standard, and the macros just expanded
+  to call alternative names for the same functions.  If you hoped getc and
+  putc would provide performance improvements over fgetc and fputc, instead
+  investigate using (f)getc_unlocked and (f)putc_unlocked, and, if
+  necessary, flockfile and funlockfile.
 
- * All stdio functions now treat end-of-file as a sticky condition.  If you
-   read from a file until EOF, and then the file is enlarged by another
-   process, you must call clearerr or another function with the same effect
-   (e.g. fseek, rewind) before you can read the additional data.  This
-   corrects a longstanding C99 conformance bug.  It is most likely to affect
-   programs that use stdio to read interactive input from a terminal.
-   (Bug #1190.)
+* All stdio functions now treat end-of-file as a sticky condition.  If you
+  read from a file until EOF, and then the file is enlarged by another
+  process, you must call clearerr or another function with the same effect
+  (e.g. fseek, rewind) before you can read the additional data.  This
+  corrects a longstanding C99 conformance bug.  It is most likely to affect
+  programs that use stdio to read interactive input from a terminal.
+  (Bug #1190.)
 
- * The macros 'major', 'minor', and 'makedev' are now only available from
-   the header <sys/sysmacros.h>; not from <sys/types.h> or various other
-   headers that happen to include <sys/types.h>.  These macros are rarely
-   used, not part of POSIX nor XSI, and their names frequently collide with
-   user code; see https://sourceware.org/bugzilla/show_bug.cgi?id=19239 for
-   further explanation.
+* The macros 'major', 'minor', and 'makedev' are now only available from
+  the header <sys/sysmacros.h>; not from <sys/types.h> or various other
+  headers that happen to include <sys/types.h>.  These macros are rarely
+  used, not part of POSIX nor XSI, and their names frequently collide with
+  user code; see https://sourceware.org/bugzilla/show_bug.cgi?id=19239 for
+  further explanation.
 
-   <sys/sysmacros.h> is a GNU extension.  Portable programs that require
-   these macros should first include <sys/types.h>, and then include
-   <sys/sysmacros.h> if __GNU_LIBRARY__ is defined.
+  <sys/sysmacros.h> is a GNU extension.  Portable programs that require
+  these macros should first include <sys/types.h>, and then include
+  <sys/sysmacros.h> if __GNU_LIBRARY__ is defined.
 
 Changes to build and runtime requirements:
 
