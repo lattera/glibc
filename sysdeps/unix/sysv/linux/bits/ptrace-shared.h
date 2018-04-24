@@ -66,6 +66,13 @@ enum __ptrace_peeksiginfo_flags
   PTRACE_PEEKSIGINFO_SHARED = (1 << 0)
 };
 
+/* Argument and results of PTRACE_SECCOMP_GET_METADATA.  */
+struct __ptrace_seccomp_metadata
+{
+  __uint64_t filter_off;	/* Input: which filter.  */
+  __uint64_t flags;		/* Output: filter's flags.  */
+};
+
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.
    For all requests except PTRACE_TRACEME, PID specifies the process to be

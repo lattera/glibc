@@ -1,3 +1,26 @@
+2018-04-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): New enum value and macro.
+	* sysdeps/unix/sysv/linux/bits/ptrace-shared.h
+	(struct __ptrace_seccomp_metadata): New type.
+	* sysdeps/unix/sysv/linux/aarch64/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/arm/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/s390/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/tile/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+	* sysdeps/unix/sysv/linux/x86/sys/ptrace.h
+	(PTRACE_SECCOMP_GET_METADATA): Likewise.
+
 2018-04-23  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* dirent/alphasort.c (alphasort): Build iff _DIRENT_MATCHES_DIRENT64 is
