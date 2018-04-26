@@ -35,11 +35,8 @@ __libgcc_s_init (void)
   void *resume, *personality;
   void *handle;
 
-  /* Use RTLD_NOW here for consistency with pthread_cancel_init.
-     RTLD_NOW will rarely make a difference here because unwinding is
-     already in progress, so libgcc_s.so has already been loaded if
-     its unwinder is used.  */
-  handle = __libc_dlopen_mode (LIBGCC_S_SO, RTLD_NOW | __RTLD_DLOPEN);
+  /* See include/dlfcn.h. Use of __libc_dlopen requires RTLD_NOW.  */
+  handle = __libc_dlopen (LIBGCC_S_SO);
 
   if (handle == NULL
       || (resume = __libc_dlsym (handle, "_Unwind_Resume")) == NULL

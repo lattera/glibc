@@ -1,3 +1,11 @@
+2018-04-26  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	[BZ #22766]
+	* include/dlfcn.h [__libc_dl_open]: Replace RTLD_LAZY with RTLD_NOW.
+	* sysdeps/gnu/unwind-resume.c (__lib_gcc_s_init): Replace
+	__libc_dlopen_mode() using RTLD_NOW with __libc_dlopen.
+	* sysdeps/nptl/unwind-forcedunwind.c: Likewise.
+
 2018-04-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/getdirentries.c (getdirentries): Build iff

@@ -31,8 +31,29 @@ extern char **__libc_argv attribute_hidden;
 
 /* Now define the internal interfaces.  */
 
+/* Use RTLD_NOW here because:
+   1. In pthread_cancel_init we want to use RTLD_NOW to reduce the stack usage
+      of future cancellation operations, particularly when the target thread
+      is running with a small stack.  Likewise for consistency we do the same
+      thing in __libgcc_s_init.  RTLD_NOW will rarely make a difference for
+      __libgcc_s_init because unwinding is already in progress, so libgcc_s.so
+      has already been loaded if its unwinder is used (Bug 22636).
+   2. It allows us to provide robust fallback code at dlopen time for
+      incorrectly configured systems that mix old libnss_* modules with newly
+      installed libraries e.g. old libnss_nis.so.2 with new libnsl.so.1.  Using
+      RTLD_LAZY here causes a failure at the time the symbol is called and at
+      that point it is much harder to safely return an error (Bug 22766).
+
+   The use of RTLD_NOW also impacts gconv module loading, backtracing
+   (where the unwinder form libgcc_s.so is used), and IDNA functions
+   (which load libidn), all of which load their respective DSOs on
+   demand, and so should not impact program startup.  That is to say
+   that the DSOs are loaded as part of an API call and therefore we
+   will be calling that family of API functions shortly so RTLD_NOW or
+   RTLD_LAZY is not a big difference in performance, but RTLD_NOW has
+   better error handling semantics for the library.  */
 #define __libc_dlopen(name) \
-  __libc_dlopen_mode (name, RTLD_LAZY | __RTLD_DLOPEN)
+  __libc_dlopen_mode (name, RTLD_NOW | __RTLD_DLOPEN)
 extern void *__libc_dlopen_mode  (const char *__name, int __mode);
 extern void *__libc_dlsym   (void *__map, const char *__name);
 extern void *__libc_dlvsym (void *map, const char *name, const char *version);
