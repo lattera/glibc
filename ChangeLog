@@ -1,3 +1,8 @@
+2018-04-26  Aurelien Jarno  <aurelien@aurel32.net>
+
+	* signal/tst-sigaction.c: New file to test BZ #23069.
+	* signal/Makefile (tests): Fix indentation. Add tst-sigaction.
+
 2018-04-26  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	[BZ #22766]
