@@ -79,38 +79,40 @@ ENTRY(__swapcontext)
 	cmpq	$-4095, %rax		/* Check %rax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 
-	/* Restore destroyed registers.  */
-	movq	%r12, %rsi
+	/* Restore destroyed register into RDX. The choice is arbitrary,
+	   but leaving RDI and RSI available for use later can avoid
+	   shuffling values.  */
+	movq	%r12, %rdx
 
 	/* Restore the floating-point context.  Not the registers, only the
 	   rest.  */
-	movq	oFPREGS(%rsi), %rcx
+	movq	oFPREGS(%rdx), %rcx
 	fldenv	(%rcx)
-	ldmxcsr oMXCSR(%rsi)
+	ldmxcsr oMXCSR(%rdx)
 
 	/* Load the new stack pointer and the preserved registers.  */
-	movq	oRSP(%rsi), %rsp
-	movq	oRBX(%rsi), %rbx
-	movq	oRBP(%rsi), %rbp
-	movq	oR12(%rsi), %r12
-	movq	oR13(%rsi), %r13
-	movq	oR14(%rsi), %r14
-	movq	oR15(%rsi), %r15
+	movq	oRSP(%rdx), %rsp
+	movq	oRBX(%rdx), %rbx
+	movq	oRBP(%rdx), %rbp
+	movq	oR12(%rdx), %r12
+	movq	oR13(%rdx), %r13
+	movq	oR14(%rdx), %r14
+	movq	oR15(%rdx), %r15
 
 	/* The following ret should return to the address set with
 	getcontext.  Therefore push the address on the stack.  */
-	movq	oRIP(%rsi), %rcx
+	movq	oRIP(%rdx), %rcx
 	pushq	%rcx
 
 	/* Setup registers used for passing args.  */
-	movq	oRDI(%rsi), %rdi
-	movq	oRDX(%rsi), %rdx
-	movq	oRCX(%rsi), %rcx
-	movq	oR8(%rsi), %r8
-	movq	oR9(%rsi), %r9
+	movq	oRDI(%rdx), %rdi
+	movq	oRSI(%rdx), %rsi
+	movq	oRCX(%rdx), %rcx
+	movq	oR8(%rdx), %r8
+	movq	oR9(%rdx), %r9
 
-	/* Setup finally  %rsi.  */
-	movq	oRSI(%rsi), %rsi
+	/* Setup finally %rdx.  */
+	movq	oRDX(%rdx), %rdx
 
 	/* Clear rax to indicate success.  */
 	xorl	%eax, %eax
