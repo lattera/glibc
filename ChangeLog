@@ -1,5 +1,7 @@
 2018-04-27  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
+	* math/e_exp2_template.c: Replace M_SUF (M_LN2) with M_MLIT (M_LN2).
+
 	* math/w_acos_template.c: Replace M_SUF (fabs) with M_FABS.
 	* math/w_asin_template.c: Likewise.
 	* math/w_atanh_template.c: Likewise.

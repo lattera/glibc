@@ -41,7 +41,7 @@ M_DECL_FUNC (__ieee754_exp2) (FLOAT x)
 	  if (M_FABS (fractx) < M_EPSILON / 4)
 	    result = M_SCALBN (1 + fractx, intx);
 	  else
-	    result = M_SCALBN (M_EXP (M_SUF (M_LN2) * fractx), intx);
+	    result = M_SCALBN (M_EXP (M_MLIT (M_LN2) * fractx), intx);
 	  math_check_force_underflow_nonneg (result);
 	  return result;
 	}
