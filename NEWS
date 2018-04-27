@@ -57,6 +57,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   these macros should first include <sys/types.h>, and then include
   <sys/sysmacros.h> if __GNU_LIBRARY__ is defined.
 
+* The tilegx*-*-linux-gnu configurations are no longer supported.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

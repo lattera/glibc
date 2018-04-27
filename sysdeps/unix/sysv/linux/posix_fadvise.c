@@ -31,9 +31,8 @@
    (redefined to __NR_fadvise64_64 in kernel-features.h) that behaves as
    __NR_fadvise64_64 (without the aligment argument required for the ABI).
 
-   Third option will be used by both tile 32-bits and mips o32.  Tile
-   will set __ASSUME_FADVISE64_64_NO_ALIGN to issue a 6 argument syscall,
-   while mips will use a 7 argument one with __NR_fadvise64.
+   Third option will be used by mips o32.  Mips will use a 7 argument
+   syscall with __NR_fadvise64.
 
    s390 implements fadvice64_64 using a specific struct with arguments
    packed inside.  This is the only implementation handled in arch-specific
@@ -52,11 +51,6 @@ posix_fadvise (int fd, off_t offset, off_t len, int advise)
   int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, err, fd, advise,
 				   SYSCALL_LL (offset), SYSCALL_LL (len));
 #  else
-
-#   ifdef __ASSUME_FADVISE64_64_NO_ALIGN
-#    undef __ALIGNMENT_ARG
-#    define __ALIGNMENT_ARG
-#   endif
 
 #   ifndef __NR_fadvise64_64
 #    define __NR_fadvise64_64 __NR_fadvise64

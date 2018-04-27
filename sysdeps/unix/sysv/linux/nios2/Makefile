@@ -3,7 +3,7 @@ gen-as-const-headers += ucontext_i.sym
 endif
 
 ifeq ($(subdir),misc)
-# MIPS/Tile-style cacheflush routine
+# MIPS-style cacheflush routine
 sysdep_headers += sys/cachectl.h
 sysdep_routines += cacheflush
 endif

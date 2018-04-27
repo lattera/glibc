@@ -1,6 +1,0 @@
-libc {
-  GLIBC_2.12 {
-    # name requested by gcc community.
-    __mcount;
-  }
-}

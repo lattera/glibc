@@ -26,17 +26,9 @@ libc_hidden_proto (__posix_fadvise64_l64)
    just after 'fd' to avoid the requirement of implementing 7-arg syscalls.
    ARM also defines __NR_fadvise64_64 as __NR_arm_fadvise64_64.
 
-   tile requires __ASSUME_ALIGNED_REGISTER_PAIRS but implements the 32-bit
-   fadvise64_64 without the padding 0 after fd.
-
    s390 implements fadvice64_64 using a specific struct with arguments
    packed inside.  This is the only implementation handled in arch-specific
    code.  */
-
-#ifdef __ASSUME_FADVISE64_64_NO_ALIGN
-# undef __ALIGNMENT_ARG
-# define __ALIGNMENT_ARG
-#endif
 
 #ifndef __NR_fadvise64_64
 # define __NR_fadvise64_64 __NR_fadvise64

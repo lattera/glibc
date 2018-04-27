@@ -265,7 +265,8 @@ version 3 (@code{i386-sequent-bsd}).
 @item
 Chris Metcalf for the port to Linux/Tile
 (@code{tilegx-@var{anything}-linux} and
-@code{tilepro-@var{anything}-linux}).
+@code{tilepro-@var{anything}-linux}) and support for the generic Linux
+kernel syscall interface used by several newer ports.
 
 @item
 David Miller for contributing the port to Linux/Sparc

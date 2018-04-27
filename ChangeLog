@@ -1,3 +1,26 @@
+2018-04-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/tile: Remove.
+	* sysdeps/unix/sysv/linux/tile: Likewise.
+	* README (tilegx-*-linux-gnu): Remove from list of supported
+	configurations.
+	* manual/contrib.texi (Contributors): Mention Chris Metcalf's
+	contribution of support for generic Linux kernel syscall
+	interface.
+	* scripts/build-many-glibcs.py (Context.add_all_configs): Remove
+	tilegx configurations.
+	(Config.install_linux_headers): Do not handle tile.
+	* sysdeps/unix/sysv/linux/aarch64/ldsodefs.h: Do not mention Tile
+	in comment.
+	* sysdeps/unix/sysv/linux/nios2/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/posix_fadvise.c: Likewise.
+	[__ASSUME_FADVISE64_64_NO_ALIGN] (__ALIGNMENT_ARG): Remove
+	conditional undefine and redefine.
+	* sysdeps/unix/sysv/linux/posix_fadvise64.c: Do not mention Tile
+	in comment.
+	[__ASSUME_FADVISE64_64_NO_ALIGN] (__ALIGNMENT_ARG): Remove
+	conditional undefine and redefine.
+
 2018-04-26  Aurelien Jarno  <aurelien@aurel32.net>
 
 	* signal/tst-sigaction.c: New file to test BZ #23069.
