@@ -29,7 +29,7 @@
 FLOAT
 M_DECL_FUNC (__asin) (FLOAT x)
 {
-  if (__glibc_unlikely (isgreater (M_SUF (fabs) (x),  M_LIT (1.0))))
+  if (__glibc_unlikely (isgreater (M_FABS (x),  M_LIT (1.0))))
     /* Domain error: asin(|x|>1).  */
     __set_errno (EDOM);
   return M_SUF (__ieee754_asin) (x);
