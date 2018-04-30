@@ -33,6 +33,6 @@ __exp (double x)
 
   return z;
 }
-hidden_def (__exp)
+libm_hidden_def (__exp)
 libm_alias_double (__exp, exp)
 #endif

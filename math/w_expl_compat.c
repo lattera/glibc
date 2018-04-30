@@ -41,6 +41,6 @@ long double __expl(long double x)	/* wrapper exp */
 	return z;
 # endif
 }
-hidden_def (__expl)
+libm_hidden_def (__expl)
 libm_alias_ldouble (__exp, exp)
 #endif

@@ -26,9 +26,6 @@
 # include <math.h>
 # include <math_private.h>
 
-/* Provide an additional macro expansion for hidden_def.  */
-#define hidden_def_x(name) hidden_def (name)
-
 FLOAT
 M_DECL_FUNC (__exp) (FLOAT x)
 {
@@ -38,7 +35,7 @@ M_DECL_FUNC (__exp) (FLOAT x)
     __set_errno (ERANGE);
   return z;
 }
-hidden_def_x (M_SUF (__exp))
+libm_hidden_def (M_SUF (__exp))
 declare_mgen_alias (__exp, exp)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

@@ -1,3 +1,9 @@
+2018-04-30  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* math/w_exp_compat.c: Replace hidden_def with libm_hidden_def..
+	* math/w_expl_compat.c: Likewise.
+	* math/w_exp_template.c: Likewise.  Remove hidden_def_x.
+
 2018-04-30  Raymond Nicholson <rain1@airmail.cc>
 
 	* manual/startup.texi (Aborting a Program): Remove inappropriate joke.
