@@ -1005,14 +1005,6 @@ This function actually terminates the process by raising a
 intercept this signal; see @ref{Signal Handling}.
 @end deftypefun
 
-@c Put in by rms.  Don't remove.
-@cartouche
-@strong{Future Change Warning:} Proposed Federal censorship regulations
-may prohibit us from giving you information about the possibility of
-calling this function.  We would be required to say that this is not an
-acceptable way of terminating a program.
-@end cartouche
-
 @node Termination Internals
 @subsection Termination Internals
 
