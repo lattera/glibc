@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2018 Free Software Foundation, Inc.
+/* __libc_siglongjmp for x86.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,16 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <setjmpP.h>
-#include <signal.h>
+#define __libc_longjmp __redirect___libc_longjmp
+#include <setjmp/longjmp.c>
+#undef __libc_longjmp
 
+extern void __longjmp_cancel (__jmp_buf __env, int __val)
+     __attribute__ ((__noreturn__)) attribute_hidden;
 
-/* Set the signal mask to the one specified in ENV, and jump
-   to the position specified in ENV, causing the setjmp
-   call there to return VAL, or 1 if VAL is 0.  */
+/* Since __libc_longjmp is a private interface for cancellation
+   implementation in libpthread, there is no need to restore shadow
+   stack register.  */
+
 void
-__libc_siglongjmp (sigjmp_buf env, int val)
+__libc_longjmp (sigjmp_buf env, int val)
 {
   /* Perform any cleanups needed by the frames being unwound.  */
   _longjmp_unwind (env, val);
@@ -35,17 +39,7 @@ __libc_siglongjmp (sigjmp_buf env, int val)
 			  (sigset_t *) &env[0].__saved_mask,
 			  (sigset_t *) NULL);
 
-  /* Call the machine-dependent function to restore machine state.  */
-  __longjmp (env[0].__jmpbuf, val ?: 1);
+  /* Call the machine-dependent function to restore machine state
+     without shadow stack.  */
+  __longjmp_cancel (env[0].__jmpbuf, val ?: 1);
 }
-
-#ifndef __libc_siglongjmp
-# ifndef __libc_longjmp
-/* __libc_longjmp is a private interface for cancellation implementation
-   in libpthread.  */
-strong_alias (__libc_siglongjmp, __libc_longjmp)
-# endif
-weak_alias (__libc_siglongjmp, _longjmp)
-weak_alias (__libc_siglongjmp, longjmp)
-weak_alias (__libc_siglongjmp, siglongjmp)
-#endif

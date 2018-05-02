@@ -1,3 +1,20 @@
+2018-05-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/pthread_create.c (START_THREAD_DEFN): Clear previous
+	handlers after setjmp.
+	* setjmp/longjmp.c (__libc_longjmp): Don't define alias if
+	defined.
+	* sysdeps/unix/sysv/linux/x86/setjmpP.h: Include
+	<libc-pointer-arith.h>.
+	(_JUMP_BUF_SIGSET_BITS_PER_WORD): New.
+	(_JUMP_BUF_SIGSET_NSIG): Changed to 96.
+	(_JUMP_BUF_SIGSET_NWORDS): Changed to use ALIGN_UP and
+	_JUMP_BUF_SIGSET_BITS_PER_WORD.
+	* sysdeps/x86/Makefile (sysdep_routines): Add __longjmp_cancel.
+	* sysdeps/x86/__longjmp_cancel.S: New file.
+	* sysdeps/x86/longjmp.c: Likewise.
+	* sysdeps/x86/nptl/pt-longjmp.c: Likewise.
+
 2018-05-02  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Add ustat.h deprecation entry.

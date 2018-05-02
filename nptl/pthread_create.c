@@ -427,12 +427,23 @@ START_THREAD_DEFN
      compilers without that support we do use setjmp.  */
   struct pthread_unwind_buf unwind_buf;
 
-  /* No previous handlers.  */
+  int not_first_call;
+  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
+
+  /* No previous handlers.  NB: This must be done after setjmp since the
+     private space in the unwind jump buffer may overlap space used by
+     setjmp to store extra architecture-specific information which is
+     never used by the cancellation-specific __libc_unwind_longjmp.
+
+     The private space is allowed to overlap because the unwinder never
+     has to return through any of the jumped-to call frames, and thus
+     only a minimum amount of saved data need be stored, and for example,
+     need not include the process signal mask information. This is all
+     an optimization to reduce stack usage when pushing cancellation
+     handlers.  */
   unwind_buf.priv.data.prev = NULL;
   unwind_buf.priv.data.cleanup = NULL;
 
-  int not_first_call;
-  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
   if (__glibc_likely (! not_first_call))
     {
       /* Store the new cleanup handler info.  */
