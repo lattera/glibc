@@ -1,5 +1,11 @@
 2018-05-02  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S (__swapcontext):
+	Restore the pointer into %rdx, after syscall and use %rdx,
+	instead of %rsi, to restore context.
+
+2018-05-02  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/setcontext.S (__setcontext):
 	Pop the pointer into %rdx after syscall and use %rdx, instead
 	of %rsi, to restore context.
