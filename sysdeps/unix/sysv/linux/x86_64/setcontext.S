@@ -44,21 +44,24 @@ ENTRY(__setcontext)
 	movl	$_NSIG8,%r10d
 	movl	$__NR_rt_sigprocmask, %eax
 	syscall
-	popq	%rdi			/* Reload %rdi, adjust stack.  */
+	/* Pop the pointer into RDX. The choice is arbitrary, but
+	   leaving RDI and RSI available for use later can avoid
+	   shuffling values.  */
+	popq	%rdx
 	cfi_adjust_cfa_offset(-8)
 	cmpq	$-4095, %rax		/* Check %rax for error.  */
 	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 
 	/* Restore the floating-point context.  Not the registers, only the
 	   rest.  */
-	movq	oFPREGS(%rdi), %rcx
+	movq	oFPREGS(%rdx), %rcx
 	fldenv	(%rcx)
-	ldmxcsr oMXCSR(%rdi)
+	ldmxcsr oMXCSR(%rdx)
 
 
 	/* Load the new stack pointer, the preserved registers and
 	   registers used for passing args.  */
-	cfi_def_cfa(%rdi, 0)
+	cfi_def_cfa(%rdx, 0)
 	cfi_offset(%rbx,oRBX)
 	cfi_offset(%rbp,oRBP)
 	cfi_offset(%r12,oR12)
@@ -68,27 +71,27 @@ ENTRY(__setcontext)
 	cfi_offset(%rsp,oRSP)
 	cfi_offset(%rip,oRIP)
 
-	movq	oRSP(%rdi), %rsp
-	movq	oRBX(%rdi), %rbx
-	movq	oRBP(%rdi), %rbp
-	movq	oR12(%rdi), %r12
-	movq	oR13(%rdi), %r13
-	movq	oR14(%rdi), %r14
-	movq	oR15(%rdi), %r15
+	movq	oRSP(%rdx), %rsp
+	movq	oRBX(%rdx), %rbx
+	movq	oRBP(%rdx), %rbp
+	movq	oR12(%rdx), %r12
+	movq	oR13(%rdx), %r13
+	movq	oR14(%rdx), %r14
+	movq	oR15(%rdx), %r15
 
 	/* The following ret should return to the address set with
 	getcontext.  Therefore push the address on the stack.  */
-	movq	oRIP(%rdi), %rcx
+	movq	oRIP(%rdx), %rcx
 	pushq	%rcx
 
-	movq	oRSI(%rdi), %rsi
-	movq	oRDX(%rdi), %rdx
-	movq	oRCX(%rdi), %rcx
-	movq	oR8(%rdi), %r8
-	movq	oR9(%rdi), %r9
+	movq	oRSI(%rdx), %rsi
+	movq	oRDI(%rdx), %rdi
+	movq	oRCX(%rdx), %rcx
+	movq	oR8(%rdx), %r8
+	movq	oR9(%rdx), %r9
 
-	/* Setup finally  %rdi.  */
-	movq	oRDI(%rdi), %rdi
+	/* Setup finally %rdx.  */
+	movq	oRDX(%rdx), %rdx
 
 	/* End FDE here, we fall into another context.  */
 	cfi_endproc
