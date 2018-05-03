@@ -1,3 +1,28 @@
+2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
+	strcmp-avx2, strncmp-avx2, wcscmp-avx2, wcscmp-sse2, wcsncmp-avx2 and
+	wcsncmp-sse2.
+	* sysdeps/x86_64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add tests for __strcmp_avx2,
+	__strncmp_avx2,	__wcscmp_avx2, __wcsncmp_avx2, __wcscmp_sse2
+	and __wcsncmp_sse2.
+	* sysdeps/x86_64/multiarch/strcmp.c (OPTIMIZE (avx2)):
+	(IFUNC_SELECTOR): Return OPTIMIZE (avx2) on AVX 2 machines if
+	AVX unaligned load is fast and vzeroupper is preferred.
+	* sysdeps/x86_64/multiarch/strncmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/strcmp-avx2.S: New file.
+	* sysdeps/x86_64/multiarch/strncmp-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcscmp-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcscmp-sse2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcscmp.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcsncmp-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/wcsncmp-sse2.c: Likewise.
+	* sysdeps/x86_64/multiarch/wcsncmp.c: Likewise.
+	* sysdeps/x86_64/wcscmp.S (__wcscmp): Add alias only if __wcscmp
+	is undefined.
+
 2018-06-01  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Update with results from

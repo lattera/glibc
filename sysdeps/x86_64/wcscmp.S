@@ -946,5 +946,7 @@ L(equal):
 	ret
 
 END (__wcscmp)
+#ifndef __wcscmp
 libc_hidden_def (__wcscmp)
 weak_alias (__wcscmp, wcscmp)
+#endif

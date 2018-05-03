@@ -6,8 +6,8 @@ ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   strcmp-sse2 strcmp-sse2-unaligned strcmp-ssse3  \
-		   strcmp-sse4_2 \
-		   strncmp-sse2 strncmp-ssse3 strncmp-sse4_2 \
+		   strcmp-sse4_2 strcmp-avx2 \
+		   strncmp-sse2 strncmp-ssse3 strncmp-sse4_2 strncmp-avx2 \
 		   memchr-sse2 rawmemchr-sse2 memchr-avx2 rawmemchr-avx2 \
 		   memrchr-sse2 memrchr-avx2 \
 		   memcmp-sse2 \
@@ -51,6 +51,8 @@ ifeq ($(subdir),wcsmbs)
 sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wmemcmp-avx2-movbe \
 		   wmemchr-sse2 wmemchr-avx2 \
+		   wcscmp-sse2 wcscmp-avx2 \
+		   wcsncmp-sse2 wcsncmp-avx2 \
 		   wcscpy-ssse3 wcscpy-c \
 		   wcschr-sse2 wcschr-avx2 \
 		   wcsrchr-sse2 wcsrchr-avx2 \
