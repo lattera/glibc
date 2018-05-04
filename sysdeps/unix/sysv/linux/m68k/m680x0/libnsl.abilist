@@ -1,4 +1,3 @@
-GLIBC_2.0 GLIBC_2.0 A
 GLIBC_2.0 __yp_check F
 GLIBC_2.0 xdr_domainname F
 GLIBC_2.0 xdr_keydat F
@@ -42,7 +41,6 @@ GLIBC_2.0 yp_update F
 GLIBC_2.0 ypbinderr_string F
 GLIBC_2.0 yperr_string F
 GLIBC_2.0 ypprot_err F
-GLIBC_2.1 GLIBC_2.1 A
 GLIBC_2.1 __free_fdresult F
 GLIBC_2.1 __nis_default_access F
 GLIBC_2.1 __nis_default_group F
@@ -120,5 +118,4 @@ GLIBC_2.1 readColdStartFile F
 GLIBC_2.1 writeColdStartFile F
 GLIBC_2.1 xdr_cback_data F
 GLIBC_2.1 xdr_obj_p F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 xdr_ypall F

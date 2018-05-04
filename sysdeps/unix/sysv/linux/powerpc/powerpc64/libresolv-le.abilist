@@ -1,4 +1,3 @@
-GLIBC_2.17 GLIBC_2.17 A
 GLIBC_2.17 __b64_ntop F
 GLIBC_2.17 __b64_pton F
 GLIBC_2.17 __dn_comp F

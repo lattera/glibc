@@ -1,4 +1,3 @@
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 __libc_stack_end D 0x8
 GLIBC_2.27 __stack_chk_guard D 0x8
 GLIBC_2.27 __tls_get_addr F

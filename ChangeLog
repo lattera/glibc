@@ -1,3 +1,359 @@
+2018-05-04  Joseph Myers  <joseph@codesourcery.com>
+
+	* scripts/abilist.awk: Ignore absolute symbols.
+	* sysdeps/mach/hurd/i386/ld.abilist: Remove absolute symbols.
+	* sysdeps/mach/hurd/i386/libBrokenLocale.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libanl.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libc.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libcrypt.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libdl.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libm.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libnsl.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libpthread.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libresolv.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/librt.abilist: Likewise.
+	* sysdeps/mach/hurd/i386/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libcidn.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_compat.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_dns.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_files.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_hesiod.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_nis.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libnss_nisplus.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n32/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/n64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libBrokenLocale-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libanl-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libcrypt-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libdl-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libnsl-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libpthread-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libpthread.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libresolv-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libresolv.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/librt-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libthread_db-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libthread_db.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libutil-le.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libBrokenLocale.abilist:
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libutil.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/libmvec.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/ld.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libBrokenLocale.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libanl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libcrypt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libdl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libnsl.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libpthread.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libresolv.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/librt.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libthread_db.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libutil.abilist: Likewise.
+
 2018-05-04  Stefan Liebler  <stli@linux.vnet.ibm.com>
 
 	[BZ #23137]

@@ -1,4 +1,3 @@
-GLIBC_2.17 GLIBC_2.17 A
 GLIBC_2.17 __mq_open_2 F
 GLIBC_2.17 aio_cancel F
 GLIBC_2.17 aio_cancel64 F

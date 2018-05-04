@@ -1,15 +1,11 @@
-GLIBC_2.11 GLIBC_2.11 A
 GLIBC_2.11 pthread_sigqueue F
-GLIBC_2.12 GLIBC_2.12 A
 GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
 GLIBC_2.12 pthread_setname_np F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 _IO_flockfile F
 GLIBC_2.4 _IO_ftrylockfile F
 GLIBC_2.4 _IO_funlockfile F

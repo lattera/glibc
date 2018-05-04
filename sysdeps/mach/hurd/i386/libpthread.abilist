@@ -1,4 +1,3 @@
-GLIBC_2.12 GLIBC_2.12 A
 GLIBC_2.12 __mutex_lock_solid F
 GLIBC_2.12 __mutex_unlock_solid F
 GLIBC_2.12 __pthread_get_cleanup_stack F
@@ -143,10 +142,8 @@ GLIBC_2.12 sem_timedwait F
 GLIBC_2.12 sem_trywait F
 GLIBC_2.12 sem_unlink F
 GLIBC_2.12 sem_wait F
-GLIBC_2.2.6 GLIBC_2.2.6 A
 GLIBC_2.2.6 _IO_flockfile F
 GLIBC_2.2.6 _IO_ftrylockfile F
 GLIBC_2.2.6 _IO_funlockfile F
-GLIBC_2.21 GLIBC_2.21 A
 GLIBC_2.21 pthread_hurd_cond_timedwait_np F
 GLIBC_2.21 pthread_hurd_cond_wait_np F

@@ -1,4 +1,3 @@
-GLIBC_2.2.6 GLIBC_2.2.6 A
 GLIBC_2.2.6 __close F
 GLIBC_2.2.6 __errno_location F
 GLIBC_2.2.6 __fxstat64 F
@@ -15,8 +14,6 @@ GLIBC_2.2.6 calloc F
 GLIBC_2.2.6 free F
 GLIBC_2.2.6 malloc F
 GLIBC_2.2.6 realloc F
-GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 ___tls_get_addr F
 GLIBC_2.3 __tls_get_addr F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 __stack_chk_guard D 0x4

@@ -1,4 +1,3 @@
-GLIBC_2.0 GLIBC_2.0 A
 GLIBC_2.0 __b64_ntop F
 GLIBC_2.0 __b64_pton F
 GLIBC_2.0 __dn_comp F
@@ -57,7 +56,6 @@ GLIBC_2.0 res_querydomain F
 GLIBC_2.0 res_search F
 GLIBC_2.0 res_send_setqhook F
 GLIBC_2.0 res_send_setrhook F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 __dn_expand F
 GLIBC_2.2 __res_hostalias F
 GLIBC_2.2 __res_mkquery F
@@ -69,9 +67,7 @@ GLIBC_2.2 __res_nsend F
 GLIBC_2.2 __res_query F
 GLIBC_2.2 __res_querydomain F
 GLIBC_2.2 __res_search F
-GLIBC_2.3.2 GLIBC_2.3.2 A
 GLIBC_2.3.2 __p_rcode F
-GLIBC_2.9 GLIBC_2.9 A
 GLIBC_2.9 ns_datetosecs F
 GLIBC_2.9 ns_format_ttl F
 GLIBC_2.9 ns_get16 F

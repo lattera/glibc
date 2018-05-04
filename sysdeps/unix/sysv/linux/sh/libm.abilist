@@ -1,4 +1,3 @@
-GLIBC_2.15 GLIBC_2.15 A
 GLIBC_2.15 __acos_finite F
 GLIBC_2.15 __acosf_finite F
 GLIBC_2.15 __acosh_finite F
@@ -53,10 +52,8 @@ GLIBC_2.15 __y1_finite F
 GLIBC_2.15 __y1f_finite F
 GLIBC_2.15 __yn_finite F
 GLIBC_2.15 __ynf_finite F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 __issignaling F
 GLIBC_2.18 __issignalingf F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 _LIB_VERSION D 0x4
 GLIBC_2.2 __clog10 F
 GLIBC_2.2 __clog10f F
@@ -368,19 +365,16 @@ GLIBC_2.2 y1l F
 GLIBC_2.2 yn F
 GLIBC_2.2 ynf F
 GLIBC_2.2 ynl F
-GLIBC_2.23 GLIBC_2.23 A
 GLIBC_2.23 __signgam D 0x4
 GLIBC_2.23 lgamma F
 GLIBC_2.23 lgammaf F
 GLIBC_2.23 lgammal F
-GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 nextdown F
 GLIBC_2.24 nextdownf F
 GLIBC_2.24 nextdownl F
 GLIBC_2.24 nextup F
 GLIBC_2.24 nextupf F
 GLIBC_2.24 nextupl F
-GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __iseqsig F
 GLIBC_2.25 __iseqsigf F
 GLIBC_2.25 canonicalize F
@@ -429,7 +423,6 @@ GLIBC_2.25 ufromfpl F
 GLIBC_2.25 ufromfpx F
 GLIBC_2.25 ufromfpxf F
 GLIBC_2.25 ufromfpxl F
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 acosf32 F
 GLIBC_2.27 acosf32x F
 GLIBC_2.27 acosf64 F
@@ -747,7 +740,6 @@ GLIBC_2.27 y1f64 F
 GLIBC_2.27 ynf32 F
 GLIBC_2.27 ynf32x F
 GLIBC_2.27 ynf64 F
-GLIBC_2.28 GLIBC_2.28 A
 GLIBC_2.28 daddl F
 GLIBC_2.28 dsubl F
 GLIBC_2.28 f32addf32x F
@@ -760,5 +752,4 @@ GLIBC_2.28 fadd F
 GLIBC_2.28 faddl F
 GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 exp2l F

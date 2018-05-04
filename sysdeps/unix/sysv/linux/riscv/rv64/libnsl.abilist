@@ -1,4 +1,3 @@
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 __free_fdresult F
 GLIBC_2.27 __nis_default_access F
 GLIBC_2.27 __nis_default_group F

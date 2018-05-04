@@ -1,4 +1,3 @@
-GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __b64_ntop F
 GLIBC_2.3 __b64_pton F
 GLIBC_2.3 __dn_comp F
@@ -63,9 +62,7 @@ GLIBC_2.3 res_gethostbyname F
 GLIBC_2.3 res_gethostbyname2 F
 GLIBC_2.3 res_send_setqhook F
 GLIBC_2.3 res_send_setrhook F
-GLIBC_2.3.2 GLIBC_2.3.2 A
 GLIBC_2.3.2 __p_rcode F
-GLIBC_2.9 GLIBC_2.9 A
 GLIBC_2.9 ns_datetosecs F
 GLIBC_2.9 ns_format_ttl F
 GLIBC_2.9 ns_get16 F

@@ -1,9 +1,7 @@
-GCC_3.0 GCC_3.0 A
 GCC_3.0 _Unwind_Find_FDE F
 GCC_3.0 __deregister_frame_info_bases F
 GCC_3.0 __register_frame_info_bases F
 GCC_3.0 __register_frame_info_table_bases F
-GLIBC_2.0 GLIBC_2.0 A
 GLIBC_2.0 _IO_adjust_column F
 GLIBC_2.0 _IO_default_doallocate F
 GLIBC_2.0 _IO_default_finish F
@@ -1312,7 +1310,6 @@ GLIBC_2.0 xdrstdio_create F
 GLIBC_2.0 xencrypt F
 GLIBC_2.0 xprt_register F
 GLIBC_2.0 xprt_unregister F
-GLIBC_2.10 GLIBC_2.10 A
 GLIBC_2.10 __cxa_at_quick_exit F
 GLIBC_2.10 __posix_getopt F
 GLIBC_2.10 accept4 F
@@ -1338,7 +1335,6 @@ GLIBC_2.10 register_printf_type F
 GLIBC_2.10 setsgent F
 GLIBC_2.10 sgetsgent F
 GLIBC_2.10 sgetsgent_r F
-GLIBC_2.11 GLIBC_2.11 A
 GLIBC_2.11 __longjmp_chk F
 GLIBC_2.11 execvpe F
 GLIBC_2.11 fallocate64 F
@@ -1346,22 +1342,18 @@ GLIBC_2.11 mkostemps F
 GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
-GLIBC_2.12 GLIBC_2.12 A
 GLIBC_2.12 ntp_gettimex F
 GLIBC_2.12 recvmmsg F
-GLIBC_2.13 GLIBC_2.13 A
 GLIBC_2.13 fanotify_init F
 GLIBC_2.13 fanotify_mark F
 GLIBC_2.13 prlimit F
 GLIBC_2.13 prlimit64 F
-GLIBC_2.14 GLIBC_2.14 A
 GLIBC_2.14 clock_adjtime F
 GLIBC_2.14 name_to_handle_at F
 GLIBC_2.14 open_by_handle_at F
 GLIBC_2.14 sendmmsg F
 GLIBC_2.14 setns F
 GLIBC_2.14 syncfs F
-GLIBC_2.15 GLIBC_2.15 A
 GLIBC_2.15 __fdelt_chk F
 GLIBC_2.15 __fdelt_warn F
 GLIBC_2.15 posix_spawn F
@@ -1370,7 +1362,6 @@ GLIBC_2.15 process_vm_readv F
 GLIBC_2.15 process_vm_writev F
 GLIBC_2.15 scandirat F
 GLIBC_2.15 scandirat64 F
-GLIBC_2.16 GLIBC_2.16 A
 GLIBC_2.16 __getauxval F
 GLIBC_2.16 __poll_chk F
 GLIBC_2.16 __ppoll_chk F
@@ -1381,19 +1372,15 @@ GLIBC_2.16 getauxval F
 GLIBC_2.16 mbrtoc16 F
 GLIBC_2.16 mbrtoc32 F
 GLIBC_2.16 timespec_get F
-GLIBC_2.17 GLIBC_2.17 A
 GLIBC_2.17 clock_getcpuclockid F
 GLIBC_2.17 clock_getres F
 GLIBC_2.17 clock_gettime F
 GLIBC_2.17 clock_nanosleep F
 GLIBC_2.17 clock_settime F
 GLIBC_2.17 secure_getenv F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 __cxa_thread_atexit_impl F
-GLIBC_2.19 GLIBC_2.19 A
 GLIBC_2.19 getrlimit64 F
 GLIBC_2.19 setrlimit64 F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 _Exit F
 GLIBC_2.2 _IO_2_1_stderr_ D 0xa0
 GLIBC_2.2 _IO_2_1_stdin_ D 0xa0
@@ -1913,35 +1900,26 @@ GLIBC_2.2 xdr_uint32_t F
 GLIBC_2.2 xdr_uint64_t F
 GLIBC_2.2 xdr_uint8_t F
 GLIBC_2.2 xdr_unixcred F
-GLIBC_2.2.1 GLIBC_2.2.1 A
 GLIBC_2.2.1 pivot_root F
 GLIBC_2.2.1 posix_openpt F
-GLIBC_2.2.2 GLIBC_2.2.2 A
 GLIBC_2.2.2 __nss_hostname_digits_dots F
-GLIBC_2.2.3 GLIBC_2.2.3 A
 GLIBC_2.2.3 __rpc_thread_createerr F
 GLIBC_2.2.3 __rpc_thread_svc_fdset F
 GLIBC_2.2.3 __rpc_thread_svc_max_pollfd F
 GLIBC_2.2.3 __rpc_thread_svc_pollfd F
 GLIBC_2.2.3 fnmatch F
 GLIBC_2.2.3 sprofil F
-GLIBC_2.2.4 GLIBC_2.2.4 A
 GLIBC_2.2.4 dl_iterate_phdr F
 GLIBC_2.2.4 getgrouplist F
 GLIBC_2.2.4 sockatmark F
-GLIBC_2.2.6 GLIBC_2.2.6 A
 GLIBC_2.2.6 __nanosleep F
-GLIBC_2.22 GLIBC_2.22 A
 GLIBC_2.22 fmemopen F
-GLIBC_2.23 GLIBC_2.23 A
 GLIBC_2.23 fts64_children F
 GLIBC_2.23 fts64_close F
 GLIBC_2.23 fts64_open F
 GLIBC_2.23 fts64_read F
 GLIBC_2.23 fts64_set F
-GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
-GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __explicit_bzero_chk F
 GLIBC_2.25 explicit_bzero F
 GLIBC_2.25 getentropy F
@@ -1949,13 +1927,11 @@ GLIBC_2.25 getrandom F
 GLIBC_2.25 strfromd F
 GLIBC_2.25 strfromf F
 GLIBC_2.25 strfroml F
-GLIBC_2.26 GLIBC_2.26 A
 GLIBC_2.26 preadv2 F
 GLIBC_2.26 preadv64v2 F
 GLIBC_2.26 pwritev2 F
 GLIBC_2.26 pwritev64v2 F
 GLIBC_2.26 reallocarray F
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 copy_file_range F
 GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
@@ -1981,7 +1957,6 @@ GLIBC_2.27 wcstof32x F
 GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
-GLIBC_2.3 GLIBC_2.3 A
 GLIBC_2.3 __ctype_b_loc F
 GLIBC_2.3 __ctype_tolower_loc F
 GLIBC_2.3 __ctype_toupper_loc F
@@ -2071,7 +2046,6 @@ GLIBC_2.3 wcstoull_l F
 GLIBC_2.3 wcsxfrm_l F
 GLIBC_2.3 wctrans_l F
 GLIBC_2.3 wctype_l F
-GLIBC_2.3.2 GLIBC_2.3.2 A
 GLIBC_2.3.2 __register_atfork F
 GLIBC_2.3.2 epoll_create F
 GLIBC_2.3.2 epoll_ctl F
@@ -2084,7 +2058,6 @@ GLIBC_2.3.2 pthread_cond_signal F
 GLIBC_2.3.2 pthread_cond_timedwait F
 GLIBC_2.3.2 pthread_cond_wait F
 GLIBC_2.3.2 strptime_l F
-GLIBC_2.3.3 GLIBC_2.3.3 A
 GLIBC_2.3.3 _sys_siglist D 0x200
 GLIBC_2.3.3 gnu_dev_major F
 GLIBC_2.3.3 gnu_dev_makedev F
@@ -2105,7 +2078,6 @@ GLIBC_2.3.3 sched_setaffinity F
 GLIBC_2.3.3 semtimedop F
 GLIBC_2.3.3 sys_sigabbrev D 0x200
 GLIBC_2.3.3 sys_siglist D 0x200
-GLIBC_2.3.4 GLIBC_2.3.4 A
 GLIBC_2.3.4 __chk_fail F
 GLIBC_2.3.4 __fprintf_chk F
 GLIBC_2.3.4 __gets_chk F
@@ -2135,7 +2107,6 @@ GLIBC_2.3.4 setipv4sourcefilter F
 GLIBC_2.3.4 setsourcefilter F
 GLIBC_2.3.4 xdr_quad_t F
 GLIBC_2.3.4 xdr_u_quad_t F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F
@@ -2208,7 +2179,6 @@ GLIBC_2.4 renameat F
 GLIBC_2.4 symlinkat F
 GLIBC_2.4 unlinkat F
 GLIBC_2.4 unshare F
-GLIBC_2.5 GLIBC_2.5 A
 GLIBC_2.5 __readlinkat_chk F
 GLIBC_2.5 inet6_opt_append F
 GLIBC_2.5 inet6_opt_find F
@@ -2226,7 +2196,6 @@ GLIBC_2.5 inet6_rth_space F
 GLIBC_2.5 splice F
 GLIBC_2.5 tee F
 GLIBC_2.5 vmsplice F
-GLIBC_2.6 GLIBC_2.6 A
 GLIBC_2.6 __sched_cpucount F
 GLIBC_2.6 epoll_pwait F
 GLIBC_2.6 futimens F
@@ -2234,7 +2203,6 @@ GLIBC_2.6 sched_getcpu F
 GLIBC_2.6 strerror_l F
 GLIBC_2.6 sync_file_range F
 GLIBC_2.6 utimensat F
-GLIBC_2.7 GLIBC_2.7 A
 GLIBC_2.7 __fread_chk F
 GLIBC_2.7 __fread_unlocked_chk F
 GLIBC_2.7 __isoc99_fscanf F
@@ -2261,7 +2229,6 @@ GLIBC_2.7 eventfd_write F
 GLIBC_2.7 mkostemp F
 GLIBC_2.7 mkostemp64 F
 GLIBC_2.7 signalfd F
-GLIBC_2.8 GLIBC_2.8 A
 GLIBC_2.8 __asprintf_chk F
 GLIBC_2.8 __dprintf_chk F
 GLIBC_2.8 __obstack_printf_chk F
@@ -2272,9 +2239,7 @@ GLIBC_2.8 qsort_r F
 GLIBC_2.8 timerfd_create F
 GLIBC_2.8 timerfd_gettime F
 GLIBC_2.8 timerfd_settime F
-GLIBC_2.9 GLIBC_2.9 A
 GLIBC_2.9 dup3 F
 GLIBC_2.9 epoll_create1 F
 GLIBC_2.9 inotify_init1 F
 GLIBC_2.9 pipe2 F
-_gp_disp _gp_disp A

@@ -1,4 +1,3 @@
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 __acos_finite F
 GLIBC_2.27 __acosf_finite F
 GLIBC_2.27 __acosh_finite F
@@ -968,7 +967,6 @@ GLIBC_2.27 ynf32x F
 GLIBC_2.27 ynf64 F
 GLIBC_2.27 ynf64x F
 GLIBC_2.27 ynl F
-GLIBC_2.28 GLIBC_2.28 A
 GLIBC_2.28 daddl F
 GLIBC_2.28 dsubl F
 GLIBC_2.28 f32addf128 F

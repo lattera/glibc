@@ -1,4 +1,3 @@
-GLIBC_2.21 GLIBC_2.21 A
 GLIBC_2.21 dladdr F
 GLIBC_2.21 dladdr1 F
 GLIBC_2.21 dlclose F

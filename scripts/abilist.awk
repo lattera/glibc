@@ -72,8 +72,7 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
     seen_opd = -1;
   }
   else if ($4 == "*ABS*") {
-    type = "A";
-    size = "";
+    next;
   }
   else if (type == "DO") {
     type = "D";

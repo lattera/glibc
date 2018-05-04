@@ -1,4 +1,3 @@
-GLIBC_2.0 GLIBC_2.0 A
 GLIBC_2.0 _LIB_VERSION D 0x4
 GLIBC_2.0 acos F
 GLIBC_2.0 acosf F
@@ -155,7 +154,6 @@ GLIBC_2.0 y1l F
 GLIBC_2.0 yn F
 GLIBC_2.0 ynf F
 GLIBC_2.0 ynl F
-GLIBC_2.1 GLIBC_2.1 A
 GLIBC_2.1 __clog10 F
 GLIBC_2.1 __clog10f F
 GLIBC_2.1 __clog10l F
@@ -311,7 +309,6 @@ GLIBC_2.1 tgammal F
 GLIBC_2.1 trunc F
 GLIBC_2.1 truncf F
 GLIBC_2.1 truncl F
-GLIBC_2.15 GLIBC_2.15 A
 GLIBC_2.15 __acos_finite F
 GLIBC_2.15 __acosf_finite F
 GLIBC_2.15 __acosh_finite F
@@ -393,11 +390,9 @@ GLIBC_2.15 __y1l_finite F
 GLIBC_2.15 __yn_finite F
 GLIBC_2.15 __ynf_finite F
 GLIBC_2.15 __ynl_finite F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 __issignaling F
 GLIBC_2.18 __issignalingf F
 GLIBC_2.18 __issignalingl F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 feclearexcept F
 GLIBC_2.2 fedisableexcept F
 GLIBC_2.2 feenableexcept F
@@ -408,19 +403,16 @@ GLIBC_2.2 feraiseexcept F
 GLIBC_2.2 fesetenv F
 GLIBC_2.2 fesetexceptflag F
 GLIBC_2.2 feupdateenv F
-GLIBC_2.23 GLIBC_2.23 A
 GLIBC_2.23 __signgam D 0x4
 GLIBC_2.23 lgamma F
 GLIBC_2.23 lgammaf F
 GLIBC_2.23 lgammal F
-GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 nextdown F
 GLIBC_2.24 nextdownf F
 GLIBC_2.24 nextdownl F
 GLIBC_2.24 nextup F
 GLIBC_2.24 nextupf F
 GLIBC_2.24 nextupl F
-GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __fe_dfl_mode D 0x8
 GLIBC_2.25 __iscanonicall F
 GLIBC_2.25 __iseqsig F
@@ -472,7 +464,6 @@ GLIBC_2.25 ufromfpl F
 GLIBC_2.25 ufromfpx F
 GLIBC_2.25 ufromfpxf F
 GLIBC_2.25 ufromfpxl F
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 acosf32 F
 GLIBC_2.27 acosf32x F
 GLIBC_2.27 acosf64 F
@@ -790,7 +781,6 @@ GLIBC_2.27 y1f64 F
 GLIBC_2.27 ynf32 F
 GLIBC_2.27 ynf32x F
 GLIBC_2.27 ynf64 F
-GLIBC_2.28 GLIBC_2.28 A
 GLIBC_2.28 __nldbl_daddl F
 GLIBC_2.28 __nldbl_dsubl F
 GLIBC_2.28 daddl F
@@ -805,7 +795,6 @@ GLIBC_2.28 fadd F
 GLIBC_2.28 faddl F
 GLIBC_2.28 fsub F
 GLIBC_2.28 fsubl F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 __clog10l F
 GLIBC_2.4 __finitel F
 GLIBC_2.4 __fpclassifyl F

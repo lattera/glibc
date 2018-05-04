@@ -1,4 +1,3 @@
-GLIBC_2.17 GLIBC_2.17 A
 GLIBC_2.17 _IO_flockfile F
 GLIBC_2.17 _IO_ftrylockfile F
 GLIBC_2.17 _IO_funlockfile F
@@ -221,6 +220,5 @@ GLIBC_2.17 vfork F
 GLIBC_2.17 wait F
 GLIBC_2.17 waitpid F
 GLIBC_2.17 write F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F

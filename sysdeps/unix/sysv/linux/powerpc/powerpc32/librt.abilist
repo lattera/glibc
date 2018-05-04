@@ -1,4 +1,3 @@
-GLIBC_2.1 GLIBC_2.1 A
 GLIBC_2.1 aio_cancel F
 GLIBC_2.1 aio_cancel64 F
 GLIBC_2.1 aio_error F
@@ -16,7 +15,6 @@ GLIBC_2.1 aio_write F
 GLIBC_2.1 aio_write64 F
 GLIBC_2.1 lio_listio F
 GLIBC_2.1 lio_listio64 F
-GLIBC_2.2 GLIBC_2.2 A
 GLIBC_2.2 clock_getcpuclockid F
 GLIBC_2.2 clock_getres F
 GLIBC_2.2 clock_gettime F
@@ -29,7 +27,6 @@ GLIBC_2.2 timer_delete F
 GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 timer_gettime F
 GLIBC_2.2 timer_settime F
-GLIBC_2.3.4 GLIBC_2.3.4 A
 GLIBC_2.3.4 mq_close F
 GLIBC_2.3.4 mq_getattr F
 GLIBC_2.3.4 mq_notify F
@@ -40,8 +37,6 @@ GLIBC_2.3.4 mq_setattr F
 GLIBC_2.3.4 mq_timedreceive F
 GLIBC_2.3.4 mq_timedsend F
 GLIBC_2.3.4 mq_unlink F
-GLIBC_2.4 GLIBC_2.4 A
 GLIBC_2.4 lio_listio F
 GLIBC_2.4 lio_listio64 F
-GLIBC_2.7 GLIBC_2.7 A
 GLIBC_2.7 __mq_open_2 F

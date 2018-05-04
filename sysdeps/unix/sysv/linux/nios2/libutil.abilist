@@ -1,4 +1,3 @@
-GLIBC_2.21 GLIBC_2.21 A
 GLIBC_2.21 forkpty F
 GLIBC_2.21 login F
 GLIBC_2.21 login_tty F

@@ -1,4 +1,3 @@
-GLIBC_2.17 GLIBC_2.17 A
 GLIBC_2.17 _Exit F
 GLIBC_2.17 _IO_2_1_stderr_ D 0xe0
 GLIBC_2.17 _IO_2_1_stdin_ D 0xe0
@@ -2076,20 +2075,15 @@ GLIBC_2.17 xdrstdio_create F
 GLIBC_2.17 xencrypt F
 GLIBC_2.17 xprt_register F
 GLIBC_2.17 xprt_unregister F
-GLIBC_2.18 GLIBC_2.18 A
 GLIBC_2.18 __cxa_thread_atexit_impl F
 GLIBC_2.18 _mcount F
-GLIBC_2.22 GLIBC_2.22 A
 GLIBC_2.22 fmemopen F
-GLIBC_2.23 GLIBC_2.23 A
 GLIBC_2.23 fts64_children F
 GLIBC_2.23 fts64_close F
 GLIBC_2.23 fts64_open F
 GLIBC_2.23 fts64_read F
 GLIBC_2.23 fts64_set F
-GLIBC_2.24 GLIBC_2.24 A
 GLIBC_2.24 quick_exit F
-GLIBC_2.25 GLIBC_2.25 A
 GLIBC_2.25 __explicit_bzero_chk F
 GLIBC_2.25 explicit_bzero F
 GLIBC_2.25 getentropy F
@@ -2097,13 +2091,11 @@ GLIBC_2.25 getrandom F
 GLIBC_2.25 strfromd F
 GLIBC_2.25 strfromf F
 GLIBC_2.25 strfroml F
-GLIBC_2.26 GLIBC_2.26 A
 GLIBC_2.26 preadv2 F
 GLIBC_2.26 preadv64v2 F
 GLIBC_2.26 pwritev2 F
 GLIBC_2.26 pwritev64v2 F
 GLIBC_2.26 reallocarray F
-GLIBC_2.27 GLIBC_2.27 A
 GLIBC_2.27 copy_file_range F
 GLIBC_2.27 glob F
 GLIBC_2.27 glob64 F
