@@ -181,11 +181,14 @@ extern int __lll_timedlock_wait (int *futex, const struct timespec *,
    thread ID while the clone is running and is reset to zero by the kernel
    afterwards.  The kernel up to version 3.16.3 does not use the private futex
    operations for futex wake-up when the clone terminates.  */
-#define lll_wait_tid(tid) \
-  do {					\
-    __typeof (tid) __tid;		\
-    while ((__tid = (tid)) != 0)	\
-      lll_futex_wait (&(tid), __tid, LLL_SHARED);\
+#define lll_wait_tid(tid)				\
+  do {							\
+    __typeof (tid) __tid;				\
+    /* We need acquire MO here so that we synchronize	\
+       with the kernel's store to 0 when the clone	\
+       terminates. (see above)  */			\
+    while ((__tid = atomic_load_acquire (&(tid))) != 0)	\
+      lll_futex_wait (&(tid), __tid, LLL_SHARED);	\
   } while (0)
 
 extern int __lll_timedwait_tid (int *, const struct timespec *)
