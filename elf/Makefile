@@ -186,7 +186,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
 	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
 	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
-	 tst-debug1 tst-main1 tst-absolute-sym
+	 tst-debug1 tst-main1 tst-absolute-sym tst-big-note
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -272,7 +272,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
-		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib
+		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib \
+		tst-big-note-lib
+
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod
@@ -1450,3 +1452,5 @@ $(objpfx)tst-libc_dlvsym-static: $(common-objpfx)dlfcn/libdl.a
 tst-libc_dlvsym-static-ENV = \
   LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
+
+$(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so

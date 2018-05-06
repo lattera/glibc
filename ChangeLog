@@ -1,3 +1,11 @@
+2018-05-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #20419]
+	* elf/dl-load.c (open_verify): Fix stack overflow.
+	* elf/Makefile (tst-big-note): New test.
+	* elf/tst-big-note-lib.S: New.
+	* elf/tst-big-note.c: New.
+
 2018-05-04  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/abilist.awk: Ignore absolute symbols.
