@@ -1,3 +1,9 @@
+2018-05-07  Alexandre Oliva <oliva@gnu.org>
+
+	Revert:
+	2018-04-30  Raymond Nicholson <rain1@airmail.cc>
+	* manual/startup.texi (Aborting a Program): Remove inappropriate joke.
+
 2018-05-05  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #20419]
