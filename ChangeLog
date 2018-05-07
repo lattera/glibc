@@ -1,3 +1,9 @@
+2018-05-07  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(MEMSET_SYMBOL (__memset, erms)): Mark the debugger symbol as
+	hidden.
+
 2018-05-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-memcpy-walk.c (test_main): Move declaration
