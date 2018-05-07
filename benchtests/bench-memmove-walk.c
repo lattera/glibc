@@ -86,7 +86,6 @@ int
 test_main (void)
 {
   json_ctx_t json_ctx;
-  size_t i;
 
   test_init ();
 
@@ -106,7 +105,7 @@ test_main (void)
 
   json_array_begin (&json_ctx, "results");
   /* Non-overlapping buffers.  */
-  for (i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
+  for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
       /* Test length alignments from 0-16 bytes.  */
       for (int j = 0; j < 8; j++)
@@ -117,7 +116,7 @@ test_main (void)
     }
 
   /* Overlapping buffers.  */
-  for (i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
+  for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
       /* Test length alignments from 0-16 bytes.  */
       for (int j = 0; j < 8; j++)
