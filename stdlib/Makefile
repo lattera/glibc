@@ -84,7 +84,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-cxa_atexit tst-on_exit test-atexit-race 		    \
 		   test-at_quick_exit-race test-cxa_atexit-race             \
 		   test-on_exit-race test-dlclose-exit-race 		    \
-		   tst-makecontext-align
+		   tst-makecontext-align test-bz22786
 
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete

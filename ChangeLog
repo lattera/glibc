@@ -1,3 +1,11 @@
+2018-05-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	[BZ #22786]
+	* stdlib/canonicalize.c (__realpath): Fix overflow in path length
+	computation.
+	* stdlib/Makefile (test-bz22786): New test.
+	* stdlib/test-bz22786.c: New test.
+
 2018-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* include/math-narrow-eval.h: New file.  Contents moved from ....
