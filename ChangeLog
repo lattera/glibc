@@ -1,3 +1,29 @@
+2018-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-barriers.h: New file.
+	* sysdeps/generic/math_private.h [!math_opt_barrier]
+	(math_opt_barrier): Move to math-barriers.h.
+	[!math_opt_barrier] (math_force_eval): Likewise.
+	* sysdeps/aarch64/fpu/math-barriers.h: New file.
+	* sysdeps/aarch64/fpu/math_private.h (math_opt_barrier): Move to
+	math-barriers.h.
+	(math_force_eval): Likewise.
+	* sysdeps/alpha/fpu/math-barriers.h: New file.
+	* sysdeps/alpha/fpu/math_private.h (math_opt_barrier): Move to
+	math-barriers.h.
+	(math_force_eval): Likewise.
+	* sysdeps/x86/fpu/math-barriers.h: New file.
+	* sysdeps/i386/fpu/fenv_private.h (math_opt_barrier): Move to
+	math-barriers.h.
+	(math_force_eval): Likewise.
+	* sysdeps/m68k/m680x0/fpu/math_private.h: Move to....
+	* sysdeps/m68k/m680x0/fpu/math-barriers.h: ... here.  Adjust
+	multiple-include guard for rename.
+	* sysdeps/powerpc/fpu/math-barriers.h: New file.
+	* sysdeps/powerpc/fpu/math_private.h (math_opt_barrier): Move to
+	math-barriers.h.
+	(math_force_eval): Likewise.
+
 2018-05-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #22786]

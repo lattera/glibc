@@ -5,45 +5,6 @@
 #include <fenv.h>
 #include <fpu_control.h>
 
-#ifdef __SSE2_MATH__
-# define math_opt_barrier(x)						\
-  ({ __typeof(x) __x;							\
-     if (sizeof (x) <= sizeof (double)					\
-	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
-       __asm ("" : "=x" (__x) : "0" (x));				\
-     else								\
-       __asm ("" : "=t" (__x) : "0" (x));				\
-     __x; })
-# define math_force_eval(x)						\
-  do {									\
-    if (sizeof (x) <= sizeof (double)					\
-	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
-      __asm __volatile ("" : : "x" (x));				\
-    else								\
-      __asm __volatile ("" : : "f" (x));				\
-  } while (0)
-#else
-# define math_opt_barrier(x)						\
-  ({ __typeof (x) __x;							\
-     if (__builtin_types_compatible_p (__typeof (x), _Float128))	\
-       {								\
-	 __x = (x);							\
-	 __asm ("" : "+m" (__x));					\
-       }								\
-     else								\
-       __asm ("" : "=t" (__x) : "0" (x));				\
-     __x; })
-# define math_force_eval(x)						\
-  do {									\
-    __typeof (x) __x = (x);						\
-    if (sizeof (x) <= sizeof (double)					\
-	|| __builtin_types_compatible_p (__typeof (x), _Float128))	\
-      __asm __volatile ("" : : "m" (__x));				\
-    else								\
-      __asm __volatile ("" : : "f" (__x));				\
-  } while (0)
-#endif
-
 /* This file is used by both the 32- and 64-bit ports.  The 64-bit port
    has a field in the fenv_t for the mxcsr; the 32-bit port does not.
    Instead, we (ab)use the only 32-bit field extant in the struct.  */

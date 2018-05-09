@@ -24,12 +24,6 @@
 #include <dl-procinfo.h>
 #include <fenv_private.h>
 
-/* Avoid putting floating point values in memory.  */
-# define math_opt_barrier(x)					\
-  ({ __typeof (x) __x = (x); __asm ("" : "+dwa" (__x)); __x; })
-# define math_force_eval(x)						\
-  ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "dwa" (__x)); })
-
 #include_next <math_private.h>
 
 #if defined _ARCH_PWR9 && __HAVE_DISTINCT_FLOAT128

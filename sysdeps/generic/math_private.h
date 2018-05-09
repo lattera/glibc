@@ -263,12 +263,7 @@ extern double __mpsin (double __x, double __dx, bool __range_reduce);
 extern double __mpcos (double __x, double __dx, bool __range_reduce);
 extern void __docos (double __x, double __dx, double __v[]);
 
-#ifndef math_opt_barrier
-# define math_opt_barrier(x) \
-({ __typeof (x) __x = (x); __asm ("" : "+m" (__x)); __x; })
-# define math_force_eval(x) \
-({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "m" (__x)); })
-#endif
+#include <math-barriers.h>
 
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 
