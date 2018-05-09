@@ -66,12 +66,12 @@ mon           "Am Faoilleach";/
      "An D<U00E0>mhair";/
      "An t-Samhain";/
      "An D<U00F9>bhlachd"
-% Faoi, Gearr, Màrt, Gibl, Mhàrt, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
+% Faoi, Gearr, Màrt, Gibl, Cèit, Ògmh, Iuch, Lùna, Sult, Dàmh, Samh, Dùbh
 abmon         "Faoi";/
        "Gearr";/
        "M<U00E0>rt";/
        "Gibl";/
-       "Mh<U00E0>rt";/
+       "C<U00E8>it";/
        "<U00D2>gmh";/
        "Iuch";/
        "L<U00F9>na";/
