@@ -270,29 +270,6 @@ extern void __docos (double __x, double __dx, double __v[]);
 ({ __typeof (x) __x = (x); __asm __volatile__ ("" : : "m" (__x)); })
 #endif
 
-/* math_narrow_eval reduces its floating-point argument to the range
-   and precision of its semantic type.  (The original evaluation may
-   still occur with excess range and precision, so the result may be
-   affected by double rounding.)  */
-#if FLT_EVAL_METHOD == 0
-# define math_narrow_eval(x) (x)
-#else
-# if FLT_EVAL_METHOD == 1
-#  define excess_precision(type) __builtin_types_compatible_p (type, float)
-# else
-#  define excess_precision(type) (__builtin_types_compatible_p (type, float) \
-				  || __builtin_types_compatible_p (type, \
-								   double))
-# endif
-# define math_narrow_eval(x)					\
-  ({								\
-    __typeof (x) math_narrow_eval_tmp = (x);			\
-    if (excess_precision (__typeof (math_narrow_eval_tmp)))	\
-      __asm__ ("" : "+m" (math_narrow_eval_tmp));		\
-    math_narrow_eval_tmp;					\
-   })
-#endif
-
 #define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
 
 /* These must be function-like macros because some __MATH_TG

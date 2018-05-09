@@ -1,3 +1,41 @@
+2018-05-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* include/math-narrow-eval.h: New file.  Contents moved from ....
+	* sysdeps/generic/math_private.h: ... here.
+	(math_narrow_eval): Remove macro.  Moved to math-narrow-eval.h.
+	[FLT_EVAL_METHOD != 0] (excess_precision): Likewise.
+	* math/s_fdim_template.c: Include <math-narrow-eval.h>.
+	* stdlib/strtod_l.c: Likewise.
+	* sysdeps/i386/fpu/s_f32xaddf64.c: Likewise.
+	* sysdeps/i386/fpu/s_f32xsubf64.c: Likewise.
+	* sysdeps/i386/fpu/s_fdim.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_cosh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/gamma_productf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/lgamma_neg.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_llrint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_lrint.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_coshf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_exp2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_expf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_sinhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/lgamma_negf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_llrintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_lrintf.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/gamma_product.c: Likewise.
+
 2018-05-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/nptl/internaltypes.h: Fix comment.

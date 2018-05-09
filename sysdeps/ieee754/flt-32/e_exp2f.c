@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <stdint.h>
 #include <shlib-compat.h>
 #include <libm-alias-float.h>

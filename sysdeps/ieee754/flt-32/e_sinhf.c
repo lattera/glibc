@@ -15,6 +15,7 @@
 
 #include <float.h>
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 
 static const float one = 1.0, shuge = 1.0e37;

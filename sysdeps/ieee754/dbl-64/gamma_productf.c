@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 #include <float.h>
 

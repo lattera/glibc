@@ -61,6 +61,7 @@
 #include <errno.h>
 #include <float.h>
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 
 static double pone (double), qone (double);

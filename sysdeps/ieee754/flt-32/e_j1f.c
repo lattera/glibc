@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <float.h>
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 
 static float ponef(float), qonef(float);

@@ -78,6 +78,7 @@
  */
 
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 #include <libc-diag.h>
 

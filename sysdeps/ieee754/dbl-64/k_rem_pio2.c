@@ -131,6 +131,7 @@ static char rcsid[] = "$NetBSD: k_rem_pio2.c,v 1.7 1995/05/10 20:46:25 jtc Exp $
  */
 
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 #include <libc-diag.h>
 

@@ -34,6 +34,7 @@ static char rcsid[] = "$NetBSD: e_sinh.c,v 1.7 1995/05/10 20:46:13 jtc Exp $";
 
 #include <float.h>
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 
 static const double one = 1.0, shuge = 1.0e307;

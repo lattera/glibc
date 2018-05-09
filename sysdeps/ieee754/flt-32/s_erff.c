@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: s_erff.c,v 1.4 1995/05/10 20:47:07 jtc Exp $";
 #include <errno.h>
 #include <float.h>
 #include <math.h>
+#include <math-narrow-eval.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
