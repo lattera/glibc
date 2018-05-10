@@ -28,6 +28,7 @@ static char rcsid[] = "$NetBSD: s_asinh.c,v 1.9 1995/05/12 04:57:37 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <math_ldbl_opt.h>
 
 static const long double

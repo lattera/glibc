@@ -108,6 +108,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libm-alias-ldouble.h>
 
 static const long double

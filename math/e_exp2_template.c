@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <float.h>
 
 #define declare_mgen_finite_alias_x(from, to) \

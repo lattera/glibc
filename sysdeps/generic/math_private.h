@@ -20,7 +20,6 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <fenv.h>
-#include <float.h>
 #include <get-rounding-mode.h>
 
 /* Gather machine dependent _Floatn support.  */
@@ -264,58 +263,6 @@ extern double __mpcos (double __x, double __dx, bool __range_reduce);
 extern void __docos (double __x, double __dx, double __v[]);
 
 #include <math-barriers.h>
-
-#define fabs_tg(x) __MATH_TG ((x), (__typeof (x)) __builtin_fabs, (x))
-
-/* These must be function-like macros because some __MATH_TG
-   implementations macro-expand the function-name argument before
-   concatenating a suffix to it.  */
-#define min_of_type_f() FLT_MIN
-#define min_of_type_() DBL_MIN
-#define min_of_type_l() LDBL_MIN
-#define min_of_type_f128() FLT128_MIN
-
-#define min_of_type(x) __MATH_TG ((x), (__typeof (x)) min_of_type_, ())
-
-/* If X (which is not a NaN) is subnormal, force an underflow
-   exception.  */
-#define math_check_force_underflow(x)				\
-  do								\
-    {								\
-      __typeof (x) force_underflow_tmp = (x);			\
-      if (fabs_tg (force_underflow_tmp)				\
-	  < min_of_type (force_underflow_tmp))			\
-	{							\
-	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
-	    = force_underflow_tmp * force_underflow_tmp;	\
-	  math_force_eval (force_underflow_tmp2);		\
-	}							\
-    }								\
-  while (0)
-/* Likewise, but X is also known to be nonnegative.  */
-#define math_check_force_underflow_nonneg(x)			\
-  do								\
-    {								\
-      __typeof (x) force_underflow_tmp = (x);			\
-      if (force_underflow_tmp					\
-	  < min_of_type (force_underflow_tmp))			\
-	{							\
-	  __typeof (force_underflow_tmp) force_underflow_tmp2	\
-	    = force_underflow_tmp * force_underflow_tmp;	\
-	  math_force_eval (force_underflow_tmp2);		\
-	}							\
-    }								\
-  while (0)
-/* Likewise, for both real and imaginary parts of a complex
-   result.  */
-#define math_check_force_underflow_complex(x)				\
-  do									\
-    {									\
-      __typeof (x) force_underflow_complex_tmp = (x);			\
-      math_check_force_underflow (__real__ force_underflow_complex_tmp); \
-      math_check_force_underflow (__imag__ force_underflow_complex_tmp); \
-    }									\
-  while (0)
 
 /* The standards only specify one variant of the fenv.h interfaces.
    But at least for some architectures we can be more efficient if we

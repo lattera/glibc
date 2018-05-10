@@ -56,6 +56,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 /* Coefficients for log(1+x) = x - x^2 / 2 + x^3 P(x)/Q(x)
  * 1/sqrt(2) <= 1+x < sqrt(2)

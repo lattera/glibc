@@ -1,3 +1,114 @@
+2018-05-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/math-underflow.h: New file.
+	* sysdeps/generic/math_private.h: Do not include <float.h>.
+	(fabs_tg): Remove macro.  Moved to math-underflow.h.
+	(min_of_type_f): Likewise.
+	(min_of_type_): Likewise.
+	(min_of_type_l): Likewise.
+	(min_of_type_f128): Likewise.
+	(min_of_type): Likewise.
+	(math_check_force_underflow): Likewise.
+	(math_check_force_underflow_nonneg): Likewise.
+	(math_check_force_underflow_complex): Likewise.
+	* math/e_exp2_template.c: Include <math-underflow.h>.
+	* math/k_casinh_template.c: Likewise.
+	* math/s_catan_template.c: Likewise.
+	* math/s_catanh_template.c: Likewise.
+	* math/s_ccosh_template.c: Likewise.
+	* math/s_cexp_template.c: Likewise.
+	* math/s_clog10_template.c: Likewise.
+	* math/s_clog_template.c: Likewise.
+	* math/s_csin_template.c: Likewise.
+	* math/s_csinh_template.c: Likewise.
+	* math/s_csqrt_template.c: Likewise.
+	* math/s_ctan_template.c: Likewise.
+	* math/s_ctanh_template.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_asin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_gamma_r.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_hypot.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_jn.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sinh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_asinh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_erf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_sincos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_tanh.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_asinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_gammaf_r.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_sinhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_sinf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_tanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_asinhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_atanf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_erff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_tanhf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sincosl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_atanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_tanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_hypotl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j1l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_sinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/k_sinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/k_tanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_asinhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_erfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_tanhl.c: Likewise.
+	* sysdeps/powerpc/fpu/e_hypot.c: Likewise.
+	* sysdeps/x86/fpu/powl_helper.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_nextup.c: Include <float.h>.
+	* sysdeps/ieee754/flt-32/s_nextupf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextupl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nextupl.c: Likewise.
+
 2018-05-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-barriers.h: New file.

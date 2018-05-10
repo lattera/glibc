@@ -44,6 +44,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 double
 __ieee754_hypot (double x, double y)

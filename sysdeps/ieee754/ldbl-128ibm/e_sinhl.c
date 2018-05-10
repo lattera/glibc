@@ -31,6 +31,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 static const long double one = 1.0, shuge = 1.0e307;
 

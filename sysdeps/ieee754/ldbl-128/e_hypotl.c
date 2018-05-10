@@ -47,6 +47,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 _Float128
 __ieee754_hypotl(_Float128 x, _Float128 y)

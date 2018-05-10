@@ -38,6 +38,7 @@
 #include "MathLib.h"
 #include "upow.tbl"
 #include <math_private.h>
+#include <math-underflow.h>
 #include <fenv.h>
 
 #ifndef SECTION

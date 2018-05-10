@@ -62,6 +62,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libm-alias-ldouble.h>
 
 /* arctan(k/8), k = 0, ..., 82 */

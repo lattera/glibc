@@ -45,6 +45,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libm-alias-ldouble.h>
 
 static const long double one=1.0, two=2.0, tiny = 1.0e-4900L;

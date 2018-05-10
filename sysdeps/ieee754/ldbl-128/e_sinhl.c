@@ -56,6 +56,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 static const _Float128 one = 1.0, shuge = L(1.0e4931),
 ovf_thresh = L(1.1357216553474703894801348310092223067821E4);

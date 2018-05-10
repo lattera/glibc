@@ -44,6 +44,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libm-alias-ldouble.h>
 
 static const _Float128 one = 1.0, two = 2.0, tiny = L(1.0e-4900);

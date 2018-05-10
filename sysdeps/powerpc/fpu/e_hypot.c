@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <stdint.h>
 
 static const double two60   = 1.152921504606847e+18;

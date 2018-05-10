@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <float.h>
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>

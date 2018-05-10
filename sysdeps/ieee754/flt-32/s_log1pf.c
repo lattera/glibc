@@ -16,6 +16,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libc-diag.h>
 
 static const float

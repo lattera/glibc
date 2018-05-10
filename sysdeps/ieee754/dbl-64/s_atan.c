@@ -46,6 +46,7 @@
 #include <libm-alias-double.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <stap-probe.h>
 
 void __mpatan (mp_no *, mp_no *, int);	/* see definition in mpatan.c */

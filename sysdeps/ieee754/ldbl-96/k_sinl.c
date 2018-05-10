@@ -23,6 +23,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 /* The polynomials have not been optimized for extended-precision and
    may contain more terms than needed.  */

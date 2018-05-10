@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: k_tanf.c,v 1.4 1995/05/10 20:46:39 jtc Exp $";
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 static const float
 one   =  1.0000000000e+00, /* 0x3f800000 */
 pio4  =  7.8539812565e-01, /* 0x3f490fda */

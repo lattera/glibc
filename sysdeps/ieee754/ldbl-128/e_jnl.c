@@ -60,6 +60,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 static const _Float128
   invsqrtpi = L(5.6418958354775628694807945156077258584405E-1),

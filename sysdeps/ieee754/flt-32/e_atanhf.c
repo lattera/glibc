@@ -39,6 +39,7 @@
 #include <inttypes.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 
 static const float huge = 1e30;
 

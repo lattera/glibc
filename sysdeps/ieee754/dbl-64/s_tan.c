@@ -41,6 +41,7 @@
 #include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <libm-alias-double.h>
 #include <fenv.h>
 #include <stap-probe.h>

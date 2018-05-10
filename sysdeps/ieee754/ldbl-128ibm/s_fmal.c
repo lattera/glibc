@@ -21,6 +21,7 @@
 #include <float.h>
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <math_ldbl_opt.h>
 #include <mul_split.h>
 #include <stdlib.h>

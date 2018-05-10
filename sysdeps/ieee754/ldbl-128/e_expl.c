@@ -65,6 +65,7 @@
 #include <fenv.h>
 #include <inttypes.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <stdlib.h>
 #include "t_expl.h"
 

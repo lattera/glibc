@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-underflow.h>
 #include <stdbool.h>
 
 /* High parts and low parts of -log (k/16), for integer k from 12 to
