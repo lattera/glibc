@@ -35,6 +35,20 @@
 #define A_hw	w7
 #define tmp1	x14
 
+#define B_l	x8
+#define B_lw	w8
+#define B_h	x9
+#define C_l	x10
+#define C_h	x11
+#define D_l	x12
+#define D_h	x13
+#define E_l	dst
+#define E_h	tmp1
+#define F_l	src
+#define F_h	count
+#define G_l	srcend
+#define G_h	x15
+
 /* Copies are split into 3 main cases:
 
    1. Small copies of up to 32 bytes
@@ -74,21 +88,21 @@ ENTRY_ALIGN (__memcpy_falkor, 6)
 	/* Medium copies: 33..128 bytes.  */
 	sub	tmp1, count, 1
 	ldp	A_l, A_h, [src, 16]
-	stp	A_l, A_h, [dstin, 16]
+	ldp	B_l, B_h, [srcend, -32]
+	ldp	C_l, C_h, [srcend, -16]
 	tbz	tmp1, 6, 1f
-	ldp	A_l, A_h, [src, 32]
-	stp	A_l, A_h, [dstin, 32]
-	ldp	A_l, A_h, [src, 48]
-	stp	A_l, A_h, [dstin, 48]
-	ldp	A_l, A_h, [srcend, -64]
-	stp	A_l, A_h, [dstend, -64]
-	ldp	A_l, A_h, [srcend, -48]
-	stp	A_l, A_h, [dstend, -48]
+	ldp	D_l, D_h, [src, 32]
+	ldp	E_l, E_h, [src, 48]
+	stp	D_l, D_h, [dstin, 32]
+	stp	E_l, E_h, [dstin, 48]
+	ldp	F_l, F_h, [srcend, -64]
+	ldp	G_l, G_h, [srcend, -48]
+	stp	F_l, F_h, [dstend, -64]
+	stp	G_l, G_h, [dstend, -48]
 1:
-	ldp	A_l, A_h, [srcend, -32]
-	stp	A_l, A_h, [dstend, -32]
-	ldp	A_l, A_h, [srcend, -16]
-	stp	A_l, A_h, [dstend, -16]
+	stp	A_l, A_h, [dstin, 16]
+	stp	B_l, B_h, [dstend, -32]
+	stp	C_l, C_h, [dstend, -16]
 	ret
 
 	.p2align 4
@@ -98,36 +112,36 @@ L(copy32):
 	cmp	count, 16
 	b.lo	1f
 	ldp	A_l, A_h, [src]
+	ldp	B_l, B_h, [srcend, -16]
 	stp	A_l, A_h, [dstin]
-	ldp	A_l, A_h, [srcend, -16]
-	stp	A_l, A_h, [dstend, -16]
+	stp	B_l, B_h, [dstend, -16]
 	ret
 	.p2align 4
 1:
 	/* 8-15 */
 	tbz	count, 3, 1f
 	ldr	A_l, [src]
+	ldr	B_l, [srcend, -8]
 	str	A_l, [dstin]
-	ldr	A_l, [srcend, -8]
-	str	A_l, [dstend, -8]
+	str	B_l, [dstend, -8]
 	ret
 	.p2align 4
 1:
 	/* 4-7 */
 	tbz	count, 2, 1f
 	ldr	A_lw, [src]
+	ldr	B_lw, [srcend, -4]
 	str	A_lw, [dstin]
-	ldr	A_lw, [srcend, -4]
-	str	A_lw, [dstend, -4]
+	str	B_lw, [dstend, -4]
 	ret
 	.p2align 4
 1:
 	/* 2-3 */
 	tbz	count, 1, 1f
 	ldrh	A_lw, [src]
+	ldrh	B_lw, [srcend, -2]
 	strh	A_lw, [dstin]
-	ldrh	A_lw, [srcend, -2]
-	strh	A_lw, [dstend, -2]
+	strh	B_lw, [dstend, -2]
 	ret
 	.p2align 4
 1:
@@ -171,12 +185,12 @@ L(loop64):
 L(last64):
 	ldp	A_l, A_h, [srcend, -64]
 	stnp	A_l, A_h, [dstend, -64]
-	ldp	A_l, A_h, [srcend, -48]
-	stnp	A_l, A_h, [dstend, -48]
-	ldp	A_l, A_h, [srcend, -32]
-	stnp	A_l, A_h, [dstend, -32]
-	ldp	A_l, A_h, [srcend, -16]
-	stnp	A_l, A_h, [dstend, -16]
+	ldp	B_l, B_h, [srcend, -48]
+	stnp	B_l, B_h, [dstend, -48]
+	ldp	C_l, C_h, [srcend, -32]
+	stnp	C_l, C_h, [dstend, -32]
+	ldp	D_l, D_h, [srcend, -16]
+	stnp	D_l, D_h, [dstend, -16]
 	ret
 
 END (__memcpy_falkor)

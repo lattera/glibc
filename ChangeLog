@@ -1,5 +1,8 @@
 2018-05-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S (__memcpy_falkor):
+	Use multiple registers to copy data in loop tail.
+
 	* sysdeps/aarch64/multiarch/memmove_falkor.S
 	(__memmove_falkor): Use multiple registers to move data in
 	loop tail.
