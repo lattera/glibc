@@ -1,3 +1,9 @@
+2018-05-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/multiarch/memmove_falkor.S
+	(__memmove_falkor): Use multiple registers to move data in
+	loop tail.
+
 2018-05-10  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/math-underflow.h: New file.

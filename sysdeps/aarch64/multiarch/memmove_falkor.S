@@ -150,7 +150,6 @@ L(copy96):
 
 	.p2align 4
 L(copy_long):
-	sub	count, count, 64 + 16	/* Test and readjust count.  */
 	mov	B_l, Q_l
 	mov	B_h, Q_h
 	ldp	A_l, A_h, [src]
@@ -161,6 +160,8 @@ L(copy_long):
 	ldp	Q_l, Q_h, [src, 16]!
 	stp	A_l, A_h, [dstin]
 	ldp	A_l, A_h, [src, 16]!
+	subs	count, count, 32 + 64 + 16	/* Test and readjust count.  */
+	b.ls	L(last64)
 
 L(loop64):
 	subs	count, count, 32
@@ -170,18 +171,22 @@ L(loop64):
 	ldp	A_l, A_h, [src, 16]!
 	b.hi	L(loop64)
 
-	/* Write the last full set of 32 bytes.  The remainder is at most 32
-	   bytes, so it is safe to always copy 32 bytes from the end even if
-	   there is just 1 byte left.  */
+	/* Write the last full set of 64 bytes.  The remainder is at most 64
+	   bytes and at least 33 bytes, so it is safe to always copy 64 bytes
+	   from the end.  */
 L(last64):
-	ldp	C_l, C_h, [srcend, -32]
+	ldp	C_l, C_h, [srcend, -64]
 	stp	Q_l, Q_h, [dst, 16]
-	ldp	Q_l, Q_h, [srcend, -16]
-	stp	A_l, A_h, [dst, 32]
-	stp	C_l, C_h, [dstend, -32]
-	stp	Q_l, Q_h, [dstend, -16]
 	mov	Q_l, B_l
 	mov	Q_h, B_h
+	ldp	B_l, B_h, [srcend, -48]
+	stp	A_l, A_h, [dst, 32]
+	ldp	A_l, A_h, [srcend, -32]
+	ldp	D_l, D_h, [srcend, -16]
+	stp	C_l, C_h, [dstend, -64]
+	stp	B_l, B_h, [dstend, -48]
+	stp	A_l, A_h, [dstend, -32]
+	stp	D_l, D_h, [dstend, -16]
 	ret
 
 	.p2align 4
@@ -204,7 +209,8 @@ L(move_long):
 	sub	count, count, tmp1
 	ldp	A_l, A_h, [srcend, -16]!
 	sub	dstend, dstend, tmp1
-	sub	count, count, 64
+	subs	count, count, 32 + 64
+	b.ls	2f
 
 1:
 	subs	count, count, 32
@@ -214,18 +220,22 @@ L(move_long):
 	ldp	A_l, A_h, [srcend, -16]!
 	b.hi	1b
 
-	/* Write the last full set of 32 bytes.  The remainder is at most 32
-	   bytes, so it is safe to always copy 32 bytes from the start even if
-	   there is just 1 byte left.  */
+	/* Write the last full set of 64 bytes.  The remainder is at most 64
+	   bytes and at least 33 bytes, so it is safe to always copy 64 bytes
+	   from the start.  */
 2:
-	ldp	C_l, C_h, [src, 16]
+	ldp	C_l, C_h, [src, 48]
 	stp	Q_l, Q_h, [dstend, -16]
-	ldp	Q_l, Q_h, [src]
-	stp	A_l, A_h, [dstend, -32]
-	stp	C_l, C_h, [dstin, 16]
-	stp	Q_l, Q_h, [dstin]
 	mov	Q_l, B_l
 	mov	Q_h, B_h
+	ldp	B_l, B_h, [src, 32]
+	stp	A_l, A_h, [dstend, -32]
+	ldp	A_l, A_h, [src, 16]
+	ldp	D_l, D_h, [src]
+	stp	C_l, C_h, [dstin, 48]
+	stp	B_l, B_h, [dstin, 32]
+	stp	A_l, A_h, [dstin, 16]
+	stp	D_l, D_h, [dstin]
 3:	ret
 
 END (__memmove_falkor)
