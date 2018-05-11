@@ -56,6 +56,13 @@
 #define __HAVE_DISTINCT_FLOAT64X 0
 #define __HAVE_DISTINCT_FLOAT128X __HAVE_FLOAT128X
 
+/* Defined to 1 if the corresponding _FloatN type is not binary compatible
+   with the corresponding ISO C type in the current compilation unit as
+   opposed to __HAVE_DISTINCT_FLOATN, which indicates the default types built
+   in glibc.  */
+#define __HAVE_FLOAT128_UNLIKE_LDBL (__HAVE_DISTINCT_FLOAT128	\
+				     && __LDBL_MANT_DIG__ != 113)
+
 /* Defined to 1 if any _FloatN or _FloatNx types that are not
    ABI-distinct are however distinct types at the C language level (so
    for the purposes of __builtin_types_compatible_p and _Generic).  */

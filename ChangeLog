@@ -1,3 +1,16 @@
+2018-05-11  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* bits/floatn-common.h: Define __HAVE_FLOAT128_UNLIKE_LDBL.
+	* math/math.h: Restrict the prototype definition for the functions
+	issignaling(_Float128) and iszero(_Float128); and template
+	__iseqsig_type<_Float128>, from __HAVE_DISTINCT_FLOAT128 to
+	__HAVE_FLOAT128_UNLIKE_LDBL.
+	* sysdeps/powerpc/bits/floatn.h [__HAVE_FLOAT128
+	&& (!__GNUC_PREREQ (7, 0) || defined __cplusplus)
+	&& __LDBL_MANT_DIG__ == 113]: Use long double suffix for
+	__f128() constants; define the type _Float128 as long double;
+	and reuse long double in __CFLOAT128.
+
 2018-05-11  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math_private.h: Do not include

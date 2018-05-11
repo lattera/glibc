@@ -33,7 +33,8 @@
 #endif
 
 /* Defined to 1 if __HAVE_FLOAT128 is 1 and the type is ABI-distinct
-   from the default float, double and long double types in this glibc.  */
+   from the default float, double and long double types in this glibc, i.e.
+   calls to the binary128 functions go to *f128 symbols instead of *l.  */
 #if __HAVE_FLOAT128
 # define __HAVE_DISTINCT_FLOAT128 1
 #else
@@ -58,7 +59,11 @@
 # if __HAVE_FLOAT128
 #  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
 /* The literal suffix (f128) exist for powerpc only since GCC 7.0.  */
-#   define __f128(x) x##q
+#   if __LDBL_MANT_DIG__ == 113
+#    define __f128(x) x##l
+#   else
+#    define __f128(x) x##q
+#   endif
 #  else
 #   define __f128(x) x##f128
 #  endif
@@ -66,8 +71,13 @@
 
 /* Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.  */
 # if __HAVE_FLOAT128
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-/* Add a typedef for older GCC compilers which don't natively support
+#  if __LDBL_MANT_DIG__ == 113 && defined __cplusplus
+typedef long double _Float128;
+#   define __CFLOAT128 _Complex long double
+#  elif !__GNUC_PREREQ (7, 0) || defined __cplusplus
+/* The type _Float128 exist for powerpc only since GCC 7.0.  */
+typedef __float128 _Float128;
+/* Add a typedef for older GCC and C++ compilers which don't natively support
    _Complex _Float128.  */
 typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__KC__)));
 #   define __CFLOAT128 __cfloat128
@@ -78,12 +88,6 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__KC__)));
 
 /* The remaining of this file provides support for older compilers.  */
 # if __HAVE_FLOAT128
-
-/* The type _Float128 exist for powerpc only since GCC 7.0.  */
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
-typedef __float128 _Float128;
-#  endif
-
 /* Builtin __builtin_huge_valf128 doesn't exist before GCC 7.0.  */
 #  if !__GNUC_PREREQ (7, 0)
 #   define __builtin_huge_valf128() ((_Float128) __builtin_huge_val ())

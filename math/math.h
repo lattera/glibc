@@ -989,7 +989,9 @@ issignaling (long double __val)
   return __issignalingl (__val);
 #  endif
 }
-#  if __HAVE_DISTINCT_FLOAT128
+#  if __HAVE_FLOAT128_UNLIKE_LDBL
+/* When using an IEEE 128-bit long double, _Float128 is defined as long double
+   in C++.  */
 inline int issignaling (_Float128 __val) { return __issignalingf128 (__val); }
 #  endif
 } /* extern C++ */
@@ -1027,7 +1029,9 @@ iszero (long double __val)
   return __fpclassifyl (__val) == FP_ZERO;
 #   endif
 }
-#   if __HAVE_DISTINCT_FLOAT128
+#   if __HAVE_FLOAT128_UNLIKE_LDBL
+  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+     in C++.  */
 inline int
 iszero (_Float128 __val)
 {
@@ -1517,7 +1521,9 @@ template<> struct __iseqsig_type<long double>
   }
 };
 
-#  if __HAVE_DISTINCT_FLOAT128
+#  if __HAVE_FLOAT128_UNLIKE_LDBL
+  /* When using an IEEE 128-bit long double, _Float128 is defined as long double
+     in C++.  */
 template<> struct __iseqsig_type<_Float128>
 {
   static int __call (_Float128 __x, _Float128 __y) throw ()
