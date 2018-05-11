@@ -44,12 +44,12 @@ struct ttinfo
 
 struct leap
   {
-    time_t transition;		/* Time the transition takes effect.  */
+    internal_time_t transition;	/* Time the transition takes effect.  */
     long int change;		/* Seconds of correction to apply.  */
   };
 
 static size_t num_transitions;
-libc_freeres_ptr (static time_t *transitions);
+libc_freeres_ptr (static internal_time_t *transitions);
 static unsigned char *type_idxs;
 static size_t num_types;
 static struct ttinfo *types;
@@ -113,8 +113,8 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   size_t tzspec_len;
   char *new = NULL;
 
-  if (sizeof (time_t) != 4 && sizeof (time_t) != 8)
-    abort ();
+  _Static_assert (sizeof (internal_time_t) == 8,
+		  "internal_time_t must be eight bytes");
 
   __use_tzfile = 0;
 
@@ -200,9 +200,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   if (__glibc_unlikely (num_isstd > num_types || num_isgmt > num_types))
     goto lose;
 
-  /* For platforms with 64-bit time_t we use the new format if available.  */
-  if (sizeof (time_t) == 8 && trans_width == 4
-      && tzhead.tzh_version[0] != '\0')
+  if (trans_width == 4 && tzhead.tzh_version[0] != '\0')
     {
       /* We use the 8-byte format.  */
       trans_width = 8;
@@ -222,9 +220,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   if (__builtin_expect (num_transitions
 			> ((SIZE_MAX - (__alignof__ (struct ttinfo) - 1))
-			   / (sizeof (time_t) + 1)), 0))
+			   / (sizeof (internal_time_t) + 1)), 0))
     goto lose;
-  total_size = num_transitions * (sizeof (time_t) + 1);
+  total_size = num_transitions * (sizeof (internal_time_t) + 1);
   total_size = ((total_size + __alignof__ (struct ttinfo) - 1)
 		& ~(__alignof__ (struct ttinfo) - 1));
   types_idx = total_size;
@@ -246,7 +244,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     goto lose;
   total_size += num_leaps * sizeof (struct leap);
   tzspec_len = 0;
-  if (sizeof (time_t) == 8 && trans_width == 8)
+  if (trans_width == 8)
     {
       off_t rem = st.st_size - __ftello (f);
       if (__builtin_expect (rem < 0
@@ -276,23 +274,23 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 
   /* Allocate enough memory including the extra block requested by the
      caller.  */
-  transitions = (time_t *) malloc (total_size + tzspec_len + extra);
+  transitions = malloc (total_size + tzspec_len + extra);
   if (transitions == NULL)
     goto lose;
 
   type_idxs = (unsigned char *) transitions + (num_transitions
-					       * sizeof (time_t));
+					       * sizeof (internal_time_t));
   types = (struct ttinfo *) ((char *) transitions + types_idx);
   zone_names = (char *) types + num_types * sizeof (struct ttinfo);
   leaps = (struct leap *) ((char *) transitions + leaps_idx);
-  if (sizeof (time_t) == 8 && trans_width == 8)
+  if (trans_width == 8)
     tzspec = (char *) leaps + num_leaps * sizeof (struct leap) + extra;
   else
     tzspec = NULL;
   if (extra > 0)
     *extrap = (char *) &leaps[num_leaps];
 
-  if (sizeof (time_t) == 4 || __builtin_expect (trans_width == 8, 1))
+  if (__builtin_expect (trans_width == 8, 1))
     {
       if (__builtin_expect (__fread_unlocked (transitions, trans_width + 1,
 					      num_transitions, f)
@@ -315,19 +313,17 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     if (__glibc_unlikely (type_idxs[i] >= num_types))
       goto lose;
 
-  if ((BYTE_ORDER != BIG_ENDIAN && (sizeof (time_t) == 4 || trans_width == 4))
-      || (BYTE_ORDER == BIG_ENDIAN && sizeof (time_t) == 8
-	  && trans_width == 4))
+  if (trans_width == 4)
     {
       /* Decode the transition times, stored as 4-byte integers in
-	 network (big-endian) byte order.  We work from the end of
-	 the array so as not to clobber the next element to be
-	 processed when sizeof (time_t) > 4.  */
+	 network (big-endian) byte order.  We work from the end of the
+	 array so as not to clobber the next element to be
+	 processed.  */
       i = num_transitions;
       while (i-- > 0)
 	transitions[i] = decode ((char *) transitions + i * 4);
     }
-  else if (BYTE_ORDER != BIG_ENDIAN && sizeof (time_t) == 8)
+  else if (BYTE_ORDER != BIG_ENDIAN)
     {
       /* Decode the transition times, stored as 8-byte integers in
 	 network (big-endian) byte order.  */
@@ -364,10 +360,10 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       if (__builtin_expect (__fread_unlocked (x, 1, trans_width, f)
 			    != trans_width, 0))
 	goto lose;
-      if (sizeof (time_t) == 4 || trans_width == 4)
-	leaps[i].transition = (time_t) decode (x);
+      if (trans_width == 4)
+	leaps[i].transition = decode (x);
       else
-	leaps[i].transition = (time_t) decode64 (x);
+	leaps[i].transition = decode64 (x);
 
       if (__glibc_unlikely (__fread_unlocked (x, 1, 4, f) != 4))
 	goto lose;
@@ -395,7 +391,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     types[i++].isgmt = 0;
 
   /* Read the POSIX TZ-style information if possible.  */
-  if (sizeof (time_t) == 8 && tzspec != NULL)
+  if (tzspec != NULL)
     {
       /* Skip over the newline first.  */
       if (__getc_unlocked (f) != '\n'
@@ -404,52 +400,6 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
 	tzspec = NULL;
       else
 	tzspec[tzspec_len - 1] = '\0';
-    }
-  else if (sizeof (time_t) == 4 && tzhead.tzh_version[0] != '\0')
-    {
-      /* Get the TZ string.  */
-      if (__builtin_expect (__fread_unlocked ((void *) &tzhead,
-					      sizeof (tzhead), 1, f) != 1, 0)
-	  || (memcmp (tzhead.tzh_magic, TZ_MAGIC, sizeof (tzhead.tzh_magic))
-	      != 0))
-	goto lose;
-
-      size_t num_transitions2 = (size_t) decode (tzhead.tzh_timecnt);
-      size_t num_types2 = (size_t) decode (tzhead.tzh_typecnt);
-      size_t chars2 = (size_t) decode (tzhead.tzh_charcnt);
-      size_t num_leaps2 = (size_t) decode (tzhead.tzh_leapcnt);
-      size_t num_isstd2 = (size_t) decode (tzhead.tzh_ttisstdcnt);
-      size_t num_isgmt2 = (size_t) decode (tzhead.tzh_ttisgmtcnt);
-
-      /* Position the stream before the second header.  */
-      size_t to_skip = (num_transitions2 * (8 + 1)
-			+ num_types2 * 6
-			+ chars2
-			+ num_leaps2 * 12
-			+ num_isstd2
-			+ num_isgmt2);
-      off_t off;
-      if (fseek (f, to_skip, SEEK_CUR) != 0
-	  || (off = __ftello (f)) < 0
-	  || st.st_size < off + 2)
-	goto lose;
-
-      tzspec_len = st.st_size - off - 1;
-      if (tzspec_len == 0)
-	goto lose;
-      char *tzstr = malloc (tzspec_len);
-      if (tzstr == NULL)
-	goto lose;
-      if (__getc_unlocked (f) != '\n'
-	  || (__fread_unlocked (tzstr, 1, tzspec_len - 1, f)
-	      != tzspec_len - 1))
-	{
-	  free (tzstr);
-	  goto lose;
-	}
-      tzstr[tzspec_len - 1] = '\0';
-      tzspec = __tzstring (tzstr);
-      free (tzstr);
     }
 
   /* Don't use an empty TZ string.  */
@@ -630,7 +580,7 @@ __tzfile_default (const char *std, const char *dst,
 }
 
 void
-__tzfile_compute (time_t timer, int use_localtime,
+__tzfile_compute (internal_time_t timer, int use_localtime,
 		  long int *leap_correct, int *leap_hit,
 		  struct tm *tp)
 {
@@ -685,10 +635,16 @@ __tzfile_compute (time_t timer, int use_localtime,
 
 	  /* Convert to broken down structure.  If this fails do not
 	     use the string.  */
-	  if (__glibc_unlikely (! __offtime (&timer, 0, tp)))
-	    goto use_last;
+	  {
+	    time_t truncated = timer;
+	    if (__glibc_unlikely (truncated != timer
+				  || ! __offtime (&truncated, 0, tp)))
+	      goto use_last;
+	  }
 
-	  /* Use the rules from the TZ string to compute the change.  */
+	  /* Use the rules from the TZ string to compute the change.
+	     timer fits into time_t due to the truncation check
+	     above.  */
 	  __tz_compute (timer, tp, 1);
 
 	  /* If tzspec comes from posixrules loaded by __tzfile_default,
@@ -709,10 +665,12 @@ __tzfile_compute (time_t timer, int use_localtime,
 	     then pick the type of the transition before it.  */
 	  size_t lo = 0;
 	  size_t hi = num_transitions - 1;
-	  /* Assume that DST is changing twice a year and guess initial
-	     search spot from it.
-	     Half of a gregorian year has on average 365.2425 * 86400 / 2
-	     = 15778476 seconds.  */
+	  /* Assume that DST is changing twice a year and guess
+	     initial search spot from it.  Half of a gregorian year
+	     has on average 365.2425 * 86400 / 2 = 15778476 seconds.
+	     The value i can be truncated if size_t is smaller than
+	     internal_time_t, but this is harmless because it is just
+	     a guess.  */
 	  i = (transitions[num_transitions - 1] - timer) / 15778476;
 	  if (i < num_transitions)
 	    {

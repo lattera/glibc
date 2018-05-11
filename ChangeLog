@@ -1,5 +1,18 @@
 2018-05-11  Florian Weimer  <fweimer@redhat.com>
 
+	Use 64-bit epoch values in the time zone file parser.
+	* include/time.h (internal_time_t): Define.
+	(__tzfile_compute): Use it.
+	* time/tzfile.c (struct leap): Use internal_time_t for epoch
+	member.
+	(transitions): Switch to internal_time_t.
+	(__tzfile_read): Likewise.  Remove code dealing with 4-byte time_t
+	types.
+	(__tzfile_compute): Use internal_time_t for timer argument.  Check
+	for truncation before calling __offtime.
+
+2018-05-11  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23166]
 	* include/rpc/clnt.h (rpc_createerr): Declare hidden alias.
 	* include/rpc/svc.h (svc_pollfd, svc_max_pollfd, svc_fdset):
