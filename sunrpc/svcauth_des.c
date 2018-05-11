@@ -87,16 +87,21 @@ static void cache_ref (uint32_t sid); /* note that sid was ref'd */
 
 static void invalidate (char *cred); /* invalidate entry in cache */
 
-/*
- * cache statistics
- */
+/* Cache statistics.  Accidental historic export without a matching
+   declaration in any header file.  */
+#ifndef SHARED
+static
+#endif
 struct
   {
     u_long ncachehits;		/* times cache hit, and is not replay */
     u_long ncachereplays;	/* times cache hit, and is replay */
     u_long ncachemisses;	/* times cache missed */
   }
-svcauthdes_stats;
+svcauthdes_stats __attribute__ ((nocommon));
+#ifdef SHARED
+compat_symbol (libc, svcauthdes_stats, svcauthdes_stats, GLIBC_2_0);
+#endif
 
 /*
  * Service side authenticator for AUTH_DES

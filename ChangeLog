@@ -1,3 +1,15 @@
+2018-05-11  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23166]
+	* include/rpc/clnt.h (rpc_createerr): Declare hidden alias.
+	* include/rpc/svc.h (svc_pollfd, svc_max_pollfd, svc_fdset):
+	Likewise.
+	* sunrpc/rpc_common.c (svc_fdset, rpc_createerr, svc_pollfd)
+	(svc_max_pollfd): Add nocommon attribute and hidden alias.  Do not
+	export without --enable-obsolete-rpc.
+	* sunrpc/svcauth_des.c (svcauthdes_stats): Turn into compatibility
+	symbol.  This should not have been exported, ever.
+
 2018-05-11  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23152]
