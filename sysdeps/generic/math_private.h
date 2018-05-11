@@ -262,8 +262,6 @@ extern double __mpsin (double __x, double __dx, bool __range_reduce);
 extern double __mpcos (double __x, double __dx, bool __range_reduce);
 extern void __docos (double __x, double __dx, double __v[]);
 
-#include <math-barriers.h>
-
 /* The standards only specify one variant of the fenv.h interfaces.
    But at least for some architectures we can be more efficient if we
    know what operations are going to be performed.  Therefore we

@@ -66,8 +66,8 @@ extern double ____strtod_l_internal (const char *, char **, int, locale_t);
 #include <float.h>
 #include "../locale/localeinfo.h"
 #include <math.h>
+#include <math-barriers.h>
 #include <math-narrow-eval.h>
-#include <math_private.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>

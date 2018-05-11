@@ -29,6 +29,7 @@
 #include <math.h>
 #include <fenv.h>
 #include <inttypes.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <math-underflow.h>
 

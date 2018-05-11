@@ -20,6 +20,7 @@
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <stdbool.h>
 #include <stdint.h>

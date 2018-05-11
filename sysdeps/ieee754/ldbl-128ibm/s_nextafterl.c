@@ -27,6 +27,7 @@ static char rcsid[] = "$NetBSD: $";
 #include <errno.h>
 #include <float.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 

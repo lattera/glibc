@@ -26,6 +26,7 @@ static char rcsid[] = "$NetBSD: s_rint.c,v 1.8 1995/05/10 20:48:04 jtc Exp $";
 
 #include <fenv.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <libm-alias-double.h>
 

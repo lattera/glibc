@@ -19,6 +19,7 @@
 #include <math.h>
 #include <get-rounding-mode.h>
 #include <stdint.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <libm-alias-double.h>
 

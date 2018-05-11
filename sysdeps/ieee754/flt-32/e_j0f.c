@@ -14,6 +14,7 @@
  */
 
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 static float pzerof(float), qzerof(float);

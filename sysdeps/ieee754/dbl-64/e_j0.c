@@ -59,6 +59,7 @@
  */
 
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 static double pzero (double), qzero (double);

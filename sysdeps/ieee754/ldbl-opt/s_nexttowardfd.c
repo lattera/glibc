@@ -22,6 +22,7 @@
 
 #include <errno.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>

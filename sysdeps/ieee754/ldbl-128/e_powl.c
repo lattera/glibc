@@ -65,6 +65,7 @@
  */
 
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 static const _Float128 bp[] = {

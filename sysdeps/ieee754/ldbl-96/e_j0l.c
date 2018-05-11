@@ -72,6 +72,7 @@
  */
 
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 static long double pzero (long double), qzero (long double);

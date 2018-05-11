@@ -20,6 +20,7 @@ static char rcsid[] = "$NetBSD: $";
 
 #include <errno.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 float __nexttowardf(float x, long double y)

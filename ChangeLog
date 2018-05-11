@@ -1,3 +1,62 @@
+2018-05-11  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math_private.h: Do not include
+	<math-barriers.h>.
+	* stdlib/strtod_l.c: Include <math-barriers.h> instead of
+	<math_private.h>.
+	* math/fromfp.h: Include <math-barriers.h>.
+	* math/math-narrow.h: Likewise.
+	* math/s_nextafter.c: Likewise.
+	* math/s_nexttowardf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llrint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_llrintf.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lrint.c: Likewise.
+	* sysdeps/aarch64/fpu/s_lrintf.c: Likewise.
+	* sysdeps/i386/fpu/s_nextafterl.c: Likewise.
+	* sysdeps/i386/fpu/s_nexttoward.c: Likewise.
+	* sysdeps/i386/fpu/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_atanh.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_exp2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_j0.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_sqrt.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_expm1.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fma.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fmaf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_log1p.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_nearbyint.c: Likewise.
+	* sysdeps/ieee754/dbl-64/wordsize-64/s_nearbyint.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_atanhf.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_j0f.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_expm1f.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_log1pf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_nearbyintf.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_nextafterf.c: Likewise.
+	* sysdeps/ieee754/k_standardl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_expl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nearbyintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/e_asinl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nextafterl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_rintl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_atanhl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fma.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmal.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttoward.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_nexttowardf.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/s_nexttowardfd.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_nextafterl.c: Likewise.
+
 2018-05-11  Florian Weimer  <fweimer@redhat.com>
 
 	Use 64-bit epoch values in the time zone file parser.

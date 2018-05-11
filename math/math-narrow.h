@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <fenv.h>
 #include <ieee754.h>
+#include <math-barriers.h>
 #include <math_private.h>
 
 /* Carry out a computation using round-to-odd.  The computation is

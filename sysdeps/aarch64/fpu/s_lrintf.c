@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
 

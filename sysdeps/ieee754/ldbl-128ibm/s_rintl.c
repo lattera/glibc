@@ -22,6 +22,7 @@
 
 #include <math.h>
 #include <fenv.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
 #include <float.h>

@@ -37,6 +37,7 @@
 #include "mydefs.h"
 #include "MathLib.h"
 #include "uexp.tbl"
+#include <math-barriers.h>
 #include <math_private.h>
 #include <fenv.h>
 #include <float.h>

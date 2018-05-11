@@ -38,6 +38,7 @@
 #include <float.h>
 #include <inttypes.h>
 #include <math.h>
+#include <math-barriers.h>
 #include <math_private.h>
 #include <math-underflow.h>
 
