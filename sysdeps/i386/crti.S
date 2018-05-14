@@ -68,7 +68,7 @@ _init:
 	movl PREINIT_FUNCTION@GOT(%ebx), %eax
 	testl %eax, %eax
 	je .Lno_weak_fn
-	call PREINIT_FUNCTION@PLT
+	call *%eax
 .Lno_weak_fn:
 #else
 	call PREINIT_FUNCTION

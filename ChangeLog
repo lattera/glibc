@@ -1,5 +1,10 @@
 2018-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/crti.S (_init): Replace PREINIT_FUNCTION@PLT
+	with *%eax in call.
+
+2018-05-14  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/ldsodefs.h: Removed.
 	* sysdeps/x86_64/ldsodefs.h: Moved to ...
 	* sysdeps/x86/ldsodefs.h: This.
