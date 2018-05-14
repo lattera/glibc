@@ -1,3 +1,9 @@
+2018-05-24  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	[BZ #23171]
+	* math/math.h [C++] (iseqsig): Fix parameter type for the long
+	double version.
+
 2018-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/sh/Implies: Remove sh/soft-fp.

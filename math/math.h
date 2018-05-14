@@ -1511,7 +1511,7 @@ template<> struct __iseqsig_type<double>
 
 template<> struct __iseqsig_type<long double>
 {
-  static int __call (double __x, double __y) throw ()
+  static int __call (long double __x, long double __y) throw ()
   {
 #  ifndef __NO_LONG_DOUBLE_MATH
     return __iseqsigl (__x, __y);
