@@ -1,3 +1,32 @@
+2018-07-04  Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #23164]
+	* localedata/tst-langinfo-setlocale.c: New file.
+	* localedata/tst-langinfo-setlocale-static.c: New file.
+	* localedata/tst-langinfo-newlocale.c: New file.
+	* localedata/tst-langinfo-newlocale-static.c: New file.
+	* localedata/Makefile (test-srcs): Remove tst-langinfo. Add
+	tst-langinfo-setlocale, tst-langinfo-setlocale-static,
+	tst-langinfo-newlocale, tst-langinfo-newlocale-static.
+	(tests-static): Remove tst-langinfo-static. Add
+	tst-langinfo-newlocale-static, tst-langinfo-setlocale-static.
+	(tests-special): Remove $(objpfx)tst-langinfo.out,
+	$(objpfx)tst-langinfo-static.out. Add
+	$(objpfx)tst-langinfo-setlocale.out,
+	$(objpfx)tst-langinfo-newlocale.out,
+	$(objpfx)tst-langinfo-setlocale-static.out,
+	$(objpfx)tst-langinfo-newlocale-static.out.
+	($(objpfx)tst-langinfo.out): Remove.
+	($(objpfx)tst-langinfo-static.out): Remove.
+	($(objpfx)tst-langinfo-newlocale.out): New target.
+	($(objpfx)tst-langinfo-newlocale-static.out): New target.
+	(test-xfail-tst-langinfo-newlocale-static): Add.
+	($(objpfx)tst-langinfo-setlocale.out): New target.
+	($(objpfx)tst-langinfo-setlocale-static.out): New target.
+	* localedata/tst-langinfo.c: Call test_locale.
+	* localedata/tst-langinfo.sh: Add LC_MONETARY CURRENCY_SYMBOL test
+	data.
+
 2018-07-04  Florian Weimer  <fweimer@redhat.com>
 
 	testrun.sh: Implement --tool=strace, --tool=valgrind

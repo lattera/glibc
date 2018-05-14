@@ -34,7 +34,9 @@ vpath %.h tests-mbwc
 
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
-	     tst-ctype tst-langinfo tst-langinfo-static tst-numeric
+	     tst-ctype tst-langinfo-newlocale tst-langinfo-setlocale \
+	     tst-langinfo-newlocale-static tst-langinfo-setlocale-static \
+	     tst-numeric
 # List of test input files (list sorted alphabetically):
 test-input := \
 	am_ET.UTF-8 \
@@ -168,13 +170,16 @@ install-others := $(addprefix $(inst_i18ndir)/, \
 
 tests: $(objdir)/iconvdata/gconv-modules
 
-tests-static += tst-langinfo-static
+tests-static += tst-langinfo-newlocale-static tst-langinfo-setlocale-static
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)sort-test.out $(objpfx)tst-fmon.out \
 		 $(objpfx)tst-locale.out $(objpfx)tst-rpmatch.out \
 		 $(objpfx)tst-trans.out $(objpfx)tst-ctype.out \
-		 $(objpfx)tst-langinfo.out $(objpfx)tst-langinfo-static.out \
+		 $(objpfx)tst-langinfo-newlocale.out \
+		 $(objpfx)tst-langinfo-setlocale.out \
+		 $(objpfx)tst-langinfo-newlocale-static.out \
+		 $(objpfx)tst-langinfo-setlocale-static.out \
 		 $(objpfx)tst-numeric.out
 # We have to generate locales (list sorted alphabetically)
 LOCALES := \
@@ -332,18 +337,38 @@ $(objpfx)tst-ctype.out: tst-ctype.sh $(objpfx)tst-ctype \
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
 		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
-$(objpfx)tst-langinfo.out: tst-langinfo.sh $(objpfx)tst-langinfo \
+$(objpfx)tst-langinfo-newlocale.out: tst-langinfo.sh \
+			$(objpfx)tst-langinfo-newlocale \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
 		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
-$(objpfx)tst-langinfo-static.out: tst-langinfo.sh $(objpfx)tst-langinfo-static \
+$(objpfx)tst-langinfo-newlocale-static.out: tst-langinfo.sh \
+			$(objpfx)tst-langinfo-newlocale-static \
 			$(objpfx)sort-test.out \
 			$(addprefix $(objpfx),$(CTYPE_FILES))
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
 		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
 	$(evaluate-test)
+# Static use of newlocale is known not to work. See Bug 23164.
+test-xfail-tst-langinfo-newlocale-static = yes
+
+$(objpfx)tst-langinfo-setlocale.out: tst-langinfo.sh \
+			$(objpfx)tst-langinfo-setlocale \
+			$(objpfx)sort-test.out \
+			$(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
+	$(evaluate-test)
+$(objpfx)tst-langinfo-setlocale-static.out: tst-langinfo.sh \
+			$(objpfx)tst-langinfo-setlocale-static \
+			$(objpfx)sort-test.out \
+			$(addprefix $(objpfx),$(CTYPE_FILES))
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd-before-env)' \
+		 '$(run-program-env)' '$(test-program-cmd-after-env)' > $@; \
+	$(evaluate-test)
+
 $(objpfx)tst-digits.out: $(objpfx)tst-locale.out
 $(objpfx)tst-mbswcs6.out: $(addprefix $(objpfx),$(CTYPE_FILES))
 endif
