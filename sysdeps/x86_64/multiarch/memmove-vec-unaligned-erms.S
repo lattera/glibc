@@ -90,7 +90,6 @@
 #  define PREFETCH_ONE_SET(dir, base, offset) \
 	PREFETCH ((offset)base); \
 	PREFETCH ((offset + dir * PREFETCH_SIZE)base); \
-	PREFETCH ((offset + dir * PREFETCH_SIZE)base); \
 	PREFETCH ((offset + dir * PREFETCH_SIZE * 2)base); \
 	PREFETCH ((offset + dir * PREFETCH_SIZE * 3)base)
 # else
