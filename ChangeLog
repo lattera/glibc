@@ -1,3 +1,11 @@
+2018-05-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/strncat-c.c (STRNCAT_PRIMARY): Removed.
+	Include <string/strncat.c>.
+	* sysdeps/x86_64/multiarch/strncat.c (__strncat): New strong
+	alias.
+	(__GI___strncat): New hidden alias.
+
 2018-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/mips/mips32/libm-test-ulps: Update.
