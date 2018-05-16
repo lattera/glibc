@@ -1,3 +1,21 @@
+2018-05-16  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23178]
+	* nscd/nscd-client.h (sendfileall): Remove prototype.
+	* nscd/connections.c [HAVE_SENDFILE] (sendfileall): Remove function.
+	(handle_request): Use writeall instead of sendfileall.
+	* nscd/aicache.c (addhstaiX): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/initgrcache.c (addinitgroupsX): Likewise.
+	* nscd/netgroupcache.c (addgetnetgrentX, addinnetgrX): Likewise.
+	* nscd/pwdcache.c (cache_addpw): Likewise.
+	* nscd/servicescache.c (cache_addserv): Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir) == nscd]
+	(sysdep-CFLAGS): Remove -DHAVE_SENDFILE.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_SENDFILE):
+	Remove define.
+
 2018-05-16  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/strncat-c.c (STRNCAT_PRIMARY): Removed.

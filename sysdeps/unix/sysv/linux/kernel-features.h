@@ -37,9 +37,6 @@
    introduced.  If somebody cares these values can afterwards be
    corrected.  */
 
-/* The sendfile syscall was introduced in 2.2.0.  */
-#define __ASSUME_SENDFILE		1
-
 /* Some architectures use the socketcall multiplexer for some or all
    socket-related operations instead of separate syscalls.
    __ASSUME_SOCKETCALL is defined for such architectures.  */

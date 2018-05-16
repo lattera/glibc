@@ -29,9 +29,6 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
-#ifdef HAVE_SENDFILE
-# include <kernel-features.h>
-#endif
 
 #include "../nss/nsswitch.h"
 
@@ -353,37 +350,9 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	     unnecessarily let the receiver wait.  */
 	  assert (fd != -1);
 
-#ifdef HAVE_SENDFILE
-	  if (__builtin_expect (db->mmap_used, 1) && !alloca_used)
-	    {
-	      assert (db->wr_fd != -1);
-	      assert ((char *) &dataset->resp > (char *) db->data);
-	      assert ((char *) dataset - (char *) db->head
-		      + total
-		      <= (sizeof (struct database_pers_head)
-			  + db->head->module * sizeof (ref_t)
-			  + db->head->data_size));
-	      ssize_t written = sendfileall (fd, db->wr_fd,
-					     (char *) &dataset->resp
-					     - (char *) db->head,
-					     dataset->head.recsize);
-	      if (written != dataset->head.recsize)
-		{
-# ifndef __ASSUME_SENDFILE
-		  if (written == -1 && errno == ENOSYS)
-		    goto use_write;
-# endif
-		  all_written = false;
-		}
-	    }
-	  else
-# ifndef __ASSUME_SENDFILE
-	  use_write:
-# endif
-#endif
-	    if (writeall (fd, &dataset->resp, dataset->head.recsize)
-		!= dataset->head.recsize)
-	      all_written = false;
+	  if (writeall (fd, &dataset->resp, dataset->head.recsize)
+	      != dataset->head.recsize)
+	    all_written = false;
 	}
 
 

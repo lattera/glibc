@@ -46,9 +46,6 @@
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
-#ifdef HAVE_SENDFILE
-# include <sys/sendfile.h>
-#endif
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/un.h>
@@ -283,26 +280,6 @@ writeall (int fd, const void *buf, size_t len)
   while (n > 0);
   return ret < 0 ? ret : len - n;
 }
-
-
-#ifdef HAVE_SENDFILE
-ssize_t
-sendfileall (int tofd, int fromfd, off_t off, size_t len)
-{
-  ssize_t n = len;
-  ssize_t ret;
-
-  do
-    {
-      ret = TEMP_FAILURE_RETRY (sendfile (tofd, fromfd, &off, n));
-      if (ret <= 0)
-	break;
-      n -= ret;
-    }
-  while (n > 0);
-  return ret < 0 ? ret : len - n;
-}
-#endif
 
 
 enum usekey
@@ -1163,35 +1140,8 @@ request from '%s' [%ld] not handled due to missing permission"),
       if (cached != NULL)
 	{
 	  /* Hurray it's in the cache.  */
-	  ssize_t nwritten;
-
-#ifdef HAVE_SENDFILE
-	  if (__glibc_likely (db->mmap_used))
-	    {
-	      assert (db->wr_fd != -1);
-	      assert ((char *) cached->data > (char *) db->data);
-	      assert ((char *) cached->data - (char *) db->head
-		      + cached->recsize
-		      <= (sizeof (struct database_pers_head)
-			  + db->head->module * sizeof (ref_t)
-			  + db->head->data_size));
-	      nwritten = sendfileall (fd, db->wr_fd,
-				      (char *) cached->data
-				      - (char *) db->head, cached->recsize);
-# ifndef __ASSUME_SENDFILE
-	      if (nwritten == -1 && errno == ENOSYS)
-		goto use_write;
-# endif
-	    }
-	  else
-# ifndef __ASSUME_SENDFILE
-	  use_write:
-# endif
-#endif
-	    nwritten = writeall (fd, cached->data, cached->recsize);
-
-	  if (nwritten != cached->recsize
-	      && __builtin_expect (debug_level, 0) > 0)
+	  if (writeall (fd, cached->data, cached->recsize) != cached->recsize
+	      && __glibc_unlikely (debug_level > 0))
 	    {
 	      /* We have problems sending the result.  */
 	      char buf[256];
