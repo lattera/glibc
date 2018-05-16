@@ -2457,6 +2457,22 @@ ifloat128: 1
 ildouble: 1
 ldouble: 1
 
+Function: "mul_downward_ldouble":
+double: 1
+float: 1
+
+Function: "mul_ldouble":
+double: 1
+float: 1
+
+Function: "mul_towardzero_ldouble":
+double: 1
+float: 1
+
+Function: "mul_upward_ldouble":
+double: 1
+float: 1
+
 Function: "nextafter_downward":
 ildouble: 1
 ldouble: 1

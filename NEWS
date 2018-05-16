@@ -18,6 +18,9 @@ Major new features:
   - fsub, fsubl, dsubl and corresponding fMsubfN, fMsubfNx, fMxsubfN and
     fMxsubfNx functions.
 
+  - fmul, fmull, dmull and corresponding fMmulfN, fMmulfNx, fMxmulfN and
+    fMxmulfNx functions.
+
 * Nominative and genitive month names are now supported for the Catalan and
   Czech languages.  The Catalan and Greek languages now support abbreviated
   alternative month names.

@@ -555,12 +555,17 @@ libm {
     # Functions not involving _Float64x or _Float128, for all configurations.
     fadd; faddl; daddl;
     f32addf32x; f32addf64; f32xaddf64;
+    fmul; fmull; dmull;
+    f32mulf32x; f32mulf64; f32xmulf64;
     fsub; fsubl; dsubl;
     f32subf32x; f32subf64; f32xsubf64;
     # Functions involving _Float64x or _Float128, for some configurations.
     f32addf64x; f32addf128;
     f32xaddf64x; f32xaddf128; f64addf64x; f64addf128;
     f64xaddf128;
+    f32mulf64x; f32mulf128;
+    f32xmulf64x; f32xmulf128; f64mulf64x; f64mulf128;
+    f64xmulf128;
     f32subf64x; f32subf128;
     f32xsubf64x; f32xsubf128; f64subf64x; f64subf128;
     f64xsubf128;

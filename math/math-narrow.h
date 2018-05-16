@@ -166,6 +166,59 @@
     }						\
   while (0)
 
+/* Check for error conditions from a narrowing multiply function
+   returning RET with arguments X and Y and set errno as needed.
+   Overflow and underflow can occur for finite arguments and a domain
+   error for Inf * 0.  */
+#define CHECK_NARROW_MUL(RET, X, Y)			\
+  do							\
+    {							\
+      if (!isfinite (RET))				\
+	{						\
+	  if (isnan (RET))				\
+	    {						\
+	      if (!isnan (X) && !isnan (Y))		\
+		__set_errno (EDOM);			\
+	    }						\
+	  else if (isfinite (X) && isfinite (Y))	\
+	    __set_errno (ERANGE);			\
+	}						\
+      else if ((RET) == 0 && (X) != 0 && (Y) != 0)	\
+	__set_errno (ERANGE);				\
+    }							\
+  while (0)
+
+/* Implement narrowing multiply using round-to-odd.  The arguments are
+   X and Y, the return type is TYPE and UNION, MANTISSA and SUFFIX are
+   as for ROUND_TO_ODD.  */
+#define NARROW_MUL_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA)	\
+  do									\
+    {									\
+      TYPE ret;								\
+									\
+      ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) * (Y),		\
+				 UNION, SUFFIX, MANTISSA);		\
+									\
+      CHECK_NARROW_MUL (ret, (X), (Y));					\
+      return ret;							\
+    }									\
+  while (0)
+
+/* Implement a narrowing multiply function that is not actually
+   narrowing or where no attempt is made to be correctly rounding (the
+   latter only applies to IBM long double).  The arguments are X and Y
+   and the return type is TYPE.  */
+#define NARROW_MUL_TRIVIAL(X, Y, TYPE)		\
+  do						\
+    {						\
+      TYPE ret;					\
+						\
+      ret = (TYPE) ((X) * (Y));			\
+      CHECK_NARROW_MUL (ret, (X), (Y));		\
+      return ret;				\
+    }						\
+  while (0)
+
 /* The following macros declare aliases for a narrowing function.  The
    sole argument is the base name of a family of functions, such as
    "add".  If any platform changes long double format after the

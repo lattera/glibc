@@ -89,7 +89,7 @@ libm-compat-calls =							\
 	w_lgammaF_r_compat w_lgammaF_compat2 w_expF_compat		\
 	w_lgamma_compatF k_standardF
 
-libm-narrow-fns = add sub
+libm-narrow-fns = add mul sub
 libm-narrow-types-basic = s_fF s_f32xFf64
 libm-narrow-types-ldouble-yes = s_fFl s_dFl
 libm-narrow-types-float128-yes = s_f32Ff128 s_f64Ff128 s_f64xFf128
@@ -284,7 +284,7 @@ libm-test-funcs-noauto = canonicalize ceil cimag conj copysign cproj creal \
 			 scalbln scalbn setpayload setpayloadsig signbit \
 			 significand totalorder totalordermag trunc ufromfp \
 			 ufromfpx
-libm-test-funcs-narrow = add sub
+libm-test-funcs-narrow = add mul sub
 libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
 libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
 libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)

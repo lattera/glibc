@@ -6445,6 +6445,54 @@ log2 min
 log2 min_subnorm
 log2 max
 
+mul 0 0
+mul 0 -0
+mul -0 0
+mul -0 -0
+mul max max
+mul max -max
+mul -max max
+mul -max -max
+mul min min
+mul min -min
+mul -min min
+mul -min -min
+mul min_subnorm min_subnorm
+mul min_subnorm -min_subnorm
+mul -min_subnorm min_subnorm
+mul -min_subnorm -min_subnorm
+mul 1 2
+mul 1 -2
+mul -1 2
+mul -1 -2
+mul 100.5 0.75
+mul 100.5 -0.75
+mul -100.5 0.75
+mul -100.5 -0.75
+# Cases where the product of two values in a wider format is very
+# close to half way between two representable values in a narrower
+# format, so that double rounding would sometimes yield the wrong
+# result.  These examples have products of the form
+# (2^a + 1)(2^b + 1)/2^(a+b), where a is the width of the narrower
+# format, b is greater than the width of the wider format and factors
+# have been rearranged between the terms so that both terms do fit
+# within the wider format.
+# a = 24, b = 54
+mul 0x5000005p-24 0xccccccccccccdp-54
+# a = 24, b = 65
+mul 0x3000003p-24 0xaaaaaaaaaaaaaaabp-65
+# a = 24, b = 114
+mul 0x5000005p-24 0xcccccccccccccccccccccccccccdp-114
+# a = 53, b = 65
+mul 0x60000000000003p-53 0xaaaaaaaaaaaaaaabp-65
+# a = 53, b = 114
+mul 0xa0000000000005p-53 0xcccccccccccccccccccccccccccdp-114
+# a = 64, b = 114
+mul 0x50000000000000005p-64 0xcccccccccccccccccccccccccccdp-114
+# Similar, for double rounding to 64 bit of a product of 53-bit values.
+# This product equals 2^64 + 2^11 + 1.
+mul 97689974585 188829449
+
 pow 0 0
 pow 0 -0
 pow -0 0

@@ -1,3 +1,75 @@
+2018-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/Makefile (libm-narrow-fns): Add mul.
+	(libm-test-funcs-narrow): Likewise.
+	* math/Versions (GLIBC_2.28): Add narrowing multiply functions.
+	* math/bits/mathcalls-narrow.h (mul): Use __MATHCALL_NARROW.
+	* math/gen-auto-libm-tests.c (test_functions): Add mul.
+	* math/math-narrow.h (CHECK_NARROW_MUL): New macro.
+	(NARROW_MUL_ROUND_TO_ODD): Likewise.
+	(NARROW_MUL_TRIVIAL): Likewise.
+	* soft-fp/op-common.h (FP_TRUNC_COOKED): Likewise.
+	* sysdeps/ieee754/float128/float128_private.h (__fmull): New
+	macro.
+	(__dmull): Likewise.
+	* sysdeps/ieee754/ldbl-opt/Makefile (libnldbl-calls): Add fmul and
+	dmul.
+	(CFLAGS-nldbl-dmul.c): New variable.
+	(CFLAGS-nldbl-fmul.c): Likewise.
+	* sysdeps/ieee754/ldbl-opt/Versions (GLIBC_2.28): Add
+	__nldbl_dmull.
+	* sysdeps/ieee754/ldbl-opt/nldbl-compat.h (__nldbl_dmull): New
+	prototype.
+	* manual/arith.texi (Misc FP Arithmetic): Document fmul, fmull,
+	dmull, fMmulfN, fMmulfNx, fMxmulfN and fMxmulfNx.
+	* math/auto-libm-test-in: Add tests of mul.
+	* math/auto-libm-test-out-narrow-mul: New generated file.
+	* math/libm-test-narrow-mul.inc: New file.
+	* sysdeps/i386/fpu/s_f32xmulf64.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_f32xmulf64.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_fmul.c: Likewise.
+	* sysdeps/ieee754/float128/s_f32mulf128.c: Likewise.
+	* sysdeps/ieee754/float128/s_f64mulf128.c: Likewise.
+	* sysdeps/ieee754/float128/s_f64xmulf128.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_dmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_f64xmulf128.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_dmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm/s_fmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_dmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fmull.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-dmul.c: Likewise.
+	* sysdeps/ieee754/ldbl-opt/nldbl-fmul.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_dmull.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fmul.c: Likewise.
+	* sysdeps/ieee754/soft-fp/s_fmull.c: Likewise.
+	* sysdeps/powerpc/fpu/libm-test-ulps: Update.
+	* sysdeps/mach/hurd/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/arm/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/i386/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/coldfire/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/m680x0/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/mips/mips64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/nios2/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm-le.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/riscv/rv64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sh/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/64/libm.abilist: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/x32/libm.abilist: Likewise.
+
 2018-05-14  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/crti.S (_init): Replace PREINIT_FUNCTION@PLT

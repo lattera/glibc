@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Multiply double values, narrowing the result to float.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
-#endif
+#define f32mulf64 __hide_f32mulf64
+#define f32mulf32x __hide_f32mulf32x
+#define fmull __hide_fmull
+#include <math.h>
+#undef f32mulf64
+#undef f32mulf32x
+#undef fmull
 
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
+#include <math-narrow.h>
 
-/* Multiply.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
-
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+float
+__fmul (double x, double y)
+{
+  NARROW_MUL_ROUND_TO_ODD (x, y, float, union ieee754_double, , mantissa1);
+}
+libm_alias_float_double (mul)

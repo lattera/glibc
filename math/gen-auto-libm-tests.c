@@ -579,6 +579,7 @@ static test_function test_functions[] =
     FUNC_mpfr_f_f ("log10", mpfr_log10, false),
     FUNC_mpfr_f_f ("log1p", mpfr_log1p, false),
     FUNC_mpfr_f_f ("log2", mpfr_log2, false),
+    FUNC_mpfr_ff_f ("mul", mpfr_mul, true),
     FUNC_mpfr_ff_f ("pow", mpfr_pow, false),
     FUNC_mpfr_f_f ("sin", mpfr_sin, false),
     FUNC ("sincos", ARGS1 (type_fp), RET2 (type_fp, type_fp), false, false,
