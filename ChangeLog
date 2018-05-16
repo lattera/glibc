@@ -1,3 +1,8 @@
+2018-05-16  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/mips/mips32/libm-test-ulps: Update.
+	* sysdeps/mips/mips64/libm-test-ulps: Likewise.
+
 2018-05-16  Florian Weimer  <fweimer@redhat.com>
 
 	* support/Makefile (libsupport-routines): Add support_quote_blob,
