@@ -64,6 +64,8 @@ __BEGIN_DECLS
         (1, __FILE__, __LINE__, #expr);                         \
   })
 
+
+
 int support_print_failure_impl (const char *file, int line,
                                 const char *format, ...)
   __attribute__ ((nonnull (1), format (printf, 3, 4)));
@@ -140,6 +142,26 @@ void support_test_compare_failure (const char *file, int line,
                                    int right_positive,
                                    int right_size);
 
+
+/* Compare [LEFT, LEFT + LEFT_LENGTH) with [RIGHT, RIGHT +
+   RIGHT_LENGTH) and report a test failure if the arrays are
+   different.  LEFT_LENGTH and RIGHT_LENGTH are measured in bytes.  If
+   the length is null, the corresponding pointer is ignored (i.e., it
+   can be NULL).  The blobs should be reasonably short because on
+   mismatch, both are printed.  */
+#define TEST_COMPARE_BLOB(left, left_length, right, right_length)       \
+  (support_test_compare_blob (left, left_length, right, right_length,   \
+                              __FILE__, __LINE__,                       \
+                              #left, #left_length, #right, #right_length))
+
+void support_test_compare_blob (const void *left,
+                                unsigned long int left_length,
+                                const void *right,
+                                unsigned long int right_length,
+                                const char *file, int line,
+                                const char *left_exp, const char *left_len_exp,
+                                const char *right_exp,
+                                const char *right_len_exp);
 
 /* Internal function called by the test driver.  */
 int support_report_failure (int status)

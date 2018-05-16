@@ -1,5 +1,18 @@
 2018-05-16  Florian Weimer  <fweimer@redhat.com>
 
+	* support/Makefile (libsupport-routines): Add support_quote_blob,
+	support_test_compare_blob.
+	(tests): Add tst-support_quote_blob, tst-test_compare_blob.
+	* support/check.h (TEST_COMPARE_BLOB): Define.
+	(support_test_compare_blob): Declare.
+	* support/support.h (support_quote_blob): Declare.
+	* support/support_quote_blob.c: New file.
+	* support/support_test_compare_blob.c: Likewise.
+	* support/tst-support_quote_blob.c: Likewise.
+	* support/tst-test_compare_blob.c: Likewise.
+
+2018-05-16  Florian Weimer  <fweimer@redhat.com>
+
 	* stdlib/strtod_nan.c: Include <math-type-macros-double.h> instead
 	of <strtod_nan_double.h>.
 	* stdlib/strtod_nan_main.c (STRTOD_NAN): Use SET_NAN_PAYLOAD

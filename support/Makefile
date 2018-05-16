@@ -53,9 +53,11 @@ libsupport-routines = \
   support_format_netent \
   support_isolate_in_subprocess \
   support_openpty \
+  support_quote_blob \
   support_record_failure \
   support_run_diff \
   support_shared_allocate \
+  support_test_compare_blob \
   support_test_compare_failure \
   support_write_file_string \
   support_test_main \
@@ -151,8 +153,10 @@ tests = \
   tst-support-namespace \
   tst-support_capture_subprocess \
   tst-support_format_dns_packet \
+  tst-support_quote_blob \
   tst-support_record_failure \
   tst-test_compare \
+  tst-test_compare_blob \
   tst-xreadlink \
 
 ifeq ($(run-built-tests),yes)

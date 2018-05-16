@@ -59,6 +59,12 @@ void support_shared_free (void *);
    process on error.  */
 void support_write_file_string (const char *path, const char *contents);
 
+/* Quote the contents of the byte array starting at BLOB, of LENGTH
+   bytes, in such a way that the result string can be included in a C
+   literal (in single/double quotes, without putting the quotes into
+   the result).  */
+char *support_quote_blob (const void *blob, size_t length);
+
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 
