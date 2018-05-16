@@ -1,5 +1,10 @@
 2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* stdlib/Makefile (tests): Add tst-swapcontext1.
+	* stdlib/tst-swapcontext1.c: New test.
+
+2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/Makefile (tests): Add tst-cet-legacy-1,
 	tst-cet-legacy-2, tst-cet-legacy-2a, tst-cet-legacy-3,
 	tst-cet-legacy-4, tst-cet-legacy-4a, tst-cet-legacy-4b
