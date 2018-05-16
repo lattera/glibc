@@ -18,7 +18,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stdlib/strtod_nan_wide.h>
-#include <float128_private.h>
-#include <strtod_nan_float128.h>
+#include <math-type-macros-float128.h>
 #define STRTOD_NAN __wcstof128_nan
 #include <stdlib/strtod_nan_main.c>

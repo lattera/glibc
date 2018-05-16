@@ -30,6 +30,7 @@
    the double macro constants.  */
 #define M_MLIT(c) c
 
+#include <math-nan-payload-float.h>
 #include <libm-alias-float.h>
 
 #ifndef declare_mgen_alias
@@ -45,7 +46,7 @@
 
 /* Do not use the type-generic wrapper templates if compatibility with
    SVID error handling is needed.  */
-#include <math-svid-compat.h>
+#include <math/math-svid-compat.h>
 #define __USE_WRAPPER_TEMPLATE !LIBM_SVID_COMPAT
 
 #endif

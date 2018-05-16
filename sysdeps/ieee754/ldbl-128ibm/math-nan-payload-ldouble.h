@@ -1,4 +1,4 @@
-/* Convert string for NaN payload to corresponding NaN.  For ldbl-128.
+/* NaN payload handling or ldbl-128ibm.
    Copyright (C) 1997-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define FLOAT		long double
-#define SET_MANTISSA(flt, mant)				\
-  do							\
-    {							\
-      union ieee854_long_double u;			\
-      u.d = (flt);					\
-      u.ieee_nan.mantissa0 = 0;				\
-      u.ieee_nan.mantissa1 = 0;				\
-      u.ieee_nan.mantissa2 = (mant) >> 32;		\
-      u.ieee_nan.mantissa3 = (mant);			\
-      if ((u.ieee.mantissa0 | u.ieee.mantissa1		\
-	   | u.ieee.mantissa2 | u.ieee.mantissa3) != 0)	\
-	(flt) = u.d;					\
-    }							\
+#define SET_NAN_PAYLOAD(flt, mant)				\
+  do								\
+    {								\
+      union ibm_extended_long_double u;				\
+      u.ld = (flt);						\
+      u.d[0].ieee_nan.mantissa0 = (mant) >> 32;			\
+      u.d[0].ieee_nan.mantissa1 = (mant);			\
+      if ((u.d[0].ieee.mantissa0 | u.d[0].ieee.mantissa1) != 0)	\
+	(flt) = u.ld;						\
+    }								\
   while (0)

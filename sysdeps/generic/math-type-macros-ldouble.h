@@ -27,6 +27,7 @@
 #define CFLOAT _Complex long double
 #define M_STRTO_NAN __strtold_nan
 
+#include <math-nan-payload-ldouble.h>
 #include <libm-alias-ldouble.h>
 
 #ifndef declare_mgen_alias
@@ -42,7 +43,7 @@
 
 /* Do not use the type-generic wrapper templates if compatibility with
    SVID error handling is needed.  */
-#include <math-svid-compat.h>
+#include <math/math-svid-compat.h>
 #define __USE_WRAPPER_TEMPLATE !LIBM_SVID_COMPAT
 
 #endif

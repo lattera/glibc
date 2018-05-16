@@ -1,3 +1,69 @@
+2018-05-16  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/strtod_nan.c: Include <math-type-macros-double.h> instead
+	of <strtod_nan_double.h>.
+	* stdlib/strtod_nan_main.c (STRTOD_NAN): Use SET_NAN_PAYLOAD
+	instead of SET_MANTISSA.
+	* stdlib/strtof_nan.c: Include <math-type-macros-float.h> instead
+	of include <strtod_nan_float.h>.
+	* stdlib/strtold_nan.c: Include <math-type-macros-ldouble.h>
+	instead of <strtod_nan_ldouble.h>.
+	* stdlib/strtod_nan_double.h: Move to ...
+	* sysdeps/generic/math-nan-payload-double.h: ... here.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* stdlib/strtod_nan_float.h: Move to ...
+	* sysdeps/generic/math-nan-payload-float.h: ... here.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* sysdeps/generic/math-type-macros-double.h: Include
+	<math-nan-payload-double.h>.  Include <math/math-svid-compat.h>
+	instead of <math-svid-compat.h>.
+	* sysdeps/generic/math-type-macros-float.h: Include
+	<math-nan-payload-float.h>.  Include <math/math-svid-compat.h>
+	instead of <math-svid-compat.h>.
+	* sysdeps/generic/math-type-macros-float128.h: Include
+	<math-nan-payload-float128.h>.
+	* sysdeps/generic/math-type-macros-ldouble.h: Include
+	<math-nan-payload-ldouble.h>.  Include <math/math-svid-compat.h>
+	instead of <math-svid-compat.h>.
+	* sysdeps/generic/math-type-macros.h: Document SET_NAN_PAYLOAD and
+	check for definition.
+	* sysdeps/ieee754/float128/strtod_nan_float128.h: Move to ...
+	* sysdeps/ieee754/float128/math-nan-payload-float128.h: ... here.
+	Include <ieee754_float128.h>.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* sysdeps/ieee754/float128/strtof128_nan.c: Include
+	<math-type-macros-float128.h> instead of <strtod_nan_float128.h>.
+	Do not include <float128_private.h>.
+	* sysdeps/ieee754/float128/wcstof128_nan.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/strtod_nan_ldouble.h: Move to ...
+	* sysdeps/ieee754/ldbl-128/math-nan-payload-ldouble.h: ... here.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* sysdeps/ieee754/ldbl-128ibm/strtod_nan_ldouble.h: Move to ...
+	* sysdeps/ieee754/ldbl-128ibm/math-nan-payload-ldouble.h: ... here.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* sysdeps/ieee754/ldbl-96/strtod_nan_ldouble.h: Move to ...
+	* sysdeps/ieee754/ldbl-96/math-nan-payload-ldouble.h: ... here.
+	(FLOAT): Remove definition.
+	(SET_MANTISSA): Rename to ...
+	(SET_NAN_PAYLOAD): ... this.
+	* wcsmbs/wcstod_nan.c: Include <math-type-macros-double.h> instead
+	of "../stdlib/strtod_nan_double.h".
+	* wcsmbs/wcstof_nan.c: Include <math-type-macros-float.h> instead
+	of "../stdlib/strtod_nan_float.h".
+	* wcsmbs/wcstold_nan.c: Include <math-type-macros-ldouble.h>
+	instead of "../stdlib/strtod_nan_ldouble.h".
+	* manual/arith.texi (Parsing of Floats): Adjust comment.
+
 2018-05-16  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/Makefile (libm-narrow-fns): Add mul.

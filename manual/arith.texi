@@ -2784,7 +2784,7 @@ as well.
 @c mpn_lshift_1 -> mpn_lshift ok
 @c STRTOF_INTERNAL
 @c   MPN_VAR ok
-@c   SET_MANTISSA ok
+@c   SET_NAN_PAYLOAD ok
 @c   STRNCASECMP ok, wide and narrow
 @c   round_and_return ok
 @c   mpn_mul ok

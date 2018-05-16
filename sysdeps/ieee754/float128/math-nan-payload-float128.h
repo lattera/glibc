@@ -1,5 +1,5 @@
-/* Convert string for NaN payload to corresponding NaN.  For float.
-   Copyright (C) 1997-2018 Free Software Foundation, Inc.
+/* NaN payload handling for _Float128.
+   Copyright (C) 2017-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,19 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#define	FLOAT		float
-#define SET_MANTISSA(flt, mant)			\
-  do						\
-    {						\
-      union ieee754_float u;			\
-      u.f = (flt);				\
-      u.ieee_nan.mantissa = (mant);		\
-      if (u.ieee.mantissa != 0)			\
-	(flt) = u.f;				\
-    }						\
+#include <ieee754_float128.h>
+
+#define SET_NAN_PAYLOAD(flt, mant)			\
+  do							\
+    {							\
+      union ieee854_float128 u;				\
+      u.d = (flt);					\
+      u.ieee_nan.mantissa0 = 0;				\
+      u.ieee_nan.mantissa1 = 0;				\
+      u.ieee_nan.mantissa2 = (mant) >> 32;		\
+      u.ieee_nan.mantissa3 = (mant);			\
+      if ((u.ieee.mantissa0 | u.ieee.mantissa1		\
+	   | u.ieee.mantissa2 | u.ieee.mantissa3) != 0)	\
+	(flt) = u.d;					\
+    }							\
   while (0)

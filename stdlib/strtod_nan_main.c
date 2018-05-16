@@ -52,7 +52,7 @@ STRTOD_NAN (const STRING_TYPE *str, STRING_TYPE **endptr, STRING_TYPE endc)
 
   mant = STRTOULL (str, &endp, 0);
   if (endp == cp)
-    SET_MANTISSA (retval, mant);
+    SET_NAN_PAYLOAD (retval, mant);
 
  out:
   if (endptr != NULL)

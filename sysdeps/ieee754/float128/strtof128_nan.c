@@ -19,10 +19,8 @@
 
 #include <math.h>
 
-#include <float128_private.h>
-
 #include <strtod_nan_narrow.h>
-#include <strtod_nan_float128.h>
+#include <math-type-macros-float128.h>
 
 #define STRTOD_NAN __strtof128_nan
 #include <stdlib/strtod_nan_main.c>

@@ -18,7 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <strtod_nan_narrow.h>
-#include <strtod_nan_float.h>
+#include <math-type-macros-float.h>
 
 #define STRTOD_NAN __strtof_nan
 #include <strtod_nan_main.c>

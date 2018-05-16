@@ -40,7 +40,11 @@
 
   declare_mgen_alias_r(from,to)
       This exposes the appropriate symbol(s) for a
-      function f_r of type FLOAT.  */
+      function f_r of type FLOAT.
+
+  SET_NAN_PAYLOAD(flt, mant)
+      Set the NaN payload bits of the variable FLT of type FLOAT to
+      the mantissa MANT.  */
 
 #ifndef M_PFX
 # error "M_PFX must be defined."
@@ -65,6 +69,9 @@
 #endif
 #ifndef declare_mgen_alias_r
 # error "declare_mgen_alias_r must be defined."
+#endif
+#ifndef SET_NAN_PAYLOAD
+# error "SET_NAN_PAYLOAD must be defined."
 #endif
 
 #define __M_CONCAT(a,b) a ## b
