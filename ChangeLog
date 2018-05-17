@@ -1,3 +1,8 @@
+2018-05-17  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(PREFETCH_ONE_SET): Remove duplicate line.
+
 2018-05-17  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/generic/math-type-macros-double.h: Include
