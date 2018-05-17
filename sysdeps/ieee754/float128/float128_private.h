@@ -258,6 +258,8 @@
 
 #define __faddl __f32addf128
 #define __daddl __f64addf128
+#define __fdivl __f32divf128
+#define __ddivl __f64divf128
 #define __fmull __f32mulf128
 #define __dmull __f64mulf128
 #define __fsubl __f32subf128

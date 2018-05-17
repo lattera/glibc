@@ -4758,6 +4758,80 @@ ctanh -min 0
 ctanh min_subnorm 0
 ctanh -min_subnorm 0
 
+div 0 min
+div 0 -min
+div 0 min_subnorm
+div 0 -min_subnorm
+div 0 max
+div 0 -max
+div -0 min
+div -0 -min
+div -0 min_subnorm
+div -0 -min_subnorm
+div -0 max
+div -0 -max
+div max max xfail:ibm128-libgcc
+div max -max xfail:ibm128-libgcc
+div -max max xfail:ibm128-libgcc
+div -max -max xfail:ibm128-libgcc
+div min min
+div min -min
+div -min min
+div -min -min
+div min_subnorm min_subnorm
+div min_subnorm -min_subnorm
+div -min_subnorm min_subnorm
+div -min_subnorm -min_subnorm
+div max min xfail-rounding:ibm128-libgcc
+div max -min xfail-rounding:ibm128-libgcc
+div -max min xfail-rounding:ibm128-libgcc
+div -max -min xfail-rounding:ibm128-libgcc
+div max min_subnorm xfail-rounding:ibm128-libgcc
+div max -min_subnorm xfail-rounding:ibm128-libgcc
+div -max min_subnorm xfail-rounding:ibm128-libgcc
+div -max -min_subnorm xfail-rounding:ibm128-libgcc
+div min max xfail-rounding:ibm128-libgcc
+div min -max xfail-rounding:ibm128-libgcc
+div -min max xfail-rounding:ibm128-libgcc
+div -min -max xfail-rounding:ibm128-libgcc
+div min_subnorm max xfail-rounding:ibm128-libgcc
+div min_subnorm -max xfail-rounding:ibm128-libgcc
+div -min_subnorm max xfail-rounding:ibm128-libgcc
+div -min_subnorm -max xfail-rounding:ibm128-libgcc
+div 1 2
+div 1 -2
+div -1 2
+div -1 -2
+div 100.5 0.75
+div 100.5 -0.75
+div -100.5 0.75
+div -100.5 -0.75
+
+# Cases where the ratio of two values in a wider format is very close
+# to half way between two representable values in a narrower format,
+# so that double rounding would sometimes yield the wrong result.  For
+# a narrower format of width a and a wider format of width w, take
+# b = w - a; these examples are of the form
+# (1 + 2^-a + 2^-b + 2^(1-w)) / (1 + 2^-b).  These examples have
+# ratios of the form (1 + 2^-a) to the width of the wider format, but
+# the mathematical value is slightly greater, so that rounding once
+# should round the result up but double rounding would wrongly round
+# the result down.
+# a = 24, w = 53.
+div 0x1.0000010800001p0 0x1.00000008p0
+# a = 24, w = 64.
+div 0x1.0000010001000002p0 0x1.0000000001p0
+# a = 24, w = 113.
+div 0x1.0000010000000000000000800001p0 0x1.00000000000000000000008p0
+# a = 53, w = 64.
+div 0x1.0020000000000802p0 0x1.002p0
+# a = 53, w = 113.
+div 0x1.0000000000000810000000000001p0 0x1.000000000000001p0
+# a = 64, w = 113.
+div 0x1.0000000000008001000000000001p0 0x1.0000000000008p0
+# Similar, for double rounding to 64-bit of a division of 53-bit values.
+div 0x1ffe1p0 0xfffp0
+
 erf 0
 erf -0
 erf 0.125

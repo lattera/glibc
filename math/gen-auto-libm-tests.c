@@ -561,6 +561,7 @@ static test_function test_functions[] =
     FUNC_mpc_c_c ("csqrt", mpc_sqrt, false),
     FUNC_mpc_c_c ("ctan", mpc_tan, false),
     FUNC_mpc_c_c ("ctanh", mpc_tanh, false),
+    FUNC_mpfr_ff_f ("div", mpfr_div, true),
     FUNC_mpfr_f_f ("erf", mpfr_erf, false),
     FUNC_mpfr_f_f ("erfc", mpfr_erfc, false),
     FUNC_mpfr_f_f ("exp", mpfr_exp, false),

@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Divide _Float128 values, converting the result to _Float64x.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +16,23 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
+#include <math.h>
+#include <math-narrow.h>
+
+/* math_ldbl.h defines _Float128 to long double for this directory,
+   but when they are different, this function must be defined with
+   _Float128 arguments to avoid defining an alias with an incompatible
+   type.  */
+#undef _Float128
+
+_Float64x
+__f64xdivf128 (_Float128 x, _Float128 y)
+{
+#if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
+  NARROW_DIV_ROUND_TO_ODD (x, y, _Float64x, union ieee854_long_double, l,
+			   mantissa3);
+#else
+  NARROW_DIV_TRIVIAL (x, y, _Float64x);
 #endif
-
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
-
-/* Divide.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (div), __MATHCALL_REDIR_NAME (div), 2);
-
-/* Multiply.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
-
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+}
+libm_alias_float64x_float128 (div)

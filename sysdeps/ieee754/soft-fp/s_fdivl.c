@@ -1,4 +1,5 @@
-/* Declare functions returning a narrower type.
+/* Divide long double (ldbl-128) values, narrowing the result to
+   float, using soft-fp.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +17,39 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
+#define f32divf64x __hide_f32divf64x
+#define f32divf128 __hide_f32divf128
+#include <math.h>
+#undef f32divf64x
+#undef f32divf128
+
+#include <math-narrow.h>
+#include <soft-fp.h>
+#include <single.h>
+#include <quad.h>
+
+float
+__fdivl (_Float128 x, _Float128 y)
+{
+  FP_DECL_EX;
+  FP_DECL_Q (X);
+  FP_DECL_Q (Y);
+  FP_DECL_Q (R);
+  FP_DECL_S (RN);
+  float ret;
+
+  FP_INIT_ROUNDMODE;
+  FP_UNPACK_Q (X, x);
+  FP_UNPACK_Q (Y, y);
+  FP_DIV_Q (R, X, Y);
+#if (2 * _FP_W_TYPE_SIZE) < _FP_FRACBITS_Q
+  FP_TRUNC_COOKED (S, Q, 1, 4, RN, R);
+#else
+  FP_TRUNC_COOKED (S, Q, 1, 2, RN, R);
 #endif
-
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
-
-/* Divide.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (div), __MATHCALL_REDIR_NAME (div), 2);
-
-/* Multiply.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
-
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+  FP_PACK_S (ret, RN);
+  FP_HANDLE_EXCEPTIONS;
+  CHECK_NARROW_DIV (ret, x, y);
+  return ret;
+}
+libm_alias_float_ldouble (div)

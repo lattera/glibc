@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Divide long double (ldbl-128) values, narrowing the result to double.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +16,22 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
-#endif
+#define f32xdivf64x __hide_f32xdivf64x
+#define f32xdivf128 __hide_f32xdivf128
+#define f64divf64x __hide_f64divf64x
+#define f64divf128 __hide_f64divf128
+#include <math.h>
+#undef f32xdivf64x
+#undef f32xdivf128
+#undef f64divf64x
+#undef f64divf128
 
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
+#include <math-narrow.h>
 
-/* Divide.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (div), __MATHCALL_REDIR_NAME (div), 2);
-
-/* Multiply.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
-
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+double
+__ddivl (_Float128 x, _Float128 y)
+{
+  NARROW_DIV_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
+			   mantissa3);
+}
+libm_alias_double_ldouble (div)

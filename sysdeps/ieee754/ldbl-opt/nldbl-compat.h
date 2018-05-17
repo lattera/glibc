@@ -104,6 +104,7 @@ extern void __nldbl___vsyslog_chk (int, int, const char *, va_list);
 /* The original declarations of these were hidden by the including
    file.  */
 extern double __nldbl_daddl (double, double) __THROW;
+extern double __nldbl_ddivl (double, double) __THROW;
 extern double __nldbl_dmull (double, double) __THROW;
 extern double __nldbl_dsubl (double, double) __THROW;
 

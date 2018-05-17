@@ -1,4 +1,4 @@
-/* Declare functions returning a narrower type.
+/* Divide _Float64 values, converting the result to _Float32x.
    Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,18 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _MATH_H
-# error "Never include <bits/mathcalls-narrow.h> directly; include <math.h> instead."
-#endif
+#define ddivl __hide_ddivl
+#include <math.h>
+#undef ddivl
 
-/* Add.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (add), __MATHCALL_REDIR_NAME (add), 2);
+#include <math-narrow.h>
 
-/* Divide.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (div), __MATHCALL_REDIR_NAME (div), 2);
-
-/* Multiply.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
-
-/* Subtract.  */
-__MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);
+_Float32x
+__f32xdivf64 (_Float64 x, _Float64 y)
+{
+  NARROW_DIV_TRIVIAL (x, y, _Float32x);
+}
+libm_alias_float32x_float64 (div)

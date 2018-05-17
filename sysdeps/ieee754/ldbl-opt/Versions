@@ -101,6 +101,6 @@ libm {
     # Functions taking long double = double argument and rounding
     # result to double (same as f32x*f64 functions, but those names
     # are not reserved in TS 18661-1).
-    __nldbl_daddl; __nldbl_dmull; __nldbl_dsubl;
+    __nldbl_daddl; __nldbl_ddivl; __nldbl_dmull; __nldbl_dsubl;
   }
 }

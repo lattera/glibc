@@ -2248,6 +2248,25 @@ function without any intermediate rounding to the type of the
 arguments.
 @end deftypefun
 
+@deftypefun float fdiv (double @var{x}, double @var{y})
+@deftypefunx float fdivl (long double @var{x}, long double @var{y})
+@deftypefunx double ddivl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatM fMdivfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatM fMdivfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@deftypefunx _FloatMx fMxdivfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatMx fMxdivfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{TS 18661-1:2014, math.h}
+@standardsx{fMdivfN, TS 18661-3:2015, math.h}
+@standardsx{fMdivfNx, TS 18661-3:2015, math.h}
+@standardsx{fMxdivfN, TS 18661-3:2015, math.h}
+@standardsx{fMxdivfNx, TS 18661-3:2015, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+@math{@var{x} / @var{y}}, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+@end deftypefun
+
 @node Complex Numbers
 @section Complex Numbers
 @pindex complex.h

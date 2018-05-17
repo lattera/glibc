@@ -1823,6 +1823,9 @@ ifloat128: 5
 ildouble: 10
 ldouble: 10
 
+Function: "div_ldouble":
+float: 1
+
 Function: "erf":
 double: 1
 float: 1
