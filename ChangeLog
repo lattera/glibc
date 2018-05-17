@@ -1,3 +1,8 @@
+2018-05-17  Andreas Schwab  <schwab@suse.de>
+
+	* resolv/res_send.c (__res_context_send): Don't set errno when
+	returing error after malloc failure.
+
 2018-05-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* nptl/allocatestack.c (allocate_stack): Remove the
