@@ -34,19 +34,8 @@
 #endif
 
 
-#ifdef __ASSUME_PRIVATE_FUTEX
-# define LOAD_PRIVATE_FUTEX_WAIT(reg) \
+#define LOAD_PRIVATE_FUTEX_WAIT(reg) \
 	movl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
-#else
-# if FUTEX_WAIT == 0
-#  define LOAD_PRIVATE_FUTEX_WAIT(reg) \
-	movl	%fs:PRIVATE_FUTEX, reg
-# else
-#  define LOAD_PRIVATE_FUTEX_WAIT(reg) \
-	movl	%fs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAIT, reg
-# endif
-#endif
 
 /* It is crucial that the functions in this file don't modify registers
    other than %rax and %r11.  The syscall wrapper code depends on this

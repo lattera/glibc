@@ -1,3 +1,27 @@
+2018-05-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* nptl/allocatestack.c (allocate_stack): Remove the
+	!__ASSUME_PRIVATE_FUTEX paths.
+	* nptl/descr.h (header): Remove the !__ASSUME_PRIVATE_FUTEX path.
+	* nptl/nptl-init.c (__pthread_initialize_minimal_internal):
+	Likewise.
+	* sysdeps/i386/nptl/tcb-offsets.sym (PRIVATE_FUTEX): Removed.
+	* sysdeps/powerpc/nptl/tcb-offsets.sym (PRIVATE_FUTEX): Likewise.
+	* sysdeps/sh/nptl/tcb-offsets.sym (PRIVATE_FUTEX): Likewise.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym (PRIVATE_FUTEX): Likewise.
+	* sysdeps/i386/nptl/tls.h: (tcbhead_t): Remve the
+	!__ASSUME_PRIVATE_FUTEX path.
+	* sysdeps/s390/nptl/tls.h (tcbhead_t): Likewise.
+	* sysdeps/sparc/nptl/tls.h (tcbhead_t): Likewise.
+	* sysdeps/x86_64/nptl/tls.h (tcbhead_t): Likewise.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.S: Remove the
+	!__ASSUME_PRIVATE_FUTEX macros.
+	* sysdeps/unix/sysv/linux/lowlevellock-futex.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/cancellation.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_PRIVATE_FUTEX): Removed.
+
 2018-05-17  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/Makefile (libm-narrow-fns): Add div.

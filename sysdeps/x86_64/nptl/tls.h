@@ -51,11 +51,7 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   unsigned long int vgetcpu_cache[2];
-# ifndef __ASSUME_PRIVATE_FUTEX
-  int private_futex;
-# else
   int __glibc_reserved1;
-# endif
   int __glibc_unused1;
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];

@@ -313,24 +313,6 @@ __pthread_initialize_minimal_internal (void)
   }
 
 #ifdef __NR_futex
-# ifndef __ASSUME_PRIVATE_FUTEX
-  /* Private futexes are always used (at least internally) so that
-     doing the test once this early is beneficial.  */
-  {
-    int word = 0;
-    INTERNAL_SYSCALL_DECL (err);
-    word = INTERNAL_SYSCALL (futex, err, 3, &word,
-			    FUTEX_WAKE | FUTEX_PRIVATE_FLAG, 1);
-    if (!INTERNAL_SYSCALL_ERROR_P (word, err))
-      THREAD_SETMEM (pd, header.private_futex, FUTEX_PRIVATE_FLAG);
-  }
-
-  /* Private futexes have been introduced earlier than the
-     FUTEX_CLOCK_REALTIME flag.  We don't have to run the test if we
-     know the former are not supported.  This also means we know the
-     kernel will return ENOSYS for unknown operations.  */
-  if (THREAD_GETMEM (pd, header.private_futex) != 0)
-# endif
 # ifndef __ASSUME_FUTEX_CLOCK_REALTIME
     {
       int word = 0;

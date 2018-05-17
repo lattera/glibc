@@ -61,9 +61,6 @@
    configurations).  */
 #define __ASSUME_SET_ROBUST_LIST	1
 
-/* Support for private futexes was added in 2.6.22.  */
-#define __ASSUME_PRIVATE_FUTEX	1
-
 /* Support for various CLOEXEC and NONBLOCK flags was added in
    2.6.27.  */
 #define __ASSUME_IN_NONBLOCK	1

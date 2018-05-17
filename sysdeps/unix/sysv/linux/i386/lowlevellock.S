@@ -25,48 +25,16 @@
 
 	.text
 
-#ifdef __ASSUME_PRIVATE_FUTEX
-# define LOAD_PRIVATE_FUTEX_WAIT(reg) \
+#define LOAD_PRIVATE_FUTEX_WAIT(reg) \
 	movl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
-# define LOAD_PRIVATE_FUTEX_WAKE(reg) \
+#define LOAD_PRIVATE_FUTEX_WAKE(reg) \
 	movl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
-# define LOAD_FUTEX_WAIT(reg) \
+#define LOAD_FUTEX_WAIT(reg) \
 	xorl	$(FUTEX_WAIT | FUTEX_PRIVATE_FLAG), reg
-# define LOAD_FUTEX_WAIT_ABS(reg) \
+#define LOAD_FUTEX_WAIT_ABS(reg) \
 	xorl	$(FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME), reg
-# define LOAD_FUTEX_WAKE(reg) \
+#define LOAD_FUTEX_WAKE(reg) \
 	xorl	$(FUTEX_WAKE | FUTEX_PRIVATE_FLAG), reg
-#else
-# if FUTEX_WAIT == 0
-#  define LOAD_PRIVATE_FUTEX_WAIT(reg) \
-	movl	%gs:PRIVATE_FUTEX, reg
-# else
-#  define LOAD_PRIVATE_FUTEX_WAIT(reg) \
-	movl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAIT, reg
-# endif
-# define LOAD_PRIVATE_FUTEX_WAKE(reg) \
-	movl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAKE, reg
-# if FUTEX_WAIT == 0
-#  define LOAD_FUTEX_WAIT(reg) \
-	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
-	andl	%gs:PRIVATE_FUTEX, reg
-# else
-#  define LOAD_FUTEX_WAIT(reg) \
-	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
-	andl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAIT, reg
-# endif
-# define LOAD_FUTEX_WAIT_ABS(reg) \
-	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
-	andl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAIT_BITSET | FUTEX_CLOCK_REALTIME, reg
-# define LOAD_FUTEX_WAKE(reg) \
-	xorl	$FUTEX_PRIVATE_FLAG, reg ; \
-	andl	%gs:PRIVATE_FUTEX, reg ; \
-	orl	$FUTEX_WAKE, reg
-#endif
 
 	.globl	__lll_lock_wait_private
 	.type	__lll_lock_wait_private,@function

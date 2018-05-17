@@ -27,6 +27,3 @@ TCB_AT_PLATFORM			(offsetof (tcbhead_t, at_platform) - TLS_TCB_OFFSET - sizeof(t
 PADDING				(offsetof (tcbhead_t, padding) - TLS_TCB_OFFSET - sizeof(tcbhead_t))
 #endif
 TCB_HWCAP			(offsetof (tcbhead_t, hwcap) - TLS_TCB_OFFSET - sizeof (tcbhead_t))
-#ifndef __ASSUME_PRIVATE_FUTEX
-PRIVATE_FUTEX_OFFSET		thread_offsetof (header.private_futex)
-#endif

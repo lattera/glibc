@@ -41,11 +41,7 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   int gscope_flag;
-#ifndef __ASSUME_PRIVATE_FUTEX
-  int private_futex;
-#else
   int __glibc_reserved1;
-#endif
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];
   /* GCC split stack support.  */

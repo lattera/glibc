@@ -12,9 +12,6 @@ MUTEX_FUTEX		offsetof (pthread_mutex_t, __data.__lock)
 MULTIPLE_THREADS_OFFSET	offsetof (tcbhead_t, multiple_threads)
 POINTER_GUARD		offsetof (tcbhead_t, pointer_guard)
 VGETCPU_CACHE_OFFSET	offsetof (tcbhead_t, vgetcpu_cache)
-#ifndef __ASSUME_PRIVATE_FUTEX
-PRIVATE_FUTEX		offsetof (tcbhead_t, private_futex)
-#endif
 
 -- Not strictly offsets, but these values are also used in the TCB.
 TCB_CANCELSTATE_BITMASK	 CANCELSTATE_BITMASK

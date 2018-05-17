@@ -39,11 +39,7 @@ typedef struct
   uintptr_t sysinfo;
   uintptr_t stack_guard;
   int gscope_flag;
-#ifndef __ASSUME_PRIVATE_FUTEX
-  int private_futex;
-#else
   int __glibc_reserved1;
-#endif
   /* GCC split stack support.  */
   void *__private_ss;
 } tcbhead_t;

@@ -45,9 +45,6 @@ typedef struct
 #if __WORDSIZE != 64
   int gscope_flag;
 #endif
-#ifndef __ASSUME_PRIVATE_FUTEX
-  int private_futex;
-#endif
 } tcbhead_t;
 
 #else /* __ASSEMBLER__ */

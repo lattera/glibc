@@ -145,9 +145,6 @@ struct pthread
 	 looks to cancel itself and is hence going to end anyway.  */
       int multiple_threads;
       int gscope_flag;
-# ifndef __ASSUME_PRIVATE_FUTEX
-      int private_futex;
-# endif
     } header;
 #endif
 

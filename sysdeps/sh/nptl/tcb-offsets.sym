@@ -10,6 +10,3 @@ MULTIPLE_THREADS_OFFSET	offsetof (struct pthread, header.multiple_threads)
 TLS_PRE_TCB_SIZE	sizeof (struct pthread)
 MUTEX_FUTEX		offsetof (pthread_mutex_t, __data.__lock)
 POINTER_GUARD		offsetof (tcbhead_t, pointer_guard)
-#ifndef __ASSUME_PRIVATE_FUTEX
-PRIVATE_FUTEX		offsetof (struct pthread, header.private_futex)
-#endif
