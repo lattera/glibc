@@ -30,8 +30,8 @@
    the double macro constants.  */
 #define M_MLIT(c) c
 
-#include <math-nan-payload-float.h>
 #include <libm-alias-float.h>
+#include <math-nan-payload-float.h>
 
 #ifndef declare_mgen_alias
 # define declare_mgen_alias(from, to) libm_alias_float (from, to)

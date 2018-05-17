@@ -1,3 +1,14 @@
+2018-05-17  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/generic/math-type-macros-double.h: Include
+	<math-nan-payload-double.h> after <libm-alias-double.h>.
+	* sysdeps/generic/math-type-macros-float.h: Include
+	<math-nan-payload-float.h> after <libm-alias-float.h>.
+	* sysdeps/generic/math-type-macros-float128.h: Include
+	<math-nan-payload-float128.h> after <libm-alias-float128.h>.
+	* sysdeps/generic/math-type-macros-ldouble.h: Include
+	<math-nan-payload-ldouble.h> after <libm-alias-ldouble.h>.
+
 2018-05-17  Andreas Schwab  <schwab@suse.de>
 
 	* resolv/res_send.c (__res_context_send): Don't set errno when
