@@ -41,7 +41,7 @@ mount		EXTRA	mount		i:sssip	__mount	mount
 mremap		EXTRA	mremap		b:ainip	__mremap	mremap
 munlock		-	munlock		i:ai	munlock
 munlockall	-	munlockall	i:	munlockall
-nfsservctl	EXTRA	nfsservctl	i:ipp	nfsservctl
+nfsservctl	EXTRA	nfsservctl	i:ipp	__compat_nfsservctl	nfsservctl@GLIBC_2.0:GLIBC_2.28
 pipe		-	pipe		i:f	__pipe		pipe
 pipe2		-	pipe2		i:fi	__pipe2		pipe2
 pivot_root	EXTRA	pivot_root	i:ss	pivot_root

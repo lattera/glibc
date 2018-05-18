@@ -69,6 +69,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   binaries; the headers <ustat.h> and <sys/ustat.h> have been removed.  This
   function has been deprecated in favor of fstatfs and statfs.
 
+* The obsolete function nfsservctl is no longer available to newly linked
+  binaries.  This function was specific to systems using the Linux kernel
+  and could not usefully be used with the GNU C Library on systems with
+  version 3.1 or later of the Linux kernel.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

@@ -1,5 +1,9 @@
 2018-05-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscalls.list (nfsservctl): Make into a
+	compat symbol, disabled for minimum symbol version GLIBC_2.28 and
+	later.
+
 	[BZ #22639]
 	* time/tzset.c (SECSPERDAY): Cast to time_t.
 	* time/tst-y2039.c: New file.
