@@ -1,5 +1,30 @@
 2018-05-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/gen-tgmath-tests.py: Import sys.
+	(Tests.__init__): Initialize macros_seen.
+	(Tests.add_tests): Add macro to macros_seen.  Only generate tests
+	if requested to do so for this macro.
+	(Tests.add_all_tests): Take argument for macro for which to
+	generate tests.
+	(Tests.check_macro_list): New function.
+	(main): Handle check-list argument and argument specifying macro
+	for which to generate tests.
+	* math/Makefile [PYTHON] (tgmath3-macros): New variable.
+	[PYTHON] (tgmath3-macro-tests): Likewise.
+	[PYTHON] (tests): Add $(tgmath3-macro-tests) not test-tgmath3.
+	[PYTHON] (generated): Add $(addsuffix .c,$(tgmath3-macro-tests))
+	not test-tgmath3.c.
+	[PYTHON] (CFLAGS-test-tgmath3.c): Remove.
+	[PYTHON] ($(tgmath3-macro-tests:%=$(objpfx)%.o): Add -fno-builtin
+	to CFLAGS.
+	[PYTHON] ($(objpfx)test-tgmath3.c): Replace rule by....
+	[PYTHON] ($(foreach
+	m,$(tgmath3-macros),$(objpfx)test-tgmath3-$(m).c): ... this.  New
+	rule.
+	[PYTHON] (tests-special): Add
+	$(objpfx)test-tgmath3-macro-list.out.
+	[PYTHON] ($(objpfx)test-tgmath3-macro-list.out): New rule.
+
 	* sysdeps/unix/sysv/linux/syscalls.list (nfsservctl): Make into a
 	compat symbol, disabled for minimum symbol version GLIBC_2.28 and
 	later.

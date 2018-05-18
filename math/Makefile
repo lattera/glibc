@@ -350,12 +350,32 @@ $(libm-test-c-narrow-obj): $(objpfx)libm-test%.c: libm-test%.inc \
 endif
 
 ifdef PYTHON
-tests += test-tgmath3
-generated += test-tgmath3.c
-CFLAGS-test-tgmath3.c += -fno-builtin
+tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
+		 fma fmax fmin fmod frexp hypot ilogb ldexp lgamma llrint \
+		 llround log10 log1p log2 logb lrint lround nearbyint \
+		 nextafter nexttoward remainder remquo rint round scalbn \
+		 scalbln tgamma trunc acos asin atan acosh asinh atanh cos \
+		 sin tan cosh sinh tanh exp log pow sqrt fabs carg cimag conj \
+		 cproj creal roundeven nextup nextdown fminmag fmaxmag llogb \
+		 fromfp fromfpx ufromfp ufromfpx totalorder totalordermag \
+		 scalb
+tgmath3-macro-tests = $(addprefix test-tgmath3-,$(tgmath3-macros))
+tests += $(tgmath3-macro-tests)
+generated += $(addsuffix .c,$(tgmath3-macro-tests))
 
-$(objpfx)test-tgmath3.c: gen-tgmath-tests.py
-	$(PYTHON) $< > $@
+$(tgmath3-macro-tests:%=$(objpfx)%.o): CFLAGS += -fno-builtin
+
+$(foreach m,$(tgmath3-macros),\
+	    $(objpfx)test-tgmath3-$(m).c): $(objpfx)test-tgmath3-%.c: \
+					   gen-tgmath-tests.py
+	$(PYTHON) gen-tgmath-tests.py $* > $@
+
+# Verify that the list of supported macros is in sync between the
+# Makefile and gen-tgmath-tests.py.
+tests-special += $(objpfx)test-tgmath3-macro-list.out
+$(objpfx)test-tgmath3-macro-list.out: gen-tgmath-tests.py
+	$(PYTHON) $< check-list $(tgmath3-macros) > $@; \
+	$(evaluate-test)
 endif
 
 libm-test-fast-math-cflags = -fno-builtin -D__FAST_MATH__ -DTEST_FAST_MATH

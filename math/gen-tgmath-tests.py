@@ -55,6 +55,7 @@
 # uniquely determines the format.
 
 import string
+import sys
 
 class Type(object):
     """A type that may be used as an argument for generic parameters."""
@@ -351,6 +352,7 @@ class Tests(object):
             self.add_type_var(t.name, t.condition)
         self.test_text_list = []
         self.test_array_list = []
+        self.macros_seen = set()
 
     def add_type_var(self, name, cond):
         """Add declarations of variables for a type."""
@@ -361,13 +363,18 @@ class Tests(object):
         self.types_seen.add(name)
 
     def add_tests(self, macro, ret, args, complex_func=None):
-        """Add tests for a given tgmath.h macro."""
+        """Add tests for a given tgmath.h macro, if that is the macro for
+        which tests are to be generated; otherwise just add it to the
+        list of macros for which test generation is supported."""
         # 'c' means the function argument or return type is
         # type-generic and complex only (a complex function argument
         # may still have a real macro argument).  'g' means it is
         # type-generic and may be real or complex; 'r' means it is
         # type-generic and may only be real; 's' means the same as
         # 'r', but restricted to float, double and long double.
+        self.macros_seen.add(macro)
+        if macro != self.macro:
+            return
         have_complex = False
         func = macro
         if ret == 'c' or 'c' in args:
@@ -488,8 +495,10 @@ class Tests(object):
             test_func_text = if_cond_text(all_conds, test_func_text)
             self.test_text_list.append(test_func_text)
 
-    def add_all_tests(self):
-        """Add tests for all tgmath.h macros."""
+    def add_all_tests(self, macro):
+        """Add tests for the given tgmath.h macro, if any, and generate the
+        list of all supported macros."""
+        self.macro = macro
         # C99/C11 real-only functions.
         self.add_tests('atan2', 'r', ['r', 'r'])
         self.add_tests('cbrt', 'r', ['r'])
@@ -614,12 +623,27 @@ class Tests(object):
                        '#include <support/test-driver.c>']
         return ''.join(self.header_list + test_list + footer_list)
 
+    def check_macro_list(self, macro_list):
+        """Check the list of macros that can be tested."""
+        if self.macros_seen != set(macro_list):
+            print('error: macro list mismatch')
+            sys.exit(1)
+
 def main():
     """The main entry point."""
     Type.init_types()
     t = Tests()
-    t.add_all_tests()
-    print(t.tests_text())
+    if sys.argv[1] == 'check-list':
+        macro = None
+        macro_list = sys.argv[2:]
+    else:
+        macro = sys.argv[1]
+        macro_list = []
+    t.add_all_tests(macro)
+    if macro:
+        print(t.tests_text())
+    else:
+        t.check_macro_list(macro_list)
 
 if __name__ == '__main__':
     main()
