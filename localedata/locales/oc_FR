@@ -18,25 +18,25 @@ tel ""
 fax ""
 language "Occitan"
 territory "France"
-revision "0.2"
-date "2000-11-15"
+revision "0.3"
+date "2018-04-12"
 
 category "i18n:2012";LC_IDENTIFICATION
-category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_ADDRESS
 category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
 category "i18n:2012";LC_MESSAGES
 category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_NAME
 category "i18n:2012";LC_NUMERIC
-category "i18n:2012";LC_TIME
 category "i18n:2012";LC_PAPER
 category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_TIME
 category "i18n:2012";LC_TELEPHONE
-category "i18n:2012";LC_ADDRESS
 END LC_IDENTIFICATION
 
 LC_ADDRESS
 postal_fmt "%d%N%f%N%d%N%b%N%s %h 5e %r%N%C%z %T%N%c%N"
-% https://oc.wikipedia.org/wiki/Fran%C3%A7a França
 country_name "Fran<U00E7>a"
 country_post "F"
 country_ab2 "FR"
@@ -58,7 +58,7 @@ translit_end
 END LC_CTYPE
 
 LC_COLLATE
-copy "en_DK"
+copy "ca_ES"
 END LC_COLLATE
 
 LC_MESSAGES
@@ -87,24 +87,27 @@ copy "fr_FR"
 END LC_TELEPHONE
 
 LC_TIME
-abday   "dim";"lun";/
-        "mar";"mec";/
-        "j<U00F2>u";"ven";/
-        "sab"
+abday   "dg.";"dl.";"dm.";"dc.";"dj.";"dv.";"ds."
 day     "dimenge";/
         "diluns";/
         "dimars";/
-        "dimecres";/
+        "dim<U00E8>cres";/
         "dij<U00F3>us";/
         "divendres";/
-        "disabte"
-abmon   "gen";"feb";/
-        "mar";"abr";/
-        "mai";"jun";/
-        "jul";"ago";/
-        "set";"oct";/
-        "nov";"dec"
-mon     "geni<U00E8>r";/
+        "dissabte"
+abmon   "gen.";/
+        "febr.";/
+        "mar<U00E7>";/
+        "abr.";/
+        "mai";/
+        "junh";/
+        "jul.";/
+        "ago.";/
+        "set.";/
+        "oct.";/
+        "nov.";/
+        "dec."
+alt_mon "geni<U00E8>r";/
         "febri<U00E8>r";/
         "mar<U00E7>";/
         "abrial";/
@@ -113,11 +116,23 @@ mon     "geni<U00E8>r";/
         "julhet";/
         "agost";/
         "setembre";/
-        "octobre";/
+        "oct<U00F2>bre";/
         "novembre";/
         "decembre"
+mon     "de geni<U00E8>r";/
+        "de febri<U00E8>r";/
+        "de mar<U00E7>";/
+        "d<U2019>abrial";/
+        "de mai";/
+        "de junh";/
+        "de julhet";/
+        "d<U2019>agost";/
+        "de setembre";/
+        "d<U2019>oct<U00F2>bre";/
+        "de novembre";/
+        "de decembre"
 d_t_fmt "%a %d %b %Y %T %Z"
-d_fmt   "%d.%m.%Y"
+d_fmt   "%d//%m//%Y"
 t_fmt   "%T"
 am_pm   "";""
 t_fmt_ampm ""
@@ -126,6 +141,7 @@ first_weekday 2
 END LC_TIME
 
 LC_NAME
-% FIXME
-copy "fr_FR"
+name_fmt    "%d%t%g%t%m%t%f"
+name_mr     "En"
+name_mrs    "Na"
 END LC_NAME

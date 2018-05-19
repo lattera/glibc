@@ -1,3 +1,23 @@
+2018-07-18  Quentin PAGÈS  <provaires@quentino.fr>
+
+	[BZ #23140]
+	* localedata/locales/oc_FR (mon): Rename to...
+	(alt_mon): This, then update October (typo fix).
+	(mon): New content (genitive case, month names preceded by
+	"de" or "d’").
+
+	[BZ #23422]
+	* localedata/locales/oc_FR (abday): Update all items.
+	(day): Update Wednesday and Saturday (typo fixes).
+	(abmon): Update all items, except May.
+	(d_fmt): Update "%d.%m.%Y" -> "%d/%m/%Y".
+	(LC_IDENTIFICATION): Bump the revision number and date.
+	Keep the "category" entries in alphabetic order.
+	(LC_ADDRESS): Remove no longer needed comment.
+	(LC_COLLATE): Use “copy "ca_ES"”.
+	(LC_NAME): Set the correct values of "name_fmt", "name_mr", and
+	"name_mrs".
+
 2018-07-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* grp/tst_fgetgrent.c: Include <unistd.h>.
