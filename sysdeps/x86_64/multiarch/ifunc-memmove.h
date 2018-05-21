@@ -41,7 +41,8 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, Prefer_ERMS))
+  if (CPU_FEATURES_ARCH_P (cpu_features, Prefer_ERMS)
+      || CPU_FEATURES_ARCH_P (cpu_features, Prefer_FSRM))
     return OPTIMIZE (erms);
 
   if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)

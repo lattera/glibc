@@ -1,5 +1,14 @@
 2018-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/cpu-features.h (bit_arch_Prefer_FSRM): New.
+	(index_arch_Prefer_FSRM): Likewise.
+	* sysdeps/x86/cpu-tunables.c (TUNABLE_CALLBACK (set_hwcaps)):
+	Also check Prefer_FSRM.
+	* sysdeps/x86_64/multiarch/ifunc-memmove.h (IFUNC_SELECTOR):
+	Also return OPTIMIZE (erms) for Prefer_FSRM.
+
+2018-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86/cpu-features.h (bit_cpu_FSRM): New.
 	(index_cpu_FSRM): Likewise.
 	(reg_FSRM): Likewise.

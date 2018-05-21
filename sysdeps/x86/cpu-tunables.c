@@ -241,6 +241,8 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	  CHECK_GLIBC_IFUNC_ARCH_NEED_CPU_BOTH (n, cpu_features,
 						Slow_SSE4_2, SSE4_2,
 						disable, 11);
+	  CHECK_GLIBC_IFUNC_ARCH_BOTH (n, cpu_features, Prefer_FSRM,
+				       disable, 11);
 	  break;
 	case 13:
 	  if (disable)
