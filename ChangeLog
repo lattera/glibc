@@ -1,3 +1,9 @@
+2018-05-21  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (bit_cpu_FSRM): New.
+	(index_cpu_FSRM): Likewise.
+	(reg_FSRM): Likewise.
+
 2018-05-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-tgmath-tests.py: Import sys.
