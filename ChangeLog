@@ -1,5 +1,14 @@
 2018-05-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/aarch64/Implies: Remove aarch64/soft-fp.
+	* sysdeps/aarch64/Makefile [$(subdir) = math] (CPPFLAGS): Add
+	-I../soft-fp.  Moved from ....
+	* sysdeps/aarch64/soft-fp/Makefile: ... here.  Remove file.
+	* sysdeps/aarch64/soft-fp/e_sqrtl.c: Move to ....
+	* sysdeps/aarch64/e_sqrtl.c: ... here.
+	* sysdeps/aarch64/soft-fp/sfp-machine.h: Move to ....
+	* sysdeps/aarch64/sfp-machine.h: ... here.
+
 	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2): Ignore
 	-Wmaybe-uninitialized around access to fq[0].
 	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):

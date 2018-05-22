@@ -12,3 +12,7 @@ endif
 ifeq ($(subdir),gmon)
 CFLAGS-mcount.c += -mgeneral-regs-only
 endif
+
+ifeq ($(subdir),math)
+CPPFLAGS += -I../soft-fp
+endif
