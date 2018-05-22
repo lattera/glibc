@@ -1,3 +1,19 @@
+2018-05-22  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/i386/Makefile [$(subdir) == math] (sysdep-CFLAGS): Do
+	not add -mpreferred-stack-boundary=4.
+	[$(subdir) == csu] (sysdep-CFLAGS): Likewise.
+	(stack-align-test-flags): Likewise.
+	[$(subdir) == stdlib] (CFLAGS-exit.c, CFLAGS-cxa_finalize.c):
+	Likewise.
+	[$(subdir) == elf] (CFLAGS-dl-init.c, CFLAGS-dl-fini.c)
+	(CFLAGS-dl-open.c, CFLAGS-dl-close.c, CFLAGS-dl-error.c): Likewise.
+	[$(subdir) == dlfcn] (CFLAGS-dlopen.c, CFLAGS-dlopenold.c)
+	(CFLAGS-dlclose.c, CFLAGS-dlerror.c): Likewise.
+	* sysdeps/i386/nptl/Makefile [$(subdir) == nptl]
+	(CFLAGS-pthread_create.c, CFLAGS-tst-align.c)
+	(CFLAGS-tst-align2.c): Likewise.
+
 2018-05-21  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.h (bit_arch_Prefer_FSRM): New.

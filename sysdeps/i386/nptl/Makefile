@@ -18,9 +18,3 @@
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
 endif
-
-ifeq ($(subdir),nptl)
-CFLAGS-pthread_create.c += -mpreferred-stack-boundary=4
-CFLAGS-tst-align.c += -mpreferred-stack-boundary=4
-CFLAGS-tst-align2.c += -mpreferred-stack-boundary=4
-endif
