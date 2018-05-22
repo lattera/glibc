@@ -1,5 +1,10 @@
 2018-05-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/ieee754/dbl-64/k_rem_pio2.c (__kernel_rem_pio2): Ignore
+	-Wmaybe-uninitialized around access to fq[0].
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c (__kernel_rem_pio2f):
+	Likewise.
+
 	[BZ #18471]
 	* sysdeps/unix/make-syscalls.sh (emit_weak_aliases): Use weak
 	aliases for non-libc case of versioned symbols.
