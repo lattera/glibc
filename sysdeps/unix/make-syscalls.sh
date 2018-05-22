@@ -103,7 +103,7 @@ emit_weak_aliases()
 	fi
 	echo "	 echo 'versioned_symbol (libc, $source, $base, $ver)'; \\"
 	echo "	 echo '#else'; \\"
-	echo "	 echo 'strong_alias ($strong, $base)'; \\"
+	echo "	 echo 'weak_alias ($strong, $base)'; \\"
 	echo "	 echo '#endif'; \\"
 	;;
       *@*)

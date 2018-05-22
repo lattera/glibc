@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <sysdep.h>
 #include <errno.h>
+#include <shlib-compat.h>
 
 off64_t
 __lseek64 (int fd, off64_t offset, int whence)
@@ -46,9 +47,7 @@ libc_hidden_def (__lseek)
 strong_alias (__lseek64, __libc_lseek64)
 weak_alias (__lseek64, lseek64)
 
-/* llseek doesn't have a prototype.  Since the second parameter is a
-   64bit type, this results in wrong behaviour if no prototype is
-   provided.  */
-weak_alias (__lseek64, llseek)
-link_warning (llseek, "\
-the `llseek' function may be dangerous; use `lseek64' instead.")
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_28)
+strong_alias (__lseek64, __compat_llseek)
+compat_symbol (libc, __compat_llseek, llseek, GLIBC_2_0);
+#endif
