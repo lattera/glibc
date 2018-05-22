@@ -336,6 +336,7 @@ L(preloop_large):
 	vmovups	(%rsi), %zmm4
 	vmovups	0x40(%rsi), %zmm5
 
+	mov	%rdi, %r11
 /* Align destination for access with non-temporal stores in the loop.  */
 	mov	%rdi, %r8
 	and	$-0x80, %rdi
@@ -366,8 +367,8 @@ L(gobble_256bytes_nt_loop):
 	cmp	$256, %rdx
 	ja	L(gobble_256bytes_nt_loop)
 	sfence
-	vmovups	%zmm4, (%rax)
-	vmovups	%zmm5, 0x40(%rax)
+	vmovups	%zmm4, (%r11)
+	vmovups	%zmm5, 0x40(%r11)
 	jmp	L(check)
 
 L(preloop_large_bkw):

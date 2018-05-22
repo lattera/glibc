@@ -18,6 +18,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define MEMCPY_RESULT(dst, len) (dst) + (len)
+#define MIN_PAGE_SIZE 131072
 #define TEST_MAIN
 #define TEST_NAME "mempcpy"
 #include "test-string.h"

@@ -1,3 +1,12 @@
+2018-05-23  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23196]
+	CVE-2018-11237
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S
+	(L(preloop_large)): Save initial destination pointer in %r11 and
+	use it instead of %rax after the loop.
+	* string/test-mempcpy.c (MIN_PAGE_SIZE): Define.
+
 2018-05-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/aarch64/Implies: Remove aarch64/soft-fp.
