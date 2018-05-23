@@ -46,7 +46,7 @@ extern char **__libc_argv attribute_hidden;
 
    The use of RTLD_NOW also impacts gconv module loading, backtracing
    (where the unwinder form libgcc_s.so is used), and IDNA functions
-   (which load libidn), all of which load their respective DSOs on
+   (which load libidn2), all of which load their respective DSOs on
    demand, and so should not impact program startup.  That is to say
    that the DSOs are loaded as part of an API call and therefore we
    will be calling that family of API functions shortly so RTLD_NOW or

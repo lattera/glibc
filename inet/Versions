@@ -88,5 +88,7 @@ libc {
 
     # Used from nscd.
     __inet6_scopeid_pton;
+    __idna_to_dns_encoding;
+    __idna_from_dns_encoding;
   }
 }

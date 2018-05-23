@@ -42,9 +42,6 @@
 /* Support code.  */
 #include <check_pf.c>
 #include <check_native.c>
-#ifdef HAVE_LIBIDN
-# include <libidn/idn-stub.c>
-#endif
 
 /* Some variables normally defined in libc.  */
 service_user *__nss_hosts_database attribute_hidden;

@@ -85,9 +85,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <scratch_buffer.h>
 #include <inet/net-internal.h>
 
-#ifdef HAVE_LIBIDN
-# include <idna.h>
-#endif
+/* Former AI_IDN_ALLOW_UNASSIGNED and AI_IDN_USE_STD3_ASCII_RULES
+   flags, now ignored.  */
+#define DEPRECATED_AI_IDN 0x300
 
 #if IS_IN (libc)
 # define feof_unlocked(fp) __feof_unlocked (fp)
@@ -478,35 +478,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
       at->scopeid = 0;
       at->next = NULL;
 
-#ifdef HAVE_LIBIDN
       if (req->ai_flags & AI_IDN)
 	{
-	  int idn_flags = 0;
-	  if (req->ai_flags & AI_IDN_ALLOW_UNASSIGNED)
-	    idn_flags |= IDNA_ALLOW_UNASSIGNED;
-	  if (req->ai_flags & AI_IDN_USE_STD3_ASCII_RULES)
-	    idn_flags |= IDNA_USE_STD3_ASCII_RULES;
-
-	  char *p = NULL;
-	  int rc = __idna_to_ascii_lz (name, &p, idn_flags);
-	  if (rc != IDNA_SUCCESS)
-	    {
-	      /* No need to jump to free_and_return here.  */
-	      if (rc == IDNA_MALLOC_ERROR)
-		return -EAI_MEMORY;
-	      if (rc == IDNA_DLOPEN_ERROR)
-		return -EAI_SYSTEM;
-	      return -EAI_IDN_ENCODE;
-	    }
-	  /* In case the output string is the same as the input string
-	     no new string has been allocated.  */
-	  if (p != name)
-	    {
-	      name = p;
-	      malloc_name = true;
-	    }
+	  char *out;
+	  result = __idna_to_dns_encoding (name, &out);
+	  if (result != 0)
+	    return -result;
+	  name = out;
+	  malloc_name = true;
 	}
-#endif
 
       if (__inet_aton (name, (struct in_addr *) at->addr) != 0)
 	{
@@ -1032,40 +1012,24 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		 the passed in string.  */
 	      canon = orig_name;
 
-#ifdef HAVE_LIBIDN
-	    if (req->ai_flags & AI_CANONIDN)
+	    bool do_idn = req->ai_flags & AI_CANONIDN;
+	    if (do_idn)
 	      {
-		int idn_flags = 0;
-		if (req->ai_flags & AI_IDN_ALLOW_UNASSIGNED)
-		  idn_flags |= IDNA_ALLOW_UNASSIGNED;
-		if (req->ai_flags & AI_IDN_USE_STD3_ASCII_RULES)
-		  idn_flags |= IDNA_USE_STD3_ASCII_RULES;
-
 		char *out;
-		int rc = __idna_to_unicode_lzlz (canon, &out, idn_flags);
-		if (rc != IDNA_SUCCESS)
+		int rc = __idna_from_dns_encoding (canon, &out);
+		if (rc == 0)
+		  canon = out;
+		else if (rc == EAI_IDN_ENCODE)
+		  /* Use the punycode name as a fallback.  */
+		  do_idn = false;
+		else
 		  {
-		    if (rc == IDNA_MALLOC_ERROR)
-		      result = -EAI_MEMORY;
-		    else if (rc == IDNA_DLOPEN_ERROR)
-		      result = -EAI_SYSTEM;
-		    else
-		      result = -EAI_IDN_ENCODE;
+		    result = -rc;
 		    goto free_and_return;
 		  }
-		/* In case the output string is the same as the input
-		   string no new string has been allocated and we
-		   make a copy.  */
-		if (out == canon)
-		  goto make_copy;
-		canon = out;
 	      }
-	    else
-#endif
+	    if (!do_idn)
 	      {
-#ifdef HAVE_LIBIDN
-	      make_copy:
-#endif
 		if (canonbuf != NULL)
 		  /* We already allocated the string using malloc, but
 		     the buffer is now owned by canon.  */
@@ -2226,10 +2190,7 @@ getaddrinfo (const char *name, const char *service,
 
   if (hints->ai_flags
       & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
-#ifdef HAVE_LIBIDN
-	  |AI_IDN|AI_CANONIDN|AI_IDN_ALLOW_UNASSIGNED
-	  |AI_IDN_USE_STD3_ASCII_RULES
-#endif
+	  |AI_IDN|AI_CANONIDN|DEPRECATED_AI_IDN
 	  |AI_NUMERICSERV|AI_ALL))
     return EAI_BADFLAGS;
 

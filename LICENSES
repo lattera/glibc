@@ -248,75 +248,6 @@ Public License, version 2.1 or later - see the file COPYING.LIB for details.
 If you did not receive a copy of the license with this program, please
 see <http://www.gnu.org/licenses/> to obtain a copy.
 
-The libidn code is copyright Simon Josefsson, with portions copyright
-The Internet Society, Tom Tromey and Red Hat, Inc.:
-
-Copyright (C) 2002, 2003, 2004, 2011  Simon Josefsson
-
-This file is part of GNU Libidn.
-
-GNU Libidn is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-GNU Libidn is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with GNU Libidn; if not, see <http://www.gnu.org/licenses/>.
-
-The following notice applies to portions of libidn/nfkc.c:
-
-This file contains functions from GLIB, including gutf8.c and
-gunidecomp.c, all licensed under LGPL and copyright hold by:
-
-Copyright (C) 1999, 2000 Tom Tromey
-Copyright 2000 Red Hat, Inc.
-
-The following applies to portions of libidn/punycode.c and
-libidn/punycode.h:
-
-This file is derived from RFC 3492bis written by Adam M. Costello.
-
-Disclaimer and license: Regarding this entire document or any
-portion of it (including the pseudocode and C code), the author
-makes no guarantees and is not responsible for any damage resulting
-from its use.  The author grants irrevocable permission to anyone
-to use, modify, and distribute it in any way that does not diminish
-the rights of anyone else to use, modify, and distribute it,
-provided that redistributed derivative works do not contain
-misleading author or version information.  Derivative works need
-not be licensed under similar terms.
-
-Copyright (C) The Internet Society (2003).  All Rights Reserved.
-
-This document and translations of it may be copied and furnished to
-others, and derivative works that comment on or otherwise explain it
-or assist in its implementation may be prepared, copied, published
-and distributed, in whole or in part, without restriction of any
-kind, provided that the above copyright notice and this paragraph are
-included on all such copies and derivative works.  However, this
-document itself may not be modified in any way, such as by removing
-the copyright notice or references to the Internet Society or other
-Internet organizations, except as needed for the purpose of
-developing Internet standards in which case the procedures for
-copyrights defined in the Internet Standards process must be
-followed, or as required to translate it into languages other than
-English.
-
-The limited permissions granted above are perpetual and will not be
-revoked by the Internet Society or its successors or assigns.
-
-This document and the information contained herein is provided on an
-"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
-TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
-HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
-MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
-
 The file inet/rcmd.c is under a UCB copyright and the following:
 
 Copyright (C) 1998 WIDE Project.

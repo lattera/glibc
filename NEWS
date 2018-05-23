@@ -31,6 +31,16 @@ Major new features:
 * Building and running on GNU/Hurd systems now works without out-of-tree
   patches.
 
+* IDN domain names in getaddrinfo and getnameinfo now use the system libidn2
+  library if installed.  libidn2 version 2.0.5 or later is recommended.  If
+  libidn2 is not available, internationalized domain names are not encoded
+  or decoded even if the AI_IDN or NI_IDN flags are passed to getaddrinfo or
+  getnameinfo.  (getaddrinfo calls with non-ASCII names and AI_IDN will fail
+  with an encoding error.)  Flags which used to change the IDN encoding and
+  decoding behavior (AI_IDN_ALLOW_UNASSIGNED, AI_IDN_USE_STD3_ASCII_RULES,
+  NI_IDN_ALLOW_UNASSIGNED, NI_IDN_USE_STD3_ASCII_RULES) have been
+  deprecated.  They no longer have any effect.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The nonstandard header files <libio.h> and <_G_config.h> are no longer
@@ -79,13 +89,25 @@ Deprecated and removed features, and other changes affecting compatibility:
   and was not declared in a header.  Programs should use the lseek64 name
   for this function instead.
 
+* The AI_IDN_ALLOW_UNASSIGNED and NI_IDN_ALLOW_UNASSIGNED flags for the
+  getaddrinfo and getnameinfo functions have been deprecated.  The behavior
+  previously selected by them is now always enabled.
+
+* The AI_IDN_USE_STD3_ASCII_RULES and NI_IDN_USE_STD3_ASCII_RULES flags for
+  the getaddrinfo and getnameinfo functions have been deprecated.  The STD3
+  restriction (rejecting '_' in host names, among other things) has been
+  removed, for increased compatibility with non-IDN name resolution.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2016-6261, CVE-2016-6263, CVE-2017-14062: Various vulnerabilities have
+  been fixed by removing the glibc-internal IDNA implementation and using
+  the system-provided libidn2 library instead.  Originally reported by Hanno
+  Böck and Christian Weisgerber.
 
 The following bugs are resolved with this release:
 

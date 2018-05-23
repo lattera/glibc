@@ -124,9 +124,6 @@
 /* Mach/i386 specific: define if the `i386_set_gdt' RPC is available.  */
 #undef	HAVE_I386_SET_GDT
 
-/* Defined of libidn is available.  */
-#undef HAVE_LIBIDN
-
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
 

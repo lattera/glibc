@@ -60,6 +60,9 @@ tests += \
 # These tests need libdl.
 ifeq (yes,$(build-shared))
 tests += \
+  tst-resolv-ai_idn \
+  tst-resolv-ai_idn-latin1 \
+  tst-resolv-ai_idn-nolibidn2 \
   tst-resolv-canonname \
 
 # uses DEPRECATED_RES_USE_INET6 from <resolv-internal.h>.
@@ -72,7 +75,13 @@ tests-internal += \
   tst-resolv-res_ninit \
   tst-resolv-threads \
 
-endif
+# Used by tst-resolv-ai_idn-nolibidn2 to disable libidn2 (by not
+# providing any functions in libidn2.so.0).
+modules-names += tst-no-libidn2
+extra-test-objs += tst-no-libidn2.os
+LDFLAGS-tst-no-libidn2.so = -Wl,-soname,libidn2.so.0
+
+endif # $(build-shared)
 
 # This test accesses __inet_ntop_length, an internal libc function.
 tests-internal += tst-inet_pton
@@ -128,6 +137,9 @@ generated += mtrace-tst-leaks.out tst-leaks.mtrace \
 
 include ../Rules
 
+LOCALES := en_US.UTF-8 en_US.ISO-8859-1
+include ../gen-locales.mk
+
 CFLAGS-res_hconf.c += -fexceptions
 
 # The DNS NSS modules needs the resolver.
@@ -159,6 +171,16 @@ $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-res_use_inet6: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-ai_idn: \
+  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-ai_idn-latin1: \
+  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-ai_idn-nolibidn2: \
+  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-ai_idn.out: $(gen-locales)
+$(objpfx)tst-resolv-ai_idn-latin1.out: $(gen-locales)
+$(objpfx)tst-resolv-ai_idn-nolibidn2.out: \
+  $(gen-locales) $(objpfx)tst-no-libidn2.so
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-binary: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)

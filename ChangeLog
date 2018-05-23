@@ -1,5 +1,69 @@
 2018-05-23  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #19728]
+	[BZ #19729]
+	[BZ #22247]
+	CVE-2016-6261
+	CVE-2016-6263
+	CVE-2017-14062
+	Switch to extern IDNA implementation (libidn2).
+	* libidn: Remove subdirectory.
+	* LICENSES: Do not mention licensing conditions for the removed
+	libidn code.
+	* config.h.in (HAVE_LIBIDN): Remove.
+	* include/dlfcn.h (__libc_dlopen): Update comment.
+	* include/idna.h: Remove file.
+	* inet/Makefile (routines): Add idna.
+	(tests-static, tests-internal): Add tst-idna_name_classify.
+	(LOCALES): Generate locales for tests.
+	(tst-idna_name_classify.out): Depend on generated locales.
+	* inet/idna_name_classify.c: New file.
+	* inet/tst-idna_name_classify.c: Likewise.
+	* inet/net-internal.h (__idna_to_dns_encoding)
+	(__idna_from_dns_encoding): Declare.
+	* inet/net-internal.h (enum idna_name_classification): Define.
+	(__idna_name_classify): Declare.
+	* inet/Versions (GLIBC_PRIVATE): Add __idna_to_dns_encoding,
+	__idna_from_dns_encoding.
+	* inet/getnameinfo.c (DEPRECATED_NI_IDN): Define.
+	(gni_host_inet_name): Call __idna_from_dns_encoding.  Use punycode
+	name as a fallback in case of encoding errors.
+	(getnameinfo): Use DEPRECATED_NI_IDN.
+	* inet/idna.c: New file.
+	* nscd/gai.c: Do not include <libidn/idn-stub.c>.
+	* resolv/Makefile (tests): Add tst-resolv-ai_idn,
+	tst-resolv-ai_idn-latin1, tst-resolv-ai_idn-nolibidn2.
+	(modules-names): Add tst-no-libidn2.
+	(extra-test-objs): Add tst-no-libidn2.os.
+	(LDFLAGS-tst-no-libidn2.so): Set soname.
+	(LOCALES): Set, and generate locales.
+	(tst-resolv-ai_idn): Link with -ldl -lresolv -lpthread.
+	(tst-resolv-ai_idn-latin1): Likewise.
+	(tst-resolv-ai_idn-nolibidn2): Likewise.
+	(tst-resolv-ai_idn.out): Depend on locales.
+	(tst-resolv-ai_idn-latin1.out): Depend on locales.
+	(tst-resolv-ai_idn-nolibidn2.out): Depend on locales and
+	tst-no-libidn2.so.
+	* resolv/netdb.h (AI_IDN_ALLOW_UNASSIGNED)
+	(AI_IDN_USE_STD3_ASCII_RULES, NI_IDN_ALLOW_UNASSIGNED)
+	(NI_IDN_USE_STD3_ASCII_RULES): Deprecate.
+	* resolv/tst-resolv-ai_idn.c: New file.
+	* resolv/tst-resolv-ai_idn-latin1.c: Likewise.
+	* resolv/tst-resolv-ai_idn-nolibidn2.c: Likewise.
+	* resolv/tst-no-libidn2.c: Likewise.
+	* support/support_format_addrinfo.c (format_ai_flags): Do not
+	handle AI_IDN_ALLOW_UNASSIGNED, AI_IDN_USE_STD3_ASCII_RULES.
+	* sysdeps/posix/getaddrinfo.c (DEPRECATED_AI_IDN): Define.
+	(gaih_inet): Call __idna_to_dns_encoding and
+	__idna_from_dns_encoding, and use the original (punycode) name if
+	__idna_from_dns_encoding fails due to an encoding error.
+	(getaddrinfo): Use DEPRECATED_AI_IDN.
+	* sysdeps/unix/inet/Subdirs (libidn): Remove.
+	* sysdeps/unix/inet/configure: Remove file.
+	* sysdeps/unix/inet/configure.ac: Likewise.
+
+2018-05-23  Florian Weimer  <fweimer@redhat.com>
+
 	Implement allocate_once.
 	* include/allocate_once.h: New file.
 	* misc/allocate_once.c: Likewise.

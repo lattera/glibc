@@ -29,6 +29,33 @@ int __inet6_scopeid_pton (const struct in6_addr *address,
 libc_hidden_proto (__inet6_scopeid_pton)
 
 
+/* IDNA conversion.  These functions convert domain names between the
+   current multi-byte character set and the IDNA encoding.  On
+   success, the result string is written to *RESULT (which the caller
+   has to free), and zero is returned.  On error, an EAI_* error code
+   is returned (see <netdb.h>), and *RESULT is not changed.  */
+int __idna_to_dns_encoding (const char *name, char **result);
+libc_hidden_proto (__idna_to_dns_encoding)
+int __idna_from_dns_encoding (const char *name, char **result);
+libc_hidden_proto (__idna_from_dns_encoding)
+
+
+/* Return value of __idna_name_classify below.  */
+enum idna_name_classification
+{
+  idna_name_ascii,          /* No non-ASCII characters.  */
+  idna_name_nonascii,       /* Non-ASCII characters, no backslash.  */
+  idna_name_nonascii_backslash, /* Non-ASCII characters with backslash.  */
+  idna_name_encoding_error, /* Decoding error.  */
+  idna_name_memory_error,   /* Memory allocation failure.  */
+  idna_name_error,          /* Other error during decoding.  Check errno.  */
+};
+
+/* Check the specified name for non-ASCII characters and backslashes
+   or encoding errors.  */
+enum idna_name_classification __idna_name_classify (const char *name)
+  attribute_hidden;
+
 /* Deadline handling for enforcing timeouts.
 
    Code should call __deadline_current_time to obtain the current time
