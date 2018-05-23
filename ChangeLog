@@ -1,3 +1,11 @@
+2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+	(__mempcpy_erms): Skip zero length.
+	(__memmove_erms): Likewise.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+	(__memset_erms): Likewise.
+
 2018-05-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/alpha/Implies: Remove alpha/soft-fp.

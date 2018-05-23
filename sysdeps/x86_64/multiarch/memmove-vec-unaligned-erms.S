@@ -156,6 +156,9 @@ END (__mempcpy_chk_erms)
 /* Only used to measure performance of REP MOVSB.  */
 ENTRY (__mempcpy_erms)
 	movq	%rdi, %rax
+	/* Skip zero length.  */
+	testq	%rdx, %rdx
+	jz	2f
 	addq	%rdx, %rax
 	jmp	L(start_movsb)
 END (__mempcpy_erms)
@@ -167,6 +170,9 @@ END (__memmove_chk_erms)
 
 ENTRY (__memmove_erms)
 	movq	%rdi, %rax
+	/* Skip zero length.  */
+	testq	%rdx, %rdx
+	jz	2f
 L(start_movsb):
 	movq	%rdx, %rcx
 	cmpq	%rsi, %rdi
