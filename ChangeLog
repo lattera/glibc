@@ -1,3 +1,9 @@
+2018-05-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/sh/Implies: Remove sh/soft-fp.
+	* sysdeps/sh/soft-fp/sfp-machine.h: Move to ....
+	* sysdeps/sh/sfp-machine.h: ... here.
+
 2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
