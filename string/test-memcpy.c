@@ -212,6 +212,50 @@ do_random_tests (void)
     }
 }
 
+static void
+do_test1 (void)
+{
+  size_t size = 0x100000;
+  void *large_buf;
+
+  large_buf = mmap (NULL, size * 2 + page_size, PROT_READ | PROT_WRITE,
+		    MAP_PRIVATE | MAP_ANON, -1, 0);
+  if (large_buf == MAP_FAILED)
+    {
+      puts ("Failed to allocat large_buf, skipping do_test1");
+      return;
+    }
+
+  if (mprotect (large_buf + size, page_size, PROT_NONE))
+    error (EXIT_FAILURE, errno, "mprotect failed");
+
+  size_t arrary_size = size / sizeof (uint32_t);
+  uint32_t *dest = large_buf;
+  uint32_t *src = large_buf + size + page_size;
+  size_t i;
+
+  for (i = 0; i < arrary_size; i++)
+    src[i] = (uint32_t) i;
+
+  FOR_EACH_IMPL (impl, 0)
+    {
+      memset (dest, -1, size);
+      CALL (impl, (char *) dest, (char *) src, size);
+      for (i = 0; i < arrary_size; i++)
+	if (dest[i] != src[i])
+	  {
+	    error (0, 0,
+		   "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
+		   impl->name, dest, src, i);
+	    ret = 1;
+	    break;
+	  }
+    }
+
+  munmap ((void *) dest, size);
+  munmap ((void *) src, size);
+}
+
 int
 test_main (void)
 {
@@ -253,6 +297,9 @@ test_main (void)
   do_test (0, 0, getpagesize ());
 
   do_random_tests ();
+
+  do_test1 ();
+
   return ret;
 }
 

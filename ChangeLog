@@ -1,3 +1,9 @@
+2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23196]
+	* string/test-memcpy.c (do_test1): New function.
+	(test_main): Call it.
+
 2018-05-23  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23196]
