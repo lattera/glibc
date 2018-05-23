@@ -165,5 +165,6 @@ libc {
     __tdelete; __tfind; __tsearch; __twalk;
     __mmap; __munmap; __mprotect;
     __sched_get_priority_min; __sched_get_priority_max;
+    __libc_allocate_once_slow;
   }
 }

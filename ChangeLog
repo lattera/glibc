@@ -1,3 +1,18 @@
+2018-05-23  Florian Weimer  <fweimer@redhat.com>
+
+	Implement allocate_once.
+	* include/allocate_once.h: New file.
+	* misc/allocate_once.c: Likewise.
+	* misc/tst-allocate_once.c: Likewise.
+	* misc/Makefile (routines): Add allocate_once.
+	(tests-internal): Add tst-allocate_once.
+	(generated): Add tst-allocate_once.mtrace,
+	tst-allocate_once-mem.out.
+	(tests-special): Add tst-allocate_once-mem.out.
+	(tst-allocate_once-ENV): Set MALLOC_TRACE.
+	(tst-allocate_once-mem.out): Call mtrace.
+	* misc/Versions (GLIBC_PRIVATE): Add __libc_allocate_once_slow.
+
 2018-05-23  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23196]

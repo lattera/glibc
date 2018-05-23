@@ -70,9 +70,11 @@ routines := brk sbrk sstk ioctl \
 	    getloadavg getclktck \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
-	    removexattr setxattr getauxval ifunc-impl-list makedev
+	    removexattr setxattr getauxval ifunc-impl-list makedev \
+	    allocate_once
 
-generated += tst-error1.mtrace tst-error1-mem.out
+generated += tst-error1.mtrace tst-error1-mem.out \
+  tst-allocate_once.mtrace tst-allocate_once-mem.out
 
 aux := init-misc
 install-lib := libg.a
@@ -84,11 +86,12 @@ tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
 	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
 	 tst-preadvwritev2 tst-preadvwritev64v2
 
-tests-internal := tst-atomic tst-atomic-long
+tests-internal := tst-atomic tst-atomic-long tst-allocate_once
 tests-static := tst-empty
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)tst-error1-mem.out
+tests-special += $(objpfx)tst-error1-mem.out \
+  $(objpfx)tst-allocate_once-mem.out
 endif
 
 CFLAGS-select.c += -fexceptions -fasynchronous-unwind-tables
@@ -136,4 +139,9 @@ tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace
 tst-error1-ARGS = $(objpfx)tst-error1.out
 $(objpfx)tst-error1-mem.out: $(objpfx)tst-error1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-error1.mtrace > $@; \
+	$(evaluate-test)
+
+tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace
+$(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
