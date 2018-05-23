@@ -79,7 +79,7 @@ def draw_graph(f, v, ifuncs, results):
     pylab.savefig('%s-%s.png' % (f, v), bbox_inches='tight')
 
 
-def process_results(results, attrs, base_func, graph):
+def process_results(results, attrs, base_func, graph, no_diff, no_header):
     """ Process results and print them
 
     Args:
@@ -88,16 +88,19 @@ def process_results(results, attrs, base_func, graph):
     """
 
     for f in results['functions'].keys():
-        print('Function: %s' % f)
+
         v = results['functions'][f]['bench-variant']
-        print('Variant: %s' % v)
 
         base_index = 0
         if base_func:
             base_index = results['functions'][f]['ifuncs'].index(base_func)
 
-        print("%36s%s" % (' ', '\t'.join(results['functions'][f]['ifuncs'])))
-        print("=" * 120)
+        if not no_header:
+            print('Function: %s' % f)
+            print('Variant: %s' % v)
+            print("%36s%s" % (' ', '\t'.join(results['functions'][f]['ifuncs'])))
+            print("=" * 120)
+
         graph_res = {}
         for res in results['functions'][f]['results']:
             attr_list = ['%s=%s' % (a, res[a]) for a in attrs]
@@ -107,10 +110,11 @@ def process_results(results, attrs, base_func, graph):
             graph_res[key] = res['timings']
             for t in res['timings']:
                 sys.stdout.write ('%12.2f' % t)
-                if i != base_index:
-                    base = res['timings'][base_index]
-                    diff = (base - t) * 100 / base
-                    sys.stdout.write (' (%6.2f%%)' % diff)
+                if not no_diff:
+                    if i != base_index:
+                        base = res['timings'][base_index]
+                        diff = (base - t) * 100 / base
+                        sys.stdout.write (' (%6.2f%%)' % diff)
                 sys.stdout.write('\t')
                 i = i + 1
             print('')
@@ -132,7 +136,7 @@ def main(args):
     attrs = args.attributes.split(',')
 
     results = parse_file(args.input, args.schema)
-    process_results(results, attrs, base_func, args.graph)
+    process_results(results, attrs, base_func, args.graph, args.no_diff, args.no_header)
 
 
 if __name__ == '__main__':
@@ -152,6 +156,10 @@ if __name__ == '__main__':
                         help='IFUNC variant to set as baseline.')
     parser.add_argument('-g', '--graph', action='store_true',
                         help='Generate a graph from results.')
+    parser.add_argument('--no-diff', action='store_true',
+                        help='Do not print the difference from baseline.')
+    parser.add_argument('--no-header', action='store_true',
+                        help='Do not print the header.')
 
     args = parser.parse_args()
     main(args)

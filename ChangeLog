@@ -1,4 +1,10 @@
 2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* benchtests/scripts/compare_string.py: Add --no-diff and --no-header
+	options to avoid diff calculation and omit header, respectively.
+	(main): process --no-diff and --no-header
+
+2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86_64/multiarch/Makefile (sysdep_routines): Add
