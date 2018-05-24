@@ -817,6 +817,7 @@
 2018-05-09  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	[BZ #22786]
+	CVE-2018-11236
 	* stdlib/canonicalize.c (__realpath): Fix overflow in path length
 	computation.
 	* stdlib/Makefile (test-bz22786): New test.
@@ -2676,6 +2677,7 @@
 	    Max Horn  <max@quendi.de>
 
 	[BZ #22644]
+	CVE-2017-18269
 	* sysdeps/i386/i686/multiarch/memcpy-sse2-unaligned.S: Fixed
 	branch conditions.
 	* string/test-memmove.c (do_test2): New testcase.
