@@ -1,3 +1,12 @@
+2018-05-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/Implies: Remove
+	powerpc/soft-fp.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/e500/nofpu/Implies:
+	Likewise.
+	* sysdeps/powerpc/soft-fp/sfp-machine.h: Move to ....
+	* sysdeps/powerpc/nofpu/sfp-machine.h: ... here.
+
 2018-05-24  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	[BZ #23171]
