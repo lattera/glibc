@@ -1,3 +1,11 @@
+2018-05-24  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/powerpc/Implies: Removed.  Previous contents copied to...
+	* sysdeps/powerpc/powerpc32/Implies-after: ... here.
+	* sysdeps/powerpc/powerpc64/be/Implies-after: ... here.
+	* sysdeps/powerpc/powerpc64/le/Implies-before: ... and here.
+
 2018-05-24  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/Implies: Remove
