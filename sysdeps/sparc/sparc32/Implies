@@ -3,4 +3,3 @@ wordsize-32
 ieee754/ldbl-128
 ieee754/dbl-64
 ieee754/flt-32
-sparc/sparc32/soft-fp
