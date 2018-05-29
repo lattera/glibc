@@ -41,6 +41,9 @@ void xpthread_check_return (const char *function, int value);
 void xpthread_barrier_init (pthread_barrier_t *barrier,
                             pthread_barrierattr_t *attr, unsigned int count);
 void xpthread_barrier_destroy (pthread_barrier_t *barrier);
+void xpthread_barrierattr_destroy (pthread_barrierattr_t *);
+void xpthread_barrierattr_init (pthread_barrierattr_t *);
+void xpthread_barrierattr_setpshared (pthread_barrierattr_t *, int pshared);
 void xpthread_mutexattr_destroy (pthread_mutexattr_t *);
 void xpthread_mutexattr_init (pthread_mutexattr_t *);
 void xpthread_mutexattr_setprotocol (pthread_mutexattr_t *, int);

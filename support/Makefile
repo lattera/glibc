@@ -98,6 +98,9 @@ libsupport-routines = \
   xpthread_barrier_destroy \
   xpthread_barrier_init \
   xpthread_barrier_wait \
+  xpthread_barrierattr_destroy \
+  xpthread_barrierattr_init \
+  xpthread_barrierattr_setpshared \
   xpthread_cancel \
   xpthread_check_return \
   xpthread_cond_wait \

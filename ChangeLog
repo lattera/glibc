@@ -1,3 +1,12 @@
+2018-05-29  Florian Weimer  <fweimer@redhat.com>
+
+	* support/Makefile (libsupport-routines): Add
+	xpthread_barrierattr_destroy, xpthread_barrierattr_init,
+	xpthread_barrierattr_setpshared.
+	* support/xpthread_barrierattr_destroy.c: New file.
+	* support/xpthread_barrierattr_init.c: Likewise.
+	* support/xpthread_barrierattr_setpshared.c: Likewise.
+
 2018-05-29  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23206]
