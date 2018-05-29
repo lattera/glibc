@@ -1,3 +1,9 @@
+2018-05-29  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23206]
+	* elf/dl-reloc-static-pie.c (_dl_relocate_static_pie): Initialize
+	_r_debug and update DT_DEBUG for debugger.
+
 2018-05-29  Florian Weimer  <fweimer@redhat.com>
 
 	* stdlib/Makefile (tst-strtod1i.out): Depend on generated locales.
