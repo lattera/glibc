@@ -38,13 +38,16 @@ except ImportError:
 
 
 def parse_file(filename, schema_filename):
-    with open(schema_filename, 'r') as schemafile:
-        schema = json.load(schemafile)
-        with open(filename, 'r') as benchfile:
-            bench = json.load(benchfile)
-            validator.validate(bench, schema)
-            return bench
-
+    try:
+        with open(schema_filename, 'r') as schemafile:
+            schema = json.load(schemafile)
+            with open(filename, 'r') as benchfile:
+                bench = json.load(benchfile)
+                validator.validate(bench, schema)
+        return bench
+    except FileNotFoundError:
+        sys.stderr.write('Invalid input file %s.\n' % filename)
+        sys.exit(os.EX_NOINPUT)
 
 def draw_graph(f, v, ifuncs, results):
     """Plot graphs for functions
@@ -93,7 +96,12 @@ def process_results(results, attrs, base_func, graph, no_diff, no_header):
 
         base_index = 0
         if base_func:
-            base_index = results['functions'][f]['ifuncs'].index(base_func)
+            try:
+                base_index = results['functions'][f]['ifuncs'].index(base_func)
+            except ValueError:
+                sys.stderr.write('Invalid -b "%s" parameter. Options: %s.\n' %
+                                 (base_func, ', '.join(results['functions'][f]['ifuncs'])))
+                sys.exit(os.EX_DATAERR)
 
         if not no_header:
             print('Function: %s' % f)
@@ -103,7 +111,12 @@ def process_results(results, attrs, base_func, graph, no_diff, no_header):
 
         graph_res = {}
         for res in results['functions'][f]['results']:
-            attr_list = ['%s=%s' % (a, res[a]) for a in attrs]
+            try:
+                attr_list = ['%s=%s' % (a, res[a]) for a in attrs]
+            except KeyError as ke:
+                sys.stderr.write('Invalid -a %s parameter. Options: %s.\n'
+                                 % (ke, ', '.join([a for a in res.keys() if a != 'timings'])))
+                sys.exit(os.EX_DATAERR)
             i = 0
             key = ', '.join(attr_list)
             sys.stdout.write('%36s: ' % key)
@@ -137,6 +150,7 @@ def main(args):
 
     results = parse_file(args.input, args.schema)
     process_results(results, attrs, base_func, args.graph, args.no_diff, args.no_header)
+    return os.EX_OK
 
 
 if __name__ == '__main__':
@@ -162,4 +176,4 @@ if __name__ == '__main__':
                         help='Do not print the header.')
 
     args = parser.parse_args()
-    main(args)
+    sys.exit(main(args))

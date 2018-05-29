@@ -1,5 +1,12 @@
 2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
+	* benchtests/scripts/compare_string.py:	(process_results) Catch
+	exception in non-existent base_func and catch exception in
+	non-existent attribute.
+	(parse_file) Catch exception if input file does not exist.
+
+2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
 	* benchtests/scripts/compare_string.py: Add --no-diff and --no-header
 	options to avoid diff calculation and omit header, respectively.
 	(main): process --no-diff and --no-header
