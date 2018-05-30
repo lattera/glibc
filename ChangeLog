@@ -1,3 +1,13 @@
+2018-05-30  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/Makefile: New file to
+	add w_sqrtf128-power9 and w_sqrtf128-ppc64le to libm-sysdep_routines.
+	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/w_sqrtf128-power9.c:
+	New file.
+	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/w_sqrtf128-ppc64le.c:
+	Likewise.
+	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/w_sqrtf128.c: Likewise.
+
 2018-05-29  Florian Weimer  <fweimer@redhat.com>
 
 	* support/Makefile (libsupport-routines): Add
