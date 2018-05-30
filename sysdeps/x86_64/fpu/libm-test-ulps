@@ -2467,7 +2467,7 @@ double: 1
 float: 3
 
 Function: "log_vlen8_avx2":
-float: 2
+float: 3
 
 Function: "pow":
 double: 1

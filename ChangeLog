@@ -1,3 +1,8 @@
+2018-05-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps (log_vlen8_avx2): Update for
+	AMD Ryzen 7 1800X.
+
 2018-05-30  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/le/fpu/multiarch/Makefile: New file to
