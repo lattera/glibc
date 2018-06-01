@@ -63,7 +63,7 @@ _IO_wstr_init_static (FILE *fp, wchar_t *ptr, size_t size,
       fp->_wide_data->_IO_read_end = end;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
-  (((_IO_strfile *) fp)->_s._allocate_buffer) = (_IO_alloc_type)0;
+  (((_IO_strfile *) fp)->_s._allocate_buffer_unused) = (_IO_alloc_type)0;
 }
 
 wint_t
@@ -95,9 +95,7 @@ _IO_wstr_overflow (FILE *fp, wint_t c)
 	      || __glibc_unlikely (new_size > SIZE_MAX / sizeof (wchar_t)))
 	    return EOF;
 
-	  new_buf
-	    = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (new_size
-									* sizeof (wchar_t));
+	  new_buf = malloc (new_size * sizeof (wchar_t));
 	  if (new_buf == NULL)
 	    {
 	      /*	  __ferror(fp) = 1; */
@@ -106,7 +104,7 @@ _IO_wstr_overflow (FILE *fp, wint_t c)
 	  if (old_buf)
 	    {
 	      __wmemcpy (new_buf, old_buf, old_wblen);
-	      (*((_IO_strfile *) fp)->_s._free_buffer) (old_buf);
+	      free (old_buf);
 	      /* Make sure _IO_setb won't try to delete _IO_buf_base. */
 	      fp->_wide_data->_IO_buf_base = NULL;
 	    }
@@ -186,16 +184,14 @@ enlarge_userbuf (FILE *fp, off64_t offset, int reading)
     return 1;
 
   wchar_t *oldbuf = wd->_IO_buf_base;
-  wchar_t *newbuf
-    = (wchar_t *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize
-								* sizeof (wchar_t));
+  wchar_t *newbuf = malloc (newsize * sizeof (wchar_t));
   if (newbuf == NULL)
     return 1;
 
   if (oldbuf != NULL)
     {
       __wmemcpy (newbuf, oldbuf, _IO_wblen (fp));
-      (*((_IO_strfile *) fp)->_s._free_buffer) (oldbuf);
+      free (oldbuf);
       /* Make sure _IO_setb won't try to delete
 	 _IO_buf_base. */
       wd->_IO_buf_base = NULL;
@@ -357,7 +353,7 @@ void
 _IO_wstr_finish (FILE *fp, int dummy)
 {
   if (fp->_wide_data->_IO_buf_base && !(fp->_flags2 & _IO_FLAGS2_USER_WBUF))
-    (((_IO_strfile *) fp)->_s._free_buffer) (fp->_wide_data->_IO_buf_base);
+    free (fp->_wide_data->_IO_buf_base);
   fp->_wide_data->_IO_buf_base = NULL;
 
   _IO_wdefault_finish (fp, 0);

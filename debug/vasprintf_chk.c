@@ -55,8 +55,8 @@ __vasprintf_chk (char **result_ptr, int flags, const char *format,
   _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
   _IO_str_init_static_internal (&sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;
-  sf._s._allocate_buffer = (_IO_alloc_type) malloc;
-  sf._s._free_buffer = (_IO_free_type) free;
+  sf._s._allocate_buffer_unused = (_IO_alloc_type) malloc;
+  sf._s._free_buffer_unused = (_IO_free_type) free;
 
   /* For flags > 0 (i.e. __USE_FORTIFY_LEVEL > 1) request that %n
      can only come from read-only format strings.  */

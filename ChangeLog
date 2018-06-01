@@ -1,3 +1,27 @@
+2018-06-01  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23236]
+	* libio/strfile.h (struct _IO_str_fields): Rename members to
+	discourage their use and add comment.
+	(_IO_STR_DYNAMIC): Remove unused macro.
+	* libio/strops.c (_IO_str_init_static_internal): Do not use
+	callback pointers.  Call malloc and free.
+	(_IO_str_overflow): Do not use callback pointers.  Call malloc
+	and free.
+	(enlarge_userbuf): Likewise.
+	(_IO_str_finish): Call free.
+	* libio/wstrops.c (_IO_wstr_init_static): Initialize
+	_allocate_buffer_unused.
+	(_IO_wstr_overflow): Do not use callback pointers.  Call malloc
+	and free.
+	(enlarge_userbuf): Likewise.
+	(_IO_wstr_finish): Call free.
+	* debug/vasprintf_chk.c (__vasprintf_chk): Initialize
+	_allocate_buffer_unused, _free_buffer_unused.
+	* libio/memstream.c (__open_memstream): Likewise.
+	* libio/vasprintf.c (_IO_vasprintf): Likewise.
+	* libio/wmemstream.c (open_wmemstream): Likewise.
+
 2018-05-30  Paul Pluzhnikov  <ppluzhnikov@google.com>
 
 	* sysdeps/x86_64/fpu/libm-test-ulps (log_vlen8_avx2): Update for

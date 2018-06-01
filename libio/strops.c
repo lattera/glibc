@@ -61,7 +61,7 @@ _IO_str_init_static_internal (_IO_strfile *sf, char *ptr, size_t size,
       fp->_IO_read_end = end;
     }
   /* A null _allocate_buffer function flags the strfile as being static. */
-  sf->_s._allocate_buffer = (_IO_alloc_type) 0;
+  sf->_s._allocate_buffer_unused = (_IO_alloc_type) 0;
 }
 
 void
@@ -103,8 +103,7 @@ _IO_str_overflow (FILE *fp, int c)
 	  size_t new_size = 2 * old_blen + 100;
 	  if (new_size < old_blen)
 	    return EOF;
-	  new_buf
-	    = (char *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (new_size);
+	  new_buf = malloc (new_size);
 	  if (new_buf == NULL)
 	    {
 	      /*	  __ferror(fp) = 1; */
@@ -113,7 +112,7 @@ _IO_str_overflow (FILE *fp, int c)
 	  if (old_buf)
 	    {
 	      memcpy (new_buf, old_buf, old_blen);
-	      (*((_IO_strfile *) fp)->_s._free_buffer) (old_buf);
+	      free (old_buf);
 	      /* Make sure _IO_setb won't try to delete _IO_buf_base. */
 	      fp->_IO_buf_base = NULL;
 	    }
@@ -182,15 +181,14 @@ enlarge_userbuf (FILE *fp, off64_t offset, int reading)
 
   size_t newsize = offset + 100;
   char *oldbuf = fp->_IO_buf_base;
-  char *newbuf
-    = (char *) (*((_IO_strfile *) fp)->_s._allocate_buffer) (newsize);
+  char *newbuf = malloc (newsize);
   if (newbuf == NULL)
     return 1;
 
   if (oldbuf != NULL)
     {
       memcpy (newbuf, oldbuf, _IO_blen (fp));
-      (*((_IO_strfile *) fp)->_s._free_buffer) (oldbuf);
+      free (oldbuf);
       /* Make sure _IO_setb won't try to delete
 	 _IO_buf_base. */
       fp->_IO_buf_base = NULL;
@@ -346,7 +344,7 @@ void
 _IO_str_finish (FILE *fp, int dummy)
 {
   if (fp->_IO_buf_base && !(fp->_flags & _IO_USER_BUF))
-    (((_IO_strfile *) fp)->_s._free_buffer) (fp->_IO_buf_base);
+    free (fp->_IO_buf_base);
   fp->_IO_buf_base = NULL;
 
   _IO_default_finish (fp, 0);
