@@ -1,5 +1,12 @@
 2018-06-01  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Update with results from
+	configuring with --disable-multi-arch, building with
+	“-march=x86-64 -mtune=generic -mfpmath=sse” and running on a
+	Haswell-era CPU.
+
+2018-06-01  Florian Weimer  <fweimer@redhat.com>
+
 	* sysdeps/i386/i686/fpu/multiarch/libm-test-ulps: Update with
 	results from building with “-march=x86-64 -mtune=generic
 	-mfpmath=sse” and running on a Haswell-era CPU.
