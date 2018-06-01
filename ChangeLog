@@ -1,5 +1,9 @@
 2018-06-01  Florian Weimer  <fweimer@redhat.com>
 
+	* sysdeps/generic/libcidn.abilist: Remove file.
+
+2018-06-01  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23236]
 	* libio/strfile.h (struct _IO_str_fields): Rename members to
 	discourage their use and add comment.
