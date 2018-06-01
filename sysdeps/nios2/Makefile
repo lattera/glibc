@@ -22,8 +22,7 @@ pic-ccflag = -fpic
 long-double-fcts = no
 
 ifeq ($(subdir),soft-fp)
-sysdep_routines += $(filter-out sqrtsf2,$(gcc-single-routines)) \
-  $(filter-out sqrtdf2,$(gcc-double-routines))
+sysdep_routines += $(gcc-single-routines) $(gcc-double-routines)
 endif
 
 ifeq ($(subdir),csu)

@@ -29,21 +29,25 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include "soft-fp.h"
-#include "quad.h"
+#include "single.h"
+#include <shlib-compat.h>
 
-TFtype
-__sqrttf2 (TFtype a)
+#if SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_28)
+SFtype
+__sqrtsf2 (SFtype a)
 {
   FP_DECL_EX;
-  FP_DECL_Q (A);
-  FP_DECL_Q (R);
-  TFtype r;
+  FP_DECL_S (A);
+  FP_DECL_S (R);
+  SFtype r;
 
   FP_INIT_ROUNDMODE;
-  FP_UNPACK_Q (A, a);
-  FP_SQRT_Q (R, A);
-  FP_PACK_Q (r, R);
+  FP_UNPACK_S (A, a);
+  FP_SQRT_S (R, A);
+  FP_PACK_S (r, R);
   FP_HANDLE_EXCEPTIONS;
 
   return r;
 }
+compat_symbol (libc, __sqrtsf2, __sqrtsf2, GLIBC_2_3_2);
+#endif

@@ -1,3 +1,27 @@
+2018-06-01  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #18473]
+	* soft-fp/sqrttf2.c: Remove file.
+	* soft-fp/sqrtdf2.c: Move to ....
+	* sysdeps/powerpc/nofpu/sqrtdf2.c: ... here.  Include
+	<shlib-compat.h>.
+	(__sqrtdf2): Make conditional on
+	[SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_28)].  Define as compat
+	symbol.
+	* soft-fp/sqrtsf2.c: Move to ....
+	* sysdeps/powerpc/nofpu/sqrtsf2.c: ... here.  Include
+	<shlib-compat.h>.
+	(__sqrtsf2): Make conditional on
+	[SHLIB_COMPAT (libc, GLIBC_2_3_2, GLIBC_2_28)].  Define as compat
+	symbol.
+	* soft-fp/Makefile (gcc-single-routines): Remove sqrtsf2.
+	(gcc-double-routines): Remove sqrtdf2.
+	(gcc-quad-routines): Remove sqrttf2.
+	* sysdeps/nios2/Makefile [$(subdir) = soft-fp] (sysdep_routines):
+	Do not filter out sqrtsf2 and sqrtdf2.
+	* sysdeps/powerpc/nofpu/Makefile [$(subdir) = soft-fp]
+	(sysdep_routines): Add sqrtsf2 and sqrtdf2.
+
 2018-06-01  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/generic/libcidn.abilist: Remove file.
