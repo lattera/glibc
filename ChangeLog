@@ -1,3 +1,9 @@
+2018-06-02  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* bits/shm.h (struct shmid_ds): Make shm_segsz field size_t instead of
+	int.
+	* sysdeps/gnu/bits/shm.h (struct shmid_ds): Likewise.
+
 2018-06-01  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
 	* benchtests/scripts/compare_string.py:	(process_results) Catch

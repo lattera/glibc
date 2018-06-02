@@ -44,7 +44,7 @@ typedef unsigned short int shmatt_t;
 struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */
-    int shm_segsz;			/* size of segment in bytes */
+    size_t shm_segsz;			/* size of segment in bytes */
     __time_t shm_atime;			/* time of last shmat() */
     __time_t shm_dtime;			/* time of last shmdt() */
     __time_t shm_ctime;			/* time of last change by shmctl() */
