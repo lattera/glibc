@@ -709,7 +709,7 @@ class Context(object):
                             'gcc': 'vcs-8',
                             'glibc': 'vcs-mainline',
                             'gmp': '6.1.2',
-                            'linux': '4.16',
+                            'linux': '4.17',
                             'mpc': '1.1.0',
                             'mpfr': '4.0.1',
                             'mig': 'vcs-mainline',
