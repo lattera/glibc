@@ -38,6 +38,8 @@
 # define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
 # define MAP_SYNC	0x80000		/* Perform synchronous page
 					   faults for the mapping.  */
+# define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
+					   underlying mapping.  */
 #endif
 
 /* Include generic Linux declarations.  */

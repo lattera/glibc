@@ -34,6 +34,8 @@
 # define MAP_NONBLOCK   0x20000         /* do not block on IO */
 # define MAP_STACK	0x40000		/* Allocation is for a stack.  */
 # define MAP_HUGETLB	0x80000		/* Create huge page mapping.  */
+# define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
+					   underlying mapping.  */
 #endif
 
 #define __MAP_ANONYMOUS 0x0800

@@ -62,6 +62,8 @@
 # define MAP_NONBLOCK	0x20000		/* Do not block on IO */
 # define MAP_STACK	0x40000		/* Create for process/thread stacks */
 # define MAP_HUGETLB	0x80000		/* Create a huge page mapping */
+# define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
+					   underlying mapping.  */
 #endif
 
 /* Flags to "msync"  */

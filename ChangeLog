@@ -1,5 +1,36 @@
 2018-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): New macro.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/microblaze/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/nios2/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/riscv/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/mman.h [__USE_MISC]
+	(MAP_FIXED_NOREPLACE): Likewise.
+
 	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
 	version to 4.17.
 
