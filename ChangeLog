@@ -1,5 +1,14 @@
 2018-06-05  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_DIT): New
+	macro.
+	(HWCAP_USCAT): Likewise.
+	(HWCAP_ILRCPC): Likewise.
+	(HWCAP_FLAGM): Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.c (_DL_HWCAP_COUNT):
+	Increase to 28.
+	(_dl_aarch64_cap_flags): Add new flag names.
+
 	* sysdeps/unix/sysv/linux/aarch64/bits/mman.h [__USE_MISC]
 	(MAP_FIXED_NOREPLACE): New macro.
 	* sysdeps/unix/sysv/linux/alpha/bits/mman.h [__USE_MISC]
