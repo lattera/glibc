@@ -26,9 +26,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Unavoidable hacks since TFmode is assumed to be binary128. */
-#define TFtype KFtype
-#define TF KF
+#include <math.h>
+
+/* Unavoidable hacks since TFmode is assumed to be binary128 when
+   -mabi=ibmlongdouble is used.  */
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+# define TFtype KFtype
+# define TF KF
+#endif
 
 #include <soft-fp.h>
 #include <quad.h>

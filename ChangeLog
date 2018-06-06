@@ -1,3 +1,10 @@
+2018-06-06  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/le/fpu/e_sqrtf128.c
+	[__HAVE_FLOAT128_UNLIKE_LDBL] (TFtype, TF): Restrict TFtype
+	and TF redirection to KFtype and KF only when the default
+	long double type is not the IEEE 128-bit floating point type.
+
 2018-06-05  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h (HWCAP_DIT): New
