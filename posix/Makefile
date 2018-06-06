@@ -95,10 +95,10 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \
-		   tst-glob-tilde test-ssize-max
+		   tst-glob-tilde test-ssize-max tst-spawn4
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
-		   tst-glob_lstat_compat
+		   tst-glob_lstat_compat tst-spawn4-compat
 xtests		:= bug-ga2 tst-getaddrinfo4 tst-getaddrinfo5
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest

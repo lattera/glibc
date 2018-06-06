@@ -67,11 +67,9 @@ maybe_script_execute (const char *file, char *const argv[], char *const envp[])
   __execve (new_argv[0], new_argv, envp);
 }
 
-
-/* Execute FILE, searching in the `PATH' environment variable if it contains
-   no slashes, with arguments ARGV and environment from ENVP.  */
-int
-__execvpe (const char *file, char *const argv[], char *const envp[])
+static int
+__execvpe_common (const char *file, char *const argv[], char *const envp[],
+	          bool exec_script)
 {
   /* We check the simple case first. */
   if (*file == '\0')
@@ -85,7 +83,7 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
     {
       __execve (file, argv, envp);
 
-      if (errno == ENOEXEC)
+      if (errno == ENOEXEC && exec_script)
         maybe_script_execute (file, argv, envp);
 
       return -1;
@@ -137,7 +135,7 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
 
       __execve (buffer, argv, envp);
 
-      if (errno == ENOEXEC)
+      if (errno == ENOEXEC && exec_script)
         /* This has O(P*C) behavior, where P is the length of the path and C
            is the argument count.  A better strategy would be allocate the
            substitute argv and reuse it each time through the loop (so it
@@ -184,4 +182,18 @@ __execvpe (const char *file, char *const argv[], char *const envp[])
   return -1;
 }
 
+/* Execute FILE, searching in the `PATH' environment variable if it contains
+   no slashes, with arguments ARGV and environment from ENVP.  */
+int
+__execvpe (const char *file, char *const argv[], char *const envp[])
+{
+  return __execvpe_common (file, argv, envp, true);
+}
 weak_alias (__execvpe, execvpe)
+
+/* Same as __EXECVPE, but does not try to execute NOEXEC files.  */
+int
+__execvpex (const char *file, char *const argv[], char *const envp[])
+{
+  return __execvpe_common (file, argv, envp, false);
+}

@@ -310,6 +310,8 @@ __spawni (pid_t * pid, const char *file,
 	  const posix_spawnattr_t * attrp, char *const argv[],
 	  char *const envp[], int xflags)
 {
+  /* It uses __execvpex to avoid run ENOEXEC in non compatibility mode (it
+     will be handled by maybe_script_execute).  */
   return __spawnix (pid, file, acts, attrp, argv, envp, xflags,
-		    xflags & SPAWN_XFLAGS_USE_PATH ? __execvpe : __execve);
+		    xflags & SPAWN_XFLAGS_USE_PATH ? __execvpex : __execve);
 }

@@ -1,3 +1,16 @@
+2018-06-08  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #23264]
+	* include/unistd.h (__execvpex): New prototype.
+	* posix/Makefile (tests): Add tst-spawn4.
+	(tests-internal): Add tst-spawn4-compat.
+	* posix/execvpe.c (__execvpe_common, __execvpex): New functions.
+	* posix/tst-spawn4-compat.c: New file.
+	* posix/tst-spawn4.c: Likewise.
+	* sysdeps/unix/sysv/linux/spawni.c (__spawni): Do not interpret invalid
+	binaries as shell scripts.
+	* sysdeps/posix/spawni.c (__spawni): Likewise.
+
 2018-06-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #23145]

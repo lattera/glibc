@@ -77,6 +77,8 @@ extern char *__getcwd (char *__buf, size_t __size) attribute_hidden;
 extern int __rmdir (const char *__path) attribute_hidden;
 extern int __execvpe (const char *file, char *const argv[],
 		      char *const envp[]) attribute_hidden;
+extern int __execvpex (const char *file, char *const argv[],
+		       char *const envp[]) attribute_hidden;
 
 /* Get the canonical absolute name of the named directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
