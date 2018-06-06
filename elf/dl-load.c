@@ -121,12 +121,6 @@ is_trusted_path_normalize (const char *path, size_t len)
   if (len == 0)
     return false;
 
-  if (*path == ':')
-    {
-      ++path;
-      --len;
-    }
-
   char *npath = (char *) alloca (len + 2);
   char *wnp = npath;
   while (*path != '\0')
@@ -177,114 +171,165 @@ is_trusted_path_normalize (const char *path, size_t len)
   return false;
 }
 
+/* Given a substring starting at INPUT, just after the DST '$' start
+   token, determine if INPUT contains DST token REF, following the
+   ELF gABI rules for DSTs:
 
+   * Longest possible sequence using the rules (greedy).
+
+   * Must start with a $ (enforced by caller).
+
+   * Must follow $ with one underscore or ASCII [A-Za-z] (caller
+     follows these rules for REF) or '{' (start curly quoted name).
+
+   * Must follow first two characters with zero or more [A-Za-z0-9_]
+     (enforced by caller) or '}' (end curly quoted name).
+
+   If the sequence is a DST matching REF then the length of the DST
+   (excluding the $ sign but including curly braces, if any) is
+   returned, otherwise 0.  */
 static size_t
-is_dst (const char *start, const char *name, const char *str, int secure)
+is_dst (const char *input, const char *ref)
 {
-  size_t len;
   bool is_curly = false;
 
-  if (name[0] == '{')
+  /* Is a ${...} input sequence?  */
+  if (input[0] == '{')
     {
       is_curly = true;
-      ++name;
+      ++input;
     }
 
-  len = 0;
-  while (name[len] == str[len] && name[len] != '\0')
-    ++len;
+  /* Check for matching name, following closing curly brace (if
+     required), or trailing characters which are part of an
+     identifier.  */
+  size_t rlen = strlen (ref);
+  if (strncmp (input, ref, rlen) != 0
+      || (is_curly && input[rlen] != '}')
+      || ((input[rlen] >= 'A' && input[rlen] <= 'Z')
+	  || (input[rlen] >= 'a' && input[rlen] <= 'z')
+	  || (input[rlen] >= '0' && input[rlen] <= '9')
+	  || (input[rlen] == '_')))
+    return 0;
 
   if (is_curly)
-    {
-      if (name[len] != '}')
-	return 0;
-
-      /* Point again at the beginning of the name.  */
-      --name;
-      /* Skip over closing curly brace and adjust for the --name.  */
-      len += 2;
-    }
-  else if (name[len] != '\0' && name[len] != '/')
-    return 0;
-
-  if (__glibc_unlikely (secure)
-      && ((name[len] != '\0' && name[len] != '/')
-	  || (name != start + 1)))
-    return 0;
-
-  return len;
+    /* Count the two curly braces.  */
+    return rlen + 2;
+  else
+    return rlen;
 }
 
-
+/* INPUT is the start of a DST sequence at the first '$' occurrence.
+   If there is a DST we call into _dl_dst_count to count the number of
+   DSTs.  We count all known DSTs regardless of __libc_enable_secure;
+   the caller is responsible for enforcing the security of the
+   substitution rules (usually _dl_dst_substitute).  */
 size_t
-_dl_dst_count (const char *name)
+_dl_dst_count (const char *input)
 {
-  const char *const start = name;
   size_t cnt = 0;
+
+  input = strchr (input, '$');
+
+  /* Most likely there is no DST.  */
+  if (__glibc_likely (input == NULL))
+    return 0;
 
   do
     {
       size_t len;
 
-      /* $ORIGIN is not expanded for SUID/GUID programs (except if it
-	 is $ORIGIN alone) and it must always appear first in path.  */
-      ++name;
-      if ((len = is_dst (start, name, "ORIGIN", __libc_enable_secure)) != 0
-	  || (len = is_dst (start, name, "PLATFORM", 0)) != 0
-	  || (len = is_dst (start, name, "LIB", 0)) != 0)
+      ++input;
+      /* All DSTs must follow ELF gABI rules, see is_dst ().  */
+      if ((len = is_dst (input, "ORIGIN")) != 0
+	  || (len = is_dst (input, "PLATFORM")) != 0
+	  || (len = is_dst (input, "LIB")) != 0)
 	++cnt;
 
-      name = strchr (name + len, '$');
+      /* There may be more than one DST in the input.  */
+      input = strchr (input + len, '$');
     }
-  while (name != NULL);
+  while (input != NULL);
 
   return cnt;
 }
 
-
+/* Process INPUT for DSTs and store in RESULT using the information
+   from link map L to resolve the DSTs. This function only handles one
+   path at a time and does not handle colon-separated path lists (see
+   fillin_rpath ()).  Lastly the size of result in bytes should be at
+   least equal to the value returned by DL_DST_REQUIRED.  Note that it
+   is possible for a DT_NEEDED, DT_AUXILIARY, and DT_FILTER entries to
+   have colons, but we treat those as literal colons here, not as path
+   list delimeters.  */
 char *
-_dl_dst_substitute (struct link_map *l, const char *name, char *result)
+_dl_dst_substitute (struct link_map *l, const char *input, char *result)
 {
-  const char *const start = name;
-
-  /* Now fill the result path.  While copying over the string we keep
-     track of the start of the last path element.  When we come across
-     a DST we copy over the value or (if the value is not available)
-     leave the entire path element out.  */
+  /* Copy character-by-character from input into the working pointer
+     looking for any DSTs.  We track the start of input and if we are
+     going to check for trusted paths, all of which are part of $ORIGIN
+     handling in SUID/SGID cases (see below).  In some cases, like when
+     a DST cannot be replaced, we may set result to an empty string and
+     return.  */
   char *wp = result;
-  char *last_elem = result;
+  const char *start = input;
   bool check_for_trusted = false;
 
   do
     {
-      if (__glibc_unlikely (*name == '$'))
+      if (__glibc_unlikely (*input == '$'))
 	{
 	  const char *repl = NULL;
 	  size_t len;
 
-	  ++name;
-	  if ((len = is_dst (start, name, "ORIGIN", __libc_enable_secure)) != 0)
+	  ++input;
+	  if ((len = is_dst (input, "ORIGIN")) != 0)
 	    {
-	      repl = l->l_origin;
+	      /* For SUID/GUID programs we normally ignore the path with
+		 $ORIGIN in DT_RUNPATH, or DT_RPATH.  However, there is
+		 one exception to this rule, and it is:
+
+		   * $ORIGIN appears as the first path element, and is
+		     the only string in the path or is immediately
+		     followed by a path separator and the rest of the
+		     path.
+
+		   * The path is rooted in a trusted directory.
+
+		 This exception allows such programs to reference
+		 shared libraries in subdirectories of trusted
+		 directories.  The use case is one of general
+		 organization and deployment flexibility.
+		 Trusted directories are usually such paths as "/lib64"
+		 or "/usr/lib64", and the usual RPATHs take the form of
+		 [$ORIGIN/../$LIB/somedir].  */
+	      if (__glibc_unlikely (__libc_enable_secure)
+		  && !(input == start + 1
+		       && (input[len] == '\0' || input[len] == '/')))
+		repl = (const char *) -1;
+	      else
+	        repl = l->l_origin;
+
 	      check_for_trusted = (__libc_enable_secure
 				   && l->l_type == lt_executable);
 	    }
-	  else if ((len = is_dst (start, name, "PLATFORM", 0)) != 0)
+	  else if ((len = is_dst (input, "PLATFORM")) != 0)
 	    repl = GLRO(dl_platform);
-	  else if ((len = is_dst (start, name, "LIB", 0)) != 0)
+	  else if ((len = is_dst (input, "LIB")) != 0)
 	    repl = DL_DST_LIB;
 
 	  if (repl != NULL && repl != (const char *) -1)
 	    {
 	      wp = __stpcpy (wp, repl);
-	      name += len;
+	      input += len;
 	    }
-	  else if (len > 1)
+	  else if (len != 0)
 	    {
-	      /* We cannot use this path element, the value of the
-		 replacement is unknown.  */
-	      wp = last_elem;
-	      break;
+	      /* We found a valid DST that we know about, but we could
+	         not find a replacement value for it, therefore we
+		 cannot use this path and discard it.  */
+	      *result = '\0';
+	      return result;
 	    }
 	  else
 	    /* No DST we recognize.  */
@@ -292,16 +337,26 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result)
 	}
       else
 	{
-	  *wp++ = *name++;
+	  *wp++ = *input++;
 	}
     }
-  while (*name != '\0');
+  while (*input != '\0');
 
   /* In SUID/SGID programs, after $ORIGIN expansion the normalized
-     path must be rooted in one of the trusted directories.  */
+     path must be rooted in one of the trusted directories.  The $LIB
+     and $PLATFORM DST cannot in any way be manipulated by the caller
+     because they are fixed values that are set by the dynamic loader
+     and therefore any paths using just $LIB or $PLATFORM need not be
+     checked for trust, the authors of the binaries themselves are
+     trusted to have designed this correctly.  Only $ORIGIN is tested in
+     this way because it may be manipulated in some ways with hard
+     links.  */
   if (__glibc_unlikely (check_for_trusted)
-      && !is_trusted_path_normalize (last_elem, wp - last_elem))
-    wp = last_elem;
+      && !is_trusted_path_normalize (result, wp - result))
+    {
+      *result = '\0';
+      return result;
+    }
 
   *wp = '\0';
 
@@ -309,13 +364,13 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result)
 }
 
 
-/* Return copy of argument with all recognized dynamic string tokens
-   ($ORIGIN and $PLATFORM for now) replaced.  On some platforms it
-   might not be possible to determine the path from which the object
-   belonging to the map is loaded.  In this case the path element
-   containing $ORIGIN is left out.  */
+/* Return a malloc allocated copy of INPUT with all recognized DSTs
+   replaced. On some platforms it might not be possible to determine the
+   path from which the object belonging to the map is loaded.  In this
+   case the path containing the DST is left out.  On error NULL
+   is returned.  */
 static char *
-expand_dynamic_string_token (struct link_map *l, const char *s)
+expand_dynamic_string_token (struct link_map *l, const char *input)
 {
   /* We make two runs over the string.  First we determine how large the
      resulting string is and then we copy it over.  Since this is no
@@ -325,22 +380,22 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
   size_t total;
   char *result;
 
-  /* Determine the number of DST elements.  */
-  cnt = DL_DST_COUNT (s);
+  /* Determine the number of DSTs.  */
+  cnt = _dl_dst_count (input);
 
   /* If we do not have to replace anything simply copy the string.  */
   if (__glibc_likely (cnt == 0))
-    return __strdup (s);
+    return __strdup (input);
 
   /* Determine the length of the substituted string.  */
-  total = DL_DST_REQUIRED (l, s, strlen (s), cnt);
+  total = DL_DST_REQUIRED (l, input, strlen (input), cnt);
 
   /* Allocate the necessary memory.  */
   result = (char *) malloc (total + 1);
   if (result == NULL)
     return NULL;
 
-  return _dl_dst_substitute (l, s, result);
+  return _dl_dst_substitute (l, input, result);
 }
 
 

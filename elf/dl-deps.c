@@ -100,7 +100,7 @@ struct list
   ({									      \
     const char *__str = (str);						      \
     const char *__result = __str;					      \
-    size_t __dst_cnt = DL_DST_COUNT (__str);				      \
+    size_t __dst_cnt = _dl_dst_count (__str);				      \
 									      \
     if (__dst_cnt != 0)							      \
       {									      \

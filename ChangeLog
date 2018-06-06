@@ -1,3 +1,22 @@
+2018-06-12  Carlos O'Donell  <carlos@redhat.com>
+	    Andreas Schwab  <schwab@suse.de>
+	    Dmitry V. Levin  <ldv@altlinux.org>
+	    Florian Weimer <fweimer@redhat.com>
+
+	[BZ #23102]
+	[BZ #21942]
+	[BZ #18018]
+	[BZ #23259]
+	CVE-2011-0536
+	* elf/dl-dst.h: Remove DL_DST_COUNT.
+	* elf/dl-deps.c (expand_dst): Call _dl_dst_count.
+	* elf/dl-load.c (is_trusted_path_normalize): Don't handle colons.
+	(is_dst): Comment.  Support ELF gABI.
+	(_dl_dst_count): Comment.  Simplify and count DSTs.
+	(_dl_dst_substitute): Comment.  Support __libc_enable_secure handling.
+	(expand_dybamic_string_token): Comment. Call _dl_dst_count. Rename
+	locals.
+
 2018-06-12  Zack Weinberg  <zackw@panix.com>
 
 	* elf/dl-load.c, elf/dl-misc.c, elf/dl-profile.c, elf/rtld.c

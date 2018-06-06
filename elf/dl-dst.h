@@ -18,19 +18,6 @@
 
 #include "trusted-dirs.h"
 
-/* Determine the number of DST elements in the name.  Only if IS_PATH is
-   nonzero paths are recognized (i.e., multiple, ':' separated filenames).  */
-#define DL_DST_COUNT(name) \
-  ({									      \
-    size_t __cnt = 0;							      \
-    const char *__sf = strchr (name, '$');				      \
-									      \
-    if (__glibc_unlikely (__sf != NULL))				      \
-      __cnt = _dl_dst_count (__sf);					      \
-									      \
-    __cnt; })
-
-
 #ifdef SHARED
 # define IS_RTLD(l) (l) == &GL(dl_rtld_map)
 #else

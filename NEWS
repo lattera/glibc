@@ -42,6 +42,17 @@ Major new features:
   NI_IDN_ALLOW_UNASSIGNED, NI_IDN_USE_STD3_ASCII_RULES) have been
   deprecated.  They no longer have any effect.
 
+* Parsing of dynamic string tokens in DT_RPATH, DT_RUNPATH, DT_NEEDED,
+  DT_AUXILIARY, and DT_FILTER has been expanded to support the full
+  range of ELF gABI expressions including such constructs as
+  '$ORIGIN$ORIGIN' (if valid).  For SUID/GUID applications the rules
+  have been further restricted, and where in the past a dynamic string
+  token sequence may have been interpreted as a literal string it will
+  now cause a load failure.  These load failures were always considered
+  unspecified behaviour from the perspective of the dynamic loader, and
+  for safety are now load errors e.g. /foo/${ORIGIN}.so in DT_NEEDED
+  results in a load failure now.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The nonstandard header files <libio.h> and <_G_config.h> are no longer
