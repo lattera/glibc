@@ -29,6 +29,9 @@ Major new features:
   Upper Sorbian, and Walloon.  The following languages now support
   abbreviated alternative month names: Catalan, Greek, and Kashubian.
 
+* New locale added: Lower Sorbian (dsb_DE), including the support of the
+  nominative and genitive month names.
+
 * Building and running on GNU/Hurd systems now works without out-of-tree
   patches.
 

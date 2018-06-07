@@ -1,3 +1,9 @@
+2018-06-29  Michael Wolf  <milupo@sorbzilla.de>
+
+	[BZ #23208]
+	* localedata/SUPPORTED (dsb_DE/UTF-8): New entry.
+	* localedata/locales/dsb_DE: New file.
+
 2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
