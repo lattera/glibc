@@ -65,6 +65,7 @@
 	.section .init,"ax",@progbits
 	.p2align 2
 	.globl _init
+	.hidden _init
 	.type _init, @function
 _init:
 	addiu $sp,$sp,-16
@@ -90,6 +91,7 @@ _init:
 	.section .fini,"ax",@progbits
 	.p2align 2
 	.globl _fini
+	.hidden _fini
 	.type _fini, @function
 _fini:
 	addiu $sp,$sp,-16

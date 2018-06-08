@@ -72,6 +72,7 @@ call_weak_fn:
 	.section .init,"ax",%progbits
 	.align	2
 	.global	_init
+	.hidden	_init
 	.type	_init, %function
 _init:
 	stp	x29, x30, [sp, -16]!
@@ -85,6 +86,7 @@ _init:
 	.section	.fini,"ax",%progbits
 	.align	2
 	.global	_fini
+	.hidden	_fini
 	.type	_fini, %function
 _fini:
 	stp	x29, x30, [sp, -16]!

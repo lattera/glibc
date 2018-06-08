@@ -142,6 +142,7 @@ gmon_initializer:
 	.section .init, "ax", %progbits
 	.align 4
 	.globl _init
+	.hidden	_init
 	.type _init,@function
 _init:
 	stw	%rp,-20(%sp)
@@ -152,6 +153,7 @@ _init:
         .section .fini,"ax",%progbits
 	.align 4
 	.globl _fini
+	.hidden	_fini
 	.type _fini,@function
 _fini:
 	stw	%rp,-20(%sp)

@@ -59,6 +59,7 @@
 	.section .init,"ax",@progbits
 	.align 4
 	.globl	_init
+	.hidden	_init
 	.type	_init,@function
 _init:
 	stmg	%r6,%r15,48(%r15)
@@ -81,6 +82,7 @@ _init:
 	.section .fini,"ax",@progbits
 	.align 4
 	.globl	_fini
+	.hidden	_fini
 	.type	_fini,@function
 _fini:
 	stmg	%r6,%r15,48(%r15)

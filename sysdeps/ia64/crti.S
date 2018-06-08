@@ -129,6 +129,7 @@ gmon_initializer:
 
 	.section .init,"ax",@progbits
 	.global _init#
+	.hidden	_init#
 	.proc _init#
 _init:
 	.prologue
@@ -145,6 +146,7 @@ _init:
 
 	.section .fini,"ax",@progbits
 	.global _fini#
+	.hidden	_fini#
 	.proc _fini#
 _fini:
 	.prologue

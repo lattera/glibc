@@ -1,3 +1,51 @@
+2018-06-08  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23145]
+	* elf/Makefile (tests-special): Add $(objpfx)check-initfini.out.
+	($(all-built-dso:=.dynsym): New target.
+	(common-generated): Add $(all-built-dso:$(common-objpfx)%=%.dynsym).
+	($(objpfx)check-initfini.out): New target.
+	(generated): Add check-initfini.out.
+	* scripts/check-initfini.awk: New file.
+	* sysdeps/aarch64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/alpha/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/arm/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/hppa/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/i386/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/ia64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/m68k/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/microblaze/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/mips/mips32/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/mips/mips64/n32/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/mips/mips64/n64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/nios2/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/powerpc/powerpc32/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/powerpc/powerpc64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/s390/s390-32/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/s390/s390-64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/sh/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/sparc/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+	* sysdeps/x86_64/crti.S (_init): Mark as hidden.
+	(_fini): Likewise.
+
 2018-06-06  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/le/fpu/e_sqrtf128.c

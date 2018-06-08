@@ -58,6 +58,7 @@
 	.section .init,"ax",@progbits
 	.align	2
 	.globl	_init
+	.hidden	_init
 	.type	_init, @function
 _init:
 	link.w %fp, #0
@@ -75,6 +76,7 @@ _init:
 	.section .fini,"ax",@progbits
 	.align	2
 	.globl	_fini
+	.hidden	_fini
 	.type	_fini, @function
 _fini:
 	link.w %fp, #0

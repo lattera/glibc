@@ -57,6 +57,7 @@
 	.section .init,"ax",@progbits
 	.align	2
 	.global	_init
+	.hidden	_init
 	.type	_init, @function
 _init:
 	addi	sp, sp, -8
@@ -84,6 +85,7 @@ _init:
 	.section .fini,"ax",@progbits
 	.align	2
 	.global	_fini
+	.hidden	_fini
 	.type	_fini, @function
 _fini:
 	addi	sp, sp, -8

@@ -67,6 +67,7 @@
 
 	.section .init, "ax", @progbits
 	.globl	_init
+	.hidden	_init
 	.type	_init, @function
 	.usepv	_init, std
 _init:
@@ -89,6 +90,7 @@ _init:
 
 	.section .fini, "ax", @progbits
 	.globl	_fini
+	.hidden	_fini
 	.type	_fini,@function
 	.usepv	_fini,std
 _fini:

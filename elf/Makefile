@@ -348,7 +348,7 @@ ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
-		 $(objpfx)check-localplt.out
+		 $(objpfx)check-localplt.out $(objpfx)check-initfini.out
 endif
 
 ifeq ($(run-built-tests),yes)
@@ -1135,6 +1135,19 @@ $(objpfx)check-localplt.out: $(..)scripts/check-localplt.awk \
 	  > $@; \
 	$(evaluate-test)
 endif
+
+$(all-built-dso:=.dynsym): %.dynsym: %
+	@rm -f $@T
+	LC_ALL=C $(READELF) -W --dyn-syms $< > $@T
+	test -s $@T
+	mv -f $@T $@
+common-generated += $(all-built-dso:$(common-objpfx)%=%.dynsym)
+
+$(objpfx)check-initfini.out: $(..)scripts/check-initfini.awk \
+			    $(all-built-dso:=.dynsym)
+	LC_ALL=C $(AWK) -f $^ > $@; \
+	$(evaluate-test)
+generated += check-initfini.out
 
 $(objpfx)tst-dlopenrpathmod.so: $(libdl)
 $(objpfx)tst-dlopenrpath: $(objpfx)tst-dlopenrpathmod.so $(libdl)

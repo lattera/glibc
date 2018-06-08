@@ -62,6 +62,7 @@
 #endif
 	.section ".init", "ax", @progbits
 	ENTRY_2(_init)
+	.hidden _init
 	.align ALIGNARG (2)
 BODY_LABEL (_init):
 	LOCALENTRY(_init)
@@ -80,6 +81,7 @@ BODY_LABEL (_init):
 
 	.section ".fini", "ax", @progbits
 	ENTRY_2(_fini)
+	.hidden _fini
 	.align ALIGNARG (2)
 BODY_LABEL (_fini):
 	LOCALENTRY(_fini)

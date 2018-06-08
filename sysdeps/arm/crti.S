@@ -78,6 +78,7 @@ call_weak_fn:
 	.section .init,"ax",%progbits
 	.p2align 2
 	.globl _init
+	.hidden	_init
 	.type _init, %function
 _init:
 	push	{r3, lr}
@@ -90,6 +91,7 @@ _init:
 	.section .fini,"ax",%progbits
 	.p2align 2
 	.globl _fini
+	.hidden	_fini
 	.type _fini, %function
 _fini:
 	push	{r3, lr}
