@@ -1,3 +1,10 @@
+2018-06-11  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23272]
+	* sysdeps/ieee754/ldbl-96/s_fma.c (__fma): Start by handling all
+	cases of non-finite arguments.
+	* math/libm-test-fma.inc (fma_test_data): Add more tests.
+
 2018-06-10  John David Anglin  <danglin@gcc.gnu.org>
 
 	[BZ #23174]

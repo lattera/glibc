@@ -32,14 +32,12 @@
 double
 __fma (double x, double y, double z)
 {
-  if (__glibc_unlikely (isinf (z)))
-    {
-      /* If z is Inf, but x and y are finite, the result should be
-	 z rather than NaN.  */
-      if (isfinite (x) && isfinite (y))
-	return (z + x) + y;
-      return (x * y) + z;
-    }
+  if (__glibc_unlikely (!isfinite (x) || !isfinite (y)))
+    return x * y + z;
+  else if (__glibc_unlikely (!isfinite (z)))
+    /* If z is Inf, but x and y are finite, the result should be z
+       rather than NaN.  */
+    return (z + x) + y;
 
   /* Ensure correct sign of exact 0 + 0.  */
   if (__glibc_unlikely ((x == 0 || y == 0) && z == 0))
