@@ -31,9 +31,10 @@ extern __typeof (__redirect_memset) __libc_memset;
 extern __typeof (__redirect_memset) __memset_falkor attribute_hidden;
 extern __typeof (__redirect_memset) __memset_generic attribute_hidden;
 
-libc_ifunc (__libc_memset, (IS_FALKOR (midr) && zva_size == 64
-			    ? __memset_falkor
-			    : __memset_generic));
+libc_ifunc (__libc_memset,
+	    ((IS_FALKOR (midr) || IS_PHECDA (midr)) && zva_size == 64
+	     ? __memset_falkor
+	     : __memset_generic));
 
 # undef memset
 strong_alias (__libc_memset, memset);

@@ -1,3 +1,17 @@
+2018-06-12  Minfeng Kang  <minfeng.kang@hxt-semitech.com>
+	    Hongbo Zhang  <hongbo.zhang@linaro.org>
+
+	* sysdeps/aarch64/multiarch/memcpy.c (libc_ifunc): reuse
+	__memcpy_falkor for phecda core.
+	* sysdeps/aarch64/multiarch/memmove.c (libc_ifunc): reuse
+	__memmove_falkor for phecda core.
+	* sysdeps/aarch64/multiarch/memset.c (libc_ifunc): reuse
+	__memset_falkor for phecda core.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c: add MIDR entry
+	for phecda core.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_PHECDA): add
+	macro to identify phecda core.
+
 2018-06-12  Carlos O'Donell  <carlos@redhat.com>
 	    Andreas Schwab  <schwab@suse.de>
 	    Dmitry V. Levin  <ldv@altlinux.org>

@@ -49,6 +49,9 @@
 #define IS_FALKOR(midr) (MIDR_IMPLEMENTOR(midr) == 'Q'			      \
                         && MIDR_PARTNUM(midr) == 0xc00)
 
+#define IS_PHECDA(midr) (MIDR_IMPLEMENTOR(midr) == 'h'			      \
+                        && MIDR_PARTNUM(midr) == 0x000)
+
 struct cpu_features
 {
   uint64_t midr_el1;

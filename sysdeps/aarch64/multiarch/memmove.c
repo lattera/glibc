@@ -35,7 +35,7 @@ extern __typeof (__redirect_memmove) __memmove_falkor attribute_hidden;
 libc_ifunc (__libc_memmove,
             (IS_THUNDERX (midr)
 	     ? __memmove_thunderx
-	     : (IS_FALKOR (midr)
+	     : (IS_FALKOR (midr) || IS_PHECDA (midr)
 		? __memmove_falkor
 		: __memmove_generic)));
 
