@@ -1,3 +1,11 @@
+2018-06-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* benchtests/scripts/compare_strings.py (process_results): Add
+	funcs argument.  Compare only functions which are selected.
+	(main): Check if base function is among selected functions.
+	Pass selected functions to process_results.
+	(__main__): Add -f/--functions argument.
+
 2018-06-12  Minfeng Kang  <minfeng.kang@hxt-semitech.com>
 	    Hongbo Zhang  <hongbo.zhang@linaro.org>
 
