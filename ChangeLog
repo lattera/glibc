@@ -1,3 +1,12 @@
+2018-06-12  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23277]
+	* math/bits/mathcalls.h [__USE_ISOC99] (nan): Do not use __const__
+	attribute.
+	* math/test-nan-const.c: New file.
+	* math/Makefile (tests): Add test-nan-const.
+	(CFLAGS-test-nan-const.c): New variable.
+
 2018-06-12  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* benchtests/scripts/compare_strings.py (process_results): Add

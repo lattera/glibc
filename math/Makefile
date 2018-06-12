@@ -235,7 +235,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-iseqsig-excess-precision test-flt-eval-method \
 	test-fp-ilogb-constants test-fp-llogb-constants \
 	test-fe-snans-always-signal test-finite-macros test-narrow-macros \
-	$(tests-static)
+	test-nan-const $(tests-static)
 tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
@@ -441,6 +441,8 @@ CFLAGS-test-flt-eval-method.c += -fexcess-precision=standard
 CFLAGS-test-fe-snans-always-signal.c += -fsignaling-nans
 
 CFLAGS-test-finite-macros.c += -ffinite-math-only
+
+CFLAGS-test-nan-const.c += -fno-builtin
 
 include ../Rules
 

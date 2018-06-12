@@ -198,7 +198,7 @@ __MATHCALLX (copysign,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 #ifdef __USE_ISOC99
 /* Return representation of qNaN for double type.  */
-__MATHCALLX (nan,, (const char *__tagb), (__const__));
+__MATHCALL (nan,, (const char *__tagb));
 #endif
 
 
