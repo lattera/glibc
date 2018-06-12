@@ -1,3 +1,8 @@
+2018-06-12  Carlos O'Donell  <carlos@redhat.com>
+
+	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Call
+	lll_futex_timed_wait.
+
 2018-06-12  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23277]

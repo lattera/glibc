@@ -287,7 +287,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mutex,
 	  /* Block using the futex.  */
 #if (!defined __ASSUME_FUTEX_CLOCK_REALTIME \
      || !defined lll_futex_timed_wait_bitset)
-	  lll_futex_timed wait (&mutex->__data.__lock, oldval,
+	  lll_futex_timed_wait (&mutex->__data.__lock, oldval,
 				&rt, PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 #else
 	  int err = lll_futex_timed_wait_bitset (&mutex->__data.__lock,
