@@ -1,3 +1,11 @@
+2018-06-12  Florian Weimer  <fweimer@redhat.com>
+
+	x86: Make strncmp usable from rtld.
+	* sysdeps/i386/i686/multiarch/strncmp-c.c: Only rename strncmp to
+	__strncmp_ia32 if in libc (and not in rtld).
+	* sysdeps/x86_64/multiarch/strncmp-sse2.S: Rename strcmp to
+	strncmp if not in libc (and not to __strncmp_sse2).
+
 2018-06-12  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]

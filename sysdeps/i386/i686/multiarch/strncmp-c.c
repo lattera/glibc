@@ -1,4 +1,4 @@
-#ifdef SHARED
+#if defined (SHARED) && IS_IN (libc)
 # define STRNCMP __strncmp_ia32
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name)  \

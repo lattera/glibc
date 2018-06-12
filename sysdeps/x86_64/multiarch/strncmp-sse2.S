@@ -18,10 +18,13 @@
 
 #include <sysdep.h>
 
-#define STRCMP	__strncmp_sse2
-
-#undef libc_hidden_builtin_def
-#define libc_hidden_builtin_def(strcmp)
+#if IS_IN (libc)
+# define STRCMP __strncmp_sse2
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(strcmp)
+#else
+# define STRCMP strncmp
+#endif
 
 #define USE_AS_STRNCMP
 #include <sysdeps/x86_64/strcmp.S>
