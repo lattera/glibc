@@ -1,3 +1,13 @@
+2018-06-12  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23250]
+	[BZ #10686]
+	* sysdeps/i386/nptl/tls.h (tcbhead_t): Change __private_tm[4]
+	to _private_tm[3] and add __glibc_reserved2.
+	Add _Static_assert of offset of __private_ss == 0x30.
+	* sysdeps/x86_64/nptl/tls.h: Add _Static_assert of offset of
+	__private_ss == 0x40 for ILP32 and == 0x70 for LP64.
+
 2018-06-12  Florian Weimer  <fweimer@redhat.com>
 
 	x86: Make strncmp usable from rtld.

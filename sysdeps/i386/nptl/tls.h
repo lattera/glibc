@@ -43,10 +43,15 @@ typedef struct
   int gscope_flag;
   int __glibc_reserved1;
   /* Reservation of some values for the TM ABI.  */
-  void *__private_tm[4];
+  void *__private_tm[3];
   /* GCC split stack support.  */
   void *__private_ss;
+  void *__glibc_reserved2;
 } tcbhead_t;
+
+/* morestack.S in libgcc uses offset 0x30 to access __private_ss,   */
+_Static_assert (offsetof (tcbhead_t, __private_ss) == 0x30,
+		"offset of __private_ss != 0x30");
 
 # define TLS_MULTIPLE_THREADS_IN_TCB 1
 
