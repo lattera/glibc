@@ -1,3 +1,19 @@
+2018-07-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/ieee754/flt-32/e_powf.c (__powf): Use uint32_t.
+	(exp2f_inline): Likewise.
+	* sysdeps/ieee754/flt-32/math_config.h (__math_oflowf): Likewise.
+	(__math_uflowf): Likewise.
+	(__math_may_uflowf): Likewise.
+	(__math_divzerof): Likewise.
+	(__math_invalidf): Likewise.
+	* sysdeps/ieee754/flt-32/math_errf.c (xflowf): Likewise.
+	(__math_oflowf): Likewise.
+	(__math_uflowf): Likewise.
+	(__math_may_uflowf): Likewise.
+	(__math_divzerof): Likewise.
+	(__math_invalidf): Likewise.
+
 2018-06-29  DJ Delorie  <dj@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 

@@ -84,7 +84,7 @@ log2_inline (uint32_t ix)
    (in case of fast toint intrinsics) or not.  The unscaled xd must be
    in [-1021,1023], sign_bias sets the sign of the result.  */
 static inline double_t
-exp2_inline (double_t xd, unsigned long sign_bias)
+exp2_inline (double_t xd, uint32_t sign_bias)
 {
   uint64_t ki, ski, t;
   /* double_t for better performance on targets with FLT_EVAL_METHOD==2.  */
@@ -143,7 +143,7 @@ zeroinfnan (uint32_t ix)
 float
 __powf (float x, float y)
 {
-  unsigned long sign_bias = 0;
+  uint32_t sign_bias = 0;
   uint32_t ix, iy;
 
   ix = asuint (x);

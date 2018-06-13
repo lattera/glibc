@@ -102,10 +102,10 @@ issignalingf_inline (float x)
 
 #define NOINLINE __attribute__ ((noinline))
 
-attribute_hidden float __math_oflowf (unsigned long);
-attribute_hidden float __math_uflowf (unsigned long);
-attribute_hidden float __math_may_uflowf (unsigned long);
-attribute_hidden float __math_divzerof (unsigned long);
+attribute_hidden float __math_oflowf (uint32_t);
+attribute_hidden float __math_uflowf (uint32_t);
+attribute_hidden float __math_may_uflowf (uint32_t);
+attribute_hidden float __math_divzerof (uint32_t);
 attribute_hidden float __math_invalidf (float);
 
 /* Shared between expf, exp2f and powf.  */
