@@ -10,6 +10,8 @@
 	__thread_switch, __evc_wait): Move declarations to...
 	* sysdeps/mach/include/mach/mach_traps.h: ... new file, and add
 	attribute_hidden.
+	* sysdeps/mach/hurd/i386/____longjmp_chk.S (____longjmp_chk): Do not
+	use PLT to call _hurd_self_sigstate.
 
 2018-06-13  Joseph Myers  <joseph@codesourcery.com>
 
