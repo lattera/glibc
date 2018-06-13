@@ -2,6 +2,8 @@
 
 	* sysdeps/mach/hurd/i386/Makefile (test-xfail-check-abi-libhurduser,
 	test-xfail-check-abi-libmachuser): Add.
+	* sysdeps/mach/hurd/localplt.data (ld.so): Add __open64, rename
+	__libc_read and __libc_write to __read and __write.
 
 2018-06-13  Joseph Myers  <joseph@codesourcery.com>
 
