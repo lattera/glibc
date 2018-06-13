@@ -1,5 +1,8 @@
 2018-06-12  Carlos O'Donell  <carlos@redhat.com>
 
+	* elf/dl-load (_dl_dst_substitute): Correct comment.
+	(_dl_dst_count): Likewise.
+
 	* nptl/pthread_mutex_timedlock.c (__pthread_mutex_timedlock): Call
 	lll_futex_timed_wait.
 

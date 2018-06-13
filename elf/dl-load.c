@@ -219,11 +219,11 @@ is_dst (const char *input, const char *ref)
     return rlen;
 }
 
-/* INPUT is the start of a DST sequence at the first '$' occurrence.
-   If there is a DST we call into _dl_dst_count to count the number of
-   DSTs.  We count all known DSTs regardless of __libc_enable_secure;
-   the caller is responsible for enforcing the security of the
-   substitution rules (usually _dl_dst_substitute).  */
+/* INPUT should be the start of a path e.g DT_RPATH or name e.g.
+   DT_NEEDED.  The return value is the number of known DSTs found.  We
+   count all known DSTs regardless of __libc_enable_secure; the caller
+   is responsible for enforcing the security of the substitution rules
+   (usually _dl_dst_substitute).  */
 size_t
 _dl_dst_count (const char *input)
 {
@@ -292,7 +292,9 @@ _dl_dst_substitute (struct link_map *l, const char *input, char *result)
 		   * $ORIGIN appears as the first path element, and is
 		     the only string in the path or is immediately
 		     followed by a path separator and the rest of the
-		     path.
+		     path,
+
+		   and ...
 
 		   * The path is rooted in a trusted directory.
 
