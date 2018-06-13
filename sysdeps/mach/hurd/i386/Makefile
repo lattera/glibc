@@ -88,3 +88,11 @@ test-xfail-XOPEN2K8/sys/types.h/conform = yes
 test-xfail-XOPEN2K8/stdlib.h/conform = yes
 test-xfail-XOPEN2K8/arpa/inet.h/conform = yes
 endif
+
+# For bug 23286
+ifeq ($(subdir),hurd)
+test-xfail-check-abi-libhurduser = yes
+endif
+ifeq ($(subdir),mach)
+test-xfail-check-abi-libmachuser = yes
+endif
