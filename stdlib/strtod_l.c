@@ -310,7 +310,7 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 	}
     }
 
-  if (exponent > MAX_EXP)
+  if (exponent >= MAX_EXP)
     goto overflow;
 
   bool half_bit = (round_limb & (((mp_limb_t) 1) << round_bit)) != 0;
@@ -343,7 +343,7 @@ round_and_return (mp_limb_t *retval, intmax_t exponent, int negative,
 	exponent = MIN_EXP - 1;
     }
 
-  if (exponent > MAX_EXP)
+  if (exponent >= MAX_EXP)
   overflow:
     return overflow_value (negative);
 

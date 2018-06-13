@@ -1,3 +1,22 @@
+2018-06-13  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23279]
+	* stdlib/strtod_l.c (round_and_return): Handle an exponent of
+	MAX_EXP as overflowing.
+	* stdlib/gen-tst-strtod-round.c (string_to_fp): Clear MPFR
+	overflow flag.
+	(round_str): Output also whether result overflows in each rounding
+	mode.
+	* stdlib/tst-strtod-round-data: Add more tests.
+	* stdlib/tst-strtod-round-data.h: Regenerated.
+	* stdlib/tst-strtod-round-skeleton.c (_XNTRY): Update comment.
+	(TEST): Handle extra arguments for overflow flags.
+	(struct test_overflow): New type.
+	[!FE_OVERFLOW] (FE_OVERFLOW): Define to 0.
+	(GEN_ONE_TEST): Clear all exceptions.  Test overflow flag.
+	(test_in_one_mode): Take argument with overflow information.
+	(do_test): Update calls to test_in_one_mode.
+
 2018-06-12  Carlos O'Donell  <carlos@redhat.com>
 
 	* elf/dl-load (_dl_dst_substitute): Correct comment.

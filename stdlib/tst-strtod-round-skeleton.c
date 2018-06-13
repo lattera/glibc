@@ -121,7 +121,8 @@
 #define ENTRY(...) \
   GEN_TEST_STRTOD_FOREACH (_ENTRY, __VA_ARGS__)
 
-/* Selector for boolean exact tag of expected results.  */
+/* Selector for boolean exact tag of expected results and that for
+   overflow.  */
 #define _XNTRY(FSUF, FTYPE, FTOSTR, LSUF, CSUF, ...)  \
   CHOOSE_ ## FSUF (__VA_ARGS__),
 #define XNTRY(...) \
@@ -136,22 +137,32 @@
 /* This macro is used in conjunction with the output from the
    gen-tst-strtod-round utility to select the appropriately
    rounded long double value for a given format.  */
-#define TEST(s,						\
-	     fx, fd, fn, fz, fu,			\
-	     dx, dd, dn, dz, du,			\
-	     ld64ix, ld64id, ld64in, ld64iz, ld64iu,	\
-	     ld64mx, ld64md, ld64mn, ld64mz, ld64mu,	\
-	     ld106x, ld106d, ld106n, ld106z, ld106u,	\
-	     ld113x, ld113d, ld113n, ld113z, ld113u)	\
-  {							\
-    L_ (s),						\
-    { XNTRY (fx, dx, ld64ix, ld64mx, ld106x, ld113x) },	\
-    {							\
-    { ENTRY (fn, dn, ld64in, ld64mn, ld106n, ld113n) },	\
-    { ENTRY (fd, dd, ld64id, ld64md, ld106d, ld113d) },	\
-    { ENTRY (fz, dz, ld64iz, ld64mz, ld106z, ld113z) },	\
-    { ENTRY (fu, du, ld64iu, ld64mu, ld106u, ld113u) }	\
-    }							\
+#define TEST(s,							\
+	     fx, fd, fdo, fn, fno, fz, fzo, fu, fuo,		\
+	     dx, dd, ddo, dn, dno, dz, dzo, du, duo,		\
+	     ld64ix, ld64id, ld64ido, ld64in, ld64ino,		\
+	     ld64iz, ld64izo, ld64iu, ld64iuo,			\
+	     ld64mx, ld64md, ld64mdo, ld64mn, ld64mno,		\
+	     ld64mz, ld64mzo, ld64mu, ld64muo,			\
+	     ld106x, ld106d, ld106do, ld106n, ld106no,		\
+	     ld106z, ld106zo, ld106u, ld106uo,			\
+	     ld113x, ld113d, ld113do, ld113n, ld113no,		\
+	     ld113z, ld113zo, ld113u, ld113uo)			\
+  {								\
+    L_ (s),							\
+    { XNTRY (fx, dx, ld64ix, ld64mx, ld106x, ld113x) },		\
+    {								\
+    { ENTRY (fn, dn, ld64in, ld64mn, ld106n, ld113n) },		\
+    { ENTRY (fd, dd, ld64id, ld64md, ld106d, ld113d) },		\
+    { ENTRY (fz, dz, ld64iz, ld64mz, ld106z, ld113z) },		\
+    { ENTRY (fu, du, ld64iu, ld64mu, ld106u, ld113u) }		\
+    },								\
+    {								\
+    { XNTRY (fno, dno, ld64ino, ld64mno, ld106no, ld113no) },	\
+    { XNTRY (fdo, ddo, ld64ido, ld64mdo, ld106do, ld113do) },	\
+    { XNTRY (fzo, dzo, ld64izo, ld64mzo, ld106zo, ld113zo) },	\
+    { XNTRY (fuo, duo, ld64iuo, ld64muo, ld106uo, ld113uo) }	\
+    }								\
   }
 
 struct test_exactness
@@ -164,10 +175,16 @@ struct test_results
   STRUCT_FOREACH_FLOAT_FTYPE
   };
 
+struct test_overflow
+  {
+  STRUCT_FOREACH_FLOAT_BOOL
+  };
+
 struct test {
   const CHAR *s;
   struct test_exactness exact;
   struct test_results r[4];
+  struct test_overflow o[4];
 };
 
 /* Include the generated test data.  */
@@ -181,9 +198,13 @@ struct test {
 # define FE_INEXACT 0
 #endif
 
+#ifndef FE_OVERFLOW
+# define FE_OVERFLOW 0
+#endif
+
 #define GEN_ONE_TEST(FSUF, FTYPE, FTOSTR, LSUF, CSUF)		\
 {								\
-  feclearexcept (FE_INEXACT);					\
+  feclearexcept (FE_ALL_EXCEPT);				\
   FTYPE f = STRTO (FSUF) (s, NULL);				\
   if (f != expected->FSUF					\
       || (copysign ## CSUF) (1.0 ## LSUF, f)			\
@@ -200,25 +221,47 @@ struct test {
       else							\
 	printf ("ignoring this inexact result\n");		\
     }								\
-  else if (FE_INEXACT != 0)					\
+  else								\
     {								\
-      bool inexact_raised = fetestexcept (FE_INEXACT) != 0;	\
-      if (inexact_raised != !exact->FSUF)			\
+      if (FE_INEXACT != 0)					\
 	{							\
-	  printf (FNPFXS "to" #FSUF  " (" STRM ") inexact %d "	\
-		  "not %d\n", s, inexact_raised, !exact->FSUF);	\
-	  if (EXCEPTION_TESTS (FTYPE))				\
-	    result = 1;						\
-	  else							\
-	    printf ("ignoring this exception error\n");		\
+	  bool inexact_raised = fetestexcept (FE_INEXACT) != 0;	\
+	  if (inexact_raised != !exact->FSUF)			\
+	    {							\
+	      printf (FNPFXS "to" #FSUF				\
+		      " (" STRM ") inexact %d "			\
+		      "not %d\n", s, inexact_raised,		\
+		      !exact->FSUF);				\
+	      if (EXCEPTION_TESTS (FTYPE))			\
+		result = 1;					\
+	      else						\
+		printf ("ignoring this exception error\n");	\
+	    }							\
+	}							\
+      if (FE_OVERFLOW != 0)					\
+	{							\
+	  bool overflow_raised					\
+	    = fetestexcept (FE_OVERFLOW) != 0;			\
+	  if (overflow_raised != overflow->FSUF)		\
+	    {							\
+	      printf (FNPFXS "to" #FSUF				\
+		      " (" STRM ") overflow %d "		\
+		      "not %d\n", s, overflow_raised,		\
+		      overflow->FSUF);				\
+	      if (EXCEPTION_TESTS (FTYPE))			\
+		result = 1;					\
+	      else						\
+		printf ("ignoring this exception error\n");	\
+	    }							\
 	}							\
     }								\
 }
 
 static int
 test_in_one_mode (const CHAR *s, const struct test_results *expected,
-		  const struct test_exactness *exact, const char *mode_name,
-		  int rnd_mode)
+		    const struct test_exactness *exact,
+		    const struct test_overflow *overflow,
+		    const char *mode_name, int rnd_mode)
 {
   int result = 0;
   GEN_TEST_STRTOD_FOREACH (GEN_ONE_TEST)
@@ -252,14 +295,15 @@ do_test (void)
   for (size_t i = 0; i < sizeof (tests) / sizeof (tests[0]); i++)
     {
       result |= test_in_one_mode (tests[i].s, &tests[i].r[modes[0].rnd_i],
-				  &tests[i].exact, modes[0].mode_name,
-				  modes[0].rnd_mode);
+				  &tests[i].exact, &tests[i].o[modes[0].rnd_i],
+				  modes[0].mode_name, modes[0].rnd_mode);
       for (const struct fetestmodes *m = &modes[1]; m->mode_name != NULL; m++)
 	{
 	  if (!fesetround (m->rnd_mode))
 	    {
 	      result |= test_in_one_mode (tests[i].s, &tests[i].r[m->rnd_i],
-					  &tests[i].exact, m->mode_name,
+					  &tests[i].exact,
+					  &tests[i].o[m->rnd_i], m->mode_name,
 					  m->rnd_mode);
 	      fesetround (save_round_mode);
 	    }
