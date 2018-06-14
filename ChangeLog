@@ -1,3 +1,7 @@
+2018-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	* scripts/update-abilist.sh: Accept empty list of files to patch.
+
 2018-06-13  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/Makefile (test-xfail-check-abi-libhurduser,
