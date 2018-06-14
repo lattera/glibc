@@ -2,8 +2,8 @@
 #include_next <mach/mach_traps.h>
 
 extern mach_port_t __mach_reply_port (void) attribute_hidden;
-extern mach_port_t __mach_thread_self (void) attribute_hidden;
-extern mach_port_t (__mach_task_self) (void) attribute_hidden;
+extern mach_port_t __mach_thread_self (void);
+extern mach_port_t (__mach_task_self) (void);
 extern mach_port_t (__mach_host_self) (void) attribute_hidden;
 extern boolean_t __swtch (void) attribute_hidden;
 extern boolean_t __swtch_pri (int priority) attribute_hidden;

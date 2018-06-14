@@ -1,3 +1,8 @@
+2018-06-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/include/mach/mach_traps.h (__mach_thread_self,
+	__mach_task_self): Remove attribute_hidden.
+
 2018-06-14  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tester.c (test_strncat) [__GNUC_PREREQ (7, 0)]: Also
