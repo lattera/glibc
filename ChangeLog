@@ -1,3 +1,8 @@
+2018-06-14  Steve Ellcey  <sellcey@caviumnetworks.com>
+	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/unix/sysv/linux/aarch64/gettimeofday.c: New file.
+
 2018-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	* scripts/update-abilist.sh: Accept empty list of files to patch.
