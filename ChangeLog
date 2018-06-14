@@ -1,3 +1,8 @@
+2018-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/tester.c (test_strncat) [__GNUC_PREREQ (7, 0)]: Also
+	ignore -Wrestrict for one test.
+
 2018-06-14  Steve Ellcey  <sellcey@caviumnetworks.com>
 	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
 

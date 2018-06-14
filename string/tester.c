@@ -485,6 +485,10 @@ test_strncat (void)
 	       deliberately tested here; GCC 8 gives a -Warray-bounds
 	       warning about this.  */
 	    DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
+	    /* GCC 9 as of 2018-06-14 warns that the size passed is
+	       large enough that, if it were the actual object size,
+	       the objects would have to overlap.  */
+	    DIAG_IGNORE_NEEDS_COMMENT (9, "-Wrestrict");
 #endif
 	    DIAG_IGNORE_NEEDS_COMMENT (8, "-Warray-bounds");
 	    check (strncat (buf1 + n2, buf2 + n1, ~((size_t) 0) - n4)
