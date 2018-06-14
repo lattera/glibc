@@ -1,3 +1,11 @@
+2018-06-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23290]
+	* localedata/charmaps/IBM273: Map codepoint 0xbc to U+00AF, so
+	that the result stays within the ISO-8859-1 range.
+	* iconvdata/ibm273.c (HAS_HOLES): Define as 0 because all 256
+	characters are defined in IBM273.
+
 2018-06-14  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/include/mach/mach_traps.h (__mach_thread_self,

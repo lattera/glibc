@@ -194,7 +194,7 @@ CHARMAP
 <U00BE>     /xb9         VULGAR FRACTION THREE QUARTERS
 <U00AC>     /xba         NOT SIGN
 <U007C>     /xbb         VERTICAL LINE
-<U203E>     /xbc         OVERLINE
+<U00AF>     /xbc         MACRON
 <U00A8>     /xbd         DIAERESIS
 <U00B4>     /xbe         ACUTE ACCENT
 <U00D7>     /xbf         MULTIPLICATION SIGN
