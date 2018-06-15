@@ -1,3 +1,9 @@
+2018-06-15  Herman ten Brugge  <hermantenbrugge@home.nl>
+
+	[BZ #23007]
+	* stdlib/strtod_l.c (____STRTOF_INTERNAL): Return NaN of
+	appropriate sign.
+
 2018-06-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23290]

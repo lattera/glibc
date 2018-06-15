@@ -678,7 +678,7 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 	  if (endptr != NULL)
 	    *endptr = (STRING_TYPE *) cp;
 
-	  return retval;
+	  return negative ? -retval : retval;
 	}
 
       /* It is really a text we do not recognize.  */
