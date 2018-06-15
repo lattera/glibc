@@ -20,7 +20,7 @@ ld.so: _dl_signal_exception
 ld.so: _dl_catch_exception
 # The dynamic linker has its own versions of basic functions for initial loading
 # of shared libraries.  These need to be overriden by libc once loaded.
-ld.so: __open
+ld.so: __open ?
 ld.so: __open64 ?
 ld.so: __close
 ld.so: __read ?

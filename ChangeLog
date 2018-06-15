@@ -17,6 +17,7 @@
 	(__pthread_get_cleanup_stack): Add hidden proto.
 	* sysdeps/htl/pthreadP.h (___pthread_get_cleanup_stack): Remove
 	prototype.
+	* sysdeps/mach/hurd/localplt.data (ld.so): Make ref to __open optional.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
