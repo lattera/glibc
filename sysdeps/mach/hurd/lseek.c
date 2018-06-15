@@ -17,12 +17,22 @@
 
 #include <unistd.h>
 #include <sys/types.h>
+#include <errno.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 off_t
 __libc_lseek (int fd, off_t offset, int whence)
 {
-  return __libc_lseek64 (fd, (off64_t) offset, whence);
+  off64_t res64 = __libc_lseek64 (fd, (off64_t) offset, whence);
+  off_t res = (off_t) res64;
+
+  if (sizeof res != sizeof res64 && res != res64)
+    {
+      __set_errno (EOVERFLOW);
+      return (off_t) -1;
+    }
+
+  return res;
 }
 
 weak_alias (__libc_lseek, __lseek)

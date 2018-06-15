@@ -5,6 +5,9 @@
 	of sendfile.
 	* sysdeps/mach/hurd/sendfile64.c (sendfile64): Rename to __sendfile64.
 	(sendfile64): New strong alias.
+	* sysdeps/mach/hurd/lseek.c: Include <errno.h>.
+	* sysdeps/mach/hurd/lseek.c (__libc_lseek): Check that the value
+	returned by __lseek64 can fit off_t, return EOVERFLOW otherwise.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
