@@ -1,3 +1,11 @@
+2018-06-15  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* include/sys/sendfile.h (__sendfile64): Declare hidden prototype.
+	* sysdeps/mach/hurd/sendfile.c (sendfile): Call __sendfile64 instead
+	of sendfile.
+	* sysdeps/mach/hurd/sendfile64.c (sendfile64): Rename to __sendfile64.
+	(sendfile64): New strong alias.
+
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23007]

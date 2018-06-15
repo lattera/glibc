@@ -25,11 +25,11 @@ ssize_t
 sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
 {
   if (offset == NULL || sizeof (off_t) == sizeof (off64_t))
-    return sendfile64 (out_fd, in_fd, (off64_t *) offset, count);
+    return __sendfile64 (out_fd, in_fd, (off64_t *) offset, count);
   else
     {
       off64_t ofs = *offset;
-      ssize_t ret = sendfile64 (out_fd, in_fd, &ofs, count);
+      ssize_t ret = __sendfile64 (out_fd, in_fd, &ofs, count);
       *offset = ofs;
       return ret;
     }

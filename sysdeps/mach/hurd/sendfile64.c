@@ -24,7 +24,7 @@
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
 ssize_t
-sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
+__sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
 {
   /* We just do a vanilla io_read followed by a vanilla io_write here.
      In theory the IN_FD filesystem can return us out-of-line data that
@@ -57,3 +57,4 @@ sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
     }
   return __hurd_fail (err);
 }
+strong_alias (__sendfile64, sendfile64)
