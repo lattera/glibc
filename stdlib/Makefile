@@ -84,7 +84,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-cxa_atexit tst-on_exit test-atexit-race 		    \
 		   test-at_quick_exit-race test-cxa_atexit-race             \
 		   test-on_exit-race test-dlclose-exit-race 		    \
-		   tst-makecontext-align test-bz22786
+		   tst-makecontext-align test-bz22786 tst-strtod-nan-sign
 
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete
@@ -221,6 +221,7 @@ $(objpfx)tst-tininess: $(libm)
 $(objpfx)tst-strtod-underflow: $(libm)
 $(objpfx)tst-strtod6: $(libm)
 $(objpfx)tst-strtod-nan-locale: $(libm)
+$(objpfx)tst-strtod-nan-sign: $(libm)
 
 tst-tls-atexit-lib.so-no-z-defs = yes
 test-dlclose-exit-race-helper.so-no-z-defs = yes

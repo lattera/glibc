@@ -1,3 +1,14 @@
+2018-06-15  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23007]
+	* stdlib/tst-strtod-nan-sign-main.c: New file.
+	* stdlib/tst-strtod-nan-sign.c: Likewise.
+	* wcsmbs/tst-wcstod-nan-sign.c: Likewise.
+	* stdlib/Makefile (tests): Add tst-strtod-nan-sign.
+	($(objpfx)tst-strtod-nan-sign): Depend on $(libm).
+	* wcsmbs/Makefile (tests) Add tst-wcstod-nan-sign.
+	($(objpfx)tst-wcstod-nan-sign): Depend on $(libm).
+
 2018-06-15  Herman ten Brugge  <hermantenbrugge@home.nl>
 
 	[BZ #23007]
