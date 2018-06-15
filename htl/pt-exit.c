@@ -41,7 +41,7 @@ __pthread_exit (void *status)
      disabled.  */
   __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
-  for (handlers = ___pthread_get_cleanup_stack ();
+  for (handlers = __pthread_get_cleanup_stack ();
        *handlers != NULL;
        *handlers = (*handlers)->__next)
     (*handlers)->__handler ((*handlers)->__arg);

@@ -60,6 +60,9 @@ pthread_t __pthread_self (void);
 int __pthread_setcancelstate (int, int *);
 int __pthread_setcanceltype (int, int *);
 struct __pthread_cancelation_handler **__pthread_get_cleanup_stack (void);
+#if IS_IN (libpthread)
+hidden_proto (__pthread_get_cleanup_stack)
+#endif
 int __pthread_once (pthread_once_t *, void (*) (void));
 int __pthread_rwlock_rdlock (pthread_rwlock_t *);
 int __pthread_rwlock_wrlock (pthread_rwlock_t *);
