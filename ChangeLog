@@ -29,6 +29,8 @@
 	* sysdeps/mach/include/mach/mach_traps.h (__mach_reply_port,
 	__mach_thread_self, __mach_task_self, __mach_host_self, __swtch,
 	__swtch_pri, __thread_switch, __evc_wait): Add hidden prototypes.
+	* sysdeps/mach/hurd/localplt.data (siglongjmp, longjmp,
+	__libc_lseek64, _IO_funlockfile): Whitelist PLT references.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
