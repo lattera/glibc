@@ -26,6 +26,10 @@
 	__swtch_pri, __thread_switch, __evc_wait): Add hidden prototypes.
 	* sysdeps/mach/hurd/localplt.data (siglongjmp, longjmp,
 	__libc_lseek64, _IO_funlockfile): Whitelist PLT references.
+	* sysdeps/hurd/include/hurd/signal.h (_hurd_self_sigstate): Add hidden
+	prototype and definition.
+	* sysdeps/mach/hurd/i386/____longjmp_chk.S (____longjmp_chk): Use
+	hidden target for _hurd_self_sigstate.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
