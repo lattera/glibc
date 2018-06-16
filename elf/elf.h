@@ -3850,7 +3850,8 @@ enum
 /* BPF specific declarations.  */
 
 #define R_BPF_NONE		0	/* No reloc */
-#define R_BPF_MAP_FD		1	/* Map fd to pointer */
+#define R_BPF_64_64		1
+#define R_BPF_64_32		10
 
 /* Imagination Meta specific relocations. */
 

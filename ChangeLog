@@ -1,3 +1,8 @@
+2018-06-21  Mark Wielaard  <mark@klomp.org>
+
+	* elf/elf.h (R_BPF_MAP_FD): Removed.
+	(R_BPF_64_64, R_BPF_64_32): New.
+
 2018-06-21  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23253]
