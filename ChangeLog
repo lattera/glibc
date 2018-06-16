@@ -18,6 +18,10 @@
 	* sysdeps/htl/pthreadP.h (___pthread_get_cleanup_stack): Remove
 	prototype.
 	* sysdeps/mach/hurd/localplt.data (ld.so): Make ref to __open optional.
+	* sysdeps/mach/include/mach-shortcuts-hidden.h: New file.
+	* mach/shortcut.awk: Make syscall stubs include
+	<mach-shortcuts-hidden.h> and add hidden definition.
+	* sysdeps/mach/include/mach.h: Include <mach-shortcuts-hidden.h>.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
