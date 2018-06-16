@@ -25,6 +25,7 @@
  */
 #include <mach/port.h>
 #include <mach/message.h>
+#include <mach.h>
 
 #ifdef MACH_MSG_OVERWRITE
 /* In variants with this feature, the actual system call is
@@ -125,6 +126,7 @@ __mach_msg (mach_msg_header_t *msg,
   return ret;
 }
 weak_alias (__mach_msg, mach_msg)
+libc_hidden_def (__mach_msg)
 
 mach_msg_return_t
 __mach_msg_send	(mach_msg_header_t *msg)

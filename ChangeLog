@@ -22,6 +22,9 @@
 	* mach/shortcut.awk: Make syscall stubs include
 	<mach-shortcuts-hidden.h> and add hidden definition.
 	* sysdeps/mach/include/mach.h: Include <mach-shortcuts-hidden.h>.
+	(__mach_msg): Add hidden prototype.
+	* mach/msg.c: Include <mach.h>.
+	(__mach_msg): Add hidden definition.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
