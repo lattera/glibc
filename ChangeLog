@@ -25,6 +25,10 @@
 	(__mach_msg): Add hidden prototype.
 	* mach/msg.c: Include <mach.h>.
 	(__mach_msg): Add hidden definition.
+	* mach/Makefile ($(mach-syscalls:%=$(objpfx))): Add hidden definition.
+	* sysdeps/mach/include/mach/mach_traps.h (__mach_reply_port,
+	__mach_thread_self, __mach_task_self, __mach_host_self, __swtch,
+	__swtch_pri, __thread_switch, __evc_wait): Add hidden prototypes.
 
 2018-06-15  Joseph Myers  <joseph@codesourcery.com>
 
