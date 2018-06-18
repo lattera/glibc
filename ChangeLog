@@ -1,3 +1,21 @@
+2018-06-26  Mike FABIAN  <mfabian@redhat.com>
+
+	[BZ #23308]
+	* unicode-gen/Makefile (UNICODE_VERSION): Set to 11.0.0.
+	* localedata/unicode-gen/DerivedCoreProperties.txt: Update to Unicode 11.0.0.
+	* localedata/unicode-gen/EastAsianWidth.txt: likewise.
+	* localedata/unicode-gen/PropList.txt: likewise.
+	* localedata/unicode-gen/UnicodeData.txt: likewise.
+	* localedata/charmaps/UTF-8: Regenerate.
+	* localedata/locales/i18n_ctype: likewise.
+	* localedata/locales/tr_TR: likewise.
+	* localedata/locales/translit_circle: likewise.
+	* localedata/locales/translit_cjk_compat: likewise.
+	* localedata/locales/translit_combining: likewise.
+	* localedata/locales/translit_compat: likewise.
+	* localedata/locales/translit_font: likewise.
+	* localedata/locales/translit_fraction: likewise.
+
 2018-07-03  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23363]

@@ -9,6 +9,10 @@ Version 2.28
 
 Major new features:
 
+* Unicode 11.0.0 Support: Character encoding, character type info, and
+  transliteration tables are all updated to Unicode 11.0.0, using
+  generator scripts contributed by Mike FABIAN (Red Hat).
+
 * <math.h> functions that round their results to a narrower type are added
   from TS 18661-1:2014 and TS 18661-3:2015:
 
