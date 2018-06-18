@@ -1,5 +1,30 @@
 2018-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): New macro.
+	* sysdeps/unix/sysv/linux/arm/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/shm.h [__USE_MISC]
+	(SHM_STAT_ANY): Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/sem.h [__USE_MISC]
 	(SEM_STAT_ANY): New macro.
 	* sysdeps/unix/sysv/linux/bits/sem.h [__USE_MISC]

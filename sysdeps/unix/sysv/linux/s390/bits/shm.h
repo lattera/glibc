@@ -75,6 +75,7 @@ struct shmid_ds
 /* ipcs ctl commands */
 # define SHM_STAT	13
 # define SHM_INFO	14
+# define SHM_STAT_ANY	15
 
 /* shm_mode upper byte flags */
 # define SHM_DEST	01000	/* segment will be destroyed on last detach */
