@@ -36,7 +36,7 @@
 #ifdef __USE_MISC
 # define MAP_SHARED_VALIDATE	0x03	/* Share changes and validate
 					   extension flags.  */
-# define MAP_TYPE	0x03		/* Mask for type of mapping */
+# define MAP_TYPE	0x2b		/* Mask for type of mapping */
 #endif
 
 /* Other flags.  */
