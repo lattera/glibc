@@ -1,3 +1,12 @@
+2018-06-18  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23303]
+	* sysdeps/powerpc/powerpc64/le/Makefile
+	(CFLAGS-tst-strtod-nan-sign.c): Add -mfloat128.
+	(CFLAGS-tst-wcstod-nan-sign.c): Likewise.
+	(gnulib-tests): Also add $(f128-loader-link) for
+	tst-strtod-nan-sign abd tst-wcstod-nan-sign.
+
 2018-06-15  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* include/sys/sendfile.h (__sendfile64): Declare hidden prototype.

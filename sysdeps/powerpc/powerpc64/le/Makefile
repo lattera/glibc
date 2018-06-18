@@ -54,10 +54,13 @@ CFLAGS-tst-strtod6.c += -mfloat128
 CFLAGS-tst-strfrom.c += -mfloat128
 CFLAGS-tst-strfrom-locale.c += -mfloat128
 CFLAGS-strfrom-skeleton.c += -mfloat128
+CFLAGS-tst-strtod-nan-sign.c += -mfloat128
+CFLAGS-tst-wcstod-nan-sign.c += -mfloat128
 $(foreach test,bug-strtod bug-strtod2 bug-strtod2 tst-strtod-round \
 tst-wcstod-round tst-strtod6 tst-strrom tst-strfrom-locale \
 tst-strtod-nan-locale tst-wcstod-nan-locale \
-strfrom-skeleton,$(objpfx)$(test)): gnulib-tests += $(f128-loader-link)
+strfrom-skeleton tst-strtod-nan-sign tst-wcstod-nan-sign, \
+$(objpfx)$(test)): gnulib-tests += $(f128-loader-link)
 
 # When building glibc with support for _Float128, the powers of ten tables in
 # fpioconst.c and in the string conversion functions must be extended.  Some
