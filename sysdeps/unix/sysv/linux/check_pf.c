@@ -313,7 +313,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
     }
   else
     {
-      int fd = __socket (PF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
+      int fd = __socket (PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
 
       if (__glibc_likely (fd >= 0))
 	{
