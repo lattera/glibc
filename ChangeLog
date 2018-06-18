@@ -1,5 +1,26 @@
 2018-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): New macro.
+	* sysdeps/unix/sysv/linux/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/msq.h [__USE_MISC]
+	(MSG_STAT_ANY): Likewise.
+
 	* sysdeps/unix/sysv/linux/hppa/bits/mman.h [__USE_MISC]
 	(MAP_TYPE): Change value to 0x2b.
 
