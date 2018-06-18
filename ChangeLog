@@ -1,5 +1,26 @@
 2018-06-18  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): New macro.
+	* sysdeps/unix/sysv/linux/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/generic/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+	* sysdeps/unix/sysv/linux/x86/bits/sem.h [__USE_MISC]
+	(SEM_STAT_ANY): Likewise.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/msq.h [__USE_MISC]
 	(MSG_STAT_ANY): New macro.
 	* sysdeps/unix/sysv/linux/bits/msq.h [__USE_MISC]
