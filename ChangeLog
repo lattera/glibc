@@ -1,3 +1,13 @@
+2018-06-19  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23280]
+	* stdio-common/vfscanf.c (_IO_vfscanf_internal): Pass sign of
+	floating-point number to strtod functions rather than possibly
+	negating result of those functions.
+	* stdio-common/tst-scanf-round.c: New file.
+	* stdio-common/Makefile (tests): Add tst-scanf-round.
+	($(objpfx)tst-scanf-round): Depend on $(libm).
+
 2018-06-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/localplt.data: Move to...

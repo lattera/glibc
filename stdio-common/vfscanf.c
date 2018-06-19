@@ -292,7 +292,7 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
   /* Errno of last failed inchar call.  */
   int inchar_errno = 0;
   /* Status for reading F-P nums.  */
-  char got_digit, got_dot, got_e, negative;
+  char got_digit, got_dot, got_e, got_sign;
   /* If a [...] is a [^...].  */
   CHAR_T not_in;
 #define exp_char not_in
@@ -1914,20 +1914,19 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	  if (__glibc_unlikely (c == EOF))
 	    input_error ();
 
-	  got_digit = got_dot = got_e = 0;
+	  got_digit = got_dot = got_e = got_sign = 0;
 
 	  /* Check for a sign.  */
 	  if (c == L_('-') || c == L_('+'))
 	    {
-	      negative = c == L_('-');
+	      got_sign = 1;
+	      char_buffer_add (&charbuf, c);
 	      if (__glibc_unlikely (width == 0 || inchar () == EOF))
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
 	      if (width > 0)
 		--width;
 	    }
-	  else
-	    negative = 0;
 
 	  /* Take care for the special arguments "nan" and "inf".  */
 	  if (TOLOWER (c) == L_('n'))
@@ -2176,7 +2175,7 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		 digits with ASCII letters.  */
 	      && !(flags & HEXA_FLOAT)
 	      /* Minimum requirement.  */
-	      && (char_buffer_size (&charbuf) == 0 || got_dot)
+	      && (char_buffer_size (&charbuf) == got_sign || got_dot)
 	      && (map = __wctrans ("to_inpunct")) != NULL)
 	    {
 	      /* Reget the first character.  */
@@ -2195,8 +2194,8 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		 for localized FP numbers, then we may have localized
 		 digits.  Note, we test GOT_DOT above.  */
 #ifdef COMPILE_WSCANF
-	      if (char_buffer_size (&charbuf) == 0
-		  || (char_buffer_size (&charbuf) == 1
+	      if (char_buffer_size (&charbuf) == got_sign
+		  || (char_buffer_size (&charbuf) == got_sign + 1
 		      && wcdigits[11] == decimal))
 #else
 	      char mbdigits[12][MB_LEN_MAX + 1];
@@ -2204,13 +2203,13 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	      mbstate_t state;
 	      memset (&state, '\0', sizeof (state));
 
-	      bool match_so_far = char_buffer_size (&charbuf) == 0;
+	      bool match_so_far = char_buffer_size (&charbuf) == got_sign;
 	      size_t mblen = __wcrtomb (mbdigits[11], wcdigits[11], &state);
 	      if (mblen != (size_t) -1)
 		{
 		  mbdigits[11][mblen] = '\0';
 		  match_so_far |=
-		    (char_buffer_size (&charbuf) == strlen (decimal)
+		    (char_buffer_size (&charbuf) == strlen (decimal) + got_sign
 		     && strcmp (decimal, mbdigits[11]) == 0);
 		}
 	      else
@@ -2220,7 +2219,8 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		     from a file.  */
 		  if (decimal_len <= MB_LEN_MAX)
 		    {
-		      match_so_far |= char_buffer_size (&charbuf) == decimal_len;
+		      match_so_far |= (char_buffer_size (&charbuf)
+				       == decimal_len + got_sign);
 		      memcpy (mbdigits[11], decimal, decimal_len + 1);
 		    }
 		  else
@@ -2284,7 +2284,7 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		      if (got_e && charbuf.current[-1] == exp_char
 			  && (c == L_('-') || c == L_('+')))
 			char_buffer_add (&charbuf, c);
-		      else if (char_buffer_size (&charbuf) > 0 && !got_e
+		      else if (char_buffer_size (&charbuf) > got_sign && !got_e
 			       && (CHAR_T) TOLOWER (c) == exp_char)
 			{
 			  char_buffer_add (&charbuf, exp_char);
@@ -2408,9 +2408,10 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
 	     prefix this is an error.  */
-	  if (__glibc_unlikely (char_buffer_size (&charbuf) == 0
+	  if (__glibc_unlikely (char_buffer_size (&charbuf) == got_sign
 				|| ((flags & HEXA_FLOAT)
-				    && char_buffer_size (&charbuf) == 2)))
+				    && (char_buffer_size (&charbuf)
+					== 2 + got_sign))))
 	    conv_error ();
 
 	scan_float:
@@ -2427,21 +2428,21 @@ _IO_vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	      long double d = __strtold_internal
 		(char_buffer_start (&charbuf), &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != char_buffer_start (&charbuf))
-		*ARG (long double *) = negative ? -d : d;
+		*ARG (long double *) = d;
 	    }
 	  else if (flags & (LONG | LONGDBL))
 	    {
 	      double d = __strtod_internal
 		(char_buffer_start (&charbuf), &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != char_buffer_start (&charbuf))
-		*ARG (double *) = negative ? -d : d;
+		*ARG (double *) = d;
 	    }
 	  else
 	    {
 	      float d = __strtof_internal
 		(char_buffer_start (&charbuf), &tw, flags & GROUP);
 	      if (!(flags & SUPPRESS) && tw != char_buffer_start (&charbuf))
-		*ARG (float *) = negative ? -d : d;
+		*ARG (float *) = d;
 	    }
 
 	  if (__glibc_unlikely (tw == char_buffer_start (&charbuf)))

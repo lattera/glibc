@@ -61,6 +61,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-printf-bz18872 tst-vfprintf-width-prec tst-fmemopen4 \
 	 tst-vfprintf-user-type \
 	 tst-vfprintf-mbs-prec \
+	 tst-scanf-round \
 
 test-srcs = tst-unbputc tst-printf
 
@@ -158,3 +159,4 @@ $(objpfx)tst-setvbuf1-cmp.out: tst-setvbuf1.expect $(objpfx)tst-setvbuf1.out
 	$(evaluate-test)
 
 $(objpfx)tst-printf-round: $(libm)
+$(objpfx)tst-scanf-round: $(libm)
