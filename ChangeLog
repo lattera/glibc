@@ -1,3 +1,9 @@
+2018-06-18  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/localplt.data: Move to...
+	* sysdeps/mach/hurd/i386/localplt.data: new file. Add + REL
+	R_386_GLOB_DAT like on Linux i386.
+
 2018-06-18  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/shm.h [__USE_MISC]
