@@ -54,7 +54,7 @@ ld.so: _dl_init_first
 ld.so: _dl_mcount
 ld.so: ___tls_get_addr
 ld.so: __tunable_get_val
-
+#
 # These should ideally be avoided, but is currently difficult
 libc.so: siglongjmp ?
 libc.so: longjmp ?
