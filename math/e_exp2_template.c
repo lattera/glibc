@@ -21,13 +21,6 @@
 #include <math-underflow.h>
 #include <float.h>
 
-#define declare_mgen_finite_alias_x(from, to) \
-	strong_alias (from, to ## _finite)
-#define declare_mgen_finite_alias_s(from,to) \
-	declare_mgen_finite_alias_x (from, to)
-#define declare_mgen_finite_alias(from, to) \
-	declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
-
 FLOAT
 M_DECL_FUNC (__ieee754_exp2) (FLOAT x)
 {

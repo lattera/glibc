@@ -1,3 +1,10 @@
+2018-06-20  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* math/e_exp2_template.c (declare_mgen_finite_alias,
+	declare_mgen_finite_alias_s, declare_mgen_finite_alias_x): Move to...
+	* sysdeps/generic/math-type-macros.h (declare_mgen_finite_alias,
+	declare_mgen_finite_alias_s, declare_mgen_finite_alias_x): ... here.
+
 2018-06-20  Florian Weimer  <fweimer@redhat.com>
 
 	* libio/libioP.h (IO_validate_vtable): Avoid ptrdiff_t overflow.

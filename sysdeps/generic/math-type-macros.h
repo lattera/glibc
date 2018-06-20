@@ -74,6 +74,21 @@
 # error "SET_NAN_PAYLOAD must be defined."
 #endif
 
+#ifndef declare_mgen_finite_alias_x
+#define declare_mgen_finite_alias_x(from, to)	\
+  strong_alias (from, to ## _finite)
+#endif
+
+#ifndef declare_mgen_finite_alias_s
+# define declare_mgen_finite_alias_s(from,to)	\
+  declare_mgen_finite_alias_x (from, to)
+#endif
+
+#ifndef declare_mgen_finite_alias
+# define declare_mgen_finite_alias(from, to)	\
+  declare_mgen_finite_alias_s (M_SUF (from), M_SUF (to))
+#endif
+
 #define __M_CONCAT(a,b) a ## b
 #define __M_CONCATX(a,b) __M_CONCAT(a,b)
 
