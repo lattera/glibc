@@ -1,5 +1,11 @@
 2018-06-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* string/tst-cmp.c: Include <libc-diag.h>.
+	(strncmp_max): Disable -Wstringop-overflow= around call to
+	strncmp.
+	(strncasecmp_max): Disable -Wstringop-overflow= around call to
+	strncasecmp.
+
 	* string/bug-strpbrk1.c: Include <libc-diag.h>.
 	(main): Disable -Wunused-value around call to strpbrk.
 	* string/bug-strspn1.c: Include <libc-diag.h>.

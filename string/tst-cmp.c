@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libc-diag.h>
 
 static int
 signum (int val)
@@ -98,13 +99,27 @@ strncasecmp_64 (const char *left, const char *right)
 static int
 strncmp_max (const char *left, const char *right)
 {
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 9 warns about the size passed to strncmp being larger than
+     PTRDIFF_MAX; the use of SIZE_MAX is deliberate here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wstringop-overflow=");
+#endif
   return strncmp (left, right, SIZE_MAX);
+  DIAG_POP_NEEDS_COMMENT;
 }
 
 static int
 strncasecmp_max (const char *left, const char *right)
 {
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* GCC 9 warns about the size passed to strncasecmp being larger
+     than PTRDIFF_MAX; the use of SIZE_MAX is deliberate here.  */
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wstringop-overflow=");
+#endif
   return strncasecmp (left, right, SIZE_MAX);
+  DIAG_POP_NEEDS_COMMENT;
 }
 
 int
