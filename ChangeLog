@@ -1,4 +1,10 @@
 2018-06-20  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* sysdeps/ieee754/ldbl-128ibm-compat/Versions: New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/libm-alias-float128.h: New file.
+
+2018-06-20  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* math/Makefile (libm-calls): Move s_significandF to...
 	(gen-libm-calls): ... here.
