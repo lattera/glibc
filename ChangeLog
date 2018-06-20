@@ -1,3 +1,10 @@
+2018-06-20  Joseph Myers  <joseph@codesourcery.com>
+
+	* string/bug-strpbrk1.c: Include <libc-diag.h>.
+	(main): Disable -Wunused-value around call to strpbrk.
+	* string/bug-strspn1.c: Include <libc-diag.h>.
+	(main): Disable -Wunused-value around call to strspn.
+
 2018-06-20  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 	    Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
