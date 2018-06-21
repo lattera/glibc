@@ -3915,6 +3915,16 @@ enum
 #define R_METAG_TLS_LE_HI16	60
 #define R_METAG_TLS_LE_LO16	61
 
+/* NDS32 relocations.  */
+#define R_NDS32_NONE		0
+#define R_NDS32_32_RELA 	20
+#define R_NDS32_COPY		39
+#define R_NDS32_GLOB_DAT	40
+#define R_NDS32_JMP_SLOT	41
+#define R_NDS32_RELATIVE	42
+#define R_NDS32_TLS_TPOFF	102
+#define R_NDS32_TLS_DESC	119
+
 __END_DECLS
 
 #endif	/* elf.h */

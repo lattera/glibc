@@ -1,3 +1,14 @@
+2018-06-21  Vincent Chen  <vincentc@andestech.com>
+
+	* elf/elf.h (R_NDS32_NONE): New define.
+	(R_NDS32_32_RELA): Likewise.
+	(R_NDS32_COPY): Likewise.
+	(R_NDS32_GLOB_DAT): Likewise.
+	(R_NDS32_JUMP_SLOT): Likewise.
+	(R_NDS32_RELATIVE): Likewise.
+	(R_NDS32_TLS_TPOFF): Likewise.
+	(R_NDS32_TLS_DESC): Likewise.
+
 2018-06-21  Mark Wielaard  <mark@klomp.org>
 
 	* elf/elf.h (R_BPF_MAP_FD): Removed.
