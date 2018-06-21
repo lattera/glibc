@@ -122,6 +122,8 @@ END LC_COLLATE
 LC_MESSAGES
 yesexpr "^[+1JjTtYy]"
 noexpr  "^[-0nN]"
+yesstr  "jo"
+nostr   "ni<U00E9>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -154,10 +156,10 @@ abmon  "st<U00EB>"; "gro";/
 mon    "st<U00EB>cznik";/
         "gromicznik";/
         "str<U00EB>miannik";/
-        "<U0142><U017C><U00EB>kwi<U00F4>t";/
+        "<U0142><U017C><U00EB>kwiat";/
         "m<U00F4>j";/
         "czerwi<U0144>c";/
-        "l<U00EB>pinc";/
+        "l<U00EB>pi<U0144>c";/
         "z<U00E9>lnik";/
         "s<U00E9>wnik";/
         "rujan";/

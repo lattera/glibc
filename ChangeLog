@@ -1,3 +1,11 @@
+2018-06-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #19485]
+	* localedata/locales/csb_PL (mon): Fix typos:
+	"łżëkwiôt" -> "łżëkwiat" (April); "lëpinc" -> "lëpińc" (July).
+	(yesstr): Add, value is "jo".
+	(nostr): Add, value is "nié".
+
 2018-06-22  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
 
 	* sysdeps/m68k/m680x0/fpu/s_log1p.c: Set as the generic file for
