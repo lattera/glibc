@@ -460,11 +460,19 @@ libc_feupdateenv_387_ctx (struct rm_ctx *ctx)
 #endif /* __SSE_MATH__ */
 
 #ifdef __SSE2_MATH__
-# define libc_feholdexcept_setround_ctx	libc_feholdexcept_setround_sse_ctx
-# define libc_fesetenv_ctx		libc_fesetenv_sse_ctx
-# define libc_feupdateenv_ctx		libc_feupdateenv_sse_ctx
-# define libc_feholdsetround_ctx	libc_feholdsetround_sse_ctx
-# define libc_feresetround_ctx		libc_feresetround_sse_ctx
+# if defined (__x86_64__) || !defined (MATH_SET_BOTH_ROUNDING_MODES)
+#  define libc_feholdexcept_setround_ctx libc_feholdexcept_setround_sse_ctx
+#  define libc_fesetenv_ctx		libc_fesetenv_sse_ctx
+#  define libc_feupdateenv_ctx		libc_feupdateenv_sse_ctx
+#  define libc_feholdsetround_ctx	libc_feholdsetround_sse_ctx
+#  define libc_feresetround_ctx		libc_feresetround_sse_ctx
+# else
+#  define libc_feholdexcept_setround_ctx default_libc_feholdexcept_setround_ctx
+#  define libc_fesetenv_ctx		default_libc_fesetenv_ctx
+#  define libc_feupdateenv_ctx		default_libc_feupdateenv_ctx
+#  define libc_feholdsetround_ctx	default_libc_feholdsetround_ctx
+#  define libc_feresetround_ctx		default_libc_feresetround_ctx
+# endif
 #else
 # define libc_feholdexcept_setround_ctx	libc_feholdexcept_setround_387_ctx
 # define libc_feupdateenv_ctx		libc_feupdateenv_387_ctx

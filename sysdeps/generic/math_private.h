@@ -428,6 +428,53 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 # define HAVE_RM_CTX 0
 #endif
 
+
+/* Default implementation using standard fenv functions.
+   Avoid unnecessary rounding mode changes by first checking the
+   current rounding mode.  Note the use of __glibc_unlikely is
+   important for performance.  */
+
+static __always_inline void
+default_libc_feholdsetround_ctx (struct rm_ctx *ctx, int round)
+{
+  ctx->updated_status = false;
+
+  /* Update rounding mode only if different.  */
+  if (__glibc_unlikely (round != get_rounding_mode ()))
+    {
+      ctx->updated_status = true;
+      __fegetenv (&ctx->env);
+      __fesetround (round);
+    }
+}
+
+static __always_inline void
+default_libc_feresetround_ctx (struct rm_ctx *ctx)
+{
+  /* Restore the rounding mode if updated.  */
+  if (__glibc_unlikely (ctx->updated_status))
+    __feupdateenv (&ctx->env);
+}
+
+static __always_inline void
+default_libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
+{
+  /* Save exception flags and rounding mode, and disable exception
+     traps.  */
+  __feholdexcept (&ctx->env);
+
+  /* Update rounding mode only if different.  */
+  if (__glibc_unlikely (round != get_rounding_mode ()))
+    __fesetround (round);
+}
+
+static __always_inline void
+default_libc_feresetround_noex_ctx (struct rm_ctx *ctx)
+{
+  /* Restore exception flags and rounding mode.  */
+  __fesetenv (&ctx->env);
+}
+
 #if HAVE_RM_CTX
 /* Set/Restore Rounding Modes only when necessary.  If defined, these functions
    set/restore floating point state only if the state needed within the lexical
@@ -456,51 +503,10 @@ default_libc_feupdateenv_test (fenv_t *e, int ex)
 
 #else
 
-/* Default implementation using standard fenv functions.
-   Avoid unnecessary rounding mode changes by first checking the
-   current rounding mode.  Note the use of __glibc_unlikely is
-   important for performance.  */
-
-static __always_inline void
-libc_feholdsetround_ctx (struct rm_ctx *ctx, int round)
-{
-  ctx->updated_status = false;
-
-  /* Update rounding mode only if different.  */
-  if (__glibc_unlikely (round != get_rounding_mode ()))
-    {
-      ctx->updated_status = true;
-      __fegetenv (&ctx->env);
-      __fesetround (round);
-    }
-}
-
-static __always_inline void
-libc_feresetround_ctx (struct rm_ctx *ctx)
-{
-  /* Restore the rounding mode if updated.  */
-  if (__glibc_unlikely (ctx->updated_status))
-    __feupdateenv (&ctx->env);
-}
-
-static __always_inline void
-libc_feholdsetround_noex_ctx (struct rm_ctx *ctx, int round)
-{
-  /* Save exception flags and rounding mode, and disable exception
-     traps.  */
-  __feholdexcept (&ctx->env);
-
-  /* Update rounding mode only if different.  */
-  if (__glibc_unlikely (round != get_rounding_mode ()))
-    __fesetround (round);
-}
-
-static __always_inline void
-libc_feresetround_noex_ctx (struct rm_ctx *ctx)
-{
-  /* Restore exception flags and rounding mode.  */
-  __fesetenv (&ctx->env);
-}
+# define libc_feholdsetround_ctx      default_libc_feholdsetround_ctx
+# define libc_feresetround_ctx        default_libc_feresetround_ctx
+# define libc_feholdsetround_noex_ctx default_libc_feholdsetround_noex_ctx
+# define libc_feresetround_noex_ctx   default_libc_feresetround_noex_ctx
 
 # define libc_feholdsetroundf_ctx libc_feholdsetround_ctx
 # define libc_feholdsetroundl_ctx libc_feholdsetround_ctx

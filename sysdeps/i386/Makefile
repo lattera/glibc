@@ -5,6 +5,14 @@ asm-CPPFLAGS += -DGAS_SYNTAX
 # The i386 `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq ($(subdir),math)
+# These functions change the rounding mode internally and need to
+# update both the SSE2 rounding mode and the 387 rounding mode.  See
+# the handling of MATH_SET_BOTH_ROUNDING_MODES in
+# sysdeps/i386/fpu/fenv_private.h.
+CFLAGS-e_gamma_r.c += -DMATH_SET_BOTH_ROUNDING_MODES
+endif
+
 ifeq ($(subdir),string)
 sysdep_routines += cacheinfo
 endif

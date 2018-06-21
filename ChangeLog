@@ -1,3 +1,25 @@
+2018-06-21  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23253]
+	* sysdeps/generic/math_private.h (default_libc_feholdsetround_ctx):
+	Renamed from libc_feholdsetround_ctx.
+	(default_libc_feresetround_ctx): Renamed from
+	libc_feresetround_ctx.
+	(default_libc_feholdsetround_noex_ctx): Renamed from
+	libc_feholdsetround_noex_ctx.
+	(default_libc_feresetround_noex_ctx): Renamed from
+	libc_feresetround_noex_ctx.
+	[!HAVE_RM_CTX] (libc_feholdsetround_ctx, libc_feresetround_ctx)
+	(libc_feholdsetround_noex_ctx, libc_feresetround_noex_ctx): Macros
+	forwardning to the old implementations under the new names.
+	* sysdeps/i386/fpu/fenv_private.h [__SSE_MATH__]
+	(libc_feholdexcept_setround_ctx, libc_fesetenv_ctx)
+	(libc_feupdateenv_ctx, libc_feholdsetround_ctx)
+	(libc_feresetround_ctx): Forward to default implements for i386
+	and MATH_SET_BOTH_ROUNDING_MODES.
+	* sysdeps/i386/Makefile [$(subdir) == math] (CFLAGS-e_gamma_r.c):
+	Add -DMATH_SET_BOTH_ROUNDING_MODES.
+
 2018-06-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* string/tst-cmp.c: Include <libc-diag.h>.
