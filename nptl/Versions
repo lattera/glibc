@@ -271,5 +271,6 @@ libpthread {
     __pthread_unwind; __pthread_get_minstack;
     __pthread_barrier_init; __pthread_barrier_wait;
     __shm_directory;
+    __libpthread_freeres;
   }
 }

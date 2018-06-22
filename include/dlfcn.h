@@ -155,6 +155,8 @@ extern void __libc_register_dl_open_hook (struct link_map *map)
 extern void __libc_register_dlfcn_hook (struct link_map *map)
      attribute_hidden;
 #endif
-#endif
 
+extern void __dlerror_main_freeres (void) attribute_hidden;
+
+#endif
 #endif

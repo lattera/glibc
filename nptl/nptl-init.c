@@ -78,9 +78,6 @@ extern
 void __nptl_set_robust (struct pthread *);
 
 #ifdef SHARED
-static void nptl_freeres (void);
-
-
 static const struct pthread_functions pthread_functions =
   {
     .ptr_pthread_attr_destroy = __pthread_attr_destroy,
@@ -140,8 +137,6 @@ static const struct pthread_functions pthread_functions =
 # ifdef SIGSETXID
     .ptr__nptl_setxid = __nptl_setxid,
 # endif
-    /* For now only the stack cache needs to be freed.  */
-    .ptr_freeres = nptl_freeres,
     .ptr_set_robust = __nptl_set_robust
   };
 # define ptr_pthread_functions &pthread_functions
@@ -151,16 +146,6 @@ static const struct pthread_functions pthread_functions =
 
 
 #ifdef SHARED
-/* This function is called indirectly from the freeres code in libc.  */
-static void
-__libc_freeres_fn_section
-nptl_freeres (void)
-{
-  __unwind_freeres ();
-  __free_stacks (0);
-}
-
-
 static
 #endif
 void

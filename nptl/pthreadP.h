@@ -279,8 +279,8 @@ hidden_proto (__pthread_register_cancel)
 hidden_proto (__pthread_unregister_cancel)
 # ifdef SHARED
 extern void attribute_hidden pthread_cancel_init (void);
-extern void __unwind_freeres (void);
 # endif
+extern void __nptl_unwind_freeres (void) attribute_hidden;
 #endif
 
 
@@ -597,7 +597,8 @@ extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 extern void __nptl_set_robust (struct pthread *self);
 #endif
 
-extern void __free_stacks (size_t limit) attribute_hidden;
+extern void __nptl_stacks_freeres (void) attribute_hidden;
+extern void __shm_directory_freeres (void) attribute_hidden;
 
 extern void __wait_lookup_done (void) attribute_hidden;
 

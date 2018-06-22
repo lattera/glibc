@@ -135,13 +135,13 @@ __shm_directory (size_t *len)
 }
 #if IS_IN (libpthread)
 hidden_def (__shm_directory)
-#endif
-
 
 /* Make sure the table is freed if we want to free everything before
    exiting.  */
-libc_freeres_fn (freeit)
+void
+__shm_directory_freeres (void)
 {
   if (mountpoint.dir != defaultdir)
     free (mountpoint.dir);
 }
+#endif

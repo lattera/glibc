@@ -1,3 +1,51 @@
+2018-06-29  DJ Delorie  <dj@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	[BZ #23329]
+	* include/libc-symbols.h: Comment the freeres framework.
+	* include/set-hooks.h: Include libc-symbols.h.  Fix comment.
+	* dlfcn/Makefile (libdl-routines): Add dlfreeres.
+	* dlfcn/Versions (GLIBC_PRIVATE): Add __libdl_freeres.
+	* dlfcn/dlerror.c: Include libc-symbols.h
+	(__dlerror_main_freeres): New function.
+	* dlfcn/dlfreeres.c: New file.
+	* dlfcn/sdlfreeres.c: New file.
+	* include/dlfcn.h: Declare __dlerror_main_freeres.
+	* malloc/set-freeres.c: Declare __libdl_freeres, and
+	__libpthread_freeres.
+	(__libc_subfreeres): Call __libdl_freeres, and __libpthread_freeres if
+	the releavant libraries are loaded.
+	* malloc/thread-freeres.c: Add comments.
+	* nptl/Makefile (libpthread-routines): Add nptlfreeres.
+	* nptl/Version (GLIBC_PRIVATE): Add __libpthread_freeres.
+	* nptl/allocatestack.c (__nptl_free_stacks): New function.
+	(__free_stacks): Rename to...
+	(free_stacks): ...this. Mark static.
+	(queue_stack): Call free_stacks.
+	* nptl/libc_pthread_init.c [SHARED] (freeres_libpthread): Delete.
+	* nptl/nptl-init.c: Delete delcaration of nptl_freeres.
+	* sysdeps/nptl/pthread-functions.h (pthread_functions): Remove
+	ptr_freeres element from struct.
+	(pthread_functions): Remove .ptr_freeres from struct initializer.
+	[SHARED] (nptl_freeres): Remove.
+	* nptl/nptlfreeres.c: New file.
+	* nptl/pthreadP.h
+	[IS_IN (libpthread) && SHARED ] (__unwind_freeres): Rename to...
+	[IS_IN (libpthread)] (__nptl_unwind_freeres): ...this.  Mark
+	attribute_hidden.
+	(__free_stacks): Rename to...
+	(__nptl_stacks_freeres): ...this.
+	(__shm_directory_freeres): Declare.
+	* nptl/unwind-forcedunwind.c (__unwind_freeres): Rename to...
+	(__nptl_unwind_freeres): ...this.
+	* resolv/res-close.c: Add comment.
+	* resolv/resolv_conf.c: Include libc-symbols.h.
+	* string/strerror_l.c: Include libc-symbols.h.
+	* sunrpc/rpc_thread.c: Include libc-symbols.h.
+	* sysdeps/mach/strerror_l.c: Inlcude libc-symbols.h
+	* sysdeps/unix/sysv/linux/shm-directory.c (freeit): Rename to...
+	[IS_IN (libpthread)] (__shm_directory_freeres): ...this.
+
 2018-06-29  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* stdlib/tst-strfmon_l.c: Add tests for long double.

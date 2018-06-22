@@ -5,6 +5,7 @@
 #include <libc-lock.h>
 #include <libc-tsd.h>
 #include <shlib-compat.h>
+#include <libc-symbols.h>
 
 
 /* Variable used in non-threaded applications or for the first thread.  */

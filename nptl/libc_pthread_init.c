@@ -77,11 +77,3 @@ __libc_pthread_init (unsigned long int *ptr, void (*reclaim) (void),
   return &__libc_multiple_threads;
 #endif
 }
-
-#ifdef SHARED
-libc_freeres_fn (freeres_libptread)
-{
-  if (__libc_pthread_functions_init)
-    PTHFCT_CALL (ptr_freeres, ());
-}
-#endif

@@ -24,6 +24,7 @@
 #include <mach/error.h>
 #include <errorlib.h>
 #include <sys/param.h>
+#include <libc-symbols.h>
 
 
 static __thread char *last_value;
@@ -86,7 +87,7 @@ strerror_l (int errnum, locale_t loc)
   return (char *) translate (es->subsystem[sub].codes[code], loc);
 }
 
-
+/* This is called when a thread is exiting to free the last_value string.  */
 void
 __strerror_thread_freeres (void)
 {

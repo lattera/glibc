@@ -217,16 +217,6 @@
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((used, section (".gnu.warning." #symbol __sec_comment))) \
     = msg;
-#define libc_freeres_ptr(decl) \
-  __make_section_unallocated ("__libc_freeres_ptrs, \"aw\", %nobits") \
-  decl __attribute__ ((section ("__libc_freeres_ptrs" __sec_comment)))
-#define __libc_freeres_fn_section \
-  __attribute__ ((section ("__libc_freeres_fn")))
-
-#define libc_freeres_fn(name)	\
-  static void name (void) __attribute_used__ __libc_freeres_fn_section;	\
-  text_set_element (__libc_subfreeres, name);				\
-  static void name (void)
 
 /* A canned warning for sysdeps/stub functions.  */
 #define	stub_warning(name) \
@@ -243,6 +233,79 @@
 requires at runtime the shared libraries from the glibc version used \
 for linking")
 #endif
+
+/* Resource Freeing Hooks:
+
+   Normally a process exits and the OS cleans up any allocated
+   memory.  However, when tooling like mtrace or valgrind is monitoring
+   the process we need to free all resources that are part of the
+   process in order to provide the consistency required to track
+   memory leaks.
+
+   A single public API exists and is __libc_freeres(), and this is used
+   by applications like valgrind to freee resouces.
+
+   There are 3 cases:
+
+   (a) __libc_freeres
+
+	In this case all you need to do is define the freeing routine:
+
+	foo.c:
+	libfoo_freeres_fn (foo_freeres)
+	{
+	  complex_free (mem);
+	}
+
+	This ensures the function is called at the right point to free
+	resources.
+
+   (b) __libc_freeres_ptr
+
+	The framework for (a) iterates over the list of pointers-to-free
+	in (b) and frees them.
+
+	foo.c:
+	libc_freeres_ptr (static char *foo_buffer);
+
+	Freeing these resources alaways happens last and is equivalent
+	to registering a function that does 'free (foo_buffer)'.
+
+   (c) Explicit lists of free routines to call or objects to free.
+
+	It is the intended goal to remove (a) and (b) which have some
+	non-determinism based on link order, and instead use explicit
+	lists of functions and frees to resolve cleanup ordering issues
+	and make it easy to debug and maintain.
+
+	As of today the following subsystems use (c):
+
+	Per-thread cleanup:
+	* malloc/thread-freeres.c
+
+	libdl cleanup:
+	* dlfcn/dlfreeres.c
+
+	libpthread cleanup:
+	* nptl/nptlfreeres.c
+
+	So if you need any shutdown routines to run you should add them
+	directly to the appropriate subsystem's shutdown list.  */
+
+/* Resource pointers to free in libc.so.  */
+#define libc_freeres_ptr(decl) \
+  __make_section_unallocated ("__libc_freeres_ptrs, \"aw\", %nobits") \
+  decl __attribute__ ((section ("__libc_freeres_ptrs" __sec_comment)))
+
+/* Resource freeing functions from libc.so go in this section.  */
+#define __libc_freeres_fn_section \
+  __attribute__ ((section ("__libc_freeres_fn")))
+
+/* Resource freeing functions for libc.so.  */
+#define libc_freeres_fn(name) \
+  static void name (void) __attribute_used__ __libc_freeres_fn_section;	\
+  text_set_element (__libc_subfreeres, name);				\
+  static void name (void)
 
 /* Declare SYMBOL to be TYPE (`function' or `object') of SIZE bytes
    alias to ORIGINAL, when the assembler supports such declarations

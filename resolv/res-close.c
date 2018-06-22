@@ -140,4 +140,5 @@ __res_thread_freeres (void)
   /* Make sure we do a full re-initialization the next time.  */
   _res.options = 0;
 }
+/* Also must be called when the main thread exits.  */
 text_set_element (__libc_subfreeres, __res_thread_freeres);

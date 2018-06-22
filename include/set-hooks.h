@@ -22,11 +22,12 @@
 #define __need_size_t
 #include <stddef.h>
 #include <sys/cdefs.h>
+#include <libc-symbols.h>
 
 #ifdef symbol_set_define
 /* Define a hook variable called NAME.  Functions put on this hook take
    arguments described by PROTO.  Use `text_set_element (NAME, FUNCTION)'
-   from gnu-stabs.h to add a function to the hook.  */
+   from include/libc-symbols.h to add a function to the hook.  */
 
 # define DEFINE_HOOK(NAME, PROTO)		\
   typedef void __##NAME##_hook_function_t PROTO; \

@@ -13,5 +13,6 @@ libdl {
   }
   GLIBC_PRIVATE {
     _dlfcn_hook;
+    __libdl_freeres;
   }
 }

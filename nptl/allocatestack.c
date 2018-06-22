@@ -251,8 +251,8 @@ get_cached_stack (size_t *sizep, void **memp)
 
 
 /* Free stacks until cache size is lower than LIMIT.  */
-void
-__free_stacks (size_t limit)
+static void
+free_stacks (size_t limit)
 {
   /* We reduce the size of the cache.  Remove the last entries until
      the size is below the limit.  */
@@ -288,6 +288,12 @@ __free_stacks (size_t limit)
     }
 }
 
+/* Free all the stacks on cleanup.  */
+void
+__nptl_stacks_freeres (void)
+{
+  free_stacks (0);
+}
 
 /* Add a stack frame which is not used anymore to the stack.  Must be
    called with the cache lock held.  */
@@ -302,7 +308,7 @@ queue_stack (struct pthread *stack)
 
   stack_cache_actsize += stack->stackblock_size;
   if (__glibc_unlikely (stack_cache_actsize > stack_cache_maxsize))
-    __free_stacks (stack_cache_maxsize);
+    free_stacks (stack_cache_maxsize);
 }
 
 

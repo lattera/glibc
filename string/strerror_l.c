@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
-
+#include <libc-symbols.h>
 
 static __thread char *last_value;
 
@@ -55,7 +55,6 @@ strerror_l (int errnum, locale_t loc)
 
   return (char *) translate (_sys_errlist_internal[errnum], loc);
 }
-
 
 void
 __strerror_thread_freeres (void)

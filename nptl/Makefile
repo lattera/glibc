@@ -45,7 +45,7 @@ pthread-compat-wrappers = \
 		      sigwait sigsuspend \
 		      recvmsg sendmsg
 
-libpthread-routines = nptl-init vars events version pt-interp \
+libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_create pthread_exit pthread_detach \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_join_common \

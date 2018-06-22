@@ -94,7 +94,6 @@ struct pthread_functions
        __attribute ((noreturn)) __cleanup_fct_attribute;
   void (*ptr__nptl_deallocate_tsd) (void);
   int (*ptr__nptl_setxid) (struct xid_command *);
-  void (*ptr_freeres) (void);
   void (*ptr_set_robust) (struct pthread *);
 };
 
