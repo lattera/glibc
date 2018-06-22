@@ -16,20 +16,6 @@
    License along with the GNU C Library.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <math.h>
-
-#ifndef FUNC
 #define FUNC significand
-#endif
-#ifndef float_type
-#define float_type double
-#endif
-
-#define __CONCATX(a,b) __CONCAT(a,b)
-
-float_type
-__CONCATX(__,FUNC) (float_type x)
-{
-  return __m81_u(__CONCATX(__,FUNC))(x);
-}
-weak_alias (__CONCATX(__,FUNC), FUNC)
+#include <s_log1p.c>
+weak_alias (__significand, significand)

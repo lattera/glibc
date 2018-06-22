@@ -1,4 +1,3 @@
 #define FUNC log1pl
-#undef weak_alias
-#define weak_alias(a,b)
-#include <s_significandl.c>
+#define float_type long double
+#include <s_log1p.c>

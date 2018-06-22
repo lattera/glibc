@@ -1,5 +1,4 @@
-#ifndef FUNC
 #define FUNC significandf
-#endif
 #define float_type float
-#include <s_significand.c>
+#include <s_log1p.c>
+weak_alias (__significandf, significandf)

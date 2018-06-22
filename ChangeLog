@@ -1,3 +1,15 @@
+2018-06-22  Tulio Magno Quites Machado Filho  <tuliom@linux.ibm.com>
+
+	* sysdeps/m68k/m680x0/fpu/s_log1p.c: Set as the generic file for
+	all log1p and significand functions on m680x0.
+	* sysdeps/m68k/m680x0/fpu/s_log1pf.c: Include s_log1p.c instead
+	of s_significand.c..
+	* sysdeps/m68k/m680x0/fpu/s_log1pl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_significandf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_significandl.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/s_significand.c: Move all the code to
+	s_log1p.c and include it..
+
 2018-06-21  Vincent Chen  <vincentc@andestech.com>
 
 	* elf/elf.h (R_NDS32_NONE): New define.
