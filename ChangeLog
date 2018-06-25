@@ -1,6 +1,15 @@
 2018-06-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
+	* nscd/grpcache.c (addgrbyX): Use struct scratch_buffer instead
+	of extend_alloca.
+	* nscd/hstcache.c (addhstbyX): Likewise.
+	* nscd/pwdcache.c (addpwbyX): Likewise.
+	* nscd/servicescache.c (addservbyX): Likewise.
+
+2018-06-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
 	* nscd/connections.c (read_cmdline): New function.
 	(restart): Use it.  Update comment.
 

@@ -16,7 +16,6 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
 #include <assert.h>
 #include <errno.h>
 #include <error.h>
@@ -32,6 +31,7 @@
 #include <sys/mman.h>
 #include <sys/socket.h>
 #include <stackinfo.h>
+#include <scratch_buffer.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -395,12 +395,11 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
      look again in the table whether the dataset is now available.  We
      simply insert it.  It does not matter if it is in there twice.  The
      pruning function only will look at the timestamp.  */
-  size_t buflen = 1024;
-  char *buffer = (char *) alloca (buflen);
   struct passwd resultbuf;
   struct passwd *pwd;
-  bool use_malloc = false;
   int errval = 0;
+  struct scratch_buffer tmpbuf;
+  scratch_buffer_init (&tmpbuf);
 
   if (__glibc_unlikely (debug_level > 0))
     {
@@ -410,45 +409,26 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in password cache!"), keystr);
     }
 
-  while (lookup (req->type, key, &resultbuf, buffer, buflen, &pwd) != 0
+  while (lookup (req->type, key, &resultbuf,
+		 tmpbuf.data, tmpbuf.length, &pwd) != 0
 	 && (errval = errno) == ERANGE)
-    {
-      errno = 0;
-
-      if (__glibc_unlikely (buflen > 32768))
-	{
-	  char *old_buffer = buffer;
-	  buflen *= 2;
-	  buffer = (char *) realloc (use_malloc ? buffer : NULL, buflen);
-	  if (buffer == NULL)
-	    {
-	      /* We ran out of memory.  We cannot do anything but
-		 sending a negative response.  In reality this should
-		 never happen.  */
-	      pwd = NULL;
-	      buffer = old_buffer;
-
-	      /* We set the error to indicate this is (possibly) a
-		 temporary error and that it does not mean the entry
-		 is not available at all.  */
-	      errval = EAGAIN;
-	      break;
-	    }
-	  use_malloc = true;
-	}
-      else
-	/* Allocate a new buffer on the stack.  If possible combine it
-	   with the previously allocated buffer.  */
-	buffer = (char *) extend_alloca (buffer, buflen, 2 * buflen);
-    }
+    if (!scratch_buffer_grow (&tmpbuf))
+      {
+	/* We ran out of memory.  We cannot do anything but sending a
+	   negative response.  In reality this should never
+	   happen.  */
+	pwd = NULL;
+	/* We set the error to indicate this is (possibly) a temporary
+	   error and that it does not mean the entry is not available
+	   at all.  */
+	errval = EAGAIN;
+	break;
+      }
 
   /* Add the entry to the cache.  */
   time_t timeout = cache_addpw (db, fd, req, keystr, pwd, c_uid, he, dh,
 				errval);
-
-  if (use_malloc)
-    free (buffer);
-
+  scratch_buffer_free (&tmpbuf);
   return timeout;
 }
 
