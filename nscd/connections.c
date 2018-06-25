@@ -1281,64 +1281,83 @@ request from '%s' [%ld] not handled due to missing permission"),
     }
 }
 
+static char *
+read_cmdline (size_t *size)
+{
+  int fd = open ("/proc/self/cmdline", O_RDONLY);
+  if (fd < 0)
+    return NULL;
+  size_t current = 0;
+  size_t limit = 1024;
+  char *buffer = malloc (limit);
+  if (buffer == NULL)
+    {
+      close (fd);
+      errno = ENOMEM;
+      return NULL;
+    }
+  while (1)
+    {
+      if (current == limit)
+	{
+	  char *newptr;
+	  if (2 * limit < limit
+	      || (newptr = realloc (buffer, 2 * limit)) == NULL)
+	    {
+	      free (buffer);
+	      close (fd);
+	      errno = ENOMEM;
+	      return NULL;
+	    }
+	  buffer = newptr;
+	  limit *= 2;
+	}
+
+      ssize_t n = TEMP_FAILURE_RETRY (read (fd, buffer + current,
+					    limit - current));
+      if (n == -1)
+	{
+	  int e = errno;
+	  free (buffer);
+	  close (fd);
+	  errno = e;
+	  return NULL;
+	}
+      if (n == 0)
+	break;
+      current += n;
+    }
+
+  close (fd);
+  *size = current;
+  return buffer;
+}
+
 
 /* Restart the process.  */
 static void
 restart (void)
 {
   /* First determine the parameters.  We do not use the parameters
-     passed to main() since in case nscd is started by running the
-     dynamic linker this will not work.  Yes, this is not the usual
-     case but nscd is part of glibc and we occasionally do this.  */
-  size_t buflen = 1024;
-  char *buf = alloca (buflen);
-  size_t readlen = 0;
-  int fd = open ("/proc/self/cmdline", O_RDONLY);
-  if (fd == -1)
+     passed to main because then nscd would use the system libc after
+     restarting even if it was started by a non-system dynamic linker
+     during glibc testing.  */
+  size_t readlen;
+  char *cmdline = read_cmdline (&readlen);
+  if (cmdline == NULL)
     {
       dbg_log (_("\
-cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
-	       strerror (errno));
-
+cannot open /proc/self/cmdline: %m; disabling paranoia mode"));
       paranoia = 0;
       return;
     }
-
-  while (1)
-    {
-      ssize_t n = TEMP_FAILURE_RETRY (read (fd, buf + readlen,
-					    buflen - readlen));
-      if (n == -1)
-	{
-	  dbg_log (_("\
-cannot read /proc/self/cmdline: %s; disabling paranoia mode"),
-		   strerror (errno));
-
-	  close (fd);
-	  paranoia = 0;
-	  return;
-	}
-
-      readlen += n;
-
-      if (readlen < buflen)
-	break;
-
-      /* We might have to extend the buffer.  */
-      size_t old_buflen = buflen;
-      char *newp = extend_alloca (buf, buflen, 2 * buflen);
-      buf = memmove (newp, buf, old_buflen);
-    }
-
-  close (fd);
 
   /* Parse the command line.  Worst case scenario: every two
      characters form one parameter (one character plus NUL).  */
   char **argv = alloca ((readlen / 2 + 1) * sizeof (argv[0]));
   int argc = 0;
 
-  char *cp = buf;
-  while (cp < buf + readlen)
+  for (char *cp = cmdline; cp < cmdline + readlen;)
     {
       argv[argc++] = cp;
       cp = (char *) rawmemchr (cp, '\0') + 1;
@@ -1355,6 +1374,7 @@ cannot change to old UID: %s; disabling paranoia mode"),
 		   strerror (errno));
 
 	  paranoia = 0;
+	  free (cmdline);
 	  return;
 	}
 
@@ -1366,6 +1386,7 @@ cannot change to old GID: %s; disabling paranoia mode"),
 
 	  ignore_value (setuid (server_uid));
 	  paranoia = 0;
+	  free (cmdline);
 	  return;
 	}
     }
@@ -1383,6 +1404,7 @@ cannot change to old working directory: %s; disabling paranoia mode"),
 	  ignore_value (setgid (server_gid));
 	}
       paranoia = 0;
+      free (cmdline);
       return;
     }
 
@@ -1431,6 +1453,7 @@ cannot change to old working directory: %s; disabling paranoia mode"),
     dbg_log (_("cannot change current working directory to \"/\": %s"),
 	     strerror (errno));
   paranoia = 0;
+  free (cmdline);
 
   /* Reenable the databases.  */
   time_t now = time (NULL);

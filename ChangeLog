@@ -1,3 +1,9 @@
+2018-06-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
+	* nscd/connections.c (read_cmdline): New function.
+	(restart): Use it.  Update comment.
+
 2018-06-25  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
