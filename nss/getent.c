@@ -39,6 +39,7 @@
 #include <netinet/ether.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <scratch_buffer.h>
 
 /* Get libc version number.  */
 #include <version.h>
@@ -473,40 +474,59 @@ netgroup_keys (int number, char *key[])
   return result;
 }
 
+#define DYNARRAY_STRUCT gid_list
+#define DYNARRAY_ELEMENT gid_t
+#define DYNARRAY_PREFIX gid_list_
+#define DYNARRAY_INITIAL_SIZE 10
+#include <malloc/dynarray-skeleton.c>
+
 /* This is for initgroups */
 static int
 initgroups_keys (int number, char *key[])
 {
-  int ngrps = 100;
-  size_t grpslen = ngrps * sizeof (gid_t);
-  gid_t *grps = alloca (grpslen);
-
   if (number == 0)
     {
       fprintf (stderr, _("Enumeration not supported on %s\n"), "initgroups");
       return 3;
     }
 
+  struct gid_list list;
+  gid_list_init (&list);
+  if (!gid_list_resize (&list, 10))
+    {
+      fprintf (stderr, _("Could not allocate group list: %m\n"));
+      return 3;
+    }
+
   for (int i = 0; i < number; ++i)
     {
-      int no = ngrps;
+      int no = gid_list_size (&list);
       int n;
-      while ((n = getgrouplist (key[i], -1, grps, &no)) == -1
-	     && no > ngrps)
+      while ((n = getgrouplist (key[i], -1, gid_list_begin (&list), &no)) == -1
+	     && no > gid_list_size (&list))
 	{
-	  grps = extend_alloca (grps, grpslen, no * sizeof (gid_t));
-	  ngrps = no;
+	  if (!gid_list_resize (&list, no))
+	    {
+	      fprintf (stderr, _("Could not allocate group list: %m\n"));
+	      return 3;
+	    }
 	}
 
       if (n == -1)
-	return 1;
+	{
+	  gid_list_free (&list);
+	  return 1;
+	}
 
+      const gid_t *grps = gid_list_begin (&list);
       printf ("%-21s", key[i]);
       for (int j = 0; j < n; ++j)
 	if (grps[j] != -1)
 	  printf (" %ld", (long int) grps[j]);
       putchar_unlocked ('\n');
     }
+
+  gid_list_free (&list);
 
   return 0;
 }
