@@ -261,7 +261,6 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 		 overwrite the pointer with one to a bigger buffer.  */
 	      char *tmpbuf = buffer;
 	      size_t tmplen = buflen;
-	      bool use_malloc = false;
 
 	      for (int i = 0; i < mystart; i++)
 		{
@@ -270,29 +269,26 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 			 == NSS_STATUS_TRYAGAIN
 			 && *errnop == ERANGE)
                     {
-                      if (__libc_use_alloca (tmplen * 2))
-                        {
-                          if (tmpbuf == buffer)
-                            {
-                              tmplen *= 2;
-                              tmpbuf = __alloca (tmplen);
-                            }
-                          else
-                            tmpbuf = extend_alloca (tmpbuf, tmplen, tmplen * 2);
-                        }
-                      else
-                        {
-                          tmplen *= 2;
-                          char *newbuf = realloc (use_malloc ? tmpbuf : NULL, tmplen);
-
-                          if (newbuf == NULL)
-                            {
-                              status = NSS_STATUS_TRYAGAIN;
-			      goto done;
-                            }
-                          use_malloc = true;
-                          tmpbuf = newbuf;
-                        }
+		      /* Check for overflow. */
+		      if (__glibc_unlikely (tmplen * 2 < tmplen))
+			{
+			  __set_errno (ENOMEM);
+			  status = NSS_STATUS_TRYAGAIN;
+			  goto done;
+			}
+		      /* Increase the size.  Make sure that we retry
+			 with a reasonable size.  */
+		      tmplen *= 2;
+		      if (tmplen < 1024)
+			tmplen = 1024;
+		      if (tmpbuf != buffer)
+			free (tmpbuf);
+		      tmpbuf = malloc (tmplen);
+		      if (__glibc_unlikely (tmpbuf == NULL))
+			{
+			  status = NSS_STATUS_TRYAGAIN;
+			  goto done;
+			}
                     }
 
 		  if (__builtin_expect  (status != NSS_STATUS_NOTFOUND, 1))
@@ -320,7 +316,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	      status = NSS_STATUS_NOTFOUND;
 
  done:
-	      if (use_malloc)
+	      if (tmpbuf != buffer)
 	        free (tmpbuf);
 	    }
 

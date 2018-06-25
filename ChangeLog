@@ -1,6 +1,12 @@
 2018-06-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
+	* nss/nss_compat/compat-initgroups.c (getgrent_next_nss): Fall
+	back to malloc directly, without stack allocations.
+
+2018-06-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
 	* nscd/aicache.c (addhstaiX): Use struct scratch_buffer instead
 	of extend_alloca.
 
