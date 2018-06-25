@@ -1,6 +1,12 @@
 2018-06-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
+	* nscd/aicache.c (addhstaiX): Use struct scratch_buffer instead
+	of extend_alloca.
+
+2018-06-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
 	* nscd/grpcache.c (addgrbyX): Use struct scratch_buffer instead
 	of extend_alloca.
 	* nscd/hstcache.c (addhstbyX): Likewise.
