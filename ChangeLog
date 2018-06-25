@@ -1,6 +1,12 @@
 2018-06-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
+	* nss/nss_files/files-initgroups.c (_nss_files_initgroups_dyn):
+	Use struct scratch_buffer instead of extend_alloca.
+
+2018-06-25  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
 	* nss/getent.c (initgroups_keys): Use dynarray instead of
 	extend_alloca.
 
