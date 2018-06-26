@@ -1,5 +1,13 @@
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
+	* libio/Makefile (tests-internal): Add tst-vtables,
+	tst-vtables-interposed.
+	* libio/tst-vtables.c: New file.
+	* libio/tst-vtables-common.c: Likewise.
+	* libio/tst-vtables-interposed.c: Likewise.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
 	* support/support_test_main.c (support_test_main): Only call
 	setvbuf if not disables.
 	* support/test-driver.c (main): Check TEST_NO_SETVBUF.

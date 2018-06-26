@@ -66,6 +66,8 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-fwrite-error tst-ftell-partial-wide tst-ftell-active-handler \
 	tst-ftell-append tst-fputws tst-bz22415 tst-fgetc-after-eof
 
+tests-internal = tst-vtables tst-vtables-interposed
+
 ifeq (yes,$(build-shared))
 # Add test-fopenloc only if shared library is enabled since it depends on
 # shared localedata objects.
