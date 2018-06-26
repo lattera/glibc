@@ -1,3 +1,8 @@
+2018-06-26  Patsy Franklin  <pfrankli@redhat.com>
+
+	* nptl/sem_open.c [!__HAVE_64B_ATOMICS] (sem_open): Don't update pad.
+	(sem_open): Set sem.newsem.pad to zero for valgrind.
+
 2018-06-26  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #20251]
