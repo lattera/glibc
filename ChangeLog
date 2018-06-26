@@ -1,5 +1,12 @@
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
+	* support/support_test_main.c (support_test_main): Only call
+	setvbuf if not disables.
+	* support/test-driver.c (main): Check TEST_NO_SETVBUF.
+	* support/test-driver.h (struct test_config): Add no_setvbuf member.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
 	[BZ #23313]
 	* libio/vtables.c (check_stdfiles_vtables): New ELF constructor.
 

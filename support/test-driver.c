@@ -140,6 +140,10 @@ main (int argc, char **argv)
   test_config.no_mallopt = 1;
 #endif
 
+#ifdef TEST_NO_SETVBUF
+  test_config.no_setvbuf = 1;
+#endif
+
 #ifdef TIMEOUT
   test_config.timeout = TIMEOUT;
 #endif

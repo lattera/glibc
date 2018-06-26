@@ -270,7 +270,8 @@ support_test_main (int argc, char **argv, const struct test_config *config)
     timeout =  DEFAULT_TIMEOUT;
 
   /* Make sure we see all message, even those on stdout.  */
-  setvbuf (stdout, NULL, _IONBF, 0);
+  if (!config->no_setvbuf)
+    setvbuf (stdout, NULL, _IONBF, 0);
 
   /* Make sure temporary files are deleted.  */
   if (support_delete_temp_files != NULL)
