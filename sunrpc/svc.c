@@ -61,11 +61,7 @@
 #include <time.h>
 #include <shlib-compat.h>
 
-#ifdef _RPC_THREAD_SAFE_
 #define xports RPC_THREAD_VARIABLE(svc_xports_s)
-#else
-static SVCXPRT **xports;
-#endif
 
 #define NULL_SVC ((struct svc_callout *)0)
 #define	RQCRED_SIZE	400	/* this size is excessive */
@@ -81,11 +77,7 @@ struct svc_callout {
   void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
   bool_t sc_mapped;
 };
-#ifdef _RPC_THREAD_SAFE_
 #define svc_head RPC_THREAD_VARIABLE(svc_head_s)
-#else
-static struct svc_callout *svc_head;
-#endif
 
 /* ***************  SVCXPRT related stuff **************** */
 
@@ -568,7 +560,6 @@ __svc_accept_failed (void)
     }
 }
 
-#ifdef _RPC_THREAD_SAFE_
 
 void
 __rpc_thread_svc_cleanup (void)
@@ -578,5 +569,3 @@ __rpc_thread_svc_cleanup (void)
   while ((svcp = svc_head) != NULL)
     svc_unregister (svcp->sc_prog, svcp->sc_vers);
 }
-
-#endif /* _RPC_THREAD_SAFE_ */

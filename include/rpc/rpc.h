@@ -13,7 +13,6 @@ extern unsigned long _create_xid (void);
  * Group all global and static variables into a single spot.
  * This area is allocated on a per-thread basis
  */
-#ifdef _RPC_THREAD_SAFE_
 struct rpc_thread_variables {
 	fd_set		svc_fdset_s;		/* Global, rpc_common.c */
 	struct rpc_createerr rpc_createerr_s;	/* Global, rpc_common.c */
@@ -62,8 +61,6 @@ libc_hidden_proto (__rpc_thread_createerr)
    RPC error).  */
 int __libc_rpc_gethostbyname (const char *host, struct sockaddr_in *addr)
   attribute_hidden;
-
-#endif /* _RPC_THREAD_SAFE_ */
 
 # endif /* !_ISOMAC */
 #endif

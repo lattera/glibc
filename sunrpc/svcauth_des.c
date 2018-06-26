@@ -72,13 +72,8 @@ struct cache_entry
     struct rpc_timeval laststamp;	/* detect replays of creds */
     char *localcred;		/* generic local credential */
   };
-#ifdef _RPC_THREAD_SAFE_
 #define authdes_cache RPC_THREAD_VARIABLE(authdes_cache_s)
 #define authdes_lru RPC_THREAD_VARIABLE(authdes_lru_s)
-#else
-static struct cache_entry *authdes_cache;
-static int *authdes_lru;
-#endif
 
 static void cache_init (void); /* initialize the cache */
 static short cache_spot (des_block *, char *, struct rpc_timeval *);

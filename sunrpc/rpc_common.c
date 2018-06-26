@@ -30,12 +30,10 @@
 #include <rpc/rpc.h>
 #include <shlib-compat.h>
 
-#ifdef _RPC_THREAD_SAFE_
 #undef svc_fdset
 #undef rpc_createerr
 #undef svc_pollfd
 #undef svc_max_pollfd
-#endif /* _RPC_THREAD_SAFE_ */
 
 /*
  * This file should only contain common data (global data) that is exported

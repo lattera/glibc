@@ -6,7 +6,6 @@
 #include <libc-tsd.h>
 #include <shlib-compat.h>
 
-#ifdef _RPC_THREAD_SAFE_
 
 /* Variable used in non-threaded applications or for the first thread.  */
 static struct rpc_thread_variables __libc_tsd_RPC_VARS_mem;
@@ -136,5 +135,3 @@ libc_hidden_def (__rpc_thread_svc_max_pollfd)
 #else
 libc_hidden_nolink_sunrpc (__rpc_thread_svc_max_pollfd, GLIBC_2_2_3)
 #endif
-
-#endif /* _RPC_THREAD_SAFE_ */

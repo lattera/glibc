@@ -1,5 +1,24 @@
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
+	Remove always-defined _RPC_THREAD_SAFE_ macro.
+	* sunrpc/Makefile (sunrpc-CPPFLAGS, CPPFLAGS, BUILD_CPPFLAGS):
+	Do not define _RPC_THREAD_SAFE_.
+	* include/rpc/rpc.h: Remove _RPC_THREAD_SAFE_ preprocessor
+	conditional.
+	* sunrpc/clnt_perr.c: Likewise.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/rpc_common.c: Likewise.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc_thread.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sumrpc/svcauth_des.c: Likewise.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
 	* libio/Makefile (tests-internal): Add tst-vtables,
 	tst-vtables-interposed.
 	* libio/tst-vtables.c: New file.

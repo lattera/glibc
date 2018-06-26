@@ -59,11 +59,7 @@ struct clntraw_private_s
     } mashl_callmsg;
     u_int mcnt;
   };
-#ifdef _RPC_THREAD_SAFE_
 #define clntraw_private RPC_THREAD_VARIABLE(clntraw_private_s)
-#else
-static struct clntraw_private_s *clntraw_private;
-#endif
 
 static enum clnt_stat clntraw_call (CLIENT *, u_long, xdrproc_t, caddr_t,
 				    xdrproc_t, caddr_t, struct timeval);

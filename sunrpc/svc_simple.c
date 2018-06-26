@@ -53,19 +53,11 @@ struct proglst_
     xdrproc_t p_inproc, p_outproc;
     struct proglst_ *p_nxt;
   };
-#ifdef _RPC_THREAD_SAFE_
 #define proglst RPC_THREAD_VARIABLE(svcsimple_proglst_s)
-#else
-static struct proglst_ *proglst;
-#endif
 
 
 static void universal (struct svc_req *rqstp, SVCXPRT *transp_s);
-#ifdef _RPC_THREAD_SAFE_
 #define transp RPC_THREAD_VARIABLE(svcsimple_transp_s)
-#else
-static SVCXPRT *transp;
-#endif
 
 int
 __registerrpc (u_long prognum, u_long versnum, u_long procnum,

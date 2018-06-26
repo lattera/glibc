@@ -49,11 +49,7 @@ struct callrpc_private_s
     u_long oldprognum, oldversnum, valid;
     char *oldhost;
   };
-#ifdef _RPC_THREAD_SAFE_
 #define callrpc_private RPC_THREAD_VARIABLE(callrpc_private_s)
-#else
-static struct callrpc_private_s *callrpc_private;
-#endif
 
 int
 callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
@@ -123,7 +119,6 @@ callrpc (const char *host, u_long prognum, u_long versnum, u_long procnum,
 }
 libc_hidden_nolink_sunrpc (callrpc, GLIBC_2_0)
 
-#ifdef _RPC_THREAD_SAFE_
 void
 __rpc_thread_clnt_cleanup (void)
 {
@@ -135,4 +130,3 @@ __rpc_thread_clnt_cleanup (void)
 		free (rcp);
 	}
 }
-#endif /* _RPC_THREAD_SAFE_ */
