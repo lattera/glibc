@@ -38,7 +38,7 @@ main (int argc, char **argv)
   else
     name = *argv;
 
-  (void) sprintf (filename, "/tmp/%s.test", name);
+  (void) sprintf (filename, OBJPFX "%s.test", name);
 
   f = fopen (filename, "w+");
   if (f == NULL)

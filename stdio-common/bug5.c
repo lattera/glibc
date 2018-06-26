@@ -14,8 +14,8 @@ main (void)
 {
   FILE *in;
   FILE *out;
-  static char inname[] = "/tmp/bug5.in";
-  static char outname[] = "/tmp/bug5.out";
+  static char inname[] = OBJPFX "bug5test.in";
+  static char outname[] = OBJPFX "bug5test.out";
   char *printbuf;
   size_t i;
   int result;

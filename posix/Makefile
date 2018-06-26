@@ -256,6 +256,7 @@ tst-pcre-ARGS = PCRE.tests
 tst-boost-ARGS = BOOST.tests
 bug-glob1-ARGS = "$(objpfx)"
 tst-execvp3-ARGS = --test-dir=$(objpfx)
+CFLAGS-tst-spawn3.c += -DOBJPFX=\"$(objpfx)\"
 
 testcases.h: TESTS TESTS2C.sed
 	LC_ALL=C sed -f TESTS2C.sed < $< > $@T

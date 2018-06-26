@@ -1,3 +1,25 @@
+2018-06-26  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #13888]
+	* posix/Makefile (CFLAGS-tst-spawn3.c): New variable.
+	* posix/tst-spawn3.c (do_test): Put tst-spwan3.pid in OBJPFX, not
+	/tmp.
+	* scripts/test-installation.pl: Put temporary files in build
+	directory, not /tmp.
+	* stdio-common/Makefile (CFLAGS-bug3.c): New variable.
+	(CFLAGS-bug4.c): Likewise.
+	(CFLAGS-bug5.c): Likewise.
+	(CFLAGS-test-fseek.c): Likewise.
+	(CFLAGS-test-popen.c): Likewise.
+	(CFLAGS-test_rdwr.c): Likewise.
+	* stdio-common/bug3.c (main): Put temporary file in OBJPFX, not
+	/tmp.
+	* stdio-common/bug4.c (main): Likewise.
+	* stdio-common/bug5.c (main): Likewise.
+	* stdio-common/test-fseek.c (TESTFILE): Likewise.
+	* stdio-common/test-popen.c (do_test): Likewise.
+	* stdio-common/test_rdwr.c (main): Likewise.
+
 2018-06-26  Patsy Franklin  <pfrankli@redhat.com>
 
 	* nptl/sem_open.c [!__HAVE_64B_ATOMICS] (sem_open): Don't update pad.

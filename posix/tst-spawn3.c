@@ -82,8 +82,8 @@ do_test (void)
   if (posix_spawn_file_actions_init (&a) != 0)
     FAIL_EXIT1 ("posix_spawn_file_actions_init");
 
-  /* Executes a /bin/sh echo $$ 2>&1 > /tmp/tst-spawn3.pid .  */
-  const char pidfile[] = "/tmp/tst-spawn3.pid";
+  /* Executes a /bin/sh echo $$ 2>&1 > ${objpfx}tst-spawn3.pid .  */
+  const char pidfile[] = OBJPFX "tst-spawn3.pid";
   if (posix_spawn_file_actions_addopen (&a, STDOUT_FILENO, pidfile, O_WRONLY |
 					O_CREAT | O_TRUNC, 0644) != 0)
     FAIL_EXIT1 ("posix_spawn_file_actions_addopen");

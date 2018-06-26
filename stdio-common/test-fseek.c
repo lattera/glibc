@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 
-#define TESTFILE "/tmp/test.dat"
+#define TESTFILE OBJPFX "test.dat"
 
 static int
 do_test (void)

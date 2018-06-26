@@ -145,6 +145,13 @@ CFLAGS-scanf15.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 CFLAGS-scanf17.c += -I../libio -I../stdlib -I../wcsmbs -I../time -I../string \
 		   -I../wctype
 
+CFLAGS-bug3.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-bug4.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-bug5.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-test-fseek.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-test-popen.c += -DOBJPFX=\"$(objpfx)\"
+CFLAGS-test_rdwr.c += -DOBJPFX=\"$(objpfx)\"
+
 # tst-gets.c tests a deprecated function.
 CFLAGS-tst-gets.c += -Wno-deprecated-declarations
 

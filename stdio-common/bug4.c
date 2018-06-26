@@ -10,7 +10,7 @@ main (int argc, char *argv[])
   FILE *f;
   int i;
   char buffer[31];
-  const char filename[] = "/tmp/bug4.test";
+  const char filename[] = OBJPFX "bug4.test";
 
   while ((i = getopt (argc, argv, "rw")) != -1)
     switch (i)
