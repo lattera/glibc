@@ -45,7 +45,7 @@ extern void __rpc_thread_svc_cleanup (void) attribute_hidden;
 extern void __rpc_thread_clnt_cleanup (void) attribute_hidden;
 extern void __rpc_thread_key_cleanup (void) attribute_hidden;
 
-extern void __rpc_thread_destroy (void);
+extern void __rpc_thread_destroy (void) attribute_hidden;
 
 __libc_tsd_define (extern, struct rpc_thread_variables *, RPC_VARS)
 

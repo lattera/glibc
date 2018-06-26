@@ -1,5 +1,35 @@
 2018-06-26  Florian Weimer  <fweimer@redhat.com>
 
+	Run thread shutdown functions in an explicit order.
+	* malloc/thread-freeres.c (__libc_thread_subfreeres): Remove hook
+	definition.
+	(__libc_thread_freeres): Call thread shutdown functions
+	explicitly.
+	* include/rpc/rpc.h (__rpc_thread_destroy): Add hidden attribute.
+	* include/string.h (__strerror_thread_freeres): Declare.
+	* malloc/arena.c (__malloc_arena_thread_freeres): Renamed from
+	arena_thread_freeres.  No longer static.  Remove thread shutdown
+	hook registration.
+	* malloc/malloc-internal.h (__malloc_arena_thread_freeres):
+	Declare.
+	* resolv/res-close.c (__res_thread_freeres): Renamed from
+	res_thread_freeres.  No longer static.  Remove thread shutdown
+	hook registration.
+	* resolv/resolv-internal.h (__res_thread_freeres): Declare.
+	* resolv/resolv_conf.c (freeres): Remove incorrect section
+	attribute and use libc_freeres_fn.
+	* string/strerror_l.c (__strerror_thread_freeres): Renamed from
+	strerror_thread_freeres.  No longer static.  Remove thread
+	shutdown hook registration.
+	* sysdeps/mach/strerror_l.c (__strerror_thread_freeres): Likewise.
+	* sunrpc/rpc_thread.c (__rpc_thread_destroy): Remove thread
+	shutdown hook registration.
+	* Makerules (shlib.lds): Do not provide section boundary symbols
+	for __libc_thread_subfreeres.
+	* manual/memory.texi (Basic Allocation): Update comment.
+
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
 	Remove always-defined _RPC_THREAD_SAFE_ macro.
 	* sunrpc/Makefile (sunrpc-CPPFLAGS, CPPFLAGS, BUILD_CPPFLAGS):
 	Do not define _RPC_THREAD_SAFE_.

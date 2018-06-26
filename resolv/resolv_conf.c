@@ -673,8 +673,7 @@ __resolv_conf_detach (struct __res_state *resp)
 }
 
 /* Deallocate the global data.  */
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-freeres (void)
+libc_freeres_fn (freeres)
 {
   /* No locking because this function is supposed to be called when
      the process has turned single-threaded.  */
@@ -698,4 +697,3 @@ freeres (void)
      deallocated memory.  */
   global = NULL;
 }
-text_set_element (__libc_subfreeres, freeres);

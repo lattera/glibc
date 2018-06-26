@@ -126,8 +126,8 @@ res_nclose (res_state statp)
 libc_hidden_def (__res_nclose)
 
 /* This is called when a thread is exiting to free resources held in _res.  */
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-res_thread_freeres (void)
+void
+__res_thread_freeres (void)
 {
   __resolv_context_freeres ();
 
@@ -140,5 +140,4 @@ res_thread_freeres (void)
   /* Make sure we do a full re-initialization the next time.  */
   _res.options = 0;
 }
-text_set_element (__libc_thread_subfreeres, res_thread_freeres);
-text_set_element (__libc_subfreeres, res_thread_freeres);
+text_set_element (__libc_subfreeres, __res_thread_freeres);

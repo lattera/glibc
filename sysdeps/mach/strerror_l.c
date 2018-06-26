@@ -87,15 +87,9 @@ strerror_l (int errnum, locale_t loc)
 }
 
 
-#ifdef _LIBC
-# ifdef _LIBC_REENTRANT
-/* This is called when a thread is exiting to free the last_value string.  */
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-strerror_thread_freeres (void)
+void
+__strerror_thread_freeres (void)
 {
   free (last_value);
 }
-text_set_element (__libc_thread_subfreeres, strerror_thread_freeres);
-text_set_element (__libc_subfreeres, strerror_thread_freeres);
-# endif
-#endif
+text_set_element (__libc_subfreeres, __strerror_thread_freeres);

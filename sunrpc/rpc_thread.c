@@ -15,7 +15,7 @@ static __thread struct rpc_thread_variables *thread_rpc_vars
 /*
  * Task-variable destructor
  */
-void __attribute__ ((section ("__libc_thread_freeres_fn")))
+void
 __rpc_thread_destroy (void)
 {
 	struct rpc_thread_variables *tvp = thread_rpc_vars;
@@ -36,11 +36,7 @@ __rpc_thread_destroy (void)
 		thread_rpc_vars = NULL;
 	}
 }
-#ifdef _LIBC_REENTRANT
-text_set_element (__libc_thread_subfreeres, __rpc_thread_destroy);
-#endif
 text_set_element (__libc_subfreeres, __rpc_thread_destroy);
-
 
 /*
  * Initialize RPC multi-threaded operation

@@ -71,6 +71,9 @@ void __malloc_fork_unlock_parent (void) attribute_hidden;
 /* Called in the child process after a fork.  */
 void __malloc_fork_unlock_child (void) attribute_hidden;
 
+/* Called as part of the thread shutdown sequence.  */
+void __malloc_arena_thread_freeres (void) attribute_hidden;
+
 /* Set *RESULT to LEFT * RIGHT.  Return true if the multiplication
    overflowed.  */
 static inline bool

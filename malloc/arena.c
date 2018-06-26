@@ -941,8 +941,8 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
   return ar_ptr;
 }
 
-static void __attribute__ ((section ("__libc_thread_freeres_fn")))
-arena_thread_freeres (void)
+void
+__malloc_arena_thread_freeres (void)
 {
   /* Shut down the thread cache first.  This could deallocate data for
      the thread arena, so do this before we put the arena on the free
@@ -966,7 +966,6 @@ arena_thread_freeres (void)
       __libc_lock_unlock (free_list_lock);
     }
 }
-text_set_element (__libc_thread_subfreeres, arena_thread_freeres);
 
 /*
  * Local variables:

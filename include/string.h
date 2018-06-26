@@ -50,6 +50,9 @@ extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
 
+/* Called as part of the thread shutdown sequence.  */
+void __strerror_thread_freeres (void) attribute_hidden;
+
 /* Get _STRING_ARCH_unaligned.  */
 #include <string_private.h>
 #endif

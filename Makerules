@@ -648,9 +648,6 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		 PROVIDE(__start___libc_atexit = .);\
 		 __libc_atexit : { *(__libc_atexit) }\
 		 PROVIDE(__stop___libc_atexit = .);\
-		 PROVIDE(__start___libc_thread_subfreeres = .);\
-		 __libc_thread_subfreeres : { *(__libc_thread_subfreeres) }\
-		 PROVIDE(__stop___libc_thread_subfreeres = .);\
 		 PROVIDE(__start___libc_IO_vtables = .);\
 		 __libc_IO_vtables : { *(__libc_IO_vtables) }\
 		 PROVIDE(__stop___libc_IO_vtables = .);\

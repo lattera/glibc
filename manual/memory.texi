@@ -404,7 +404,7 @@ this function is in @file{stdlib.h}.
 @c      reads&writes next_to_use and iterates over arena next without guards
 @c      those are harmless as long as we don't drop arenas from the
 @c      NEXT list, and we never do; when a thread terminates,
-@c      arena_thread_freeres prepends the arena to the free_list
+@c      __malloc_arena_thread_freeres prepends the arena to the free_list
 @c      NEXT_FREE list, but NEXT is never modified, so it's safe!
 @c     mutex_trylock (arena lock) @asulock @aculock
 @c     mutex_lock (arena lock) dup @asulock @aculock

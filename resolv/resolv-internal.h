@@ -97,4 +97,7 @@ int __res_nopt (struct resolv_context *, int n0,
 int __inet_pton_length (int af, const char *src, size_t srclen, void *);
 libc_hidden_proto (__inet_pton_length)
 
+/* Called as part of the thread shutdown sequence.  */
+void __res_thread_freeres (void) attribute_hidden;
+
 #endif  /* _RESOLV_INTERNAL_H */
