@@ -1,3 +1,8 @@
+2018-06-26  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23313]
+	* libio/vtables.c (check_stdfiles_vtables): New ELF constructor.
+
 2018-06-25  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]

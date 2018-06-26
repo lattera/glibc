@@ -71,3 +71,19 @@ _IO_vtable_check (void)
 
   __libc_fatal ("Fatal error: glibc detected an invalid stdio handle\n");
 }
+
+/* Some variants of libstdc++ interpose _IO_2_1_stdin_ etc. and
+   install their own vtables directly, without calling _IO_init or
+   other functions.  Detect this by looking at the vtables values
+   during startup, and disable vtable validation in this case.  */
+#ifdef SHARED
+__attribute__ ((constructor))
+static void
+check_stdfiles_vtables (void)
+{
+  if (_IO_2_1_stdin_.vtable != &_IO_file_jumps
+      || _IO_2_1_stdout_.vtable != &_IO_file_jumps
+      || _IO_2_1_stderr_.vtable != &_IO_file_jumps)
+    IO_set_accept_foreign_vtables (&_IO_vtable_check);
+}
+#endif
