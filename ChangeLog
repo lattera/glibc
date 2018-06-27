@@ -1,6 +1,12 @@
 2018-06-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
+	* sysdeps/unix/sysv/linux/gethostid.c (gethostid): Use struct
+	scratch_buffer instead of extend_alloca.  Update comments.
+
+2018-06-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
 	* posix/wordexp.c (parse_tilde): Use struct scratch_buffer
 	instead of extend_alloca.
 
