@@ -2622,7 +2622,6 @@ pointer @var{ap}.
 @c __libc_use_alloca
 @c process_arg
 @c process_string_arg
-@c extend_alloca
 @c __parse_one_spec(wc|mb)
 @c *__printf_arginfo_table unguarded
 @c __printf_va_arg_table-> unguarded

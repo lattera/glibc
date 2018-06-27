@@ -1,3 +1,10 @@
+2018-06-27  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #18023]
+        * include/alloca.h (stackinfo_alloca_round, extend_alloca)
+        (extend_alloca_account): Remove.
+	* manual/stdio.texi (Variable Arguments Output): Update comment.
+
 2018-06-27  Joseph Myers  <joseph@codesourcery.com>
 
 	* nptl/sockperf.c: Remove file.
