@@ -1,3 +1,7 @@
+2018-06-27  Joseph Myers  <joseph@codesourcery.com>
+
+	* nptl/sockperf.c: Remove file.
+
 2018-06-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
