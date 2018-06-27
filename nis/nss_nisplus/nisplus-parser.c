@@ -82,7 +82,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 
   char *numstr = NISOBJVAL (2, obj);
   len = NISOBJLEN (2, obj);
-  if (len == 0 && numstr[len - 1] != '\0')
+  if (len == 0 || numstr[len - 1] != '\0')
     {
       if (len >= room_left)
 	goto no_more_room;
@@ -98,7 +98,7 @@ _nss_nisplus_parse_pwent (nis_result *result, struct passwd *pw,
 
   numstr = NISOBJVAL (3, obj);
   len = NISOBJLEN (3, obj);
-  if (len == 0 && numstr[len - 1] != '\0')
+  if (len == 0 || numstr[len - 1] != '\0')
     {
       if (len >= room_left)
 	goto no_more_room;

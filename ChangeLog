@@ -1,3 +1,10 @@
+2018-06-27  Maciej W. Rozycki  <macro@mips.com>
+
+	[BZ #23266]
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_pwent):
+	Copy and null-terminate entries that are not terminated, in
+	addition to empty ones.
+
 2018-06-27  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #18023]
