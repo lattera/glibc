@@ -1,5 +1,10 @@
 2018-07-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h (HWCAP_IMPORTANT): Add
+	HWCAP_ATOMICS.
+
+2018-07-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (init_cpu_features):
 	Use dl_hwcap without masking.
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h (HWCAP_IMPORTANT):

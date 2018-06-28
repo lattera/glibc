@@ -28,7 +28,7 @@
 #define _dl_procinfo(type, word) -1
 
 /* No additional library search paths.  */
-#define HWCAP_IMPORTANT 0
+#define HWCAP_IMPORTANT HWCAP_ATOMICS
 
 static inline const char *
 __attribute__ ((unused))
