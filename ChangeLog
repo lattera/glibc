@@ -1,3 +1,9 @@
+2018-06-28  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23349]
+	* time/bits/types/struct_timespec.h: Change header inclusion guard to
+	_STRUCT_TIMESPEC.
+
 2018-06-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/ieee754/ldbl-128ibm-compat/Versions: Add __strfromieee128,
