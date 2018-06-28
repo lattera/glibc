@@ -27,9 +27,8 @@
 /* We cannot provide a general printing function.  */
 #define _dl_procinfo(type, word) -1
 
-/* HWCAP_CPUID should be available by default to influence IFUNC as well as
-   library search.  */
-#define HWCAP_IMPORTANT HWCAP_CPUID
+/* No additional library search paths.  */
+#define HWCAP_IMPORTANT 0
 
 static inline const char *
 __attribute__ ((unused))
