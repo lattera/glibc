@@ -3283,7 +3283,7 @@ Set process or process group ID to receive @code{SIGIO} signals.
 
 This function is a cancellation point in multi-threaded programs for the
 commands @code{F_SETLKW} (and the LFS analogous @code{F_SETLKW64}) and
-@code {F_OFD_SETLKW}.  This is a problem if the thread allocates some
+@code{F_OFD_SETLKW}.  This is a problem if the thread allocates some
 resources (like memory, file descriptors, semaphores or whatever) at the time
 @code{fcntl} is called.  If the thread gets canceled these resources stay
 allocated until the program ends.  To avoid this calls to @code{fcntl} should

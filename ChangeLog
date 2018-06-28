@@ -1,3 +1,7 @@
+2018-06-28  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* manual/llio.texi: Remove spurious space.
+
 2018-06-28  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23349]
