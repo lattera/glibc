@@ -111,3 +111,11 @@ libm {
     __ynieee128;
   }
 }
+libc {
+  LDBL_IBM128_VERSION {
+    __strfromieee128;
+    __strtoieee128;
+    __strtoieee128_l;
+    __wcstoieee128;
+    __wcstoieee128_l;
+  }

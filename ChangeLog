@@ -1,3 +1,13 @@
+2018-06-28  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/ieee754/ldbl-128ibm-compat/Versions: Add __strfromieee128,
+	 __strtoieee128, __strtoieee128_l,__wcstoieee128 and __wcstoieee128_l.
+	* sysdeps/ieee754/ldbl-128ibm-compat/strfromf128.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/strtof128.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/strtof128_l.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/wcstof128.c: New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/wcstof128_l.c: New file.
+
 2018-06-27  Maciej W. Rozycki  <macro@mips.com>
 
 	[BZ #23266]
