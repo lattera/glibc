@@ -36,8 +36,8 @@ too.
 				 for delimiters.
 * Erasing Sensitive Data::      Clearing memory which contains sensitive
                                  data, after it's no longer needed.
-* strfry::                      Function for flash-cooking a string.
-* Trivial Encryption::          Obscuring data.
+* Shuffling Bytes::             Or how to flash-cook a string.
+* Obfuscating Data::            Reversibly obscuring data from casual view.
 * Encode Binary Data::          Encoding and Decoding of Binary Data.
 * Argz and Envz Vectors::       Null-separated string vectors.
 @end menu
@@ -2426,73 +2426,73 @@ functionality under a different name, such as @code{explicit_memset},
 systems it may be in @file{strings.h} instead.
 @end deftypefun
 
-@node strfry
-@section strfry
+
+@node Shuffling Bytes
+@section Shuffling Bytes
 
 The function below addresses the perennial programming quandary: ``How do
 I take good data in string form and painlessly turn it into garbage?''
-This is actually a fairly simple task for C programmers who do not use
-@theglibc{} string functions, but for programs based on @theglibc{},
-the @code{strfry} function is the preferred method for
-destroying string data.
+This is not a difficult thing to code for oneself, but the authors of
+@theglibc{} wish to make it as convenient as possible.
 
-The prototype for this function is in @file{string.h}.
+To @emph{erase} data, use @code{explicit_bzero} (@pxref{Erasing
+Sensitive Data}); to obfuscate it reversibly, use @code{memfrob}
+(@pxref{Obfuscating Data}).
 
 @deftypefun {char *} strfry (char *@var{string})
 @standards{GNU, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 @c Calls initstate_r, time, getpid, strlen, and random_r.
 
-@code{strfry} creates a pseudorandom anagram of a string, replacing the
-input with the anagram in place.  For each position in the string,
-@code{strfry} swaps it with a position in the string selected at random
-(from a uniform distribution).  The two positions may be the same.
+@code{strfry} performs an in-place shuffle on @var{string}.  Each
+character is swapped to a position selected at random, within the
+portion of the string starting with the character's original position.
+(This is the Fisher-Yates algorithm for unbiased shuffling.)
+
+Calling @code{strfry} will not disturb any of the random number
+generators that have global state (@pxref{Pseudo-Random Numbers}).
 
 The return value of @code{strfry} is always @var{string}.
 
 @strong{Portability Note:}  This function is unique to @theglibc{}.
-
+It is declared in @file{string.h}.
 @end deftypefun
 
 
-@node Trivial Encryption
-@section Trivial Encryption
-@cindex encryption
-
-
-The @code{memfrob} function converts an array of data to something
-unrecognizable and back again.  It is not encryption in its usual sense
-since it is easy for someone to convert the encrypted data back to clear
-text.  The transformation is analogous to Usenet's ``Rot13'' encryption
-method for obscuring offensive jokes from sensitive eyes and such.
-Unlike Rot13, @code{memfrob} works on arbitrary binary data, not just
-text.
+@node Obfuscating Data
+@section Obfuscating Data
 @cindex Rot13
 
-For true encryption, @xref{Cryptographic Functions}.
+The @code{memfrob} function reversibly obfuscates an array of binary
+data.  This is not true encryption; the obfuscated data still bears a
+clear relationship to the original, and no secret key is required to
+undo the obfuscation.  It is analogous to the ``Rot13'' cipher used on
+Usenet for obscuring offensive jokes, spoilers for works of fiction,
+and so on, but it can be applied to arbitrary binary data.
 
-This function is declared in @file{string.h}.
-@pindex string.h
+Programs that need true encryption---a transformation that completely
+obscures the original and cannot be reversed without knowledge of a
+secret key---should use a dedicated cryptography library, such as
+@uref{https://www.gnu.org/software/libgcrypt/,,libgcrypt}.
+
+Programs that need to @emph{destroy} data should use
+@code{explicit_bzero} (@pxref{Erasing Sensitive Data}), or possibly
+@code{strfry} (@pxref{Shuffling Bytes}).
 
 @deftypefun {void *} memfrob (void *@var{mem}, size_t @var{length})
 @standards{GNU, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 
-@code{memfrob} transforms (frobnicates) each byte of the data structure
-at @var{mem}, which is @var{length} bytes long, by bitwise exclusive
-oring it with binary 00101010.  It does the transformation in place and
-its return value is always @var{mem}.
+The function @code{memfrob} obfuscates @var{length} bytes of data
+beginning at @var{mem}, in place.  Each byte is bitwise xor-ed with
+the binary pattern 00101010 (hexadecimal 0x2A).  The return value is
+always @var{mem}.
 
-Note that @code{memfrob} a second time on the same data structure
-returns it to its original state.
-
-This is a good function for hiding information from someone who doesn't
-want to see it or doesn't want to see it very much.  To really prevent
-people from retrieving the information, use stronger encryption such as
-that described in @xref{Cryptographic Functions}.
+@code{memfrob} a second time on the same data returns it to
+its original state.
 
 @strong{Portability Note:}  This function is unique to @theglibc{}.
-
+It is declared in @file{string.h}.
 @end deftypefun
 
 @node Encode Binary Data

@@ -10,6 +10,22 @@
 #include <stdlib.h>
 #include "crypt.h"
 
+/* This file tests the deprecated setkey/encrypt interface.  */
+#include <shlib-compat.h>
+#if TEST_COMPAT (libcrypt, GLIBC_2_0, GLIBC_2_28)
+
+#define libcrypt_version_reference(symbol, version) \
+  _libcrypt_version_reference (symbol, VERSION_libcrypt_##version)
+#define _libcrypt_version_reference(symbol, version) \
+  __libcrypt_version_reference (symbol, version)
+#define __libcrypt_version_reference(symbol, version) \
+  __asm__ (".symver " #symbol ", " #symbol "@" #version)
+
+extern void setkey (const char *);
+extern void encrypt (const char *, int);
+libcrypt_version_reference (setkey, GLIBC_2_0);
+libcrypt_version_reference (encrypt, GLIBC_2_0);
+
 int totfails = 0;
 
 int main (int argc, char *argv[]);
@@ -104,3 +120,13 @@ put8 (char *cp)
 	  printf("%02x", t);
 	}
 }
+
+#else /* encrypt and setkey are not available.  */
+
+int
+main (void)
+{
+  return 77; /* UNSUPPORTED */
+}
+
+#endif

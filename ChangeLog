@@ -1,3 +1,36 @@
+2018-06-29  Zack Weinberg  <zackw@panix.com>
+	    Florian Weimer <fweimer@redhat.com>
+
+	* posix/unistd.h: Do not declare encrypt.
+	(_XOPEN_CRYPT): Remove macro definition.
+	(crypt): Declare only for _USE_MISC.
+	* stdlib/stdlib.h: Do not declare setkey.
+	* crypt/crypt.h: Do not declare encrypt, setkey, encrypt_r, setkey_r.
+	* sunrpc/Makefile: Do not install des_crypt.h nor rpc_des.h.
+
+	* crypt/crypt-entry.c: Make fcrypt a compat symbol.
+	* crypt/crypt_util.c: Make encrypt, encrypt_r, setkey, setkey_r
+	into compat symbols.  Don't define initial_perm if it's not
+	going to be used.
+	* crypt/cert.c: Link explicitly with the expected versions for
+	setkey and encrypt.  If they are not available at all, mark
+	the test as unsupported.
+
+	* sunrpc/des_crypt.c: Unconditionally block linkage with
+	cbc_crypt and ecb_crypt for new binaries.
+	* sunrpc/des_soft.c: Unconditionally block linkage with
+	des_setparity for new binaries.
+
+	* manual/crypt.texi: Remove the entire "DES Encryption"
+	section.  Also remove the paragraph talking about FIPS 140-2
+	from the introduction.
+	* manual/string.texi (strfry, memfrob): Revise.	 Recommend use
+	of libgcrypt for "real" encryption, not DES.
+	* manual/conf.texi (Constants for Sysconf): Mention that
+	_XOPEN_CRYPT is no longer impelemented.
+
+	* conform/data/unistd.h-data: Remove crypt function declaration.
+
 2018-06-29  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23351]

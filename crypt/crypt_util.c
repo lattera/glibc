@@ -34,6 +34,7 @@
 #endif
 
 #include "crypt-private.h"
+#include <shlib-compat.h>
 
 /* Prototypes for local functions.  */
 #ifndef __GNU_LIBRARY__
@@ -150,6 +151,7 @@ static const int sbox[8][4][16]= {
 	}
 };
 
+#if SHLIB_COMPAT (libcrypt, GLIBC_2_0, GLIBC_2_28)
 /*
  * This is the initial
  * permutation matrix
@@ -160,6 +162,7 @@ static const int initial_perm[64] = {
   57, 49, 41, 33, 25, 17,  9,  1, 59, 51, 43, 35, 27, 19, 11, 3,
   61, 53, 45, 37, 29, 21, 13,  5, 63, 55, 47, 39, 31, 23, 15, 7
 };
+#endif
 
 /*
  * This is the final
@@ -785,6 +788,7 @@ _ufc_output_conversion_r (ufc_long v1, ufc_long v2, const char *salt,
   __data->crypt_3_buf[13] = 0;
 }
 
+#if SHLIB_COMPAT (libcrypt, GLIBC_2_0, GLIBC_2_28)
 
 /*
  * UNIX encrypt function. Takes a bitvector
@@ -885,12 +889,14 @@ __encrypt_r (char *__block, int __edflag,
   }
 }
 weak_alias (__encrypt_r, encrypt_r)
+compat_symbol (libcrypt, encrypt_r, encrypt_r, GLIBC_2_0);
 
 void
 encrypt (char *__block, int __edflag)
 {
   __encrypt_r(__block, __edflag, &_ufc_foobar);
 }
+compat_symbol (libcrypt, encrypt, encrypt, GLIBC_2_0);
 
 
 /*
@@ -915,12 +921,15 @@ __setkey_r (const char *__key, struct crypt_data * __restrict __data)
   _ufc_mk_keytab_r((char *) ktab, __data);
 }
 weak_alias (__setkey_r, setkey_r)
+compat_symbol (libcrypt, setkey_r, setkey_r, GLIBC_2_0);
 
 void
 setkey (const char *__key)
 {
   __setkey_r(__key, &_ufc_foobar);
 }
+compat_symbol (libcrypt, setkey, setkey, GLIBC_2_0);
+#endif /* SHLIB_COMPAT (libcrypt, GLIBC_2_0, GLIBC_2_28) */
 
 void
 __b64_from_24bit (char **cp, int *buflen,

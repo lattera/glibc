@@ -437,9 +437,6 @@ function int chroot (const char*)
 function int chown (const char*, uid_t, gid_t)
 function int close (int)
 function size_t confstr (int, char*, size_t)
-#if !defined POSIX && !defined POSIX2008
-function {char*} crypt (const char*, const char*)
-#endif
 #if defined XPG4 || defined XPG42 || defined UNIX98
 function {char*} ctermid (char*)
 function {char*} cuserid (char*)
@@ -449,9 +446,6 @@ allow cuserid
 #endif
 function int dup (int)
 function int dup2 (int, int)
-#if !defined POSIX && !defined POSIX2008
-function void encrypt (char[64], int)
-#endif
 function int execl (const char*, const char*, ...)
 function int execle (const char*, const char*, ...)
 function int execlp (const char*, const char*, ...)

@@ -958,12 +958,6 @@ extern int getsubopt (char **__restrict __optionp,
 #endif
 
 
-#ifdef __USE_XOPEN
-/* Setup DES tables according KEY.  */
-extern void setkey (const char *__key) __THROW __nonnull ((1));
-#endif
-
-
 /* X/Open pseudo terminal handling.  */
 
 #ifdef __USE_XOPEN2KXSI

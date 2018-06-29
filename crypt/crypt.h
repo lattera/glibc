@@ -32,16 +32,8 @@ __BEGIN_DECLS
 extern char *crypt (const char *__key, const char *__salt)
      __THROW __nonnull ((1, 2));
 
-/* Setup DES tables according KEY.  */
-extern void setkey (const char *__key) __THROW __nonnull ((1));
-
-/* Encrypt data in BLOCK in place if EDFLAG is zero; otherwise decrypt
-   block in place.  */
-extern void encrypt (char *__glibc_block, int __edflag)
-     __THROW __nonnull ((1));
-
 #ifdef __USE_GNU
-/* Reentrant versions of the functions above.  The additional argument
+/* Reentrant version of 'crypt'.  The additional argument
    points to a structure where the results are placed in.  */
 struct crypt_data
   {
@@ -60,14 +52,6 @@ struct crypt_data
 extern char *crypt_r (const char *__key, const char *__salt,
 		      struct crypt_data * __restrict __data)
      __THROW __nonnull ((1, 2, 3));
-
-extern void setkey_r (const char *__key,
-		      struct crypt_data * __restrict __data)
-     __THROW __nonnull ((1, 2));
-
-extern void encrypt_r (char *__glibc_block, int __edflag,
-		       struct crypt_data * __restrict __data)
-     __THROW __nonnull ((1, 3));
 #endif
 
 __END_DECLS

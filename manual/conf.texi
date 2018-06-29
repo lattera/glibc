@@ -778,6 +778,8 @@ Inquire about the parameter corresponding to @code{_XOPEN_LEGACY}.
 @item _SC_XOPEN_CRYPT
 @standards{X/Open, unistd.h}
 Inquire about the parameter corresponding to @code{_XOPEN_CRYPT}.
+@Theglibc no longer implements the @code{_XOPEN_CRYPT} extensions,
+so @samp{sysconf (_SC_XOPEN_CRYPT)} always returns @code{-1}.
 
 @item _SC_XOPEN_ENH_I18N
 @standards{X/Open, unistd.h}

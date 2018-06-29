@@ -71,4 +71,4 @@ des_setparity (char *p)
       p++;
     }
 }
-libc_hidden_nolink_sunrpc (des_setparity, GLIBC_2_1)
+hidden_nolink (des_setparity, libc, GLIBC_2_1)

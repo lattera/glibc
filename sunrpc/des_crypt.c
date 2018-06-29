@@ -86,6 +86,9 @@ common_crypt (char *key, char *buf, register unsigned len,
   return desdev == DES_SW ? DESERR_NONE : DESERR_NOHWDEVICE;
 }
 
+/* Note: these cannot be excluded from the build yet, because they are
+   still used internally.  */
+
 /*
  * CBC mode encryption
  */
@@ -102,7 +105,7 @@ cbc_crypt (char *key, char *buf, unsigned int len, unsigned int mode,
   COPY8 (dp.des_ivec, ivec);
   return err;
 }
-libc_hidden_nolink_sunrpc (cbc_crypt, GLIBC_2_1)
+hidden_nolink (cbc_crypt, libc, GLIBC_2_1)
 
 /*
  * ECB mode encryption
@@ -115,4 +118,4 @@ ecb_crypt (char *key, char *buf, unsigned int len, unsigned int mode)
   dp.des_mode = ECB;
   return common_crypt (key, buf, len, mode, &dp);
 }
-libc_hidden_nolink_sunrpc (ecb_crypt, GLIBC_2_1)
+hidden_nolink (ecb_crypt, libc, GLIBC_2_1)
