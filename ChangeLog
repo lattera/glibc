@@ -1,4 +1,12 @@
 2018-06-29  Zack Weinberg  <zackw@panix.com>
+
+	* manual/crypt.texi: Use a normal top-level @node declaration.
+	Move most of the introductory text to the 'crypt' section.
+	Move the example programs below the @deftypefun for 'crypt_r'.
+	Move the 'getpass' section...
+	* manual/terminal.texi: ...here.
+
+2018-06-29  Zack Weinberg  <zackw@panix.com>
 	    Florian Weimer <fweimer@redhat.com>
 
 	* posix/unistd.h: Do not declare encrypt.
