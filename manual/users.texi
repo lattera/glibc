@@ -1730,6 +1730,16 @@ users.  The database itself is kept in the file @file{/etc/passwd} on
 most systems, but on some systems a special network server gives access
 to it.
 
+Historically, this database included one-way hashes of user
+passphrases (@pxref{Passphrase Storage}) as well as public information
+about each user (such as their user ID and full name).  Many of the
+functions and data structures associated with this database, and the
+filename @file{/etc/passwd} itself, reflect this history.  However,
+the information in this database is available to all users, and it is
+no longer considered safe to make passphrase hashes available to all
+users, so they have been moved to a ``shadow'' database that can only
+be accessed with special privileges.
+
 @menu
 * User Data Structure::         What each user record contains.
 * Lookup User::                 How to look for a particular user.
@@ -1753,8 +1763,10 @@ entries in the system user data base.  It has at least the following members:
 @item char *pw_name
 The user's login name.
 
-@item char *pw_passwd.
-The encrypted password string.
+@item char *pw_passwd
+Historically, this field would hold the one-way hash of the user's
+passphrase.  Nowadays, it will almost always be the single character
+@samp{x}, indicating that the hash is in the shadow database.
 
 @item uid_t pw_uid
 The user ID number.
@@ -2105,7 +2117,7 @@ rewritten on subsequent calls to @code{fgetpwent}.  You must copy the
 contents of the structure if you wish to save the information.
 
 The stream must correspond to a file in the same format as the standard
-password database file.
+user database file.
 @end deftypefun
 
 @deftypefun int fgetpwent_r (FILE *@var{stream}, struct passwd *@var{result_buf}, char *@var{buffer}, size_t @var{buflen}, struct passwd **@var{result})
@@ -2126,7 +2138,7 @@ first @var{buflen} bytes of the additional buffer pointed to by
 strings which are pointed to by the elements of the result structure.
 
 The stream must correspond to a file in the same format as the standard
-password database file.
+user database file.
 
 If the function returns zero @var{result} points to the structure with
 the wanted data (normally this is in @var{result_buf}).  If errors
@@ -2234,7 +2246,6 @@ avoid using it, because it makes sense only on the assumption that the
 on a system which merges the traditional Unix data base with other
 extended information about users, adding an entry using this function
 would inevitably leave out much of the important information.
-@c Then how are programmers to modify the password file? -zw
 
 The group and user ID fields are left empty if the group or user name
 starts with a - or +.

@@ -1,4 +1,4 @@
-/* Verify a password.
+/* Verify a passphrase.
    Copyright (C) 1991-2018 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or
@@ -20,24 +20,48 @@
 #include <unistd.h>
 #include <crypt.h>
 
+/* @samp{GNU's Not Unix} hashed using SHA-256, MD5, and DES.  */
+static const char hash_sha[] =
+  "$5$DQ2z5NHf1jNJnChB$kV3ZTR0aUaosujPhLzR84Llo3BsspNSe4/tsp7VoEn6";
+static const char hash_md5[] = "$1$A3TxDv41$rtXVTUXl2LkeSV0UU5xxs1";
+static const char hash_des[] = "FgkTuF98w5DaI";
+
 int
 main(void)
 {
-  /* Hashed form of "GNU libc manual".  */
-  const char *const pass = "$1$/iSaq7rB$EoUw5jJPPvAPECNaaWzMK/";
+  char *phrase;
+  int status = 0;
 
-  char *result;
-  int ok;
+  /* Prompt for a passphrase.  */
+  phrase = getpass ("Enter passphrase: ");
 
-/*@group*/
-  /* Read in the user's password and encrypt it,
-     passing the expected password in as the salt.  */
-  result = crypt(getpass("Password:"), pass);
-/*@end group*/
+  /* Compare against the stored hashes.  Any input that begins with
+     @samp{GNU's No} will match the DES hash, but the other two will
+     only match @samp{GNU's Not Unix}.  */
 
-  /* Test the result.  */
-  ok = strcmp (result, pass) == 0;
+  if (strcmp (crypt (phrase, hash_sha), hash_sha))
+    {
+      puts ("SHA: not ok");
+      status = 1;
+    }
+  else
+    puts ("SHA: ok");
 
-  puts(ok ? "Access granted." : "Access denied.");
-  return ok ? 0 : 1;
+  if (strcmp (crypt (phrase, hash_md5), hash_md5))
+    {
+      puts ("MD5: not ok");
+      status = 1;
+    }
+  else
+    puts ("MD5: ok");
+
+  if (strcmp (crypt (phrase, hash_des), hash_des))
+    {
+      puts ("DES: not ok");
+      status = 1;
+    }
+  else
+    puts ("DES: ok");
+
+  return status;
 }

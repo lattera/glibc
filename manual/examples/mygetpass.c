@@ -1,4 +1,4 @@
-/* Reading Passwords
+/* Reading passphrases manually.
    Copyright (C) 1991-2018 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ my_getpass (char **lineptr, size_t *n, FILE *stream)
   if (tcsetattr (fileno (stream), TCSAFLUSH, &new) != 0)
     return -1;
 
-  /* Read the password.  */
+  /* Read the passphrase  */
   nread = getline (lineptr, n, stream);
 
   /* Restore terminal.  */

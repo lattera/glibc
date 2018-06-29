@@ -3452,7 +3452,7 @@ system performance.  In this case, locking pages can help.
 @item
 Privacy.  If you keep secrets in virtual memory and that virtual memory
 gets paged out, that increases the chance that the secrets will get out.
-If a password gets written out to disk swap space, for example, it might
+If a passphrase gets written out to disk swap space, for example, it might
 still be there long after virtual and real memory have been wiped clean.
 
 @end itemize

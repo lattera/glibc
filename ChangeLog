@@ -1,5 +1,31 @@
 2018-06-29  Zack Weinberg  <zackw@panix.com>
 
+	* crypt/crypt.h, posix/unistd.h: Update comments and
+	prototypes for crypt and crypt_r.
+
+	* manual/crypt.texi (Cryptographic Functions): New initial
+	exposition.
+	(crypt): Section renamed to 'Passphrase Storage'.  Full rewrite.
+	(Unpredictable Bytes): Improve initial exposition.  Clarify error
+	behavior of getentropy and getrandom.
+	* manual/examples/genpass.c: Generate a salt using getentropy
+	instead of the current time. Use hash $5$ (SHA-2-256).
+	* manual/examples/testpass.c: Demonstrate validation against
+	hashes generated with three different one-way functions.
+
+	* manual/intro.texi: crypt.texi does not need an overview
+	anymore.
+
+	* manual/nss.texi, manual/memory.texi, manual/socket.texi
+	* manual/terminal.texi: Consistently refer to "passphrases"
+	* instead of "passwords", and to the "user database" instead
+	* of the "password database".
+	* manual/users.texi: Similarly.  Add notes about how actual
+	passphrase hashes are now stored in the shadow database.
+	Remove 20-year-old junk todo note.
+
+2018-06-29  Zack Weinberg  <zackw@panix.com>
+
 	* manual/crypt.texi: Use a normal top-level @node declaration.
 	Move most of the introductory text to the 'crypt' section.
 	Move the example programs below the @deftypefun for 'crypt_r'.

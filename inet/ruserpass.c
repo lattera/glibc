@@ -177,7 +177,7 @@ next:
 			    fstat64(fileno(cfile), &stb) >= 0 &&
 			    (stb.st_mode & 077) != 0) {
 	warnx(_("Error: .netrc file is readable by others."));
-	warnx(_("Remove password or make file unreadable by others."));
+	warnx(_("Remove 'password' line or make file unreadable by others."));
 				goto bad;
 			}
 			if (token() && *apass == 0) {

@@ -257,7 +257,7 @@ system assigns an address automatically if you have not specified one.
 
 Occasionally a client needs to specify an address because the server
 discriminates based on address; for example, the rsh and rlogin
-protocols look at the client's socket address and only bypass password
+protocols look at the client's socket address and only bypass passphrase
 checking if it is less than @code{IPPORT_RESERVED} (@pxref{Ports}).
 
 The details of socket addresses vary depending on what namespace you are
@@ -3277,7 +3277,7 @@ or request that comes in.  If @var{style} uses connections, then
 @var{user} is the user name that the server should run as.  @code{inetd} runs
 as root, so it can set the user ID of its children arbitrarily.  It's
 best to avoid using @samp{root} for @var{user} if you can; but some
-servers, such as Telnet and FTP, read a username and password
+servers, such as Telnet and FTP, read a username and passphrase
 themselves.  These servers need to be root initially so they can log
 in as commanded by the data coming over the network.
 

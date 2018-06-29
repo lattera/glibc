@@ -404,9 +404,9 @@ addpwbyX (struct database_dyn *db, int fd, request_header *req,
   if (__glibc_unlikely (debug_level > 0))
     {
       if (he == NULL)
-	dbg_log (_("Haven't found \"%s\" in password cache!"), keystr);
+	dbg_log (_("Haven't found \"%s\" in user database cache!"), keystr);
       else
-	dbg_log (_("Reloading \"%s\" in password cache!"), keystr);
+	dbg_log (_("Reloading \"%s\" in user database cache!"), keystr);
     }
 
   while (lookup (req->type, key, &resultbuf,

@@ -84,15 +84,15 @@ Network names and numbers, @pxref{Networks Database}.
 @item protocols
 Network protocols, @pxref{Protocols Database}.
 @item passwd
-User passwords, @pxref{User Database}.
+User identities, @pxref{User Database}.
 @item rpc
-Remote procedure call names and numbers,
+Remote procedure call names and numbers.
 @comment @pxref{RPC Database}.
 @item services
 Network services, @pxref{Services Database}.
 @item shadow
-Shadow user passwords,
-@comment @pxref{Shadow Password Database}.
+User passphrase hashes and related information.
+@comment @pxref{Shadow Passphrase Database}.
 @end table
 
 @noindent
@@ -526,7 +526,7 @@ with the main application.)
 The @code{get@var{XXX}by@var{YYY}} functions are the most important
 functions in the NSS modules.  But there are others which implement
 the other ways to access system databases (say for the
-password database, there are @code{setpwent}, @code{getpwent}, and
+user database, there are @code{setpwent}, @code{getpwent}, and
 @code{endpwent}).  These will be described in more detail later.
 Here we give a general way to determine the
 signature of the module function:
@@ -650,7 +650,7 @@ general rules must be followed by all functions.
 In fact there are four kinds of different functions which may appear in
 the interface.  All derive from the traditional ones for system databases.
 @var{db} in the following table is normally an abbreviation for the
-database (e.g., it is @code{pw} for the password database).
+database (e.g., it is @code{pw} for the user database).
 
 @table @code
 @item enum nss_status _nss_@var{database}_set@var{db}ent (void)

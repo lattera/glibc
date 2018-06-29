@@ -1321,7 +1321,6 @@ this manual.
 @c Message Translation (8)
 @c Resource Usage And Limitations (22)
 @c Inter-Process Communication (27)
-@c DES Encryption and Password Handling (33)
 @c Debugging support (34)
 @c POSIX Threads (35)
 @c Internal Probes (36)

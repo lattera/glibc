@@ -24,7 +24,7 @@ descriptor is and how to open a file descriptor for a terminal device.
 * Line Control::                Sending break sequences, clearing
                                  terminal buffers @dots{}
 * Noncanon Example::            How to read single characters without echo.
-* getpass::                     Prompting the user for a password.
+* getpass::                     Prompting the user for a passphrase.
 * Pseudo-Terminals::            How to open a pseudo-terminal.
 @end menu
 
@@ -1873,9 +1873,9 @@ handlers for job control signals that reset terminal modes.  The above
 example does so.
 
 @node getpass
-@section Reading Passwords
+@section Reading Passphrases
 
-When reading in a password, it is desirable to avoid displaying it on
+When reading in a passphrase, it is desirable to avoid displaying it on
 the screen, to help keep it secret.  The following function handles this
 in a convenient way.
 
@@ -1884,7 +1884,7 @@ in a convenient way.
 @safety{@prelim{}@mtunsafe{@mtasuterm{}}@asunsafe{@ascuheap{} @asulock{} @asucorrupt{}}@acunsafe{@acuterm{} @aculock{} @acucorrupt{}}}
 @c This function will attempt to create a stream for terminal I/O, but
 @c will fallback to stdio/stderr.  It attempts to change the terminal
-@c mode in a thread-unsafe way, write out the prompt, read the password,
+@c mode in a thread-unsafe way, write out the prompt, read the passphrase,
 @c then restore the terminal mode.  It has a cleanup to close the stream
 @c in case of (synchronous) cancellation, but not to restore the
 @c terminal mode.
@@ -1892,14 +1892,14 @@ in a convenient way.
 @code{getpass} outputs @var{prompt}, then reads a string in from the
 terminal without echoing it.  It tries to connect to the real terminal,
 @file{/dev/tty}, if possible, to encourage users not to put plaintext
-passwords in files; otherwise, it uses @code{stdin} and @code{stderr}.
+passphrases in files; otherwise, it uses @code{stdin} and @code{stderr}.
 @code{getpass} also disables the INTR, QUIT, and SUSP characters on the
 terminal using the @code{ISIG} terminal attribute (@pxref{Local Modes}).
 The terminal is flushed before and after @code{getpass}, so that
-characters of a mistyped password are not accidentally visible.
+characters of a mistyped passphrase are not accidentally visible.
 
 In other C libraries, @code{getpass} may only return the first
-@code{PASS_MAX} bytes of a password.  @Theglibc{} has no limit, so
+@code{PASS_MAX} bytes of a passphrase.  @Theglibc{} has no limit, so
 @code{PASS_MAX} is undefined.
 
 The prototype for this function is in @file{unistd.h}.  @code{PASS_MAX}

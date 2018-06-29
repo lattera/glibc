@@ -16,34 +16,44 @@
 */
 
 #include <stdio.h>
-#include <time.h>
 #include <unistd.h>
 #include <crypt.h>
 
 int
 main(void)
 {
-  unsigned long seed[2];
-  char salt[] = "$1$........";
-  const char *const seedchars =
+  unsigned char ubytes[16];
+  char salt[20];
+  const char *const saltchars =
     "./0123456789ABCDEFGHIJKLMNOPQRST"
     "UVWXYZabcdefghijklmnopqrstuvwxyz";
-  char *password;
+  char *hash;
   int i;
 
-  /* Generate a (not very) random seed.
-     You should do it better than this...  */
-  seed[0] = time(NULL);
-  seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
+  /* Retrieve 16 unpredictable bytes from the operating system.  */
+  if (getentropy (ubytes, sizeof ubytes))
+    {
+      perror ("getentropy");
+      return 1;
+    }
 
-  /* Turn it into printable characters from `seedchars'.  */
-  for (i = 0; i < 8; i++)
-    salt[3+i] = seedchars[(seed[i/5] >> (i%5)*6) & 0x3f];
+  /* Use them to fill in the salt string.  */
+  salt[0] = '$';
+  salt[1] = '5'; /* SHA-256 */
+  salt[2] = '$';
+  for (i = 0; i < 16; i++)
+    salt[3+i] = saltchars[ubytes[i] & 0x3f];
+  salt[3+i] = '\0';
 
-  /* Read in the user's password and encrypt it.  */
-  password = crypt(getpass("Password:"), salt);
+  /* Read in the user's passphrase and hash it.  */
+  hash = crypt (getpass ("Enter new passphrase: "), salt);
+  if (!hash || hash[0] == '*')
+    {
+      perror ("crypt");
+      return 1;
+    }
 
   /* Print the results.  */
-  puts(password);
+  puts (hash);
   return 0;
 }

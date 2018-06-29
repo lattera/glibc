@@ -129,7 +129,7 @@ Martin Galvan for contributing gdb pretty printer support to glibc and adding
 an initial set of pretty printers for structures in the POSIX Threads library.
 
 @item
-Michael Glad for the DES encryption function @code{crypt} and related
+Michael Glad for the passphrase-hashing function @code{crypt} and related
 functions.
 
 @item

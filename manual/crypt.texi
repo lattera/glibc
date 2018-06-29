@@ -1,121 +1,200 @@
 @node Cryptographic Functions, Debugging Support, System Configuration, Top
 @chapter Cryptographic Functions
-@c %MENU% Password storage and strongly unpredictable bytes
+@c %MENU% Passphrase storage and strongly unpredictable bytes.
+
+@Theglibc{} includes only a few special-purpose cryptographic
+functions: one-way hash functions for passphrase storage, and access
+to a cryptographic randomness source, if one is provided by the
+operating system.  Programs that need general-purpose cryptography
+should use a dedicated cryptography library, such as
+@uref{https://www.gnu.org/software/libgcrypt/,,libgcrypt}.
+
+Many countries place legal restrictions on the import, export,
+possession, or use of cryptographic software.  We deplore these
+restrictions, but we must still warn you that @theglibc{} may be
+subject to them, even if you do not use the functions in this chapter
+yourself.  The restrictions vary from place to place and are changed
+often, so we cannot give any more specific advice than this warning.
 
 @menu
-* crypt::                       A one-way function for passwords.
-* Unpredictable Bytes::         Randomness for cryptography purposes.
+* Passphrase Storage::          One-way hashing for passphrases.
+* Unpredictable Bytes::         Randomness for cryptographic purposes.
 @end menu
 
-@node crypt
-@section Encrypting Passwords
+@node Passphrase Storage
+@section Passphrase Storage
+@cindex passphrase hashing
+@cindex one-way hashing
+@cindex hashing, passphrase
 
-On many systems, it is unnecessary to have any kind of user
-authentication; for instance, a workstation which is not connected to a
-network probably does not need any user authentication, because to use
-the machine an intruder must have physical access.
-
-Sometimes, however, it is necessary to be sure that a user is authorized
+Sometimes it is necessary to be sure that a user is authorized
 to use some service a machine provides---for instance, to log in as a
 particular user id (@pxref{Users and Groups}).  One traditional way of
-doing this is for each user to choose a secret @dfn{password}; then, the
-system can ask someone claiming to be a user what the user's password
-is, and if the person gives the correct password then the system can
-grant the appropriate privileges.
+doing this is for each user to choose a secret @dfn{passphrase}; then, the
+system can ask someone claiming to be a user what the user's passphrase
+is, and if the person gives the correct passphrase then the system can
+grant the appropriate privileges.  (Traditionally, these were called
+``passwords,'' but nowadays a single word is too easy to guess.)
 
-If all the passwords are just stored in a file somewhere, then this file
-has to be very carefully protected.  To avoid this, passwords are run
-through a @dfn{one-way function}, a function which makes it difficult to
-work out what its input was by looking at its output, before storing in
-the file.
+Programs that handle passphrases must take special care not to reveal
+them to anyone, no matter what.  It is not enough to keep them in a
+file that is only accessible with special privileges.  The file might
+be ``leaked'' via a bug or misconfiguration, and system administrators
+shouldn't learn everyone's passphrase even if they have to edit that
+file for some reason.  To avoid this, passphrases should also be
+converted into @dfn{one-way hashes}, using a @dfn{one-way function},
+before they are stored.
 
-@Theglibc{} provides a one-way function that is compatible with
-the behavior of the @code{crypt} function introduced in FreeBSD 2.0.
-It supports two one-way algorithms: one based on the MD5
-message-digest algorithm that is compatible with modern BSD systems,
-and the other based on the Data Encryption Standard (DES) that is
-compatible with Unix systems.
+A one-way function is easy to compute, but there is no known way to
+compute its inverse.  This means the system can easily check
+passphrases, by hashing them and comparing the result with the stored
+hash.  But an attacker who discovers someone's passphrase hash can
+only discover the passphrase it corresponds to by guessing and
+checking.  The one-way functions are designed to make this process
+impractically slow, for all but the most obvious guesses.  (Do not use
+a word from the dictionary as your passphrase.)
 
-@deftypefun {char *} crypt (const char *@var{key}, const char *@var{salt})
-@standards{BSD, crypt.h}
-@standards{SVID, crypt.h}
+@Theglibc{} provides an interface to four one-way functions, based on
+the SHA-2-512, SHA-2-256, MD5, and DES cryptographic primitives.  New
+passphrases should be hashed with either of the SHA-based functions.
+The others are too weak for newly set passphrases, but we continue to
+support them for verifying old passphrases.  The DES-based hash is
+especially weak, because it ignores all but the first eight characters
+of its input.
+
+@deftypefun {char *} crypt (const char *@var{phrase}, const char *@var{salt})
+@standards{X/Open, unistd.h}
+@standards{GNU, crypt.h}
 @safety{@prelim{}@mtunsafe{@mtasurace{:crypt}}@asunsafe{@asucorrupt{} @asulock{} @ascuheap{} @ascudlopen{}}@acunsafe{@aculock{} @acsmem{}}}
 @c Besides the obvious problem of returning a pointer into static
 @c storage, the DES initializer takes an internal lock with the usual
-@c set of problems for AS- and AC-Safety.  The FIPS mode checker and the
-@c NSS implementations of may leak file descriptors if canceled.  The
+@c set of problems for AS- and AC-Safety.
+@c The NSS implementations may leak file descriptors if cancelled.
 @c The MD5, SHA256 and SHA512 implementations will malloc on long keys,
 @c and NSS relies on dlopening, which brings about another can of worms.
 
-The @code{crypt} function takes a password, @var{key}, as a string, and
-a @var{salt} character array which is described below, and returns a
-printable ASCII string which starts with another salt.  It is believed
-that, given the output of the function, the best way to find a @var{key}
-that will produce that output is to guess values of @var{key} until the
-original value of @var{key} is found.
+The function @code{crypt} converts a passphrase string, @var{phrase},
+into a one-way hash suitable for storage in the user database.  The
+string that it returns will consist entirely of printable ASCII
+characters.  It will not contain whitespace, nor any of the characters
+@samp{:}, @samp{;}, @samp{*}, @samp{!}, or @samp{\}.
 
-The @var{salt} parameter does two things.  Firstly, it selects which
-algorithm is used, the MD5-based one or the DES-based one.  Secondly, it
-makes life harder for someone trying to guess passwords against a file
-containing many passwords; without a @var{salt}, an intruder can make a
-guess, run @code{crypt} on it once, and compare the result with all the
-passwords.  With a @var{salt}, the intruder must run @code{crypt} once
-for each different salt.
+The @var{salt} parameter controls which one-way function is used, and
+it also ensures that the output of the one-way function is different
+for every user, even if they have the same passphrase.  This makes it
+harder to guess passphrases from a large user database.  Without salt,
+the attacker could make a guess, run @code{crypt} on it once, and
+compare the result with all the hashes.  Salt forces the attacker to
+make separate calls to @code{crypt} for each user.
 
-For the MD5-based algorithm, the @var{salt} should consist of the string
-@code{$1$}, followed by up to 8 characters, terminated by either
-another @code{$} or the end of the string.  The result of @code{crypt}
-will be the @var{salt}, followed by a @code{$} if the salt didn't end
-with one, followed by 22 characters from the alphabet
-@code{./0-9A-Za-z}, up to 34 characters total.  Every character in the
-@var{key} is significant.
+To verify a passphrase, pass the previously hashed passphrase as the
+@var{salt}.  To hash a new passphrase for storage, set @var{salt} to a
+string consisting of a prefix plus a sequence of randomly chosen
+characters, according to this table:
 
-For the DES-based algorithm, the @var{salt} should consist of two
-characters from the alphabet @code{./0-9A-Za-z}, and the result of
-@code{crypt} will be those two characters followed by 11 more from the
-same alphabet, 13 in total.  Only the first 8 characters in the
-@var{key} are significant.
+@multitable @columnfractions .2 .1 .3
+@headitem One-way function @tab Prefix @tab Random sequence
+@item SHA-2-512
+@tab @samp{$6$}
+@tab 16 characters
+@item SHA-2-256
+@tab @samp{$5$}
+@tab 16 characters
+@item MD5
+@tab @samp{$1$}
+@tab 8 characters
+@item DES
+@tab @samp{}
+@tab 2 characters
+@end multitable
 
-The MD5-based algorithm has no limit on the useful length of the
-password used, and is slightly more secure.  It is therefore preferred
-over the DES-based algorithm.
+In all cases, the random characters should be chosen from the alphabet
+@code{./0-9A-Za-z}.
 
-When the user enters their password for the first time, the @var{salt}
-should be set to a new string which is reasonably random.  To verify a
-password against the result of a previous call to @code{crypt}, pass
-the result of the previous call as the @var{salt}.
+With all of the hash functions @emph{except} DES, @var{phrase} can be
+arbitrarily long, and all eight bits of each byte are significant.
+With DES, only the first eight characters of @var{phrase} affect the
+output, and the eighth bit of each byte is also ignored.
+
+@code{crypt} can fail.  Some implementations return @code{NULL} on
+failure, and others return an @emph{invalid} hashed passphrase, which
+will begin with a @samp{*} and will not be the same as @var{salt}.  In
+either case, @code{errno} will be set to indicate the problem.  Some
+of the possible error codes are:
+
+@table @code
+@item EINVAL
+@var{salt} is invalid; neither a previously hashed passphrase, nor a
+well-formed new salt for any of the supported hash functions.
+
+@item EPERM
+The system configuration forbids use of the hash function selected by
+@var{salt}.
+
+@item ENOMEM
+Failed to allocate internal scratch storage.
+
+@item ENOSYS
+@itemx EOPNOTSUPP
+Hashing passphrases is not supported at all, or the hash function
+selected by @var{salt} is not supported.  @Theglibc{} does not use
+these error codes, but they may be encountered on other operating
+systems.
+@end table
+
+@code{crypt} uses static storage for both internal scratchwork and the
+string it returns.  It is not safe to call @code{crypt} from multiple
+threads simultaneously, and the string it returns will be overwritten
+by any subsequent call to @code{crypt}.
+
+@code{crypt} is specified in the X/Open Portability Guide and is
+present on nearly all historical Unix systems.  However, the XPG does
+not specify any one-way functions.
+
+@code{crypt} is declared in @file{unistd.h}.  @Theglibc{} also
+declares this function in @file{crypt.h}.
 @end deftypefun
 
-@deftypefun {char *} crypt_r (const char *@var{key}, const char *@var{salt}, {struct crypt_data *} @var{data})
+@deftypefun {char *} crypt_r (const char *@var{phrase}, const char *@var{salt}, struct crypt_data *@var{data})
 @standards{GNU, crypt.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@asucorrupt{} @asulock{} @ascuheap{} @ascudlopen{}}@acunsafe{@aculock{} @acsmem{}}}
+@tindex struct crypt_data
 @c Compared with crypt, this function fixes the @mtasurace:crypt
 @c problem, but nothing else.
 
-The @code{crypt_r} function does the same thing as @code{crypt}, but
-takes an extra parameter which includes space for its result (among
-other things), so it can be reentrant.  @code{data@w{->}initialized} must be
-cleared to zero before the first time @code{crypt_r} is called.
+The function @code{crypt_r} is a thread-safe version of @code{crypt}.
+Instead of static storage, it uses the memory pointed to by its
+@var{data} argument for both scratchwork and the string it returns.
+It can safely be used from multiple threads, as long as different
+@var{data} objects are used in each thread.  The string it returns
+will still be overwritten by another call with the same @var{data}.
 
-The @code{crypt_r} function is a GNU extension.
+@var{data} must point to a @code{struct crypt_data} object allocated
+by the caller.  All of the fields of @code{struct crypt_data} are
+private, but before one of these objects is used for the first time,
+it must be initialized to all zeroes, using @code{memset} or similar.
+After that, it can be reused for many calls to @code{crypt_r} without
+erasing it again.  @code{struct crypt_data} is very large, so it is
+best to allocate it with @code{malloc} rather than as a local
+variable.  @xref{Memory Allocation}.
+
+@code{crypt_r} is a GNU extension.  It is declared in @file{crypt.h},
+as is @code{struct crypt_data}.
 @end deftypefun
 
-The @code{crypt} and @code{crypt_r} functions are prototyped in the
-header @file{crypt.h}.
-
-The following short program is an example of how to use @code{crypt} the
-first time a password is entered.  Note that the @var{salt} generation
-is just barely acceptable; in particular, it is not unique between
-machines, and in many applications it would not be acceptable to let an
-attacker know what time the user's password was last set.
+The following program shows how to use @code{crypt} the first time a
+passphrase is entered.  It uses @code{getentropy} to make the salt as
+unpredictable as possible; @pxref{Unpredictable Bytes}.
 
 @smallexample
 @include genpass.c.texi
 @end smallexample
 
-The next program shows how to verify a password.  It prompts the user
-for a password and prints ``Access granted.'' if the user types
-@code{GNU libc manual}.
+The next program demonstrates how to verify a passphrase.  It checks a
+hash hardcoded into the program, because looking up real users' hashed
+passphrases may require special privileges (@pxref{User Database}).
+It also shows that different one-way functions produce different
+hashes for the same passphrase.
 
 @smallexample
 @include testpass.c.texi
@@ -123,93 +202,121 @@ for a password and prints ``Access granted.'' if the user types
 
 @node Unpredictable Bytes
 @section Generating Unpredictable Bytes
+@cindex randomness source
+@cindex random numbers, cryptographic
+@cindex pseudo-random numbers, cryptographic
+@cindex cryptographic random number generator
+@cindex deterministic random bit generator
+@cindex CRNG
+@cindex CSPRNG
+@cindex DRBG
 
-Some cryptographic applications (such as session key generation) need
-unpredictable bytes.
+Cryptographic applications often need some random data that will be as
+difficult as possible for a hostile eavesdropper to guess.  For
+instance, encryption keys should be chosen at random, and the ``salt''
+strings used by @code{crypt} (@pxref{Passphrase Storage}) should also
+be chosen at random.
 
-In general, application code should use a deterministic random bit
-generator, which could call the @code{getentropy} function described
-below internally to obtain randomness to seed the generator.  The
-@code{getrandom} function is intended for low-level applications which
-need additional control over the blocking behavior.
+Some pseudo-random number generators do not provide unpredictable-enough
+output for cryptographic applications; @pxref{Pseudo-Random Numbers}.
+Such applications need to use a @dfn{cryptographic random number
+generator} (CRNG), also sometimes called a @dfn{cryptographically strong
+pseudo-random number generator} (CSPRNG) or @dfn{deterministic random
+bit generator} (DRBG).
+
+Currently, @theglibc{} does not provide a cryptographic random number
+generator, but it does provide functions that read random data from a
+@dfn{randomness source} supplied by the operating system.  The
+randomness source is a CRNG at heart, but it also continually
+``re-seeds'' itself from physical sources of randomness, such as
+electronic noise and clock jitter.  This means applications do not need
+to do anything to ensure that the random numbers it produces are
+different on each run.
+
+The catch, however, is that these functions will only produce
+relatively short random strings in any one call.  Often this is not a
+problem, but applications that need more than a few kilobytes of
+cryptographically strong random data should call these functions once
+and use their output to seed a CRNG.
+
+Most applications should use @code{getentropy}.  The @code{getrandom}
+function is intended for low-level applications which need additional
+control over blocking behavior.
 
 @deftypefun int getentropy (void *@var{buffer}, size_t @var{length})
 @standards{GNU, sys/random.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 
-This function writes @var{length} bytes of random data to the array
-starting at @var{buffer}, which must be at most 256 bytes long.  The
-function returns zero on success.  On failure, it returns @code{-1} and
-@code{errno} is updated accordingly.
-
-The @code{getentropy} function is declared in the header file
-@file{sys/random.h}.  It is derived from OpenBSD.
-
-The @code{getentropy} function is not a cancellation point.  A call to
-@code{getentropy} can block if the system has just booted and the kernel
-entropy pool has not yet been initialized.  In this case, the function
-will keep blocking even if a signal arrives, and return only after the
-entropy pool has been initialized.
-
-The @code{getentropy} function can fail with several errors, some of
-which are listed below.
+This function writes exactly @var{length} bytes of random data to the
+array starting at @var{buffer}.  @var{length} can be no more than 256.
+On success, it returns zero.  On failure, it returns @math{-1}, and
+@code{errno} is set to indicate the problem.  Some of the possible
+errors are listed below.
 
 @table @code
 @item ENOSYS
-The kernel does not implement the required system call.
+The operating system does not implement a randomness source, or does
+not support this way of accessing it.  (For instance, the system call
+used by this function was added to the Linux kernel in version 3.17.)
 
 @item EFAULT
 The combination of @var{buffer} and @var{length} arguments specifies
 an invalid memory range.
 
 @item EIO
-More than 256 bytes of randomness have been requested, or the buffer
-could not be overwritten with random data for an unspecified reason.
-
+@var{length} is larger than 256, or the kernel entropy pool has
+suffered a catastrophic failure.
 @end table
 
+A call to @code{getentropy} can only block when the system has just
+booted and the randomness source has not yet been initialized.
+However, if it does block, it cannot be interrupted by signals or
+thread cancellation.  Programs intended to run in very early stages of
+the boot process may need to use @code{getrandom} in non-blocking mode
+instead, and be prepared to cope with random data not being available
+at all.
+
+The @code{getentropy} function is declared in the header file
+@file{sys/random.h}.  It is derived from OpenBSD.
 @end deftypefun
 
 @deftypefun ssize_t getrandom (void *@var{buffer}, size_t @var{length}, unsigned int @var{flags})
 @standards{GNU, sys/random.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 
-This function writes @var{length} bytes of random data to the array
-starting at @var{buffer}.  On success, this function returns the number
-of bytes which have been written to the buffer (which can be less than
-@var{length}).  On error, @code{-1} is returned, and @code{errno} is
-updated accordingly.
-
-The @code{getrandom} function is declared in the header file
-@file{sys/random.h}.  It is a GNU extension.
-
-The following flags are defined for the @var{flags} argument:
+This function writes up to @var{length} bytes of random data to the
+array starting at @var{buffer}.  The @var{flags} argument should be
+either zero, or the bitwise OR of some of the following flags:
 
 @table @code
 @item GRND_RANDOM
-Use the @file{/dev/random} (blocking) pool instead of the
-@file{/dev/urandom} (non-blocking) pool to obtain randomness.  If the
-@code{GRND_RANDOM} flag is specified, the @code{getrandom} function can
-block even after the randomness source has been initialized.
+Use the @file{/dev/random} (blocking) source instead of the
+@file{/dev/urandom} (non-blocking) source to obtain randomness.
+
+If this flag is specified, the call may block, potentially for quite
+some time, even after the randomness source has been initialized.  If it
+is not specified, the call can only block when the system has just
+booted and the randomness source has not yet been initialized.
 
 @item GRND_NONBLOCK
 Instead of blocking, return to the caller immediately if no data is
 available.
 @end table
 
-The @code{getrandom} function is a cancellation point.
+Unlike @code{getentropy}, the @code{getrandom} function is a
+cancellation point, and if it blocks, it can be interrupted by
+signals.
 
-Obtaining randomness from the @file{/dev/urandom} pool (i.e., a call
-without the @code{GRND_RANDOM} flag) can block if the system has just
-booted and the pool has not yet been initialized.
-
-The @code{getrandom} function can fail with several errors, some of
-which are listed below.  In addition, the function may not fill the
-buffer completely and return a value less than @var{length}.
+On success, @code{getrandom} returns the number of bytes which have
+been written to the buffer, which may be less than @var{length}.  On
+error, it returns @math{-1}, and @code{errno} is set to indicate the
+problem.  Some of the possible errors are:
 
 @table @code
 @item ENOSYS
-The kernel does not implement the @code{getrandom} system call.
+The operating system does not implement a randomness source, or does
+not support this way of accessing it.  (For instance, the system call
+used by this function was added to the Linux kernel in version 3.17.)
 
 @item EAGAIN
 No random data was available and @code{GRND_NONBLOCK} was specified in
@@ -227,5 +334,8 @@ the kernel randomness pool is initialized, this can happen even if
 @item EINVAL
 The @var{flags} argument contains an invalid combination of flags.
 @end table
+
+The @code{getrandom} function is declared in the header file
+@file{sys/random.h}.  It is a GNU extension.
 
 @end deftypefun
