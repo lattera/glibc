@@ -23,44 +23,36 @@
 #define dstin	x0
 #define src	x1
 #define count	x2
-#define dstlen	x3
 #define dst	x3
 #define srcend	x4
 #define dstend	x5
-#define A_l	x6
-#define A_lw	w6
-#define A_h	x7
-#define A_hw	w7
-#define B_l	x8
-#define B_lw	w8
-#define B_h	x9
-#define C_l	x10
-#define C_h	x11
-#define D_l	x12
-#define D_h	x13
-#define E_l	src
-#define E_h	count
-#define F_l	srcend
-#define F_h	dst
+#define A_x	x6
+#define B_x	x7
+#define A_w	w6
+#define B_w	w7
 #define tmp1	x14
 
-/* Alias with A_l and A_h to train the prefetcher.  */
-#define Q_l	x22
-#define Q_h	x23
+#define Q_q	q6
+#define A_q	q22
+#define B_q	q18
+#define C_q	q19
+#define D_q	q20
+#define E_q	q21
+#define F_q	q17
+#define G_q	q23
 
 /* RATIONALE:
 
-   The copy has 4 distinct parts:
-   * Small copies of 16 bytes and under
-   * Medium sized copies of 17-96 bytes
-   * Large copies where the source address is higher than the destination
+   The move has 4 distinct parts:
+   * Small moves of 16 bytes and under
+   * Medium sized moves of 17-96 bytes
+   * Large moves where the source address is higher than the destination
      (forward copies)
-   * Large copies where the destination address is higher than the source
+   * Large moves where the destination address is higher than the source
      (copy backward, or move).
 
-   We use only two registerpairs x6,x7 and x22,x23 for the copies and copy 32
-   bytes at a time to correctly train the hardware prefetcher for better
-   throughput.  */
+   We use only two registers q6 and q22 for the moves and move 32 bytes at a
+   time to correctly train the hardware prefetcher for better throughput.  */
 ENTRY_ALIGN (__memmove_falkor, 6)
 
 	sub	tmp1, dstin, src
@@ -77,17 +69,17 @@ ENTRY_ALIGN (__memmove_falkor, 6)
 
 	/* Medium copies: 17..96 bytes.  */
 	sub	tmp1, count, 1
-	ldp	A_l, A_h, [src]
+	ldr	A_q, [src]
 	tbnz	tmp1, 6, L(copy96)
-	ldp	D_l, D_h, [srcend, -16]
+	ldr	D_q, [srcend, -16]
 	tbz	tmp1, 5, 1f
-	ldp	B_l, B_h, [src, 16]
-	ldp	C_l, C_h, [srcend, -32]
-	stp	B_l, B_h, [dstin, 16]
-	stp	C_l, C_h, [dstend, -32]
+	ldr	B_q, [src, 16]
+	ldr	C_q, [srcend, -32]
+	str	B_q, [dstin, 16]
+	str	C_q, [dstend, -32]
 1:
-	stp	A_l, A_h, [dstin]
-	stp	D_l, D_h, [dstend, -16]
+	str	A_q, [dstin]
+	str	D_q, [dstend, -16]
 	ret
 
 	.p2align 4
@@ -95,52 +87,52 @@ ENTRY_ALIGN (__memmove_falkor, 6)
 L(copy16):
 	cmp	count, 8
 	b.lo	1f
-	ldr	A_l, [src]
-	ldr	A_h, [srcend, -8]
-	str	A_l, [dstin]
-	str	A_h, [dstend, -8]
+	ldr	A_x, [src]
+	ldr	B_x, [srcend, -8]
+	str	A_x, [dstin]
+	str	B_x, [dstend, -8]
 	ret
 	.p2align 4
 1:
 	/* 4-7 */
 	tbz	count, 2, 1f
-	ldr	A_lw, [src]
-	ldr	A_hw, [srcend, -4]
-	str	A_lw, [dstin]
-	str	A_hw, [dstend, -4]
+	ldr	A_w, [src]
+	ldr	B_w, [srcend, -4]
+	str	A_w, [dstin]
+	str	B_w, [dstend, -4]
 	ret
 	.p2align 4
 1:
 	/* 2-3 */
 	tbz	count, 1, 1f
-	ldrh	A_lw, [src]
-	ldrh	A_hw, [srcend, -2]
-	strh	A_lw, [dstin]
-	strh	A_hw, [dstend, -2]
+	ldrh	A_w, [src]
+	ldrh	B_w, [srcend, -2]
+	strh	A_w, [dstin]
+	strh	B_w, [dstend, -2]
 	ret
 	.p2align 4
 1:
 	/* 0-1 */
 	tbz	count, 0, 1f
-	ldrb	A_lw, [src]
-	strb	A_lw, [dstin]
+	ldrb	A_w, [src]
+	strb	A_w, [dstin]
 1:	ret
 
 	.p2align 4
 	/* Copy 64..96 bytes.  Copy 64 bytes from the start and
 	   32 bytes from the end.  */
 L(copy96):
-	ldp	B_l, B_h, [src, 16]
-	ldp	C_l, C_h, [src, 32]
-	ldp	D_l, D_h, [src, 48]
-	ldp	E_l, E_h, [srcend, -32]
-	ldp	F_l, F_h, [srcend, -16]
-	stp	A_l, A_h, [dstin]
-	stp	B_l, B_h, [dstin, 16]
-	stp	C_l, C_h, [dstin, 32]
-	stp	D_l, D_h, [dstin, 48]
-	stp	E_l, E_h, [dstend, -32]
-	stp	F_l, F_h, [dstend, -16]
+	ldr	B_q, [src, 16]
+	ldr	C_q, [src, 32]
+	ldr	D_q, [src, 48]
+	ldr	E_q, [srcend, -32]
+	ldr	F_q, [srcend, -16]
+	str	A_q, [dstin]
+	str	B_q, [dstin, 16]
+	str	C_q, [dstin, 32]
+	str	D_q, [dstin, 48]
+	str	E_q, [dstend, -32]
+	str	F_q, [dstend, -16]
 	ret
 
 	/* Align SRC to 16 byte alignment so that we don't cross cache line
@@ -150,92 +142,83 @@ L(copy96):
 
 	.p2align 4
 L(copy_long):
-	mov	B_l, Q_l
-	mov	B_h, Q_h
-	ldp	A_l, A_h, [src]
+	ldr	A_q, [src]
 	and	tmp1, src, 15
 	bic	src, src, 15
 	sub	dst, dstin, tmp1
 	add	count, count, tmp1	/* Count is now 16 too large.  */
-	ldp	Q_l, Q_h, [src, 16]!
-	stp	A_l, A_h, [dstin]
-	ldp	A_l, A_h, [src, 16]!
+	ldr	Q_q, [src, 16]!
+	str	A_q, [dstin]
+	ldr	A_q, [src, 16]!
 	subs	count, count, 32 + 64 + 16	/* Test and readjust count.  */
 	b.ls	L(last64)
 
 L(loop64):
 	subs	count, count, 32
-	stp	Q_l, Q_h, [dst, 16]
-	ldp	Q_l, Q_h, [src, 16]!
-	stp	A_l, A_h, [dst, 32]!
-	ldp	A_l, A_h, [src, 16]!
+	str	Q_q, [dst, 16]
+	ldr	Q_q, [src, 16]!
+	str	A_q, [dst, 32]!
+	ldr	A_q, [src, 16]!
 	b.hi	L(loop64)
 
 	/* Write the last full set of 64 bytes.  The remainder is at most 64
 	   bytes and at least 33 bytes, so it is safe to always copy 64 bytes
 	   from the end.  */
 L(last64):
-	ldp	C_l, C_h, [srcend, -64]
-	stp	Q_l, Q_h, [dst, 16]
-	mov	Q_l, B_l
-	mov	Q_h, B_h
-	ldp	B_l, B_h, [srcend, -48]
-	stp	A_l, A_h, [dst, 32]
-	ldp	A_l, A_h, [srcend, -32]
-	ldp	D_l, D_h, [srcend, -16]
-	stp	C_l, C_h, [dstend, -64]
-	stp	B_l, B_h, [dstend, -48]
-	stp	A_l, A_h, [dstend, -32]
-	stp	D_l, D_h, [dstend, -16]
+	ldr	C_q, [srcend, -64]
+	str	Q_q, [dst, 16]
+	ldr	B_q, [srcend, -48]
+	str	A_q, [dst, 32]
+	ldr	A_q, [srcend, -32]
+	ldr	D_q, [srcend, -16]
+	str	C_q, [dstend, -64]
+	str	B_q, [dstend, -48]
+	str	A_q, [dstend, -32]
+	str	D_q, [dstend, -16]
 	ret
 
 	.p2align 4
 L(move_long):
 	cbz	tmp1, 3f
 
-	mov	B_l, Q_l
-	mov	B_h, Q_h
-
 	/* Align SRCEND to 16 byte alignment so that we don't cross cache line
 	   boundaries on both loads and stores.  There are at least 96 bytes
 	   to copy, so copy 16 bytes unaligned and then align.  The loop
 	   copies 32 bytes per iteration and prefetches one iteration ahead.  */
 
-	ldp	A_l, A_h, [srcend, -16]
+	ldr	A_q, [srcend, -16]
 	and	tmp1, srcend, 15
 	sub	srcend, srcend, tmp1
-	ldp	Q_l, Q_h, [srcend, -16]!
-	stp	A_l, A_h, [dstend, -16]
+	ldr	Q_q, [srcend, -16]!
+	str	A_q, [dstend, -16]
 	sub	count, count, tmp1
-	ldp	A_l, A_h, [srcend, -16]!
+	ldr	A_q, [srcend, -16]!
 	sub	dstend, dstend, tmp1
 	subs	count, count, 32 + 64
 	b.ls	2f
 
 1:
 	subs	count, count, 32
-	stp	Q_l, Q_h, [dstend, -16]
-	ldp	Q_l, Q_h, [srcend, -16]!
-	stp	A_l, A_h, [dstend, -32]!
-	ldp	A_l, A_h, [srcend, -16]!
+	str	Q_q, [dstend, -16]
+	ldr	Q_q, [srcend, -16]!
+	str	A_q, [dstend, -32]!
+	ldr	A_q, [srcend, -16]!
 	b.hi	1b
 
 	/* Write the last full set of 64 bytes.  The remainder is at most 64
 	   bytes and at least 33 bytes, so it is safe to always copy 64 bytes
 	   from the start.  */
 2:
-	ldp	C_l, C_h, [src, 48]
-	stp	Q_l, Q_h, [dstend, -16]
-	mov	Q_l, B_l
-	mov	Q_h, B_h
-	ldp	B_l, B_h, [src, 32]
-	stp	A_l, A_h, [dstend, -32]
-	ldp	A_l, A_h, [src, 16]
-	ldp	D_l, D_h, [src]
-	stp	C_l, C_h, [dstin, 48]
-	stp	B_l, B_h, [dstin, 32]
-	stp	A_l, A_h, [dstin, 16]
-	stp	D_l, D_h, [dstin]
+	ldr	C_q, [src, 48]
+	str	Q_q, [dstend, -16]
+	ldr	B_q, [src, 32]
+	str	A_q, [dstend, -32]
+	ldr	A_q, [src, 16]
+	ldr	D_q, [src]
+	str	C_q, [dstin, 48]
+	str	B_q, [dstin, 32]
+	str	A_q, [dstin, 16]
+	str	D_q, [dstin]
 3:	ret
 
 END (__memmove_falkor)
