@@ -1,5 +1,8 @@
 2018-06-29  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S (__memcpy_falkor):
+	Use vector registers.
+
 	* sysdeps/aarch64/multiarch/memmove_falkor.S
 	(__memcpy_falkor): Use vector registers.
 
