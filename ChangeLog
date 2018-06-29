@@ -1,3 +1,17 @@
+2018-06-29  Maciej W. Rozycki  <macro@mips.com>
+
+	[BZ #23307]
+	* elf/dl-lookup.c (check_match): Do not reject a symbol whose
+	`st_value' is 0 if `st_shndx' is SHN_ABS.
+	* elf/tst-absolute-zero.c: New file.
+	* elf/tst-absolute-zero-lib.c: New file.
+	* elf/tst-absolute-zero-lib.lds: New file.
+	* elf/Makefile (tests): Add `tst-absolute-zero'.
+	(modules-names): Add `tst-absolute-zero-lib'.
+	(LDLIBS-tst-absolute-zero-lib.so): New variable.
+	($(objpfx)tst-absolute-zero-lib.so): New dependency.
+	($(objpfx)tst-absolute-zero: New dependency.
+
 2018-06-29  Zack Weinberg  <zackw@panix.com>
 
 	* configure.ac: New command-line option --disable-crypt.

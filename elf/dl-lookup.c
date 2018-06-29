@@ -76,6 +76,7 @@ check_match (const char *const undef_name,
   unsigned int stt = ELFW(ST_TYPE) (sym->st_info);
   assert (ELF_RTYPE_CLASS_PLT == 1);
   if (__glibc_unlikely ((sym->st_value == 0 /* No value.  */
+			 && sym->st_shndx != SHN_ABS
 			 && stt != STT_TLS)
 			|| ELF_MACHINE_SYM_NO_MATCH (sym)
 			|| (type_class & (sym->st_shndx == SHN_UNDEF))))
