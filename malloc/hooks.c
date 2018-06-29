@@ -52,30 +52,10 @@ memalign_hook_ini (size_t alignment, size_t sz, const void *caller)
 /* Whether we are using malloc checking.  */
 static int using_malloc_checking;
 
-/* A flag that is set by malloc_set_state, to signal that malloc checking
-   must not be enabled on the request from the user (via the MALLOC_CHECK_
-   environment variable).  It is reset by __malloc_check_init to tell
-   malloc_set_state that the user has requested malloc checking.
-
-   The purpose of this flag is to make sure that malloc checking is not
-   enabled when the heap to be restored was constructed without malloc
-   checking, and thus does not contain the required magic bytes.
-   Otherwise the heap would be corrupted by calls to free and realloc.  If
-   it turns out that the heap was created with malloc checking and the
-   user has requested it malloc_set_state just calls __malloc_check_init
-   again to enable it.  On the other hand, reusing such a heap without
-   further malloc checking is safe.  */
-static int disallow_malloc_check;
-
 /* Activate a standard set of debugging hooks. */
 void
 __malloc_check_init (void)
 {
-  if (disallow_malloc_check)
-    {
-      disallow_malloc_check = 0;
-      return;
-    }
   using_malloc_checking = 1;
   __malloc_hook = malloc_check;
   __free_hook = free_check;
@@ -407,21 +387,11 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
 
-/* Get/set state: malloc_get_state() records the current state of all
-   malloc variables (_except_ for the actual heap contents and `hook'
-   function pointers) in a system dependent, opaque data structure.
-   This data structure is dynamically allocated and can be free()d
-   after use.  malloc_set_state() restores the state of all malloc
-   variables to the previously obtained state.  This is especially
-   useful when using this malloc as part of a shared library, and when
-   the heap contents are saved/restored via some other method.  The
-   primary example for this is GNU Emacs with its `dumping' procedure.
-   `Hook' function pointers are never saved or restored by these
-   functions, with two exceptions: If malloc checking was in use when
-   malloc_get_state() was called, then malloc_set_state() calls
-   __malloc_check_init() if possible; if malloc checking was not in
-   use in the recorded state but the user requested malloc checking,
-   then the hooks are reset to 0.  */
+/* Support for restoring dumped heaps contained in historic Emacs
+   executables.  The heap saving feature (malloc_get_state) is no
+   longer implemented in this version of glibc, but we have a heap
+   rewriter in malloc_set_state which transforms the heap into a
+   version compatible with current malloc.  */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
 #define MALLOC_STATE_VERSION (0 * 0x100l + 5l) /* major*0x100 + minor */
@@ -476,7 +446,7 @@ malloc_set_state (void *msptr)
   if ((ms->version & ~0xffl) > (MALLOC_STATE_VERSION & ~0xffl))
     return -2;
 
-  /* We do not need to perform locking here because __malloc_set_state
+  /* We do not need to perform locking here because malloc_set_state
      must be called before the first call into the malloc subsytem
      (usually via __malloc_initialize_hook).  pthread_create always
      calls calloc and thus must be called only afterwards, so there

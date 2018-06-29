@@ -698,22 +698,6 @@ size_t   __malloc_usable_size(void*);
 void     __malloc_stats(void);
 
 /*
-  malloc_get_state(void);
-
-  Returns the state of all malloc variables in an opaque data
-  structure.
-*/
-void*  __malloc_get_state(void);
-
-/*
-  malloc_set_state(void* state);
-
-  Restore the state of all malloc variables from data obtained with
-  malloc_get_state().
-*/
-int      __malloc_set_state(void*);
-
-/*
   posix_memalign(void **memptr, size_t alignment, size_t size);
 
   POSIX wrapper like memalign(), checking for validity of size.

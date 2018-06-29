@@ -1,3 +1,13 @@
+2018-06-29  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23351]
+	* malloc/hooks.c: Update comments on restoring of dumped heaps.
+	(disallow_malloc_check): Remove variable.
+	(__malloc_check_init): Adjust.
+	(malloc_set_state): Update comment.
+	* malloc/malloc.c (__malloc_get_state, __malloc_set_state): Remove
+	declarations.
+
 2018-06-29  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
