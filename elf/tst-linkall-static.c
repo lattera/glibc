@@ -18,7 +18,9 @@
 
 #include <math.h>
 #include <pthread.h>
-#include <crypt.h>
+#if USE_CRYPT
+# include <crypt.h>
+#endif
 #include <resolv.h>
 #include <dlfcn.h>
 #include <utmp.h>

@@ -302,11 +302,22 @@ AC_ARG_ENABLE([experimental-malloc],
 	      [experimental_malloc=yes])
 AC_SUBST(experimental_malloc)
 
+AC_ARG_ENABLE([crypt],
+              AC_HELP_STRING([--disable-crypt],
+                             [do not build nor install the passphrase hashing library, libcrypt]),
+              [build_crypt=$enableval],
+              [build_crypt=yes])
+AC_SUBST(build_crypt)
+
 AC_ARG_ENABLE([nss-crypt],
 	      AC_HELP_STRING([--enable-nss-crypt],
 			     [enable libcrypt to use nss]),
 	      [nss_crypt=$enableval],
 	      [nss_crypt=no])
+if test x$build_libcrypt = xno && test x$nss_crypt = xyes; then
+  AC_MSG_WARN([--enable-nss-crypt has no effect when libcrypt is disabled])
+  nss_crypt=no
+fi
 if test x$nss_crypt = xyes; then
   nss_includes=-I$(nss-config --includedir 2>/dev/null)
   if test $? -ne 0; then

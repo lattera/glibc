@@ -193,13 +193,11 @@ linknamespace-libs-thr = $(linknamespace-libs-isoc) \
 			 $(common-objpfx)rt/librt.a $(static-thread-library)
 linknamespace-libs-posix = $(linknamespace-libs-thr) \
 			   $(common-objpfx)dlfcn/libdl.a
-linknamespace-libs-xsi = $(linknamespace-libs-posix) \
-			 $(common-objpfx)crypt/libcrypt.a
+linknamespace-libs-xsi = $(linknamespace-libs-posix)
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO11 = $(linknamespace-libs-isoc)
-linknamespace-libs-XPG4 = $(linknamespace-libs-isoc) \
-			  $(common-objpfx)crypt/libcrypt.a
+linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
 linknamespace-libs-XPG42 = $(linknamespace-libs-XPG4)
 linknamespace-libs-POSIX = $(linknamespace-libs-thr)
 linknamespace-libs-UNIX98 = $(linknamespace-libs-xsi)
@@ -208,6 +206,11 @@ linknamespace-libs-POSIX2008 = $(linknamespace-libs-posix)
 linknamespace-libs-XOPEN2K8 = $(linknamespace-libs-xsi)
 linknamespace-libs = $(foreach std,$(conformtest-standards),\
 				   $(linknamespace-libs-$(std)))
+
+ifeq ($(build-crypt),yes)
+linknamespace-libs-xsi += $(common-objpfx)crypt/libcrypt.a
+linknamespace-libs-XPG4 += $(common-objpfx)crypt/libcrypt.a
+endif
 
 $(linknamespace-symlist-stdlibs-tests): $(objpfx)symlist-stdlibs-%: \
 					$(linknamespace-libs)

@@ -197,6 +197,17 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      libnss_nisplus are not built at all.  Use this option to enable
      libnsl with all depending NSS modules and header files.
 
+'--disable-crypt'
+     Do not install the passphrase-hashing library 'libcrypt' or the
+     header file 'crypt.h'.  'unistd.h' will still declare the function
+     'crypt'.  Using this option does not change the set of programs
+     that may need to be linked with '-lcrypt'; it only means that the
+     GNU C Library will not provide that library.
+
+     This option is for hackers and distributions experimenting with
+     independently-maintained implementations of libcrypt.  It may
+     become the default in a future release.
+
 '--disable-experimental-malloc'
      By default, a per-thread cache is enabled in 'malloc'.  While this
      cache can be disabled on a per-application basis using tunables

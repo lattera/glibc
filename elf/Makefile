@@ -387,14 +387,21 @@ $(objpfx)tst-_dl_addr_inside_object: $(objpfx)dl-addr-obj.os
 CFLAGS-tst-_dl_addr_inside_object.c += $(PIE-ccflag)
 endif
 
-# By default tst-linkall-static should try to use crypt routines to test
-# static libcrypt use.
+# We can only test static libcrypt use if libcrypt has been built,
+# and either NSS crypto is not in use, or static NSS libraries are
+# available.
+ifeq ($(build-crypt),no)
+CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
+else
+ifeq ($(nss-crypt),no)
 CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
-# However, if we are using NSS crypto and we don't have a static
-# library, then we exclude the use of crypt functions in the test.
-# We similarly exclude libcrypt.a from the static link (see below).
-ifeq (yesno,$(nss-crypt)$(static-nss-crypt))
-CFLAGS-tst-linkall-static.c += -UUSE_CRYPT -DUSE_CRYPT=0
+else
+ifeq ($(static-nss-crypt),no)
+CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=0
+else
+CFLAGS-tst-linkall-static.c += -DUSE_CRYPT=1
+endif
+endif
 endif
 
 include ../Rules
@@ -1115,13 +1122,15 @@ localplt-built-dso := $(addprefix $(common-objpfx),\
 				  rt/librt.so \
 				  dlfcn/libdl.so \
 				  resolv/libresolv.so \
-				  crypt/libcrypt.so \
 		       )
 ifeq ($(build-mathvec),yes)
 localplt-built-dso += $(addprefix $(common-objpfx), mathvec/libmvec.so)
 endif
 ifeq ($(have-thread-library),yes)
 localplt-built-dso += $(filter-out %_nonshared.a, $(shared-thread-library))
+endif
+ifeq ($(build-crypt),yes)
+localplt-built-dso += $(addprefix $(common-objpfx), crypt/libcrypt.so)
 endif
 
 vpath localplt.data $(+sysdep_dirs)
@@ -1410,6 +1419,7 @@ $(objpfx)tst-linkall-static: \
   $(common-objpfx)resolv/libanl.a \
   $(static-thread-library)
 
+ifeq ($(build-crypt),yes)
 # If we are using NSS crypto and we have the ability to link statically
 # then we include libcrypt.a, otherwise we leave out libcrypt.a and
 # link as much as we can into the tst-linkall-static test.  This assumes
@@ -1424,6 +1434,7 @@ endif
 ifeq (no,$(nss-crypt))
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)crypt/libcrypt.a
+endif
 endif
 
 # The application depends on the DSO, and the DSO loads the plugin.

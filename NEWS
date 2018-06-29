@@ -133,6 +133,18 @@ Deprecated and removed features, and other changes affecting compatibility:
   binaries.  It was just another name for the standard function crypt,
   and it has not appeared in any header file in many years.
 
+* We have tentative plans to hand off maintenance of the passphrase-hashing
+  library, libcrypt, to a separate development project that will, we hope,
+  keep up better with new passphrase-hashing algorithms.  We will continue
+  to declare 'crypt' in <unistd.h>, and programs that use 'crypt' or
+  'crypt_r' should not need to change at all; however, distributions will
+  need to install <crypt.h> and libcrypt from a separate project.
+
+  In this release, if the configure option --disable-crypt is used, glibc
+  will not install <crypt.h> or libcrypt, making room for the separate
+  project's versions of these files.  The plan is to make this the default
+  behavior in a future release.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

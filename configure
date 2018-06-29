@@ -676,6 +676,7 @@ build_obsolete_nsl
 link_obsolete_rpc
 libc_cv_static_nss_crypt
 libc_cv_nss_crypt
+build_crypt
 experimental_malloc
 enable_werror
 all_warnings
@@ -779,6 +780,7 @@ enable_all_warnings
 enable_werror
 enable_multi_arch
 enable_experimental_malloc
+enable_crypt
 enable_nss_crypt
 enable_obsolete_rpc
 enable_obsolete_nsl
@@ -1448,6 +1450,8 @@ Optional Features:
                           architectures
   --disable-experimental-malloc
                           disable experimental malloc features
+  --disable-crypt         do not build nor install the passphrase hashing
+                          library, libcrypt
   --enable-nss-crypt      enable libcrypt to use nss
   --enable-obsolete-rpc   build and install the obsolete RPC code for
                           link-time usage
@@ -3505,6 +3509,15 @@ fi
 
 
 
+# Check whether --enable-crypt was given.
+if test "${enable_crypt+set}" = set; then :
+  enableval=$enable_crypt; build_crypt=$enableval
+else
+  build_crypt=yes
+fi
+
+
+
 # Check whether --enable-nss-crypt was given.
 if test "${enable_nss_crypt+set}" = set; then :
   enableval=$enable_nss_crypt; nss_crypt=$enableval
@@ -3512,6 +3525,11 @@ else
   nss_crypt=no
 fi
 
+if test x$build_libcrypt = xno && test x$nss_crypt = xyes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-nss-crypt has no effect when libcrypt is disabled" >&5
+$as_echo "$as_me: WARNING: --enable-nss-crypt has no effect when libcrypt is disabled" >&2;}
+  nss_crypt=no
+fi
 if test x$nss_crypt = xyes; then
   nss_includes=-I$(nss-config --includedir 2>/dev/null)
   if test $? -ne 0; then

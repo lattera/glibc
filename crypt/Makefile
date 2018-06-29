@@ -32,10 +32,6 @@ libcrypt-routines := crypt-entry md5-crypt sha256-crypt sha512-crypt crypt \
 
 tests := cert md5c-test sha256c-test sha512c-test badsalttest
 
-ifeq ($(crypt-in-libc),yes)
-routines += $(libcrypt-routines)
-endif
-
 ifeq ($(nss-crypt),yes)
 nss-cpp-flags := -DUSE_NSS \
   -I$(shell nss-config --includedir) -I$(shell nspr-config --includedir)

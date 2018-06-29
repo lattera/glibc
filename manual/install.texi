@@ -230,6 +230,17 @@ libnss_nisplus are not built at all.
 Use this option to enable libnsl with all depending NSS modules and
 header files.
 
+@item --disable-crypt
+Do not install the passphrase-hashing library @file{libcrypt} or the
+header file @file{crypt.h}.  @file{unistd.h} will still declare the
+function @code{crypt}.  Using this option does not change the set of
+programs that may need to be linked with @option{-lcrypt}; it only
+means that @theglibc{} will not provide that library.
+
+This option is for hackers and distributions experimenting with
+independently-maintained implementations of libcrypt.  It may become
+the default in a future release.
+
 @item --disable-experimental-malloc
 By default, a per-thread cache is enabled in @code{malloc}.  While
 this cache can be disabled on a per-application basis using tunables
