@@ -124,7 +124,7 @@ first_weekday 2
 END LC_TIME
 
 LC_PAPER
-copy "i18n"
+copy "en_US"
 END LC_PAPER
 
 LC_TELEPHONE
