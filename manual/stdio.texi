@@ -2962,7 +2962,11 @@ The facilities of this section are declared in the header file
 
 @strong{Portability Note:} The ability to extend the syntax of
 @code{printf} template strings is a GNU extension.  ISO standard C has
-nothing similar.
+nothing similar.  When using the GNU C compiler or any other compiler
+that interprets calls to standard I/O functions according to the rules
+of the language standard it is necessary to disable such handling by
+the appropriate compiler option.  Otherwise the behavior of a program
+that relies on the extension is undefined.
 
 @node Registering New Conversions
 @subsection Registering New Conversions
@@ -3016,9 +3020,13 @@ function when this format specifier appears in the format string.
 The return value is @code{0} on success, and @code{-1} on failure
 (which occurs if @var{spec} is out of range).
 
-You can redefine the standard output conversions, but this is probably
-not a good idea because of the potential for confusion.  Library routines
-written by other people could break if you do this.
+@strong{Portability Note:} It is possible to redefine the standard output
+conversions but doing so is strongly discouraged because it may interfere
+with the behavior of programs and compiler implementations that assume
+the effects of the conversions conform to the relevant language standards.
+In addition, conforming compilers need not guarantee that the function
+registered for a standard conversion will be called for each such
+conversion in every format string in a program.
 @end deftypefun
 
 @node Conversion Specifier Options

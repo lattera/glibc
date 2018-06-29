@@ -1,3 +1,8 @@
+2018-06-29  Martin Sebor  <msebor@redhat.com>
+
+	* manual/stdio.texi (Customizing Printf): Mention interaction
+	with GCC built-ins.
+
 2018-06-29  Maciej W. Rozycki  <macro@mips.com>
 
 	[BZ #23307]
