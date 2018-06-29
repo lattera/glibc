@@ -370,6 +370,14 @@ getifaddrs_internal (struct ifaddrs **ifap)
 	  if ((pid_t) nlh->nlmsg_pid != nh.pid || nlh->nlmsg_seq != nlp->seq)
 	    continue;
 
+	  /* If the dump got interrupted, we can't rely on the results
+	     so try again. */
+	  if (nlh->nlmsg_flags & NLM_F_DUMP_INTR)
+	    {
+	      result = -EAGAIN;
+	      goto exit_free;
+	    }
+
 	  if (nlh->nlmsg_type == NLMSG_DONE)
 	    break;		/* ok */
 
