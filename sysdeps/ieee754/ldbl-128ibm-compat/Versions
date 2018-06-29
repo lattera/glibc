@@ -118,4 +118,6 @@ libc {
     __strtoieee128_l;
     __wcstoieee128;
     __wcstoieee128_l;
+
+    __printf_sizeieee128;
   }

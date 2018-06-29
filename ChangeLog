@@ -1,3 +1,30 @@
+2018-07-02  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
+
+	* stdio-common/Makefile (test-srcs): Add tst-printfsz-islongdouble.
+	(tests-special) Add $(objpfx)tst-printfsz-islongdouble.out.
+	($(objpfx)tst-printfsz-islongdouble.out): New build and run rule.
+	* stdio-common/tst-printfsz-islongdouble.c: New file.
+	* stdio-common/tst-printfsz-islongdouble.sh: Likewise.
+	* sysdeps/ieee754/ldbl-128ibm-compat/Makefile:
+	[subdir == stdio-common] (routines): Add ieee128-printf_size.
+	[subdir == stdio-common] (tests-internal): Add
+	test-printf-size-ieee128, and test-printf-size-ibm128.
+	[subdir == stdio-common] (CFLAGS-test-printf-size-ieee128.c)
+	(CFLAGS-test-printf-size-ibm128.c): New variables.
+	[subdir == stdio-common] (tests-special): Add
+	$(objpfx)test-printf-size-ieee128.out and
+	$(objpfx)test-printf-size-ibm128.out.
+	[subdir == stdio-common] ($(objpfx)test-printf-size-ieee128.out)
+	($(objpfx)test-printf-size-ibm128.out): New build and run rules.
+	* sysdeps/ieee754/ldbl-128ibm-compat/Versions (libc): Add
+	__printf_sizeieee128.
+	* sysdeps/ieee754/ldbl-128ibm-compat/ieee128-printf_size.c:
+	New file.
+	* sysdeps/ieee754/ldbl-128ibm-compat/test-printf-size-ibm128.c:
+	Likewise.
+	* sysdeps/ieee754/ldbl-128ibm-compat/test-printf-size-ieee128.c:
+	Likewise.
+
 2018-07-02  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/ieee754/flt-32/e_powf.c (__powf): Use uint32_t.
