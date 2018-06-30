@@ -1,3 +1,7 @@
+2018-06-29  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* stdlib/tst-strfmon_l.c: Add tests for long double.
+
 2018-06-29  Michael Wolf  <milupo@sorbzilla.de>
 
 	[BZ #23208]
