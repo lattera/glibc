@@ -1,3 +1,8 @@
+2018-07-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/mach/hurd/i386/libc.abilist [GLIBC_2.28] (fcntl): Remove
+	symbol.
+
 2018-07-02  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* stdio-common/Makefile (test-srcs): Add tst-printfsz-islongdouble.
