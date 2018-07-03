@@ -372,15 +372,6 @@ Permission to use, copy, modify, and distribute this
 software is freely granted, provided that this notice
 is preserved.
 
-Part of stdio-common/tst-printf.c is copyright C E Chew:
-
-(C) Copyright C E Chew
-
-Feel free to copy, use and distribute this software provided:
-
-     1. you do not pretend that you wrote it
-     2. you leave this copyright notice intact.
-
 Various long double libm functions are copyright Stephen L. Moshier:
 
 Copyright 2001 by Stephen L. Moshier <moshier@na-net.ornl.gov>

@@ -1,3 +1,10 @@
+2018-07-03  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23363]
+	* stdio-common/tst-printf.c (DEC, INT, UNS, fp_test): Remove.
+	* stdio-common/tst-printf.sh: Adjust expected output.
+	* LICENSES: Update.
+
 2018-07-03  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/mach/hurd/i386/libc.abilist [GLIBC_2.28] (fcntl): Remove
