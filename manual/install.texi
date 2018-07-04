@@ -473,13 +473,7 @@ build @theglibc{}:
 
 @itemize @bullet
 @item
-GNU @code{make} 3.79 or newer
-
-You need the latest version of GNU @code{make}.  Modifying @theglibc{}
-to work with other @code{make} programs would be so difficult that
-we recommend you port GNU @code{make} instead.  @strong{Really.}  We
-recommend GNU @code{make} version 3.79.  All earlier versions have severe
-bugs or lack features.
+GNU @code{make} 4.0 or newer
 
 @item
 GCC 4.9 or newer

@@ -154,7 +154,7 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+  GNU make 4.0 or later is now required to build glibc.
 
 Security related changes:
 

@@ -426,13 +426,7 @@ Recommended Tools for Compilation
 We recommend installing the following GNU tools before attempting to
 build the GNU C Library:
 
-   * GNU 'make' 3.79 or newer
-
-     You need the latest version of GNU 'make'.  Modifying the GNU C
-     Library to work with other 'make' programs would be so difficult
-     that we recommend you port GNU 'make' instead.  *Really.*  We
-     recommend GNU 'make' version 3.79.  All earlier versions have
-     severe bugs or lack features.
+   * GNU 'make' 4.0 or newer
 
    * GCC 4.9 or newer
 

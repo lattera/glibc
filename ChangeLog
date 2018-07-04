@@ -1,3 +1,14 @@
+2018-07-04  Florian Weimer  <fweimer@redhat.com>
+
+	testrun.sh: Implement --tool=strace, --tool=valgrind
+	* Makefile (testrun-script): Define variable.
+	(testrun.sh): Use variable.
+	* manual/install.texi (Tools for Compilation): make 4.0 or later
+	is required.
+	* configure.ac: Check for make 4.0 or later.
+	* INSTALL: Regenerate.
+	* configure: Likewise.
+
 2018-07-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	[BZ #23233]

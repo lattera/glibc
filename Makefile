@@ -128,17 +128,60 @@ ifeq (yes,$(build-shared))
 lib: $(common-objpfx)libc.so $(common-objpfx)linkobj/libc.so
 endif # $(build-shared)
 
+# Used to build testrun.sh.
+define testrun-script
+#!/bin/bash
+builddir=`dirname "$$0"`
+GCONV_PATH="$${builddir}/iconvdata"
+
+usage () {
+  echo "usage: $$0 [--tool=strace] PROGRAM [ARGUMENTS...]" 2>&1
+  echo "       $$0 --tool=valgrind PROGRAM [ARGUMENTS...]" 2>&1
+}
+
+toolname=default
+while test $$# -gt 0 ; do
+  case "$$1" in
+    --tool=*)
+      toolname="$${1:7}"
+      shift
+      ;;
+    --*)
+      usage
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if test $$# -eq 0 ; then
+  usage
+fi
+
+case "$$toolname" in
+  default)
+    exec $(subst $(common-objdir),"$${builddir}", $(test-program-prefix)) \
+      $${1+"$$@"}
+    ;;
+  strace)
+    exec strace $(patsubst %, -E%, $(run-program-env)) \
+      $(test-via-rtld-prefix) $${1+"$$@"}
+    ;;
+  valgrind)
+    exec env $(run-program-env) valgrind $(test-via-rtld-prefix) $${1+"$$@"}
+    ;;
+  *)
+    usage
+    ;;
+esac
+endef
 
 # This is a handy script for running any dynamically linked program against
 # the current libc build for testing.
 $(common-objpfx)testrun.sh: $(common-objpfx)config.make \
 			    $(..)Makeconfig $(..)Makefile
-	(echo '#!/bin/sh'; \
-	 echo 'builddir=`dirname "$$0"`'; \
-	 echo 'GCONV_PATH="$${builddir}/iconvdata" \'; \
-	 echo 'exec $(subst $(common-objdir),"$${builddir}",\
-			    $(test-program-prefix)) $${1+"$$@"}'; \
-	) > $@T
+	$(file >$@T, $(testrun-script))
 	chmod a+x $@T
 	mv -f $@T $@
 postclean-generated += testrun.sh
