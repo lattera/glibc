@@ -1,3 +1,7 @@
+2018-07-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* posix/bug-regex33.c: Fix build after regex sync.
+
 2018-07-04  Carlos O'Donell  <carlos@redhat.com>
 
 	[BZ #23164]

@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "regex_internal.h"
 
 static int
 do_test (void)
@@ -39,8 +38,9 @@ do_test (void)
   memset (&r, 0, sizeof (r));
   memset (&s, 0, sizeof (s));
 
-  /* The bug cannot be reproduced without initialized fastmap. */
-  r.fastmap = malloc (SBC_MAX);
+  /* The bug cannot be reproduced without initialized fastmap (it is SBC_MAX
+     value from regex_internal.h).  */
+  r.fastmap = malloc (UCHAR_MAX + 1);
 
                      /* 圭 */
   re_compile_pattern ("\xb7\xbd", 2, &r);
