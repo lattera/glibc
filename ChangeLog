@@ -1,3 +1,16 @@
+2018-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/fpu/math_private.h (roundtoint): Use round.
+	(converttoint): Use lround.
+	* sysdeps/ieee754/flt-32/math_config.h (roundtoint): Declare and
+	document the semantics when TOINT_INTRINSICS is set.
+	(converttoint): Likewise.
+	(TOINT_RINT): Remove.
+	(TOINT_SHIFT): Remove.
+	* sysdeps/ieee754/flt-32/e_expf.c (__expf): Remove the TOINT_RINT code
+	path.
+
 2018-08-10  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23497]

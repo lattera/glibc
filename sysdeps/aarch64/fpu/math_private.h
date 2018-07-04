@@ -21,6 +21,8 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
+#include <stdint.h>
+#include <math.h>
 
 static __always_inline void
 libc_feholdexcept_aarch64 (fenv_t *envp)
@@ -298,25 +300,20 @@ libc_feresetround_noex_aarch64_ctx (struct rm_ctx *ctx)
 #define libc_feresetround_noexf_ctx	libc_feresetround_noex_aarch64_ctx
 #define libc_feresetround_noexl_ctx	libc_feresetround_noex_aarch64_ctx
 
-/* Hack: only include the large arm_neon.h when needed.  */
-#ifdef _MATH_CONFIG_H
-# include <arm_neon.h>
-
-/* ACLE intrinsics for frintn and fcvtns instructions.  */
-# define TOINT_INTRINSICS 1
+/* Use inline round and lround instructions.  */
+#define TOINT_INTRINSICS 1
 
 static inline double_t
 roundtoint (double_t x)
 {
-  return vget_lane_f64 (vrndn_f64 (vld1_f64 (&x)), 0);
+  return round (x);
 }
 
-static inline uint64_t
+static inline int32_t
 converttoint (double_t x)
 {
-  return vcvtnd_s64_f64 (x);
+  return lround (x);
 }
-#endif
 
 #include_next <math_private.h>
 
