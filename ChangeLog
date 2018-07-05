@@ -1,4 +1,10 @@
 2018-07-05  Florian Weimer  <fweimer@redhat.com>
+
+	* csu/Makefile (CFLAGS-static-reloc.os): Build with stack
+	protector.
+	(CFLAGS-elf-init.oS): Likewise.
+
+2018-07-05  Florian Weimer  <fweimer@redhat.com>
 	    Carlos O'Donell  <carlos@redhat.com>
 
 	* debug/Makefile (CFLAGS-stack_chk_fail_local.c): Remove

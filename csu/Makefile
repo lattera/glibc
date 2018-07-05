@@ -50,6 +50,22 @@ CFLAGS-.o += $(no-stack-protector)
 CFLAGS-.op += $(no-stack-protector)
 CFLAGS-.os += $(no-stack-protector)
 
+# Dummy object not actually used for anything.  It is linked into
+# crt1.o nevertheless, which in turn is statically linked into
+# applications, so that build flags matter.
+# See <https://sourceware.org/ml/libc-alpha/2018-07/msg00101.html>.
+# NB: Using $(stack-protector) in this way causes a wrong definition
+# STACK_PROTECTOR_LEVEL due to the preceding $(no-stack-protector),
+# but it does not matter for this source file.
+CFLAGS-static-reloc.os += $(stack-protector)
+
+# This file is not actually part of the startup code in the nonshared
+# case and statically linked into applications.  See
+# <https://sourceware.org/bugzilla/show_bug.cgi?id=23323>,
+# <https://sourceware.org/ml/libc-alpha/2018-06/msg00717.html>.
+# Also see the note above regarding STACK_PROTECTOR_LEVEL.
+CFLAGS-elf-init.oS += $(stack-protector)
+
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os
 ifneq ($(start-installed-name),$(static-start-installed-name))
