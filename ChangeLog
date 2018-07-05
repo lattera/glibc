@@ -1,3 +1,11 @@
+2018-07-05  Florian Weimer  <fweimer@redhat.com>
+	    Carlos O'Donell  <carlos@redhat.com>
+
+	* debug/Makefile (CFLAGS-stack_chk_fail_local.c): Remove
+	$(no-stack-protector).  stack_chk_fail_local.c can be compiled
+	with stack protector enabled because there is no risk of infinite
+	recursion.
+
 2018-07-05  Maciej W. Rozycki  <macro@mips.com>
 
 	[BZ #19818]

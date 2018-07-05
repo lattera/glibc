@@ -58,10 +58,13 @@ static-only-routines := warning-nop stack_chk_fail_local
 elide-routines.o := stack_chk_fail_local
 
 # Building the stack-protector failure routines with stack protection
-# makes no sense.
+# is not required since we have already failed a stack check and are
+# exiting the process.  However, the local aliases which jump to the
+# real routines should still be compiled with stack protection
+# (stack_chk_fail_local.c), so that the statically linked parts of the
+# library have the expected flags.
 
 CFLAGS-stack_chk_fail.c += $(no-stack-protector)
-CFLAGS-stack_chk_fail_local.c += $(no-stack-protector)
 
 CFLAGS-backtrace.c += -fno-omit-frame-pointer -funwind-tables
 CFLAGS-sprintf_chk.c += $(libio-mtsafe)
