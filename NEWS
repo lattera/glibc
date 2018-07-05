@@ -9,6 +9,13 @@ Version 2.28
 
 Major new features:
 
+* The GNU C Library now has correct support for ABSOLUTE symbols
+  (SHN_ABS-relative symbols).  Previously such ABSOLUTE symbols were
+  relocated incorrectly or in some cases discarded.  The GNU linker can
+  make use of the newer semantics, but it must communicate it to the
+  dynamic loader by setting the ELF file's identification (EI_ABIVERSION
+  field) to indicate such support is required.
+
 * Unicode 11.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 11.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).

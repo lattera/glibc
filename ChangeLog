@@ -1,3 +1,11 @@
+2018-07-05  Maciej W. Rozycki  <macro@mips.com>
+
+	[BZ #19818]
+	[BZ #23307]
+	* libc-abis (ABSOLUTE): New ABI.
+	* sysdeps/unix/sysv/linux/mips/libc-abis (ABSOLUTE): New ABI.
+	* NEWS: Mention the new ABI.
+
 2018-07-05  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ # 17662]

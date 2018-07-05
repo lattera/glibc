@@ -14,3 +14,5 @@ UNIQUE
 #
 # MIPS O32 FP64
 MIPS_O32_FP64   mips*-*-linux*
+# Absolute (SHN_ABS) symbols working correctly.
+ABSOLUTE

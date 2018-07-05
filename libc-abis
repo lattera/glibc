@@ -46,3 +46,5 @@ IFUNC		powerpc64-*-linux*
 IFUNC		powerpc-*-linux*
 IFUNC		sparc64-*-linux*
 IFUNC		sparc-*-linux*
+# Absolute (SHN_ABS) symbols working correctly.
+ABSOLUTE
