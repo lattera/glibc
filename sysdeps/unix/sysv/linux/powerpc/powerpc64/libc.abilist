@@ -117,6 +117,7 @@ GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
 GLIBC_2.28 fcntl64 F
+GLIBC_2.28 renameat2 F
 GLIBC_2.3 _Exit F
 GLIBC_2.3 _IO_2_1_stderr_ D 0xe0
 GLIBC_2.3 _IO_2_1_stdin_ D 0xe0

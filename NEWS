@@ -39,6 +39,15 @@ Major new features:
 * Building and running on GNU/Hurd systems now works without out-of-tree
   patches.
 
+* The renameat2 function has been added, a variant of the renameat function
+  which has a flags argument.  If the flags are zero, the renameat2 function
+  acts like renameat.  If the flag is not zero and there is no kernel
+  support for renameat2, the function will fail with an errno value of
+  EINVAL.  This is different from the existing gnulib function renameatu,
+  which performs a plain rename operation in case of a RENAME_NOREPLACE
+  flags and a non-existing destination (and therefore has a race condition
+  that can clobber the destination inadvertently).
+
 * IDN domain names in getaddrinfo and getnameinfo now use the system libidn2
   library if installed.  libidn2 version 2.0.5 or later is recommended.  If
   libidn2 is not available, internationalized domain names are not encoded

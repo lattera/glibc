@@ -3552,6 +3552,7 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c open_by_handle_at
 @c readlinkat
 @c renameat
+@c renameat2
 @c scandirat
 @c symlinkat
 @c unlinkat

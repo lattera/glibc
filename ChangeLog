@@ -1,3 +1,34 @@
+2018-07-05  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ # 17662]
+	* libio/stdio.h [__USE_GNU] (RENAME_NOREPLACE, RENAME_EXCHANGE)
+	(RENAME_WHITEOUT): Define.
+	[__USE_GNU] (renameat2): Declare.
+	* stdio-common/Makefile (routines): Add renameat2.
+	(tests): Add tst-renameat2.
+	* stdio-common/Versions (GLIBC_2_28): Export renameat2.
+	* stdio-common/renameat2.c: New file.
+	* stdio-common/tst-renameat2.c: Likewise.
+	* sysdeps/unix/sysv/linux/renameat2.c: Likewise.
+	* manual/filesys.texi (Temporary Files): Note that renameat2 is
+	undocumented.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x030F00] (__ASSUME_RENAMEAT2): Define.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x031100] (__ASSUME_RENAMEAT2): Undefine.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x031100] (__ASSUME_RENAMEAT2): Undefine.
+	* sysdeps/unix/sysv/linux/sh/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040800] (__ASSUME_RENAMEAT2): Undefine.
+	* sysdeps/unix/sysv/linux/sparc/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x031000] (__ASSUME_RENAMEAT2): Undefine.
+	* include/stdio.h (__renameat): Add alias for renameat.
+	* stdio-common/renameat.c (__renameat): Rename from renameat.
+	Add hidden definition and alias.
+	* sysdeps/unix/sysv/linux/renameat.c: Likewise.
+	* sysdeps/mach/hurd/renameat.c: Likewise.
+	* sysdeps/**/libc*.abilist: Add renameat2.
+
 2018-07-04  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* posix/bug-regex33.c: Fix build after regex sync.

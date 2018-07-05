@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2018 Free Software Foundation, Inc.
+/* Generic implementation of the renameat function.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,30 +17,14 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 
-
-/* Rename the file OLD relative to OLDFD to NEW relative to NEWFD.  */
 int
-__renameat (int oldfd, const char *old, int newfd, const char *new)
+renameat2 (int oldfd, const char *old, int newfd, const char *new,
+           unsigned int flags)
 {
-  if ((oldfd < 0 && oldfd != AT_FDCWD) || (newfd < 0 && newfd != AT_FDCWD))
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
-
-  if (old == NULL || new == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
+  if (flags == 0)
+    return __renameat (oldfd, old, newfd, new);
+  __set_errno (EINVAL);
   return -1;
 }
-
-libc_hidden_def (__renameat)
-weak_alias (__renameat, renameat)
-stub_warning (renameat)

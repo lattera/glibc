@@ -237,5 +237,8 @@ __putc_unlocked (int __c, FILE *__stream)
 }
 #  endif
 
+extern __typeof (renameat) __renameat;
+libc_hidden_proto (__renameat)
+
 # endif /* not _ISOMAC */
 #endif /* stdio.h */

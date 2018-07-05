@@ -153,6 +153,18 @@ extern int renameat (int __oldfd, const char *__old, int __newfd,
 		     const char *__new) __THROW;
 #endif
 
+#ifdef __USE_GNU
+/* Flags for renameat2.  */
+# define RENAME_NOREPLACE (1 << 0)
+# define RENAME_EXCHANGE (1 << 1)
+# define RENAME_WHITEOUT (1 << 2)
+
+/* Rename file OLD relative to OLDFD to NEW relative to NEWFD, with
+   additional flags.  */
+extern int renameat2 (int __oldfd, const char *__old, int __newfd,
+		      const char *__new, unsigned int __flags) __THROW;
+#endif
+
 /* Create a temporary file and open it read/write.
 
    This function is a possible cancellation point and therefore not

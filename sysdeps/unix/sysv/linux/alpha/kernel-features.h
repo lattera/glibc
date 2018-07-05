@@ -35,6 +35,11 @@
 #define __ASSUME_RECV_SYSCALL	1
 #define __ASSUME_SEND_SYSCALL	1
 
+/* Support for the renameat2 syscall was added in 3.17.  */
+#if __LINUX_KERNEL_VERSION < 0x031100
+# undef __ASSUME_RENAMEAT2
+#endif
+
 /* Support for the execveat syscall was added in 4.2.  */
 #if __LINUX_KERNEL_VERSION < 0x040200
 # undef __ASSUME_EXECVEAT

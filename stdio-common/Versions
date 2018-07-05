@@ -57,6 +57,9 @@ libc {
     psiginfo;
     register_printf_modifier; register_printf_type; register_printf_specifier;
   }
+  GLIBC_2.28 {
+    renameat2;
+  }
   GLIBC_PRIVATE {
     # global variables
     _itoa_lower_digits;

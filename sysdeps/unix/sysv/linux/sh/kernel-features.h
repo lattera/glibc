@@ -51,4 +51,9 @@
 /* sh only supports ipc syscall.  */
 #undef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
 
+/* Support for the renameat2 syscall was added in 4.8.  */
+#if __LINUX_KERNEL_VERSION < 0x040800
+# undef __ASSUME_RENAMEAT2
+#endif
+
 #endif

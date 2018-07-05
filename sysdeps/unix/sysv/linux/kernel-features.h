@@ -97,6 +97,11 @@
    implementation based on p{read,write}v and returning an error for
    non supported flags.  */
 
+/* Support for the renameat2 system call was added in kernel 3.15.  */
+#if __LINUX_KERNEL_VERSION >= 0x030F00
+# define __ASSUME_RENAMEAT2
+#endif
+
 /* Support for the execveat syscall was added in 3.19.  */
 #if __LINUX_KERNEL_VERSION >= 0x031300
 # define __ASSUME_EXECVEAT	1

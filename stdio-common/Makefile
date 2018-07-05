@@ -35,7 +35,7 @@ routines	:=							      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \
-	remove rename renameat						      \
+	remove rename renameat renameat2				      \
 	flockfile ftrylockfile funlockfile				      \
 	isoc99_scanf isoc99_vscanf isoc99_fscanf isoc99_vfscanf isoc99_sscanf \
 	isoc99_vsscanf							      \
@@ -62,6 +62,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-vfprintf-user-type \
 	 tst-vfprintf-mbs-prec \
 	 tst-scanf-round \
+	 tst-renameat2 \
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
