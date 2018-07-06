@@ -1,5 +1,16 @@
 2018-07-06  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #18991]
+	* nss/nss_files/files-XXX.c (internal_getent): Use
+	__libc_readline_unlocked.  Seek back to the start of the line if
+	parsing failes with ERANGE.
+	(get_contents_ret, get_contents): Remove.
+	* nss/tst-nss-files-hosts-getent.c: New file.
+	* nss/Makefile (tests): Add tst-nss-files-hosts-getent.
+	(tst-nss-files-hosts-getent): Link with -ldl.
+
+2018-07-06  Florian Weimer  <fweimer@redhat.com>
+
 	* include/stdio.h (__libc_readline_unlocked): Declare.
 	(__ftello64, __fseeko64): Declare aliases.
 	* libio/readline.c: New file.

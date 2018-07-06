@@ -64,6 +64,7 @@ xtests			= bug-erange
 ifeq (yes,$(build-shared))
 tests += tst-nss-files-hosts-erange
 tests += tst-nss-files-hosts-multi
+tests += tst-nss-files-hosts-getent
 endif
 
 # If we have a thread library then we can test cancellation against
@@ -169,3 +170,4 @@ endif
 
 $(objpfx)tst-nss-files-hosts-erange: $(libdl)
 $(objpfx)tst-nss-files-hosts-multi: $(libdl)
+$(objpfx)tst-nss-files-hosts-getent: $(libdl)
