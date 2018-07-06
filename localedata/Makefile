@@ -95,6 +95,7 @@ test-input := \
 	ps_AF.UTF-8 \
 	ro_RO.UTF-8 \
 	ru_RU.UTF-8 \
+	sah_RU.UTF-8 \
 	sc_IT.UTF-8 \
 	se_NO.UTF-8 \
 	si_LK.UTF-8 \
@@ -250,6 +251,7 @@ LOCALES := \
 	ps_AF.UTF-8 \
 	ro_RO.UTF-8 \
 	ru_RU.UTF-8 \
+	sah_RU.UTF-8 \
 	sc_IT.UTF-8 \
 	se_NO.UTF-8 \
 	si_LK.UTF-8 \

@@ -1,3 +1,12 @@
+2018-07-18  Valery Timiriliyev  <timiriliyev@gmail.com>
+
+	[BZ #22241]
+	* localedata/Makefile (test-input): Add sah_RU.UTF-8.
+	(LOCALES): Likewise.
+	* localedata/SUPPORTED (sah_RU/UTF-8): New entry.
+	* localedata/locales/sah_RU: New file.
+	* localedata/sah_RU.UTF-8.in: New file.
+
 2018-07-17  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/add_n.S: Include <sysdep.h>, instead of
