@@ -78,8 +78,15 @@ get_common_indeces (struct cpu_features *cpu_features,
 	      /* The following features depend on AVX being usable.  */
 	      /* Determine if AVX2 is usable.  */
 	      if (CPU_FEATURES_CPU_P (cpu_features, AVX2))
+	      {
 		cpu_features->feature[index_arch_AVX2_Usable]
 		  |= bit_arch_AVX2_Usable;
+
+	        /* Unaligned load with 256-bit AVX registers are faster on
+	           Intel/AMD processors with AVX2.  */
+	        cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
+		  |= bit_arch_AVX_Fast_Unaligned_Load;
+	      }
 	      /* Determine if FMA is usable.  */
 	      if (CPU_FEATURES_CPU_P (cpu_features, FMA))
 		cpu_features->feature[index_arch_FMA_Usable]
@@ -298,11 +305,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    }
 	}
 
-      /* Unaligned load with 256-bit AVX registers are faster on
-	 Intel processors with AVX2.  */
-      if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
-	cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
-	  |= bit_arch_AVX_Fast_Unaligned_Load;
 
       /* Since AVX512ER is unique to Xeon Phi, set Prefer_No_VZEROUPPER
          if AVX512ER is available.  Don't use AVX512 to avoid lower CPU
@@ -351,9 +353,15 @@ init_cpu_features (struct cpu_features *cpu_features)
 #endif
 	  /* "Excavator"   */
 	  if (model >= 0x60 && model <= 0x7f)
+	  {
 	    cpu_features->feature[index_arch_Fast_Unaligned_Load]
 	      |= (bit_arch_Fast_Unaligned_Load
 		  | bit_arch_Fast_Copy_Backward);
+
+	    /* Unaligned AVX loads are slower.*/
+	    cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
+		  &= ~bit_arch_AVX_Fast_Unaligned_Load;
+	  }
 	}
     }
   else

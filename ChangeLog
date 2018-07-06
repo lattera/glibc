@@ -1,3 +1,10 @@
+2018-07-06  Amit Pawar  <amit.pawar@amd.com>
+
+	* sysdeps/x86/cpu-features.c (get_common_indeces):
+	AVX_Fast_Unaligned_Load is enabled when AVX2 is detected.
+	* sysdeps/x86/cpu-features.c (init_cpu_features):
+	AVX_Fast_Unaligned_Load is disabled for Excavator core.
+
 2018-07-05  Florian Weimer  <fweimer@redhat.com>
 
 	* csu/Makefile (CFLAGS-static-reloc.os): Build with stack
