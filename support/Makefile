@@ -54,6 +54,7 @@ libsupport-routines = \
   support_format_netent \
   support_isolate_in_subprocess \
   support_openpty \
+  support_paths \
   support_quote_blob \
   support_record_failure \
   support_run_diff \
@@ -85,6 +86,7 @@ libsupport-routines = \
   xmalloc \
   xmemstream \
   xmkdir \
+  xmkdirp \
   xmmap \
   xmprotect \
   xmunmap \
@@ -140,6 +142,7 @@ libsupport-routines = \
   xsocket \
   xstrdup \
   xstrndup \
+  xsymlink \
   xsysconf \
   xunlink \
   xwaitpid \
@@ -151,6 +154,45 @@ libsupport-inhibit-o := .os
 ifeq ($(build-shared),yes)
 libsupport-inhibit-o += .o
 endif
+
+CFLAGS-support_paths.c = \
+		-DSRCDIR_PATH=\"`cd .. ; pwd`\" \
+		-DOBJDIR_PATH=\"`cd $(objpfx)/..; pwd`\" \
+		-DINSTDIR_PATH=\"$(prefix)\" \
+		-DLIBDIR_PATH=\"$(libdir)\"
+
+ifeq (,$(CXX))
+LINKS_DSO_PROGRAM = links-dso-program-c
+else
+LINKS_DSO_PROGRAM = links-dso-program
+LDLIBS-links-dso-program = -lstdc++ -lgcc_s
+endif
+
+others: \
+	$(objpfx)test-container \
+	$(objpfx)shell-container \
+	$(objpfx)echo-container \
+	$(objpfx)true-container \
+	$(objpfx)$(LINKS_DSO_PROGRAM)
+
+ifeq ($(build-programs),yes)
+endif
+
+LDLIBS-test-container = $(libsupport)
+
+others += test-container
+others-noinstall += test-container
+
+others += shell-container echo-container true-container
+others-noinstall += shell-container echo-container true-container
+
+others += $(LINKS_DSO_PROGRAM)
+others-noinstall += $(LINKS_DSO_PROGRAM)
+
+$(objpfx)test-container : $(libsupport)
+$(objpfx)shell-container : $(libsupport)
+$(objpfx)echo-container : $(libsupport)
+$(objpfx)true-container : $(libsupport)
 
 tests = \
   README-testing \

@@ -130,12 +130,14 @@ others: $(py-const)
 
 ifeq ($(run-built-tests),no)
 tests: $(addprefix $(objpfx),$(filter-out $(tests-unsupported), \
-                                          $(tests) $(tests-internal)) \
+                                          $(tests) $(tests-internal) \
+					  $(tests-container)) \
 			     $(test-srcs)) $(tests-special) \
 			     $(tests-printers-programs)
 xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
+       $(tests-container:%=$(objpfx)%.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
@@ -145,7 +147,8 @@ xtests-special-notdir = $(patsubst $(objpfx)%, %, $(xtests-special))
 ifeq ($(run-built-tests),no)
 tests-expected =
 else
-tests-expected = $(tests) $(tests-internal) $(tests-printers)
+tests-expected = $(tests) $(tests-internal) $(tests-printers) \
+	$(tests-container)
 endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
@@ -158,7 +161,8 @@ xtests:
 
 ifeq ($(build-programs),yes)
 binaries-all-notests = $(others) $(sysdep-others)
-binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
+binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs) \
+		     $(tests-container)
 binaries-all = $(binaries-all-notests) $(binaries-all-tests)
 binaries-static-notests = $(others-static)
 binaries-static-tests = $(tests-static) $(xtests-static)
@@ -247,6 +251,17 @@ $(objpfx)%.out: %.input $(objpfx)%
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 	$(make-test-out) > $@; \
 	$(evaluate-test)
+
+
+# Any tests that require an isolated container (filesystem, network
+# and pid namespaces) in which to run, should be added to
+# tests-container.
+$(tests-container:%=$(objpfx)%.out): $(objpfx)%.out : $(if $(wildcard $(objpfx)%.files),$(objpfx)%.files,/dev/null) $(objpfx)%
+	$(test-wrapper-env) $(run-program-env) $(run-via-rtld-prefix) \
+	  $(common-objpfx)support/test-container env $(run-program-env) $($*-ENV) \
+	  $(host-test-program-cmd) $($*-ARGS) > $@; \
+	$(evaluate-test)
+
 
 # tests-unsupported lists tests that we will not try to build at all in
 # this configuration.  Note this runs every time because it does not

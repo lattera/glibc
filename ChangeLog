@@ -1,3 +1,28 @@
+2018-08-22  DJ Delorie  <dj@redhat.com>
+
+	* Makefile (testroot.pristine): New rules to initialize the
+	test-in-container "testroot".
+	* Makerules (all-testsuite): Add tests-container.
+	* Rules (tests-expected): Add tests-container.
+	(binaries-all-tests): Likewise.
+	(tests-container): New, run these tests in the testroot container.
+	* support/Makefile (others): Add *-container, support_paths.c,
+	xmkdirp, and links-dso-program.
+	* support/links-dso-program-c.c: New.
+	* support/links-dso-program.cc: New.
+	* support/test-container.c: New.
+	* support/shell-container.c: New.
+	* support/echo-container.c: New.
+	* support/true-container.c: New.
+	* support/xmkdirp.c: New.
+	* support/xsymlink.c: New.
+	* support/support_paths.c: New.
+	* support/support.h: Add support paths prototypes.
+	* support/xunistd.h: Add xmkdirp () and xsymlink ().
+
+	* nss/tst-nss-test3.c: Convert to test-in-container.
+	* nss/tst-nss-test3.root/: New.
+
 2018-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: port Gnulib code to z/OS POSIX environment

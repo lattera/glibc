@@ -55,10 +55,12 @@ tests-internal		= tst-field
 tests			= test-netdb test-digits-dots tst-nss-getpwent bug17079 \
 			  tst-nss-test1 \
 			  tst-nss-test2 \
-			  tst-nss-test3 \
 			  tst-nss-test4 \
 			  tst-nss-test5
 xtests			= bug-erange
+
+tests-container = \
+			  tst-nss-test3
 
 # Tests which need libdl
 ifeq (yes,$(build-shared))

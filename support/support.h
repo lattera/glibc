@@ -25,6 +25,8 @@
 
 #include <stddef.h>
 #include <sys/cdefs.h>
+/* For mode_t.  */
+#include <sys/stat.h>
 
 __BEGIN_DECLS
 
@@ -81,6 +83,16 @@ char *xasprintf (const char *format, ...)
   __attribute__ ((format (printf, 1, 2), malloc));
 char *xstrdup (const char *);
 char *xstrndup (const char *, size_t);
+
+/* These point to the TOP of the source/build tree, not your (or
+   support's) subdirectory.  */
+extern const char support_srcdir_root[];
+extern const char support_objdir_root[];
+
+/* Corresponds to the --prefix= passed to configure.  */
+extern const char support_install_prefix[];
+/* Corresponds to the install's lib/ or lib64/ directory.  */
+extern const char support_libdir_prefix[];
 
 __END_DECLS
 

@@ -1369,7 +1369,8 @@ xcheck: xtests
 # The only difference between MODULE_NAME=testsuite and MODULE_NAME=nonlib is
 # that almost all internal declarations from config.h, libc-symbols.h, and
 # include/*.h are not available to 'testsuite' code, but are to 'nonlib' code.
-all-testsuite := $(strip $(tests) $(xtests) $(test-srcs) $(test-extras))
+all-testsuite := $(strip $(tests) $(xtests) $(test-srcs) $(test-extras) \
+		 $(tests-container))
 ifneq (,$(all-testsuite))
 cpp-srcs-left = $(all-testsuite)
 lib := testsuite

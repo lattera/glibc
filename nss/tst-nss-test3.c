@@ -107,7 +107,11 @@ do_test (void)
   int i;
   struct group *g = NULL;
 
-  __nss_configure_lookup ("group", "test1");
+/* Previously we used __nss_configure_lookup to isolate the test
+   from the host environment and to get it to lookup from our new
+   test1 NSS service module, but now this test is run in a different
+   root filesystem via the test-container support and we directly
+   configure the use of the test1 NSS service.  */
 
   setgrent ();
 
