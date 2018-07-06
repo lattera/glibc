@@ -24,11 +24,15 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
+/* We need to disable the redirect for __fseeko64 for the alias
+   definitions below to work.  */
+#define __fseeko64 __fseeko64_disable
+
 #include "libioP.h"
 #include "stdio.h"
 
 int
-fseeko (FILE *fp, off_t offset, int whence)
+__fseeko (FILE *fp, off_t offset, int whence)
 {
   int result;
   CHECK_FILE (fp, -1);
@@ -37,7 +41,11 @@ fseeko (FILE *fp, off_t offset, int whence)
   _IO_release_lock (fp);
   return result;
 }
+weak_alias (__fseeko, fseeko)
 
 #ifdef __OFF_T_MATCHES_OFF64_T
-weak_alias (fseeko, fseeko64)
+weak_alias (__fseeko, fseeko64)
+# undef __fseeko64
+strong_alias (__fseeko, __fseeko64)
+libc_hidden_ver (__fseeko, __fseeko64)
 #endif

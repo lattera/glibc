@@ -32,7 +32,7 @@
 #ifndef __OFF_T_MATCHES_OFF64_T
 
 off64_t
-ftello64 (FILE *fp)
+__ftello64 (FILE *fp)
 {
   off64_t pos;
   CHECK_FILE (fp, -1L);
@@ -52,5 +52,6 @@ ftello64 (FILE *fp)
     }
   return pos;
 }
-
+libc_hidden_def (__ftello64)
+weak_alias (__ftello64, ftello64)
 #endif

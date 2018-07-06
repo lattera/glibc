@@ -1,3 +1,22 @@
+2018-07-06  Florian Weimer  <fweimer@redhat.com>
+
+	* include/stdio.h (__libc_readline_unlocked): Declare.
+	(__ftello64, __fseeko64): Declare aliases.
+	* libio/readline.c: New file.
+	* libio/tst-readline.c: Likewise.
+	(routines): Add readline.
+	(tests-internal): Add tst-readlime.
+	* libio/Versions (GLIBC_PRIVATE): Export __fseeko64, __ftello64,
+	__libc_readline_unlocked.
+	* libio/fseeko.c (__fseeko): Rename from fseeko.
+	(fseeko): Add alias.
+	[__OFF_T_MATCHES_OFF64_T] (fseeko64, __fseeko64): Likewise.
+	* libio/fseeko64.c (__fseeko64): Rename from fseeko64.
+	(fseeko64): Add alias.
+	* libio/ftello.c [__OFF_T_MATCHES_OFF64_T] (__ftello64): Add alias.
+	* libio/ftello64.c (__ftello64): Rename from ftello64.
+	(ftello64): Add alias.
+
 2018-07-06  Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
 	* sysdeps/unix/sysv/linux/aarch64/dl-procinfo.h (HWCAP_IMPORTANT): Add

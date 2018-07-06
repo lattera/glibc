@@ -127,6 +127,19 @@ extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
 extern int __fxprintf_nocancel (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
 
+/* Read the next line from FP into BUFFER, of LENGTH bytes.  LINE will
+   include the line terminator and a NUL terminator.  On success,
+   return the length of the line, including the line terminator, but
+   excluding the NUL termintor.  On EOF, return zero and write a NUL
+   terminator.  On error, return -1 and set errno.  If the total byte
+   count (line and both terminators) exceeds LENGTH, return -1 and set
+   errno to ERANGE (but do not mark the stream as failed).
+
+   The behavior is undefined if FP is not seekable, or if the stream
+   is already in an error state.  */
+ssize_t __libc_readline_unlocked (FILE *fp, char *buffer, size_t length);
+libc_hidden_proto (__libc_readline_unlocked);
+
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;
 
@@ -170,6 +183,10 @@ libc_hidden_proto (fwrite)
 libc_hidden_proto (fseek)
 extern __typeof (ftello) __ftello;
 libc_hidden_proto (__ftello)
+extern __typeof (fseeko64) __fseeko64;
+libc_hidden_proto (__fseeko64)
+extern __typeof (ftello64) __ftello64;
+libc_hidden_proto (__ftello64)
 libc_hidden_proto (fflush)
 libc_hidden_proto (fflush_unlocked)
 extern __typeof (fflush_unlocked) __fflush_unlocked;
