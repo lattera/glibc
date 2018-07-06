@@ -367,7 +367,7 @@ while ($#headers >= 0) {
       s/^optional-//;
       $optional = 1;
     }
-    if (/^element *({([^}]*)}|([^{ ]*)) *({([^}]*)}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
+    if (/^element *(\{([^}]*)\}|([^{ ]*)) *(\{([^}]*)\}|([^{ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
       my($struct) = "$2$3";
       my($type) = "$5$6";
       my($member) = "$7";
@@ -556,7 +556,7 @@ while ($#headers >= 0) {
 			"Symbol \"$symbol\" has not the right value.", $res,
 			$xfail);
       }
-    } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
+    } elsif (/^type *(\{([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
       my($maybe_opaque) = 0;
 
@@ -586,7 +586,7 @@ while ($#headers >= 0) {
 		    ? "NOT AVAILABLE"
 		    : "Type \"$type\" not available."), $missing, $optional,
 		   $xfail);
-    } elsif (/^tag *({([^}]*)|([a-zA-Z0-9_]*))/) {
+    } elsif (/^tag *(\{([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
 
       # Remember that this name is allowed.
@@ -607,7 +607,7 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Testing for type $type",
 		   "Type \"$type\" not available.", $missing, 0, $xfail);
-    } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
+    } elsif (/^function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
       my($args) = "$5";
@@ -644,7 +644,7 @@ while ($#headers >= 0) {
 		     "Function \"$fname\" has incorrect type.", $res, 0,
 		     $xfail);
       }
-    } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+    } elsif (/^function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
       my($args) = "$5";
@@ -681,7 +681,7 @@ while ($#headers >= 0) {
 		     "Function \"$fname\" has incorrect type.", $res, 0,
 		     $xfail);
       }
-    } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) *(.*)/) {
+    } elsif (/^variable *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) *(.*)/) {
       my($type) = "$2$3";
       my($vname) = "$4";
       my($rest) = "$5";
@@ -713,7 +713,7 @@ while ($#headers >= 0) {
 
       compiletest ($fnamebase, "Test for type of variable $fname",
 		   "Variable \"$vname\" has incorrect type.", $res, 0, $xfail);
-    } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+    } elsif (/^macro-function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
       my($rettype) = "$2$3";
       my($fname) = "$4";
       my($args) = "$5";
@@ -812,11 +812,11 @@ while ($#headers >= 0) {
 
       s/^xfail(\[([^\]]*)\])?-//;
       s/^optional-//;
-      if (/^element *({([^}]*)}|([^ ]*)) *({([^}]*)}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
+      if (/^element *(\{([^}]*)\}|([^ ]*)) *(\{([^}]*)\}|([^ ]*)) *([A-Za-z0-9_]*) *(.*)/) {
 	push @allow, $7;
       } elsif (/^(macro|constant|macro-constant|macro-int-constant) +([a-zA-Z0-9_]*) *(?:{([^}]*)} *)?(?:([>=<!]+) ([A-Za-z0-9_-]*))?/) {
 	push @allow, $2;
-      } elsif (/^(type|tag) *({([^}]*)|([a-zA-Z0-9_]*))/) {
+      } elsif (/^(type|tag) *(\{([^}]*)|([a-zA-Z0-9_]*))/) {
 	my($type) = "$3$4";
 
 	# Remember that this name is allowed.
@@ -827,13 +827,13 @@ while ($#headers >= 0) {
 	} else {
 	  push @allow, $type;
 	}
-      } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
+      } elsif (/^function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) [(][*]([a-zA-Z0-9_]*) ([(].*[)])/) {
 	push @allow, $4;
-      } elsif (/^function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+      } elsif (/^function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
 	push @allow, $4;
-      } elsif (/^variable *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*)/) {
+      } elsif (/^variable *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*)/) {
 	push @allow, $4;
-      } elsif (/^macro-function *({([^}]*)}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
+      } elsif (/^macro-function *(\{([^}]*)\}|([a-zA-Z0-9_]*)) ([a-zA-Z0-9_]*) ([(].*[)])/) {
 	push @allow, $4;
       } elsif (/^symbol *([a-zA-Z0-9_]*) *([A-Za-z0-9_-]*)?/) {
 	push @allow, $1;

@@ -1,3 +1,8 @@
+2018-07-06  Florian Weimer  <fweimer@redhat.com>
+
+	* conform/conformtest.pl (checknamespace): Escape literal braces
+	in regular expressions.
+
 2018-07-06  Amit Pawar  <amit.pawar@amd.com>
 
 	* sysdeps/x86/cpu-features.c (get_common_indeces):
