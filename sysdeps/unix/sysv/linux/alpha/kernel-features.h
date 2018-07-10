@@ -45,4 +45,9 @@
 # undef __ASSUME_EXECVEAT
 #endif
 
+/* Support for statx was added in kernel 4.13.  */
+#if __LINUX_KERNEL_VERSION < 0x040D00
+# undef __ASSUME_STATX
+#endif
+
 #endif /* _KERNEL_FEATURES_H */

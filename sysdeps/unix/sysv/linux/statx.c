@@ -1,6 +1,5 @@
-/* Set flags signalling availability of kernel features based on given
-   kernel version number.
-   Copyright (C) 2010-2018 Free Software Foundation, Inc.
+/* Linux statx implementation.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,22 +13,29 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _KERNEL_FEATURES_H
-#define _KERNEL_FEATURES_H 1
+#include <errno.h>
+#include <sys/stat.h>
 
-#include_next <kernel-features.h>
+#include "statx_generic.c"
 
-#define __ASSUME_RECV_SYSCALL   	1
-#define __ASSUME_SEND_SYSCALL		1
-#define __ASSUME_ACCEPT4_SYSCALL	1
-
-/* No statx system call on ia64 yet.  */
-#undef __ASSUME_STATX
-
-#undef __ASSUME_CLONE_DEFAULT
-#define __ASSUME_CLONE2
-
-#endif /* _KERNEL_FEATURES_H */
+int
+statx (int fd, const char *path, int flags,
+       unsigned int mask, struct statx *buf)
+{
+#ifdef __NR_statx
+  int ret = INLINE_SYSCALL_CALL (statx, fd, path, flags, mask, buf);
+# ifdef __ASSUME_STATX
+  return ret;
+# else
+  if (ret == 0 || errno != ENOSYS)
+    /* Preserve non-error/non-ENOSYS return values.  */
+    return ret;
+# endif
+#endif
+#ifndef __ASSUME_STATX
+  return statx_generic (fd, path, flags, mask, buf);
+#endif
+}

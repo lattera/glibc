@@ -1,3 +1,29 @@
+2018-07-10  Florian Weimer  <fweimer@redhat.com>
+
+	* io/Makefile (routines): Add statx.
+	(tests-internal): Add tst-statx.
+	* io/Versions (GLIBC_2.28): Export statx.
+	* io/bits/statx.h: New file.
+	* io/sys/stat.h [__USE_GNU]: Include it.
+	* io/fcntl.h [__USE_GNU] (AT_STATX_SYNC_TYPE)
+	(AT_STATX_SYNC_AS_STAT, AT_STATX_FORCE_SYNC, AT_STATX_DONT_SYNC):
+	Define.
+	* io/statx.c: New file.
+	* io/statx_generic.: Likewise.
+	* io/tst-statx.: Likewise.
+	* include/bits/statx.h: Likewise.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 0x040B00] (__ASSUME_STATX): Define.
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040D00] (__ASSUME_STATX): Undefine.
+	* sysdeps/unix/sysv/linux/ia64/kernel-features.h (__ASSUME_STATX):
+	Undefine.
+	* sysdeps/unix/sysv/linux/microblaze/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040C00] (__ASSUME_STATX): Undefine.
+	* sysdeps/unix/sysv/linux/statx.c: New file.
+	* manual/filesys.texi: Note that statx is undocumented.
+	* sysdeps/**/libc*.abilist: Update.
+
 2018-07-10  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* sysdeps/unix/sysv/linux/tst-ofdlocks-compat.c: Add a comment about

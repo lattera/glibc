@@ -3545,6 +3545,7 @@ The @code{mkdtemp} function comes from OpenBSD.
 @c fchownat
 @c futimesat
 @c fstatat (there's a commented-out safety assessment for this one)
+@c statx
 @c mkdirat
 @c mkfifoat
 @c name_to_handle_at

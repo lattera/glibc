@@ -2095,3 +2095,4 @@ GLIBC_2.27 xprt_register F
 GLIBC_2.27 xprt_unregister F
 GLIBC_2.28 fcntl64 F
 GLIBC_2.28 renameat2 F
+GLIBC_2.28 statx F

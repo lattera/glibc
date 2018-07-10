@@ -442,6 +442,10 @@ extern int __xmknodat (int __ver, int __fd, const char *__path,
 		       __mode_t __mode, __dev_t *__dev)
      __THROW __nonnull ((3, 5));
 
+#ifdef __USE_GNU
+# include <bits/statx.h>
+#endif
+
 #ifdef __USE_EXTERN_INLINES
 /* Inlined versions of the real stat and mknod functions.  */
 

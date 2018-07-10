@@ -130,6 +130,7 @@ libc {
   }
   GLIBC_2.28 {
     fcntl64;
+    statx;
   }
   GLIBC_PRIVATE {
     __libc_fcntl64;

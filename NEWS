@@ -55,6 +55,11 @@ Major new features:
   flags and a non-existing destination (and therefore has a race condition
   that can clobber the destination inadvertently).
 
+* The statx function has been added, a variant of the fstatat64
+  function with an additional flags argument.  If there is no direct
+  kernel support for statx, glibc provides basic stat support based on
+  the fstatat64 function.
+
 * IDN domain names in getaddrinfo and getnameinfo now use the system libidn2
   library if installed.  libidn2 version 2.0.5 or later is recommended.  If
   libidn2 is not available, internationalized domain names are not encoded

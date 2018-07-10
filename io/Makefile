@@ -31,7 +31,7 @@ routines :=								\
 	utime								\
 	mkfifo mkfifoat							\
 	stat fstat lstat stat64 fstat64 lstat64 fstatat fstatat64	\
-	xstat fxstat lxstat xstat64 fxstat64 lxstat64			\
+	xstat fxstat lxstat xstat64 fxstat64 lxstat64 statx		\
 	mknod mknodat xmknod xmknodat					\
 	fxstatat fxstatat64						\
 	statfs fstatfs statfs64 fstatfs64				\
@@ -77,6 +77,9 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 # which uses internal, unexported libc functions.
 tests-static += tst-copy_file_range-compat
 tests-internal += tst-copy_file_range-compat
+
+# Likewise for statx, but we do not need static linking here.
+tests-internal += tst-statx
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)ftwtest.out
