@@ -47069,7 +47069,7 @@ CHARMAP
 <U0010FFC0>..<U0010FFFD> /xf4/x8f/xbf/x80 <Plane 16 Private Use>
 END CHARMAP
 
-% Character width according to Unicode 10.0.0.
+% Character width according to Unicode 11.0.0.
 % - Default width is 1.
 % - Double-width characters have width 2; generated from
 %        "grep '^[^;]*;[WF]' EastAsianWidth.txt"

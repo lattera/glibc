@@ -27,6 +27,7 @@ Usage: python3 utf8_gen.py UnicodeData.txt EastAsianWidth.txt
 It will output UTF-8 file
 '''
 
+import argparse
 import sys
 import re
 import unicode_utils
@@ -197,9 +198,10 @@ def write_header_charmap(outfile):
     outfile.write("% alias ISO-10646/UTF-8\n")
     outfile.write("CHARMAP\n")
 
-def write_header_width(outfile):
+def write_header_width(outfile, unicode_version):
     '''Writes the header on top of the WIDTH section to the output file'''
-    outfile.write('% Character width according to Unicode 10.0.0.\n')
+    outfile.write('% Character width according to Unicode '
+                  + '{:s}.\n'.format(unicode_version))
     outfile.write('% - Default width is 1.\n')
     outfile.write('% - Double-width characters have width 2; generated from\n')
     outfile.write('%        "grep \'^[^;]*;[WF]\' EastAsianWidth.txt"\n')
@@ -292,41 +294,71 @@ def process_width(outfile, ulines, elines, plines):
                 width_dict[same_width_list[0]]))
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("USAGE: python3 utf8_gen.py UnicodeData.txt EastAsianWidth.txt PropList.txt")
-    else:
-        with open(sys.argv[1], mode='r') as UNIDATA_FILE:
-            UNICODE_DATA_LINES = UNIDATA_FILE.readlines()
-        with open(sys.argv[2], mode='r') as EAST_ASIAN_WIDTH_FILE:
-            EAST_ASIAN_WIDTH_LINES = []
-            for LINE in EAST_ASIAN_WIDTH_FILE:
-                # If characters from EastAasianWidth.txt which are from
-                # from reserved ranges (i.e. not yet assigned code points)
-                # are added to the WIDTH section of the UTF-8 file, then
-                # “make check” produces “Unknown Character” errors for
-                # these code points because such unassigned code points
-                # are not in the CHARMAP section of the UTF-8 file.
-                #
-                # Therefore, we skip all reserved code points when reading
-                # the EastAsianWidth.txt file.
-                if re.match(r'.*<reserved-.+>\.\.<reserved-.+>.*', LINE):
-                    continue
-                if re.match(r'^[^;]*;[WF]', LINE):
-                    EAST_ASIAN_WIDTH_LINES.append(LINE.strip())
-        with open(sys.argv[3], mode='r') as PROP_LIST_FILE:
-            PROP_LIST_LINES = []
-            for LINE in PROP_LIST_FILE:
-                if re.match(r'^[^;]*;[\s]*Prepended_Concatenation_Mark', LINE):
-                    PROP_LIST_LINES.append(LINE.strip())
-        with open('UTF-8', mode='w') as OUTFILE:
-            # Processing UnicodeData.txt and write CHARMAP to UTF-8 file
-            write_header_charmap(OUTFILE)
-            process_charmap(UNICODE_DATA_LINES, OUTFILE)
-            OUTFILE.write("END CHARMAP\n\n")
-            # Processing EastAsianWidth.txt and write WIDTH to UTF-8 file
-            write_header_width(OUTFILE)
-            process_width(OUTFILE,
-                          UNICODE_DATA_LINES,
-                          EAST_ASIAN_WIDTH_LINES,
-                          PROP_LIST_LINES)
-            OUTFILE.write("END WIDTH\n")
+    PARSER = argparse.ArgumentParser(
+        description='''
+        Generate a UTF-8 file from UnicodeData.txt, EastAsianWidth.txt, and PropList.txt.
+        ''')
+    PARSER.add_argument(
+        '-u', '--unicode_data_file',
+        nargs='?',
+        type=str,
+        default='UnicodeData.txt',
+        help=('The UnicodeData.txt file to read, '
+              + 'default: %(default)s'))
+    PARSER.add_argument(
+        '-e', '--east_asian_with_file',
+        nargs='?',
+        type=str,
+        default='EastAsianWidth.txt',
+        help=('The EastAsianWidth.txt file to read, '
+              + 'default: %(default)s'))
+    PARSER.add_argument(
+        '-p', '--prop_list_file',
+        nargs='?',
+        type=str,
+        default='PropList.txt',
+        help=('The PropList.txt file to read, '
+              + 'default: %(default)s'))
+    PARSER.add_argument(
+        '--unicode_version',
+        nargs='?',
+        required=True,
+        type=str,
+        help='The Unicode version of the input files used.')
+    ARGS = PARSER.parse_args()
+
+    with open(ARGS.unicode_data_file, mode='r') as UNIDATA_FILE:
+        UNICODE_DATA_LINES = UNIDATA_FILE.readlines()
+    with open(ARGS.east_asian_with_file, mode='r') as EAST_ASIAN_WIDTH_FILE:
+        EAST_ASIAN_WIDTH_LINES = []
+        for LINE in EAST_ASIAN_WIDTH_FILE:
+            # If characters from EastAasianWidth.txt which are from
+            # from reserved ranges (i.e. not yet assigned code points)
+            # are added to the WIDTH section of the UTF-8 file, then
+            # “make check” produces “Unknown Character” errors for
+            # these code points because such unassigned code points
+            # are not in the CHARMAP section of the UTF-8 file.
+            #
+            # Therefore, we skip all reserved code points when reading
+            # the EastAsianWidth.txt file.
+            if re.match(r'.*<reserved-.+>\.\.<reserved-.+>.*', LINE):
+                continue
+            if re.match(r'^[^;]*;[WF]', LINE):
+                EAST_ASIAN_WIDTH_LINES.append(LINE.strip())
+    with open(ARGS.prop_list_file, mode='r') as PROP_LIST_FILE:
+        PROP_LIST_LINES = []
+        for LINE in PROP_LIST_FILE:
+            if re.match(r'^[^;]*;[\s]*Prepended_Concatenation_Mark', LINE):
+                PROP_LIST_LINES.append(LINE.strip())
+    with open('UTF-8', mode='w') as OUTFILE:
+        # Processing UnicodeData.txt and write CHARMAP to UTF-8 file
+        write_header_charmap(OUTFILE)
+        process_charmap(UNICODE_DATA_LINES, OUTFILE)
+        OUTFILE.write("END CHARMAP\n\n")
+        # Processing EastAsianWidth.txt and write WIDTH to UTF-8 file
+        write_header_width(OUTFILE, ARGS.unicode_version)
+        process_width(OUTFILE,
+                      UNICODE_DATA_LINES,
+                      EAST_ASIAN_WIDTH_LINES,
+                      PROP_LIST_LINES)
+        OUTFILE.write("END WIDTH\n")

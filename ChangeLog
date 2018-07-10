@@ -1,3 +1,12 @@
+2018-07-10  Mike FABIAN  <mfabian@redhat.com>
+
+	* localedata/charmaps/UTF-8: Use correct Unicode version 11.0.0 in comment.
+	* localedata/locales/i18n_ctype: Use correct Unicode version in comments
+	and headers.
+	* localedata/unicode-gen/utf8_gen.py: Add option to specify Unicode version
+	* localedata/unicode-gen/Makefile: Use option to specify Unicode version
+	for utf8_gen.py
+
 2018-07-10  Florian Weimer  <fweimer@redhat.com>
 
 	* io/Makefile (routines): Add statx.

@@ -92,7 +92,9 @@ tr_TR: gen_unicode_ctype.py
 
 UTF-8: UnicodeData.txt EastAsianWidth.txt
 UTF-8: utf8_gen.py
-	$(PYTHON3) utf8_gen.py UnicodeData.txt EastAsianWidth.txt PropList.txt
+	$(PYTHON3) utf8_gen.py -u UnicodeData.txt \
+	-e EastAsianWidth.txt -p PropList.txt \
+	--unicode_version $(UNICODE_VERSION)
 
 UTF-8-report: UTF-8 ../charmaps/UTF-8
 UTF-8-report: utf8_compatibility.py

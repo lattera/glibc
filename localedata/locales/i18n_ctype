@@ -13,10 +13,10 @@ comment_char %
 % information, but with different transliterations, can include it
 % directly.
 
-% Generated automatically by gen_unicode_ctype.py for Unicode 10.0.0.
+% Generated automatically by gen_unicode_ctype.py for Unicode 11.0.0.
 
 LC_IDENTIFICATION
-title     "Unicode 10.0.0 FDCC-set"
+title     "Unicode 11.0.0 FDCC-set"
 source    "UnicodeData.txt, DerivedCoreProperties.txt"
 address   ""
 contact   ""
@@ -25,7 +25,7 @@ tel       ""
 fax       ""
 language  ""
 territory "Earth"
-revision  "10.0.0"
+revision  "11.0.0"
 date      "2018-06-20"
 category  "i18n:2012";LC_CTYPE
 END LC_IDENTIFICATION
