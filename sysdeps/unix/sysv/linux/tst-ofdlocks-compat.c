@@ -40,6 +40,14 @@ do_prepare (int argc, char **argv)
 
 #define PREPARE do_prepare
 
+/* Linux between 4.13 and 4.15 return EOVERFLOW for LFS OFD locks usage
+   in compat mode (non-LFS ABI running on a LFS default kernel, such as
+   i386 on a x86_64 kernel or s390-32 on a s390-64 kernel) [1].  This is
+   a kernel issue because __NR_fcntl64 is the expected way to use OFD locks
+   (used on GLIBC for both fcntl and fcntl64).
+
+   [1] https://sourceware.org/ml/libc-alpha/2018-07/msg00243.html  */
+
 static int
 do_test (void)
 {
