@@ -1,5 +1,12 @@
 2018-07-10  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #23036]
+	* posix/regexec.c (check_node_accept_bytes): When comparing
+	weights, do not compare an extra byte after the end of the
+	weights.
+
+2018-07-10  Florian Weimer  <fweimer@redhat.com>
+
 	* libio/readline.c: Fix copyright year.
 	* libio/tst-readline.c Likewise.
 	* nss/tst-nss-files-hosts-getent.c: Likewise.
