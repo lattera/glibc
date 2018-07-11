@@ -1,3 +1,7 @@
+2018-07-11  Florian Weimer  <fweimer@redhat.com>
+
+	* io/Makefile (headers): Add bits/statx.h.
+
 2018-07-10  Mike FABIAN  <mfabian@redhat.com>
 
 	* localedata/charmaps/UTF-8: Use correct Unicode version 11.0.0 in comment.
