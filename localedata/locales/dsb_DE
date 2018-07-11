@@ -77,8 +77,8 @@ collating-symbol <d-z-acute-digraph>
 collating-symbol <e-caron>
 collating-symbol <c-h-digraph>
 collating-symbol <l-stroke>
-collating symbol <n-acute>
-collating symbol <o-acute>
+collating-symbol <n-acute>
+collating-symbol <o-acute>
 collating-symbol <r-acute>
 collating-symbol <s-caron>
 collating-symbol <s-acute>

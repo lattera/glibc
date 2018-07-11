@@ -1,3 +1,11 @@
+2018-07-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
+
+	[BZ #23208]
+	* localedata/Makefile (test-input): Add dsb_DE.UTF-8.
+	(LOCALES): Likewise.
+	* localedata/dsb_DE.UTF-8.in: New file.
+	* localedata/locales/dsb_DE (LC_COLLATE): Fix syntax error.
+
 2018-07-12  Florian Weimer  <fweimer@redhat.com>
 
 	* nptl/allocatestack.c [_STACK_GROWS_UP] (allocate_stack): Call

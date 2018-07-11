@@ -55,6 +55,7 @@ test-input := \
 	cy_GB.UTF-8 \
 	da_DK.ISO-8859-1 \
 	de_DE.ISO-8859-1 \
+	dsb_DE.UTF-8 \
 	dz_BT.UTF-8 \
 	en_US.ISO-8859-1 \
 	eo.UTF-8 \
@@ -200,6 +201,7 @@ LOCALES := \
 	da_DK.ISO-8859-1 \
 	de_DE.ISO-8859-1 \
 	de_DE.UTF-8 \
+	dsb_DE.UTF-8 \
 	dz_BT.UTF-8 \
 	en_GB.UTF-8 \
 	en_US.ANSI_X3.4-1968 \
