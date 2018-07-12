@@ -99,9 +99,10 @@ typedef struct
 # define TLS_DEFINE_INIT_TP(tp, pd) \
   void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE
 
-/* Magic for libthread_db to know how to do THREAD_SELF.  */
+/* Informs libthread_db that the thread pointer is register 4, which is used
+ * to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  CONST_THREAD_AREA (32, TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE)
+  REGISTER (64, 64, 4 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Access to data in the thread descriptor is easy.  */
 # define THREAD_GETMEM(descr, member) \
