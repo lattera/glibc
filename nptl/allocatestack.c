@@ -728,7 +728,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
          /* The guard size difference might be > 0, but once rounded
             to the nearest page the size difference might be zero.  */
          if (new_guard > old_guard
-             && mprotect (old_guard, new_guard - old_guard, prot) != 0)
+             && __mprotect (old_guard, new_guard - old_guard, prot) != 0)
 	    goto mprot_error;
 #endif
 

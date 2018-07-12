@@ -1,3 +1,8 @@
+2018-07-12  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/allocatestack.c [_STACK_GROWS_UP] (allocate_stack): Call
+	__mprotect, not mprotect.
+
 2018-07-11  Florian Weimer  <fweimer@redhat.com>
 
 	* io/Makefile (headers): Add bits/statx.h.
