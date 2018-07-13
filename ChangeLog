@@ -1,3 +1,12 @@
+2018-07-19  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
+
+	* benchtests/scripts/compare_bench.py (__main__): use the argparse
+	library to improve command line parsing.
+	(__main__): make schema file as optional parameter (--schema),
+	defaulting to benchtests/scripts/benchout.schema.json.
+	(main): move out of the parsing stuff to __main_  and leave it
+	only as caller of main comparison functions.
+
 2018-07-19  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* NEWS: Add a note for Intel CET status.

@@ -25,6 +25,7 @@ import sys
 import os
 import pylab
 import import_bench as bench
+import argparse
 
 def do_compare(func, var, tl1, tl2, par, threshold):
     """Compare one of the aggregate measurements
@@ -151,26 +152,9 @@ def plot_graphs(bench1, bench2):
             print('Writing out %s' % filename)
             pylab.savefig(filename)
 
-
-def main(args):
-    """Program Entry Point
-
-    Take two benchmark output files and compare their timings.
-    """
-    if len(args) > 4 or len(args) < 3:
-        print('Usage: %s <schema> <file1> <file2> [threshold in %%]' % sys.argv[0])
-        sys.exit(os.EX_USAGE)
-
-    bench1 = bench.parse_bench(args[1], args[0])
-    bench2 = bench.parse_bench(args[2], args[0])
-    if len(args) == 4:
-        threshold = float(args[3])
-    else:
-        threshold = 10.0
-
-    if (bench1['timing_type'] != bench2['timing_type']):
-        print('Cannot compare benchmark outputs: timing types are different')
-        return
+def main(bench1, bench2, schema, threshold):
+    bench1 = bench.parse_bench(bench1, schema)
+    bench2 = bench.parse_bench(bench2, schema)
 
     plot_graphs(bench1, bench2)
 
@@ -181,4 +165,18 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser(description='Take two benchmark and compare their timings.')
+
+    # Required parameters
+    parser.add_argument('bench1', help='First bench to compare')
+    parser.add_argument('bench2', help='Second bench to compare')
+
+    # Optional parameters
+    parser.add_argument('--schema',
+                        default=os.path.join(os.path.dirname(os.path.realpath(__file__)),'benchout.schema.json'),
+                        help='JSON file to validate source/dest files (default: %(default)s)')
+    parser.add_argument('--threshold', default=10.0, help='Only print those with equal or higher threshold (default: %(default)s)')
+
+    args = parser.parse_args()
+
+    main(args.bench1, args.bench2, args.schema, args.threshold)
