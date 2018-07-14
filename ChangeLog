@@ -1,3 +1,22 @@
+2018-07-14  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #22563]
+	* nptl/pthread_create.c: Include <tls-setup.h>.
+	(__pthread_create_2_1): Call tls_setup_tcbhead.
+	* sysdeps/generic/tls-setup.h: New file.
+	* sysdeps/x86/nptl/tls-setup.h: Likewise.
+	* sysdeps/i386/nptl/tcb-offsets.sym (FEATURE_1_OFFSET): New.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym (FEATURE_1_OFFSET):
+	Likewise.
+	* sysdeps/i386/nptl/tls.h (tcbhead_t): Rename __glibc_reserved1
+	to feature_1.
+	* sysdeps/x86_64/nptl/tls.h (tcbhead_t): Likewise.
+	* sysdeps/x86/sysdep.h (X86_FEATURE_1_IBT): New.
+	(X86_FEATURE_1_SHSTK): Likewise.
+	(CET_ENABLED): Likewise.
+	(IBT_ENABLED): Likewise.
+	(SHSTK_ENABLED): Likewise.
+
 2018-07-13  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23208]

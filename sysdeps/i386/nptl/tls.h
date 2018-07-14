@@ -41,7 +41,10 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   int gscope_flag;
-  int __glibc_reserved1;
+  /* Bit 0: X86_FEATURE_1_IBT.
+     Bit 1: X86_FEATURE_1_SHSTK.
+   */
+  unsigned int feature_1;
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[3];
   /* GCC split stack support.  */

@@ -32,6 +32,7 @@
 #include <exit-thread.h>
 #include <default-sched.h>
 #include <futex-internal.h>
+#include <tls-setup.h>
 #include "libioP.h"
 
 #include <shlib-compat.h>
@@ -711,6 +712,9 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 #ifdef THREAD_COPY_POINTER_GUARD
   THREAD_COPY_POINTER_GUARD (pd);
 #endif
+
+  /* Setup tcbhead.  */
+  tls_setup_tcbhead (pd);
 
   /* Verify the sysinfo bits were copied in allocate_stack if needed.  */
 #ifdef NEED_DL_SYSINFO

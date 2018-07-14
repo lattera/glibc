@@ -51,7 +51,10 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   unsigned long int vgetcpu_cache[2];
-  int __glibc_reserved1;
+  /* Bit 0: X86_FEATURE_1_IBT.
+     Bit 1: X86_FEATURE_1_SHSTK.
+   */
+  unsigned int feature_1;
   int __glibc_unused1;
   /* Reservation of some values for the TM ABI.  */
   void *__private_tm[4];
