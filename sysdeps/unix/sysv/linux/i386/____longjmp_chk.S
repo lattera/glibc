@@ -17,9 +17,14 @@
 
 #include <sysdep.h>
 #include <jmpbuf-offsets.h>
+#include <jmp_buf-ssp.h>
 #include <asm-syntax.h>
 #include <stap-probe.h>
 
+/* Don't restore shadow stack register if shadow stack isn't enabled.  */
+#if !SHSTK_ENABLED
+# undef SHADOW_STACK_POINTER_OFFSET
+#endif
 
 	.section .rodata.str1.1,"aMS",@progbits,1
 	.type	longjmp_msg,@object
@@ -46,6 +51,38 @@ longjmp_msg:
 ENTRY (____longjmp_chk)
 	movl	4(%esp), %ecx	/* User's jmp_buf in %ecx.  */
 
+#ifdef SHADOW_STACK_POINTER_OFFSET
+# if IS_IN (libc) && defined SHARED && defined FEATURE_1_OFFSET
+	/* Check if Shadow Stack is enabled.  */
+	testl	$X86_FEATURE_1_SHSTK, %gs:FEATURE_1_OFFSET
+	jz	L(skip_ssp)
+# else
+	xorl	%edx, %edx
+# endif
+	/* Check and adjust the Shadow-Stack-Pointer.  */
+	rdsspd	%edx
+	/* And compare it with the saved ssp value.  */
+	subl	SHADOW_STACK_POINTER_OFFSET(%ecx), %edx
+	je	L(skip_ssp)
+	/* Count the number of frames to adjust and adjust it
+	   with incssp instruction.  The instruction can adjust
+	   the ssp by [0..255] value only thus use a loop if
+	   the number of frames is bigger than 255.  */
+	negl	%edx
+	shrl	$2, %edx
+	/* NB: We saved Shadow-Stack-Pointer of setjmp.  Since we are
+	       restoring Shadow-Stack-Pointer of setjmp's caller, we
+	       need to unwind shadow stack by one more frame.  */
+	addl	$1, %edx
+	movl	$255, %ebx
+L(loop):
+	cmpl	%ebx, %edx
+	cmovb	%edx, %ebx
+	incsspd	%ebx
+	subl	%ebx, %edx
+	ja	L(loop)
+L(skip_ssp):
+#endif
 	/* Save the return address now.  */
 	movl	(JB_PC*4)(%ecx), %edx
 	/* Get the stack pointer.  */
