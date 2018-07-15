@@ -19,14 +19,13 @@
 #include <jmpbuf-offsets.h>
 #include <asm-syntax.h>
 #include <stap-probe.h>
+#include <sigaltstack-offsets.h>
+#include <jmp_buf-ssp.h>
 
 /* Don't restore shadow stack register if shadow stack isn't enabled.  */
 #if !SHSTK_ENABLED
 # undef SHADOW_STACK_POINTER_OFFSET
 #endif
-
-#include <sigaltstack-offsets.h>
-#include <jmp_buf-ssp.h>
 
 	.section .rodata.str1.1,"aMS",@progbits,1
 	.type	longjmp_msg,@object

@@ -1,3 +1,8 @@
+2018-07-15  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Undef
+	SHADOW_STACK_POINTER_OFFSET after including <jmp_buf-ssp.h>.
+
 2018-07-14  Igor Tsimbalist  <igor.v.tsimbalist@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 
