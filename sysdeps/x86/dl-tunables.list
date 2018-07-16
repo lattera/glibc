@@ -21,6 +21,12 @@ glibc {
     hwcaps {
       type: STRING
     }
+    x86_ibt {
+      type: STRING
+    }
+    x86_shstk {
+      type: STRING
+    }
     x86_non_temporal_threshold {
       type: SIZE_T
     }

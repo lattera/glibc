@@ -464,6 +464,12 @@ AC_ARG_ENABLE([mathvec],
 	      [build_mathvec=$enableval],
 	      [build_mathvec=notset])
 
+AC_ARG_ENABLE([cet],
+	      AC_HELP_STRING([--enable-cet],
+			     [enable Intel Control-flow Enforcement Technology (CET), x86 only]),
+	      [enable_cet=$enableval],
+	      [enable_cet=no])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.

@@ -790,6 +790,7 @@ enable_nscd
 enable_pt_chown
 enable_tunables
 enable_mathvec
+enable_cet
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1465,6 +1466,8 @@ Optional Features:
                           'no' and 'valstring'
   --enable-mathvec        Enable building and installing mathvec [default
                           depends on architecture]
+  --enable-cet            enable Intel Control-flow Enforcement Technology
+                          (CET), x86 only
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3756,6 +3759,14 @@ if test "${enable_mathvec+set}" = set; then :
   enableval=$enable_mathvec; build_mathvec=$enableval
 else
   build_mathvec=notset
+fi
+
+
+# Check whether --enable-cet was given.
+if test "${enable_cet+set}" = set; then :
+  enableval=$enable_cet; enable_cet=$enableval
+else
+  enable_cet=no
 fi
 
 

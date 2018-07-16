@@ -38,6 +38,7 @@
 #include <dl-cache.h>
 #include <dl-osinfo.h>
 #include <dl-procinfo.h>
+#include <dl-prop.h>
 #include <tls.h>
 #include <stap-probe.h>
 #include <stackinfo.h>
@@ -1241,6 +1242,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 	main_map->l_relro_addr = ph->p_vaddr;
 	main_map->l_relro_size = ph->p_memsz;
 	break;
+
+      case PT_NOTE:
+	if (_rtld_process_pt_note (main_map, ph))
+	  _dl_error_printf ("\
+ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
+	break;
       }
 
   /* Adjust the address of the TLS initialization image in case
@@ -2109,6 +2116,8 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
       for (struct link_map *l = main_map; l != NULL; l = l->l_next)
 	_dl_show_scope (l, 0);
     }
+
+  _rtld_main_check (main_map, _dl_argv[0]);
 
   if (prelinked)
     {

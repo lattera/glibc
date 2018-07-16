@@ -64,6 +64,7 @@
 	cfi_startproc
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset(16) # Incorporate PLT
+	_CET_ENDBR
 # if DL_RUNTIME_RESOLVE_REALIGN_STACK
 #  if LOCAL_STORAGE_AREA != 8
 #   error LOCAL_STORAGE_AREA must be 8
@@ -168,6 +169,7 @@ _dl_runtime_resolve:
 _dl_runtime_profile:
 	cfi_startproc
 	cfi_adjust_cfa_offset(16) # Incorporate PLT
+	_CET_ENDBR
 	/* The La_x86_64_regs data structure pointed to by the
 	   fourth paramater must be VEC_SIZE-byte aligned.  This must
 	   be explicitly enforced.  We have the set up a dynamically

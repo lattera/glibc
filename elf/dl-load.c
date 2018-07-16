@@ -30,44 +30,6 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "dynamic-link.h"
-#include <abi-tag.h>
-#include <stackinfo.h>
-#include <sysdep.h>
-#include <stap-probe.h>
-#include <libc-pointer-arith.h>
-#include <array_length.h>
-
-#include <dl-dst.h>
-#include <dl-load.h>
-#include <dl-map-segments.h>
-#include <dl-unmap-segments.h>
-#include <dl-machine-reject-phdr.h>
-#include <dl-sysdep-open.h>
-#include <not-cancel.h>
-
-#include <endian.h>
-#if BYTE_ORDER == BIG_ENDIAN
-# define byteorder ELFDATA2MSB
-#elif BYTE_ORDER == LITTLE_ENDIAN
-# define byteorder ELFDATA2LSB
-#else
-# error "Unknown BYTE_ORDER " BYTE_ORDER
-# define byteorder ELFDATANONE
-#endif
-
-#define STRING(x) __STRING (x)
-
-
-int __stack_prot attribute_hidden attribute_relro
-#if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
-  = PROT_GROWSDOWN;
-#elif _STACK_GROWS_UP && defined PROT_GROWSUP
-  = PROT_GROWSUP;
-#else
-  = 0;
-#endif
-
 
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
@@ -93,6 +55,46 @@ struct filebuf
 #endif
   char buf[FILEBUF_SIZE] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
+
+#include "dynamic-link.h"
+#include <abi-tag.h>
+#include <stackinfo.h>
+#include <sysdep.h>
+#include <stap-probe.h>
+#include <libc-pointer-arith.h>
+#include <array_length.h>
+
+#include <dl-dst.h>
+#include <dl-load.h>
+#include <dl-map-segments.h>
+#include <dl-unmap-segments.h>
+#include <dl-machine-reject-phdr.h>
+#include <dl-sysdep-open.h>
+#include <dl-prop.h>
+#include <not-cancel.h>
+
+#include <endian.h>
+#if BYTE_ORDER == BIG_ENDIAN
+# define byteorder ELFDATA2MSB
+#elif BYTE_ORDER == LITTLE_ENDIAN
+# define byteorder ELFDATA2LSB
+#else
+# error "Unknown BYTE_ORDER " BYTE_ORDER
+# define byteorder ELFDATANONE
+#endif
+
+#define STRING(x) __STRING (x)
+
+
+int __stack_prot attribute_hidden attribute_relro
+#if _STACK_GROWS_DOWN && defined PROT_GROWSDOWN
+  = PROT_GROWSDOWN;
+#elif _STACK_GROWS_UP && defined PROT_GROWSUP
+  = PROT_GROWSUP;
+#else
+  = 0;
+#endif
+
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
 static struct r_search_path_struct env_path_list attribute_relro;
@@ -1151,6 +1153,14 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	case PT_GNU_RELRO:
 	  l->l_relro_addr = ph->p_vaddr;
 	  l->l_relro_size = ph->p_memsz;
+	  break;
+
+	case PT_NOTE:
+	  if (_dl_process_pt_note (l, ph, fd, fbp))
+	    {
+	      errstring = N_("cannot process note segment");
+	      goto call_lose;
+	    }
 	  break;
 	}
 

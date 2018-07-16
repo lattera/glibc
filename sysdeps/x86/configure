@@ -1,0 +1,69 @@
+# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+ # Local configure fragment for sysdeps/x86.
+
+if test x"$enable_cet" = xyes; then
+  # Check if CET can be enabled.
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled" >&5
+$as_echo_n "checking whether CET can be enabled... " >&6; }
+if ${libc_cv_x86_cet_available+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+#if !defined __CET__ || __CET__ != 3
+# error CET isn't available.
+#endif
+EOF
+		 if { ac_try='${CC-cc} -c $CFLAGS -fcf-protection -include cet.h conftest.c 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		   libc_cv_x86_cet_available=yes
+		 else
+		   libc_cv_x86_cet_available=no
+		 fi
+		 rm -rf conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_available" >&5
+$as_echo "$libc_cv_x86_cet_available" >&6; }
+  if test $libc_cv_x86_cet_available = yes; then
+    enable_cet=yes
+  else
+    if test x"$enable_cet" = xdefault; then
+      enable_cet=no
+    else
+      as_fn_error $? "$CC doesn't support CET" "$LINENO" 5
+    fi
+  fi
+fi
+if test $enable_cet = yes; then
+  # Check if assembler supports CET.
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $AS supports CET" >&5
+$as_echo_n "checking whether $AS supports CET... " >&6; }
+if ${libc_cv_x86_cet_as+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.s <<EOF
+	incsspd %ecx
+EOF
+		 if { ac_try='${CC-cc} -c $CFLAGS conftest.s -o conftest.o 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+		   libc_cv_x86_cet_as=yes
+		 else
+		   libc_cv_x86_cet_as=no
+		 fi
+		 rm -rf conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_as" >&5
+$as_echo "$libc_cv_x86_cet_as" >&6; }
+  if test $libc_cv_x86_cet_as = no; then
+    as_fn_error $? "$AS doesn't support CET" "$LINENO" 5
+  fi
+fi
+config_vars="$config_vars
+enable-cet = $enable_cet"

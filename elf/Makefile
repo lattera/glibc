@@ -1058,6 +1058,8 @@ $(objpfx)tst-piemod1.so: $(libsupport)
 $(objpfx)tst-pie1: $(objpfx)tst-piemod1.so
 
 ifeq (yes,$(build-shared))
+# NB: Please keep cet-built-dso in sysdeps/x86/Makefile in sync with
+# all-built-dso here.
 all-built-dso := $(common-objpfx)elf/ld.so $(common-objpfx)libc.so \
 		 $(filter-out $(common-objpfx)linkobj/libc.so, \
 			      $(sort $(wildcard $(addprefix $(common-objpfx), \

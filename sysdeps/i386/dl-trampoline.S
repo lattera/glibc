@@ -32,6 +32,7 @@
 	.align 16
 _dl_runtime_resolve:
 	cfi_adjust_cfa_offset (8)
+	_CET_ENDBR
 	pushl %eax		# Preserve registers otherwise clobbered.
 	cfi_adjust_cfa_offset (4)
 	pushl %ecx
@@ -50,14 +51,85 @@ _dl_runtime_resolve:
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
 
+# The SHSTK compatible version.
+	.text
+	.globl _dl_runtime_resolve_shstk
+	.type _dl_runtime_resolve_shstk, @function
+	cfi_startproc
+	.align 16
+_dl_runtime_resolve_shstk:
+	cfi_adjust_cfa_offset (8)
+	_CET_ENDBR
+	pushl %eax		# Preserve registers otherwise clobbered.
+	cfi_adjust_cfa_offset (4)
+	pushl %edx
+	cfi_adjust_cfa_offset (4)
+	movl 12(%esp), %edx	# Copy args pushed by PLT in register.  Note
+	movl 8(%esp), %eax	# that `fixup' takes its parameters in regs.
+	call _dl_fixup		# Call resolver.
+	movl (%esp), %edx	# Get register content back.
+	movl %eax, %ecx		# Store the function address.
+	movl 4(%esp), %eax	# Get register content back.
+	addl $16, %esp		# Adjust stack: PLT1 + PLT2 + %eax + %edx
+	cfi_adjust_cfa_offset (-16)
+	jmp *%ecx		# Jump to function address.
+	cfi_endproc
+	.size _dl_runtime_resolve_shstk, .-_dl_runtime_resolve_shstk
 
 #ifndef PROF
+# The SHSTK compatible version.
+	.globl _dl_runtime_profile_shstk
+	.type _dl_runtime_profile_shstk, @function
+	cfi_startproc
+	.align 16
+_dl_runtime_profile_shstk:
+	cfi_adjust_cfa_offset (8)
+	_CET_ENDBR
+	pushl %esp
+	cfi_adjust_cfa_offset (4)
+	addl $8, (%esp)		# Account for the pushed PLT data
+	pushl %ebp
+	cfi_adjust_cfa_offset (4)
+	pushl %eax		# Preserve registers otherwise clobbered.
+	cfi_adjust_cfa_offset (4)
+	pushl %ecx
+	cfi_adjust_cfa_offset (4)
+	pushl %edx
+	cfi_adjust_cfa_offset (4)
+	movl %esp, %ecx
+	subl $8, %esp
+	cfi_adjust_cfa_offset (8)
+	movl $-1, 4(%esp)
+	leal 4(%esp), %edx
+	movl %edx, (%esp)
+	pushl %ecx		# Address of the register structure
+	cfi_adjust_cfa_offset (4)
+	movl 40(%esp), %ecx	# Load return address
+	movl 36(%esp), %edx	# Copy args pushed by PLT in register.  Note
+	movl 32(%esp), %eax	# that `fixup' takes its parameters in regs.
+	call _dl_profile_fixup	# Call resolver.
+	cfi_adjust_cfa_offset (-8)
+	movl (%esp), %edx
+	testl %edx, %edx
+	jns 1f
+	movl 4(%esp), %edx	# Get register content back.
+	movl %eax, %ecx		# Store the function address.
+	movl 12(%esp), %eax	# Get register content back.
+	# Adjust stack: PLT1 + PLT2 + %esp + %ebp + %eax + %ecx + %edx
+	# + free.
+	addl $32, %esp
+	cfi_adjust_cfa_offset (-32)
+	jmp *%ecx		# Jump to function address.
+	cfi_endproc
+	.size _dl_runtime_profile_shstk, .-_dl_runtime_profile_shstk
+
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
 	cfi_adjust_cfa_offset (8)
+	_CET_ENDBR
 	pushl %esp
 	cfi_adjust_cfa_offset (4)
 	addl $8, (%esp)		# Account for the pushed PLT data

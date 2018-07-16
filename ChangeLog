@@ -1,3 +1,70 @@
+2018-07-16  H.J. Lu  <hongjiu.lu@intel.com>
+
+	 [BZ #21598]
+	* configure.ac: Add --enable-cet.
+	* configure: Regenerated.
+	* elf/Makefille (all-built-dso): Add a comment.
+	* elf/dl-load.c (filebuf): Moved before "dynamic-link.h".
+	Include <dl-prop.h>.
+	(_dl_map_object_from_fd): Call _dl_process_pt_note on PT_NOTE
+	segment.
+	* elf/dl-open.c: Include <dl-prop.h>.
+	(dl_open_worker): Call _dl_open_check.
+	* elf/rtld.c: Include <dl-prop.h>.
+	(dl_main): Call _rtld_process_pt_note on PT_NOTE segment.  Call
+	_rtld_main_check.
+	* sysdeps/generic/dl-prop.h: New file.
+	* sysdeps/i386/dl-cet.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/cpu-features.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/dl-cet.h: Likewise.
+	* sysdeps/x86/cet-tunables.h: Likewise.
+	* sysdeps/x86/check-cet.awk: Likewise.
+	* sysdeps/x86/configure: Likewise.
+	* sysdeps/x86/configure.ac: Likewise.
+	* sysdeps/x86/dl-cet.c: Likewise.
+	* sysdeps/x86/dl-procruntime.c: Likewise.
+	* sysdeps/x86/dl-prop.h: Likewise.
+	* sysdeps/x86/libc-start.h: Likewise.
+	* sysdeps/x86/link_map.h: Likewise.
+	* sysdeps/i386/dl-trampoline.S (_dl_runtime_resolve): Add
+	_CET_ENDBR.
+	(_dl_runtime_profile): Likewise.
+	(_dl_runtime_resolve_shstk): New.
+	(_dl_runtime_profile_shstk): Likewise.
+	* sysdeps/linux/x86/Makefile (sysdep-dl-routines): Add dl-cet
+	if CET is enabled.
+	(CFLAGS-.o): Add -fcf-protection if CET is enabled.
+	(CFLAGS-.os): Likewise.
+	(CFLAGS-.op): Likewise.
+	(CFLAGS-.oS): Likewise.
+	(asm-CPPFLAGS): Add -fcf-protection -include cet.h if CET
+	is enabled.
+	(tests-special): Add $(objpfx)check-cet.out.
+	(cet-built-dso): New.
+	(+$(cet-built-dso:=.note)): Likewise.
+	(common-generated): Add $(cet-built-dso:$(common-objpfx)%=%.note).
+	($(objpfx)check-cet.out): New.
+	(generated): Add check-cet.out.
+	* sysdeps/x86/cpu-features.c: Include <dl-cet.h> and
+	<cet-tunables.h>.
+	(TUNABLE_CALLBACK (set_x86_ibt)): New prototype.
+	(TUNABLE_CALLBACK (set_x86_shstk)): Likewise.
+	(init_cpu_features): Call get_cet_status to check CET status
+	and update dl_x86_feature_1 with CET status.  Call
+	TUNABLE_CALLBACK (set_x86_ibt) and TUNABLE_CALLBACK
+	(set_x86_shstk).  Disable and lock CET in libc.a.
+	* sysdeps/x86/cpu-tunables.c: Include <cet-tunables.h>.
+	(TUNABLE_CALLBACK (set_x86_ibt)): New function.
+	(TUNABLE_CALLBACK (set_x86_shstk)): Likewise.
+	* sysdeps/x86/sysdep.h (_CET_NOTRACK): New.
+	(_CET_ENDBR): Define if not defined.
+	(ENTRY): Add _CET_ENDBR.
+	* sysdeps/x86/dl-tunables.list (glibc.tune): Add x86_ibt and
+	x86_shstk.
+	* sysdeps/x86_64/dl-trampoline.h (_dl_runtime_resolve): Add
+	_CET_ENDBR.
+	(_dl_runtime_profile): Likewise.
+
 2018-07-16  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
 
 	[BZ #21895]

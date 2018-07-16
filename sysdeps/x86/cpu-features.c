@@ -28,6 +28,15 @@
 
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
+
+# if CET_ENABLED
+#  include <dl-cet.h>
+#  include <cet-tunables.h>
+extern void TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *)
+  attribute_hidden;
+extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
+  attribute_hidden;
+# endif
 #endif
 
 static void
@@ -448,5 +457,56 @@ no_cpuid:
     GLRO(dl_platform) = "i686";
   else if (CPU_FEATURES_ARCH_P (cpu_features, I586))
     GLRO(dl_platform) = "i586";
+#endif
+
+#if CET_ENABLED
+# if HAVE_TUNABLES
+  TUNABLE_GET (x86_ibt, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_x86_ibt));
+  TUNABLE_GET (x86_shstk, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_x86_shstk));
+# endif
+
+  /* Check CET status.  */
+  unsigned int cet_status = get_cet_status ();
+
+  if (cet_status)
+    {
+      GL(dl_x86_feature_1)[0] = cet_status;
+
+# ifndef SHARED
+      /* Check if IBT and SHSTK are enabled by kernel.  */
+      if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_IBT)
+	  || (cet_status & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
+	{
+	  /* Disable IBT and/or SHSTK if they are enabled by kernel, but
+	     disabled by environment variable:
+
+	     GLIBC_TUNABLES=glibc.tune.hwcaps=-IBT,-SHSTK
+	   */
+	  unsigned int cet_feature = 0;
+	  if (!HAS_CPU_FEATURE (IBT))
+	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_IBT;
+	  if (!HAS_CPU_FEATURE (SHSTK))
+	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+
+	  if (cet_feature)
+	    {
+	      int res = dl_cet_disable_cet (cet_feature);
+
+	      /* Clear the disabled bits in dl_x86_feature_1.  */
+	      if (res == 0)
+		GL(dl_x86_feature_1)[0] &= ~cet_feature;
+	    }
+
+	  /* Lock CET if IBT or SHSTK is enabled in executable.  Don't
+	     lock CET if SHSTK is enabled permissively.  */
+	  if (((GL(dl_x86_feature_1)[1] >> CET_MAX)
+	       & ((1 << CET_MAX) - 1))
+	       != CET_PERMISSIVE)
+	    dl_cet_lock_cet ();
+	}
+# endif
+    }
 #endif
 }
