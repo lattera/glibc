@@ -33,10 +33,11 @@
 
 #define RETURN_TYPE char *
 #define AVAILABLE(h, h_l, j, n_l)			\
-  (!memchr ((h) + (h_l), '\0', (j) + (n_l) - (h_l))	\
-   && ((h_l) = (j) + (n_l)))
+  (((j) + (n_l) <= (h_l)) || ((h_l) += __strnlen ((void*)((h) + (h_l)), 512), \
+			      (j) + (n_l) <= (h_l)))
 #define CHECK_EOL (1)
 #define RET0_IF_0(a) if (!a) goto ret0
+#define FASTSEARCH(S,C,N) (void*) strchr ((void*)(S), (C))
 #include "str-two-way.h"
 
 #undef strstr

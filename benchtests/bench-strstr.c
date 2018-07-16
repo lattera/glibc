@@ -23,6 +23,7 @@
 
 #define STRSTR simple_strstr
 #define libc_hidden_builtin_def(X)
+#define __strnlen strnlen
 #include "../string/strstr.c"
 
 

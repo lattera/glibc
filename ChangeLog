@@ -1,3 +1,16 @@
+2018-07-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strcasestr.c: Rename __strnlen to strnlen.
+	* benchtests/bench-strstr.c: Likewise.
+	* string/memmem.c (FASTSEARCH): Define.
+	* string/str-two-way.h (two_way_short_needle): Minor cleanups.
+	Add support for FASTSEARCH.
+	* string/strcasestr.c (AVAILABLE): Use read-ahead __strnlen.
+	* string/strstr.c (AVAILABLE): Use read-ahead __strnlen.
+	(FASTSEARCH): Define.
+	* string/test-strcasestr.c: Rename __strnlen to strnlen.
+	* string/test-strstr.c: Likewise.
+
 2018-07-15  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/____longjmp_chk.S: Undef

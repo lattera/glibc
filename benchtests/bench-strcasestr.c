@@ -24,6 +24,7 @@
 #define STRCASESTR simple_strcasestr
 #define NO_ALIAS
 #define __strncasecmp strncasecmp
+#define __strnlen strnlen
 #include "../string/strcasestr.c"
 
 

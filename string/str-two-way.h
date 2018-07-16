@@ -281,50 +281,50 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
     }
   else
     {
-      const unsigned char *phaystack = &haystack[suffix];
+      const unsigned char *phaystack;
       /* The comparison always starts from needle[suffix], so cache it
 	 and use an optimized first-character loop.  */
       unsigned char needle_suffix = CANON_ELEMENT (needle[suffix]);
-
-#if CHECK_EOL
-      /* We start matching from the SUFFIX'th element, so make sure we
-	 don't hit '\0' before that.  */
-      if (haystack_len < suffix + 1
-	  && !AVAILABLE (haystack, haystack_len, 0, suffix + 1))
-	return NULL;
-#endif
 
       /* The two halves of needle are distinct; no extra memory is
 	 required, and any mismatch results in a maximal shift.  */
       period = MAX (suffix, needle_len - suffix) + 1;
       j = 0;
-      while (1
-#if !CHECK_EOL
-	     && AVAILABLE (haystack, haystack_len, j, needle_len)
-#endif
-	     )
+      while (AVAILABLE (haystack, haystack_len, j, needle_len))
 	{
 	  unsigned char haystack_char;
 	  const unsigned char *pneedle;
 
-	  /* TODO: The first-character loop can be sped up by adapting
-	     longword-at-a-time implementation of memchr/strchr.  */
-	  if (needle_suffix
+	  phaystack = &haystack[suffix + j];
+
+#ifdef FASTSEARCH
+	  if (*phaystack++ != needle_suffix)
+	    {
+	      phaystack = FASTSEARCH (phaystack, needle_suffix,
+				      haystack_len - needle_len - j);
+	      if (phaystack == NULL)
+		goto ret0;
+	      j = phaystack - &haystack[suffix];
+	      phaystack++;
+	    }
+#else
+	  while (needle_suffix
 	      != (haystack_char = CANON_ELEMENT (*phaystack++)))
 	    {
 	      RET0_IF_0 (haystack_char);
-#if !CHECK_EOL
+# if !CHECK_EOL
 	      ++j;
-#endif
-	      continue;
+	      if (!AVAILABLE (haystack, haystack_len, j, needle_len))
+		goto ret0;
+# endif
 	    }
 
-#if CHECK_EOL
+# if CHECK_EOL
 	  /* Calculate J if it wasn't kept up-to-date in the first-character
 	     loop.  */
 	  j = phaystack - &haystack[suffix] - 1;
+# endif
 #endif
-
 	  /* Scan for matches in right half.  */
 	  i = suffix + 1;
 	  pneedle = &needle[i];
@@ -338,6 +338,11 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 		}
 	      ++i;
 	    }
+#if CHECK_EOL
+	  /* Update minimal length of haystack.  */
+	  if (phaystack > haystack + haystack_len)
+	    haystack_len = phaystack - haystack;
+#endif
 	  if (needle_len <= i)
 	    {
 	      /* Scan for matches in left half.  */
@@ -360,13 +365,6 @@ two_way_short_needle (const unsigned char *haystack, size_t haystack_len,
 	    }
 	  else
 	    j += i - suffix + 1;
-
-#if CHECK_EOL
-	  if (!AVAILABLE (haystack, haystack_len, j, needle_len))
-	    break;
-#endif
-
-	  phaystack = &haystack[suffix + j];
 	}
     }
  ret0: __attribute__ ((unused))
