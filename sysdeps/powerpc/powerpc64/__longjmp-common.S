@@ -130,9 +130,6 @@ L(no_vmx):
 	ld r0,(JB_LR*8)(r3)
 	ld r14,((JB_GPRS+0)*8)(r3)
 	lfd fp14,((JB_FPRS+0)*8)(r3)
-#if defined SHARED && !IS_IN (rtld)
-	std r2,FRAME_TOC_SAVE(r1)	/* Restore the callers TOC save area.  */
-#endif
 	ld r15,((JB_GPRS+1)*8)(r3)
 	lfd fp15,((JB_FPRS+1)*8)(r3)
 	ld r16,((JB_GPRS+2)*8)(r3)
@@ -152,7 +149,7 @@ L(no_vmx):
 	second argument (-4@4), and target address (8@0), respectively.  */
 	LIBC_PROBE (longjmp, 3, 8@3, -4@4, 8@0)
 	mtlr r0
-/* 	std r2,FRAME_TOC_SAVE(r1)	Restore the TOC save area.  */
+	std r2,FRAME_TOC_SAVE(r1)	/* Restore the TOC save area.  */
 	ld r21,((JB_GPRS+7)*8)(r3)
 	lfd fp21,((JB_FPRS+7)*8)(r3)
 	ld r22,((JB_GPRS+8)*8)(r3)

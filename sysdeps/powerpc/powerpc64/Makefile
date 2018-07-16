@@ -47,3 +47,15 @@ ifeq ($(subdir),gmon)
 CFLAGS-mcount.c += $(no-special-regs)
 sysdep_routines += ppc-mcount
 endif
+
+ifeq ($(subdir),setjmp)
+tests += tst-setjmp-bug21895-static
+tests-static += tst-setjmp-bug21895-static
+modules-names += setjmp-bug21895
+
+$(objpfx)tst-setjmp-bug21895-static: $(common-objpfx)dlfcn/libdl.a
+$(objpfx)tst-setjmp-bug21895-static.out: $(objpfx)setjmp-bug21895.so
+
+tst-setjmp-bug21895-static-ENV = \
+	LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)setjmp:$(common-objpfx)elf
+endif

@@ -1,3 +1,15 @@
+2018-07-16  Rogerio A. Cardoso  <rcardoso@linux.vnet.ibm.com>
+
+	[BZ #21895]
+	* sysdeps/powerpc/powerpc64/__longjmp-common.S: Remove condition code for
+	restore r2 on longjmp.
+	* sysdeps/powerpc/powerpc64/Makefile: Added tst-setjmp-bug21895-static to
+	test list.
+	Added rules to build test tst-setjmp-bug21895-static.
+	Added module setjmp-bug21895 and rules to build a shared object from it.
+	* sysdeps/powerpc/powerpc64/setjmp-bug21895.c: New test file.
+	* sysdeps/powerpc/powerpc64/tst-setjmp-bug21895-static.c: New test file.
+
 2018-07-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* benchtests/bench-strcasestr.c: Rename __strnlen to strnlen.
