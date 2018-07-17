@@ -30,13 +30,16 @@ extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
 # if CET_ENABLED
-#  include <dl-cet.h>
-#  include <cet-tunables.h>
 extern void TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *)
   attribute_hidden;
 extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
   attribute_hidden;
 # endif
+#endif
+
+#if CET_ENABLED
+# include <dl-cet.h>
+# include <cet-tunables.h>
 #endif
 
 static void
