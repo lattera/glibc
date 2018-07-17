@@ -17,7 +17,7 @@
    along with the GNU MP Library; see the file COPYING.LIB.  If not,
    see <http://www.gnu.org/licenses/>.  */
 
-#include "sysdep.h"
+#include <sysdep.h>
 #include "asm-syntax.h"
 
 #define PARMS	4+8	/* space for 2 saved regs */
@@ -40,6 +40,13 @@ ENTRY (__mpn_add_n)
 	cfi_rel_offset (esi, 0)
 	movl S2(%esp),%edx
 	movl SIZE(%esp),%ecx
+
+#if IBT_ENABLED
+	pushl	%ebx
+	cfi_adjust_cfa_offset (4)
+	cfi_rel_offset (ebx, 0)
+#endif
+
 	movl	%ecx,%eax
 	shrl	$3,%ecx			/* compute count for unrolled loop */
 	negl	%eax
@@ -51,6 +58,9 @@ ENTRY (__mpn_add_n)
 	subl	%eax,%esi		/* ... by a constant when we ... */
 	subl	%eax,%edx		/* ... enter the loop */
 	shrl	$2,%eax			/* restore previous value */
+#if IBT_ENABLED
+	leal	-4(,%eax,4),%ebx	/* Count for 4-byte endbr32 */
+#endif
 #ifdef PIC
 /* Calculate start address in loop for PIC.  Due to limitations in some
    assemblers, Loop-L0-3 cannot be put into the leal */
@@ -65,29 +75,39 @@ L(0):	leal	(%eax,%eax,8),%eax
 /* Calculate start address in loop for non-PIC.  */
  	leal	(L(oop) - 3)(%eax,%eax,8),%eax
 #endif
+#if IBT_ENABLED
+	addl	%ebx,%eax		/* Adjust for endbr32 */
+#endif
 	jmp	*%eax			/* jump into loop */
 	ALIGN (3)
 L(oop):	movl	(%esi),%eax
 	adcl	(%edx),%eax
 	movl	%eax,(%edi)
+	_CET_ENDBR
 	movl	4(%esi),%eax
 	adcl	4(%edx),%eax
 	movl	%eax,4(%edi)
+	_CET_ENDBR
 	movl	8(%esi),%eax
 	adcl	8(%edx),%eax
 	movl	%eax,8(%edi)
+	_CET_ENDBR
 	movl	12(%esi),%eax
 	adcl	12(%edx),%eax
 	movl	%eax,12(%edi)
+	_CET_ENDBR
 	movl	16(%esi),%eax
 	adcl	16(%edx),%eax
 	movl	%eax,16(%edi)
+	_CET_ENDBR
 	movl	20(%esi),%eax
 	adcl	20(%edx),%eax
 	movl	%eax,20(%edi)
+	_CET_ENDBR
 	movl	24(%esi),%eax
 	adcl	24(%edx),%eax
 	movl	%eax,24(%edi)
+	_CET_ENDBR
 	movl	28(%esi),%eax
 	adcl	28(%edx),%eax
 	movl	%eax,28(%edi)
@@ -100,6 +120,11 @@ L(oop):	movl	(%esi),%eax
 	sbbl	%eax,%eax
 	negl	%eax
 
+#if IBT_ENABLED
+	popl	%ebx
+	cfi_adjust_cfa_offset (-4)
+	cfi_restore (ebx)
+#endif
 	popl %esi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (esi)
