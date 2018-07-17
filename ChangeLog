@@ -1,5 +1,21 @@
 2018-07-17  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/dl-tlsdesc.S (_dl_tlsdesc_return): Add
+	_CET_ENDBR.
+	(_dl_tlsdesc_undefweak): Likewise.
+	(_dl_tlsdesc_dynamic): Likewise.
+	(_dl_tlsdesc_resolve_abs_plus_addend): Likewise.
+	(_dl_tlsdesc_resolve_rel): Likewise.
+	(_dl_tlsdesc_resolve_rela): Likewise.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+	* sysdeps/x86_64/dl-tlsdesc.S (_dl_tlsdesc_return): Likewise.
+	(_dl_tlsdesc_undefweak): Likewise.
+	(_dl_tlsdesc_dynamic): Likewise.
+	(_dl_tlsdesc_resolve_rela): Likewise.
+	(_dl_tlsdesc_resolve_hold): Likewise.
+
+2018-07-17  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/crti.S (_init): Add _CET_ENDBR.
 	(_fini): Likewise.
 	* sysdeps/x86_64/crti.S (_init): Likewise.

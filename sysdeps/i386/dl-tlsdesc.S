@@ -37,6 +37,7 @@
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_return:
+	_CET_ENDBR
 	movl	4(%eax), %eax
 	ret
 	cfi_endproc
@@ -58,6 +59,7 @@ _dl_tlsdesc_return:
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_undefweak:
+	_CET_ENDBR
 	movl	4(%eax), %eax
 	subl	%gs:0, %eax
 	ret
@@ -99,6 +101,7 @@ _dl_tlsdesc_dynamic (struct tlsdesc *tdp)
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_dynamic:
+	_CET_ENDBR
 	/* Like all TLS resolvers, preserve call-clobbered registers.
 	   We need two scratch regs anyway.  */
 	subl	$28, %esp
@@ -154,6 +157,7 @@ _dl_tlsdesc_dynamic:
 	.align 16
 _dl_tlsdesc_resolve_abs_plus_addend:
 0:
+	_CET_ENDBR
 	pushl	%eax
 	cfi_adjust_cfa_offset (4)
 	pushl	%ecx
@@ -192,6 +196,7 @@ _dl_tlsdesc_resolve_abs_plus_addend:
 	.align 16
 _dl_tlsdesc_resolve_rel:
 0:
+	_CET_ENDBR
 	pushl	%eax
 	cfi_adjust_cfa_offset (4)
 	pushl	%ecx
@@ -230,6 +235,7 @@ _dl_tlsdesc_resolve_rel:
 	.align 16
 _dl_tlsdesc_resolve_rela:
 0:
+	_CET_ENDBR
 	pushl	%eax
 	cfi_adjust_cfa_offset (4)
 	pushl	%ecx
@@ -268,6 +274,7 @@ _dl_tlsdesc_resolve_rela:
 	.align 16
 _dl_tlsdesc_resolve_hold:
 0:
+	_CET_ENDBR
 	pushl	%eax
 	cfi_adjust_cfa_offset (4)
 	pushl	%ecx

@@ -37,6 +37,7 @@
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_return:
+	_CET_ENDBR
 	movq	8(%rax), %rax
 	ret
 	cfi_endproc
@@ -58,6 +59,7 @@ _dl_tlsdesc_return:
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_undefweak:
+	_CET_ENDBR
 	movq	8(%rax), %rax
 	subq	%fs:0, %rax
 	ret
@@ -96,6 +98,7 @@ _dl_tlsdesc_dynamic (register struct tlsdesc *tdp asm ("%rax"))
 	cfi_startproc
 	.align 16
 _dl_tlsdesc_dynamic:
+	_CET_ENDBR
 	/* Preserve call-clobbered registers that we modify.
 	   We need two scratch regs anyway.  */
 	movq	%rsi, -16(%rsp)
@@ -166,6 +169,7 @@ _dl_tlsdesc_dynamic:
 	.align 16
 	/* The PLT entry will have pushed the link_map pointer.  */
 _dl_tlsdesc_resolve_rela:
+	_CET_ENDBR
 	cfi_adjust_cfa_offset (8)
 	/* Save all call-clobbered registers.  Add 8 bytes for push in
 	   the PLT entry to align the stack.  */
@@ -216,6 +220,7 @@ _dl_tlsdesc_resolve_rela:
 	.align 16
 _dl_tlsdesc_resolve_hold:
 0:
+	_CET_ENDBR
 	/* Save all call-clobbered registers.  */
 	subq	$72, %rsp
 	cfi_adjust_cfa_offset (72)
