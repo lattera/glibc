@@ -126,6 +126,7 @@ END (GLABEL(__strncasecmp))
 
 STRCMP_SSE42:
 	cfi_startproc
+	_CET_ENDBR
 	CALL_MCOUNT
 
 /*
