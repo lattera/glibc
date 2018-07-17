@@ -1,3 +1,10 @@
+2018-07-17  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/crti.S (_init): Add _CET_ENDBR.
+	(_fini): Likewise.
+	* sysdeps/x86_64/crti.S (_init): Likewise.
+	(_fini): Likewise.
+
 2018-07-17  Rafal Luzynski  <digitalfreak@lingonborough.com>
 
 	[BZ #23140]
