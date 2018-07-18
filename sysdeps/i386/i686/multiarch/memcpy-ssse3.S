@@ -71,7 +71,7 @@
 	absolute	address.  */		\
 	addl	(%ebx, INDEX, SCALE), %ebx;		\
     /* We loaded the jump table.  Go.  */		\
-	jmp	*%ebx
+	_CET_NOTRACK jmp *%ebx
 # else
 
 #  define PARMS		4
@@ -85,7 +85,7 @@
 	jump table.  SCALE is the scale of INDEX. */
 
 #  define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
-	jmp	*TABLE(, INDEX, SCALE)
+	_CET_NOTRACK jmp *TABLE(, INDEX, SCALE)
 # endif
 
 	.section .text.ssse3,"ax",@progbits
