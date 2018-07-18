@@ -26,7 +26,7 @@
 
 #define HEADER_MAX          256
 
-static const char *macrofile;
+static char macrofile[] = "/tmp/annexc.XXXXXX";
 
 /* <aio.h>.  */
 static const char *const aio_syms[] =
@@ -657,6 +657,8 @@ main (int argc, char *argv[])
   for (h = 0; h < NUMBER_OF_HEADERS; ++h)
     result |= check_header (&headers[h], ignore_list);
 
+  remove (macrofile);
+
   /* The test suite should return errors but for now this is not
      practical.  Give a warning and ask the user to correct the bugs.  */
   return result;
@@ -712,7 +714,13 @@ get_null_defines (void)
   FILE *input;
   int first = 1;
 
-  macrofile = tmpnam (NULL);
+  int fd = mkstemp (macrofile);
+  if (fd == -1)
+    {
+      printf ("mkstemp failed: %m\n");
+      exit (1);
+    }
+  close (fd);
 
   command = malloc (sizeof fmt + sizeof "/dev/null" + 2 * strlen (CC)
 		    + strlen (INC) + strlen (macrofile));
@@ -784,7 +792,6 @@ get_null_defines (void)
     }
   result[result_len] = NULL;
   fclose (input);
-  remove (macrofile);
 
   return (const char **) result;
 }
@@ -879,7 +886,6 @@ check_header (const struct header *header, const char **except)
       result |= 1;
     }
   fclose (input);
-  remove (macrofile);
 
   for (i = 0; i < header->nsyms; ++i)
     if (found[i] == 0)

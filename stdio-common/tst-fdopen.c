@@ -1,6 +1,7 @@
 /* Test for fdopen bugs.  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -18,12 +19,18 @@ char buffer[256];
 int
 main (int argc, char *argv[])
 {
-  char *name;
+  char name[] = "/tmp/tst-fdopen.XXXXXX";
   FILE *fp = NULL;
   int retval = 0;
   int fd;
 
-  name = tmpnam (NULL);
+  fd = mkstemp (name);
+  if (fd == -1)
+    {
+      printf ("mkstemp failed: %m\n");
+      return 1;
+    }
+  close (fd);
   fp = fopen (name, "w");
   assert (fp != NULL)
   fputs ("foobar and baz", fp);

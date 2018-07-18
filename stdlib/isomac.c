@@ -77,7 +77,7 @@
 
 #define HEADER_MAX          256
 
-static const char *macrofile;
+static char macrofile[] = "/tmp/isomac.XXXXXX";
 
 /* ISO C header names including Amendment 1 (without ".h" suffix).  */
 static char *header[] =
@@ -219,6 +219,8 @@ main (int argc, char *argv[])
       result |= check_header (file_name, ignore_list);
     }
 
+  remove (macrofile);
+
   /* The test suite should return errors but for now this is not
      practical.  Give a warning and ask the user to correct the bugs.  */
   return result;
@@ -249,7 +251,13 @@ get_null_defines (void)
   FILE *input;
   int first = 1;
 
-  macrofile = tmpnam (NULL);
+  int fd = mkstemp (macrofile);
+  if (fd == -1)
+    {
+      printf ("mkstemp failed: %m\n");
+      exit (1);
+    }
+  close (fd);
 
   command = malloc (sizeof fmt + sizeof "/dev/null" + 2 * strlen (CC)
 		    + strlen (INC) + strlen (macrofile));
@@ -330,7 +338,6 @@ get_null_defines (void)
     }
   result[result_len] = NULL;
   fclose (input);
-  remove (macrofile);
 
   return (const char **) result;
 }
@@ -439,7 +446,6 @@ check_header (const char *file_name, const char **except)
 	}
     }
   fclose (input);
-  remove (macrofile);
 
   return result;
 }

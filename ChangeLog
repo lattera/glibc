@@ -1,3 +1,35 @@
+2018-07-18  Joseph Myers  <joseph@codesourcery.com>
+
+	* grp/tst_fgetgrent.c: Include <unistd.h>.
+	(main): Use mkstemp instead of tmpnam.
+	* io/test-utime.c (main): Likewise.
+	* posix/annexc.c (macrofile): Change to modifiable array.
+	(main): Remove macrofile here.
+	(get_null_defines): Use mkstemp instead of tmpnam.  Do not remove
+	macrofile here.
+	(check_header): Do not remove macrofile here.
+	* posix/bug-getopt1.c: Include <stdlib.h>.
+	(do_test): Use mkstemp instead of tmpnam.
+	* posix/bug-getopt2.c: Include <stdlib.h>.
+	(do_test): Use mkstemp instead of tmpnam.
+	* posix/bug-getopt3.c: Include <stdlib.h>.
+	(do_test): Use mkstemp instead of tmpnam.
+	* posix/bug-getopt4.c: Include <stdlib.h>.
+	(do_test): Use mkstemp instead of tmpnam.
+	* posix/bug-getopt5.c: Include <stdlib.h>.
+	(do_test): Use mkstemp instead of tmpnam.
+	* stdio-common/bug7.c: Include <stdlib.h> and <unistd.h>.
+	(main): Use mkstemp instead of tmpnam.
+	* stdio-common/tst-fdopen.c: Include <stdlib.h>.
+	(main): Use mkstemp instead of tmpnam.
+	* stdio-common/tst-ungetc.c: Include <stdlib.h>.
+	(main): use mkstemp instead of tmpnam.
+	* stdlib/isomac.c (macrofile): Change to modifiable array.
+	(main): Remove macrofile here.
+	(get_null_defines): Use mkstemp instead of tmpnam.  Do not remove
+	macrofile here.
+	(check_header): Do not remove macrofile here.
+
 2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* manual/tunables.texi: Document glibc.tune.x86_ibt and

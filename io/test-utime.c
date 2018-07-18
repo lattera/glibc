@@ -27,23 +27,17 @@
 int
 main (int argc, char *argv[])
 {
-  char file[L_tmpnam];
+  char file[] = "/tmp/test-utime.XXXXXX";
   struct utimbuf ut;
   struct stat st;
   struct stat stnow;
   time_t now1, now2;
   int fd;
 
-  if (tmpnam (file) == 0)
-    {
-      perror ("tmpnam");
-      return 1;
-    }
-
-  fd = creat (file, 0666);
+  fd = mkstemp (file);
   if (fd < 0)
     {
-      perror ("creat");
+      perror ("mkstemp");
       return 1;
     }
   close (fd);

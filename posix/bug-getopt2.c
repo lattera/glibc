@@ -1,6 +1,7 @@
 /* BZ 11039 */
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static int
 one_test (const char *fmt, int argc, char *argv[], int expected[argc - 1])
@@ -37,12 +38,14 @@ one_test (const char *fmt, int argc, char *argv[], int expected[argc - 1])
 static int
 do_test (void)
 {
-  char *fname = tmpnam (NULL);
-  if (fname == NULL)
+  char fname[] = "/tmp/bug-getopt2.XXXXXX";
+  int fd = mkstemp (fname);
+  if (fd == -1)
     {
-      puts ("cannot generate name for temporary file");
+      printf ("mkstemp failed: %m\n");
       return 1;
     }
+  close (fd);
 
   if (freopen (fname, "w+", stderr) == NULL)
     {

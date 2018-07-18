@@ -1,21 +1,25 @@
 /* Regression test for fseek and freopen bugs.  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int
 main (int argc, char *argv[])
 {
   int lose = 0;
-  char filename[L_tmpnam];
+  char filename[] = "/tmp/bug7.XXXXXX";
   FILE *fp;
 
-  if (tmpnam (filename) == NULL)
+  int fd = mkstemp (filename);
+  if (fd == -1)
     {
-      printf ("tmpnam failed\n");
+      printf ("mkstemp failed\n");
       lose = 1;
     }
   else
     {
+      close (fd);
       fp = fopen (filename, "w+");
       fprintf (fp, "Hello world!\n");
       fflush (fp);
@@ -32,17 +36,21 @@ main (int argc, char *argv[])
   {
     FILE *file1;
     FILE *file2;
-    char filename1[L_tmpnam];
-    char filename2[L_tmpnam];
+    char filename1[] = "/tmp/bug7.XXXXXX";
+    char filename2[] = "/tmp/bug7.XXXXXX";
     int ch;
 
-    if (tmpnam (filename1) == NULL || tmpnam (filename2) == NULL)
+    int fd1 = mkstemp (filename1);
+    int fd2 = mkstemp (filename2);
+    if (fd1 == -1 || fd2 == -1)
       {
-	printf ("tmpnam failed\n");
+	printf ("mkstemp failed\n");
 	lose = 1;
       }
     else
       {
+	close (fd1);
+	close (fd2);
 
 	file1 = fopen (filename1, "w");
 	fclose (file1);

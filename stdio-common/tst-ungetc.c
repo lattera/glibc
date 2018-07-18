@@ -1,6 +1,7 @@
 /* Test for ungetc bugs.  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #undef assert
@@ -15,13 +16,19 @@
 int
 main (int argc, char *argv[])
 {
-  char *name;
+  char name[] = "/tmp/tst-ungetc.XXXXXX";
   FILE *fp = NULL;
   int retval = 0;
   int c;
   char buffer[64];
 
-  name = tmpnam (NULL);
+  int fd = mkstemp (name);
+  if (fd == -1)
+    {
+      printf ("mkstemp failed: %m\n");
+      return 1;
+    }
+  close (fd);
   fp = fopen (name, "w");
   assert (fp != NULL)
   fputs ("bla", fp);

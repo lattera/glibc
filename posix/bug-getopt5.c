@@ -2,6 +2,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static const struct option opts[] =
   {
@@ -47,12 +48,14 @@ one_test (const char *fmt, int argc, char *argv[], int n, int expected[n])
 static int
 do_test (void)
 {
-  char *fname = tmpnam (NULL);
-  if (fname == NULL)
+  char fname[] = "/tmp/bug-getopt5.XXXXXX";
+  int fd = mkstemp (fname);
+  if (fd == -1)
     {
-      puts ("cannot generate name for temporary file");
+      printf ("mkstemp failed: %m\n");
       return 1;
     }
+  close (fd);
 
   if (freopen (fname, "w+", stderr) == NULL)
     {
