@@ -80,7 +80,7 @@ L(not_1):
 	LOAD_JUMP_TABLE_ENTRY (L(table_32bytes), %ecx)
 	addl	%ecx, %edx
 	addl	%ecx, %esi
-	jmp	*%ebx
+	_CET_NOTRACK jmp *%ebx
 
 	ALIGN (4)
 L(28bytes):
@@ -326,7 +326,7 @@ L(32bytesormore):
 	LOAD_JUMP_TABLE_ENTRY (L(table_32bytes), %ecx)
 	addl	%ecx, %edx
 	addl	%ecx, %esi
-	jmp	*%ebx
+	_CET_NOTRACK jmp *%ebx
 
 L(load_ecx_28):
 	addl	$0x4, %edx
