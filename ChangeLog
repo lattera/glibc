@@ -1,5 +1,11 @@
 2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/i386/i686/multiarch/memcmp-sse4.S
+	(BRANCH_TO_JMPTBL_ENTRY): Add _CET_NOTRACK before indirect jump
+	to jump table.
+
+2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/i686/multiarch/memset-sse2.S
 	(BRANCH_TO_JMPTBL_ENTRY): Add _CET_NOTRACK before indirect jump
 	to jump table.
