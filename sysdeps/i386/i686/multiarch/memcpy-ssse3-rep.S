@@ -71,7 +71,7 @@
        absolute address.  */					\
     addl	(%ebx,INDEX,SCALE), %ebx;			\
     /* We loaded the jump table.  Go.  */			\
-    jmp		*%ebx
+    _CET_NOTRACK jmp *%ebx
 
 # define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)			\
     addl	$(TABLE - .), %ebx
@@ -79,7 +79,7 @@
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)	\
     addl	(%ebx,INDEX,SCALE), %ebx;			\
     /* We loaded the jump table.  Go.  */			\
-    jmp		*%ebx
+    _CET_NOTRACK jmp *%ebx
 #else
 # define PARMS		4
 # define ENTRANCE
@@ -91,12 +91,12 @@
    absolute offsets.  INDEX is a register contains the index into the
    jump table.  SCALE is the scale of INDEX. */
 # define BRANCH_TO_JMPTBL_ENTRY(TABLE, INDEX, SCALE)		\
-    jmp		*TABLE(,INDEX,SCALE)
+    _CET_NOTRACK jmp *TABLE(,INDEX,SCALE)
 
 # define BRANCH_TO_JMPTBL_ENTRY_VALUE(TABLE)
 
 # define BRANCH_TO_JMPTBL_ENTRY_TAIL(TABLE, INDEX, SCALE)		\
-    jmp		*TABLE(,INDEX,SCALE)
+    _CET_NOTRACK jmp *TABLE(,INDEX,SCALE)
 #endif
 
 	.section .text.ssse3,"ax",@progbits
