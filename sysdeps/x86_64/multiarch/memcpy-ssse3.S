@@ -39,7 +39,7 @@
   lea		TABLE(%rip), %r11;				\
   movslq	(%r11, INDEX, SCALE), INDEX;			\
   lea		(%r11, INDEX), INDEX;				\
-  jmp		*INDEX;						\
+  _CET_NOTRACK jmp *INDEX;					\
   ud2
 
 	.section .text.ssse3,"ax",@progbits
@@ -86,7 +86,7 @@ L(start):
 	add	%rdx, %rsi
 	add	%rdx, %rdi
 	add	%r11, %r9
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 
 	.p2align 4
@@ -441,7 +441,7 @@ L(shl_1):
 	lea	(L(shl_1_loop_L2)-L(shl_1_loop_L1))(%r9), %r9
 L(L1_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_1_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -464,7 +464,7 @@ L(shl_1_loop_L1):
 	jb	L(shl_1_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_1_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -484,7 +484,7 @@ L(shl_1_bwd):
 	lea	(L(shl_1_bwd_loop_L2)-L(shl_1_bwd_loop_L1))(%r9), %r9
 L(L1_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_1_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -509,7 +509,7 @@ L(shl_1_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_1_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_1_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -526,7 +526,7 @@ L(shl_2):
 	lea	(L(shl_2_loop_L2)-L(shl_2_loop_L1))(%r9), %r9
 L(L2_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_2_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -549,7 +549,7 @@ L(shl_2_loop_L1):
 	jb	L(shl_2_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_2_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -569,7 +569,7 @@ L(shl_2_bwd):
 	lea	(L(shl_2_bwd_loop_L2)-L(shl_2_bwd_loop_L1))(%r9), %r9
 L(L2_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_2_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -594,7 +594,7 @@ L(shl_2_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_2_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_2_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -611,7 +611,7 @@ L(shl_3):
 	lea	(L(shl_3_loop_L2)-L(shl_3_loop_L1))(%r9), %r9
 L(L3_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_3_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -634,7 +634,7 @@ L(shl_3_loop_L1):
 	jb	L(shl_3_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_3_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -654,7 +654,7 @@ L(shl_3_bwd):
 	lea	(L(shl_3_bwd_loop_L2)-L(shl_3_bwd_loop_L1))(%r9), %r9
 L(L3_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_3_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -679,7 +679,7 @@ L(shl_3_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_3_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_3_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -696,7 +696,7 @@ L(shl_4):
 	lea	(L(shl_4_loop_L2)-L(shl_4_loop_L1))(%r9), %r9
 L(L4_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_4_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -719,7 +719,7 @@ L(shl_4_loop_L1):
 	jb	L(shl_4_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_4_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -739,7 +739,7 @@ L(shl_4_bwd):
 	lea	(L(shl_4_bwd_loop_L2)-L(shl_4_bwd_loop_L1))(%r9), %r9
 L(L4_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_4_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -764,7 +764,7 @@ L(shl_4_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_4_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_4_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -781,7 +781,7 @@ L(shl_5):
 	lea	(L(shl_5_loop_L2)-L(shl_5_loop_L1))(%r9), %r9
 L(L5_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_5_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -804,7 +804,7 @@ L(shl_5_loop_L1):
 	jb	L(shl_5_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_5_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -824,7 +824,7 @@ L(shl_5_bwd):
 	lea	(L(shl_5_bwd_loop_L2)-L(shl_5_bwd_loop_L1))(%r9), %r9
 L(L5_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_5_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -849,7 +849,7 @@ L(shl_5_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_5_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_5_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -866,7 +866,7 @@ L(shl_6):
 	lea	(L(shl_6_loop_L2)-L(shl_6_loop_L1))(%r9), %r9
 L(L6_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_6_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -889,7 +889,7 @@ L(shl_6_loop_L1):
 	jb	L(shl_6_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_6_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -909,7 +909,7 @@ L(shl_6_bwd):
 	lea	(L(shl_6_bwd_loop_L2)-L(shl_6_bwd_loop_L1))(%r9), %r9
 L(L6_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_6_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -934,7 +934,7 @@ L(shl_6_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_6_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_6_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -951,7 +951,7 @@ L(shl_7):
 	lea	(L(shl_7_loop_L2)-L(shl_7_loop_L1))(%r9), %r9
 L(L7_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_7_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -974,7 +974,7 @@ L(shl_7_loop_L1):
 	jb	L(shl_7_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_7_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -994,7 +994,7 @@ L(shl_7_bwd):
 	lea	(L(shl_7_bwd_loop_L2)-L(shl_7_bwd_loop_L1))(%r9), %r9
 L(L7_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_7_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1019,7 +1019,7 @@ L(shl_7_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_7_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_7_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1036,7 +1036,7 @@ L(shl_8):
 	lea	(L(shl_8_loop_L2)-L(shl_8_loop_L1))(%r9), %r9
 L(L8_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 L(shl_8_loop_L2):
 	prefetchnta 0x1c0(%rsi)
 L(shl_8_loop_L1):
@@ -1058,7 +1058,7 @@ L(shl_8_loop_L1):
 	jb	L(shl_8_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 	.p2align 4
 L(shl_8_end):
@@ -1079,7 +1079,7 @@ L(shl_8_bwd):
 	lea	(L(shl_8_bwd_loop_L2)-L(shl_8_bwd_loop_L1))(%r9), %r9
 L(L8_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_8_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1104,7 +1104,7 @@ L(shl_8_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_8_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_8_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1121,7 +1121,7 @@ L(shl_9):
 	lea	(L(shl_9_loop_L2)-L(shl_9_loop_L1))(%r9), %r9
 L(L9_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_9_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1144,7 +1144,7 @@ L(shl_9_loop_L1):
 	jb	L(shl_9_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_9_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1164,7 +1164,7 @@ L(shl_9_bwd):
 	lea	(L(shl_9_bwd_loop_L2)-L(shl_9_bwd_loop_L1))(%r9), %r9
 L(L9_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_9_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1189,7 +1189,7 @@ L(shl_9_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_9_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_9_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1206,7 +1206,7 @@ L(shl_10):
 	lea	(L(shl_10_loop_L2)-L(shl_10_loop_L1))(%r9), %r9
 L(L10_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_10_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1229,7 +1229,7 @@ L(shl_10_loop_L1):
 	jb	L(shl_10_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_10_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1249,7 +1249,7 @@ L(shl_10_bwd):
 	lea	(L(shl_10_bwd_loop_L2)-L(shl_10_bwd_loop_L1))(%r9), %r9
 L(L10_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_10_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1274,7 +1274,7 @@ L(shl_10_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_10_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_10_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1291,7 +1291,7 @@ L(shl_11):
 	lea	(L(shl_11_loop_L2)-L(shl_11_loop_L1))(%r9), %r9
 L(L11_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_11_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1314,7 +1314,7 @@ L(shl_11_loop_L1):
 	jb	L(shl_11_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_11_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1334,7 +1334,7 @@ L(shl_11_bwd):
 	lea	(L(shl_11_bwd_loop_L2)-L(shl_11_bwd_loop_L1))(%r9), %r9
 L(L11_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_11_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1359,7 +1359,7 @@ L(shl_11_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_11_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_11_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1376,7 +1376,7 @@ L(shl_12):
 	lea	(L(shl_12_loop_L2)-L(shl_12_loop_L1))(%r9), %r9
 L(L12_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_12_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1399,7 +1399,7 @@ L(shl_12_loop_L1):
 	jb	L(shl_12_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_12_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1419,7 +1419,7 @@ L(shl_12_bwd):
 	lea	(L(shl_12_bwd_loop_L2)-L(shl_12_bwd_loop_L1))(%r9), %r9
 L(L12_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_12_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1444,7 +1444,7 @@ L(shl_12_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_12_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_12_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1461,7 +1461,7 @@ L(shl_13):
 	lea	(L(shl_13_loop_L2)-L(shl_13_loop_L1))(%r9), %r9
 L(L13_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_13_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1484,7 +1484,7 @@ L(shl_13_loop_L1):
 	jb	L(shl_13_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_13_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1504,7 +1504,7 @@ L(shl_13_bwd):
 	lea	(L(shl_13_bwd_loop_L2)-L(shl_13_bwd_loop_L1))(%r9), %r9
 L(L13_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_13_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1529,7 +1529,7 @@ L(shl_13_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_13_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_13_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1546,7 +1546,7 @@ L(shl_14):
 	lea	(L(shl_14_loop_L2)-L(shl_14_loop_L1))(%r9), %r9
 L(L14_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_14_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1569,7 +1569,7 @@ L(shl_14_loop_L1):
 	jb	L(shl_14_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_14_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1589,7 +1589,7 @@ L(shl_14_bwd):
 	lea	(L(shl_14_bwd_loop_L2)-L(shl_14_bwd_loop_L1))(%r9), %r9
 L(L14_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_14_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1614,7 +1614,7 @@ L(shl_14_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_14_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_14_bwd_end):
 	movaps	%xmm4, (%rdi)
@@ -1631,7 +1631,7 @@ L(shl_15):
 	lea	(L(shl_15_loop_L2)-L(shl_15_loop_L1))(%r9), %r9
 L(L15_fwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_15_loop_L2):
 	prefetchnta 0x1c0(%rsi)
@@ -1654,7 +1654,7 @@ L(shl_15_loop_L1):
 	jb	L(shl_15_end)
 	movaps	%xmm4, -0x20(%rdi)
 	movaps	%xmm5, -0x10(%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_15_end):
 	movaps	%xmm4, -0x20(%rdi)
@@ -1674,7 +1674,7 @@ L(shl_15_bwd):
 	lea	(L(shl_15_bwd_loop_L2)-L(shl_15_bwd_loop_L1))(%r9), %r9
 L(L15_bwd):
 	lea	-64(%rdx), %rdx
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_15_bwd_loop_L2):
 	prefetchnta -0x1c0(%rsi)
@@ -1699,7 +1699,7 @@ L(shl_15_bwd_loop_L1):
 	movaps	%xmm3, 0x10(%rdi)
 	jb	L(shl_15_bwd_end)
 	movaps	%xmm4, (%rdi)
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 L(shl_15_bwd_end):
 	movaps	%xmm4, (%rdi)
