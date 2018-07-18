@@ -33,7 +33,7 @@
 	lea	TABLE(%rip), %r11;                              \
 	movslq	(%r11, INDEX, SCALE), %rcx;                     \
 	lea	(%r11, %rcx), %rcx;                             \
-	jmp	*%rcx
+	_CET_NOTRACK jmp *%rcx
 
 # ifndef USE_AS_STRCAT
 
