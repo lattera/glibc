@@ -39,7 +39,7 @@
   lea		TABLE(%rip), %r11;				\
   movslq	(%r11, INDEX, SCALE), INDEX;			\
   lea		(%r11, INDEX), INDEX;				\
-  jmp		*INDEX;						\
+  _CET_NOTRACK jmp *INDEX;					\
   ud2
 
 	.section .text.ssse3,"ax",@progbits
@@ -125,7 +125,7 @@ L(144bytesormore):
 	sub	$0x80, %rdx
 	movslq	(%r11, %r9, 4), %r9
 	add	%r11, %r9
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 
 	.p2align 4
@@ -155,7 +155,7 @@ L(copy_backward):
 	sub	$0x80, %rdx
 	movslq	(%r11, %r9, 4), %r9
 	add	%r11, %r9
-	jmp	*%r9
+	_CET_NOTRACK jmp *%r9
 	ud2
 
 	.p2align 4
