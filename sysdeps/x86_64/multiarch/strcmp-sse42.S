@@ -275,7 +275,7 @@ LABEL(bigger):
 	movslq	(%r10, %r9,4), %r9
 	pcmpeqb	%xmm1, D(%xmm0)		/* Any null chars? */
 	lea	(%r10, %r9), %r10
-	jmp	*%r10			/* jump to corresponding case */
+	_CET_NOTRACK jmp *%r10		/* jump to corresponding case */
 
 /*
  * The following cases will be handled by ashr_0
