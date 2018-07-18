@@ -9,6 +9,16 @@ Version 2.28
 
 Major new features:
 
+* The GNU C Library can now be compiled with support for Intel CET, AKA
+  Intel Control-flow Enforcement Technology.  When the library is built
+  with --enable-cet, the resulting glibc is protected with indirect
+  branch tracking (IBT) and shadow stack (SHSTK).  CET-enabled glibc is
+  compatible with all existing executables and shared libraries.  This
+  feature is currently supported on i386, x86_64 and x32 with GCC 8 and
+  binutils 2.29 or later.  Note that CET-enabled glibc requires CPUs
+  capable of multi-byte NOPs, like x86-64 processors as well as Intel
+  Pentium Pro or newer.
+
 * The GNU C Library now has correct support for ABSOLUTE symbols
   (SHN_ABS-relative symbols).  Previously such ABSOLUTE symbols were
   relocated incorrectly or in some cases discarded.  The GNU linker can
