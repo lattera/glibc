@@ -63,7 +63,7 @@
     add		(%ebx,%ecx,4), %ebx;				\
     add		%ecx, %edx;					\
     /* We loaded the jump table and adjusted EDX. Go.  */	\
-    jmp		*%ebx
+    _CET_NOTRACK jmp *%ebx
 #else
 # define ENTRANCE
 # define RETURN_END	ret
@@ -75,7 +75,7 @@
    absolute offsets.  */
 # define BRANCH_TO_JMPTBL_ENTRY(TABLE)				\
     add		%ecx, %edx;					\
-    jmp		*TABLE(,%ecx,4)
+    _CET_NOTRACK jmp *TABLE(,%ecx,4)
 #endif
 
 	.section .text.sse2,"ax",@progbits
