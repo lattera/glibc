@@ -31,7 +31,7 @@
   lea		TABLE(%rip), %r11;				\
   movslq	(%r11, INDEX, SCALE), %rcx;			\
   add		%r11, %rcx;					\
-  jmp		*%rcx;						\
+  _CET_NOTRACK jmp *%rcx;					\
   ud2
 
 /* Warning!
