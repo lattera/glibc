@@ -1,3 +1,8 @@
+2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/strcmp.S (STRCMP): Add _CET_NOTRACK before
+	indirect jump to jump table.
+
 2018-07-18  Valery Timiriliyev  <timiriliyev@gmail.com>
 
 	[BZ #22241]
