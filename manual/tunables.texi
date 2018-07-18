@@ -356,3 +356,31 @@ to set threshold in bytes for non temporal store.
 
 This tunable is specific to i386 and x86-64.
 @end deftp
+
+@deftp Tunable glibc.tune.x86_ibt
+The @code{glibc.tune.x86_ibt} tunable allows the user to control how
+indirect branch tracking (IBT) should be enabled.  Accepted values are
+@code{on}, @code{off}, and @code{permissive}.  @code{on} always turns
+on IBT regardless of whether IBT is enabled in the executable and its
+dependent shared libraries.  @code{off} always turns off IBT regardless
+of whether IBT is enabled in the executable and its dependent shared
+libraries.  @code{permissive} is the same as the default which disables
+IBT on non-CET executables and shared libraries.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
+@deftp Tunable glibc.tune.x86_shstk
+The @code{glibc.tune.x86_shstk} tunable allows the user to control how
+the shadow stack (SHSTK) should be enabled.  Accepted values are
+@code{on}, @code{off}, and @code{permissive}.  @code{on} always turns on
+SHSTK regardless of whether SHSTK is enabled in the executable and its
+dependent shared libraries.  @code{off} always turns off SHSTK regardless
+of whether SHSTK is enabled in the executable and its dependent shared
+libraries.  @code{permissive} changes how dlopen works on non-CET shared
+libraries.  By default, when SHSTK is enabled, dlopening a non-CET shared
+library returns an error.  With @code{permissive}, it turns off SHSTK
+instead.
+
+This tunable is specific to i386 and x86-64.
+@end deftp

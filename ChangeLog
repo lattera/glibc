@@ -1,5 +1,10 @@
 2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* manual/tunables.texi: Document glibc.tune.x86_ibt and
+	glibc.tune.x86_shstk.
+
+2018-07-18  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* NEWS: Mention --enable-cet.
 	* manual/install.texi: Document --enable-cet.
 	* INSTALL: Regenerated.
