@@ -7,6 +7,8 @@
 
 	* sysdeps/mach/hurd/socket.c (__socket): Handle SOCK_CLOEXEC and
 	SOCK_NONBLOCK.
+	* sysdeps/mach/hurd/socketpair.c (__socketpair): Handle SOCK_CLOEXEC
+	and SOCK_NONBLOCK.
 
 2018-07-19  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
