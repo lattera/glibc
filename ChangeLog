@@ -1,3 +1,8 @@
+2018-07-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Set multiple_threads
+	to 1.
+
 2018-07-19  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
 	* benchtests/scripts/compare_bench.py (__main__): use the argparse

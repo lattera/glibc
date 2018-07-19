@@ -117,6 +117,8 @@ _hurd_tls_init (tcbhead_t *tcb)
   /* This field is used by TLS accesses to get our "thread pointer"
      from the TLS point of view.  */
   tcb->tcb = tcb;
+  /* We always at least start the sigthread anyway.  */
+  tcb->multiple_threads = 1;
 
   /* Get the first available selector.  */
   int sel = -1;
