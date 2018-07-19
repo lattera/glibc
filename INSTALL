@@ -117,6 +117,11 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      the GNU C Library requires CPUs capable of multi-byte NOPs, like
      x86-64 processors as well as Intel Pentium Pro or newer.
 
+     NOTE: '--enable-cet' has been tested for i686, x86_64 and x32 on
+     non-CET processors.  '--enable-cet' has been tested for x86_64 and
+     x32 on CET SDVs, but Intel CET support hasn't been validated for
+     i686.
+
 '--disable-profile'
      Don't build libraries with profiling information.  You may want to
      use this option if you don't plan to do profiling.

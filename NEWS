@@ -17,7 +17,10 @@ Major new features:
   feature is currently supported on i386, x86_64 and x32 with GCC 8 and
   binutils 2.29 or later.  Note that CET-enabled glibc requires CPUs
   capable of multi-byte NOPs, like x86-64 processors as well as Intel
-  Pentium Pro or newer.
+  Pentium Pro or newer.  NOTE: --enable-cet has been tested for i686,
+  x86_64 and x32 on non-CET processors.  --enable-cet has been tested
+  for x86_64 and x32 on CET SDVs, but Intel CET support hasn't been
+  validated for i686.
 
 * The GNU C Library now has correct support for ABSOLUTE symbols
   (SHN_ABS-relative symbols).  Previously such ABSOLUTE symbols were

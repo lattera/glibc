@@ -1,3 +1,9 @@
+2018-07-19  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* NEWS: Add a note for Intel CET status.
+	* manual/install.texi: Likewise.
+	* INSTALL: Regenerated.
+
 2018-07-18  Quentin PAGÈS  <provaires@quentino.fr>
 
 	[BZ #23140]
