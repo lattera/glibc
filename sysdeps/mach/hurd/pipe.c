@@ -15,9 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
 #include <unistd.h>
 
 /* Create a one-way communication channel (pipe).
@@ -28,23 +25,7 @@
 int
 __pipe (int fds[2])
 {
-  int save_errno = errno;
-  int result;
-
-  /* The magic S_IFIFO protocol tells the pflocal server to create
-     sockets which report themselves as FIFOs, as POSIX requires for
-     pipes.  */
-  result = __socketpair (PF_LOCAL, SOCK_STREAM, S_IFIFO, fds);
-  if (result == -1 && errno == EPROTONOSUPPORT)
-    {
-      /* We contacted an "old" pflocal server that doesn't support the
-         magic S_IFIFO protocol.
-	 FIXME: Remove this junk somewhere in the future.  */
-      __set_errno (save_errno);
-      return __socketpair (PF_LOCAL, SOCK_STREAM, 0, fds);
-    }
-
-  return result;
+  return __pipe2 (fds, 0);
 }
 libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

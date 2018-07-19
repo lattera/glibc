@@ -9,6 +9,9 @@
 	SOCK_NONBLOCK.
 	* sysdeps/mach/hurd/socketpair.c (__socketpair): Handle SOCK_CLOEXEC
 	and SOCK_NONBLOCK.
+	* sysdeps/mach/hurd/pipe2.c: New file, copy from pipe.c.  Evolve it to
+	implement __pipe2.
+	* sysdeps/mach/hurd/pipe.c (__pipe): Reimplement using __pipe2.
 
 2018-07-19  Leonardo Sandoval  <leonardo.sandoval.gonzalez@intel.com>
 
