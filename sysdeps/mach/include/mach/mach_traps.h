@@ -1,6 +1,7 @@
 #ifndef _MACH_MACH_TRAPS_H
 #include_next <mach/mach_traps.h>
 
+#ifndef _ISOMAC
 extern mach_port_t __mach_reply_port (void);
 libc_hidden_proto (__mach_reply_port)
 extern mach_port_t __mach_thread_self (void);
@@ -18,4 +19,5 @@ kern_return_t __thread_switch (mach_port_t new_thread,
 libc_hidden_proto (__thread_switch)
 kern_return_t __evc_wait (unsigned int event);
 libc_hidden_proto (__evc_wait)
+#endif
 #endif

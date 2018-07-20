@@ -1,4 +1,5 @@
 #include <mach-shortcuts.h>
+#ifndef _ISOMAC
 libc_hidden_proto (__task_create)
 libc_hidden_proto (__task_terminate)
 libc_hidden_proto (__vm_allocate)
@@ -11,3 +12,4 @@ libc_hidden_proto (__mach_port_allocate_name)
 libc_hidden_proto (__mach_port_allocate)
 libc_hidden_proto (__mach_port_deallocate)
 libc_hidden_proto (__mach_port_insert_right)
+#endif
