@@ -1103,7 +1103,7 @@ common-generated += $(all-built-dso:$(common-objpfx)%=%.phdr)
 $(objpfx)check-execstack.out: $(..)scripts/check-execstack.awk \
 			      $(objpfx)execstack-default \
 			      $(all-built-dso:=.phdr)
-	LC_ALL=C $(AWK) -f $^ > $@; \
+	LC_ALL=C $(AWK) -v "xfail=$(check-execstack-xfail)" -f $^ > $@; \
 	$(evaluate-test)
 generated += check-execstack.out
 

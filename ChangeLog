@@ -6,6 +6,13 @@
 	hidden prototypes.
 	* sysdeps/mach/include/mach-shortcuts-hidden.h [!_ISOMAC]: Likewise.
 	* sysdeps/mach/include/mach/mach_traps.h [!_ISOMAC]: Likewise.
+	* scripts/check-execstack.awk: Consider `xfail' variable containing a
+	list of libraries whose stack executability is expected.
+	* elf/Makefile ($(objpfx)check-execstack.out): Pass
+	$(check-execstack-xfail) to check-execstack.awk through `xfail'
+	variable.
+	* sysdeps/mach/hurd/i386/Makefile (check-execstack-xfail): Set to ld.so
+	libc.so libpthread.so.
 
 2018-07-20  Thomas Schwinge  <tschwinge@gnu.org>
 

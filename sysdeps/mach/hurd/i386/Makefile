@@ -96,3 +96,9 @@ endif
 ifeq ($(subdir),mach)
 test-xfail-check-abi-libmachuser = yes
 endif
+
+ifeq ($(subdir),elf)
+# We do use nested functions involving creation of trampolines, notably for
+# callbacks whose parameters don't permit to get the context parameters.
+check-execstack-xfail += ld.so libc.so libpthread.so
+endif

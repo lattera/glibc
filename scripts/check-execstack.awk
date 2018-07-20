@@ -6,7 +6,12 @@
 # It fails (1) if any did indicate executable stack.
 # It fails (2) if the input did not take the expected form.
 
-BEGIN { result = sanity = 0; default_exec = -1 }
+BEGIN {
+  result = sanity = 0; default_exec = -1;
+  split(xfail, xfails, " ");
+  for (x in xfails)
+    expected_fails[xfails[x] ".phdr"] = 1;
+}
 
 /^execstack-no$/ { default_exec = 0; next }
 /^execstack-yes$/ { default_exec = 1; next }
@@ -17,6 +22,10 @@ function check_one(name) {
     result = 2;
   }
 
+  n = split(name, parts, "/");
+  basename = parts[n];
+  expected_fail = basename in expected_fails;
+
   if (!sanity) {
     print name ": *** input did not look like readelf -l output";
     result = 2;
@@ -24,12 +33,20 @@ function check_one(name) {
     if (stack_line ~ /^.*RW .*$/) {
       print name ": OK";
     } else if (stack_line ~ /^.*E.*$/) {
-      print name ": *** executable stack signaled";
-      result = result ? result : 1;
+      if (expected_fail) {
+	print name ": *** executable stack signaled, expected";
+      } else {
+	print name ": *** executable stack signaled";
+	result = result ? result : 1;
+      }
     }
   } else if (default_exec) {
-    print name ": *** no PT_GNU_STACK entry";
-    result = result ? result : 1;
+    if (expected_fail) {
+      print name ": *** no PT_GNU_STACK entry, expected";
+    } else {
+      print name ": *** no PT_GNU_STACK entry";
+      result = result ? result : 1;
+    }
   } else {
     print name ": no PT_GNU_STACK but default is OK";
   }
