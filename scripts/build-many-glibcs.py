@@ -869,7 +869,7 @@ class Context(object):
         if update:
             return
         url_map = {'binutils': 'https://ftp.gnu.org/gnu/binutils/binutils-%(version)s.tar.bz2',
-                   'gcc': 'https://ftp.gnu.org/gnu/gcc/gcc-%(version)s/gcc-%(version)s.tar.bz2',
+                   'gcc': 'https://ftp.gnu.org/gnu/gcc/gcc-%(version)s/gcc-%(version)s.tar.gz',
                    'gmp': 'https://ftp.gnu.org/gnu/gmp/gmp-%(version)s.tar.xz',
                    'linux': 'https://www.kernel.org/pub/linux/kernel/v4.x/linux-%(version)s.tar.xz',
                    'mpc': 'https://ftp.gnu.org/gnu/mpc/mpc-%(version)s.tar.gz',

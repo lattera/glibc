@@ -1,3 +1,8 @@
+2018-07-20  Zong Li  <zong@andestech.com>
+
+	* scripts/build-many-glibcs.py (Context.checkout_tar): Change the
+	URL of gcc's tarball.
+
 2018-07-20  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23396]
