@@ -1,3 +1,9 @@
+2018-07-20  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23396]
+	* posix/regcomp.c (build_equiv_class): When comparing weights, do
+	not compare an extra byte after the end of the weights.
+
 2018-07-20  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Set multiple_threads

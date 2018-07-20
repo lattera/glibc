@@ -3531,18 +3531,10 @@ build_equiv_class (bitset_t sbcset, const unsigned char *name)
 	    continue;
 	  /* Compare only if the length matches and the collation rule
 	     index is the same.  */
-	  if (len == weights[idx2 & 0xffffff] && (idx1 >> 24) == (idx2 >> 24))
-	    {
-	      int cnt = 0;
-
-	      while (cnt <= len &&
-		     weights[(idx1 & 0xffffff) + 1 + cnt]
-		     == weights[(idx2 & 0xffffff) + 1 + cnt])
-		++cnt;
-
-	      if (cnt > len)
-		bitset_set (sbcset, ch);
-	    }
+	  if (len == weights[idx2 & 0xffffff] && (idx1 >> 24) == (idx2 >> 24)
+	      && memcmp (weights + (idx1 & 0xffffff) + 1,
+			 weights + (idx2 & 0xffffff) + 1, len) == 0)
+	    bitset_set (sbcset, ch);
 	}
       /* Check whether the array has enough space.  */
       if (BE (*equiv_class_alloc == mbcset->nequiv_classes, 0))
