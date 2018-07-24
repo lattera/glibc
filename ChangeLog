@@ -1,3 +1,14 @@
+2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* bits/indirect-return.h: New file.
+	* misc/sys/cdefs.h (__glibc_has_attribute): New.
+	* sysdeps/x86/bits/indirect-return.h: Likewise.
+	* stdlib/Makefile (headers): Add bits/indirect-return.h.
+	* stdlib/ucontext.h: Include <bits/indirect-return.h>.
+	(swapcontext): Add __INDIRECT_RETURN.
+	* string/tst-xbzero-opt.c (ALWAYS_INLINE): New.
+	(prepare_test_buffer): Use it.
+
 2018-07-24  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23448]

@@ -22,6 +22,9 @@
 
 #include <features.h>
 
+/* Get definition of __INDIRECT_RETURN.  */
+#include <bits/indirect-return.h>
+
 /* Get machine dependent definition of data structures.  */
 #include <sys/ucontext.h>
 
@@ -36,7 +39,8 @@ extern int setcontext (const ucontext_t *__ucp) __THROWNL;
 /* Save current context in context variable pointed to by OUCP and set
    context from variable pointed to by UCP.  */
 extern int swapcontext (ucontext_t *__restrict __oucp,
-			const ucontext_t *__restrict __ucp) __THROWNL;
+			const ucontext_t *__restrict __ucp)
+  __THROWNL __INDIRECT_RETURN;
 
 /* Manipulate user context UCP to continue with calling functions FUNC
    and the ARGC-1 parameters following ARGC when the context is used

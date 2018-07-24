@@ -100,7 +100,15 @@ static ucontext_t uc_main, uc_co;
 /* Always check the test buffer immediately after filling it; this
    makes externally visible side effects depend on the buffer existing
    and having been filled in.  */
-static inline __attribute__  ((always_inline)) void
+#if defined __CET__ && !__glibc_has_attribute (__indirect_return__)
+/* Note: swapcontext returns via indirect branch when SHSTK is enabled.
+   Without indirect_return attribute, swapcontext is marked with
+   returns_twice attribute, which prevents always_inline to work.  */
+# define ALWAYS_INLINE
+#else
+# define ALWAYS_INLINE	__attribute__ ((always_inline))
+#endif
+static inline ALWAYS_INLINE void
 prepare_test_buffer (unsigned char *buf)
 {
   for (unsigned int i = 0; i < PATTERN_REPS; i++)
