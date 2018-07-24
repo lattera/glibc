@@ -56,4 +56,7 @@
 # undef __ASSUME_RENAMEAT2
 #endif
 
+/* sh does not support the statx system call.  */
+#undef __ASSUME_STATX
+
 #endif
