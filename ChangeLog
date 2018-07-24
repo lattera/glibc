@@ -1,3 +1,7 @@
+2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* NEWS: Add ISO C threads addition.
+
 2018-07-24  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
