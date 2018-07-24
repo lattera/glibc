@@ -1,3 +1,9 @@
+2018-07-24  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23448]
+	* iconvdata/ibm1364.c (MAX_NEEDED_OUTPUT) [FROM_LOOP]: Define.
+	(MAX_NEEDED_INPUT) [TO_LOOP]: Define.
+
 2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/i386/vfork.S (SYSCALL_ERROR_HANDLER):
