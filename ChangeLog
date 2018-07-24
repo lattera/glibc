@@ -1,3 +1,10 @@
+2018-07-24  Florian Weimer  <fweimer@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/kernel-features.h
+	[__LINUX_KERNEL_VERSION < 0x040D00] (__ASSUME_MLOCK2)
+	(__ASSUME_COPY_FILE_RANGE): Undefine.  Kernel support was added in
+	4.13.
+
 2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/x86/include/asm/prctl.h: New file.

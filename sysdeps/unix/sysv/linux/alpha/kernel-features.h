@@ -45,8 +45,10 @@
 # undef __ASSUME_EXECVEAT
 #endif
 
-/* Support for statx was added in kernel 4.13.  */
+/* Support for copy_file_range, statx was added in kernel 4.13.  */
 #if __LINUX_KERNEL_VERSION < 0x040D00
+# undef __ASSUME_MLOCK2
+# undef __ASSUME_COPY_FILE_RANGE
 # undef __ASSUME_STATX
 #endif
 
