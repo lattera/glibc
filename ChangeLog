@@ -1,5 +1,18 @@
 2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/i386/vfork.S (SYSCALL_ERROR_HANDLER):
+	Redefine if shadow stack is enabled.
+	(SYSCALL_ERROR_LABEL): Likewise.
+	(__vfork): Pop shadow stack and jump back to to caller directly
+	when shadow stack is in use.
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S (SYSCALL_ERROR_HANDLER):
+	Redefine if shadow stack is enabled.
+	(SYSCALL_ERROR_LABEL): Likewise.
+	(__vfork): Pop shadow stack and jump back to to caller directly
+	when shadow stack is in use.
+
+2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/x86_64/tst-quadmod1.S (func): Add endbr64 if IBT is
 	enabled.
 	(foo): Likewise.
