@@ -1,3 +1,11 @@
+2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86_64/tst-quadmod1.S (func): Add endbr64 if IBT is
+	enabled.
+	(foo): Likewise.
+	* sysdeps/x86_64/tst-quadmod2.S (func) : Likewise.
+	(foo): Likewise.
+
 2018-07-20  Joseph Myers  <joseph@codesourcery.com>
 
 	* scripts/build-many-glibcs.py (Context.checkout): Default

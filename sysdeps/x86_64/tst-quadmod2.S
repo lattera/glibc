@@ -27,6 +27,9 @@
 	.type	func, @function
 func:
 	.cfi_startproc
+#if defined __CET__ && (__CET__ & 1) != 0
+	endbr64
+#endif
 	xorl	%edi, %edi
 	jmp	exit@PLT
 	.cfi_endproc
@@ -36,6 +39,9 @@ func:
 foo:
 	.cfi_startproc
 	.cfi_def_cfa_register 6
+#if defined __CET__ && (__CET__ & 1) != 0
+	endbr64
+#endif
 	movq	.Ljmp(%rip), %rax
 	subq	$BIAS, %rax
 	jmp	*%rax
