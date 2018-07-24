@@ -1,3 +1,9 @@
+2018-07-25  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #23442]
+	* locale/weightwc.h (findidx): Handle the case where usrc is a
+	prefix of cp but one character too short.
+
 2018-07-24  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* NEWS: Add ISO C threads addition.

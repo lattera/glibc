@@ -109,7 +109,7 @@ findidx (const int32_t *table,
 	      break;
 	  DIAG_POP_NEEDS_COMMENT;
 
-	  if (cnt < nhere - 1)
+	  if (cnt < nhere - 1 || cnt == len)
 	    {
 	      cp += 2 * nhere;
 	      continue;
@@ -121,14 +121,14 @@ findidx (const int32_t *table,
 	     same reason as described above.  */
 	  DIAG_PUSH_NEEDS_COMMENT;
 	  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
-	  if (cp[nhere - 1] > usrc[nhere -1])
+	  if (cp[nhere - 1] > usrc[nhere - 1])
 	    {
 	      cp += 2 * nhere;
 	      continue;
 	    }
 	  DIAG_POP_NEEDS_COMMENT;
 
-	  if (cp[2 * nhere - 1] < usrc[nhere -1])
+	  if (cp[2 * nhere - 1] < usrc[nhere - 1])
 	    {
 	      cp += 2 * nhere;
 	      continue;
