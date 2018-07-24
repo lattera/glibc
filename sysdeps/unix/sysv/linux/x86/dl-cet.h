@@ -15,23 +15,41 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <sys/prctl.h>
+#include <asm/prctl.h>
+
 static inline int __attribute__ ((always_inline))
 dl_cet_allocate_legacy_bitmap (unsigned long *legacy_bitmap)
 {
-  /* FIXME: Need syscall support.  */
-  return -1;
+  /* Allocate legacy bitmap.  */
+  INTERNAL_SYSCALL_DECL (err);
+#ifdef __LP64__
+  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2,
+				 ARCH_CET_LEGACY_BITMAP, legacy_bitmap);
+#else
+  unsigned long long legacy_bitmap_u64[2];
+  int res = INTERNAL_SYSCALL (arch_prctl, err, 2,
+			      ARCH_CET_LEGACY_BITMAP, legacy_bitmap_u64);
+  if (res == 0)
+    {
+      legacy_bitmap[0] = legacy_bitmap_u64[0];
+      legacy_bitmap[1] = legacy_bitmap_u64[1];
+    }
+  return res;
+#endif
 }
 
 static inline int __attribute__ ((always_inline))
 dl_cet_disable_cet (unsigned int cet_feature)
 {
-  /* FIXME: Need syscall support.  */
-  return -1;
+  INTERNAL_SYSCALL_DECL (err);
+  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2, ARCH_CET_DISABLE,
+				 cet_feature);
 }
 
 static inline int __attribute__ ((always_inline))
 dl_cet_lock_cet (void)
 {
-  /* FIXME: Need syscall support.  */
-  return -1;
+  INTERNAL_SYSCALL_DECL (err);
+  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2, ARCH_CET_LOCK, 0);
 }

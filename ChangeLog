@@ -1,3 +1,17 @@
+2018-07-24  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86/include/asm/prctl.h: New file.
+	* sysdeps/unix/sysv/linux/x86/cpu-features.c: Include
+	<sys/prctl.h> and <asm/prctl.h>.
+	(get_cet_status): Call arch_prctl with ARCH_CET_STATUS.
+	* sysdeps/unix/sysv/linux/x86/dl-cet.h: Include <sys/prctl.h>
+	and <asm/prctl.h>.
+	(dl_cet_allocate_legacy_bitmap): Call arch_prctl with
+	ARCH_CET_LEGACY_BITMAP.
+	(dl_cet_disable_cet): Call arch_prctl with ARCH_CET_DISABLE.
+	(dl_cet_lock_cet): Call arch_prctl with ARCH_CET_LOCK.
+	* sysdeps/x86/libc-start.c: Include <startup.h>.
+
 2018-07-24  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sh/kernel-features.h (__ASSUME_STATX):

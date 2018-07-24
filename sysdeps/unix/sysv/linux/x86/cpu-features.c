@@ -17,9 +17,17 @@
    <http://www.gnu.org/licenses/>.  */
 
 #if CET_ENABLED
+# include <sys/prctl.h>
+# include <asm/prctl.h>
+
 static inline int __attribute__ ((always_inline))
 get_cet_status (void)
 {
+  unsigned long long cet_status[3];
+  INTERNAL_SYSCALL_DECL (err);
+  if (INTERNAL_SYSCALL (arch_prctl, err, 2, ARCH_CET_STATUS,
+			cet_status) == 0)
+    return cet_status[0];
   return 0;
 }
 

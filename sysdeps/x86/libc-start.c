@@ -16,6 +16,9 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef SHARED
+/* Define I386_USE_SYSENTER to support syscall during startup in static
+   PIE.  */
+# include <startup.h>
 # include <ldsodefs.h>
 # include <cpu-features.h>
 # include <cpu-features.c>
