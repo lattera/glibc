@@ -31,8 +31,14 @@ static mtx_t mutex;
 static int
 signal_parent (void *arg)
 {
+  /* Acquire the lock so that cnd_signal does not run until
+     cnd_timedwait has been called.  */
+  if (mtx_lock (&mutex) != thrd_success)
+    FAIL_EXIT1 ("mtx_lock failed");
   if (cnd_signal (&cond) != thrd_success)
     FAIL_EXIT1 ("cnd_signal failed");
+  if (mtx_unlock (&mutex) != thrd_success)
+    FAIL_EXIT1 ("mtx_unlock");
 
   thrd_exit (thrd_success);
 }
@@ -47,10 +53,15 @@ do_test (void)
     FAIL_EXIT1 ("cnd_init failed");
   if (mtx_init (&mutex, mtx_plain) != thrd_success)
     FAIL_EXIT1 ("mtx_init failed");
+  if (mtx_lock (&mutex) != thrd_success)
+    FAIL_EXIT1 ("mtx_lock failed");
 
   if (clock_gettime (CLOCK_REALTIME, &w_time) != 0)
     FAIL_EXIT1 ("clock_gettime failed");
-  w_time.tv_nsec += 150000;
+
+  /* This needs to be sufficiently long to prevent the cnd_timedwait
+     call from timing out.  */
+  w_time.tv_sec += 3600;
 
   if (thrd_create (&id, signal_parent, NULL) != thrd_success)
     FAIL_EXIT1 ("thrd_create failed");
@@ -60,6 +71,9 @@ do_test (void)
 
   if (thrd_join (id, NULL) != thrd_success)
     FAIL_EXIT1 ("thrd_join failed");
+
+  if (mtx_unlock (&mutex) != thrd_success)
+    FAIL_EXIT1 ("mtx_unlock");
 
   mtx_destroy (&mutex);
   cnd_destroy (&cond);

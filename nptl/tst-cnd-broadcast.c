@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <threads.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -28,12 +29,16 @@ static cnd_t cond;
 /* Mutex to control wait on cond.  */
 static mtx_t mutex;
 
+/* Number of threads which have entered the cnd_wait region.  */
+static unsigned int waiting_threads;
+
 /* Code executed by each thread.  */
 static int
 child_wait (void* data)
 {
   /* Wait until parent thread sends broadcast here.  */
   mtx_lock (&mutex);
+  ++waiting_threads;
   cnd_wait (&cond, &mutex);
   mtx_unlock (&mutex);
 
@@ -61,7 +66,16 @@ do_test (void)
     }
 
   /* Wait for other threads to reach their wait func.  */
-  thrd_sleep (&((struct timespec){.tv_sec = 2}), NULL);
+  while (true)
+    {
+      mtx_lock (&mutex);
+      TEST_VERIFY (waiting_threads <= N);
+      bool done_waiting = waiting_threads == N;
+      mtx_unlock (&mutex);
+      if (done_waiting)
+	break;
+      thrd_sleep (&((struct timespec){.tv_nsec = 100 * 1000 * 1000}), NULL);
+    }
 
   mtx_lock (&mutex);
   if (cnd_broadcast (&cond) != thrd_success)

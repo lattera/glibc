@@ -1,3 +1,17 @@
+2018-07-25  Florian Weimer  <fweimer@redhat.com>
+
+	* nptl/tst-mtx-timedlock.c (do_test): Implement carry from
+	nanoseconds into seconds.
+	* nptl/tst-cnd-basic.c (signal_parent): Lock and unlock mutex.
+	(do_test): Likewise.
+	* nptl/tst-cnd-timedwait.c (signal_parent): Likewise.
+	(do_test): Likewise.  Avoid nanosecond overflow and spurious
+	timeouts due to system load.
+	* nptl/tst-cnd-broadcast.c (waiting_threads): New variable.
+	(child_wait): Increment it.
+	(do_test): Wait as long as necessary until all expected threads
+	have arrived.
+
 2018-07-25  Vedvyas Shanbhogue  <vedvyas.shanbhogue@intel.com>
 	    H.J. Lu  <hongjiu.lu@intel.com>
 

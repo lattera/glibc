@@ -78,6 +78,11 @@ do_test (void)
   /* Tiny amount of time, to assure that if any thread finds it busy.
      It will receive thrd_timedout.  */
   wait_time.tv_nsec += 1;
+  if (wait_time.tv_nsec == 1000 * 1000 * 1000)
+    {
+      wait_time.tv_sec += 1;
+      wait_time.tv_nsec = 0;
+    }
 
   if (thrd_create (&id, child_add, NULL) != thrd_success)
     FAIL_EXIT1 ("thrd_create failed");
