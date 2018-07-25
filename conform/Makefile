@@ -197,9 +197,8 @@ linknamespace-libs-xsi = $(linknamespace-libs-posix)
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO11 = $(linknamespace-libs-isoc) \
-			   $(common-objpfx)nptl/libpthread.a
-linknamespace-libs-XPG4 = $(linknamespace-libs-isoc) \
-			  $(common-objpfx)crypt/libcrypt.a
+			   $(static-thread-library)
+linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
 linknamespace-libs-XPG42 = $(linknamespace-libs-XPG4)
 linknamespace-libs-POSIX = $(linknamespace-libs-thr)
 linknamespace-libs-UNIX98 = $(linknamespace-libs-xsi)
