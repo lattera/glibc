@@ -147,6 +147,7 @@ typedef struct ucontext_t
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
     struct _libc_fpstate __fpregs_mem;
+    __extension__ unsigned long long int __ssp[4];
   } ucontext_t;
 
 #else /* !__x86_64__ */
@@ -251,6 +252,7 @@ typedef struct ucontext_t
     mcontext_t uc_mcontext;
     sigset_t uc_sigmask;
     struct _libc_fpstate __fpregs_mem;
+    unsigned long int __ssp[4];
   } ucontext_t;
 
 #endif /* !__x86_64__ */

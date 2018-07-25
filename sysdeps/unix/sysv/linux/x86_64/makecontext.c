@@ -21,6 +21,11 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <ucontext.h>
+#if SHSTK_ENABLED
+# include <pthread.h>
+# include <libc-pointer-arith.h>
+# include <sys/prctl.h>
+#endif
 
 #include "ucontext_i.h"
 
@@ -52,6 +57,8 @@ void
 __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 {
   extern void __start_context (void) attribute_hidden;
+  extern void __push___start_context (ucontext_t *)
+    attribute_hidden;
   greg_t *sp;
   unsigned int idx_uc_link;
   va_list ap;
@@ -74,7 +81,36 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
   ucp->uc_mcontext.gregs[REG_RSP] = (uintptr_t) sp;
 
   /* Setup stack.  */
-  sp[0] = (uintptr_t) &__start_context;
+#if SHSTK_ENABLED
+  struct pthread *self = THREAD_SELF;
+  unsigned int feature_1 = THREAD_GETMEM (self, header.feature_1);
+  /* NB: We must check feature_1 before accessing __ssp since caller
+	 may be compiled against ucontext_t without __ssp.  */
+  if ((feature_1 & X86_FEATURE_1_SHSTK) != 0)
+    {
+      /* Shadow stack is enabled.  We need to allocate a new shadow
+         stack.  */
+      unsigned long ssp_size = (((uintptr_t) sp
+				 - (uintptr_t) ucp->uc_stack.ss_sp)
+				>> STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT);
+      /* Align shadow stack to 8 bytes.  */
+      ssp_size = ALIGN_UP (ssp_size, 8);
+
+      ucp->__ssp[1] = ssp_size;
+      ucp->__ssp[2] = ssp_size;
+
+      /* Call __push___start_context to allocate a new shadow stack,
+	 push __start_context onto the new stack as well as the new
+	 shadow stack.  NB: After __push___start_context returns,
+	   ucp->__ssp[0]: The new shadow stack pointer.
+	   ucp->__ssp[1]: The base address of the new shadow stack.
+	   ucp->__ssp[2]: The size of the new shadow stack.
+       */
+      __push___start_context (ucp);
+    }
+  else
+#endif
+    sp[0] = (uintptr_t) &__start_context;
   sp[idx_uc_link] = (uintptr_t) ucp->uc_link;
 
   va_start (ap, argc);

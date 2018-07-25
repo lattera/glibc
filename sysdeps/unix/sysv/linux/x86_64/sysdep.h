@@ -423,4 +423,9 @@
 #undef LO_HI_LONG
 #define LO_HI_LONG(val) (val), 0
 
+/* Each shadow stack slot takes 8 bytes.  Assuming that each stack
+   frame takes 256 bytes, this is used to compute shadow stack size
+   from stack size.  */
+#define STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT 5
+
 #endif /* linux/x86_64/sysdep.h */

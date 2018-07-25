@@ -1,3 +1,33 @@
+2018-07-25  Vedvyas Shanbhogue  <vedvyas.shanbhogue@intel.com>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86/sys/ucontext.h (ucontext_t): Add
+	__ssp.
+	* sysdeps/unix/sysv/linux/x86_64/__start_context.S: Include
+	<asm/prctl.h> and "ucontext_i.h" when shadow stack is enabled.
+	(__push___start_context): New.
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: Include
+	<asm/prctl.h>.
+	(__getcontext): Record the current shadow stack base.  Save the
+	caller's shadow stack pointer and base.
+	* sysdeps/unix/sysv/linux/x86_64/makecontext.c: Include
+	<pthread.h>, <libc-pointer-arith.h> and <sys/prctl.h>.
+	(__push___start_context): New prototype.
+	(__makecontext): Call __push___start_context to allocate a new
+	shadow stack, push __start_context onto the new stack as well
+	as the new shadow stack.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: Include
+	<asm/prctl.h>.
+	(__setcontext): Restore the target shadow stack.
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: Include
+	<asm/prctl.h>.
+	(__swapcontext): Record the current shadow stack base.  Save
+	the caller's shadow stack pointer and base. Restore the target
+	shadow stack.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
+	(STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT): New.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.sym (oSSP): New.
+
 2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* stdlib/Makefile ((tests): Add tst-setcontext6, tst-setcontext7,
