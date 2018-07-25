@@ -60,7 +60,8 @@ typedef struct
   void *__private_tm[4];
   /* GCC split stack support.  */
   void *__private_ss;
-  long int __glibc_reserved2;
+  /* The lowest address of shadow stack,  */
+  unsigned long long int ssp_base;
   /* Must be kept even if it is no longer used by glibc since programs,
      like AddressSanitizer, depend on the size of tcbhead_t.  */
   __128bits __glibc_unused2[8][4] __attribute__ ((aligned (32)));
@@ -72,10 +73,17 @@ typedef struct
 /* morestack.S in libgcc uses offset 0x40 to access __private_ss,   */
 _Static_assert (offsetof (tcbhead_t, __private_ss) == 0x40,
 		"offset of __private_ss != 0x40");
+/* NB: ssp_base used to be "long int __glibc_reserved2", which was
+   changed from 32 bits to 64 bits.  Make sure that the offset of the
+   next field, __glibc_unused2, is unchanged.  */
+_Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x60,
+		"offset of __glibc_unused2 != 0x60");
 # else
 /* morestack.S in libgcc uses offset 0x70 to access __private_ss,   */
 _Static_assert (offsetof (tcbhead_t, __private_ss) == 0x70,
 		"offset of __private_ss != 0x70");
+_Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
+		"offset of __glibc_unused2 != 0x80");
 # endif
 
 #else /* __ASSEMBLER__ */

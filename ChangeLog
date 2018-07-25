@@ -1,3 +1,12 @@
+2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/nptl/tcb-offsets.sym (SSP_BASE_OFFSET): New.
+	* sysdeps/i386/nptl/tls.h (tcbhead_t): Replace __glibc_reserved2
+	with ssp_base.
+	* sysdeps/x86_64/nptl/tcb-offsets.sym (SSP_BASE_OFFSET): New.
+	* sysdeps/x86_64/nptl/tls.h (tcbhead_t): Replace __glibc_reserved2
+	with ssp_base.
+
 2018-07-25  Andreas Schwab  <schwab@suse.de>
 
 	[BZ #23442]

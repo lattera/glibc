@@ -49,7 +49,8 @@ typedef struct
   void *__private_tm[3];
   /* GCC split stack support.  */
   void *__private_ss;
-  void *__glibc_reserved2;
+  /* The lowest address of shadow stack,  */
+  unsigned long ssp_base;
 } tcbhead_t;
 
 /* morestack.S in libgcc uses offset 0x30 to access __private_ss,   */
