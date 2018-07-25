@@ -58,6 +58,7 @@ test-input := \
 	dsb_DE.UTF-8 \
 	dz_BT.UTF-8 \
 	en_US.ISO-8859-1 \
+	en_US.UTF-8 \
 	eo.UTF-8 \
 	es_ES.UTF-8 \
 	et_EE.UTF-8 \

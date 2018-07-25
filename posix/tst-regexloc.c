@@ -29,8 +29,12 @@ do_test (void)
 
   if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
     puts ("cannot set locale");
-  else if (regcomp (&re, "[abcdef]*", 0) != REG_NOERROR)
-    puts ("cannot compile expression \"[abcdef]*\"");
+  /* Range expressions in non-POSIX locales are unspecified, but
+     for now in glibc we maintain lowercase/uppercase distinction
+     in our collation element order (but not in collation weights
+     which means strcoll_l still collates as expected).  */
+  else if (regcomp (&re, "[a-f]*", 0) != REG_NOERROR)
+    puts ("cannot compile expression \"[a-f]*\"");
   else if (regexec (&re, "abcdefCDEF", 1, mat, 0) == REG_NOMATCH)
     puts ("no match");
   else

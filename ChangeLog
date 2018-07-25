@@ -1,3 +1,14 @@
+2018-07-25  Carlos O'Donell <carlos@redhat.com>
+
+	[BZ #23393]
+	* localedata/locales/iso14651_t1_common: Deinterlace uppercase and
+	lowercase in LATIN script.
+	* localedata/Makefile (test-input): Add en_US.UTF-8.
+	* localedata/en_US.UTF-8.in: New file.
+	* posix/tst-fnmatch.input: Add comments and new tests for en_US.UTF-8,
+	and restore old tests.
+	* posix/tst-regexloc.c (do_test): Add back range expression test.
+
 2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/unix/sysv/linux/ia64/tst-setcontext4.c: New file.
