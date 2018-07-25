@@ -23,3 +23,10 @@ endif
 ifeq ($(subdir),setjmp)
 tests += tst-saved_mask-1
 endif
+
+ifeq ($(enable-cet),yes)
+ifeq ($(subdir),stdlib)
+tests += tst-cet-setcontext-1
+CFLAGS-tst-cet-setcontext-1.c += -mshstk
+endif
+endif

@@ -1,3 +1,10 @@
+2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/x86/Makefile (tests): Add
+	tst-cet-setcontext-1 if CET is enabled.
+	(CFLAGS-tst-cet-setcontext-1.c): Add -mshstk.
+	* sysdeps/unix/sysv/linux/x86/tst-cet-setcontext-1.c: New file.
+
 2018-07-25  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
 
 	* include/threads.h: Move to ...
