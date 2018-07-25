@@ -1,5 +1,47 @@
 2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/x86/Makefile (tests): Add tst-cet-legacy-1,
+	tst-cet-legacy-2, tst-cet-legacy-2a, tst-cet-legacy-3,
+	tst-cet-legacy-4, tst-cet-legacy-4a, tst-cet-legacy-4b
+	and tst-cet-legacy-4c.
+	(modules-names): Add tst-cet-legacy-mod-1, tst-cet-legacy-mod-2
+	and tst-cet-legacy-mod-4.
+	(CFLAGS-tst-cet-legacy-2.c): New.
+	(CFLAGS-tst-cet-legacy-mod-1.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-2.c): Likewise.
+	(CFLAGS-tst-cet-legacy-3.c): Likewise.
+	(CFLAGS-tst-cet-legacy-4.c): Likewise.
+	(CFLAGS-tst-cet-legacy-mod-4.c): Likewise.
+	($(objpfx)tst-cet-legacy-1): Likewise.
+	($(objpfx)tst-cet-legacy-2): Likewise.
+	($(objpfx)tst-cet-legacy-2.out): Likewise.
+	($(objpfx)tst-cet-legacy-2a): Likewise.
+	($(objpfx)tst-cet-legacy-2a.out): Likewise.
+	($(objpfx)tst-cet-legacy-4): Likewise.
+	($(objpfx)tst-cet-legacy-4.out): Likewise.
+	($(objpfx)tst-cet-legacy-4a): Likewise.
+	($(objpfx)tst-cet-legacy-4a.out): Likewise.
+	(tst-cet-legacy-4a-ENV): Likewise.
+	($(objpfx)tst-cet-legacy-4b): Likewise.
+	($(objpfx)tst-cet-legacy-4b.out): Likewise.
+	(tst-cet-legacy-4b-ENV): Likewise.
+	($(objpfx)tst-cet-legacy-4c): Likewise.
+	($(objpfx)tst-cet-legacy-4c.out): Likewise.
+	(tst-cet-legacy-4c-ENV): Likewise.
+	* sysdeps/x86/tst-cet-legacy-1.c: New file.
+	* sysdeps/x86/tst-cet-legacy-2.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-2a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-3.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-4.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-4a.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-4b.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-4c.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-1.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-2.c: Likewise.
+	* sysdeps/x86/tst-cet-legacy-mod-4.c: Likewise.
+
+2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* sysdeps/i386/nptl/tcb-offsets.sym (SSP_BASE_OFFSET): New.
 	* sysdeps/i386/nptl/tls.h (tcbhead_t): Replace __glibc_reserved2
 	with ssp_base.
