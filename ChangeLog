@@ -1,5 +1,14 @@
 2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* stdlib/Makefile ((tests): Add tst-setcontext6, tst-setcontext7,
+	tst-setcontext8 and tst-setcontext9.
+	* stdlib/tst-setcontext6.c: New file.
+	* stdlib/tst-setcontext7.c: Likewise.
+	* stdlib/tst-setcontext8.c: Likewise.
+	* stdlib/tst-setcontext9.c: Likewise.
+
+2018-07-25  H.J. Lu  <hongjiu.lu@intel.com>
+
 	* stdlib/Makefile ((tests): Add tst-setcontext5.
 	* stdlib/tst-setcontext5.c: New file.
 
