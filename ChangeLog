@@ -1,3 +1,8 @@
+2018-07-26  Stefan Liebler  <stli@linux.ibm.com>
+
+	* string/tst-xbzero-opt.c (use_test_buffer): New function.
+	(prepare_test_buffer): Call use_test_buffer as compiler barrier.
+
 2018-07-26  Florian Weimer  <fweimer@redhat.com>
 
 	* htl/lockfile.c (flockfile, funlockfile, ftrylockfile): Use weak
