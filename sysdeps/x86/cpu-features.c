@@ -43,6 +43,20 @@ extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
 #endif
 
 static void
+get_extended_indices (struct cpu_features *cpu_features)
+{
+  unsigned int eax, ebx, ecx, edx;
+  __cpuid (0x80000000, eax, ebx, ecx, edx);
+  if (eax >= 0x80000001)
+    __cpuid (0x80000001,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].eax,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ebx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ecx,
+	     cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].edx);
+
+}
+
+static void
 get_common_indeces (struct cpu_features *cpu_features,
 		    unsigned int *family, unsigned int *model,
 		    unsigned int *extended_model, unsigned int *stepping)
@@ -224,6 +238,8 @@ init_cpu_features (struct cpu_features *cpu_features)
       get_common_indeces (cpu_features, &family, &model, &extended_model,
 			  &stepping);
 
+      get_extended_indices (cpu_features);
+
       if (family == 0x06)
 	{
 	  model += extended_model;
@@ -338,16 +354,9 @@ init_cpu_features (struct cpu_features *cpu_features)
       get_common_indeces (cpu_features, &family, &model, &extended_model,
 			  &stepping);
 
-      ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
+      get_extended_indices (cpu_features);
 
-      unsigned int eax;
-      __cpuid (0x80000000, eax, ebx, ecx, edx);
-      if (eax >= 0x80000001)
-	__cpuid (0x80000001,
-		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].eax,
-		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ebx,
-		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].ecx,
-		 cpu_features->cpuid[COMMON_CPUID_INDEX_80000001].edx);
+      ecx = cpu_features->cpuid[COMMON_CPUID_INDEX_1].ecx;
 
       if (HAS_ARCH_FEATURE (AVX_Usable))
 	{

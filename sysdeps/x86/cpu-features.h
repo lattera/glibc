@@ -108,7 +108,7 @@ enum
   {
     COMMON_CPUID_INDEX_1 = 0,
     COMMON_CPUID_INDEX_7,
-    COMMON_CPUID_INDEX_80000001,	/* for AMD */
+    COMMON_CPUID_INDEX_80000001,
     /* Keep the following line at the end.  */
     COMMON_CPUID_INDEX_MAX
   };
