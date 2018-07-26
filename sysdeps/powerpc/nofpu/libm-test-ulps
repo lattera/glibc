@@ -63,6 +63,10 @@ ifloat: 2
 ildouble: 3
 ldouble: 4
 
+Function: "add_ldouble":
+double: 1
+float: 1
+
 Function: "asin":
 float: 1
 ifloat: 1
@@ -1006,7 +1010,9 @@ ildouble: 4
 ldouble: 4
 
 Function: "cos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 4
 ldouble: 4
@@ -1442,6 +1448,9 @@ idouble: 2
 ifloat: 3
 ildouble: 10
 ldouble: 10
+
+Function: "div_ldouble":
+float: 1
 
 Function: "erf":
 double: 1
@@ -1977,6 +1986,22 @@ ifloat: 2
 ildouble: 1
 ldouble: 1
 
+Function: "mul_downward_ldouble":
+double: 1
+float: 1
+
+Function: "mul_ldouble":
+double: 1
+float: 1
+
+Function: "mul_towardzero_ldouble":
+double: 1
+float: 1
+
+Function: "mul_upward_ldouble":
+double: 1
+float: 1
+
 Function: "nextafter_downward":
 ildouble: 1
 ldouble: 1
@@ -1986,7 +2011,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "pow":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -2040,7 +2067,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "sin":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -2070,7 +2099,9 @@ ildouble: 5
 ldouble: 5
 
 Function: "sincos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -2146,6 +2177,10 @@ ldouble: 1
 Function: "sqrt_upward":
 ildouble: 1
 ldouble: 1
+
+Function: "sub_ldouble":
+double: 1
+float: 1
 
 Function: "tan":
 float: 1
