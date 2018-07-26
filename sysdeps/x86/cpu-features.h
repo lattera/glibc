@@ -204,7 +204,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_HTT		COMMON_CPUID_INDEX_1
 # define index_cpu_BMI1		COMMON_CPUID_INDEX_7
 # define index_cpu_BMI2		COMMON_CPUID_INDEX_7
-# define index_cpu_LZCNT	COMMON_CPUID_INDEX_1
+# define index_cpu_LZCNT	COMMON_CPUID_INDEX_80000001
 # define index_cpu_MOVBE	COMMON_CPUID_INDEX_1
 # define index_cpu_POPCNT	COMMON_CPUID_INDEX_1
 # define index_cpu_IBT		COMMON_CPUID_INDEX_7
