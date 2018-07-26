@@ -465,13 +465,30 @@ permissions on a pseudoterminal so it can be used by the calling process.
 If you are using a Linux kernel with the @code{devpts} filesystem enabled
 and mounted at @file{/dev/pts}, you don't need this program.
 
-After installation you might want to configure the timezone and locale
-installation of your system.  @Theglibc{} comes with a locale
-database which gets configured with @code{localedef}.  For example, to
-set up a German locale with name @code{de_DE}, simply issue the command
-@samp{localedef -i de_DE -f ISO-8859-1 de_DE}.  To configure all locales
-that are supported by @theglibc{}, you can issue from your build directory the
-command @samp{make localedata/install-locales}.
+After installation you should configure the timezone and install locales
+for your system.  The time zone configuration ensures that your system
+time matches the time for your current timezone.  The locales ensure that
+the display of information on your system matches the expectations of
+your language and geographic region.
+
+@Theglibc{} is able to use two kinds of localization information sources, the
+first is a locale database named @file{locale-archive} which is generally
+installed as @file{/usr/lib/locale/locale-archive}.  The locale archive has the
+benefit of taking up less space and being very fast to load, but only if you
+plan to install sixty or more locales.  If you plan to install one or two
+locales you can instead install individual locales into their self-named
+directories e.g.@: @file{/usr/lib/locale/en_US.utf8}.  For example to install
+the German locale using the character set for UTF-8 with name @code{de_DE} into
+the locale archive issue the command @samp{localedef -i de_DE -f UTF-8 de_DE},
+and to install just the one locale issue the command @samp{localedef
+--no-archive -i de_DE -f UTF-8 de_DE}.  To configure all locales that are
+supported by @theglibc{}, you can issue from your build directory the command
+@samp{make localedata/install-locales} to install all locales into the locale
+archive or @samp{make localedata/install-locale-files} to install all locales
+as files in the default configured locale installation directory (derived from
+@samp{--prefix} or @code{--localedir}).  To install into an alternative system
+root use @samp{DESTDIR} e.g.@: @samp{make localedata/install-locale-files
+DESTDIR=/opt/glibc}, but note that this does not change the configured prefix.
 
 To configure the locally used timezone, set the @code{TZ} environment
 variable.  The script @code{tzselect} helps you to select the right value.

@@ -9,7 +9,12 @@ Version 2.29
 
 Major new features:
 
-  [Add new features here]
+* A new convenience target has been added for distribution maintainers
+  to build and install all locales as directories with files.  The new
+  target is run by issuing the following command in your build tree:
+  'make localedata/install-locale-files', with an optional DESTDIR
+  to set the install root if you wish to install into a non-default
+  configured location.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

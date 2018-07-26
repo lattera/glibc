@@ -380,12 +380,18 @@ endif
 
 include SUPPORTED
 
-INSTALL-SUPPORTED-LOCALES=$(addprefix install-, $(SUPPORTED-LOCALES))
+INSTALL-SUPPORTED-LOCALE-ARCHIVE=$(addprefix install-archive-, $(SUPPORTED-LOCALES))
+INSTALL-SUPPORTED-LOCALE-FILES=$(addprefix install-files-, $(SUPPORTED-LOCALES))
 
 # Sometimes the whole collection of locale files should be installed.
 LOCALEDEF=I18NPATH=. GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
 $(rtld-prefix) $(common-objpfx)locale/localedef
-install-locales: $(INSTALL-SUPPORTED-LOCALES)
+install-locales: install-locale-archive
+
+# Create and install the locale-archive file.
+install-locale-archive: $(INSTALL-SUPPORTED-LOCALE-ARCHIVE)
+# Create and install the locales individually (no archive).
+install-locale-files: $(INSTALL-SUPPORTED-LOCALE-FILES)
 
 install-locales-dir:
 	$(..)./scripts/mkinstalldirs $(inst_complocaledir)
@@ -393,11 +399,10 @@ install-locales-dir:
 # The SHIFT_JIS and SHIFT_JISX0213 character maps are not ASCII compatible,
 # therefore we have to use --no-warnings=ascii to disable the ASCII check.
 # See localedata/gen-locale.sh for the same logic.
-$(INSTALL-SUPPORTED-LOCALES): install-locales-dir
-	@locale=`echo $@ | sed -e 's/^install-//'`; \
+define build-one-locale
+	locale=`echo $@ | sed -e 's/^install-[a-z]*-//'`; \
 	charset=`echo $$locale | sed -e 's,.*/,,'`; \
 	locale=`echo $$locale | sed -e 's,/[^/]*,,'`; \
-	flags="-c"; \
 	if [ "$$charset" = 'SHIFT_JIS' ] \
 	   || [ "$$charset" = 'SHIFT_JISX0213' ]; then \
 	   flags="$$flags --no-warnings=ascii"; \
@@ -410,7 +415,16 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
 	$(LOCALEDEF) $$flags --alias-file=../intl/locale.alias \
 		     -i locales/$$input -f charmaps/$$charset \
 		     $(addprefix --prefix=,$(install_root)) $$locale \
-	&& echo ' done'; \
+	&& echo ' done';
+endef
+
+$(INSTALL-SUPPORTED-LOCALE-ARCHIVE): install-locales-dir
+	@flags="-c"; \
+	$(build-one-locale)
+
+$(INSTALL-SUPPORTED-LOCALE-FILES): install-locales-dir
+	@flags="-c --no-archive"; \
+	$(build-one-locale)
 
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
 tst-wctype-ENV = LC_ALL=ja_JP.EUC-JP

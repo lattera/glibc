@@ -424,13 +424,33 @@ a pseudoterminal so it can be used by the calling process.  If you are
 using a Linux kernel with the 'devpts' filesystem enabled and mounted at
 '/dev/pts', you don't need this program.
 
-   After installation you might want to configure the timezone and
-locale installation of your system.  The GNU C Library comes with a
-locale database which gets configured with 'localedef'.  For example, to
-set up a German locale with name 'de_DE', simply issue the command
-'localedef -i de_DE -f ISO-8859-1 de_DE'.  To configure all locales that
+   After installation you should configure the timezone and install
+locales for your system.  The time zone configuration ensures that your
+system time matches the time for your current timezone.  The locales
+ensure that the display of information on your system matches the
+expectations of your language and geographic region.
+
+   The GNU C Library is able to use two kinds of localization
+information sources, the first is a locale database named
+'locale-archive' which is generally installed as
+'/usr/lib/locale/locale-archive'.  The locale archive has the benefit of
+taking up less space and being very fast to load, but only if you plan
+to install sixty or more locales.  If you plan to install one or two
+locales you can instead install individual locales into their self-named
+directories e.g. '/usr/lib/locale/en_US.utf8'.  For example to install
+the German locale using the character set for UTF-8 with name 'de_DE'
+into the locale archive issue the command 'localedef -i de_DE -f UTF-8
+de_DE', and to install just the one locale issue the command 'localedef
+--no-archive -i de_DE -f UTF-8 de_DE'.  To configure all locales that
 are supported by the GNU C Library, you can issue from your build
-directory the command 'make localedata/install-locales'.
+directory the command 'make localedata/install-locales' to install all
+locales into the locale archive or 'make
+localedata/install-locale-files' to install all locales as files in the
+default configured locale installation directory (derived from
+'--prefix' or '--localedir').  To install into an alternative system
+root use 'DESTDIR' e.g. 'make localedata/install-locale-files
+DESTDIR=/opt/glibc', but note that this does not change the configured
+prefix.
 
    To configure the locally used timezone, set the 'TZ' environment
 variable.  The script 'tzselect' helps you to select the right value.

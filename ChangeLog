@@ -1,3 +1,15 @@
+2018-07-26  Carlos O'Donell <carlos@redhat.com>
+
+	* localedata/Makefile (INSTALL-SUPPORTED-LOCALES): Remove.
+	(INSTALL-SUPPORTED-LOCALE-ARCHIVE): Define.
+	(INSTALL-SUPPORTED-LOCALE-FILES): Define.
+	(install-locales): Depend on install-locale-archive.
+	(install-locale-archive): Define.
+	(install-lcoale-files): Define.
+	(build-one-locale): Define macro.
+	* manual/install.texi (Running make install): Document.
+	* manual/INSTALL: Regenerate.
+
 2018-08-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/scripts/compare_strings.py: Import traceback.
