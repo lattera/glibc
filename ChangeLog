@@ -1,3 +1,8 @@
+2018-07-26  Florian Weimer  <fweimer@redhat.com>
+
+	* htl/lockfile.c (flockfile, funlockfile, ftrylockfile): Use weak
+	aliases for symbols not in the implementation namespace.
+
 2018-07-25  Carlos O'Donell <carlos@redhat.com>
 
 	[BZ #23393]

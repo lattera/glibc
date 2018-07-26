@@ -53,8 +53,8 @@ int _IO_ftrylockfile (FILE *)
      __attribute__ ((alias ("_cthreads_ftrylockfile")));
 
 void flockfile (FILE *)
-     __attribute__ ((alias ("_cthreads_flockfile")));
+     __attribute__ ((weak, alias ("_cthreads_flockfile")));
 void funlockfile (FILE *)
-     __attribute__ ((alias ("_cthreads_funlockfile")));
+     __attribute__ ((weak, alias ("_cthreads_funlockfile")));
 int ftrylockfile (FILE *)
-     __attribute__ ((alias ("_cthreads_ftrylockfile")));
+     __attribute__ ((weak, alias ("_cthreads_ftrylockfile")));
