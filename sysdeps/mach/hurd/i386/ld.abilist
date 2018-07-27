@@ -5,6 +5,10 @@ GLIBC_2.2.6 __getpid F
 GLIBC_2.2.6 __libc_stack_end D 0x4
 GLIBC_2.2.6 __mmap F
 GLIBC_2.2.6 __open F
+GLIBC_2.2.6 __open64 F
+GLIBC_2.2.6 __strtoul_internal F
+GLIBC_2.2.6 __write F
+GLIBC_2.2.6 __writev F
 GLIBC_2.2.6 __xstat64 F
 GLIBC_2.2.6 _dl_mcount F
 GLIBC_2.2.6 _hurd_intr_rpc_mach_msg F

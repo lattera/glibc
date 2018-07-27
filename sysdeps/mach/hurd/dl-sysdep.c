@@ -275,7 +275,10 @@ _dl_sysdep_start_cleanup (void)
 /* Minimal open/close/mmap implementation sufficient for initial loading of
    shared libraries.  These are weak definitions so that when the
    dynamic linker re-relocates itself to be user-visible (for -ldl),
-   it will get the user's definition (i.e. usually libc's).  */
+   it will get the user's definition (i.e. usually libc's).
+
+   They also need to be set in the ld section of sysdeps/mach/hurd/Versions, to
+   be overridable, and in libc.abilist and ld.abilist to be checked. */
 
 /* This macro checks that the function does not get renamed to be hidden: we do
    need these to be overridable by libc's.  */

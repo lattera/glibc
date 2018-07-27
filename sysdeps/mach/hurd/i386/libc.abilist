@@ -543,6 +543,7 @@ GLIBC_2.2.6 __wctrans_l F
 GLIBC_2.2.6 __wctype_l F
 GLIBC_2.2.6 __woverflow F
 GLIBC_2.2.6 __write F
+GLIBC_2.2.6 __writev F
 GLIBC_2.2.6 __wuflow F
 GLIBC_2.2.6 __wunderflow F
 GLIBC_2.2.6 __xmknod F

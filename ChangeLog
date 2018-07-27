@@ -1,3 +1,12 @@
+2018-07-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/Versions (libc): Make __access and
+	__access_noerrno external so they can override the ld symbols.
+	(ld): Make __access, __read, __sbrk, __strtoul_internal, __write,
+	__writev, __open64, __access_noerrno extern so they can be overrided.
+	* sysdeps/mach/hurd/i386/libc.abilist: Update accordingly.
+	* sysdeps/mach/hurd/i386/ld.abilist: Update accordingly.
+
 2018-07-26  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/libc.pot: Regenerate.

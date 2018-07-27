@@ -27,7 +27,7 @@ ld.so: __open64 ?
 ld.so: __close
 ld.so: __read ?
 ld.so: __write ?
-#ld.so: __writev
+ld.so: __writev
 ld.so: __libc_lseek64
 ld.so: __mmap
 ld.so: __fxstat64
@@ -37,7 +37,7 @@ ld.so: __xstat64
 ld.so: __getpid
 #ld.so: __getcwd
 #ld.so: __sbrk
-#ld.so: __strtoul_internal
+ld.so: __strtoul_internal
 #ld.so: _exit
 ld.so: abort
 ld.so: _hurd_intr_rpc_mach_msg
