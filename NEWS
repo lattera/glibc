@@ -48,13 +48,14 @@ Major new features:
   - fdiv, fdivl, ddivl and corresponding fMdivfN, fMdivfNx, fMxdivfN and
     fMxdivfNx functions.
 
-* Nominative and genitive month names are now supported for the following
+* Two grammatical forms of month names are now supported for the following
   languages: Armenian, Asturian, Catalan, Czech, Kashubian, Occitan, Ossetian,
   Scottish Gaelic, Upper Sorbian, and Walloon.  The following languages now
-  support abbreviated alternative month names: Catalan, Greek, and Kashubian.
+  support two grammatical forms in abbreviated month names: Catalan, Greek,
+  and Kashubian.
 
 * Newly added locales: Lower Sorbian (dsb_DE) and Yakut (sah_RU) also
-  include the support of the nominative and genitive month names.
+  include the support for two grammatical forms of month names.
 
 * Building and running on GNU/Hurd systems now works without out-of-tree
   patches.
