@@ -17,6 +17,16 @@
 
 2018-07-26  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #23459]
+	* sysdeps/x86/cpu-features.c (get_extended_indices): New
+	function.
+	(init_cpu_features): Call get_extended_indices for both Intel
+	and AMD CPUs.
+	* sysdeps/x86/cpu-features.h (COMMON_CPUID_INDEX_80000001):
+	Remove "for AMD" comment.
+
+2018-07-26  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ # 23456]
 	* sysdeps/x86/cpu-features.h (index_cpu_LZCNT): Set to
 	COMMON_CPUID_INDEX_80000001.
