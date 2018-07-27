@@ -62,7 +62,12 @@ do_test (void)
     .l_start  = (off64_t)INT32_MAX + 1024,
     .l_len    = 1024,
   };
-  TEST_VERIFY_EXIT (fcntl (temp_fd, F_OFD_SETLKW, &lck64) == 0);
+  int ret = fcntl (temp_fd, F_OFD_SETLKW, &lck64);
+  if (ret == -1 && errno == EINVAL)
+    /* OFD locks are only available on Linux 3.15.  */
+    FAIL_UNSUPPORTED ("fcntl (F_OFD_SETLKW) not supported");
+
+  TEST_VERIFY_EXIT (ret == 0);
 
   /* Open file description locks placed through the same open file description
      (either by same file descriptor or a duplicated one created by fork,

@@ -1,3 +1,9 @@
+2018-07-27  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	* sysdeps/unix/sysv/linux/tst-ofdlocks.c: Return unsupported if
+	kernel does not support OFD locks.
+	* sysdeps/unix/sysv/linux/tst-ofdlocks-compat.c: Likewise.
+
 2018-07-27  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/Versions (libc): Make __access and
