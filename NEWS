@@ -9,6 +9,18 @@ Version 2.28
 
 Major new features:
 
+* The localization data for ISO 14651 is updated to match the 2016
+  Edition 4 release of the standard, this matches data provided by
+  Unicode 9.0.0.  This update introduces significant improvements to the
+  collation of Unicode characters.  This release deviates slightly from
+  the standard in that the collation element ordering for lowercase and
+  uppercase LATIN script characters is adjusted to ensure that regular
+  expressions with ranges like [a-z] and [A-Z] don't interleave e.g. A
+  is not matched by [a-z].  With the update many locales have been
+  updated to take advantage of the new collation information.  The new
+  collation information has increased the size of the compiled locale
+  archive or binary locales.
+
 * The GNU C Library can now be compiled with support for Intel CET, AKA
   Intel Control-flow Enforcement Technology.  When the library is built
   with --enable-cet, the resulting glibc is protected with indirect
