@@ -73,7 +73,7 @@ _dl_process_cet_property_note (struct link_map *l,
 	  unsigned char *ptr = (unsigned char *) (note + 1) + 4;
 	  unsigned char *ptr_end = ptr + note->n_descsz;
 
-	  while (1)
+	  while (ptr < ptr_end)
 	    {
 	      unsigned int type = *(unsigned int *) ptr;
 	      unsigned int datasz = *(unsigned int *) (ptr + 4);
