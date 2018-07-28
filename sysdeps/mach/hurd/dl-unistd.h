@@ -17,12 +17,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* __close, __getcwd, __getpid, __libc_read and __libc_write can't be
-   hidden in ld.so on Hurd since they will be preempted by the ones in
-   libc.so after bootstrap.  */
-extern __typeof (__access) __access attribute_hidden;
-extern __typeof (__brk) __brk attribute_hidden;
-extern __typeof (__lseek) __lseek attribute_hidden;
+/* Most stubs mustn't be hidden in ld.so on Hurd since they need to be preempted
+   by functions from libc.so after bootstrap.  */
 extern __typeof (__profil) __profil attribute_hidden;
-extern __typeof (__read) __read attribute_hidden;
-extern __typeof (__sbrk) __sbrk attribute_hidden;

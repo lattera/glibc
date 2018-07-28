@@ -6,6 +6,8 @@ GLIBC_2.2.6 __libc_stack_end D 0x4
 GLIBC_2.2.6 __mmap F
 GLIBC_2.2.6 __open F
 GLIBC_2.2.6 __open64 F
+GLIBC_2.2.6 __read F
+GLIBC_2.2.6 __sbrk F
 GLIBC_2.2.6 __strtoul_internal F
 GLIBC_2.2.6 __write F
 GLIBC_2.2.6 __writev F
