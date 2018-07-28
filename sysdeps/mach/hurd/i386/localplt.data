@@ -33,7 +33,7 @@ ld.so: __mmap
 ld.so: __fxstat64
 ld.so: __xstat64
 #ld.so: __access
-#ld.so: __access_noerrno
+ld.so: __access_noerrno
 ld.so: __getpid
 #ld.so: __getcwd
 ld.so: __sbrk

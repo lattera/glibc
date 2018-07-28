@@ -2,6 +2,7 @@
 
 	* sysdeps/mach/hurd/dl-unistd.h (__access, __brk, __lseek, __read,
 	__sbrk): Do not set attribute_hidden.
+	* sysdeps/mach/hurd/not-errno.h: New file.
 	* sysdeps/mach/hurd/i386/ld.abilist: Update accordingly.
 	* sysdeps/mach/hurd/i386/localplt.data: Update accordingly.
 
