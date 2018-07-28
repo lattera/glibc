@@ -6,9 +6,9 @@
 # Volodymyr M. Lisivka <lvm@mystery.lviv.net>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.26.9000\n"
-"POT-Creation-Date: 2018-01-10 15:00+0000\n"
-"PO-Revision-Date: 2018-01-10 21:25+0200\n"
+"Project-Id-Version: libc 2.27.9000\n"
+"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"PO-Revision-Date: 2018-07-27 22:09+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "Language: uk\n"
@@ -105,8 +105,12 @@ msgstr "(ПОМИЛКА ПРОГРАМИ) Параметр має розпізн
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s:%u: %s%sНеочікувана помилка: %s.\n"
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%sНеочікувана помилка: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -149,7 +153,7 @@ msgstr ""
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
 #: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:913 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -164,7 +168,7 @@ msgstr ""
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:292 locale/programs/localedef.c:453
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -179,7 +183,7 @@ msgstr ""
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
 #: locale/programs/localedef.c:458 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -382,56 +386,57 @@ msgstr "некоректний параметр режиму"
 msgid "unknown"
 msgstr "невідомий"
 
-#: elf/cache.c:135
+#: elf/cache.c:141
 msgid "Unknown OS"
 msgstr "Невідома ОС"
 
-#: elf/cache.c:140
+#: elf/cache.c:146
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI ОС: %s %d.%d.%d"
 
-#: elf/cache.c:157 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1332
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Не вдалося відкрити файл кешу %s\n"
 
-#: elf/cache.c:171
+#: elf/cache.c:177
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "Спроба виконати mmap для файла кешу зазнала невдачі.\n"
 
-#: elf/cache.c:175 elf/cache.c:189
+#: elf/cache.c:181 elf/cache.c:195
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Файл не є файлом кешу.\n"
 
-#: elf/cache.c:222 elf/cache.c:232
+#: elf/cache.c:228 elf/cache.c:238
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "У кеші «%2$s» знайдено %1$d бібліотек\n"
 
-#: elf/cache.c:426
+#: elf/cache.c:432
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Не вдалося створити тимчасовий файл кешу %s"
 
-#: elf/cache.c:434 elf/cache.c:444 elf/cache.c:448 elf/cache.c:453
+#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
+#: elf/cache.c:468
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Спроба запису до файла кешу зазнала невдачі"
 
-#: elf/cache.c:458
+#: elf/cache.c:463
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Спроба змінити права доступу до %s на %#o зазнала невдачі"
 
-#: elf/cache.c:463
+#: elf/cache.c:472
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Спроба перейменувати %s на %s зазнала невдачі"
 
-#: elf/dl-close.c:399 elf/dl-open.c:425
+#: elf/dl-close.c:399 elf/dl-open.c:420
 msgid "cannot create scope list"
 msgstr "не вдалося створити список областей дії"
 
@@ -439,28 +444,32 @@ msgstr "не вдалося створити список областей ді�
 msgid "shared object not open"
 msgstr "об’єкт спільного використання не відкрито"
 
-#: elf/dl-deps.c:111
+#: elf/dl-deps.c:112
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST заборонено використовувати у програмах з бітами SUID/SGID"
 
-#: elf/dl-deps.c:124
+#: elf/dl-deps.c:125
 msgid "empty dynamic string token substitution"
 msgstr "порожня заміна динамічної рядкової лексеми"
 
-#: elf/dl-deps.c:130
+#: elf/dl-deps.c:131
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "неможливо завантажити допоміжний «%s» через порожню заміну динамічної рядкової лексеми\n"
 
-#: elf/dl-deps.c:442
+#: elf/dl-deps.c:220
+msgid "cannot allocate dependency buffer"
+msgstr "не вдалося розмістити буфер залежностей у пам’яті"
+
+#: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "не вдалося розмістити список залежностей у пам’яті"
 
-#: elf/dl-deps.c:479 elf/dl-deps.c:539
+#: elf/dl-deps.c:483 elf/dl-deps.c:543
 msgid "cannot allocate symbol search list"
 msgstr "не вдалося розмістити список символів для пошуку у пам’яті"
 
-#: elf/dl-deps.c:519
+#: elf/dl-deps.c:523
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Підтримки фільтрів разом з LD_TRACE_PRELINKING не передбачено"
 
@@ -488,139 +497,139 @@ msgstr "внутрішня помилка: symidx перебуває поза м
 msgid "cannot create capability list"
 msgstr "не вдалося створити список можливостей"
 
-#: elf/dl-load.c:369
+#: elf/dl-load.c:427
 msgid "cannot allocate name record"
 msgstr "не вдалося розмістити запис назви у пам’яті"
 
-#: elf/dl-load.c:455 elf/dl-load.c:568 elf/dl-load.c:657 elf/dl-load.c:753
+#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
 msgid "cannot create cache for search path"
 msgstr "не вдалося створити кеш для шляху пошуку"
 
-#: elf/dl-load.c:551
+#: elf/dl-load.c:609
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "не вдалося створити копію RUNPATH/RPATH"
 
-#: elf/dl-load.c:644
+#: elf/dl-load.c:702
 msgid "cannot create search path array"
 msgstr "не вдалося створити масив шляхів пошуку"
 
-#: elf/dl-load.c:825
+#: elf/dl-load.c:883
 msgid "cannot stat shared object"
 msgstr "не вдалося виконати статистичну обробку об’єкта спільного використання"
 
-#: elf/dl-load.c:902
+#: elf/dl-load.c:960
 msgid "cannot open zero fill device"
 msgstr "не вдалося відкрити пристрій заповнення нулями"
 
-#: elf/dl-load.c:949 elf/dl-load.c:2125
+#: elf/dl-load.c:1007 elf/dl-load.c:2203
 msgid "cannot create shared object descriptor"
 msgstr "не вдалося створити дескриптор об’єкта спільного використання"
 
-#: elf/dl-load.c:968 elf/dl-load.c:1499 elf/dl-load.c:1611
+#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
 msgid "cannot read file data"
 msgstr "не вдалося прочитати дані файла"
 
-#: elf/dl-load.c:1014
+#: elf/dl-load.c:1072
 msgid "ELF load command alignment not page-aligned"
 msgstr "Вирівнювання команди завантаження ELF виконано не за сторінками пам’яті"
 
-#: elf/dl-load.c:1021
+#: elf/dl-load.c:1079
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адреса або зміщення команди завантаження ELF неправильно вирівняно"
 
-#: elf/dl-load.c:1106
+#: elf/dl-load.c:1161
+msgid "cannot process note segment"
+msgstr "не вдалося обробити сегмент нотатки щодо процесу"
+
+#: elf/dl-load.c:1172
 msgid "object file has no loadable segments"
 msgstr "у об’єктному файлі немає придатних до завантаження сегментів"
 
-#: elf/dl-load.c:1115 elf/dl-load.c:1591
+#: elf/dl-load.c:1181 elf/dl-load.c:1652
 msgid "cannot dynamically load executable"
 msgstr "не вдалося завантажити виконуваний файл у динамічному режимі"
 
-#: elf/dl-load.c:1136
+#: elf/dl-load.c:1202
 msgid "object file has no dynamic section"
 msgstr "у об’єктному файлі немає динамічного розділу"
 
-#: elf/dl-load.c:1159
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "об’єкт спільного використання не може бути відкрито за допомогою dlopen()"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "не вдалося отримати пам’ять для заголовка програми"
 
-#: elf/dl-load.c:1188 elf/dl-open.c:193
-msgid "invalid caller"
-msgstr "некоректна функція виклику"
-
-#: elf/dl-load.c:1211 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "зміна захисту області пам’яті неможлива"
 
-#: elf/dl-load.c:1231
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "не вдалося увімкнути стек виконання, як цього вимагає об’єкт спільного використання"
 
-#: elf/dl-load.c:1244
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "не вдалося закрити дескриптор файла"
 
-#: elf/dl-load.c:1499
+#: elf/dl-load.c:1560
 msgid "file too short"
 msgstr "файл є надто коротким"
 
-#: elf/dl-load.c:1534
+#: elf/dl-load.c:1595
 msgid "invalid ELF header"
 msgstr "некоректний заголовок ELF"
 
-#: elf/dl-load.c:1546
+#: elf/dl-load.c:1607
 msgid "ELF file data encoding not big-endian"
 msgstr "байти у даних файла ELF впорядковано не у зворотному порядку"
 
-#: elf/dl-load.c:1548
+#: elf/dl-load.c:1609
 msgid "ELF file data encoding not little-endian"
 msgstr "байти у даних файла ELF впорядковано не у прямому порядку"
 
-#: elf/dl-load.c:1552
+#: elf/dl-load.c:1613
 msgid "ELF file version ident does not match current one"
 msgstr "ідентифікатор версії файла ELF не відповідає поточному"
 
-#: elf/dl-load.c:1556
+#: elf/dl-load.c:1617
 msgid "ELF file OS ABI invalid"
 msgstr "некоректний ABI ОС у файлі ELF"
 
-#: elf/dl-load.c:1559
+#: elf/dl-load.c:1620
 msgid "ELF file ABI version invalid"
 msgstr "некоректна версія ABI у файлі ELF"
 
-#: elf/dl-load.c:1562
+#: elf/dl-load.c:1623
 msgid "nonzero padding in e_ident"
 msgstr "ненульове доповнення у e_ident"
 
-#: elf/dl-load.c:1565
+#: elf/dl-load.c:1626
 msgid "internal error"
 msgstr "внутрішня помилка"
 
-#: elf/dl-load.c:1572
+#: elf/dl-load.c:1633
 msgid "ELF file version does not match current one"
 msgstr "версія файла ELF не збігається з поточною"
 
-#: elf/dl-load.c:1580
+#: elf/dl-load.c:1641
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "можна завантажити лише ET_DYN і ET_EXEC"
 
-#: elf/dl-load.c:1596
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize файла ELF не є очікуваним"
 
-#: elf/dl-load.c:2144
+#: elf/dl-load.c:2222
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "помилковий клас ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2145
+#: elf/dl-load.c:2223
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "помилковий клас ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2148
+#: elf/dl-load.c:2226
 msgid "cannot open shared object file"
 msgstr "не вдалося відкрити файл об’єктів спільного використання"
 
@@ -632,31 +641,31 @@ msgstr "не вдалося відобразити сегмент з об’єк
 msgid "cannot map zero-fill pages"
 msgstr "не вдалося відобразити сторінки заповнення нулями"
 
-#: elf/dl-lookup.c:834
+#: elf/dl-lookup.c:835
 msgid "relocation error"
 msgstr "помилка пересування"
 
-#: elf/dl-lookup.c:857
+#: elf/dl-lookup.c:858
 msgid "symbol lookup error"
 msgstr "помилка під час пошуку символів"
 
-#: elf/dl-open.c:101
+#: elf/dl-open.c:99
 msgid "cannot extend global scope"
 msgstr "не вдалося розширити загальну область"
 
-#: elf/dl-open.c:475
+#: elf/dl-open.c:470
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Переповнено лічильник створення TLS! Будь ласка, повідомте про цю помилку розробникам."
 
-#: elf/dl-open.c:539
+#: elf/dl-open.c:534
 msgid "invalid mode for dlopen()"
 msgstr "некоректний режим для dlopen()"
 
-#: elf/dl-open.c:556
+#: elf/dl-open.c:551
 msgid "no more namespaces available for dlmopen()"
 msgstr "більше немає просторів назв для dlmopen()"
 
-#: elf/dl-open.c:580
+#: elf/dl-open.c:575
 msgid "invalid target namespace in dlmopen()"
 msgstr "некоректний простір назв призначення у dlmopen()"
 
@@ -1607,17 +1616,13 @@ msgid "Error: .netrc file is readable by others."
 msgstr "Помилка: файл .netrc може бути прочитано іншими користувачами."
 
 #: inet/ruserpass.c:180
-msgid "Remove password or make file unreadable by others."
-msgstr "Вилучити пароль або зробити файл непридатним до читання іншими користувачами."
+msgid "Remove 'password' line or make file unreadable by others."
+msgstr "Вилучити рядок 'password' або зробити файл непридатним до читання іншими користувачами."
 
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Невідоме ключове слово .netrc, %s"
-
-#: libidn/nfkc.c:463
-msgid "Character out of range for UTF-8"
-msgstr "Символ поза діапазоном символів UTF-8"
 
 #: locale/programs/charmap-dir.c:56
 #, c-format
@@ -1720,7 +1725,7 @@ msgstr "не вказано символічної назви для кінця 
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:934
+#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
 #: locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
@@ -1747,7 +1752,7 @@ msgstr "%s: помилка у скінченному автоматі"
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:950
+#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
 #: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
@@ -1790,7 +1795,7 @@ msgstr "байти результату для діапазону неможли
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
 #: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:89
-#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:158
+#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Не знайдено визначення для категорії %s"
@@ -1805,8 +1810,8 @@ msgstr "Не знайдено визначення для категорії %s"
 #: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:111
 #: locale/programs/ld-numeric.c:125 locale/programs/ld-paper.c:100
 #: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:103
-#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:174
-#: locale/programs/ld-time.c:195
+#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:180
+#: locale/programs/ld-time.c:201
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: поле «%s» не визначено"
@@ -1856,8 +1861,8 @@ msgstr "%s: числовий код країни «%d» є некоректни�
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
 #: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
 #: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:839
-#: locale/programs/ld-time.c:881
+#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
+#: locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: поле «%s» оголошено декілька разів"
@@ -1866,8 +1871,8 @@ msgstr "%s: поле «%s» оголошено декілька разів"
 #: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
 #: locale/programs/ld-monetary.c:507 locale/programs/ld-monetary.c:542
 #: locale/programs/ld-name.c:239 locale/programs/ld-numeric.c:221
-#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:733
-#: locale/programs/ld-time.c:802 locale/programs/ld-time.c:844
+#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:756
+#: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: невідомий символ у полі «%s»"
@@ -1877,7 +1882,7 @@ msgstr "%s: невідомий символ у полі «%s»"
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
-#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:932
+#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: незавершений рядок «END»"
@@ -1892,7 +1897,7 @@ msgstr "%s: незавершений рядок «END»"
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
 #: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:941
+#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: синтаксична помилка"
@@ -2434,82 +2439,82 @@ msgstr "значення обмінного курсу має бути нену�
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: некоректна керівна послідовність у полі «%s»"
 
-#: locale/programs/ld-time.c:245
+#: locale/programs/ld-time.c:251
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: прапорець напрямку у рядку %Zd поля «era» не має значення «+» або «-»"
 
-#: locale/programs/ld-time.c:255
+#: locale/programs/ld-time.c:261
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: прапорець напрямку у рядку %Zd поля «era» не є одинарним символом"
 
-#: locale/programs/ld-time.c:267
+#: locale/programs/ld-time.c:273
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: некоректне числове значення відступу у рядку %Zd поля «era»"
 
-#: locale/programs/ld-time.c:274
+#: locale/programs/ld-time.c:280
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: зайві дані наприкінці значення зміщення у рядку %Zd поля «era»"
 
-#: locale/programs/ld-time.c:324
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: некоректна початкова дата у рядку %Zd поля «era»"
 
-#: locale/programs/ld-time.c:332
+#: locale/programs/ld-time.c:338
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: зайві дані наприкінці початкової дати у рядку %Zd поля «era» "
 
-#: locale/programs/ld-time.c:350
+#: locale/programs/ld-time.c:356
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: у рядку %Zd початкова дата у полі «era» є некоректною"
 
-#: locale/programs/ld-time.c:398 locale/programs/ld-time.c:424
+#: locale/programs/ld-time.c:404 locale/programs/ld-time.c:430
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: некоректна кінцева дата у рядку %Zd поля «era»"
 
-#: locale/programs/ld-time.c:406
+#: locale/programs/ld-time.c:412
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: зайві дані наприкінці кінцевої дати у рядку %Zd поля «era»"
 
-#: locale/programs/ld-time.c:432
+#: locale/programs/ld-time.c:438
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: у рядку %Zd поля «era» не вистачає назви ери"
 
-#: locale/programs/ld-time.c:443
+#: locale/programs/ld-time.c:449
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: у рядку %Zd поля «era» не вистачає формату ери"
 
-#: locale/programs/ld-time.c:488
+#: locale/programs/ld-time.c:494
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: третій операнд для значення поля «%s» має бути більшим за %d"
 
-#: locale/programs/ld-time.c:496 locale/programs/ld-time.c:504
-#: locale/programs/ld-time.c:512
+#: locale/programs/ld-time.c:502 locale/programs/ld-time.c:510
+#: locale/programs/ld-time.c:518
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: значення у полі «%s» не повинні перевищувати %d"
 
-#: locale/programs/ld-time.c:717
+#: locale/programs/ld-time.c:740
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: замало значень у полі «%s»"
 
-#: locale/programs/ld-time.c:762
+#: locale/programs/ld-time.c:785
 msgid "extra trailing semicolon"
 msgstr "зайва завершальна крапка з комою"
 
-#: locale/programs/ld-time.c:765
+#: locale/programs/ld-time.c:788
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s: забагато значень у полі «%s»"
@@ -3130,7 +3135,7 @@ msgstr "Невідома системна помилка"
 msgid "unable to free arguments"
 msgstr "не вдалося звільнити аргументи"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:824 nis/ypclnt.c:913 posix/regcomp.c:137
+#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
 #: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Успіх"
@@ -3172,7 +3177,7 @@ msgid "First/next chain broken"
 msgstr "Розірвано ланцюжок перший-наступний"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:869 sysdeps/gnu/errlist.c:158
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Відмовлено у доступі"
 
@@ -3675,100 +3680,100 @@ msgstr "netname2user: запис LOCAL для %s у каталозі %s не є 
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: не можна використовувати UID 0"
 
-#: nis/ypclnt.c:827
+#: nis/ypclnt.c:828
 msgid "Request arguments bad"
 msgstr "Помилка у аргументах запиту"
 
-#: nis/ypclnt.c:830
+#: nis/ypclnt.c:831
 msgid "RPC failure on NIS operation"
 msgstr "Помилка RPC під час виконання дії NIS"
 
-#: nis/ypclnt.c:833
+#: nis/ypclnt.c:834
 msgid "Can't bind to server which serves this domain"
 msgstr "Не вдалося прив’язатися до сервера, який обслуговує цей домен"
 
-#: nis/ypclnt.c:836
+#: nis/ypclnt.c:837
 msgid "No such map in server's domain"
 msgstr "У домені сервера немає такої прив’язки"
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:840
 msgid "No such key in map"
 msgstr "У прив’язці немає такого ключа"
 
-#: nis/ypclnt.c:842
+#: nis/ypclnt.c:843
 msgid "Internal NIS error"
 msgstr "Внутрішня помилка NIS"
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:846
 msgid "Local resource allocation failure"
 msgstr "Помилка розміщення локального ресурсу"
 
-#: nis/ypclnt.c:848
+#: nis/ypclnt.c:849
 msgid "No more records in map database"
 msgstr "У базі даних прив’язок немає більше записів"
 
-#: nis/ypclnt.c:851
+#: nis/ypclnt.c:852
 msgid "Can't communicate with portmapper"
 msgstr "Не вдалося обмінятися даними з portmapper"
 
-#: nis/ypclnt.c:854
+#: nis/ypclnt.c:855
 msgid "Can't communicate with ypbind"
 msgstr "Не вдалося обмінятися даними з ypbind"
 
-#: nis/ypclnt.c:857
+#: nis/ypclnt.c:858
 msgid "Can't communicate with ypserv"
 msgstr "Не вдалося обмінятися даними з ypserv"
 
-#: nis/ypclnt.c:860
+#: nis/ypclnt.c:861
 msgid "Local domain name not set"
 msgstr "Не встановлено назви локального домену"
 
-#: nis/ypclnt.c:863
+#: nis/ypclnt.c:864
 msgid "NIS map database is bad"
 msgstr "Помилкова база даних прив’язок NIS"
 
-#: nis/ypclnt.c:866
+#: nis/ypclnt.c:867
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "Не збігаються між собою версії клієнта і сервера NIS: служба не зможе працювати"
 
-#: nis/ypclnt.c:872
+#: nis/ypclnt.c:873
 msgid "Database is busy"
 msgstr "Базу даних зайнято виконанням завдання"
 
-#: nis/ypclnt.c:875
+#: nis/ypclnt.c:876
 msgid "Unknown NIS error code"
 msgstr "Невідомий код помилки NIS"
 
-#: nis/ypclnt.c:916
+#: nis/ypclnt.c:917
 msgid "Internal ypbind error"
 msgstr "Внутрішня помилка ypbind"
 
-#: nis/ypclnt.c:919
+#: nis/ypclnt.c:920
 msgid "Domain not bound"
 msgstr "Домен не пов’язано"
 
-#: nis/ypclnt.c:922
+#: nis/ypclnt.c:923
 msgid "System resource allocation failure"
 msgstr "Помилка під час розміщення системного ресурсу"
 
-#: nis/ypclnt.c:925
+#: nis/ypclnt.c:926
 msgid "Unknown ypbind error"
 msgstr "Невідома помилка ypbind"
 
-#: nis/ypclnt.c:966
+#: nis/ypclnt.c:967
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: не вдалося перетворити адресу вузла на назву у мережі\n"
 
-#: nis/ypclnt.c:984
+#: nis/ypclnt.c:985
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: не вдалося отримати адресу сервера\n"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:485
+#: nscd/aicache.c:83 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Не вдалося знайти «%s» у кеші вузлів!"
 
-#: nscd/aicache.c:87 nscd/hstcache.c:487
+#: nscd/aicache.c:85 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Перезавантажуємо «%s» у кеші вузлів!"
@@ -3802,284 +3807,279 @@ msgstr "спорожнюємо кеш %s; час — %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "обробляємо запис %s «%s», час очікування %<PRIu64>"
 
-#: nscd/connections.c:537
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "некоректний файл постійної бази даних «%s»: %s"
 
-#: nscd/connections.c:545
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "неініціалізований заголовок"
 
-#: nscd/connections.c:550
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "розмір заголовка є невідповідним"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "розмір файла є невідповідним"
 
-#: nscd/connections.c:577
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "спроба перевірки зазнала невдачі"
 
-#: nscd/connections.c:591
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "пропонований розмір таблиці для бази даних %s є більшим за таблицю сталої бази даних"
 
-#: nscd/connections.c:602 nscd/connections.c:686
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "не вдалося створити придатний лише для читання дескриптор для «%s»; немає mmap"
 
-#: nscd/connections.c:618
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "не вдалося отримати доступ до «%s»"
 
-#: nscd/connections.c:666
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "базу даних для %s пошкоджено або ця база використовується спільно з іншою програмою; вилучіть %s вручну, якщо потрібно, і перезапустіть програму"
 
-#: nscd/connections.c:672
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "не вдалося створити %s; не використано жодної постійної бази даних"
 
-#: nscd/connections.c:675
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "не вдалося створити %s; спільне використання неможливе"
 
-#: nscd/connections.c:746
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "не вдалося виконати запис до файла бази даних %s: %s"
 
-#: nscd/connections.c:802
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "не вдалося відкрити сокет: %s"
 
-#: nscd/connections.c:821
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "не вдалося увімкнути сокет для прийняття з’єднань: %s"
 
-#: nscd/connections.c:878
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "вимкнено стеження на основі inotify за файлом «%s»: %s"
 
-#: nscd/connections.c:882
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "спостерігаємо за файлом «%s» (%d)"
 
-#: nscd/connections.c:895
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "вимкнено спостереження на основі inotify за каталогом «%s»: %s"
 
-#: nscd/connections.c:899
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "ведемо спостереження за каталогом «%s» (%d)"
 
-#: nscd/connections.c:927
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "ведемо спостереження за файлом %s щодо бази даних %s"
 
-#: nscd/connections.c:937
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "не вдалося отримати статистичні дані щодо файла «%s»; спробуємо пізніше: %s"
 
-#: nscd/connections.c:1056
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "надати доступ до файлового дескриптора %d для %s"
 
-#: nscd/connections.c:1068
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "обробка застарілої версії запиту %d неможлива; поточною версією є %d"
 
-#: nscd/connections.c:1091
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "запит від %ld не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1096
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "запит від «%s» [%ld] не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1101
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "запит не оброблено через недостатні права доступу"
 
-#: nscd/connections.c:1139 nscd/connections.c:1192
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "не вдалося записати результат: %s"
 
-#: nscd/connections.c:1283
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "помилка під час спроби отримати ідентифікатор виклику: %s"
 
-#: nscd/connections.c:1343
+#: nscd/connections.c:1349
 #, c-format
-msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "не вдалося відкрити /proc/self/cmdline: %s; вимикаємо параноїдальний режим"
+msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
+msgstr "не вдалося відкрити /proc/self/cmdline: %m; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1357
-#, c-format
-msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "не вдалося прочитати /proc/self/cmdline: %s; вимикаємо параноїдальний режим"
-
-#: nscd/connections.c:1397
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий UID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1407
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий GID: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1420
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "не вдалося змінити старий робочий каталог: %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1466
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "не вдалося повторно виконати %s; вимикаємо параноїдальний режим"
 
-#: nscd/connections.c:1475
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "не вдалося змінити поточний робочий каталог на «/»: %s"
 
-#: nscd/connections.c:1658
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "неповний зчитаний блок під час читання запиту: %s"
 
-#: nscd/connections.c:1691
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "надто довгий ключ у запиті: %d"
 
-#: nscd/connections.c:1704
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "неповний зчитаний блок під час читання ключа запиту: %s"
 
-#: nscd/connections.c:1714
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: отримано запит (версія = %d) від PID %ld"
 
-#: nscd/connections.c:1719
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: отримано запит (версія = %d)"
 
-#: nscd/connections.c:1859
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "проігноровано подію inotify щодо «%s» (файл вже існує)"
 
-#: nscd/connections.c:1864
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, знімаємо спостереження"
 
-#: nscd/connections.c:1872 nscd/connections.c:1914
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "не вдалося зняти спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:1887
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "файл, за яким ведеться спостереження, %s», було записано до"
 
-#: nscd/connections.c:1911
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "батьківський каталог, за яким ведеться спостереження, «%s» було %s, вилучаємо спостереження за «%s»"
 
-#: nscd/connections.c:1937
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "файл, за яким ведеться спостереження, «%s» було %s, додаємо спостереження"
 
-#: nscd/connections.c:1949
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "не вдалося додати спостереження за файлом «%s»: %s"
 
-#: nscd/connections.c:2127 nscd/connections.c:2292
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "спостереження за файлом на основі inotify вимкнено після помилки читання %d"
 
-#: nscd/connections.c:2407
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "не вдалося ініціалізувати змінну умови"
 
-#: nscd/connections.c:2415
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "не вдалося розпочати нитку спорожнення; перериваємо обробку"
 
-#: nscd/connections.c:2429
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "не вдалося запустити будь-яку нитку обробки; перериваємо обробку"
 
-#: nscd/connections.c:2484 nscd/connections.c:2486 nscd/connections.c:2502
-#: nscd/connections.c:2512 nscd/connections.c:2530 nscd/connections.c:2541
-#: nscd/connections.c:2551
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Не вдалося запустити nscd від імені користувача «%s»"
 
-#: nscd/connections.c:2504
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "помилка початкового getgrouplist"
 
-#: nscd/connections.c:2513
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "помилка getgrouplist"
 
-#: nscd/connections.c:2531
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "помилка setgroups"
 
-#: nscd/grpcache.c:416 nscd/hstcache.c:432 nscd/initgrcache.c:416
-#: nscd/pwdcache.c:394 nscd/servicescache.c:338
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:385
+#: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
 msgstr "неповний запис до %s: %s"
 
-#: nscd/grpcache.c:461 nscd/initgrcache.c:84
+#: nscd/grpcache.c:430 nscd/initgrcache.c:81
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Не вдалося знайти «%s» у кеші груп!"
 
-#: nscd/grpcache.c:463 nscd/initgrcache.c:86
+#: nscd/grpcache.c:432 nscd/initgrcache.c:83
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Перезавантажуємо «%s» до кешу груп!"
 
-#: nscd/grpcache.c:542
+#: nscd/grpcache.c:492
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Некоректне числове значення gid «%s»!"
@@ -4104,12 +4104,12 @@ msgstr "Не вдалося знайти «%s» у кеші netgroup!"
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Перезавантажуємо «%s» до кешу netgroup!"
 
-#: nscd/netgroupcache.c:495
+#: nscd/netgroupcache.c:469
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Не вдалося знайти «%s (%s,%s,%s)» у кеші netgroup!"
 
-#: nscd/netgroupcache.c:498
+#: nscd/netgroupcache.c:472
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Перезавантажуємо «%s (%s,%s,%s)» до кешу netgroup!"
@@ -4162,7 +4162,7 @@ msgstr "Використовувати окремий кеш для кожног
 msgid "Name Service Cache Daemon."
 msgstr "Фонова служба кешування служби назв."
 
-#: nscd/nscd.c:155 nss/getent.c:947 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "помилкова кількість параметрів"
@@ -4422,17 +4422,17 @@ msgstr ""
 "%15<PRIuMAX>  помилок у отримання пам’яті\n"
 "%15s  перевірити /etc/%s на наявність змін\n"
 
-#: nscd/pwdcache.c:439
+#: nscd/pwdcache.c:407
 #, c-format
-msgid "Haven't found \"%s\" in password cache!"
-msgstr "Не вдалося знайти «%s» у кеші паролів!"
+msgid "Haven't found \"%s\" in user database cache!"
+msgstr "Не вдалося знайти «%s» у кеші бази даних користувачів!"
 
-#: nscd/pwdcache.c:441
+#: nscd/pwdcache.c:409
 #, c-format
-msgid "Reloading \"%s\" in password cache!"
-msgstr "Перезавантажуємо «%s» до кешу паролів!"
+msgid "Reloading \"%s\" in user database cache!"
+msgstr "Перезавантажуємо «%s» у кеші бази даних користувачів!"
 
-#: nscd/pwdcache.c:522
+#: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Некоректний цифровий ідентифікатор «%s»!"
@@ -4542,51 +4542,56 @@ msgstr ""
 "%15u  зондувань CAV\n"
 "%15u  незнайдених CAV\n"
 
-#: nscd/servicescache.c:387
+#: nscd/servicescache.c:358
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr "Не вдалося знайти «%s» у кеші служб!"
 
-#: nscd/servicescache.c:389
+#: nscd/servicescache.c:360
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Перезавантажуємо «%s» до кешу служб!"
 
-#: nss/getent.c:53
+#: nss/getent.c:54
 msgid "database [key ...]"
 msgstr "база даних [ключ ...]"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "CONFIG"
 msgstr "НАЛАШТУВАННЯ"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "Service configuration to be used"
 msgstr "Налаштування служби, які буде використано"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "disable IDN encoding"
 msgstr "вимкнути кодування IDN"
 
-#: nss/getent.c:64
+#: nss/getent.c:65
 msgid "Get entries from administrative database."
 msgstr "Отримати записи з адміністративної бази даних."
 
-#: nss/getent.c:148 nss/getent.c:441 nss/getent.c:486
+#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Для %s нумерація не підтримується\n"
 
-#: nss/getent.c:861
+#: nss/getent.c:497 nss/getent.c:510
+#, c-format
+msgid "Could not allocate group list: %m\n"
+msgstr "Не вдалося розмістити список груп у пам'яті: %m\n"
+
+#: nss/getent.c:881
 #, c-format
 msgid "Unknown database name"
 msgstr "Невідома назва бази даних"
 
-#: nss/getent.c:891
+#: nss/getent.c:911
 msgid "Supported databases:\n"
 msgstr "Підтримувані бази даних:\n"
 
-#: nss/getent.c:957
+#: nss/getent.c:977
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Невідома база даних: %s\n"
@@ -4777,75 +4782,75 @@ msgstr "%s: некоректний параметр — «%c»\n"
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: до параметра слід додати аргумент — «%c»\n"
 
-#: posix/regcomp.c:140
+#: posix/regcomp.c:138
 msgid "No match"
 msgstr "Не знайдено"
 
-#: posix/regcomp.c:143
+#: posix/regcomp.c:141
 msgid "Invalid regular expression"
 msgstr "Помилка у формальному виразі"
 
-#: posix/regcomp.c:146
+#: posix/regcomp.c:144
 msgid "Invalid collation character"
 msgstr "Некоректний символ порівняння"
 
-#: posix/regcomp.c:149
+#: posix/regcomp.c:147
 msgid "Invalid character class name"
 msgstr "Некоректна назва класу символів"
 
-#: posix/regcomp.c:152
+#: posix/regcomp.c:150
 msgid "Trailing backslash"
 msgstr "Кінцевий символ похилої риски"
 
-#: posix/regcomp.c:155
+#: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Некоректне зворотне посилання"
 
-#: posix/regcomp.c:158
-msgid "Unmatched [ or [^"
-msgstr "Неврівноважена послідовність [ або [^"
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "Вираз без парних [, [^, [:, [. або [="
 
-#: posix/regcomp.c:161
+#: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
 msgstr "Неврівноважена послідовність ( або \\("
 
-#: posix/regcomp.c:164
+#: posix/regcomp.c:162
 msgid "Unmatched \\{"
 msgstr "Неврівноважена послідовність \\{"
 
-#: posix/regcomp.c:167
+#: posix/regcomp.c:165
 msgid "Invalid content of \\{\\}"
 msgstr "Некоректний вміст \\{\\}"
 
-#: posix/regcomp.c:170
+#: posix/regcomp.c:168
 msgid "Invalid range end"
 msgstr "Некоректне завершення діапазону"
 
-#: posix/regcomp.c:173
+#: posix/regcomp.c:171
 msgid "Memory exhausted"
 msgstr "Пам’ять вичерпано"
 
-#: posix/regcomp.c:176
+#: posix/regcomp.c:174
 msgid "Invalid preceding regular expression"
 msgstr "Помилка у попередньому формальному виразі"
 
-#: posix/regcomp.c:179
+#: posix/regcomp.c:177
 msgid "Premature end of regular expression"
 msgstr "Неочікуване завершення формального виразу"
 
-#: posix/regcomp.c:182
+#: posix/regcomp.c:180
 msgid "Regular expression too big"
 msgstr "Занадто об’ємний формальний вираз"
 
-#: posix/regcomp.c:185
+#: posix/regcomp.c:183
 msgid "Unmatched ) or \\)"
 msgstr "Неврівноважена послідовність ) або \\)"
 
-#: posix/regcomp.c:675
+#: posix/regcomp.c:689
 msgid "No previous regular expression"
 msgstr "Не виявлено попереднього формального виразу"
 
-#: posix/wordexp.c:1803
+#: posix/wordexp.c:1815
 msgid "parameter null or not set"
 msgstr "параметр нульової довжини або його значення не вказано"
 
@@ -5122,130 +5127,130 @@ msgstr "не вистачає пам'яті\n"
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: критична помилка упорядкування (marshalling)"
 
-#: sunrpc/clnt_perr.c:96 sunrpc/clnt_perr.c:112
+#: sunrpc/clnt_perr.c:92 sunrpc/clnt_perr.c:108
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
 msgstr "%s: %s; нижня версія = %lu, верхня версія = %lu"
 
-#: sunrpc/clnt_perr.c:103
+#: sunrpc/clnt_perr.c:99
 #, c-format
 msgid "%s: %s; why = %s\n"
 msgstr "%s: %s; причина = %s\n"
 
-#: sunrpc/clnt_perr.c:105
+#: sunrpc/clnt_perr.c:101
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
 msgstr "%s: %s; причина = (невідома помилка розпізнавання - %d)\n"
 
-#: sunrpc/clnt_perr.c:154
+#: sunrpc/clnt_perr.c:150
 msgid "RPC: Success"
 msgstr "RPC: виконано"
 
-#: sunrpc/clnt_perr.c:157
+#: sunrpc/clnt_perr.c:153
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: не вдалося закодувати аргументи"
 
-#: sunrpc/clnt_perr.c:161
+#: sunrpc/clnt_perr.c:157
 msgid "RPC: Can't decode result"
 msgstr "RPC: не вдалося декодувати результат"
 
-#: sunrpc/clnt_perr.c:165
+#: sunrpc/clnt_perr.c:161
 msgid "RPC: Unable to send"
 msgstr "RPC: не вдалося надіслати"
 
-#: sunrpc/clnt_perr.c:169
+#: sunrpc/clnt_perr.c:165
 msgid "RPC: Unable to receive"
 msgstr "RPC: не вдалося отримати"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:169
 msgid "RPC: Timed out"
 msgstr "RPC: вичерпано час очікування на відповідь"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: несумісні версії RPC"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Authentication error"
 msgstr "RPC: помилка розпізнавання"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
 msgstr "RPC: програма недоступна"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: невідповідність програми або версії"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: процедура недоступна"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: серверу не вдалося декодувати аргументи"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Remote system error"
 msgstr "RPC: помилка на віддаленій системі"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Unknown host"
 msgstr "RPC: невідомий вузол мережі"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown protocol"
 msgstr "RPC: невідомий протокол"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Port mapper failure"
 msgstr "RPC: помилка засобу пов’язування портів"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Program not registered"
 msgstr "RPC: програму не зареєстровано"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: невизначена помилка"
 
-#: sunrpc/clnt_perr.c:262
+#: sunrpc/clnt_perr.c:258
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (невідомий код помилки)"
 
-#: sunrpc/clnt_perr.c:334
+#: sunrpc/clnt_perr.c:330
 msgid "Authentication OK"
 msgstr "Розпізнавання пройдено"
 
-#: sunrpc/clnt_perr.c:337
+#: sunrpc/clnt_perr.c:333
 msgid "Invalid client credential"
 msgstr "Некоректні реєстраційні дані клієнта"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:337
 msgid "Server rejected credential"
 msgstr "Сервером відмовлено у розпізнаванні"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:341
 msgid "Invalid client verifier"
 msgstr "Некоректний засіб перевірки клієнта"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:345
 msgid "Server rejected verifier"
 msgstr "Сервером відмовлено у засобі перевірки"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:349
 msgid "Client credential too weak"
 msgstr "Захист реєстраційних даних клієнта є нестійким до зламу"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:353
 msgid "Invalid server verifier"
 msgstr "Некоректний засіб перевірки сервера"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:357
 msgid "Failed (unspecified error)"
 msgstr "Невизначена помилка"
 
-#: sunrpc/clnt_raw.c:116
+#: sunrpc/clnt_raw.c:112
 msgid "clnt_raw.c: fatal header serialization error"
 msgstr "clnt_raw.c: критична помилка під час перетворення заголовка у послідовну форму"
 
@@ -5336,195 +5341,190 @@ msgstr "Не можна вказувати декілька файлів вхі�
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
-msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr "У цій реалізації не передбачено підтримки коду у новому стилі або безпечного для багатопоточної обробки!\n"
-
-#: sunrpc/rpc_main.c:1358
-#, c-format
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Не можна використовувати прапорець netid разом з прапорцем inetd!\n"
 
-#: sunrpc/rpc_main.c:1367
+#: sunrpc/rpc_main.c:1358
 #, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Не можна використовувати прапорець netid без TIRPC!\n"
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1365
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Не можна використовувати прапорці таблиць, якщо використовується новий стиль!\n"
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1384
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "Для прапорців створення шаблонів потрібен аргумент файла вхідних даних.\n"
 
-#: sunrpc/rpc_main.c:1398
+#: sunrpc/rpc_main.c:1389
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Не можна вказувати декілька прапорців створення файлів!\n"
 
-#: sunrpc/rpc_main.c:1407
+#: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "користування: %s файл_вхідних_даних\n"
 
-#: sunrpc/rpc_main.c:1408
+#: sunrpc/rpc_main.c:1399
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dname[=значення]] [-i розмір] [-I [-K секунди]] [-Y шлях] файл_вхідних_даних\n"
 
-#: sunrpc/rpc_main.c:1410
+#: sunrpc/rpc_main.c:1401
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o файл_виведених_даних] [файл_вхідних_даних]\n"
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1403
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s тип_мережі]* [-o файл_виведених_даних] [файл_вхідних_даних]\n"
 
-#: sunrpc/rpc_main.c:1413
+#: sunrpc/rpc_main.c:1404
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n ід_мережі]* [-o файл_виведених_даних] [файл_вхідних_даних]\n"
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1412
 #, c-format
 msgid "options:\n"
 msgstr "параметри:\n"
 
-#: sunrpc/rpc_main.c:1422
+#: sunrpc/rpc_main.c:1413
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr "-a\t\tстворити усі файли, зокрема зразки\n"
 
-#: sunrpc/rpc_main.c:1423
+#: sunrpc/rpc_main.c:1414
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr "-b\t\tрежим зворотної сумісності (створити код для SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1415
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr "-c\t\tстворити підпрограми XDR\n"
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr "-C\t\tрежим ANSI C\n"
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1417
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr "-Dname[=значення]\tвизначити символ (те саме, що і #define)\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr "-h\t\tстворити файл заголовка\n"
 
-#: sunrpc/rpc_main.c:1428
+#: sunrpc/rpc_main.c:1419
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr "-i розмір\t\tрозмір, при досягненні якого слід розпочати створювати вбудований код\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr "-I\t\tстворити код для підтримки inetd на сервері (для SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr "-K секунди\tсервер завершує роботу після вказаної кількості секунд неактивності\n"
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr "-l\t\tстворити заглушки на боці клієнта\n"
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr "-L\t\tпомилки сервера буде виведено до загальносистемного журналу\n"
 
-#: sunrpc/rpc_main.c:1433
+#: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr "-m\t\tстворити заглушки на боці сервера\n"
 
-#: sunrpc/rpc_main.c:1434
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr "-M\t\tстворити безпечний для багатопотокової обробки код\n"
 
-#: sunrpc/rpc_main.c:1435
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr "-n ід_мережі\tстворити код сервера з підтримкою іменованих ідентифікаторів мережі\n"
 
-#: sunrpc/rpc_main.c:1436
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr "-N\t\tпідтримка декількох аргументів та виклику за значенням\n"
 
-#: sunrpc/rpc_main.c:1437
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr "-o результат\tназва файла результатів\n"
 
-#: sunrpc/rpc_main.c:1438
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr "-s тип_мережі\tстворити код сервера з підтримкою іменованих типів мережі\n"
 
-#: sunrpc/rpc_main.c:1439
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr "-Sc\t\tстворити код заглушки клієнта з використанням віддалених процедур\n"
 
-#: sunrpc/rpc_main.c:1440
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr "-Ss\t\tстворити код заглушки, який визначає віддалені процедури\n"
 
-#: sunrpc/rpc_main.c:1441
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr "-Sm \t\tстворити шаблон makefile \n"
 
-#: sunrpc/rpc_main.c:1442
+#: sunrpc/rpc_main.c:1433
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr "-t\t\tстворити таблицю розподілу RPC\n"
 
-#: sunrpc/rpc_main.c:1443
+#: sunrpc/rpc_main.c:1434
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr "-T\t\tстворити код підтримки таблиць розподілу RPC\n"
 
-#: sunrpc/rpc_main.c:1444
+#: sunrpc/rpc_main.c:1435
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr "-Y шлях\t\tназва каталогу для пошуку препроцесора C (cpp)\n"
 
-#: sunrpc/rpc_main.c:1445
+#: sunrpc/rpc_main.c:1436
 #, c-format
 msgid "-5\t\tSysVr4 compatibility mode\n"
 msgstr "-5\t\tрежим сумісності з SysVr4\n"
 
-#: sunrpc/rpc_main.c:1446
+#: sunrpc/rpc_main.c:1437
 #, c-format
 msgid "--help\t\tgive this help list\n"
 msgstr "--help\t\tвивести цей список довідкових повідомлень\n"
 
-#: sunrpc/rpc_main.c:1447
+#: sunrpc/rpc_main.c:1438
 #, c-format
 msgid "--version\tprint program version\n"
 msgstr "--version\tвивести дані щодо версії програми\n"
 
-#: sunrpc/rpc_main.c:1449
+#: sunrpc/rpc_main.c:1440
 #, c-format
 msgid ""
 "\n"
@@ -5563,30 +5563,30 @@ msgstr "svc_run: - нестача пам’яті"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - помилка опитування"
 
-#: sunrpc/svc_simple.c:80
+#: sunrpc/svc_simple.c:72
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "не вдалося повторно призначити номер процедури %ld\n"
 
-#: sunrpc/svc_simple.c:90
+#: sunrpc/svc_simple.c:82
 msgid "couldn't create an rpc server\n"
 msgstr "не вдалося створити сервер rpc\n"
 
-#: sunrpc/svc_simple.c:98
+#: sunrpc/svc_simple.c:90
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "не вдалося зареєструвати програму %ld, версія %ld\n"
 
-#: sunrpc/svc_simple.c:106
+#: sunrpc/svc_simple.c:98
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: недостатньо оперативної пам’яті\n"
 
-#: sunrpc/svc_simple.c:169
+#: sunrpc/svc_simple.c:161
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "проблеми з відповіддю програмі %d\n"
 
-#: sunrpc/svc_simple.c:178
+#: sunrpc/svc_simple.c:170
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "незареєстрована програма %d\n"
@@ -6431,184 +6431,184 @@ msgid "Operation canceled"
 msgstr "Дію скасовано"
 
 #: sysdeps/gnu/errlist.c:1095
-msgid "Interrupted system call should be restarted"
-msgstr "Перерваний системний виклик має бути перезапущено"
-
-#: sysdeps/gnu/errlist.c:1103
-msgid "Channel number out of range"
-msgstr "Номер каналу лежить поза припустимим діапазоном"
-
-#: sysdeps/gnu/errlist.c:1111
-msgid "Level 2 not synchronized"
-msgstr "Рівень 2 не синхронізовано"
-
-#: sysdeps/gnu/errlist.c:1119
-msgid "Level 3 halted"
-msgstr "Рівень 3 перервано"
-
-#: sysdeps/gnu/errlist.c:1127
-msgid "Level 3 reset"
-msgstr "Рівень 3 скинуто"
-
-#: sysdeps/gnu/errlist.c:1135
-msgid "Link number out of range"
-msgstr "Кількість зв’язків поза припустимим діапазоном"
-
-#: sysdeps/gnu/errlist.c:1143
-msgid "Protocol driver not attached"
-msgstr "Драйвер протоколу не долучено"
-
-#: sysdeps/gnu/errlist.c:1151
-msgid "No CSI structure available"
-msgstr "Структура CSI недоступна"
-
-#: sysdeps/gnu/errlist.c:1159
-msgid "Level 2 halted"
-msgstr "Рівень 2 перервано"
-
-#: sysdeps/gnu/errlist.c:1167
-msgid "Invalid exchange"
-msgstr "Некоректний обмін"
-
-#: sysdeps/gnu/errlist.c:1175
-msgid "Invalid request descriptor"
-msgstr "Некоректний дескриптор запиту"
-
-#: sysdeps/gnu/errlist.c:1183
-msgid "Exchange full"
-msgstr "Повний обмін"
-
-#: sysdeps/gnu/errlist.c:1191
-msgid "No anode"
-msgstr "Немає anode"
-
-#: sysdeps/gnu/errlist.c:1199
-msgid "Invalid request code"
-msgstr "Некоректний код запиту"
-
-#: sysdeps/gnu/errlist.c:1207
-msgid "Invalid slot"
-msgstr "Некоректний слот"
-
-#: sysdeps/gnu/errlist.c:1215
-msgid "File locking deadlock error"
-msgstr "Помилка взаємного блокування файла"
-
-#: sysdeps/gnu/errlist.c:1223
-msgid "Bad font file format"
-msgstr "Помилковий формат файла шрифту"
-
-#: sysdeps/gnu/errlist.c:1231
-msgid "Machine is not on the network"
-msgstr "Комп’ютер не перебуває у мережі"
-
-#: sysdeps/gnu/errlist.c:1239
-msgid "Package not installed"
-msgstr "Пакунок не встановлено"
-
-#: sysdeps/gnu/errlist.c:1247
-msgid "Advertise error"
-msgstr "Помилка під час оголошення"
-
-#: sysdeps/gnu/errlist.c:1255
-msgid "Srmount error"
-msgstr "Помилка srmount"
-
-#: sysdeps/gnu/errlist.c:1263
-msgid "Communication error on send"
-msgstr "Помилка обміну даними під час надсилання"
-
-#: sysdeps/gnu/errlist.c:1271
-msgid "RFS specific error"
-msgstr "Специфічна для RFS помилка"
-
-#: sysdeps/gnu/errlist.c:1279
-msgid "Name not unique on network"
-msgstr "Назва не є унікальною у мережі"
-
-#: sysdeps/gnu/errlist.c:1287
-msgid "File descriptor in bad state"
-msgstr "Файловий дескриптор у помилковому стані"
-
-#: sysdeps/gnu/errlist.c:1295
-msgid "Remote address changed"
-msgstr "Віддалену адресу змінено"
-
-#: sysdeps/gnu/errlist.c:1303
-msgid "Can not access a needed shared library"
-msgstr "Не вдалося отримати доступ до потрібної бібліотеки спільного використання"
-
-#: sysdeps/gnu/errlist.c:1311
-msgid "Accessing a corrupted shared library"
-msgstr "Доступ до пошкодженої бібліотеки спільного використання"
-
-#: sysdeps/gnu/errlist.c:1319
-msgid ".lib section in a.out corrupted"
-msgstr "Розділ .lib у a.out пошкоджено"
-
-#: sysdeps/gnu/errlist.c:1327
-msgid "Attempting to link in too many shared libraries"
-msgstr "Спроба компонування надто великої кількості бібліотек спільного використання"
-
-#: sysdeps/gnu/errlist.c:1335
-msgid "Cannot exec a shared library directly"
-msgstr "Не можна виконувати бібліотеку спільного використання безпосередньо"
-
-#: sysdeps/gnu/errlist.c:1343
-msgid "Streams pipe error"
-msgstr "Помилка каналу потоків"
-
-#: sysdeps/gnu/errlist.c:1351
-msgid "Structure needs cleaning"
-msgstr "Структура потребує чищення"
-
-#: sysdeps/gnu/errlist.c:1359
-msgid "Not a XENIX named type file"
-msgstr "Не є файлом іменованих типів XENIX"
-
-#: sysdeps/gnu/errlist.c:1367
-msgid "No XENIX semaphores available"
-msgstr "Семафори XENIX недоступні"
-
-#: sysdeps/gnu/errlist.c:1375
-msgid "Is a named type file"
-msgstr "Є файлом іменованих типів"
-
-#: sysdeps/gnu/errlist.c:1383
-msgid "Remote I/O error"
-msgstr "Помилка під час віддаленого введення-виведення"
-
-#: sysdeps/gnu/errlist.c:1391
-msgid "No medium found"
-msgstr "Не знайдено носія"
-
-#: sysdeps/gnu/errlist.c:1399
-msgid "Wrong medium type"
-msgstr "Помилковий тип носія"
-
-#: sysdeps/gnu/errlist.c:1407
-msgid "Required key not available"
-msgstr "Потрібний ключ недоступний"
-
-#: sysdeps/gnu/errlist.c:1415
-msgid "Key has expired"
-msgstr "Строк дії ключа вичерпано"
-
-#: sysdeps/gnu/errlist.c:1423
-msgid "Key has been revoked"
-msgstr "Ключ було відкликано"
-
-#: sysdeps/gnu/errlist.c:1431
-msgid "Key was rejected by service"
-msgstr "Служба відмовилася прийняти ключ"
-
-#: sysdeps/gnu/errlist.c:1439
 msgid "Owner died"
 msgstr "Власник завершив роботу"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1103
 msgid "State not recoverable"
 msgstr "Невідновлюваний стан"
+
+#: sysdeps/gnu/errlist.c:1111
+msgid "Interrupted system call should be restarted"
+msgstr "Перерваний системний виклик має бути перезапущено"
+
+#: sysdeps/gnu/errlist.c:1119
+msgid "Channel number out of range"
+msgstr "Номер каналу лежить поза припустимим діапазоном"
+
+#: sysdeps/gnu/errlist.c:1127
+msgid "Level 2 not synchronized"
+msgstr "Рівень 2 не синхронізовано"
+
+#: sysdeps/gnu/errlist.c:1135
+msgid "Level 3 halted"
+msgstr "Рівень 3 перервано"
+
+#: sysdeps/gnu/errlist.c:1143
+msgid "Level 3 reset"
+msgstr "Рівень 3 скинуто"
+
+#: sysdeps/gnu/errlist.c:1151
+msgid "Link number out of range"
+msgstr "Кількість зв’язків поза припустимим діапазоном"
+
+#: sysdeps/gnu/errlist.c:1159
+msgid "Protocol driver not attached"
+msgstr "Драйвер протоколу не долучено"
+
+#: sysdeps/gnu/errlist.c:1167
+msgid "No CSI structure available"
+msgstr "Структура CSI недоступна"
+
+#: sysdeps/gnu/errlist.c:1175
+msgid "Level 2 halted"
+msgstr "Рівень 2 перервано"
+
+#: sysdeps/gnu/errlist.c:1183
+msgid "Invalid exchange"
+msgstr "Некоректний обмін"
+
+#: sysdeps/gnu/errlist.c:1191
+msgid "Invalid request descriptor"
+msgstr "Некоректний дескриптор запиту"
+
+#: sysdeps/gnu/errlist.c:1199
+msgid "Exchange full"
+msgstr "Повний обмін"
+
+#: sysdeps/gnu/errlist.c:1207
+msgid "No anode"
+msgstr "Немає anode"
+
+#: sysdeps/gnu/errlist.c:1215
+msgid "Invalid request code"
+msgstr "Некоректний код запиту"
+
+#: sysdeps/gnu/errlist.c:1223
+msgid "Invalid slot"
+msgstr "Некоректний слот"
+
+#: sysdeps/gnu/errlist.c:1231
+msgid "File locking deadlock error"
+msgstr "Помилка взаємного блокування файла"
+
+#: sysdeps/gnu/errlist.c:1239
+msgid "Bad font file format"
+msgstr "Помилковий формат файла шрифту"
+
+#: sysdeps/gnu/errlist.c:1247
+msgid "Machine is not on the network"
+msgstr "Комп’ютер не перебуває у мережі"
+
+#: sysdeps/gnu/errlist.c:1255
+msgid "Package not installed"
+msgstr "Пакунок не встановлено"
+
+#: sysdeps/gnu/errlist.c:1263
+msgid "Advertise error"
+msgstr "Помилка під час оголошення"
+
+#: sysdeps/gnu/errlist.c:1271
+msgid "Srmount error"
+msgstr "Помилка srmount"
+
+#: sysdeps/gnu/errlist.c:1279
+msgid "Communication error on send"
+msgstr "Помилка обміну даними під час надсилання"
+
+#: sysdeps/gnu/errlist.c:1287
+msgid "RFS specific error"
+msgstr "Специфічна для RFS помилка"
+
+#: sysdeps/gnu/errlist.c:1295
+msgid "Name not unique on network"
+msgstr "Назва не є унікальною у мережі"
+
+#: sysdeps/gnu/errlist.c:1303
+msgid "File descriptor in bad state"
+msgstr "Файловий дескриптор у помилковому стані"
+
+#: sysdeps/gnu/errlist.c:1311
+msgid "Remote address changed"
+msgstr "Віддалену адресу змінено"
+
+#: sysdeps/gnu/errlist.c:1319
+msgid "Can not access a needed shared library"
+msgstr "Не вдалося отримати доступ до потрібної бібліотеки спільного використання"
+
+#: sysdeps/gnu/errlist.c:1327
+msgid "Accessing a corrupted shared library"
+msgstr "Доступ до пошкодженої бібліотеки спільного використання"
+
+#: sysdeps/gnu/errlist.c:1335
+msgid ".lib section in a.out corrupted"
+msgstr "Розділ .lib у a.out пошкоджено"
+
+#: sysdeps/gnu/errlist.c:1343
+msgid "Attempting to link in too many shared libraries"
+msgstr "Спроба компонування надто великої кількості бібліотек спільного використання"
+
+#: sysdeps/gnu/errlist.c:1351
+msgid "Cannot exec a shared library directly"
+msgstr "Не можна виконувати бібліотеку спільного використання безпосередньо"
+
+#: sysdeps/gnu/errlist.c:1359
+msgid "Streams pipe error"
+msgstr "Помилка каналу потоків"
+
+#: sysdeps/gnu/errlist.c:1367
+msgid "Structure needs cleaning"
+msgstr "Структура потребує чищення"
+
+#: sysdeps/gnu/errlist.c:1375
+msgid "Not a XENIX named type file"
+msgstr "Не є файлом іменованих типів XENIX"
+
+#: sysdeps/gnu/errlist.c:1383
+msgid "No XENIX semaphores available"
+msgstr "Семафори XENIX недоступні"
+
+#: sysdeps/gnu/errlist.c:1391
+msgid "Is a named type file"
+msgstr "Є файлом іменованих типів"
+
+#: sysdeps/gnu/errlist.c:1399
+msgid "Remote I/O error"
+msgstr "Помилка під час віддаленого введення-виведення"
+
+#: sysdeps/gnu/errlist.c:1407
+msgid "No medium found"
+msgstr "Не знайдено носія"
+
+#: sysdeps/gnu/errlist.c:1415
+msgid "Wrong medium type"
+msgstr "Помилковий тип носія"
+
+#: sysdeps/gnu/errlist.c:1423
+msgid "Required key not available"
+msgstr "Потрібний ключ недоступний"
+
+#: sysdeps/gnu/errlist.c:1431
+msgid "Key has expired"
+msgstr "Строк дії ключа вичерпано"
+
+#: sysdeps/gnu/errlist.c:1439
+msgid "Key has been revoked"
+msgstr "Ключ було відкликано"
+
+#: sysdeps/gnu/errlist.c:1447
+msgid "Key was rejected by service"
+msgstr "Служба відмовилася прийняти ключ"
 
 #: sysdeps/gnu/errlist.c:1455
 msgid "Operation not possible due to RF-kill"
@@ -6718,6 +6718,26 @@ msgstr "не вдалося відкрити «%s»"
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "не вдалося прочитати заголовок з «%s»"
+
+#: sysdeps/x86/dl-cet.c:202
+msgid "mprotect legacy bitmap failed"
+msgstr "помилка mprotect для застарілої бітової карти"
+
+#: sysdeps/x86/dl-cet.c:217
+msgid "legacy bitmap isn't available"
+msgstr "застаріла бітова карта недоступна"
+
+#: sysdeps/x86/dl-cet.c:247
+msgid "failed to mark legacy code region"
+msgstr "не вдалося позначити область застарілого коду"
+
+#: sysdeps/x86/dl-cet.c:269
+msgid "shadow stack isn't enabled"
+msgstr "тіньовий стек не увімкнено"
+
+#: sysdeps/x86/dl-cet.c:290
+msgid "can't disable CET"
+msgstr "не вдалося вимкнути CET"
 
 #: timezone/zdump.c:338
 msgid "has fewer than 3 characters"
@@ -7195,6 +7215,24 @@ msgstr "забагато скорочень назв часових поясів
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: не вдалося створити каталог %s: %s"
+
+#~ msgid "invalid caller"
+#~ msgstr "некоректна функція виклику"
+
+#~ msgid "Character out of range for UTF-8"
+#~ msgstr "Символ поза діапазоном символів UTF-8"
+
+#~ msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
+#~ msgstr "не вдалося прочитати /proc/self/cmdline: %s; вимикаємо параноїдальний режим"
+
+#~ msgid "Haven't found \"%s\" in password cache!"
+#~ msgstr "Не вдалося знайти «%s» у кеші паролів!"
+
+#~ msgid "Reloading \"%s\" in password cache!"
+#~ msgstr "Перезавантажуємо «%s» до кешу паролів!"
+
+#~ msgid "This implementation doesn't support newstyle or MT-safe code!\n"
+#~ msgstr "У цій реалізації не передбачено підтримки коду у новому стилі або безпечного для багатопоточної обробки!\n"
 
 #~ msgid "no definition of `UNDEFINED'"
 #~ msgstr "немає визначення «UNDEFINED»"
