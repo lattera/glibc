@@ -5,11 +5,13 @@
 # Anton Zinoviev <zinoviev@debian.org>, 2007
 # Roumen Petrov <transl@roumenpetrov.info>, 2008,2009,2011,2012,2017,2018
 #
+# Abbreviations:
+#  CET - Control-Flow Enforcement Technology
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.26.9000\n"
-"POT-Creation-Date: 2018-01-10 15:00+0000\n"
-"PO-Revision-Date: 2018-01-10 21:46+0300\n"
+"Project-Id-Version: libc 2.27.9000\n"
+"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"PO-Revision-Date: 2018-07-28 14:08+0300\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
@@ -105,8 +107,12 @@ msgstr "(ПРОГРАМНА ГРЕШКА) Опцията трябва да е р
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s:%u: %s%sНеочаквана грешка: %s.\n"
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%sНеочаквана грешка: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -150,14 +156,14 @@ msgstr ""
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
 #: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:913 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
 "%s.\n"
 msgstr ""
-"За подаване на рапорт за грешка, моля, вижте:\n"
+"За подаване на доклад за грешка, моля, вижте:\n"
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
@@ -165,7 +171,7 @@ msgstr ""
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:292 locale/programs/localedef.c:453
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -181,7 +187,7 @@ msgstr ""
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
 #: locale/programs/localedef.c:458 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -250,7 +256,7 @@ msgstr "не може да се отвори файлът за изход \"%s\"
 
 #: catgets/gencat.c:1187 locale/programs/linereader.c:560
 msgid "invalid escape sequence"
-msgstr "неправилна заместваща(escape) последователност"
+msgstr "неправилна заместваща последователност (escape)"
 
 #: catgets/gencat.c:1209
 msgid "unterminated message"
@@ -340,7 +346,7 @@ msgstr ""
 #: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
 msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
-msgstr "За подаване на рапорт за грешка, моля, вижте:\\\\n%s.\\\\n"
+msgstr "За подаване на доклад за грешка, моля, вижте:\\\\n%s.\\\\n"
 
 #: debug/xtrace.sh:125
 msgid "xtrace: unrecognized option \\`$1'\\n"
@@ -384,56 +390,57 @@ msgstr "неправилен параметър за начин"
 msgid "unknown"
 msgstr "неизвестен"
 
-#: elf/cache.c:135
+#: elf/cache.c:141
 msgid "Unknown OS"
 msgstr "Неизвестна ОС"
 
-#: elf/cache.c:140
+#: elf/cache.c:146
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ОС ДПИ(двоичен програмен интерфейс): %s %d.%d.%d"
 
-#: elf/cache.c:157 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1332
 #, c-format
 msgid "Can't open cache file %s\n"
-msgstr "Не може да се отвори файлът за кеш %s\n"
+msgstr "Не може да се отвори файлът за складиране %s\n"
 
-#: elf/cache.c:171
+#: elf/cache.c:177
 #, c-format
 msgid "mmap of cache file failed.\n"
-msgstr "пропадна изображението в паметта(mmap) на файлът за кеш.\n"
+msgstr "пропадна изображението в паметта (mmap) на файлът за складиране.\n"
 
-#: elf/cache.c:175 elf/cache.c:189
+#: elf/cache.c:181 elf/cache.c:195
 #, c-format
 msgid "File is not a cache file.\n"
-msgstr "Файлът не е файл за кеш.\n"
+msgstr "Файлът не е файл за складиране.\n"
 
-#: elf/cache.c:222 elf/cache.c:232
+#: elf/cache.c:228 elf/cache.c:238
 #, c-format
 msgid "%d libs found in cache `%s'\n"
-msgstr "%d библиотеки за налични в кешът \"%s\"\n"
+msgstr "%d библиотеки са налични в склад \"%s\"\n"
 
-#: elf/cache.c:426
+#: elf/cache.c:432
 #, c-format
 msgid "Can't create temporary cache file %s"
-msgstr "Не може да се създаде временен файл за кеш %s"
+msgstr "Не може да се създаде временен файл за складиране %s"
 
-#: elf/cache.c:434 elf/cache.c:444 elf/cache.c:448 elf/cache.c:453
+#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
+#: elf/cache.c:468
 #, c-format
 msgid "Writing of cache data failed"
-msgstr "Пропадна записването на данните за кеш"
+msgstr "Пропадна записването на данните за складиране"
 
-#: elf/cache.c:458
+#: elf/cache.c:463
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Пропадна смяната па правата за достъп от %s към %#o"
 
-#: elf/cache.c:463
+#: elf/cache.c:472
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Пропадна преименуването от %s към %s"
 
-#: elf/dl-close.c:399 elf/dl-open.c:425
+#: elf/dl-close.c:399 elf/dl-open.c:420
 msgid "cannot create scope list"
 msgstr "не може да се създаде списък на обхватът"
 
@@ -441,28 +448,32 @@ msgstr "не може да се създаде списък на обхватъ�
 msgid "shared object not open"
 msgstr "не е отворен споделеният обект"
 
-#: elf/dl-deps.c:111
+#: elf/dl-deps.c:112
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "не е разрешено DST(dynamic string token) за SUID/SGID програми"
 
-#: elf/dl-deps.c:124
+#: elf/dl-deps.c:125
 msgid "empty dynamic string token substitution"
 msgstr "празен DST(dynamic string token) за заместване"
 
-#: elf/dl-deps.c:130
+#: elf/dl-deps.c:131
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "не може да се свърже \"%s\", като допълнение, поради празен DST(dynamic string token) за заместване\n"
 
-#: elf/dl-deps.c:442
+#: elf/dl-deps.c:220
+msgid "cannot allocate dependency buffer"
+msgstr "не може да се задели памет за зависимостта"
+
+#: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "не може да се задели памет за списък със зависимости"
 
-#: elf/dl-deps.c:479 elf/dl-deps.c:539
+#: elf/dl-deps.c:483 elf/dl-deps.c:543
 msgid "cannot allocate symbol search list"
 msgstr "не може да се задели памет за списък със символи за търсене"
 
-#: elf/dl-deps.c:519
+#: elf/dl-deps.c:523
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Не се поддържат филтри при LD_TRACE_PRELINKING"
 
@@ -490,139 +501,139 @@ msgstr "вътрешна грешка: symidx е извън границите �
 msgid "cannot create capability list"
 msgstr "не може да се създаде списък за възможности"
 
-#: elf/dl-load.c:369
+#: elf/dl-load.c:427
 msgid "cannot allocate name record"
 msgstr "не може да се задели памет за записите с имена"
 
-#: elf/dl-load.c:455 elf/dl-load.c:568 elf/dl-load.c:657 elf/dl-load.c:753
+#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
 msgid "cannot create cache for search path"
-msgstr "не може да се създаде кеш на директориите за търсене"
+msgstr "не може да се създаде склад на директориите за търсене"
 
-#: elf/dl-load.c:551
+#: elf/dl-load.c:609
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "не може да се създаде копие на RUNPATH/RPATH"
 
-#: elf/dl-load.c:644
+#: elf/dl-load.c:702
 msgid "cannot create search path array"
 msgstr "не може да се създаде масив на директориите за търсене"
 
-#: elf/dl-load.c:825
+#: elf/dl-load.c:883
 msgid "cannot stat shared object"
 msgstr "не може да се определят атрибутите на споделен обект"
 
-#: elf/dl-load.c:902
+#: elf/dl-load.c:960
 msgid "cannot open zero fill device"
 msgstr "не може да се отвори устройството за запълване с нули(/dev/zero)"
 
-#: elf/dl-load.c:949 elf/dl-load.c:2125
+#: elf/dl-load.c:1007 elf/dl-load.c:2203
 msgid "cannot create shared object descriptor"
 msgstr "не може да се създаде описание за споделен обект"
 
-#: elf/dl-load.c:968 elf/dl-load.c:1499 elf/dl-load.c:1611
+#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
 msgid "cannot read file data"
 msgstr "не може да се прочетат данни от файлът"
 
-#: elf/dl-load.c:1014
+#: elf/dl-load.c:1072
 msgid "ELF load command alignment not page-aligned"
 msgstr "подравняването, в командата за зареждане на ELF, не е подравнено на страници"
 
-#: elf/dl-load.c:1021
+#: elf/dl-load.c:1079
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адресът/отместването, в командата за зареждане на ELF, не е подравнен правилно"
 
-#: elf/dl-load.c:1106
+#: elf/dl-load.c:1161
+msgid "cannot process note segment"
+msgstr "не може да се обработи дял за бележки"
+
+#: elf/dl-load.c:1172
 msgid "object file has no loadable segments"
 msgstr "обектният файл е без дялове за свързване"
 
-#: elf/dl-load.c:1115 elf/dl-load.c:1591
+#: elf/dl-load.c:1181 elf/dl-load.c:1652
 msgid "cannot dynamically load executable"
 msgstr "изпълнимият файл не може да се свърже динамично"
 
-#: elf/dl-load.c:1136
+#: elf/dl-load.c:1202
 msgid "object file has no dynamic section"
 msgstr "обектният файл е без дял за динамично свързване"
 
-#: elf/dl-load.c:1159
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "не е възможно dlopen() за споделеният обект"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "не може да се задели памет за заглавието на програмата"
 
-#: elf/dl-load.c:1188 elf/dl-open.c:193
-msgid "invalid caller"
-msgstr "неправилен извикващ"
-
-#: elf/dl-load.c:1211 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "не може да се промени защитата на паметта"
 
-#: elf/dl-load.c:1231
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "стекът не може да се разреши за изпълнение, както е поискано от споделения обект"
 
-#: elf/dl-load.c:1244
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "не може да се затвори описанието на файлът"
 
-#: elf/dl-load.c:1499
+#: elf/dl-load.c:1560
 msgid "file too short"
 msgstr "файлът е твърде къс"
 
-#: elf/dl-load.c:1534
+#: elf/dl-load.c:1595
 msgid "invalid ELF header"
 msgstr "неправилен ELF заглавен блок"
 
-#: elf/dl-load.c:1546
+#: elf/dl-load.c:1607
 msgid "ELF file data encoding not big-endian"
 msgstr "данните от ELF файлът не са кодирани със старши байт първи(big-endian)"
 
-#: elf/dl-load.c:1548
+#: elf/dl-load.c:1609
 msgid "ELF file data encoding not little-endian"
 msgstr "данните от ELF файлът не са кодирани с младши байт първи(little-endian)"
 
-#: elf/dl-load.c:1552
+#: elf/dl-load.c:1613
 msgid "ELF file version ident does not match current one"
 msgstr "номерът на версия от ELF-файла не съответства на текущата"
 
-#: elf/dl-load.c:1556
+#: elf/dl-load.c:1617
 msgid "ELF file OS ABI invalid"
 msgstr "ELF файлът е с неправилен номер на ДПИ(ABI-двоичен програмен интерфейс) за ОС "
 
-#: elf/dl-load.c:1559
+#: elf/dl-load.c:1620
 msgid "ELF file ABI version invalid"
 msgstr "ELF файлът е с неправилна версия за ДПИ(двоичен програмен интерфейс)"
 
-#: elf/dl-load.c:1562
+#: elf/dl-load.c:1623
 msgid "nonzero padding in e_ident"
 msgstr "ненулево допълване при e_ident"
 
-#: elf/dl-load.c:1565
+#: elf/dl-load.c:1626
 msgid "internal error"
 msgstr "вътрешна грешка"
 
-#: elf/dl-load.c:1572
+#: elf/dl-load.c:1633
 msgid "ELF file version does not match current one"
 msgstr "версията, на ELF файлът, не съответства на текущата"
 
-#: elf/dl-load.c:1580
+#: elf/dl-load.c:1641
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "само ET_DYN и ET_EXEC могат да се свържат"
 
-#: elf/dl-load.c:1596
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "неочакван размер на елемент(phentsize) в заглавието на ELF файл"
 
-#: elf/dl-load.c:2144
+#: elf/dl-load.c:2222
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "неправилен ELF клас: ELFCLASS64"
 
-#: elf/dl-load.c:2145
+#: elf/dl-load.c:2223
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "неправилен ELF клас: ELFCLASS32"
 
-#: elf/dl-load.c:2148
+#: elf/dl-load.c:2226
 msgid "cannot open shared object file"
 msgstr "не може да се отвори файлът със споделения обект"
 
@@ -634,31 +645,31 @@ msgstr "пропадна изображението на дял от споде�
 msgid "cannot map zero-fill pages"
 msgstr "не може да се изобразят страници запълнени с нули"
 
-#: elf/dl-lookup.c:834
+#: elf/dl-lookup.c:835
 msgid "relocation error"
 msgstr "грешка при преместване"
 
-#: elf/dl-lookup.c:857
+#: elf/dl-lookup.c:858
 msgid "symbol lookup error"
 msgstr "грешка при търсене на символ"
 
-#: elf/dl-open.c:101
+#: elf/dl-open.c:99
 msgid "cannot extend global scope"
 msgstr "не може да се увеличи общата област"
 
-#: elf/dl-open.c:475
+#: elf/dl-open.c:470
 msgid "TLS generation counter wrapped!  Please report this."
-msgstr "Превъртян брояч за пораждане на TLS! Моля рапортувайте го."
+msgstr "Превъртян брояч за пораждане на TLS! Моля докладвайте го."
 
-#: elf/dl-open.c:539
+#: elf/dl-open.c:534
 msgid "invalid mode for dlopen()"
 msgstr "неправилен режим за dlopen()"
 
-#: elf/dl-open.c:556
+#: elf/dl-open.c:551
 msgid "no more namespaces available for dlmopen()"
 msgstr "не са налични повече именувани пространства за dlmopen()"
 
-#: elf/dl-open.c:580
+#: elf/dl-open.c:575
 msgid "invalid target namespace in dlmopen()"
 msgstr "неправилно именувано целево пространство в dlmopen()"
 
@@ -701,7 +712,7 @@ msgstr "не може да се създаде таблица с препрат�
 
 #: elf/ldconfig.c:142
 msgid "Print cache"
-msgstr "Извеждане на кешът"
+msgstr "Разпечатване на склад"
 
 #: elf/ldconfig.c:143
 msgid "Generate verbose messages"
@@ -709,7 +720,7 @@ msgstr "Извеждане на допълнителни съобщения"
 
 #: elf/ldconfig.c:144
 msgid "Don't build cache"
-msgstr "Да не се създава кеш"
+msgstr "Да не се създава склад"
 
 #: elf/ldconfig.c:145
 msgid "Don't update symbolic links"
@@ -729,7 +740,7 @@ msgstr "КЕШ"
 
 #: elf/ldconfig.c:147
 msgid "Use CACHE as cache file"
-msgstr "Използване на КЕШ като файл за кеш"
+msgstr "Използване на КЕШ като файл за складиране"
 
 #: elf/ldconfig.c:148
 msgid "CONF"
@@ -741,7 +752,7 @@ msgstr "Използване на НАСТ за настройващ файл"
 
 #: elf/ldconfig.c:149
 msgid "Only process directories specified on the command line.  Don't build cache."
-msgstr "Да се обработят само директориите зададени от командния ред. Да не се създава кеш."
+msgstr "Да се обработят само директориите зададени от командния ред. Да не се създава склад."
 
 #: elf/ldconfig.c:150
 msgid "Manually link individual libraries."
@@ -757,7 +768,7 @@ msgstr "Използване на формат: new, old или compat(по по
 
 #: elf/ldconfig.c:152
 msgid "Ignore auxiliary cache file"
-msgstr "Игнориране на помощният кеш файл"
+msgstr "Игнориране на помощният файл за складиране"
 
 #: elf/ldconfig.c:160
 msgid "Configure Dynamic Linker Run Time Bindings."
@@ -905,7 +916,7 @@ msgstr "%s:%u: не може да се чете директорията %s "
 #: elf/ldconfig.c:1281
 #, c-format
 msgid "relative path `%s' used to build cache"
-msgstr "използван е относителен път %s за създаване на кеш"
+msgstr "използван е относителен път %s за създаване на склад"
 
 #: elf/ldconfig.c:1311
 #, c-format
@@ -915,7 +926,7 @@ msgstr "Не може да се смени директорията на /"
 #: elf/ldconfig.c:1352
 #, c-format
 msgid "Can't open cache file directory %s\n"
-msgstr "Не може да се отвори директорията '%s' за кеш файлът\n"
+msgstr "Не може да се отвори директорията '%s' с файл за складиране\n"
 
 #: elf/ldd.bash.in:42
 msgid "Written by %s and %s.\n"
@@ -1448,7 +1459,7 @@ msgstr "не се поддържа преобразуване от \"%s\" към
 #: iconv/iconv_prog.c:256
 #, c-format
 msgid "failed to start conversion processing"
-msgstr "не можа да започне процеса за преобразуване"
+msgstr "не може да започне процеса за преобразуване"
 
 #: iconv/iconv_prog.c:354
 #, c-format
@@ -1609,17 +1620,13 @@ msgid "Error: .netrc file is readable by others."
 msgstr "Грешка: файлът .netrc може да се прочете от други."
 
 #: inet/ruserpass.c:180
-msgid "Remove password or make file unreadable by others."
-msgstr "Премахнете паролата или направете файлът не четим за другите."
+msgid "Remove 'password' line or make file unreadable by others."
+msgstr "Премахнете реда с паролата или направете файлът не четим за другите."
 
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Неизвестен .netrc-ключ %s"
-
-#: libidn/nfkc.c:463
-msgid "Character out of range for UTF-8"
-msgstr "Знакът е извън диапазона за UTF-8"
 
 #: locale/programs/charmap-dir.c:56
 #, c-format
@@ -1722,7 +1729,7 @@ msgstr "не е зададено символично име за край на 
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:934
+#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
 #: locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
@@ -1749,7 +1756,7 @@ msgstr "%s: грешка в състоянието на машината"
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:950
+#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
 #: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
@@ -1792,7 +1799,7 @@ msgstr "резултата от байтове за диапазона не мо
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
 #: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:89
-#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:158
+#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Не е намерено определение за категория %s"
@@ -1807,8 +1814,8 @@ msgstr "Не е намерено определение за категория 
 #: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:111
 #: locale/programs/ld-numeric.c:125 locale/programs/ld-paper.c:100
 #: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:103
-#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:174
-#: locale/programs/ld-time.c:195
+#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:180
+#: locale/programs/ld-time.c:201
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: полето \"%s\" е неопределено"
@@ -1858,8 +1865,8 @@ msgstr "%s: неправилен цифров код на държава \"%d\""
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
 #: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
 #: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:839
-#: locale/programs/ld-time.c:881
+#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
+#: locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: полето \"%s\" е обявено повече от веднъж"
@@ -1868,8 +1875,8 @@ msgstr "%s: полето \"%s\" е обявено повече от веднъж
 #: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
 #: locale/programs/ld-monetary.c:507 locale/programs/ld-monetary.c:542
 #: locale/programs/ld-name.c:239 locale/programs/ld-numeric.c:221
-#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:733
-#: locale/programs/ld-time.c:802 locale/programs/ld-time.c:844
+#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:756
+#: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: неизвестен знак в полето \"%s\""
@@ -1879,7 +1886,7 @@ msgstr "%s: неизвестен знак в полето \"%s\""
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
-#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:932
+#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: непълен ред \"END\""
@@ -1894,7 +1901,7 @@ msgstr "%s: непълен ред \"END\""
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
 #: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:941
+#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: синтактична грешка"
@@ -2437,82 +2444,82 @@ msgstr "обменният курс не може да е нула"
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: неправилна заместваща(escape) последователност в полето\"%s\""
 
-#: locale/programs/ld-time.c:245
+#: locale/programs/ld-time.c:251
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: флагът за посока в низа %Zd, за полето \"era\", не е '+' или '-'"
 
-#: locale/programs/ld-time.c:255
+#: locale/programs/ld-time.c:261
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: флагът за посока в низа %Zd, за полето \"era\", не е единичен знак"
 
-#: locale/programs/ld-time.c:267
+#: locale/programs/ld-time.c:273
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: неправилно число за отместване в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:274
+#: locale/programs/ld-time.c:280
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: боклук в края на стойността за отместване в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:324
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: неправилна начална дата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:332
+#: locale/programs/ld-time.c:338
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: боклук в края на началната дата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:350
+#: locale/programs/ld-time.c:356
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: началната дата е неправилна в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:398 locale/programs/ld-time.c:424
+#: locale/programs/ld-time.c:404 locale/programs/ld-time.c:430
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: неправилна крайна дата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:406
+#: locale/programs/ld-time.c:412
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: боклук в края на крайната дата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:432
+#: locale/programs/ld-time.c:438
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: липсва името на епохата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:443
+#: locale/programs/ld-time.c:449
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: липсва формата на епохата в низа %Zd, за полето \"era\""
 
-#: locale/programs/ld-time.c:488
+#: locale/programs/ld-time.c:494
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: третият операнд за стойността на полето \"%s\" не трябва да е по-голям от %d"
 
-#: locale/programs/ld-time.c:496 locale/programs/ld-time.c:504
-#: locale/programs/ld-time.c:512
+#: locale/programs/ld-time.c:502 locale/programs/ld-time.c:510
+#: locale/programs/ld-time.c:518
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: стойността за полето \"%s\" не трябва да е по-голяма от %d"
 
-#: locale/programs/ld-time.c:717
+#: locale/programs/ld-time.c:740
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: твърде малко стойности за полето \"%s\""
 
-#: locale/programs/ld-time.c:762
+#: locale/programs/ld-time.c:785
 msgid "extra trailing semicolon"
 msgstr "излишна точка и запетая на края"
 
-#: locale/programs/ld-time.c:765
+#: locale/programs/ld-time.c:788
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s: твърде много стойности за полето \"%s\""
@@ -2950,7 +2957,7 @@ msgstr "не е зададена <Uxxxx> или <Uxxxxxxxx> стойност"
 
 #: locale/programs/repertoire.c:330
 msgid "cannot save new repertoire map"
-msgstr "не можа да се съхрани изображението за набор"
+msgstr "не може да се съхрани изображението за набор"
 
 #: locale/programs/repertoire.c:341
 #, c-format
@@ -3133,7 +3140,7 @@ msgstr "Неизвестна системна грешка"
 msgid "unable to free arguments"
 msgstr "не може да се освободят аргументите"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:824 nis/ypclnt.c:913 posix/regcomp.c:137
+#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
 #: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Успешно"
@@ -3152,7 +3159,7 @@ msgstr "Вероятно не е намерен"
 
 #: nis/nis_error.h:5
 msgid "Cache expired"
-msgstr "Валидността на кешът е изтекла"
+msgstr "Валидността на склада е изтекла"
 
 # TODO
 #: nis/nis_error.h:6
@@ -3177,7 +3184,7 @@ msgid "First/next chain broken"
 msgstr "Счупено първо/следващо звено"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:869 sysdeps/gnu/errlist.c:158
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Отказан достъп"
 
@@ -3681,108 +3688,108 @@ msgstr "netname2user: записът LOCAL за %s в каталога %s не �
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: не може да има 0 за номер на потребител"
 
-#: nis/ypclnt.c:827
+#: nis/ypclnt.c:828
 msgid "Request arguments bad"
 msgstr "Неправилен аргумент на заявка"
 
-#: nis/ypclnt.c:830
+#: nis/ypclnt.c:831
 msgid "RPC failure on NIS operation"
 msgstr "RPC неуспех при NIS операция"
 
-#: nis/ypclnt.c:833
+#: nis/ypclnt.c:834
 msgid "Can't bind to server which serves this domain"
 msgstr "Не може да се привържа към сървъра, който обслужва този домейн"
 
-#: nis/ypclnt.c:836
+#: nis/ypclnt.c:837
 msgid "No such map in server's domain"
 msgstr "Няма такова изображение в домейна на сървъра"
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:840
 msgid "No such key in map"
 msgstr "Няма такъв ключ в изображението"
 
-#: nis/ypclnt.c:842
+#: nis/ypclnt.c:843
 msgid "Internal NIS error"
 msgstr "Вътрешна грешка на NIS"
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:846
 msgid "Local resource allocation failure"
 msgstr "Пропадна заделянето на местни ресурси"
 
-#: nis/ypclnt.c:848
+#: nis/ypclnt.c:849
 msgid "No more records in map database"
 msgstr "Няма повече записи в базата данни за изображения"
 
-#: nis/ypclnt.c:851
+#: nis/ypclnt.c:852
 msgid "Can't communicate with portmapper"
 msgstr "Не може да се свържа с portmapper"
 
-#: nis/ypclnt.c:854
+#: nis/ypclnt.c:855
 msgid "Can't communicate with ypbind"
 msgstr "Не може да се свържа с ypbind"
 
-#: nis/ypclnt.c:857
+#: nis/ypclnt.c:858
 msgid "Can't communicate with ypserv"
 msgstr "Не може да се свържа с ypserv"
 
-#: nis/ypclnt.c:860
+#: nis/ypclnt.c:861
 msgid "Local domain name not set"
 msgstr "Не е зададено местното име на домейн "
 
-#: nis/ypclnt.c:863
+#: nis/ypclnt.c:864
 msgid "NIS map database is bad"
 msgstr "NIS базата данни за изображения е неправилна"
 
-#: nis/ypclnt.c:866
+#: nis/ypclnt.c:867
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "Несъответствие на версията на NIS клиента/сървъра - не може да се предостави услугата"
 
-#: nis/ypclnt.c:872
+#: nis/ypclnt.c:873
 msgid "Database is busy"
 msgstr "Базата данни е заета"
 
-#: nis/ypclnt.c:875
+#: nis/ypclnt.c:876
 msgid "Unknown NIS error code"
 msgstr "Неизвестен код за грешка на NIS"
 
-#: nis/ypclnt.c:916
+#: nis/ypclnt.c:917
 msgid "Internal ypbind error"
 msgstr "Вътрешна грешка на ypbind"
 
-#: nis/ypclnt.c:919
+#: nis/ypclnt.c:920
 msgid "Domain not bound"
 msgstr "Домейнът не привързан"
 
-#: nis/ypclnt.c:922
+#: nis/ypclnt.c:923
 msgid "System resource allocation failure"
 msgstr "Заделянето на системни ресурси се провали"
 
-#: nis/ypclnt.c:925
+#: nis/ypclnt.c:926
 msgid "Unknown ypbind error"
 msgstr "Неизвестна грешка на ypbind"
 
-#: nis/ypclnt.c:966
+#: nis/ypclnt.c:967
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: не може да се преобразува от име на компютър към мрежово\n"
 
-#: nis/ypclnt.c:984
+#: nis/ypclnt.c:985
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: не може да се вземе адресът на сървъра\n"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:485
+#: nscd/aicache.c:83 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr "Не е намерен \"%s\" в кеша с имена на компютри!"
+msgstr "В склада с имена на компютри не е намерен \"%s\"!"
 
-#: nscd/aicache.c:87 nscd/hstcache.c:487
+#: nscd/aicache.c:85 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
-msgstr "Презареждане на \"%s\" в кеша с имена на компютри!"
+msgstr "Презареждане на \"%s\" в склада с имена на компютри!"
 
 #: nscd/cache.c:151
 #, c-format
 msgid "add new entry \"%s\" of type %s for %s to cache%s"
-msgstr "добавяне на нов запис \"%s\", от тип %s, за %s, към кеша%s"
+msgstr "добавяне на нов запис \"%s\", от тип %s, за %s, към склад %s"
 
 #: nscd/cache.c:153
 msgid " (first)"
@@ -3801,291 +3808,286 @@ msgstr "наблюдавания файл '%s' е променен (mtime)"
 #: nscd/cache.c:341
 #, c-format
 msgid "pruning %s cache; time %ld"
-msgstr "подрязване на кеша %s - час %ld"
+msgstr "подрязване на склад %s - час %ld"
 
 #: nscd/cache.c:370
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "разглеждане на запис %s \"%s\", просрочка %<PRIu64>"
 
-#: nscd/connections.c:537
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "неправилен файл за постоянна база данни \"%s\": %s"
 
-#: nscd/connections.c:545
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "неустановявано заглавие"
 
-#: nscd/connections.c:550
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "не съответства размерът на заглавието"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "не съответства размерът на файлът"
 
-#: nscd/connections.c:577
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "пропадна проверката"
 
-#: nscd/connections.c:591
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "предложеният размен на таблица за базата данни %s е по-голям от таблицата в постоянната база данни"
 
-#: nscd/connections.c:602 nscd/connections.c:686
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "не може да се създаде описание за \"%s\" - няма изображение в паметта"
 
-#: nscd/connections.c:618
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "'%s' не е достъпен"
 
-#: nscd/connections.c:666
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "базата данни за %s е повредена или се използва едновременно - ако е необходимо премахнете ръчно %s и пуснете отново"
 
-#: nscd/connections.c:672
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "не може да се създаде %s - не се използва постоянна база данни"
 
-#: nscd/connections.c:675
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "не може да се създаде %s - не е възможно споделяне"
 
-#: nscd/connections.c:746
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "не може да се запише във файла на базата данни %s: %s"
 
-#: nscd/connections.c:802
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "не може да се отвори гнездо: %s"
 
-#: nscd/connections.c:821
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "не може да се направи гнездото да приеме свързвания: %s"
 
-#: nscd/connections.c:878
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "забранено inotify наблюдение за файл '%s': %s"
 
-#: nscd/connections.c:882
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "наблюдаване на файл '%s' (%d)"
 
-#: nscd/connections.c:895
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "забранено inotify наблюдение за директория '%s': %s"
 
-#: nscd/connections.c:899
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "наблюдаване на директория '%s' (%d)"
 
-#: nscd/connections.c:927
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "вписване на файл за проследяване %s, за база данни %s"
 
-#: nscd/connections.c:937
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "stat не успя за файл '%s'; по-късно ще се опира пак: %s"
 
-#: nscd/connections.c:1056
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "осигуряване на достъп, до файлов описател %d, за %s"
 
-#: nscd/connections.c:1068
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "не може да се обработи заявка от стара версия %d - текущата версия е %d"
 
-#: nscd/connections.c:1091
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "заявката от %ld не е обработена поради липсващи права"
 
-#: nscd/connections.c:1096
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "заявката от '%s' [%ld] не е обработена поради липсващи права"
 
-#: nscd/connections.c:1101
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "заявката не е обработена поради липсващи права"
 
-#: nscd/connections.c:1139 nscd/connections.c:1192
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "не може да се запише резултата: %s"
 
-#: nscd/connections.c:1283
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "грешка при получаване на номера на извикващия: %s"
 
-#: nscd/connections.c:1343
+#: nscd/connections.c:1349
 #, c-format
-msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "не може да се отвори /proc/self/cmdline: %s- забраняване на параноичния режим"
+msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
+msgstr "не може да се отвори /proc/self/cmdline: %m - забраняване на параноичния режим"
 
-#: nscd/connections.c:1357
-#, c-format
-msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "не може да се прочете /proc/self/cmdline: %s - забраняване на параноичния режим"
-
-#: nscd/connections.c:1397
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "не може да се върне към предишния номер на потребител: %s - забраняване на параноичния режим"
 
-#: nscd/connections.c:1407
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "не може да се върне към предишния номер на група: %s - забраняване на параноичния режим"
 
-#: nscd/connections.c:1420
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "не може да се върне към предишната работна директория: %s - забраняване на параноичния режим"
 
-#: nscd/connections.c:1466
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "повторното изпълнение не успя: %s - забраняване на параноичния режим"
 
-#: nscd/connections.c:1475
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "не може да се смени текущата работна директория на \"/\": %s"
 
-#: nscd/connections.c:1658
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "недостиг при четене докато се четеше заявката: %s"
 
-#: nscd/connections.c:1691
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "дължината на ключа в заявката е твърде голяма: %d"
 
-#: nscd/connections.c:1704
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "недостиг при четене докато се четеше заявения ключ: %s"
 
-#: nscd/connections.c:1714
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: получена заявка (версия = %d) от процес номер(PID) %ld"
 
-#: nscd/connections.c:1719
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: получена заявка (версия = %d)"
 
-#: nscd/connections.c:1859
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "пренебрегване на събитие inotify за '%s', файла съществува"
 
-#: nscd/connections.c:1864
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "наблюдавания файл '%s' бе %s (преместен или изтрит), премахване на следенето"
 
-#: nscd/connections.c:1872 nscd/connections.c:1914
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
-msgstr "не можа да се премахне следенето на файл '%s': %s"
+msgstr "не може да се премахне следенето на файл '%s': %s"
 
-#: nscd/connections.c:1887
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "наблюдавания файл '%s' е записан в"
 
-#: nscd/connections.c:1911
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "наблюдаваната родителска директория '%s' бе %s(преместен или изтрит), премахване на следенето на '%s'"
 
-#: nscd/connections.c:1937
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "наблюдавания файл '%s' бе %s(създаден или преместен), добавяне на следене"
 
-#: nscd/connections.c:1949
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "не може да се добави следене на '%s': %s"
 
-#: nscd/connections.c:2127 nscd/connections.c:2292
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "inotify наблюдение е забранено след грешка при четене %d"
 
-#: nscd/connections.c:2407
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "не може да се зададе условна променлива"
 
-#: nscd/connections.c:2415
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "не може да се пусне почистваща нишка; прекратяване"
 
-#: nscd/connections.c:2429
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "не може да се пусне работна нишка; прекратяване"
 
-#: nscd/connections.c:2484 nscd/connections.c:2486 nscd/connections.c:2502
-#: nscd/connections.c:2512 nscd/connections.c:2530 nscd/connections.c:2541
-#: nscd/connections.c:2551
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Не успя да се пусне nscd от името на потребител \"%s\""
 
-#: nscd/connections.c:2504
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "първоначалният getgrouplist не успя"
 
-#: nscd/connections.c:2513
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplist не успя"
 
-#: nscd/connections.c:2531
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "setgroups не успя"
 
-#: nscd/grpcache.c:416 nscd/hstcache.c:432 nscd/initgrcache.c:416
-#: nscd/pwdcache.c:394 nscd/servicescache.c:338
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:385
+#: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
 msgstr "недостиг при запис в %s: %s"
 
-#: nscd/grpcache.c:461 nscd/initgrcache.c:84
+#: nscd/grpcache.c:430 nscd/initgrcache.c:81
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr "Не е намерено \"%s\" в кеша за групи!"
+msgstr "Не е намерено \"%s\" в склада за групи!"
 
-#: nscd/grpcache.c:463 nscd/initgrcache.c:86
+#: nscd/grpcache.c:432 nscd/initgrcache.c:83
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
-msgstr "Презареждане на \"%s\" в кеша за групи!"
+msgstr "Презареждане на \"%s\" в склада за групи!"
 
-#: nscd/grpcache.c:542
+#: nscd/grpcache.c:492
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Неправилен номер на група \"%s\"!"
@@ -4093,7 +4095,7 @@ msgstr "Неправилен номер на група \"%s\"!"
 #: nscd/mem.c:425
 #, c-format
 msgid "freed %zu bytes in %s cache"
-msgstr "освободени %zu байта в кеша %s"
+msgstr "освободени %zu байта в склад %s"
 
 #: nscd/mem.c:568
 #, c-format
@@ -4110,12 +4112,12 @@ msgstr "Не е намерен \"%s\" в склада за мрежови гру
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Презареждане на \"%s\" в склада за мрежови групи!"
 
-#: nscd/netgroupcache.c:495
+#: nscd/netgroupcache.c:469
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Не е намерено \"%s (%s,%s,%s)\" в склада за мрежови групи!"
 
-#: nscd/netgroupcache.c:498
+#: nscd/netgroupcache.c:472
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Презареждане на \"%s (%s,%s,%s)\" в склада за мрежови групи!"
@@ -4154,7 +4156,7 @@ msgstr "ТАБЛИЦА"
 
 #: nscd/nscd.c:115
 msgid "Invalidate the specified cache"
-msgstr "Анулиране на зададения кеш"
+msgstr "Обезсилване на зададения склад"
 
 #: nscd/nscd.c:116
 msgid "TABLE,yes"
@@ -4162,13 +4164,13 @@ msgstr "ТАБЛИЦА,yes"
 
 #: nscd/nscd.c:117
 msgid "Use separate cache for each user"
-msgstr "Да се използва отделен кеш за всеки потребител"
+msgstr "Да се използва отделен склад за всеки потребител"
 
 #: nscd/nscd.c:122
 msgid "Name Service Cache Daemon."
-msgstr "Демон на услуга за кеширане на имена(nscd)."
+msgstr "Демон на услуга за складиране на имена (nscd)."
 
-#: nscd/nscd.c:155 nss/getent.c:947 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "неправилен брой на аргументи"
@@ -4209,7 +4211,7 @@ msgstr "непълно записване"
 #: nscd/nscd.c:366
 #, c-format
 msgid "cannot read invalidate ACK"
-msgstr "не може да се прочете потвърждение за анулиране"
+msgstr "не може да се прочете потвърждение на обезсилване"
 
 #: nscd/nscd.c:372
 #, c-format
@@ -4219,7 +4221,7 @@ msgstr "пропадна обезсилването"
 #: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:190
 #, c-format
 msgid "Only root is allowed to use this option!"
-msgstr "Разрешено е само суперпотребител да използва тази опция!"
+msgstr "Разрешено е само свръх-потребител да използва тази опция!"
 
 #: nscd/nscd.c:437
 #, c-format
@@ -4243,7 +4245,7 @@ msgstr ""
 "Поддържани таблици:\n"
 "%s\n"
 "\n"
-"За подаване на рапорт за грешка, моля, вижте:\n"
+"За подаване на доклад за грешка, моля, вижте:\n"
 "%s.\n"
 
 #: nscd/nscd.c:635
@@ -4406,11 +4408,11 @@ msgid ""
 "%15s  check /etc/%s for changes\n"
 msgstr ""
 "\n"
-"%s кеш:\n"
+"%s склад:\n"
 "\n"
-"%15s  кешът е разрешен\n"
-"%15s  кешът е постоянен\n"
-"%15s  кешът е споделен\n"
+"%15s  складът е разрешен\n"
+"%15s  складът е постоянен\n"
+"%15s  складът е споделен\n"
 "%15zu  предложен размер\n"
 "%15zu  общ обем на пул за данни\n"
 "%15zu  използван обем на пул за данни\n"
@@ -4420,26 +4422,26 @@ msgstr ""
 "%15<PRIuMAX>  попадения за отрицателни записи\n"
 "%15<PRIuMAX>  пропускания за положителни записи\n"
 "%15<PRIuMAX>  пропускания за отрицателни записи\n"
-"%15lu%% честота на попадения в кеша\n"
-"%15zu  текущ брой на кешираните значения\n"
-"%15zu  максимален брой на кешираните значения\n"
+"%15lu%% честота на попадения в склада\n"
+"%15zu  текущ брой на складираните значения\n"
+"%15zu  максимален брой на складираните значения\n"
 "%15zu  максимална дължина на веригата при търсене\n"
 "%15<PRIuMAX>  брой на задържанията на rdlock\n"
 "%15<PRIuMAX>  брой на задържанията на wrlock\n"
 "%15<PRIuMAX>  пропаднали заделяния на памет\n"
 "%15s  следене на /etc/%s за промяна\n"
 
-#: nscd/pwdcache.c:439
+#: nscd/pwdcache.c:407
 #, c-format
-msgid "Haven't found \"%s\" in password cache!"
-msgstr "В кеша за пароли не е намерен \"%s\"!"
+msgid "Haven't found \"%s\" in user database cache!"
+msgstr "Не е намерен \"%s\" в потребителската база данни!"
 
-#: nscd/pwdcache.c:441
+#: nscd/pwdcache.c:409
 #, c-format
-msgid "Reloading \"%s\" in password cache!"
-msgstr "Презареждане на \"%s\" в кеша за пароли!"
+msgid "Reloading \"%s\" in user database cache!"
+msgstr "Презареждане на \"%s\" в потребителската база данни!"
 
-#: nscd/pwdcache.c:522
+#: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Неправилен номер на потребител \"%s\"!"
@@ -4451,7 +4453,7 @@ msgstr "Пропадна отварянето на връзка към подс�
 
 #: nscd/selinux.c:175
 msgid "Failed to set keep-capabilities"
-msgstr "Не можа да се вдигне флага \"задръж-способности\""
+msgstr "Не може да се вдигне флага \"задръж-способности\""
 
 #: nscd/selinux.c:176 nscd/selinux.c:239
 msgid "prctl(KEEPCAPS) failed"
@@ -4459,7 +4461,7 @@ msgstr "prctl(KEEPCAPS) не успя"
 
 #: nscd/selinux.c:190
 msgid "Failed to initialize drop of capabilities"
-msgstr "Не можа да се подготви свалянето на \"способностите\""
+msgstr "Не може да се подготви свалянето на \"способностите\""
 
 #: nscd/selinux.c:191
 msgid "cap_init failed"
@@ -4467,7 +4469,7 @@ msgstr "cap_init не успя"
 
 #: nscd/selinux.c:212 nscd/selinux.c:229
 msgid "Failed to drop capabilities"
-msgstr "Не можаха да се свалят \"способностите\""
+msgstr "Не може да се свалят \"способностите\""
 
 #: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "cap_set_proc failed"
@@ -4475,19 +4477,19 @@ msgstr "cap_set_proc не успя"
 
 #: nscd/selinux.c:238
 msgid "Failed to unset keep-capabilities"
-msgstr "Не можа да се свали флагът \"задръж-способности\""
+msgstr "Не може да се свали флагът \"задръж-способности\""
 
 #: nscd/selinux.c:254
 msgid "Failed to determine if kernel supports SELinux"
-msgstr "Не можа да се установи дали ядрото поддържа SELinux"
+msgstr "Не може да се установи дали ядрото поддържа SELinux"
 
 #: nscd/selinux.c:269
 msgid "Failed to start AVC thread"
-msgstr "Не можа да се пусне нишка за AVC"
+msgstr "Не може да се пусне нишка за AVC"
 
 #: nscd/selinux.c:291
 msgid "Failed to create AVC lock"
-msgstr "Не можа да се създаде заключване за AVC"
+msgstr "Не може да се създаде заключване за AVC"
 
 #: nscd/selinux.c:331
 msgid "Failed to start AVC"
@@ -4549,51 +4551,56 @@ msgstr ""
 "%15u  CAV проверки\n"
 "%15u  CAV пропускания\n"
 
-#: nscd/servicescache.c:387
+#: nscd/servicescache.c:358
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
-msgstr "Не е намерен \"%s\" в кеша на услугите!"
+msgstr "Не е намерен \"%s\" в склада с услугите!"
 
-#: nscd/servicescache.c:389
+#: nscd/servicescache.c:360
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
-msgstr "Презареждане на \"%s\" в кеша на услугите!"
+msgstr "Презареждане на \"%s\" в склада с услугите!"
 
-#: nss/getent.c:53
+#: nss/getent.c:54
 msgid "database [key ...]"
 msgstr "база_данни [ключ ...]"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "CONFIG"
 msgstr "НАСТР"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "Service configuration to be used"
 msgstr "Настройване на услугата, която да се използва"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "disable IDN encoding"
 msgstr "забрана на IDN надписи"
 
-#: nss/getent.c:64
+#: nss/getent.c:65
 msgid "Get entries from administrative database."
 msgstr "Получаване на записи от административна база данни."
 
-#: nss/getent.c:148 nss/getent.c:441 nss/getent.c:486
+#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Не се поддържа изброим тип от %s\n"
 
-#: nss/getent.c:861
+#: nss/getent.c:497 nss/getent.c:510
+#, c-format
+msgid "Could not allocate group list: %m\n"
+msgstr "Не може да се задели памет за списък на група: %m\n"
+
+#: nss/getent.c:881
 #, c-format
 msgid "Unknown database name"
 msgstr "Неизвестно има на база данни"
 
-#: nss/getent.c:891
+#: nss/getent.c:911
 msgid "Supported databases:\n"
 msgstr "Поддържани бази данни:\n"
 
-#: nss/getent.c:957
+#: nss/getent.c:977
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Неизвестна база данни: %s\n"
@@ -4784,75 +4791,75 @@ msgstr "%s: неправилна опция -- '%c'\n"
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: опцията изисква аргумент -- '%c'\n"
 
-#: posix/regcomp.c:140
+#: posix/regcomp.c:138
 msgid "No match"
 msgstr "Несъответствие"
 
-#: posix/regcomp.c:143
+#: posix/regcomp.c:141
 msgid "Invalid regular expression"
 msgstr "Неправилен регулярен израз"
 
-#: posix/regcomp.c:146
+#: posix/regcomp.c:144
 msgid "Invalid collation character"
 msgstr "Неправилен символ за сравнение на знаци"
 
-#: posix/regcomp.c:149
+#: posix/regcomp.c:147
 msgid "Invalid character class name"
 msgstr "Неправилно име на клас за знаци"
 
-#: posix/regcomp.c:152
+#: posix/regcomp.c:150
 msgid "Trailing backslash"
 msgstr "Обратна наклонена черта в края"
 
-#: posix/regcomp.c:155
+#: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Неправилна препратка назад"
 
-#: posix/regcomp.c:158
-msgid "Unmatched [ or [^"
-msgstr "Несъответствие на [ или [^"
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "Несъответствие на [, [^, [:, [. или [="
 
-#: posix/regcomp.c:161
+#: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
 msgstr "Несъответствие на ( или \\("
 
-#: posix/regcomp.c:164
+#: posix/regcomp.c:162
 msgid "Unmatched \\{"
 msgstr "Несъответствие на \\{"
 
-#: posix/regcomp.c:167
+#: posix/regcomp.c:165
 msgid "Invalid content of \\{\\}"
 msgstr "Неправилно съдържание в \\{\\}"
 
-#: posix/regcomp.c:170
+#: posix/regcomp.c:168
 msgid "Invalid range end"
 msgstr "Неправилен край за диапазон"
 
-#: posix/regcomp.c:173
+#: posix/regcomp.c:171
 msgid "Memory exhausted"
 msgstr "Паметта е изчерпана"
 
-#: posix/regcomp.c:176
+#: posix/regcomp.c:174
 msgid "Invalid preceding regular expression"
 msgstr "Неправилен предшестващ регулярен израз"
 
-#: posix/regcomp.c:179
+#: posix/regcomp.c:177
 msgid "Premature end of regular expression"
 msgstr "Преждевременен край на регулярният израз"
 
-#: posix/regcomp.c:182
+#: posix/regcomp.c:180
 msgid "Regular expression too big"
 msgstr "Регулярният израз е твърде дълъг"
 
-#: posix/regcomp.c:185
+#: posix/regcomp.c:183
 msgid "Unmatched ) or \\)"
 msgstr "Несъответствие на ) или \\)"
 
-#: posix/regcomp.c:675
+#: posix/regcomp.c:689
 msgid "No previous regular expression"
 msgstr "Липсва предишен регулярен израз"
 
-#: posix/wordexp.c:1803
+#: posix/wordexp.c:1815
 msgid "parameter null or not set"
 msgstr "параметърът е празен или не е зададен"
 
@@ -5130,130 +5137,130 @@ msgstr "недостиг на памет\n"
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: Пагубен проблем при прехвърляне на данни"
 
-#: sunrpc/clnt_perr.c:96 sunrpc/clnt_perr.c:112
+#: sunrpc/clnt_perr.c:92 sunrpc/clnt_perr.c:108
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
 msgstr "%s: %s; мин. версия= %lu, макс. версия = %lu"
 
-#: sunrpc/clnt_perr.c:103
+#: sunrpc/clnt_perr.c:99
 #, c-format
 msgid "%s: %s; why = %s\n"
 msgstr "%s: %s; причина = %s\n"
 
-#: sunrpc/clnt_perr.c:105
+#: sunrpc/clnt_perr.c:101
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
 msgstr "%s: %s; причина = (неизвестна грешка при удостоверяване - %d)\n"
 
-#: sunrpc/clnt_perr.c:154
+#: sunrpc/clnt_perr.c:150
 msgid "RPC: Success"
 msgstr "RPC: Успешно"
 
-#: sunrpc/clnt_perr.c:157
+#: sunrpc/clnt_perr.c:153
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Не може да се построят аргументите"
 
-#: sunrpc/clnt_perr.c:161
+#: sunrpc/clnt_perr.c:157
 msgid "RPC: Can't decode result"
 msgstr "RPC: Не може да се преобразува резултатът"
 
-#: sunrpc/clnt_perr.c:165
+#: sunrpc/clnt_perr.c:161
 msgid "RPC: Unable to send"
 msgstr "RPC: Не може да се изпраща"
 
-#: sunrpc/clnt_perr.c:169
+#: sunrpc/clnt_perr.c:165
 msgid "RPC: Unable to receive"
 msgstr "RPC: Не може да се приема"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:169
 msgid "RPC: Timed out"
 msgstr "RPC: Просрочване"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Несъвместима версия на RPC"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Authentication error"
 msgstr "RPC: Грешка при удостоверяване"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
 msgstr "RPC: Недостъпна програма"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Несъответствие при програма/версия"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Недостъпна процедура"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Сървърът не може да преобразува аргументите"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Remote system error"
 msgstr "RPC: Отдалечена системна грешка"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Unknown host"
 msgstr "RPC: Неизвестно име на компютър"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Неизвестен протокол"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Авария в portmapper"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Program not registered"
 msgstr "RPC: програмата не е регистрирана"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Неуспех (неопределена грешка)"
 
-#: sunrpc/clnt_perr.c:262
+#: sunrpc/clnt_perr.c:258
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (неизвестен код за грешка)"
 
-#: sunrpc/clnt_perr.c:334
+#: sunrpc/clnt_perr.c:330
 msgid "Authentication OK"
 msgstr "Успешно удостоверяване"
 
-#: sunrpc/clnt_perr.c:337
+#: sunrpc/clnt_perr.c:333
 msgid "Invalid client credential"
 msgstr "Неправилни клиентски препоръки"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:337
 msgid "Server rejected credential"
 msgstr "Сървърът отхвърля препоръките"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:341
 msgid "Invalid client verifier"
 msgstr "Неправилни \"данни за проверка\" от клиента"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:345
 msgid "Server rejected verifier"
 msgstr "Сървърът отхвърля \"данните за проверка\""
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:349
 msgid "Client credential too weak"
 msgstr "Клиентските препоръки са твърде ненадеждни"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:353
 msgid "Invalid server verifier"
 msgstr "Неправилни \"данни за проверка\" от сървъра"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:357
 msgid "Failed (unspecified error)"
 msgstr "Неуспех (неопределена грешка)"
 
-#: sunrpc/clnt_raw.c:116
+#: sunrpc/clnt_raw.c:112
 msgid "clnt_raw.c: fatal header serialization error"
 msgstr "clnt_raw.c: пагубна грешка при издаването на части на заглавието"
 
@@ -5344,195 +5351,190 @@ msgstr "Не може да се зададе повече от един вход
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
-msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr "Тази реализация не поддържа новия стил или безопасен многонишков код!\n"
-
-#: sunrpc/rpc_main.c:1358
-#, c-format
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Не може да се използва флагът мреж_ид заедно с флага inetd!\n"
 
-#: sunrpc/rpc_main.c:1367
+#: sunrpc/rpc_main.c:1358
 #, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Не може да се използва флагът мреж_ид без TIRPC!\n"
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1365
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Не може да се използват флагове за таблица при новия стил!\n"
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1384
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "\"вх_файл\" е необходим за флаговете за създаване на шаблони.\n"
 
-#: sunrpc/rpc_main.c:1398
+#: sunrpc/rpc_main.c:1389
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Не може да се използва повече от един флаг създаващ файл!\n"
 
-#: sunrpc/rpc_main.c:1407
+#: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "употреба: %s вх_файл\n"
 
-#: sunrpc/rpc_main.c:1408
+#: sunrpc/rpc_main.c:1399
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dиме[=стойност]] [-i размер] [-I [-K секунди]] [-Y път] вх_файл\n"
 
-#: sunrpc/rpc_main.c:1410
+#: sunrpc/rpc_main.c:1401
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o изх_файл] [вх_файл]\n"
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1403
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s мреж_тип]* [-o изх_файл] [вх_файл]\n"
 
-#: sunrpc/rpc_main.c:1413
+#: sunrpc/rpc_main.c:1404
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n мреж_ид]* [-o изх_файл] [вх_файл]\n"
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1412
 #, c-format
 msgid "options:\n"
 msgstr "опции:\n"
 
-#: sunrpc/rpc_main.c:1422
+#: sunrpc/rpc_main.c:1413
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr "-a\t\tсъздаване на всички файлове, включително примерни\n"
 
-#: sunrpc/rpc_main.c:1423
+#: sunrpc/rpc_main.c:1414
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr "-b\t\tрежим на съвместимост с преди (създаване на код за SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1415
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr "-c\t\tсъздаване на XDR методи\n"
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr "-C\t\tANSI Си режим\n"
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1417
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr "-Dиме[=стойност]\tопределяне на символ (също като #define)\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr "-h\t\tсъздаване на заглавен файл\n"
 
-#: sunrpc/rpc_main.c:1428
+#: sunrpc/rpc_main.c:1419
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr "-i размер\t\tразмер при който започва създаване на вграден код\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr "-I\t\tсъздаване на код в сървера, за поддръжка на inetd (за SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr "-K секунди\tсървера напуска след K секунди бездействие\n"
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr "-l\t\tсъздаване на празни клиентски методи\n"
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr "-L\t\tизвеждане на сърверни грешки в syslog\n"
 
-#: sunrpc/rpc_main.c:1433
+#: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr "-m\t\tсъздаване на празни сърверни методи\n"
 
-#: sunrpc/rpc_main.c:1434
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr "-M\t\tсъздаване на безопасен многонишков код\n"
 
-#: sunrpc/rpc_main.c:1435
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr "-n мреж_ид\tсъздаване на сърверен код поддържащ именуван мреж_ид\n"
 
-#: sunrpc/rpc_main.c:1436
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr "-N\t\tподдръжка на много аргументи и извикване по стойност\n"
 
-#: sunrpc/rpc_main.c:1437
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr "-o изхфайл\tиме на изходния файл\n"
 
-#: sunrpc/rpc_main.c:1438
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr "-s мреж_тип\tсъздаване на сърверен код поддържащ именуван мреж_тип\n"
 
-#: sunrpc/rpc_main.c:1439
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr "-Sc\t\tсъздаване на примерен клиентски код, който използва отдалечени процедури\n"
 
-#: sunrpc/rpc_main.c:1440
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr "-Ss\t\tсъздаване на примерен сърверен код, който определя отдалечени процедури\n"
 
-#: sunrpc/rpc_main.c:1441
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr "-Sm \t\tсъздаване на makefile шаблон \n"
 
-#: sunrpc/rpc_main.c:1442
+#: sunrpc/rpc_main.c:1433
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr "-t\t\tсъздаване на RPC препращаща таблица\n"
 
-#: sunrpc/rpc_main.c:1443
+#: sunrpc/rpc_main.c:1434
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr "-T\t\tсъздаване на код поддържащ RPC препращаща таблица\n"
 
-#: sunrpc/rpc_main.c:1444
+#: sunrpc/rpc_main.c:1435
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr "-Y път\t\tиме на директория за търсене на Си препроцесор (cpp)\n"
 
-#: sunrpc/rpc_main.c:1445
+#: sunrpc/rpc_main.c:1436
 #, c-format
 msgid "-5\t\tSysVr4 compatibility mode\n"
 msgstr "-5\t\tсъвместимост със SysVr4\n"
 
-#: sunrpc/rpc_main.c:1446
+#: sunrpc/rpc_main.c:1437
 #, c-format
 msgid "--help\t\tgive this help list\n"
 msgstr "--help\t\tизвежда този помощен списък\n"
 
-#: sunrpc/rpc_main.c:1447
+#: sunrpc/rpc_main.c:1438
 #, c-format
 msgid "--version\tprint program version\n"
 msgstr "--version\tизвежда версията на програмата\n"
 
-#: sunrpc/rpc_main.c:1449
+#: sunrpc/rpc_main.c:1440
 #, c-format
 msgid ""
 "\n"
@@ -5540,7 +5542,7 @@ msgid ""
 "%s.\n"
 msgstr ""
 "\n"
-"За подаване на рапорт за грешка, моля, вижте:\n"
+"За подаване на доклад за грешка, моля, вижте:\n"
 "%s.\n"
 
 #: sunrpc/rpc_scan.c:112
@@ -5571,30 +5573,30 @@ msgstr "svc_run: - недостиг на памет"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll не успя"
 
-#: sunrpc/svc_simple.c:80
+#: sunrpc/svc_simple.c:72
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "не може да се преназначи процедура номер %ld\n"
 
-#: sunrpc/svc_simple.c:90
+#: sunrpc/svc_simple.c:82
 msgid "couldn't create an rpc server\n"
-msgstr "не можа да се създаде rpc сървър\n"
+msgstr "не може да се създаде rpc сървър\n"
 
-#: sunrpc/svc_simple.c:98
+#: sunrpc/svc_simple.c:90
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
-msgstr "не можа да се регистрира програма %ld, версия %ld\n"
+msgstr "не може да се регистрира програма %ld, версия %ld\n"
 
-#: sunrpc/svc_simple.c:106
+#: sunrpc/svc_simple.c:98
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: недостиг на памет\n"
 
-#: sunrpc/svc_simple.c:169
+#: sunrpc/svc_simple.c:161
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "повреда при отговаряне на програма %d\n"
 
-#: sunrpc/svc_simple.c:178
+#: sunrpc/svc_simple.c:170
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "никога не е регистрирана програма %d\n"
@@ -5621,19 +5623,19 @@ msgstr "svcudp_create: xp_pad е твърде малък за IP_PKTINFO\n"
 
 #: sunrpc/svc_udp.c:481
 msgid "enablecache: cache already enabled"
-msgstr "enablecache: кешът вече е разрешен"
+msgstr "enablecache: складът вече е разрешен"
 
 #: sunrpc/svc_udp.c:487
 msgid "enablecache: could not allocate cache"
-msgstr "enablecache: не може да се задели кеш"
+msgstr "enablecache: не може да се задели за склад"
 
 #: sunrpc/svc_udp.c:496
 msgid "enablecache: could not allocate cache data"
-msgstr "enablecache: не може да се задели за данни на кеша"
+msgstr "enablecache: не може да се задели за склад за данни"
 
 #: sunrpc/svc_udp.c:504
 msgid "enablecache: could not allocate cache fifo"
-msgstr "enablecache: не може да се задели за буфер(fifo) на кеша"
+msgstr "enablecache: не може да се задели за буфер на склад (fifo)"
 
 #: sunrpc/svc_udp.c:540
 msgid "cache_set: victim not found"
@@ -5653,7 +5655,7 @@ msgstr "svc_unix.c - проблем при създаване на Юникс д
 
 #: sunrpc/svc_unix.c:179
 msgid "svc_unix.c - cannot getsockname or listen"
-msgstr "svc_unix.c - getsockname или listen не успява"
+msgstr "svc_unix.c - getsockname или listen не успя"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
@@ -6147,7 +6149,7 @@ msgstr "Мрежата е недостъпна"
 #. TRANS A network connection was reset because the remote host crashed.
 #: sysdeps/gnu/errlist.c:595
 msgid "Network dropped connection on reset"
-msgstr "Прекъснато мрежова връзка поради повторно пускане"
+msgstr "Прекъсната мрежова връзка при повторно пускане"
 
 #. TRANS A network connection was aborted locally.
 #: sysdeps/gnu/errlist.c:604
@@ -6452,192 +6454,192 @@ msgid "Operation canceled"
 msgstr "Отменена операция"
 
 #: sysdeps/gnu/errlist.c:1095
+msgid "Owner died"
+msgstr "Собственикът умря"
+
+#: sysdeps/gnu/errlist.c:1103
+msgid "State not recoverable"
+msgstr "Невъзстановимо състояние"
+
+#: sysdeps/gnu/errlist.c:1111
 msgid "Interrupted system call should be restarted"
 msgstr "Прекъснатото системно извикване трябва да бъде пуснато повторно"
 
-#: sysdeps/gnu/errlist.c:1103
+#: sysdeps/gnu/errlist.c:1119
 msgid "Channel number out of range"
 msgstr "Номер на канал извън диапазона"
 
-#: sysdeps/gnu/errlist.c:1111
+#: sysdeps/gnu/errlist.c:1127
 msgid "Level 2 not synchronized"
 msgstr "Ниво 2 — синхронизирано"
 
-#: sysdeps/gnu/errlist.c:1119
+#: sysdeps/gnu/errlist.c:1135
 msgid "Level 3 halted"
 msgstr "Ниво 3 — преустановено"
 
-#: sysdeps/gnu/errlist.c:1127
+#: sysdeps/gnu/errlist.c:1143
 msgid "Level 3 reset"
-msgstr "Ниво 3 — занулен"
+msgstr "Ниво 3 — занулено"
 
-#: sysdeps/gnu/errlist.c:1135
+#: sysdeps/gnu/errlist.c:1151
 msgid "Link number out of range"
 msgstr "Номер на връзка извън диапазона"
 
-#: sysdeps/gnu/errlist.c:1143
+#: sysdeps/gnu/errlist.c:1159
 msgid "Protocol driver not attached"
 msgstr "Непривързан протоколен механизъм"
 
-#: sysdeps/gnu/errlist.c:1151
+#: sysdeps/gnu/errlist.c:1167
 msgid "No CSI structure available"
 msgstr "Не е налична CSI-структура"
 
-#: sysdeps/gnu/errlist.c:1159
+#: sysdeps/gnu/errlist.c:1175
 msgid "Level 2 halted"
 msgstr "Ниво 2 — преустановено"
 
-#: sysdeps/gnu/errlist.c:1167
+#: sysdeps/gnu/errlist.c:1183
 msgid "Invalid exchange"
 msgstr "Неправилен обмен"
 
-#: sysdeps/gnu/errlist.c:1175
+#: sysdeps/gnu/errlist.c:1191
 msgid "Invalid request descriptor"
 msgstr "Неправилен описател на заявка"
 
 # TODO
-#: sysdeps/gnu/errlist.c:1183
+#: sysdeps/gnu/errlist.c:1199
 msgid "Exchange full"
 msgstr "Препълнен обмен"
 
-#: sysdeps/gnu/errlist.c:1191
+#: sysdeps/gnu/errlist.c:1207
 msgid "No anode"
-msgstr "Няма а-възел(a-node)"
+msgstr "Няма а-възел (a-node)"
 
-#: sysdeps/gnu/errlist.c:1199
+#: sysdeps/gnu/errlist.c:1215
 msgid "Invalid request code"
 msgstr "Неправилен код на заявка"
 
-#: sysdeps/gnu/errlist.c:1207
+#: sysdeps/gnu/errlist.c:1223
 msgid "Invalid slot"
-msgstr "Неправилен слот"
+msgstr "Неправилен жлеб"
 
-#: sysdeps/gnu/errlist.c:1215
+#: sysdeps/gnu/errlist.c:1231
 msgid "File locking deadlock error"
 msgstr "Грешка от безизходно положение при заключване на файлове"
 
-#: sysdeps/gnu/errlist.c:1223
+#: sysdeps/gnu/errlist.c:1239
 msgid "Bad font file format"
 msgstr "Неправилен формат на файл с шрифт"
 
-#: sysdeps/gnu/errlist.c:1231
+#: sysdeps/gnu/errlist.c:1247
 msgid "Machine is not on the network"
 msgstr "Машината не е в мрежа"
 
-#: sysdeps/gnu/errlist.c:1239
+#: sysdeps/gnu/errlist.c:1255
 msgid "Package not installed"
 msgstr "Пакетът не е инсталиран"
 
 # TODO
-#: sysdeps/gnu/errlist.c:1247
+#: sysdeps/gnu/errlist.c:1263
 msgid "Advertise error"
 msgstr "Грешка при осведомяване"
 
 # TODO
-#: sysdeps/gnu/errlist.c:1255
+#: sysdeps/gnu/errlist.c:1271
 msgid "Srmount error"
 msgstr "Грешка при srmount"
 
-#: sysdeps/gnu/errlist.c:1263
+#: sysdeps/gnu/errlist.c:1279
 msgid "Communication error on send"
 msgstr "Грешка при изпращане"
 
-#: sysdeps/gnu/errlist.c:1271
+#: sysdeps/gnu/errlist.c:1287
 msgid "RFS specific error"
 msgstr "RFS-грешка"
 
-#: sysdeps/gnu/errlist.c:1279
+#: sysdeps/gnu/errlist.c:1295
 msgid "Name not unique on network"
 msgstr "Името не е неповторимо в мрежата"
 
-#: sysdeps/gnu/errlist.c:1287
+#: sysdeps/gnu/errlist.c:1303
 msgid "File descriptor in bad state"
 msgstr "Файловият описател е в лошо състояние"
 
-#: sysdeps/gnu/errlist.c:1295
+#: sysdeps/gnu/errlist.c:1311
 msgid "Remote address changed"
 msgstr "Отдалеченият адрес е сменен"
 
-#: sysdeps/gnu/errlist.c:1303
+#: sysdeps/gnu/errlist.c:1319
 msgid "Can not access a needed shared library"
 msgstr "Не е достъпна необходимата споделена библиотека"
 
-#: sysdeps/gnu/errlist.c:1311
+#: sysdeps/gnu/errlist.c:1327
 msgid "Accessing a corrupted shared library"
 msgstr "Достъпва се повредена споделена библиотека"
 
-#: sysdeps/gnu/errlist.c:1319
+#: sysdeps/gnu/errlist.c:1335
 msgid ".lib section in a.out corrupted"
 msgstr "Повреден .lib-раздел в a.out"
 
-#: sysdeps/gnu/errlist.c:1327
+#: sysdeps/gnu/errlist.c:1343
 msgid "Attempting to link in too many shared libraries"
 msgstr "Опитва се свързване в твърде много споделени библиотеки"
 
-#: sysdeps/gnu/errlist.c:1335
+#: sysdeps/gnu/errlist.c:1351
 msgid "Cannot exec a shared library directly"
 msgstr "Споделена библиотека не може да се изпълнява пряко"
 
-#: sysdeps/gnu/errlist.c:1343
+#: sysdeps/gnu/errlist.c:1359
 msgid "Streams pipe error"
-msgstr "Канална грешка при потоци"
+msgstr "Грешка при непрекъснат поток"
 
-#: sysdeps/gnu/errlist.c:1351
+#: sysdeps/gnu/errlist.c:1367
 msgid "Structure needs cleaning"
 msgstr "Структурата се нуждае от почистване"
 
 # TODO
-#: sysdeps/gnu/errlist.c:1359
+#: sysdeps/gnu/errlist.c:1375
 msgid "Not a XENIX named type file"
 msgstr "Не е XENIX-именуван типов файл"
 
-#: sysdeps/gnu/errlist.c:1367
+#: sysdeps/gnu/errlist.c:1383
 msgid "No XENIX semaphores available"
 msgstr "Няма налични XENIX-семафори"
 
-#: sysdeps/gnu/errlist.c:1375
+#: sysdeps/gnu/errlist.c:1391
 msgid "Is a named type file"
-msgstr "Именуван типов файл е"
+msgstr "Именуван типов файл"
 
-#: sysdeps/gnu/errlist.c:1383
+#: sysdeps/gnu/errlist.c:1399
 msgid "Remote I/O error"
 msgstr "Отдалечена входно-изходна грешка"
 
-#: sysdeps/gnu/errlist.c:1391
+#: sysdeps/gnu/errlist.c:1407
 msgid "No medium found"
 msgstr "Не е открит носител"
 
-#: sysdeps/gnu/errlist.c:1399
+#: sysdeps/gnu/errlist.c:1415
 msgid "Wrong medium type"
 msgstr "Неправилен тип на носител"
 
-#: sysdeps/gnu/errlist.c:1407
+#: sysdeps/gnu/errlist.c:1423
 msgid "Required key not available"
 msgstr "Необходимият ключ не е наличен"
 
-#: sysdeps/gnu/errlist.c:1415
+#: sysdeps/gnu/errlist.c:1431
 msgid "Key has expired"
 msgstr "Ключът е с изтекъл срок"
 
-#: sysdeps/gnu/errlist.c:1423
+#: sysdeps/gnu/errlist.c:1439
 msgid "Key has been revoked"
-msgstr "Ключът е бил анулиран"
+msgstr "Ключът е бил отменен"
 
-#: sysdeps/gnu/errlist.c:1431
+#: sysdeps/gnu/errlist.c:1447
 msgid "Key was rejected by service"
 msgstr "Ключът е отказан от услугата"
 
-#: sysdeps/gnu/errlist.c:1439
-msgid "Owner died"
-msgstr "Собственикът умря"
-
-#: sysdeps/gnu/errlist.c:1447
-msgid "State not recoverable"
-msgstr "Невъзстановимо състояние"
-
 #: sysdeps/gnu/errlist.c:1455
 msgid "Operation not possible due to RF-kill"
-msgstr "Действието не е позволено, заради радиозабрана(RF-kill)"
+msgstr "Действието не е позволено, заради радио забрана (RF-kill)"
 
 #: sysdeps/gnu/errlist.c:1463
 msgid "Memory page has hardware error"
@@ -6681,7 +6683,7 @@ msgstr "Не е известно името на услугата"
 
 #: sysdeps/posix/gai_strerror-strs.h:9
 msgid "Servname not supported for ai_socktype"
-msgstr "Име на услуга не се поддържа за типа гнездо(ai_socktype)"
+msgstr "Име на услуга не се поддържа за типа гнездо (ai_socktype)"
 
 #: sysdeps/posix/gai_strerror-strs.h:10
 msgid "ai_socktype not supported"
@@ -6744,6 +6746,26 @@ msgstr "не може да се отвори \"%s\""
 msgid "cannot read header from `%s'"
 msgstr "не може да се прочете заглавието на \"%s\""
 
+#: sysdeps/x86/dl-cet.c:202
+msgid "mprotect legacy bitmap failed"
+msgstr "не може да се защити паметта на унаследен образ"
+
+#: sysdeps/x86/dl-cet.c:217
+msgid "legacy bitmap isn't available"
+msgstr "Не съществува унаследен образ"
+
+#: sysdeps/x86/dl-cet.c:247
+msgid "failed to mark legacy code region"
+msgstr "не може да отбележи областта с унаследен код"
+
+#: sysdeps/x86/dl-cet.c:269
+msgid "shadow stack isn't enabled"
+msgstr "не е разрешено използването на стек в сянка"
+
+#: sysdeps/x86/dl-cet.c:290
+msgid "can't disable CET"
+msgstr "не може да се забрани технологията за изпълнение на управляващия поток (CET)"
+
 #: timezone/zdump.c:338
 msgid "has fewer than 3 characters"
 msgstr "е по-кратко от три букви"
@@ -6786,7 +6808,7 @@ msgstr ""
 "  --help     Извежда тази помощ\n"
 "  --version  Извеждане на сведение за версията\n"
 "\n"
-"Рапорт за грешка на %s.\n"
+"Доклад за грешка на %s.\n"
 
 #: timezone/zdump.c:479
 #, c-format
@@ -6839,7 +6861,7 @@ msgstr ""
 "\t[ -l местновреме ] [ -p posix_правило ] [ -d директория ] \\\n"
 "\t[ -L високоснисекунди ] [ именафайл ... ]\n"
 "\n"
-"Рапортуване на грешки към %s.\n"
+"Докладване на грешки към %s.\n"
 
 #: timezone/zic.c:558
 #, c-format
@@ -7210,7 +7232,7 @@ msgstr "съкращението за часова зона е с твърде �
 
 #: timezone/zic.c:3112
 msgid "time zone abbreviation differs from POSIX standard"
-msgstr "съкращението за часова зона се различава от POSIX стандарта"
+msgstr "съкращението за часова зона се различава от стандарта POSIX"
 
 #: timezone/zic.c:3118
 msgid "too many, or too long, time zone abbreviations"
@@ -7220,9 +7242,3 @@ msgstr "твърде много или твърде дълго съкращен�
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Не може да се създаде директория %s: %s"
-
-#~ msgid "no definition of `UNDEFINED'"
-#~ msgstr "няма определение за \"UNDEFINED\""
-
-#~ msgid "non-symbolic character value should not be used"
-#~ msgstr "не символична знакова стойност не трябва да се използва"

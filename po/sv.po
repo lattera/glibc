@@ -5,12 +5,12 @@
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003, 2006, 2007, 2008, 2009, 2011, 2012, 2013, 2014, 2015.
 # Göran Uddeborg <goeran@uddeborg.se>, 2016, 2017, 2018.
 #
-# $Revision: 1.12 $
+# $Revision: 1.15 $
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.26.9000\n"
-"POT-Creation-Date: 2018-01-10 15:00+0000\n"
-"PO-Revision-Date: 2018-01-10 21:46+0100\n"
+"Project-Id-Version: libc 2.27.9000\n"
+"POT-Creation-Date: 2018-07-26 22:19-0400\n"
+"PO-Revision-Date: 2018-07-29 13:17+0200\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -107,8 +107,12 @@ msgstr "(PROGRAMFEL) Flagga skulle känts igen!?"
 
 #: assert/assert-perr.c:35
 #, c-format
-msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s:%u: %s%sOväntat fel: %s.\n"
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%sOväntat fel: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -151,7 +155,7 @@ msgstr ""
 #: elf/pldd.c:252 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:275
 #: locale/programs/localedef.c:427 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:913 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:933 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -167,7 +171,7 @@ msgstr ""
 #: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:292 locale/programs/localedef.c:453
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71
-#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:86 nss/makedb.c:385
+#: malloc/memusagestat.c:581 nscd/nscd.c:509 nss/getent.c:87 nss/makedb.c:385
 #: posix/getconf.c:485 sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -184,7 +188,7 @@ msgstr ""
 #: elf/ldconfig.c:329 elf/pldd.c:273 elf/sprof.c:395 iconv/iconv_prog.c:427
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:297
 #: locale/programs/localedef.c:458 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:91 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -386,56 +390,57 @@ msgstr "ogiltig lägesparameter"
 msgid "unknown"
 msgstr "okänt"
 
-#: elf/cache.c:135
+#: elf/cache.c:141
 msgid "Unknown OS"
 msgstr "Okänt OS"
 
-#: elf/cache.c:140
+#: elf/cache.c:146
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:157 elf/ldconfig.c:1332
+#: elf/cache.c:163 elf/ldconfig.c:1332
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Kan inte öppna cache-filen %s\n"
 
-#: elf/cache.c:171
+#: elf/cache.c:177
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "minnesmappning av cache-fil misslyckades.\n"
 
-#: elf/cache.c:175 elf/cache.c:189
+#: elf/cache.c:181 elf/cache.c:195
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Filen är inte en cache-fil.\n"
 
-#: elf/cache.c:222 elf/cache.c:232
+#: elf/cache.c:228 elf/cache.c:238
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d bibliotek hittades i cache \"%s\"\n"
 
-#: elf/cache.c:426
+#: elf/cache.c:432
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Kan inte skapa en temporär cache-fil %s"
 
-#: elf/cache.c:434 elf/cache.c:444 elf/cache.c:448 elf/cache.c:453
+#: elf/cache.c:440 elf/cache.c:450 elf/cache.c:454 elf/cache.c:458
+#: elf/cache.c:468
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Skrivning av cache-data misslyckades"
 
-#: elf/cache.c:458
+#: elf/cache.c:463
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Misslyckades med att byta åtkomsträttigheter för %s till %#o"
 
-#: elf/cache.c:463
+#: elf/cache.c:472
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Namnbyte på %s till %s misslyckades"
 
-#: elf/dl-close.c:399 elf/dl-open.c:425
+#: elf/dl-close.c:399 elf/dl-open.c:420
 msgid "cannot create scope list"
 msgstr "kan inte skapa omfångslista"
 
@@ -443,30 +448,34 @@ msgstr "kan inte skapa omfångslista"
 msgid "shared object not open"
 msgstr "delat objekt är inte öppnat"
 
-#: elf/dl-deps.c:111
+#: elf/dl-deps.c:112
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST inte tillåten i SUID/SGID-program"
 
-#: elf/dl-deps.c:124
+#: elf/dl-deps.c:125
 msgid "empty dynamic string token substitution"
 msgstr "substitution av \"dynamic string token\" är tom"
 
-#: elf/dl-deps.c:130
+#: elf/dl-deps.c:131
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr ""
 "kan inte ladda extra \"%s\" på grund av att substitution av\n"
 "\"dynamic string token\" är tom\n"
 
-#: elf/dl-deps.c:442
+#: elf/dl-deps.c:220
+msgid "cannot allocate dependency buffer"
+msgstr "kan inte allokera beroendebuffert"
+
+#: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "kan inte allokera beroendelista"
 
-#: elf/dl-deps.c:479 elf/dl-deps.c:539
+#: elf/dl-deps.c:483 elf/dl-deps.c:543
 msgid "cannot allocate symbol search list"
 msgstr "kan inte allokera söklista för symboler"
 
-#: elf/dl-deps.c:519
+#: elf/dl-deps.c:523
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filter stöds ej med LD_TRACE_PRELINKING"
 
@@ -494,139 +503,139 @@ msgstr "internt fel: symidx är utanför intervallet för fptr-tabellen"
 msgid "cannot create capability list"
 msgstr "kan inte skapa egenskapslista"
 
-#: elf/dl-load.c:369
+#: elf/dl-load.c:427
 msgid "cannot allocate name record"
 msgstr "kan inte allokera namnpost"
 
-#: elf/dl-load.c:455 elf/dl-load.c:568 elf/dl-load.c:657 elf/dl-load.c:753
+#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
 msgid "cannot create cache for search path"
 msgstr "kan inte skapa cache för sökväg"
 
-#: elf/dl-load.c:551
+#: elf/dl-load.c:609
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan inte skapa kopia av RUNPATH/RPATH"
 
-#: elf/dl-load.c:644
+#: elf/dl-load.c:702
 msgid "cannot create search path array"
 msgstr "kan inte skapa sökvägslista"
 
-#: elf/dl-load.c:825
+#: elf/dl-load.c:883
 msgid "cannot stat shared object"
 msgstr "kan inte ta status på delat objekt"
 
-#: elf/dl-load.c:902
+#: elf/dl-load.c:960
 msgid "cannot open zero fill device"
 msgstr "kan inte öppna nollfyllnadsenhet"
 
-#: elf/dl-load.c:949 elf/dl-load.c:2125
+#: elf/dl-load.c:1007 elf/dl-load.c:2203
 msgid "cannot create shared object descriptor"
 msgstr "kan inte skapa delad objektdeskriptor"
 
-#: elf/dl-load.c:968 elf/dl-load.c:1499 elf/dl-load.c:1611
+#: elf/dl-load.c:1026 elf/dl-load.c:1560 elf/dl-load.c:1673
 msgid "cannot read file data"
 msgstr "kan inte läsa fildata"
 
-#: elf/dl-load.c:1014
+#: elf/dl-load.c:1072
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF-laddkommando är inte på sidgräns"
 
-#: elf/dl-load.c:1021
+#: elf/dl-load.c:1079
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Adress/position för ELF-laddkommando är inte på rätt bytegräns"
 
-#: elf/dl-load.c:1106
+#: elf/dl-load.c:1161
+msgid "cannot process note segment"
+msgstr "kan inte återställa bearbeta noteringssegmentet"
+
+#: elf/dl-load.c:1172
 msgid "object file has no loadable segments"
 msgstr "objektfilen har inga laddbara segment"
 
-#: elf/dl-load.c:1115 elf/dl-load.c:1591
+#: elf/dl-load.c:1181 elf/dl-load.c:1652
 msgid "cannot dynamically load executable"
 msgstr "kan inte ladda exekverbar fil dynamiskt"
 
-#: elf/dl-load.c:1136
+#: elf/dl-load.c:1202
 msgid "object file has no dynamic section"
 msgstr "objektfilen har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1159
+#: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
 msgstr "delat objekt kan inte göras dlopen() på"
 
-#: elf/dl-load.c:1172
+#: elf/dl-load.c:1238
 msgid "cannot allocate memory for program header"
 msgstr "kan inte allokera minne för programhuvud"
 
-#: elf/dl-load.c:1188 elf/dl-open.c:193
-msgid "invalid caller"
-msgstr "ogiltig anropare"
-
-#: elf/dl-load.c:1211 elf/dl-load.h:130
+#: elf/dl-load.c:1271 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "kan inte ändra minnesskydd"
 
-#: elf/dl-load.c:1231
+#: elf/dl-load.c:1291
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan inte skapa exekverbar stack som delat objekt kräver"
 
-#: elf/dl-load.c:1244
+#: elf/dl-load.c:1304
 msgid "cannot close file descriptor"
 msgstr "kan inte stänga filidentifierare"
 
-#: elf/dl-load.c:1499
+#: elf/dl-load.c:1560
 msgid "file too short"
 msgstr "fil för kort"
 
-#: elf/dl-load.c:1534
+#: elf/dl-load.c:1595
 msgid "invalid ELF header"
 msgstr "ogiltigt ELF-huvud"
 
-#: elf/dl-load.c:1546
+#: elf/dl-load.c:1607
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning för ELF-fildata är inte rak byteordning"
 
-#: elf/dl-load.c:1548
+#: elf/dl-load.c:1609
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning för ELF-fildata är inte omvänd byteordning"
 
-#: elf/dl-load.c:1552
+#: elf/dl-load.c:1613
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens versionsidentitet stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1556
+#: elf/dl-load.c:1617
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-fil har felaktig version på OS-ABI"
 
-#: elf/dl-load.c:1559
+#: elf/dl-load.c:1620
 msgid "ELF file ABI version invalid"
 msgstr "ELF-fil har felaktig version på ABI"
 
-#: elf/dl-load.c:1562
+#: elf/dl-load.c:1623
 msgid "nonzero padding in e_ident"
 msgstr "utfyllnad med annat än nolltecken i e_ident"
 
-#: elf/dl-load.c:1565
+#: elf/dl-load.c:1626
 msgid "internal error"
 msgstr "internt fel"
 
-#: elf/dl-load.c:1572
+#: elf/dl-load.c:1633
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1580
+#: elf/dl-load.c:1641
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "bara ET_DYN och ET_EXEC kan laddas"
 
-#: elf/dl-load.c:1596
+#: elf/dl-load.c:1657
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens värde på \"phentsize\" är inte den förväntade"
 
-#: elf/dl-load.c:2144
+#: elf/dl-load.c:2222
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "fel ELF-klass: ELFCLASS64"
 
-#: elf/dl-load.c:2145
+#: elf/dl-load.c:2223
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "fel ELF-klass: ELFCLASS32"
 
-#: elf/dl-load.c:2148
+#: elf/dl-load.c:2226
 msgid "cannot open shared object file"
 msgstr "kan inte öppna delad objektfil"
 
@@ -638,31 +647,31 @@ msgstr "misslyckades att mappa segment från delat objekt"
 msgid "cannot map zero-fill pages"
 msgstr "kan inte mappa nollfyllda sidor"
 
-#: elf/dl-lookup.c:834
+#: elf/dl-lookup.c:835
 msgid "relocation error"
 msgstr "fel vid relokering"
 
-#: elf/dl-lookup.c:857
+#: elf/dl-lookup.c:858
 msgid "symbol lookup error"
 msgstr "fel vid symboluppslagning"
 
-#: elf/dl-open.c:101
+#: elf/dl-open.c:99
 msgid "cannot extend global scope"
 msgstr "kan inte utöka globalt område"
 
-#: elf/dl-open.c:475
+#: elf/dl-open.c:470
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Generationsräknare för TLS slog runt!  Var snäll och rapportera detta."
 
-#: elf/dl-open.c:539
+#: elf/dl-open.c:534
 msgid "invalid mode for dlopen()"
 msgstr "ogiltiga flaggor för dlopen()"
 
-#: elf/dl-open.c:556
+#: elf/dl-open.c:551
 msgid "no more namespaces available for dlmopen()"
 msgstr "inga fler namnrymder tillgängliga för dlmopen()"
 
-#: elf/dl-open.c:580
+#: elf/dl-open.c:575
 msgid "invalid target namespace in dlmopen()"
 msgstr "ogiltig målnamnrymd för dlmopen()"
 
@@ -1614,17 +1623,13 @@ msgid "Error: .netrc file is readable by others."
 msgstr "Fel: .netrc kan läsas av andra."
 
 #: inet/ruserpass.c:180
-msgid "Remove password or make file unreadable by others."
-msgstr "Ta bort lösenord eller gör filen oläsbar för andra."
+msgid "Remove 'password' line or make file unreadable by others."
+msgstr "Ta bort raden ”password” eller gör filen oläsbar för andra."
 
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Okänt .netrc-nyckelord %s"
-
-#: libidn/nfkc.c:463
-msgid "Character out of range for UTF-8"
-msgstr "Tecken utanför intervallet för UTF-8"
 
 #: locale/programs/charmap-dir.c:56
 #, c-format
@@ -1727,7 +1732,7 @@ msgstr "inget symboliskt namn givet för slutet av intervallet"
 #: locale/programs/ld-measurement.c:213 locale/programs/ld-messages.c:295
 #: locale/programs/ld-monetary.c:748 locale/programs/ld-name.c:262
 #: locale/programs/ld-numeric.c:325 locale/programs/ld-paper.c:212
-#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:934
+#: locale/programs/ld-telephone.c:276 locale/programs/ld-time.c:959
 #: locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
@@ -1754,7 +1759,7 @@ msgstr "%s: fel i tillståndsmaskin"
 #: locale/programs/ld-measurement.c:229 locale/programs/ld-messages.c:311
 #: locale/programs/ld-monetary.c:764 locale/programs/ld-name.c:278
 #: locale/programs/ld-numeric.c:341 locale/programs/ld-paper.c:228
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:950
+#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:990
 #: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
@@ -1799,7 +1804,7 @@ msgstr "resulterande byte för intervall är inte representerbara."
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
 #: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:89
-#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:158
+#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Hittade ingen definition för kategori %s"
@@ -1814,8 +1819,8 @@ msgstr "Hittade ingen definition för kategori %s"
 #: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:111
 #: locale/programs/ld-numeric.c:125 locale/programs/ld-paper.c:100
 #: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:103
-#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:174
-#: locale/programs/ld-time.c:195
+#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:180
+#: locale/programs/ld-time.c:201
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: fält \"%s\" är inte definierat"
@@ -1865,8 +1870,8 @@ msgstr "%s: numerisk landkod \"%d\" är inte giltig"
 #: locale/programs/ld-monetary.c:503 locale/programs/ld-monetary.c:538
 #: locale/programs/ld-monetary.c:579 locale/programs/ld-name.c:235
 #: locale/programs/ld-numeric.c:217 locale/programs/ld-paper.c:195
-#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:839
-#: locale/programs/ld-time.c:881
+#: locale/programs/ld-telephone.c:251 locale/programs/ld-time.c:864
+#: locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: fält \"%s\" är deklarerad mer än en gång"
@@ -1875,8 +1880,8 @@ msgstr "%s: fält \"%s\" är deklarerad mer än en gång"
 #: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
 #: locale/programs/ld-monetary.c:507 locale/programs/ld-monetary.c:542
 #: locale/programs/ld-name.c:239 locale/programs/ld-numeric.c:221
-#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:733
-#: locale/programs/ld-time.c:802 locale/programs/ld-time.c:844
+#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:756
+#: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: okänt tecken i fält \"%s\""
@@ -1886,7 +1891,7 @@ msgstr "%s: okänt tecken i fält \"%s\""
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
 #: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
-#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:932
+#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: ofullständig \"END\"-rad"
@@ -1901,7 +1906,7 @@ msgstr "%s: ofullständig \"END\"-rad"
 #: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:302
 #: locale/programs/ld-monetary.c:755 locale/programs/ld-name.c:269
 #: locale/programs/ld-numeric.c:332 locale/programs/ld-paper.c:219
-#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:941
+#: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: syntaxfel"
@@ -2443,82 +2448,82 @@ msgstr "omvandlingsvärde kan inte vara noll"
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: ogiltig kontrollsekvens i fält \"%s\""
 
-#: locale/programs/ld-time.c:245
+#: locale/programs/ld-time.c:251
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: riktningsflagga i sträng %Zd i \"era\"-fält är varken \"+\" eller \"-\""
 
-#: locale/programs/ld-time.c:255
+#: locale/programs/ld-time.c:261
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: riktningsflagga i sträng %Zd i \"era\"-fält är inte ett enskilt tecken"
 
-#: locale/programs/ld-time.c:267
+#: locale/programs/ld-time.c:273
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: ogiltigt tal för tilläggsvärde i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:274
+#: locale/programs/ld-time.c:280
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: skräp i slutet av tilläggsvärde i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:324
+#: locale/programs/ld-time.c:330
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: ogiltigt startdatum i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:332
+#: locale/programs/ld-time.c:338
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: skräp i slutet av startdatum i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:350
+#: locale/programs/ld-time.c:356
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: startdatum är ogiltigt i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:398 locale/programs/ld-time.c:424
+#: locale/programs/ld-time.c:404 locale/programs/ld-time.c:430
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: ogiltigt slutdatum i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:406
+#: locale/programs/ld-time.c:412
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: skräp i slutet av slutdatum i sträng %Zd i \"era\"-fält"
 
-#: locale/programs/ld-time.c:432
+#: locale/programs/ld-time.c:438
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: eranamn i sträng %Zd i \"era\"-fält saknas"
 
-#: locale/programs/ld-time.c:443
+#: locale/programs/ld-time.c:449
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: eraformat i sträng %Zd i \"era\"-fält saknas"
 
-#: locale/programs/ld-time.c:488
+#: locale/programs/ld-time.c:494
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: tredje operanden för värdet av fält \"%s\" kan inte vara större än %d"
 
-#: locale/programs/ld-time.c:496 locale/programs/ld-time.c:504
-#: locale/programs/ld-time.c:512
+#: locale/programs/ld-time.c:502 locale/programs/ld-time.c:510
+#: locale/programs/ld-time.c:518
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: värden på fält \"%s\" får inte vara större än %d"
 
-#: locale/programs/ld-time.c:717
+#: locale/programs/ld-time.c:740
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: för få värden för fält \"%s\""
 
-#: locale/programs/ld-time.c:762
+#: locale/programs/ld-time.c:785
 msgid "extra trailing semicolon"
 msgstr "extra avslutande semikolon"
 
-#: locale/programs/ld-time.c:765
+#: locale/programs/ld-time.c:788
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s: för många värden för fält \"%s\""
@@ -3138,7 +3143,7 @@ msgstr "Okänt systemfel"
 msgid "unable to free arguments"
 msgstr "kan inte avallokera argument"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:824 nis/ypclnt.c:913 posix/regcomp.c:137
+#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
 #: sysdeps/gnu/errlist.c:21
 msgid "Success"
 msgstr "Lyckat"
@@ -3180,7 +3185,7 @@ msgid "First/next chain broken"
 msgstr "Första/Nästa-kedja bruten"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:869 sysdeps/gnu/errlist.c:158
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
 msgid "Permission denied"
 msgstr "Åtkomst nekas"
 
@@ -3683,100 +3688,100 @@ msgstr "netname2user: LOCAL-post för %s i katalog %s är inte unik"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: borde inte ha uid 0"
 
-#: nis/ypclnt.c:827
+#: nis/ypclnt.c:828
 msgid "Request arguments bad"
 msgstr "Argument för förfrågan felaktiga"
 
-#: nis/ypclnt.c:830
+#: nis/ypclnt.c:831
 msgid "RPC failure on NIS operation"
 msgstr "RPC-fel vid NIS-operation"
 
-#: nis/ypclnt.c:833
+#: nis/ypclnt.c:834
 msgid "Can't bind to server which serves this domain"
 msgstr "Kan inte ansluta till servern som betjänar denna domän"
 
-#: nis/ypclnt.c:836
+#: nis/ypclnt.c:837
 msgid "No such map in server's domain"
 msgstr "Ingen sådan tabell i serverns domän"
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:840
 msgid "No such key in map"
 msgstr "Ingen sådan nyckel i tabellen"
 
-#: nis/ypclnt.c:842
+#: nis/ypclnt.c:843
 msgid "Internal NIS error"
 msgstr "Internt NIS-fel"
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:846
 msgid "Local resource allocation failure"
 msgstr "Allokeringsfel för lokal resurs"
 
-#: nis/ypclnt.c:848
+#: nis/ypclnt.c:849
 msgid "No more records in map database"
 msgstr "Inga fler poster i tabelldatabasen"
 
-#: nis/ypclnt.c:851
+#: nis/ypclnt.c:852
 msgid "Can't communicate with portmapper"
 msgstr "Kan inte kommunicera med portmapper"
 
-#: nis/ypclnt.c:854
+#: nis/ypclnt.c:855
 msgid "Can't communicate with ypbind"
 msgstr "Kan inte kommunicera med ypbind"
 
-#: nis/ypclnt.c:857
+#: nis/ypclnt.c:858
 msgid "Can't communicate with ypserv"
 msgstr "Kan inte kommunicera med ypserv"
 
-#: nis/ypclnt.c:860
+#: nis/ypclnt.c:861
 msgid "Local domain name not set"
 msgstr "Lokalt domännamn inte satt"
 
-#: nis/ypclnt.c:863
+#: nis/ypclnt.c:864
 msgid "NIS map database is bad"
 msgstr "NIS tabelldatabas är felaktig"
 
-#: nis/ypclnt.c:866
+#: nis/ypclnt.c:867
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS versionsskillnad klient/server - kan inte betjäna"
 
-#: nis/ypclnt.c:872
+#: nis/ypclnt.c:873
 msgid "Database is busy"
 msgstr "Databasen är upptagen"
 
-#: nis/ypclnt.c:875
+#: nis/ypclnt.c:876
 msgid "Unknown NIS error code"
 msgstr "Okänd NIS-felkod"
 
-#: nis/ypclnt.c:916
+#: nis/ypclnt.c:917
 msgid "Internal ypbind error"
 msgstr "Internt ypbind-fel"
 
-#: nis/ypclnt.c:919
+#: nis/ypclnt.c:920
 msgid "Domain not bound"
 msgstr "Domän inte bunden"
 
-#: nis/ypclnt.c:922
+#: nis/ypclnt.c:923
 msgid "System resource allocation failure"
 msgstr "Allokeringsfel för systemresurs"
 
-#: nis/ypclnt.c:925
+#: nis/ypclnt.c:926
 msgid "Unknown ypbind error"
 msgstr "Okänt ypbind-fel"
 
-#: nis/ypclnt.c:966
+#: nis/ypclnt.c:967
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: kan inte omvandla värd till nätnamn\n"
 
-#: nis/ypclnt.c:984
+#: nis/ypclnt.c:985
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: kan inte hämta serveradress\n"
 
-#: nscd/aicache.c:85 nscd/hstcache.c:485
+#: nscd/aicache.c:83 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Hittar inte \"%s\" i värdcache!"
 
-#: nscd/aicache.c:87 nscd/hstcache.c:487
+#: nscd/aicache.c:85 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Omladdar \"%s\" i värdcache!"
@@ -3810,284 +3815,279 @@ msgstr "beskär %s cache; tid %ld"
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "överväger %s-post \"%s\", tidsgräns %<PRIu64>"
 
-#: nscd/connections.c:537
+#: nscd/connections.c:520
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "ogiltig persistent databasfil \"%s\": %s"
 
-#: nscd/connections.c:545
+#: nscd/connections.c:528
 msgid "uninitialized header"
 msgstr "oinitierat huvud"
 
-#: nscd/connections.c:550
+#: nscd/connections.c:533
 msgid "header size does not match"
 msgstr "huvudstorlek stämmer inte"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:543
 msgid "file size does not match"
 msgstr "filstorlek stämmer inte"
 
-#: nscd/connections.c:577
+#: nscd/connections.c:560
 msgid "verification failed"
 msgstr "verifikation misslyckades"
 
-#: nscd/connections.c:591
+#: nscd/connections.c:574
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "föreslagen storlek på tabellen för databas %s är större än den persistenta databasens tabell"
 
-#: nscd/connections.c:602 nscd/connections.c:686
+#: nscd/connections.c:585 nscd/connections.c:669
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "kan inte skapa läsbar filidentifierare för \"%s\", ingen mmap"
 
-#: nscd/connections.c:618
+#: nscd/connections.c:601
 #, c-format
 msgid "cannot access '%s'"
 msgstr "kan inte komma åt \"%s\""
 
-#: nscd/connections.c:666
+#: nscd/connections.c:649
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "databas för %s korrupt eller använd av flera samtidigt; ta bort %s manuellt om det behövs och starta om"
 
-#: nscd/connections.c:672
+#: nscd/connections.c:655
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "kan inte skapa %s; ingen persistent databas används"
 
-#: nscd/connections.c:675
+#: nscd/connections.c:658
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "kan inte skapa %s; ingen delning möjlig"
 
-#: nscd/connections.c:746
+#: nscd/connections.c:729
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "kan inte skriva till databasfil %s: %s"
 
-#: nscd/connections.c:802
+#: nscd/connections.c:785
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan inte öppna uttag (socket): %s"
 
-#: nscd/connections.c:821
+#: nscd/connections.c:804
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan inte få uttag (socket) att acceptera förbindelser: %s"
 
-#: nscd/connections.c:878
+#: nscd/connections.c:861
 #, c-format
 msgid "disabled inotify-based monitoring for file `%s': %s"
 msgstr "avaktiverade inotify-baserad övervakning för filen ”%s”: %s"
 
-#: nscd/connections.c:882
+#: nscd/connections.c:865
 #, c-format
 msgid "monitoring file `%s` (%d)"
 msgstr "övervakar filen ”%s” (%d)"
 
-#: nscd/connections.c:895
+#: nscd/connections.c:878
 #, c-format
 msgid "disabled inotify-based monitoring for directory `%s': %s"
 msgstr "avaktiverade inotify-baserad övervakning av katalogen ”%s”: %s"
 
-#: nscd/connections.c:899
+#: nscd/connections.c:882
 #, c-format
 msgid "monitoring directory `%s` (%d)"
 msgstr "övervakar katalogen ”%s” (%d)"
 
-#: nscd/connections.c:927
+#: nscd/connections.c:910
 #, c-format
 msgid "monitoring file %s for database %s"
 msgstr "övervakar filen %s för databas %s"
 
-#: nscd/connections.c:937
+#: nscd/connections.c:920
 #, c-format
 msgid "stat failed for file `%s'; will try again later: %s"
 msgstr "stat misslyckades för filen ”%s”; kommer försöka igen senare: %s"
 
-#: nscd/connections.c:1056
+#: nscd/connections.c:1039
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "ge åtkomst till FD %d, för %s"
 
-#: nscd/connections.c:1068
+#: nscd/connections.c:1051
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "kan inte hantera äldre förfrågansversion %d, nuvarande version är %d"
 
-#: nscd/connections.c:1091
+#: nscd/connections.c:1074
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "begäran från %ld inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1096
+#: nscd/connections.c:1079
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "begäran från \"%s\" [%ld] inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1101
+#: nscd/connections.c:1084
 msgid "request not handled due to missing permission"
 msgstr "begäran inte hanterad för att rättigheter saknas"
 
-#: nscd/connections.c:1139 nscd/connections.c:1192
+#: nscd/connections.c:1122 nscd/connections.c:1148
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan inte skriva resultat: %s"
 
-#: nscd/connections.c:1283
+#: nscd/connections.c:1239
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "kunde inte hämta anropandes identitet: %s"
 
-#: nscd/connections.c:1343
+#: nscd/connections.c:1349
 #, c-format
-msgid "cannot open /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "kan inte öppna /proc/slef/cmdline: %s, kopplar ur paranoialäge"
+msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
+msgstr "kan inte öppna /proc/slef/cmdline: %m, kopplar ur paranoialäge"
 
-#: nscd/connections.c:1357
-#, c-format
-msgid "cannot read /proc/self/cmdline: %s; disabling paranoia mode"
-msgstr "kan inte läsa /proc/self/cmdline: %s, kopplar ur paranoialäge"
-
-#: nscd/connections.c:1397
+#: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående UID: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1407
+#: nscd/connections.c:1383
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående GID: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1420
+#: nscd/connections.c:1397
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "kan inte byta till föregående arbetskatalog: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1466
+#: nscd/connections.c:1444
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "återstart misslyckades: %s; kopplar ur paranoialäge"
 
-#: nscd/connections.c:1475
+#: nscd/connections.c:1453
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "kan inte byta aktuell katalog till \"/\": %s"
 
-#: nscd/connections.c:1658
+#: nscd/connections.c:1637
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "fattas data vid läsning av begäran: %s"
 
-#: nscd/connections.c:1691
+#: nscd/connections.c:1670
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "nyckellängd i begäran för lång: %d"
 
-#: nscd/connections.c:1704
+#: nscd/connections.c:1683
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "fattas data vid läsning av begäransnyckel: %s"
 
-#: nscd/connections.c:1714
+#: nscd/connections.c:1693
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: begäran mottagen (Version = %d) från PID %ld"
 
-#: nscd/connections.c:1719
+#: nscd/connections.c:1698
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: begäran mottagen (Version = %d)"
 
-#: nscd/connections.c:1859
+#: nscd/connections.c:1838
 #, c-format
 msgid "ignored inotify event for `%s` (file exists)"
 msgstr "ignorerade inotify-händelse för ”%s” (filen finns)"
 
-#: nscd/connections.c:1864
+#: nscd/connections.c:1843
 #, c-format
 msgid "monitored file `%s` was %s, removing watch"
 msgstr "den övervakade filen ”%s” var %s, tar bort vakten"
 
-#: nscd/connections.c:1872 nscd/connections.c:1914
+#: nscd/connections.c:1851 nscd/connections.c:1893
 #, c-format
 msgid "failed to remove file watch `%s`: %s"
 msgstr "misslyckades att ta bort filvakt ”%s”: %s"
 
-#: nscd/connections.c:1887
+#: nscd/connections.c:1866
 #, c-format
 msgid "monitored file `%s` was written to"
 msgstr "den övervakade filen ”%s” skrevs till"
 
-#: nscd/connections.c:1911
+#: nscd/connections.c:1890
 #, c-format
 msgid "monitored parent directory `%s` was %s, removing watch on `%s`"
 msgstr "den övervakade föräldrakatalogen ”%s” var %s, tar bort vakten av ”%s”"
 
-#: nscd/connections.c:1937
+#: nscd/connections.c:1916
 #, c-format
 msgid "monitored file `%s` was %s, adding watch"
 msgstr "den övervakade filen ”%s” var %s, lägger till vakt"
 
-#: nscd/connections.c:1949
+#: nscd/connections.c:1928
 #, c-format
 msgid "failed to add file watch `%s`: %s"
 msgstr "misslyckades med att lägga till filvakt ”%s”: %s"
 
-#: nscd/connections.c:2127 nscd/connections.c:2292
+#: nscd/connections.c:2106 nscd/connections.c:2271
 #, c-format
 msgid "disabled inotify-based monitoring after read error %d"
 msgstr "avaktiverade inotify-baserad övervakning efter läsfel %d"
 
-#: nscd/connections.c:2407
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "kan inte initiera villkorsvariabel"
 
-#: nscd/connections.c:2415
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "kunde inte starta städtråd; avslutar"
 
-#: nscd/connections.c:2429
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "kunde inte starta någon arbetstråd; avslutar"
 
-#: nscd/connections.c:2484 nscd/connections.c:2486 nscd/connections.c:2502
-#: nscd/connections.c:2512 nscd/connections.c:2530 nscd/connections.c:2541
-#: nscd/connections.c:2551
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Misslyckades att köra nscd som användare \"%s\""
 
-#: nscd/connections.c:2504
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "första getgrouplist misslyckades"
 
-#: nscd/connections.c:2513
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplist misslyckades"
 
-#: nscd/connections.c:2531
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "setgroups misslyckades"
 
-#: nscd/grpcache.c:416 nscd/hstcache.c:432 nscd/initgrcache.c:416
-#: nscd/pwdcache.c:394 nscd/servicescache.c:338
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:385
+#: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
 msgstr "ofullständig skrivning i %s: %s"
 
-#: nscd/grpcache.c:461 nscd/initgrcache.c:84
+#: nscd/grpcache.c:430 nscd/initgrcache.c:81
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Hittar inte \"%s\" i gruppcache!"
 
-#: nscd/grpcache.c:463 nscd/initgrcache.c:86
+#: nscd/grpcache.c:432 nscd/initgrcache.c:83
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Omladdar \"%s\" i gruppcache!"
 
-#: nscd/grpcache.c:542
+#: nscd/grpcache.c:492
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Ogiltigt numeriskt gruppid (gid) \"%s\"!"
@@ -4112,12 +4112,12 @@ msgstr "Hittar inte \"%s\" i nätgruppscache!"
 msgid "Reloading \"%s\" in netgroup cache!"
 msgstr "Omladdar \"%s\" i nätgruppscache!"
 
-#: nscd/netgroupcache.c:495
+#: nscd/netgroupcache.c:469
 #, c-format
 msgid "Haven't found \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Hittar inte \"%s (%s,%s,%s)\" i nätgruppscache!"
 
-#: nscd/netgroupcache.c:498
+#: nscd/netgroupcache.c:472
 #, c-format
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Omladdar \"%s (%s,%s,%s)\" i nätgruppscache!"
@@ -4170,7 +4170,7 @@ msgstr "Använd separat cache för varje användare"
 msgid "Name Service Cache Daemon."
 msgstr "Cache-demon för namntjänsten."
 
-#: nscd/nscd.c:155 nss/getent.c:947 nss/makedb.c:206
+#: nscd/nscd.c:155 nss/getent.c:967 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "fel antal argument"
@@ -4430,17 +4430,17 @@ msgstr ""
 "%15<PRIuMAX>  antal misslyckade minnesallokeringar\n"
 "%15s  kontrollera /etc/%s för ändringar\n"
 
-#: nscd/pwdcache.c:439
+#: nscd/pwdcache.c:407
 #, c-format
-msgid "Haven't found \"%s\" in password cache!"
-msgstr "Hittar inte \"%s\" i lösenordscache!"
+msgid "Haven't found \"%s\" in user database cache!"
+msgstr "Hittar inte ”%s” i användaradatabascachen!"
 
-#: nscd/pwdcache.c:441
+#: nscd/pwdcache.c:409
 #, c-format
-msgid "Reloading \"%s\" in password cache!"
-msgstr "Omladdar \"%s\" i lösenordscache!"
+msgid "Reloading \"%s\" in user database cache!"
+msgstr "Omladdar ”%s” i användardatabascachen!"
 
-#: nscd/pwdcache.c:522
+#: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Ogiltigt numeriskt användarid (uid) \"%s\"!"
@@ -4550,51 +4550,56 @@ msgstr ""
 "%15u  CAV-sonderingar\n"
 "%15u  CAV-missar\n"
 
-#: nscd/servicescache.c:387
+#: nscd/servicescache.c:358
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr "Hittar inte \"%s\" i servicecache!"
 
-#: nscd/servicescache.c:389
+#: nscd/servicescache.c:360
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr "Omladdar \"%s\" i servicecache!"
 
-#: nss/getent.c:53
+#: nss/getent.c:54
 msgid "database [key ...]"
 msgstr "databas [nyckel ...]"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "CONFIG"
 msgstr "CONFIG"
 
-#: nss/getent.c:58
+#: nss/getent.c:59
 msgid "Service configuration to be used"
 msgstr "Tjänstekonfiguration som ska användas"
 
-#: nss/getent.c:59
+#: nss/getent.c:60
 msgid "disable IDN encoding"
 msgstr "inaktivera DIN-kodning"
 
-#: nss/getent.c:64
+#: nss/getent.c:65
 msgid "Get entries from administrative database."
 msgstr "Hämta poster från den administrativa databasen."
 
-#: nss/getent.c:148 nss/getent.c:441 nss/getent.c:486
+#: nss/getent.c:149 nss/getent.c:442 nss/getent.c:489
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Uppräkning stödjs ej på %s\n"
 
-#: nss/getent.c:861
+#: nss/getent.c:497 nss/getent.c:510
+#, c-format
+msgid "Could not allocate group list: %m\n"
+msgstr "Kunde inte allokera en grupplista: %m\n"
+
+#: nss/getent.c:881
 #, c-format
 msgid "Unknown database name"
 msgstr "Okänt databasnamn"
 
-#: nss/getent.c:891
+#: nss/getent.c:911
 msgid "Supported databases:\n"
 msgstr "Databaser som stöds:\n"
 
-#: nss/getent.c:957
+#: nss/getent.c:977
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Okänd databas: %s\n"
@@ -4785,75 +4790,75 @@ msgstr "%s: ogiltig flagga -- \"%c\"\n"
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: flaggan kräver ett argument -- \"%c\"\n"
 
-#: posix/regcomp.c:140
+#: posix/regcomp.c:138
 msgid "No match"
 msgstr "Ingen träff"
 
-#: posix/regcomp.c:143
+#: posix/regcomp.c:141
 msgid "Invalid regular expression"
 msgstr "Ogiltigt reguljärt uttryck"
 
-#: posix/regcomp.c:146
+#: posix/regcomp.c:144
 msgid "Invalid collation character"
 msgstr "Ogiltigt kollationeringstecken"
 
-#: posix/regcomp.c:149
+#: posix/regcomp.c:147
 msgid "Invalid character class name"
 msgstr "Ogiltigt teckenklassnamn"
 
-#: posix/regcomp.c:152
+#: posix/regcomp.c:150
 msgid "Trailing backslash"
 msgstr "Avslutande omvänt snedstreck"
 
-#: posix/regcomp.c:155
+#: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Ogiltig bakåtreferens"
 
-#: posix/regcomp.c:158
-msgid "Unmatched [ or [^"
-msgstr "Obalanserade [ eller [^"
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "Obalanserade [, [^, [:, [. eller [="
 
-#: posix/regcomp.c:161
+#: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
 msgstr "Obalanserade ( eller \\("
 
-#: posix/regcomp.c:164
+#: posix/regcomp.c:162
 msgid "Unmatched \\{"
 msgstr "Obalanserad \\{"
 
-#: posix/regcomp.c:167
+#: posix/regcomp.c:165
 msgid "Invalid content of \\{\\}"
 msgstr "Ogiltigt innehåll i \\{\\}"
 
-#: posix/regcomp.c:170
+#: posix/regcomp.c:168
 msgid "Invalid range end"
 msgstr "Ogiltigt intervallslut"
 
-#: posix/regcomp.c:173
+#: posix/regcomp.c:171
 msgid "Memory exhausted"
 msgstr "Minnet slut"
 
-#: posix/regcomp.c:176
+#: posix/regcomp.c:174
 msgid "Invalid preceding regular expression"
 msgstr "Ogiltigt föregående reguljärt uttryck"
 
-#: posix/regcomp.c:179
+#: posix/regcomp.c:177
 msgid "Premature end of regular expression"
 msgstr "För tidigt slut på reguljärt uttryck"
 
-#: posix/regcomp.c:182
+#: posix/regcomp.c:180
 msgid "Regular expression too big"
 msgstr "Reguljärt uttryck för stort"
 
-#: posix/regcomp.c:185
+#: posix/regcomp.c:183
 msgid "Unmatched ) or \\)"
 msgstr "Obalanserade ) eller \\)"
 
-#: posix/regcomp.c:675
+#: posix/regcomp.c:689
 msgid "No previous regular expression"
 msgstr "Inget föregående reguljärt uttryck"
 
-#: posix/wordexp.c:1803
+#: posix/wordexp.c:1815
 msgid "parameter null or not set"
 msgstr "parameter är tom eller inte satt"
 
@@ -5130,130 +5135,130 @@ msgstr "minnet slut\n"
 msgid "auth_unix.c: Fatal marshalling problem"
 msgstr "auth_unix.c: Fatalt kodningsproblem"
 
-#: sunrpc/clnt_perr.c:96 sunrpc/clnt_perr.c:112
+#: sunrpc/clnt_perr.c:92 sunrpc/clnt_perr.c:108
 #, c-format
 msgid "%s: %s; low version = %lu, high version = %lu"
 msgstr "%s: %s; undre version = %lu, övre version = %lu"
 
-#: sunrpc/clnt_perr.c:103
+#: sunrpc/clnt_perr.c:99
 #, c-format
 msgid "%s: %s; why = %s\n"
 msgstr "%s: %s; varför = %s\n"
 
-#: sunrpc/clnt_perr.c:105
+#: sunrpc/clnt_perr.c:101
 #, c-format
 msgid "%s: %s; why = (unknown authentication error - %d)\n"
 msgstr "%s: %s; varför = (okänt fel vid äkthetskontroll - %d)\n"
 
-#: sunrpc/clnt_perr.c:154
+#: sunrpc/clnt_perr.c:150
 msgid "RPC: Success"
 msgstr "RPC: Lyckat"
 
-#: sunrpc/clnt_perr.c:157
+#: sunrpc/clnt_perr.c:153
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Kan inte koda argumentet"
 
-#: sunrpc/clnt_perr.c:161
+#: sunrpc/clnt_perr.c:157
 msgid "RPC: Can't decode result"
 msgstr "RPC: Kan inte avkoda resultatet"
 
-#: sunrpc/clnt_perr.c:165
+#: sunrpc/clnt_perr.c:161
 msgid "RPC: Unable to send"
 msgstr "RPC: Kan inte skicka"
 
-#: sunrpc/clnt_perr.c:169
+#: sunrpc/clnt_perr.c:165
 msgid "RPC: Unable to receive"
 msgstr "RPC: Kan inte ta emot"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:169
 msgid "RPC: Timed out"
 msgstr "RPC: Tiden löpte ut"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Inkompatibla versioner av RPC"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Authentication error"
 msgstr "RPC: Fel vid äkthetskontroll"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
 msgstr "RPC: Programmet otillgängligt"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Program/version-inkompatibilitet"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Procedur inte tillgänglig"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Server kan inte avkoda argumenten"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Remote system error"
 msgstr "RPC: Fjärrsystemsfel"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Unknown host"
 msgstr "RPC: Okänd värdmaskin"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Okänt protokoll"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Fel i portöversättare"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Program not registered"
 msgstr "RPC: Programmet inte registrerat"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Misslyckades (ospecificerat fel)"
 
-#: sunrpc/clnt_perr.c:262
+#: sunrpc/clnt_perr.c:258
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (okänd felkod)"
 
-#: sunrpc/clnt_perr.c:334
+#: sunrpc/clnt_perr.c:330
 msgid "Authentication OK"
 msgstr "Äkthetskontroll OK"
 
-#: sunrpc/clnt_perr.c:337
+#: sunrpc/clnt_perr.c:333
 msgid "Invalid client credential"
 msgstr "Ogiltiga klientreferenser"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:337
 msgid "Server rejected credential"
 msgstr "Server förkastade kreditiv"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:341
 msgid "Invalid client verifier"
 msgstr "Ogiltig klientverifierare"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:345
 msgid "Server rejected verifier"
 msgstr "Server förkastade verifierare"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:349
 msgid "Client credential too weak"
 msgstr "Klientens referenser är för svaga"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:353
 msgid "Invalid server verifier"
 msgstr "Ogiltig serververifierare"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:357
 msgid "Failed (unspecified error)"
 msgstr "Misslyckades (ospecificerat fel)"
 
-#: sunrpc/clnt_raw.c:116
+#: sunrpc/clnt_raw.c:112
 msgid "clnt_raw.c: fatal header serialization error"
 msgstr "clnt_raw.c: fatalt fel vid serialisering"
 
@@ -5344,195 +5349,190 @@ msgstr "Kan inte ange mer än en infil!\n"
 
 #: sunrpc/rpc_main.c:1349
 #, c-format
-msgid "This implementation doesn't support newstyle or MT-safe code!\n"
-msgstr "Denna implementation stödjer inte \"newstyle\" eller trådsäker kod!\n"
-
-#: sunrpc/rpc_main.c:1358
-#, c-format
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Kan inte ange netid-flaggan tillsammans med inetd-flaggan!\n"
 
-#: sunrpc/rpc_main.c:1367
+#: sunrpc/rpc_main.c:1358
 #, c-format
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Kan inte ange netid-flaggan utan TIRPC!\n"
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1365
 #, c-format
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Kan inte ange tabellflaggor med ny stil!\n"
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1384
 #, c-format
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "\"infil\" är obligatorisk för mallgenereringsflaggor.\n"
 
-#: sunrpc/rpc_main.c:1398
+#: sunrpc/rpc_main.c:1389
 #, c-format
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Kan inte ha mer än en filgenereringsflagga!\n"
 
-#: sunrpc/rpc_main.c:1407
+#: sunrpc/rpc_main.c:1398
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "användning:  %s infil\n"
 
-#: sunrpc/rpc_main.c:1408
+#: sunrpc/rpc_main.c:1399
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dnamn[=värde]] [-i storlek] [-I [-K sekunder]] [-Y sökväg] infil\n"
 
-#: sunrpc/rpc_main.c:1410
+#: sunrpc/rpc_main.c:1401
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o utfil] [infil]\n"
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1403
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s nättyp]* [-o utfil] [infil]\n"
 
-#: sunrpc/rpc_main.c:1413
+#: sunrpc/rpc_main.c:1404
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n nätid]* [-o utfil] [infil]\n"
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1412
 #, c-format
 msgid "options:\n"
 msgstr "flaggor:\n"
 
-#: sunrpc/rpc_main.c:1422
+#: sunrpc/rpc_main.c:1413
 #, c-format
 msgid "-a\t\tgenerate all files, including samples\n"
 msgstr "-a\t\tgenerera alla filer, inklusive exempel\n"
 
-#: sunrpc/rpc_main.c:1423
+#: sunrpc/rpc_main.c:1414
 #, c-format
 msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
 msgstr "-b\t\tbakåtkompatibelt läge (genererar kod för SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1424
+#: sunrpc/rpc_main.c:1415
 #, c-format
 msgid "-c\t\tgenerate XDR routines\n"
 msgstr "'-c\t\tgenerera XDR-funktioner\n"
 
-#: sunrpc/rpc_main.c:1425
+#: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "-C\t\tANSI C mode\n"
 msgstr "-C\t\tANSI C-läge\n"
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1417
 #, c-format
 msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
 msgstr "-Dnamn[=värde]\tdefiniera en symbol (samma som #define)\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "-h\t\tgenerate header file\n"
 msgstr "-h\t\tgenerera huvudfil\n"
 
-#: sunrpc/rpc_main.c:1428
+#: sunrpc/rpc_main.c:1419
 #, c-format
 msgid "-i size\t\tsize at which to start generating inline code\n"
 msgstr "-i storlek\t\tstorlek när inline-kod börjar genereras\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
 msgstr "-I\t\tgenerera kod för inetd-stöd i servern (för SunOS 4.1)\n"
 
-#: sunrpc/rpc_main.c:1430
+#: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
 msgstr "-K sekunder\tserver avslutar efter så här många sekunders inaktivitet\n"
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
 msgstr "-l\t\tgenerera stubbar för klienten\n"
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
 msgstr "-L\t\tserverfel loggas till syslog\n"
 
-#: sunrpc/rpc_main.c:1433
+#: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
 msgstr "-m\t\tgenerera stubbar för servern\n"
 
-#: sunrpc/rpc_main.c:1434
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "-M\t\tgenerate MT-safe code\n"
 msgstr "-M\t\tgenerera trådsäker kod\n"
 
-#: sunrpc/rpc_main.c:1435
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
 msgstr "-n netid\tgenerera serverkod som stödjer namngiven netid\n"
 
-#: sunrpc/rpc_main.c:1436
+#: sunrpc/rpc_main.c:1427
 #, c-format
 msgid "-N\t\tsupports multiple arguments and call-by-value\n"
 msgstr "-N\t\tstöd multipla argument och anrop-via-värde\n"
 
-#: sunrpc/rpc_main.c:1437
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "-o outfile\tname of the output file\n"
 msgstr "-o utfil\tnamn på utfilen\n"
 
-#: sunrpc/rpc_main.c:1438
+#: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
 msgstr "-s nättyp\t\tgenerera serverkod som stödjer namngiven nättyp\n"
 
-#: sunrpc/rpc_main.c:1439
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
 msgstr "-Sc\t\tgenerera exempelkod för klienten som använder fjärrprocedurer\n"
 
-#: sunrpc/rpc_main.c:1440
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr "-Ss\t\tgenerera exempelkod för server som definierar fjärrprocedurer\n"
 
-#: sunrpc/rpc_main.c:1441
+#: sunrpc/rpc_main.c:1432
 #, c-format
 msgid "-Sm \t\tgenerate makefile template \n"
 msgstr "-Sm\t\tgenerera makefile-mall\n"
 
-#: sunrpc/rpc_main.c:1442
+#: sunrpc/rpc_main.c:1433
 #, c-format
 msgid "-t\t\tgenerate RPC dispatch table\n"
 msgstr "-t\t\tgenerera en RPC-hopptabell\n"
 
-#: sunrpc/rpc_main.c:1443
+#: sunrpc/rpc_main.c:1434
 #, c-format
 msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
 msgstr "-T\t\tgenerera kod för att stödja RPC-hopptabeller\n"
 
-#: sunrpc/rpc_main.c:1444
+#: sunrpc/rpc_main.c:1435
 #, c-format
 msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
 msgstr "-Y sökväg\t\tkatalog för att hitta C preprocessorn (cpp)\n"
 
-#: sunrpc/rpc_main.c:1445
+#: sunrpc/rpc_main.c:1436
 #, c-format
 msgid "-5\t\tSysVr4 compatibility mode\n"
 msgstr "-5\t\tSysVr4-kompatibilitetsläge\n"
 
-#: sunrpc/rpc_main.c:1446
+#: sunrpc/rpc_main.c:1437
 #, c-format
 msgid "--help\t\tgive this help list\n"
 msgstr "--help\t\tskriv denna hjälplista\n"
 
-#: sunrpc/rpc_main.c:1447
+#: sunrpc/rpc_main.c:1438
 #, c-format
 msgid "--version\tprint program version\n"
 msgstr "--version\tskriv programversion\n"
 
-#: sunrpc/rpc_main.c:1449
+#: sunrpc/rpc_main.c:1440
 #, c-format
 msgid ""
 "\n"
@@ -5572,30 +5572,30 @@ msgstr "svc_run: - minnet slut"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll misslyckades"
 
-#: sunrpc/svc_simple.c:80
+#: sunrpc/svc_simple.c:72
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "kan inte ändra procedurnummer %ld\n"
 
-#: sunrpc/svc_simple.c:90
+#: sunrpc/svc_simple.c:82
 msgid "couldn't create an rpc server\n"
 msgstr "kunde inte skapa en rpc-server\n"
 
-#: sunrpc/svc_simple.c:98
+#: sunrpc/svc_simple.c:90
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "kunde inte registrera prog %ld vers %ld\n"
 
-#: sunrpc/svc_simple.c:106
+#: sunrpc/svc_simple.c:98
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: minnet slut\n"
 
-#: sunrpc/svc_simple.c:169
+#: sunrpc/svc_simple.c:161
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "problem att svara till prog %d\n"
 
-#: sunrpc/svc_simple.c:178
+#: sunrpc/svc_simple.c:170
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "aldrig registrerat prog %d\n"
@@ -6440,184 +6440,184 @@ msgid "Operation canceled"
 msgstr "Operationen avbruten"
 
 #: sysdeps/gnu/errlist.c:1095
-msgid "Interrupted system call should be restarted"
-msgstr "Avbrutet systemanrop borde omstartas"
-
-#: sysdeps/gnu/errlist.c:1103
-msgid "Channel number out of range"
-msgstr "Kanalnummer utanför giltigt intervall"
-
-#: sysdeps/gnu/errlist.c:1111
-msgid "Level 2 not synchronized"
-msgstr "Nivå 2 inte synkroniserad"
-
-#: sysdeps/gnu/errlist.c:1119
-msgid "Level 3 halted"
-msgstr "Nivå 3 stannad"
-
-#: sysdeps/gnu/errlist.c:1127
-msgid "Level 3 reset"
-msgstr "Nivå 3 omstartad"
-
-#: sysdeps/gnu/errlist.c:1135
-msgid "Link number out of range"
-msgstr "Länkantal utanför giltigt intervall"
-
-#: sysdeps/gnu/errlist.c:1143
-msgid "Protocol driver not attached"
-msgstr "Styrprogram för protokoll inte anslutet"
-
-#: sysdeps/gnu/errlist.c:1151
-msgid "No CSI structure available"
-msgstr "Inga CSI-strukturer tillgängliga"
-
-#: sysdeps/gnu/errlist.c:1159
-msgid "Level 2 halted"
-msgstr "Nivå 2 stannad"
-
-#: sysdeps/gnu/errlist.c:1167
-msgid "Invalid exchange"
-msgstr "Ogiltig växel"
-
-#: sysdeps/gnu/errlist.c:1175
-msgid "Invalid request descriptor"
-msgstr "Ogiltig begärandeidentifierare"
-
-#: sysdeps/gnu/errlist.c:1183
-msgid "Exchange full"
-msgstr "Växeln full"
-
-#: sysdeps/gnu/errlist.c:1191
-msgid "No anode"
-msgstr "Ingen anod"
-
-#: sysdeps/gnu/errlist.c:1199
-msgid "Invalid request code"
-msgstr "Ogiltig begärandekod"
-
-#: sysdeps/gnu/errlist.c:1207
-msgid "Invalid slot"
-msgstr "Ogiltig plats"
-
-#: sysdeps/gnu/errlist.c:1215
-msgid "File locking deadlock error"
-msgstr "Fillåsning gav dödläge"
-
-#: sysdeps/gnu/errlist.c:1223
-msgid "Bad font file format"
-msgstr "Felaktigt format på typsnittsfil"
-
-#: sysdeps/gnu/errlist.c:1231
-msgid "Machine is not on the network"
-msgstr "Maskinen finns inte på nätverket"
-
-#: sysdeps/gnu/errlist.c:1239
-msgid "Package not installed"
-msgstr "Paketet är inte installerat"
-
-#: sysdeps/gnu/errlist.c:1247
-msgid "Advertise error"
-msgstr "Annonseringsfel"
-
-#: sysdeps/gnu/errlist.c:1255
-msgid "Srmount error"
-msgstr "Srmount-fel"
-
-#: sysdeps/gnu/errlist.c:1263
-msgid "Communication error on send"
-msgstr "Kommunikationsfel vid sändning"
-
-#: sysdeps/gnu/errlist.c:1271
-msgid "RFS specific error"
-msgstr "RFS-specifikt fel"
-
-#: sysdeps/gnu/errlist.c:1279
-msgid "Name not unique on network"
-msgstr "Namnet inte unikt i nätverket"
-
-#: sysdeps/gnu/errlist.c:1287
-msgid "File descriptor in bad state"
-msgstr "Filidentifierare i felaktigt tillstånd"
-
-#: sysdeps/gnu/errlist.c:1295
-msgid "Remote address changed"
-msgstr "Fjärradress ändrades"
-
-#: sysdeps/gnu/errlist.c:1303
-msgid "Can not access a needed shared library"
-msgstr "Kan inte komma åt ett nödvändigt delat bibliotek"
-
-#: sysdeps/gnu/errlist.c:1311
-msgid "Accessing a corrupted shared library"
-msgstr "Öppnar ett korrupt delat bibliotek"
-
-#: sysdeps/gnu/errlist.c:1319
-msgid ".lib section in a.out corrupted"
-msgstr ".lib-sektion i a.out korrupt"
-
-#: sysdeps/gnu/errlist.c:1327
-msgid "Attempting to link in too many shared libraries"
-msgstr "Försöker att länka in för många delade bibliotek"
-
-#: sysdeps/gnu/errlist.c:1335
-msgid "Cannot exec a shared library directly"
-msgstr "Kan inte köra ett delat bibliotek direkt"
-
-#: sysdeps/gnu/errlist.c:1343
-msgid "Streams pipe error"
-msgstr "Streams-rörfel"
-
-#: sysdeps/gnu/errlist.c:1351
-msgid "Structure needs cleaning"
-msgstr "Strukturen behöver städas"
-
-#: sysdeps/gnu/errlist.c:1359
-msgid "Not a XENIX named type file"
-msgstr "Inte en XENIX-namngiven fil"
-
-#: sysdeps/gnu/errlist.c:1367
-msgid "No XENIX semaphores available"
-msgstr "Inga XENIX-semaforer tillgängliga"
-
-#: sysdeps/gnu/errlist.c:1375
-msgid "Is a named type file"
-msgstr "Är av typ namnfil"
-
-#: sysdeps/gnu/errlist.c:1383
-msgid "Remote I/O error"
-msgstr "I/O-fel på fjärrmaskin"
-
-#: sysdeps/gnu/errlist.c:1391
-msgid "No medium found"
-msgstr "Inget medium funnet"
-
-#: sysdeps/gnu/errlist.c:1399
-msgid "Wrong medium type"
-msgstr "Fel medietyp"
-
-#: sysdeps/gnu/errlist.c:1407
-msgid "Required key not available"
-msgstr "Obligatorisk nyckel inte tillgänglig"
-
-#: sysdeps/gnu/errlist.c:1415
-msgid "Key has expired"
-msgstr "Nyckeln har gått ut"
-
-#: sysdeps/gnu/errlist.c:1423
-msgid "Key has been revoked"
-msgstr "Nyckeln har återkallats"
-
-#: sysdeps/gnu/errlist.c:1431
-msgid "Key was rejected by service"
-msgstr "Nyckeln accepterades inte av tjänsten"
-
-#: sysdeps/gnu/errlist.c:1439
 msgid "Owner died"
 msgstr "Ägaren dog"
 
-#: sysdeps/gnu/errlist.c:1447
+#: sysdeps/gnu/errlist.c:1103
 msgid "State not recoverable"
 msgstr "Det går inte att återhämta från tillståndet"
+
+#: sysdeps/gnu/errlist.c:1111
+msgid "Interrupted system call should be restarted"
+msgstr "Avbrutet systemanrop borde omstartas"
+
+#: sysdeps/gnu/errlist.c:1119
+msgid "Channel number out of range"
+msgstr "Kanalnummer utanför giltigt intervall"
+
+#: sysdeps/gnu/errlist.c:1127
+msgid "Level 2 not synchronized"
+msgstr "Nivå 2 inte synkroniserad"
+
+#: sysdeps/gnu/errlist.c:1135
+msgid "Level 3 halted"
+msgstr "Nivå 3 stannad"
+
+#: sysdeps/gnu/errlist.c:1143
+msgid "Level 3 reset"
+msgstr "Nivå 3 omstartad"
+
+#: sysdeps/gnu/errlist.c:1151
+msgid "Link number out of range"
+msgstr "Länkantal utanför giltigt intervall"
+
+#: sysdeps/gnu/errlist.c:1159
+msgid "Protocol driver not attached"
+msgstr "Styrprogram för protokoll inte anslutet"
+
+#: sysdeps/gnu/errlist.c:1167
+msgid "No CSI structure available"
+msgstr "Inga CSI-strukturer tillgängliga"
+
+#: sysdeps/gnu/errlist.c:1175
+msgid "Level 2 halted"
+msgstr "Nivå 2 stannad"
+
+#: sysdeps/gnu/errlist.c:1183
+msgid "Invalid exchange"
+msgstr "Ogiltig växel"
+
+#: sysdeps/gnu/errlist.c:1191
+msgid "Invalid request descriptor"
+msgstr "Ogiltig begärandeidentifierare"
+
+#: sysdeps/gnu/errlist.c:1199
+msgid "Exchange full"
+msgstr "Växeln full"
+
+#: sysdeps/gnu/errlist.c:1207
+msgid "No anode"
+msgstr "Ingen anod"
+
+#: sysdeps/gnu/errlist.c:1215
+msgid "Invalid request code"
+msgstr "Ogiltig begärandekod"
+
+#: sysdeps/gnu/errlist.c:1223
+msgid "Invalid slot"
+msgstr "Ogiltig plats"
+
+#: sysdeps/gnu/errlist.c:1231
+msgid "File locking deadlock error"
+msgstr "Fillåsning gav dödläge"
+
+#: sysdeps/gnu/errlist.c:1239
+msgid "Bad font file format"
+msgstr "Felaktigt format på typsnittsfil"
+
+#: sysdeps/gnu/errlist.c:1247
+msgid "Machine is not on the network"
+msgstr "Maskinen finns inte på nätverket"
+
+#: sysdeps/gnu/errlist.c:1255
+msgid "Package not installed"
+msgstr "Paketet är inte installerat"
+
+#: sysdeps/gnu/errlist.c:1263
+msgid "Advertise error"
+msgstr "Annonseringsfel"
+
+#: sysdeps/gnu/errlist.c:1271
+msgid "Srmount error"
+msgstr "Srmount-fel"
+
+#: sysdeps/gnu/errlist.c:1279
+msgid "Communication error on send"
+msgstr "Kommunikationsfel vid sändning"
+
+#: sysdeps/gnu/errlist.c:1287
+msgid "RFS specific error"
+msgstr "RFS-specifikt fel"
+
+#: sysdeps/gnu/errlist.c:1295
+msgid "Name not unique on network"
+msgstr "Namnet inte unikt i nätverket"
+
+#: sysdeps/gnu/errlist.c:1303
+msgid "File descriptor in bad state"
+msgstr "Filidentifierare i felaktigt tillstånd"
+
+#: sysdeps/gnu/errlist.c:1311
+msgid "Remote address changed"
+msgstr "Fjärradress ändrades"
+
+#: sysdeps/gnu/errlist.c:1319
+msgid "Can not access a needed shared library"
+msgstr "Kan inte komma åt ett nödvändigt delat bibliotek"
+
+#: sysdeps/gnu/errlist.c:1327
+msgid "Accessing a corrupted shared library"
+msgstr "Öppnar ett korrupt delat bibliotek"
+
+#: sysdeps/gnu/errlist.c:1335
+msgid ".lib section in a.out corrupted"
+msgstr ".lib-sektion i a.out korrupt"
+
+#: sysdeps/gnu/errlist.c:1343
+msgid "Attempting to link in too many shared libraries"
+msgstr "Försöker att länka in för många delade bibliotek"
+
+#: sysdeps/gnu/errlist.c:1351
+msgid "Cannot exec a shared library directly"
+msgstr "Kan inte köra ett delat bibliotek direkt"
+
+#: sysdeps/gnu/errlist.c:1359
+msgid "Streams pipe error"
+msgstr "Streams-rörfel"
+
+#: sysdeps/gnu/errlist.c:1367
+msgid "Structure needs cleaning"
+msgstr "Strukturen behöver städas"
+
+#: sysdeps/gnu/errlist.c:1375
+msgid "Not a XENIX named type file"
+msgstr "Inte en XENIX-namngiven fil"
+
+#: sysdeps/gnu/errlist.c:1383
+msgid "No XENIX semaphores available"
+msgstr "Inga XENIX-semaforer tillgängliga"
+
+#: sysdeps/gnu/errlist.c:1391
+msgid "Is a named type file"
+msgstr "Är av typ namnfil"
+
+#: sysdeps/gnu/errlist.c:1399
+msgid "Remote I/O error"
+msgstr "I/O-fel på fjärrmaskin"
+
+#: sysdeps/gnu/errlist.c:1407
+msgid "No medium found"
+msgstr "Inget medium funnet"
+
+#: sysdeps/gnu/errlist.c:1415
+msgid "Wrong medium type"
+msgstr "Fel medietyp"
+
+#: sysdeps/gnu/errlist.c:1423
+msgid "Required key not available"
+msgstr "Obligatorisk nyckel inte tillgänglig"
+
+#: sysdeps/gnu/errlist.c:1431
+msgid "Key has expired"
+msgstr "Nyckeln har gått ut"
+
+#: sysdeps/gnu/errlist.c:1439
+msgid "Key has been revoked"
+msgstr "Nyckeln har återkallats"
+
+#: sysdeps/gnu/errlist.c:1447
+msgid "Key was rejected by service"
+msgstr "Nyckeln accepterades inte av tjänsten"
 
 #: sysdeps/gnu/errlist.c:1455
 msgid "Operation not possible due to RF-kill"
@@ -6727,6 +6727,26 @@ msgstr "kan inte öppna \"%s\""
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "kan inte läsa huvud från \"%s\""
+
+#: sysdeps/x86/dl-cet.c:202
+msgid "mprotect legacy bitmap failed"
+msgstr "mprotect föråldrad bitmapp misslyckades"
+
+#: sysdeps/x86/dl-cet.c:217
+msgid "legacy bitmap isn't available"
+msgstr "föråldrad bitmapp är inte tillgänglig"
+
+#: sysdeps/x86/dl-cet.c:247
+msgid "failed to mark legacy code region"
+msgstr "misslyckades med att markera region med föråldrad kod"
+
+#: sysdeps/x86/dl-cet.c:269
+msgid "shadow stack isn't enabled"
+msgstr "skuggstacken är inte aktiverad"
+
+#: sysdeps/x86/dl-cet.c:290
+msgid "can't disable CET"
+msgstr "kan inte avaktivera CET"
 
 #: timezone/zdump.c:338
 msgid "has fewer than 3 characters"
