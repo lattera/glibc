@@ -1,3 +1,8 @@
+2018-07-30  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #23458]
+	* sysdeps/x86/Makefile (tests): Add tst-get-cpu-features-static.
+
 2018-07-28  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/dl-unistd.h (__access, __brk, __lseek, __read,
