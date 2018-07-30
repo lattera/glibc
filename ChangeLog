@@ -1,5 +1,20 @@
 2018-07-30  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #23467]
+	* sysdeps/unix/sysv/linux/x86/Makefile (tests): Add
+	tst-cet-property-1 and tst-cet-property-2 if CET is enabled.
+	(CFLAGS-tst-cet-property-1.o): New.
+	(ASFLAGS-tst-cet-property-dep-2.o): Likewise.
+	($(objpfx)tst-cet-property-2): Likewise.
+	($(objpfx)tst-cet-property-2.out): Likewise.
+	* sysdeps/unix/sysv/linux/x86/tst-cet-property-1.c: New file.
+	* sysdeps/unix/sysv/linux/x86/tst-cet-property-2.c: Likewise.
+	* sysdeps/unix/sysv/linux/x86/tst-cet-property-dep-2.S: Likewise.
+	* sysdeps/x86/dl-prop.h (_dl_process_cet_property_note): Parse
+	each property item until GNU_PROPERTY_X86_FEATURE_1_AND is found.
+
+2018-07-30  H.J. Lu  <hongjiu.lu@intel.com>
+
 	[BZ #23458]
 	* sysdeps/x86/Makefile (tests): Add tst-get-cpu-features-static.
 

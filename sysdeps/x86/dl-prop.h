@@ -73,7 +73,7 @@ _dl_process_cet_property_note (struct link_map *l,
 	  unsigned char *ptr = (unsigned char *) (note + 1) + 4;
 	  unsigned char *ptr_end = ptr + note->n_descsz;
 
-	  while (ptr < ptr_end)
+	  do
 	    {
 	      unsigned int type = *(unsigned int *) ptr;
 	      unsigned int datasz = *(unsigned int *) (ptr + 4);
@@ -82,17 +82,28 @@ _dl_process_cet_property_note (struct link_map *l,
 	      if ((ptr + datasz) > ptr_end)
 		break;
 
-	      if (type == GNU_PROPERTY_X86_FEATURE_1_AND
-		  && datasz == 4)
+	      if (type == GNU_PROPERTY_X86_FEATURE_1_AND)
 		{
-		  unsigned int feature_1 = *(unsigned int *) ptr;
-		  if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT))
-		    l->l_cet |= lc_ibt;
-		  if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
-		    l->l_cet |= lc_shstk;
-		  break;
+		  /* The size of GNU_PROPERTY_X86_FEATURE_1_AND is 4
+		     bytes.  When seeing GNU_PROPERTY_X86_FEATURE_1_AND,
+		     we stop the search regardless if its size is correct
+		     or not.  There is no point to continue if this note
+		     is ill-formed.  */
+		  if (datasz == 4)
+		    {
+		      unsigned int feature_1 = *(unsigned int *) ptr;
+		      if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_IBT))
+			l->l_cet |= lc_ibt;
+		      if ((feature_1 & GNU_PROPERTY_X86_FEATURE_1_SHSTK))
+			l->l_cet |= lc_shstk;
+		    }
+		  return;
 		}
+
+	      /* Check the next property item.  */
+	      ptr += ALIGN_UP (datasz, sizeof (ElfW(Addr)));
 	    }
+	  while ((ptr_end - ptr) >= 8);
 	}
 
       /* NB: Note sections like .note.ABI-tag and .note.gnu.build-id are
