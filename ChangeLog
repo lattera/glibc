@@ -1,3 +1,9 @@
+2018-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Move ELF hdr and TLS
+	initialization...
+	(init): ... before initializing libpthread.
+
 2018-07-31  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/install.texi: Update versions.
