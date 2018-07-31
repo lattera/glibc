@@ -62,10 +62,16 @@ committee.
 Thomas Bushnell for his contributions to Hurd.
 
 @item
+Rogerio Alves Cardoso for various fixes to PowerPC.
+
+@item
+Paul Clarke for optimized functions on PowerPC.
+
+@item
 Palmer Dabbelt for contributing the port to Linux/RISC-V.
 
 @item
-DJ Delorie for various fixes.
+DJ Delorie for maintenance of Linux/RISC-V, and various fixes.
 
 @item
 Wilco Dijkstra for various fixes.
@@ -113,7 +119,9 @@ part of @theglibc{} steering committee.
 Steve Ellcey for various fixes.
 
 @item
-Mike FABIAN for various fixes to locales.
+Mike FABIAN for automating Unicode updates, for updating the locale data
+for ISO 14651, for updating the library Unicode support, and for various
+locale updates and fixes.
 
 @item
 Tulio Magno Quites Machado Filho for adding a new class of installed
@@ -136,6 +144,10 @@ functions.
 Wolfram Gloger for contributing the memory allocation functions
 functions @code{malloc}, @code{realloc} and @code{free} and related
 code.
+
+@item
+Gabriel F. T. Gomes for his improvements for Linux on PowerPC and for
+implementing the IEEE 128-bit floating point type for PowerPC.
 
 @item
 Torbj@"orn Granlund for fast implementations of many of the string
@@ -233,7 +245,8 @@ Stefan Liebler for various fixes.
 Hongjiu Lu for providing the support for a Linux 32-bit runtime
 environment under x86-64 (x32), for porting to Linux on IA64, for
 improved string functions, a framework for testing IFUNC
-implementations, and many bug fixes.
+implementations, for implementing Intel Control-Flow Enforcement
+Technology, and many bug fixes.
 
 @item
 Rafal Luzynski for contributing support for two grammatical forms of month
@@ -292,15 +305,16 @@ Stephen Munroe for his port to Linux on PowerPC64
 implementations for PowerPC.
 
 @item
-Paul E. Murphy for various fixes on PowerPC.
+Paul E. Murphy for various fixes on PowerPC and for implementing the IEEE
+128-bit floating point type for PowerPC.
 
 @item
 Joseph S. Myers for numerous bug fixes for the libm functions, for
-his maintainership of the ARM and MIPS architectures, improving
-cross-compilation and cross-testing of @theglibc{}, expanded
-coverage of conformtest, merging the ports/ subdirectory
-into the @glibcadj{} main repository and his direction as FSF Project
-Steward for @theglibc{}.
+his maintainership of the ARM and MIPS architectures and the math
+component, improving cross-compilation and cross-testing of
+@theglibc{}, expanded coverage of conformtest, merging the ports/
+subdirectory into the @glibcadj{} main repository and his direction as
+FSF Project Steward for @theglibc{}.
 
 @item
 Marko Myllynen for various fixes.
@@ -345,7 +359,8 @@ Torvald Riegel for the implementation of new algorithms for semaphores,
 pthread_rwlock and condition variables.
 
 @item
-Maciej W. Rozycki for various fixes.
+Maciej W. Rozycki for MIPS fixes, support for ABSOLUTE symbols,
+and various fixes.
 
 @item
 Pravin Satpute for writing sorting rules for some Indian languages.
@@ -389,7 +404,8 @@ Franz Sirl for various fixes.
 Jes Sorensen for porting to Linux on IA64 (@code{ia64-@var{anything}-linux}).
 
 @item
-Rajalakshmi Srinivasaraghavan for various fixes and optimizations on PowerPC.
+Rajalakshmi Srinivasaraghavan for various fixes and optimizations on PowerPC
+and for implementing the IEEE 128-bit floating point type for PowerPC.
 
 @item
 Richard Stallman for his contribution to the @code{getopt} function.
@@ -426,7 +442,8 @@ fixes.
 Eric Youngdale for implementing versioning of objects on the symbol level.
 
 @item
-Adhemerval Zanella for optimized functions on PowerPC and various fixes.
+Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support
+and various fixes.
 
 @end itemize
 

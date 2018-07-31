@@ -1,5 +1,9 @@
 2018-07-31  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/contrib.texi (Contributors): Update contributions.
+
+2018-07-31  Carlos O'Donell  <carlos@redhat.com>
+
 	* po/be.po: Update translations.
 
 2018-07-31  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
