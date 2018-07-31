@@ -42,7 +42,6 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   vm_address_t stack;
   vm_size_t size;
   int anywhere;
-  tcbhead_t *tcb;
 
   size = stack_size ? *stack_size ? : STACK_SIZE : STACK_SIZE;
   stack = stack_base ? *stack_base ? : 0 : 0;
@@ -51,10 +50,6 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   error = __vm_allocate (task, &stack, size + __vm_page_size, anywhere);
   if (error)
     return error;
-
-  tcb = _dl_allocate_tls (NULL);
-  if (tcb == NULL)
-    return KERN_RESOURCE_SHORTAGE;
 
   if (stack_size)
     *stack_size = size;
@@ -78,9 +73,24 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
   if (error = __vm_protect (task, stack, __vm_page_size, 0, VM_PROT_NONE))
     return error;
 
-  if (error = __thread_set_state (thread, MACHINE_NEW_THREAD_STATE_FLAVOR,
-			     (natural_t *) &ts, tssize))
-    return error;
+  return __thread_set_state (thread, MACHINE_NEW_THREAD_STATE_FLAVOR,
+			     (natural_t *) &ts, tssize);
+}
+
+weak_alias (__mach_setup_thread, mach_setup_thread)
+
+/* Give THREAD a TLS area.  */
+kern_return_t
+__mach_setup_tls (thread_t thread)
+{
+  kern_return_t error;
+  struct machine_thread_state ts;
+  mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
+  tcbhead_t *tcb;
+
+  tcb = _dl_allocate_tls (NULL);
+  if (tcb == NULL)
+    return KERN_RESOURCE_SHORTAGE;
 
   if (error = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			     (natural_t *) &ts, &tssize))
@@ -91,8 +101,7 @@ __mach_setup_thread (task_t task, thread_t thread, void *pc,
 
   error = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
 			      (natural_t *) &ts, tssize);
-
   return error;
 }
 
-weak_alias (__mach_setup_thread, mach_setup_thread)
+weak_alias (__mach_setup_tls, mach_setup_tls)

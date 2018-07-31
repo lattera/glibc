@@ -4,6 +4,17 @@
 	initialization...
 	(init): ... before initializing libpthread.
 
+	* mach/mach.h (__mach_setup_tls, mach_setup_tls): Add prototypes.
+	* mach/setup-thread.c (__mach_setup_thread): Move TLS setup to...
+	(__mach_setup_tls): ... new function.
+	(mach_setup_tls): New alias.
+	* hurd/hurdsig.c (_hurdsig_init): Call __mach_setup_tls after
+	__mach_setup_thread.
+	* sysdeps/mach/hurd/profil.c (update_waiter): Likewise.
+	* sysdeps/mach/hurd/setitimer.c (setitimer_locked): Likewise.
+	* mach/Versions [libc] (mach_setup_tls): Add symbol.
+	* sysdeps/mach/hurd/i386/libc.abilist (mach_setup_tls): Likewise.
+
 2018-07-31  Carlos O'Donell  <carlos@redhat.com>
 
 	* manual/install.texi: Update versions.

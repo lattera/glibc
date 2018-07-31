@@ -96,5 +96,8 @@ kern_return_t mach_setup_thread (task_t task, thread_t thread, void *pc,
 				 vm_address_t *stack_base,
 				 vm_size_t *stack_size);
 
+/* Give THREAD a TLS area.  */
+kern_return_t __mach_setup_tls (thread_t thread);
+kern_return_t mach_setup_tls (thread_t thread);
 
 #endif	/* mach.h */

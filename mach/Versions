@@ -32,6 +32,7 @@ libc {
     mach_port_allocate; mach_port_allocate_name; mach_port_deallocate;
     mach_port_insert_right; mach_reply_port;
     mach_setup_thread;
+    mach_setup_tls;
     mach_task_self;
     mach_thread_self;
     mig_allocate; mig_dealloc_reply_port; mig_deallocate;

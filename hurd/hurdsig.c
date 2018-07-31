@@ -1280,6 +1280,8 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 				 (vm_address_t *) &__hurd_sigthread_stack_base,
 				 &stacksize);
       assert_perror (err);
+      err = __mach_setup_tls (_hurd_msgport_thread);
+      assert_perror (err);
 
       __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + stacksize;
 

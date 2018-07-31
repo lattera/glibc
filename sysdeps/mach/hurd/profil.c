@@ -70,6 +70,8 @@ update_waiter (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
       if (! err)
 	err = __mach_setup_thread (__mach_task_self (), profile_thread,
 				   &profile_waiter, NULL, NULL);
+      if (! err)
+	err = __mach_setup_tls(profile_thread);
     }
   else
     err = 0;

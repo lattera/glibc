@@ -1228,6 +1228,7 @@ GLIBC_2.2.6 mach_port_deallocate F
 GLIBC_2.2.6 mach_port_insert_right F
 GLIBC_2.2.6 mach_reply_port F
 GLIBC_2.2.6 mach_setup_thread F
+GLIBC_2.2.6 mach_setup_tls F
 GLIBC_2.2.6 mach_task_self F
 GLIBC_2.2.6 mach_thread_self F
 GLIBC_2.2.6 madvise F
