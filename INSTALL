@@ -301,23 +301,28 @@ for testing, which run together with the rest of the testsuite through
 'make check'.  These scripts require the following tools to run
 successfully:
 
-   * Python 2.7.6/3.4.3 or later
+   * Python 2.7/3.4 or later
 
-     Python is required for running the printers' test scripts.
+     Python is required for running the printers' test scripts.  As of
+     release time, Python 3.6 is the newest verified to work to test the
+     pretty printers.
 
    * PExpect 4.0
 
      The printer tests drive GDB through test programs and compare its
      output to the printers'.  PExpect is used to capture the output of
      GDB, and should be compatible with the Python version in your
-     system.
+     system.  As of release time PExpect 4.3 is the newest verified to
+     work to test the pretty printers.
 
-   * GDB 7.8 or later with support for Python 2.7.6/3.4.3 or later
+   * GDB 7.8 or later with support for Python 2.7/3.4 or later
 
      GDB itself needs to be configured with Python support in order to
      use the pretty printers.  Notice that your system having Python
      available doesn't imply that GDB supports it, nor that your
-     system's Python and GDB's have the same version.
+     system's Python and GDB's have the same version.  As of release
+     time GNU 'debugger' 8.0.1 is the newest verified to work to test
+     the pretty printers.
 
 If these tools are absent, the printer tests will report themselves as
 'UNSUPPORTED'.  Notice that some of the printer tests require the GNU C
@@ -444,12 +449,15 @@ build the GNU C Library:
 
    * GNU 'make' 4.0 or newer
 
+     As of relase time, GNU 'make' 4.2.1 is the newest verified to work
+     to build the GNU C Library.
+
    * GCC 4.9 or newer
 
      GCC 4.9 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 7.3 is the newest compiler
+     better code.  As of release time, GCC 8.1.1 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), GCC 6.2 or higher
@@ -476,7 +484,7 @@ build the GNU C Library:
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU 'binutils' 2.29.1 is the newest
+     moment.  As of release time, GNU 'binutils' 2.31.1 is the newest
      verified to work to build the GNU C Library.
 
    * GNU 'texinfo' 4.7 or later
@@ -493,7 +501,7 @@ build the GNU C Library:
      'awk' is used in several places to generate files.  Some 'gawk'
      extensions are used, including the 'asorti' function, which was
      introduced in version 3.1.2 of 'gawk'.  As of release time, 'gawk'
-     version 4.2.0 is the newest verified to work to build the GNU C
+     version 4.2.1 is the newest verified to work to build the GNU C
      Library.
 
    * GNU 'bison' 2.7 or later
@@ -505,13 +513,15 @@ build the GNU C Library:
    * Perl 5
 
      Perl is not required, but it is used if present to test the
-     installation.  We may decide to use it elsewhere in the future.
+     installation.  We may decide to use it elsewhere in the future.  As
+     of release time 'perl' version 5.28.0 is the newest verified to
+     work to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
 
      'Sed' is used in several places to generate files.  Most scripts
      work with any version of 'sed'.  As of release time, 'sed' version
-     4.4 is the newest verified to work to build the GNU C Library.
+     4.5 is the newest verified to work to build the GNU C Library.
 
 If you change any of the 'configure.ac' files you will also need
 
@@ -520,6 +530,9 @@ If you change any of the 'configure.ac' files you will also need
 and if you change any of the message translation files you will need
 
    * GNU 'gettext' 0.10.36 or later
+
+     As of release time, GNU 'gettext' version 0.19.8.1 is the newest
+     version verified to work to build the GNU C Library.
 
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.

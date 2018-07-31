@@ -1,5 +1,8 @@
 2018-07-31  Carlos O'Donell  <carlos@redhat.com>
 
+	* manual/install.texi: Update versions.
+	* INSTALL: Regenerate.
+
 	* manual/contrib.texi (Contributors): Update contributions.
 
 2018-07-31  Carlos O'Donell  <carlos@redhat.com>
