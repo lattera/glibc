@@ -370,7 +370,9 @@ idouble: 1
 ifloat: 3
 
 Function: "cos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "cos_towardzero":
@@ -485,9 +487,9 @@ ifloat: 1
 
 Function: Imaginary part of "ctan":
 double: 2
-float: 1
+float: 2
 idouble: 2
-ifloat: 1
+ifloat: 2
 
 Function: Real part of "ctan_towardzero":
 double: 5
@@ -696,7 +698,9 @@ double: 2
 idouble: 2
 
 Function: "pow":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "pow_towardzero":
@@ -706,7 +710,9 @@ idouble: 1
 ifloat: 1
 
 Function: "sin":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "sin_towardzero":
@@ -716,7 +722,9 @@ idouble: 1
 ifloat: 1
 
 Function: "sincos":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 
 Function: "sincos_towardzero":
@@ -797,9 +805,9 @@ ifloat: 2
 
 Function: "yn":
 double: 3
-float: 2
+float: 3
 idouble: 3
-ifloat: 2
+ifloat: 3
 
 Function: "yn_towardzero":
 double: 3
