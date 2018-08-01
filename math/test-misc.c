@@ -976,11 +976,13 @@ do_test (void)
 	puts ("scalbl (LDBL_MIN, 2147483647) returns -Inf");
 	result = 1;
       }
+# ifdef FE_UNDERFLOW
     else if (fetestexcept (FE_UNDERFLOW))
       {
 	puts ("scalbl (LDBL_MIN, 2147483647) raises underflow exception");
 	result = 1;
       }
+# endif
 
     feclearexcept (FE_ALL_EXCEPT);
     r = scalbl (LDBL_MAX, -2147483647);
@@ -994,11 +996,13 @@ do_test (void)
 	puts ("scalbl (LDBL_MAX, -2147483647) returns -Inf");
 	result = 1;
       }
+# ifdef FE_OVERFLOW
     else if (fetestexcept (FE_OVERFLOW))
       {
 	puts ("scalbl (LDBL_MAX, -2147483647) raises overflow exception");
 	result = 1;
       }
+# endif
   }
 #endif
 
@@ -1178,6 +1182,7 @@ do_test (void)
 	}
     }
 
+#  ifdef FE_UPWARD
   volatile long double ld7 = nextafterl (0.0L, 1.0L);
   volatile double d7;
   (void) &ld7;
@@ -1195,6 +1200,7 @@ do_test (void)
       else
 	puts ("ignoring this failure");
     }
+#  endif
 # endif
 #endif
 

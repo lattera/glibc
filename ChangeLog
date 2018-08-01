@@ -1,3 +1,10 @@
+2018-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/test-misc.c (do_test) [LDBL_MANT_DIG > DBL_MANT_DIG]: Make
+	code using FE_UNDERFLOW conditional on [FE_UNDERFLOW], code using
+	FE_OVERFLOW conditional on [FE_OVERFLOW] and code using FE_UPWARD
+	conditional on [FE_UPWARD].
+
 2018-08-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: fix memory leak in Gnulib
