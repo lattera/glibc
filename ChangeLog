@@ -1,5 +1,18 @@
 2018-08-01  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/generic/math-tests-snan-payload.h: New file.
+	* sysdeps/hppa/math-tests-snan-payload.h: Likewise.
+	* sysdeps/mips/math-tests-snan-payload.h: Likewise.
+	* sysdeps/riscv/math-tests-snan-payload.h: Likewise.
+	* sysdeps/generic/math-tests.h: Include
+	<math-tests-snan-payload.h>.
+	(SNAN_TESTS_PRESERVE_PAYLOAD): Do not define macro here.
+	* sysdeps/hppa/math-tests.h: Remove file.
+	* sysdeps/mips/math-tests.h [!__mips_nan2008]
+	(SNAN_TESTS_PRESERVE_PAYLOAD): Do not define macro here.
+	* sysdeps/riscv/math-tests.h (SNAN_TESTS_PRESERVE_PAYLOAD):
+	Likewise.
+
 	* sysdeps/generic/math-tests-snan-cast.h: New file.
 	* sysdeps/powerpc/math-tests-snan-cast.h: Likewise.
 	* sysdeps/generic/math-tests.h: Include <math-tests-snan-cast.h>.

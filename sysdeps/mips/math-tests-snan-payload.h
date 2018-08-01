@@ -1,5 +1,5 @@
-/* Configuration for math tests.  MIPS version.
-   Copyright (C) 2013-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: sNaN payloads.  MIPS version.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <features.h>
-#include <sgidefs.h>
+#ifndef MIPS_MATH_TESTS_SNAN_PAYLOAD_H
+#define MIPS_MATH_TESTS_SNAN_PAYLOAD_H 1
 
-/* MIPS soft float does not support exceptions and rounding modes.  */
-#ifdef __mips_soft_float
-# define ROUNDING_TESTS_float(MODE)	((MODE) == FE_TONEAREST)
-# define ROUNDING_TESTS_double(MODE)	((MODE) == FE_TONEAREST)
-# define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
-# define EXCEPTION_TESTS_float	0
-# define EXCEPTION_TESTS_double	0
-# define EXCEPTION_TESTS_long_double	0
+/* NaN payload preservation when converting a signaling NaN to quiet
+   is only required in NAN2008 mode.  */
+#ifdef __mips_nan2008
+# define SNAN_TESTS_PRESERVE_PAYLOAD	1
+#else
+# define SNAN_TESTS_PRESERVE_PAYLOAD	0
 #endif
 
-#include_next <math-tests.h>
+#endif /* math-tests-snan-payload.h.  */

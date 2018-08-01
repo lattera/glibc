@@ -1,5 +1,5 @@
-/* Configuration for math tests.  hppa version.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: sNaN payloads.  RISC-V version.
+   Copyright (C) 2016-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* SNaN tests do not preserve payloads.  */
-#define SNAN_TESTS_PRESERVE_PAYLOAD 0
+#ifndef RISCV_MATH_TESTS_SNAN_PAYLOAD_H
+#define RISCV_MATH_TESTS_SNAN_PAYLOAD_H 1
 
-#include_next <math-tests.h>
+/* RISC-V floating-point instructions do not preserve NaN
+   payloads.  */
+#define SNAN_TESTS_PRESERVE_PAYLOAD	0
+
+#endif /* math-tests-snan-payload.h.  */

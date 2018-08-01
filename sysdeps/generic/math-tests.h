@@ -52,14 +52,6 @@
 /* Return nonzero value if to run tests involving sNaN values for X.  */
 #define SNAN_TESTS(x) MATH_TESTS_TG (SNAN_TESTS_, , x)
 
-/* Indicate whether operations on signaling NaNs preserve the payload
-   (if possible; it is not possible with a zero payload if the high
-   bit is set for signaling NaNs) when generating a quiet NaN, and
-   this should be tested.  */
-#ifndef SNAN_TESTS_PRESERVE_PAYLOAD
-# define SNAN_TESTS_PRESERVE_PAYLOAD	1
-#endif
-
 /* Indicate whether to run tests involving a given rounding mode for a
    given floating-point type, given that fesetround succeeds for that
    mode.  All are run if fesetround succeeds unless overridden.  */
@@ -118,3 +110,4 @@
 #endif
 
 #include <math-tests-snan-cast.h>
+#include <math-tests-snan-payload.h>

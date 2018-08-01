@@ -36,7 +36,4 @@
 # define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 #endif
 
-/* RISC-V floating-point instructions do not preserve NaN payloads.  */
-#define SNAN_TESTS_PRESERVE_PAYLOAD	0
-
 #include_next <math-tests.h>
