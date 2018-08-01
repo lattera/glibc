@@ -1,4 +1,4 @@
-/* Configuration for math tests.  PowerPC version.
+/* Configuration for math tests: casts of sNaN values.  PowerPC version.
    Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef __NO_FPRS__
-/* Setting exception flags in FPSCR results in enabled traps for those
-   exceptions being taken.  */
-# define EXCEPTION_SET_FORCES_TRAP 1
-#endif
+#ifndef POWERPC_MATH_TESTS_SNAN_CAST_H
+#define POWERPC_MATH_TESTS_SNAN_CAST_H 1
 
-#include_next <math-tests.h>
+/* On PowerPC, in versions of GCC up to at least 4.7.2, a type cast --
+   which is a IEEE 754-2008 general-computational convertFormat
+   operation (IEEE 754-2008, 5.4.2) -- does not turn a sNaN into a
+   qNaN (whilst raising an INVALID exception), which is contrary to
+   IEEE 754-2008 5.1 and 7.2.  This renders certain tests infeasible
+   in this scenario.  <https://gcc.gnu.org/PR56828>.  */
+#define SNAN_TESTS_TYPE_CAST	0
+
+#endif /* math-tests-snan-cast.h.  */

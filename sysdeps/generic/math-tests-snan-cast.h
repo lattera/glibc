@@ -1,4 +1,4 @@
-/* Configuration for math tests.  PowerPC version.
+/* Configuration for math tests: casts of sNaN values.  Generic version.
    Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef __NO_FPRS__
-/* Setting exception flags in FPSCR results in enabled traps for those
-   exceptions being taken.  */
-# define EXCEPTION_SET_FORCES_TRAP 1
-#endif
+#ifndef _MATH_TESTS_SNAN_CAST_H
+#define _MATH_TESTS_SNAN_CAST_H 1
 
-#include_next <math-tests.h>
+/* Indicate whether to run tests involving type casts of sNaN values.
+   These are run unless overridden.  */
+#define SNAN_TESTS_TYPE_CAST	1
+
+#endif /* math-tests-snan-cast.h.  */

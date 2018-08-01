@@ -1,3 +1,11 @@
+2018-08-01  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-snan-cast.h: New file.
+	* sysdeps/powerpc/math-tests-snan-cast.h: Likewise.
+	* sysdeps/generic/math-tests.h: Include <math-tests-snan-cast.h>.
+	(SNAN_TESTS_TYPE_CAST): Do not define macro here.
+	* sysdeps/powerpc/math-tests.h (SNAN_TESTS_TYPE_CAST): Likewise.
+
 2018-08-01  Carlos O'Donel  <carlos@redhat.com>
 
 	* version.h (RELEASE): Set to "development".

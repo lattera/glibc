@@ -52,12 +52,6 @@
 /* Return nonzero value if to run tests involving sNaN values for X.  */
 #define SNAN_TESTS(x) MATH_TESTS_TG (SNAN_TESTS_, , x)
 
-/* Indicate whether to run tests involving type casts of sNaN values.  These
-   are run unless overridden.  */
-#ifndef SNAN_TESTS_TYPE_CAST
-# define SNAN_TESTS_TYPE_CAST	1
-#endif
-
 /* Indicate whether operations on signaling NaNs preserve the payload
    (if possible; it is not possible with a zero payload if the high
    bit is set for signaling NaNs) when generating a quiet NaN, and
@@ -122,3 +116,5 @@
 #ifndef EXCEPTION_SET_FORCES_TRAP
 # define EXCEPTION_SET_FORCES_TRAP 0
 #endif
+
+#include <math-tests-snan-cast.h>
