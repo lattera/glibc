@@ -1,5 +1,10 @@
 2018-08-01  Carlos O'Donel  <carlos@redhat.com>
 
+	* version.h (RELEASE): Set to "stable".
+	(VERSION): Set to "2.28".
+	* include/features.h (__GLIBC_MINOR__): Set to 2.28.
+	* NEWS: Add the list of bugs fixed in 2.28.
+
 	* po/ca.po: Update to latest version.
 	* po/cs.po: Likewise
 	* po/da.po: Likewise
