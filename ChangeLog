@@ -1,3 +1,12 @@
+2018-08-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: fix memory leak in Gnulib
+	Problem and fix reported by Assaf Gordon in:
+	https://lists.gnu.org/r/bug-gnulib/2018-07/txtqLKNwBdefE.txt
+	* posix/regcomp.c (free_charset) [!_LIBC]: Free range_starts and
+	range_ends members too, as they are defined in 'struct
+	re_charset_t' even if not _LIBC.  This affects only Gnulib.
+
 2018-08-01  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/x86/cpu-features.c (get_common_indeces): Renamed to
