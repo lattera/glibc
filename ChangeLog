@@ -1,3 +1,32 @@
+2018-08-01  Carlos O'Donel  <carlos@redhat.com>
+
+	* po/ca.po: Update to latest version.
+	* po/cs.po: Likewise
+	* po/da.po: Likewise
+	* po/el.po: Likewise
+	* po/eo.po: Likewise
+	* po/es.po: Likewise
+	* po/fi.po: Likewise
+	* po/fr.po: Likewise
+	* po/gl.po: Likewise
+	* po/hu.po: Likewise
+	* po/ia.po: Likewise
+	* po/id.po: Likewise
+	* po/it.po: Likewise
+	* po/ja.po: Likewise
+	* po/ko.po: Likewise
+	* po/lt.po: Likewise
+	* po/nb.po: Likewise
+	* po/nl.po: Likewise
+	* po/pt_BR.po: Likewise
+	* po/ru.po: Likewise
+	* po/rw.po: Likewise
+	* po/sk.po: Likewise
+	* po/sl.po: Likewise
+	* po/tr.po: Likewise
+	* po/zh_CN.po: Likewise
+	* po/zh_TW.po: Likewise
+
 2018-07-31  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* sysdeps/mach/hurd/i386/init-first.c (init1): Move ELF hdr and TLS
