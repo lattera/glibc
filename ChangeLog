@@ -1,4 +1,4 @@
-2018-07-26  Carlos O'Donell <carlos@redhat.com>
+2018-08-02  Carlos O'Donell <carlos@redhat.com>
 
 	* localedata/Makefile (INSTALL-SUPPORTED-LOCALES): Remove.
 	(INSTALL-SUPPORTED-LOCALE-ARCHIVE): Define.
