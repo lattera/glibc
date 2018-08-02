@@ -17,8 +17,8 @@
 # <http://www.gnu.org/licenses/>.
 
 glibc {
-  tune {
-    cpu {
+  cpu {
+    name {
       type: STRING
     }
   }

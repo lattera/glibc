@@ -57,7 +57,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
 #if HAVE_TUNABLES
   /* Get the tunable override.  */
-  const char *mcpu = TUNABLE_GET (glibc, tune, cpu, const char *, NULL);
+  const char *mcpu = TUNABLE_GET (glibc, cpu, name, const char *, NULL);
   if (mcpu != NULL)
     midr = get_midr_from_mcpu (mcpu);
 #endif

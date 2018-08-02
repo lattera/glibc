@@ -19,7 +19,7 @@
 #include <elf/dl-tunables.h>
 
 #if HAVE_TUNABLES
-# define GET_HWCAP_MASK() TUNABLE_GET (glibc, tune, hwcap_mask, uint64_t, NULL)
+# define GET_HWCAP_MASK() TUNABLE_GET (glibc, cpu, hwcap_mask, uint64_t, NULL)
 #else
 # ifdef SHARED
 #   define GET_HWCAP_MASK() GLRO(dl_hwcap_mask)

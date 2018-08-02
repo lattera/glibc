@@ -128,7 +128,7 @@ dl_cet_check (struct link_map *m, const char *program)
 	  /* Enable IBT and SHSTK only if they are enabled in executable.
 	     NB: IBT and SHSTK may be disabled by environment variable:
 
-	     GLIBC_TUNABLES=glibc.tune.hwcaps=-IBT,-SHSTK
+	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
 	  enable_ibt &= (HAS_CPU_FEATURE (IBT)
 			 && (enable_ibt_type == CET_ALWAYS_ON

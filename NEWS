@@ -13,7 +13,8 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The glibc.tune tunable namespace has been renamed to glibc.cpu and the
+  tunable glibc.tune.cpu has been renamed to glibc.cpu.name.
 
 Changes to build and runtime requirements:
 

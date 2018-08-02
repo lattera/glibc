@@ -57,7 +57,7 @@ modules-names += x86_64/tst-x86_64mod-1
 LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
 ifneq (no,$(have-tunables))
 # Test the state size for XSAVE when XSAVEC is disabled.
-tst-x86_64-1-ENV = GLIBC_TUNABLES=glibc.tune.hwcaps=-XSAVEC_Usable
+tst-x86_64-1-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC_Usable
 endif
 
 $(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
@@ -74,7 +74,7 @@ $(objpfx)tst-platform-1.out: $(objpfx)x86_64/tst-platformmod-2.so
 # Turn off AVX512F_Usable and AVX2_Usable so that GLRO(dl_platform) is
 # always set to x86_64.
 tst-platform-1-ENV = LD_PRELOAD=$(objpfx)\$$PLATFORM/tst-platformmod-2.so \
-	GLIBC_TUNABLES=glibc.tune.hwcaps=-AVX512F_Usable,-AVX2_Usable
+	GLIBC_TUNABLES=glibc.cpu.hwcaps=-AVX512F_Usable,-AVX2_Usable
 endif
 
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 \

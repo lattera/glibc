@@ -105,11 +105,11 @@ where 'check' is the tunable name, 'int32_t' is the C type of the tunable and
 To get and set tunables in a different namespace from that module, use the full
 form of the macros as follows:
 
-  val = TUNABLE_GET_FULL (glibc, tune, hwcap_mask, uint64_t, NULL)
+  val = TUNABLE_GET_FULL (glibc, cpu, hwcap_mask, uint64_t, NULL)
 
-  TUNABLE_SET_FULL (glibc, tune, hwcap_mask, uint64_t, val)
+  TUNABLE_SET_FULL (glibc, cpu, hwcap_mask, uint64_t, val)
 
-where 'glibc' is the top namespace, 'tune' is the tunable namespace and the
+where 'glibc' is the top namespace, 'cpu' is the tunable namespace and the
 remaining arguments are the same as the short form macros.
 
 When TUNABLE_NAMESPACE is not defined in a module, TUNABLE_GET is equivalent to

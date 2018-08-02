@@ -17,7 +17,7 @@
 # <http://www.gnu.org/licenses/>.
 
 glibc {
-  tune {
+  cpu {
     cached_memopt {
       type: INT_32
       minval: 0

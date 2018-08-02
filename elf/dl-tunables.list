@@ -86,7 +86,7 @@ glibc {
       type: SIZE_T
     }
   }
-  tune {
+  cpu {
     hwcap_mask {
       type: UINT_64
       env_alias: LD_HWCAP_MASK

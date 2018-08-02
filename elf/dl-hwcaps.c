@@ -140,7 +140,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	 string and bit like you can ignore an OS-supplied HWCAP bit.  */
       hwcap_mask |= (uint64_t) mask << _DL_FIRST_EXTRA;
 #if HAVE_TUNABLES
-      TUNABLE_SET (glibc, tune, hwcap_mask, uint64_t, hwcap_mask);
+      TUNABLE_SET (glibc, cpu, hwcap_mask, uint64_t, hwcap_mask);
 #else
       GLRO(dl_hwcap_mask) = hwcap_mask;
 #endif

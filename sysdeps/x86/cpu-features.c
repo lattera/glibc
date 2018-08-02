@@ -22,7 +22,7 @@
 #include <libc-pointer-arith.h>
 
 #if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE tune
+# define TUNABLE_NAMESPACE cpu
 # include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
 # include <elf/dl-tunables.h>
 
@@ -419,7 +419,7 @@ no_cpuid:
 
   /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  */
 #if !HAVE_TUNABLES && defined SHARED
-  /* The glibc.tune.hwcap_mask tunable is initialized already, so no need to do
+  /* The glibc.cpu.hwcap_mask tunable is initialized already, so no need to do
      this.  */
   GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
 #endif
@@ -494,7 +494,7 @@ no_cpuid:
 	  /* Disable IBT and/or SHSTK if they are enabled by kernel, but
 	     disabled by environment variable:
 
-	     GLIBC_TUNABLES=glibc.tune.hwcaps=-IBT,-SHSTK
+	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
 	  unsigned int cet_feature = 0;
 	  if (!HAS_CPU_FEATURE (IBT))

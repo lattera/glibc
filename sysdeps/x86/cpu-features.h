@@ -141,7 +141,7 @@ struct cpu_features
   unsigned long int xsave_state_size;
   /* The full state size for XSAVE when XSAVEC is disabled by
 
-     GLIBC_TUNABLES=glibc.tune.hwcaps=-XSAVEC_Usable
+     GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC_Usable
    */
   unsigned int xsave_state_full_size;
   unsigned int feature[FEATURE_INDEX_MAX];

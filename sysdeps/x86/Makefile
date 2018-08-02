@@ -47,13 +47,13 @@ $(objpfx)tst-cet-legacy-4.out: $(objpfx)tst-cet-legacy-mod-4.so
 ifneq (no,$(have-tunables))
 $(objpfx)tst-cet-legacy-4a: $(libdl)
 $(objpfx)tst-cet-legacy-4a.out: $(objpfx)tst-cet-legacy-mod-4.so
-tst-cet-legacy-4a-ENV = GLIBC_TUNABLES=glibc.tune.x86_shstk=permissive
+tst-cet-legacy-4a-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=permissive
 $(objpfx)tst-cet-legacy-4b: $(libdl)
 $(objpfx)tst-cet-legacy-4b.out: $(objpfx)tst-cet-legacy-mod-4.so
-tst-cet-legacy-4b-ENV = GLIBC_TUNABLES=glibc.tune.x86_shstk=on
+tst-cet-legacy-4b-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=on
 $(objpfx)tst-cet-legacy-4c: $(libdl)
 $(objpfx)tst-cet-legacy-4c.out: $(objpfx)tst-cet-legacy-mod-4.so
-tst-cet-legacy-4c-ENV = GLIBC_TUNABLES=glibc.tune.x86_shstk=off
+tst-cet-legacy-4c-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=off
 endif
 endif
 
