@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.27.9000\n"
 "POT-Creation-Date: 2018-07-26 22:19-0400\n"
-"PO-Revision-Date: 2018-07-31 17:33+0300\n"
+"PO-Revision-Date: 2018-08-01 17:35+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
 "Language: be\n"
@@ -296,11 +296,11 @@ msgstr "немагчыма прачытаць загаловак"
 #: debug/pcprofiledump.c:179
 #, c-format
 msgid "invalid pointer size"
-msgstr ""
+msgstr "няправільны памер указальніка"
 
 #: debug/xtrace.sh:26 debug/xtrace.sh:44
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
-msgstr ""
+msgstr "Выкарыстанне: xtrace [ОПЦЫЯ]... ПРАГРАМА [ОПЦЫЯ-ПРАГРАМЫ]...\\n"
 
 #: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
 #: malloc/memusage.sh:26
@@ -325,6 +325,16 @@ msgid ""
 "short options.\n"
 "\n"
 msgstr ""
+"Сачыць за выкананнем праграмы, друкуючы функцыі, якія зараз выконваюцца.\n"
+"\n"
+"     --data=ФАЙЛ          Не выконваць гэтую праграму, толькі друкаваць даныя з файла ФАЙЛ.\n"
+"\n"
+"   -?,--help              Надрукаваць гэтую дапамогу і выйсці\n"
+"      --usage             Даць кароткае паведамленне аб выкарыстанні\n"
+"   -V,--version           Надрукаваць звесткі аб версіі і выйсці\n"
+"\n"
+"Абавязковыя аргументы да доўгіх опцыяў з'яўляюцца абавязковымі для ўсіх адпаведных кароткіх опцыяў.\n"
+"\n"
 
 #: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
 #: malloc/memusage.sh:64
@@ -342,12 +352,12 @@ msgstr "Назва праграмы не зададзеная\\n"
 #: debug/xtrace.sh:146
 #, sh-format
 msgid "executable \\`$program' not found\\n"
-msgstr ""
+msgstr "выканальны файл\\`$program' не знойдзены\\n"
 
 #: debug/xtrace.sh:150
 #, sh-format
 msgid "\\`$program' is no executable\\n"
-msgstr ""
+msgstr "\\`$program' не ёсць выканальным файлам\\n"
 
 #: dlfcn/dlinfo.c:63
 msgid "RTLD_SELF used in code not dynamically loaded"
@@ -433,7 +443,7 @@ msgstr ""
 
 #: elf/dl-deps.c:112
 msgid "DST not allowed in SUID/SGID programs"
-msgstr ""
+msgstr "DST не дазваляецца ў праграмах SUID/SGID"
 
 #: elf/dl-deps.c:125
 msgid "empty dynamic string token substitution"
@@ -972,12 +982,12 @@ msgstr ""
 #: elf/pldd-xx.c:105
 #, c-format
 msgid "cannot find program header of process"
-msgstr ""
+msgstr "не ўдалося знайсці загаловак праграмы ў працэсе"
 
 #: elf/pldd-xx.c:110
 #, c-format
 msgid "cannot read program header"
-msgstr ""
+msgstr "не ўдалося прачытаць загаловак праграмы"
 
 #: elf/pldd-xx.c:135
 #, c-format
@@ -992,7 +1002,7 @@ msgstr ""
 #: elf/pldd-xx.c:167
 #, c-format
 msgid "cannot read program interpreter"
-msgstr ""
+msgstr "не ўдалося прачытаць інтэрпрэтатар праграмы"
 
 #: elf/pldd-xx.c:197
 #, c-format
@@ -1060,7 +1070,7 @@ msgstr ""
 #: elf/pldd.c:307
 #, c-format
 msgid "process %lu is no ELF program"
-msgstr ""
+msgstr "сегмент %lu не ёсць праграмай ELF"
 
 #: elf/readelflib.c:34
 #, c-format
@@ -1170,6 +1180,18 @@ msgid ""
 "      --usage             Give a short usage message\n"
 "      --version           Print program version"
 msgstr ""
+"Выкарыстанне: sotruss [ОПЦЫЯ...] [--] ПРАГРАМА [ОПЦЫЯ-ПРАГРАМЫ...]\n"
+"  -F, --from СПІС-АД       Сачыць за выклікамі ад аб'ектаў з спісу СПІС-АД\n"
+"  -T, --to СПІС-ДА         Сачыць за выклікамі да аб'ектаў з спісу СПІС-ДА\n"
+"\n"
+"  -e, --exit               Таксама паказаць выхады з гэтых функцыяў\n"
+"  -f, --follow             Сачыць за працэсамі-нашчадкамі\n"
+"  -o, --output НАЗВА-ФАЙЛА Запісаць вывад у файл НАЗВА-ФАЙЛА (ці НАЗВА-ФАЙЛА.$PID, калі\n"
+"\t\t\t   таксама ўжыты -f) замест стандартнага патоку памылак\n"
+"\n"
+"  -?, --help               Даць гэты спіс выкарыстання\n"
+"      --usage              Даць кароткае паведамленне аб выкарыстанні\n"
+"      --version            Надрукаваць версію праграмы"
 
 #: elf/sotruss.sh:46
 msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
@@ -1361,7 +1383,7 @@ msgstr ""
 
 #: iconv/iconv_prog.c:64 locale/programs/localedef.c:120
 msgid "Output control:"
-msgstr "Кіраваньне вывадам:"
+msgstr "Кіраванне вывадам:"
 
 #: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
@@ -1372,7 +1394,7 @@ msgstr ""
 #: locale/programs/localedef.c:117 locale/programs/localedef.c:144
 #: malloc/memusagestat.c:56
 msgid "FILE"
-msgstr ""
+msgstr "ФАЙЛ"
 
 #: iconv/iconv_prog.c:66
 msgid "output file"
@@ -1464,7 +1486,7 @@ msgstr ""
 
 #: iconv/iconvconfig.c:126 locale/programs/localedef.c:123
 msgid "PATH"
-msgstr ""
+msgstr "ШЛЯХ"
 
 #: iconv/iconvconfig.c:127
 msgid "Prefix used for all file accesses"
@@ -1583,22 +1605,22 @@ msgstr ""
 #: locale/programs/charmap-dir.c:56
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr ""
+msgstr "не ўдаецца прачытаць каталог табліцы знакаў `%s'"
 
 #: locale/programs/charmap.c:138
 #, c-format
 msgid "character map file `%s' not found"
-msgstr ""
+msgstr "файл табліцы знакаў `%s' не знойдзены"
 
 #: locale/programs/charmap.c:196
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr ""
+msgstr "файл стандартнай табліцы знакаў `%s' не знойдзены"
 
 #: locale/programs/charmap.c:265
 #, c-format
 msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
-msgstr ""
+msgstr "табліца знакаў `%s' не сумяшчальная з ASCII, лакаль не адпавядае ISO C [--no-warnings=ascii]"
 
 #: locale/programs/charmap.c:343
 #, c-format
@@ -1609,40 +1631,40 @@ msgstr "%s: <mb_cur_max> павінна быць большым за <mb_cur_min
 #: locale/programs/repertoire.c:173
 #, c-format
 msgid "syntax error in prolog: %s"
-msgstr ""
+msgstr "сінтаксічная памылка ў пралогу: %s"
 
 #: locale/programs/charmap.c:364
 msgid "invalid definition"
-msgstr ""
+msgstr "няправільнае азначэнне"
 
 #: locale/programs/charmap.c:381 locale/programs/locfile.c:131
 #: locale/programs/locfile.c:158 locale/programs/repertoire.c:174
 msgid "bad argument"
-msgstr "дрэнны довад"
+msgstr "няправільны аргумент"
 
 #: locale/programs/charmap.c:408
 #, c-format
 msgid "duplicate definition of <%s>"
-msgstr ""
+msgstr "падвоенае азначэнне <%s>"
 
 #: locale/programs/charmap.c:415
 #, c-format
 msgid "value for <%s> must be 1 or greater"
-msgstr ""
+msgstr "значэньне <%s> мусіць быць 1 ці больш"
 
 #: locale/programs/charmap.c:427
 #, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
-msgstr ""
+msgstr "значэньне <%s> мусіць быць больш ці роўна значэнню <%s>"
 
 #: locale/programs/charmap.c:450 locale/programs/repertoire.c:182
 #, c-format
 msgid "argument to <%s> must be a single character"
-msgstr "довад для <%s> павінен быць аднім знакам"
+msgstr "аргумент <%s> мусіць быць адным знакам"
 
 #: locale/programs/charmap.c:476
 msgid "character sets with locking states are not supported"
-msgstr ""
+msgstr "знаказборы з блакавальнымі станамі не абслугоўваюцца"
 
 #: locale/programs/charmap.c:503 locale/programs/charmap.c:557
 #: locale/programs/charmap.c:589 locale/programs/charmap.c:683
@@ -1650,24 +1672,24 @@ msgstr ""
 #: locale/programs/charmap.c:820
 #, c-format
 msgid "syntax error in %s definition: %s"
-msgstr ""
+msgstr "сінтаксічная памылка ў азначэнні %s: %s"
 
 #: locale/programs/charmap.c:504 locale/programs/charmap.c:684
 #: locale/programs/charmap.c:780 locale/programs/repertoire.c:229
 msgid "no symbolic name given"
-msgstr ""
+msgstr "няма сімвалічнай назвы"
 
 #: locale/programs/charmap.c:558
 msgid "invalid encoding given"
-msgstr ""
+msgstr "пададзена няправільнае кадаванне"
 
 #: locale/programs/charmap.c:567
 msgid "too few bytes in character encoding"
-msgstr ""
+msgstr "у кадаванні знакаў замала байтаў"
 
 #: locale/programs/charmap.c:569
 msgid "too many bytes in character encoding"
-msgstr ""
+msgstr "у кадаванні знакаў зашмат байтаў"
 
 #: locale/programs/charmap.c:591 locale/programs/charmap.c:739
 #: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
