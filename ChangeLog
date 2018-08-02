@@ -1,3 +1,34 @@
+2018-08-02  Joseph Myers  <joseph@codesourcery.com>
+
+	[BZ #23479]
+	* sysdeps/mips/bits/fenv.h (FE_INEXACT): Define only if
+	[__mips_hard_float].
+	(FE_UNDERFLOW): Likewise.
+	(FE_OVERFLOW): Likewise.
+	(FE_DIVBYZERO): Likewise.
+	(FE_INVALID): Likewise.
+	(FE_ALL_EXCEPT): Define to 0 if [!__mips_hard_float].
+	(FE_TOWARDZERO): Define only if [__mips_hard_float].
+	(FE_UPWARD): Likewise.
+	(FE_DOWNWARD): Likewise.
+	(__FE_UNDEFINED): Define if [!__mips_hard_float]
+	(FE_NOMASK_ENV): Define only if [__mips_hard_float].
+	* sysdeps/mips/mips64/sfp-machine.h (_FP_DECL_EX): Define only if
+	[__mips_hard_float].
+	(FP_ROUNDMODE): Likewise.
+	(FP_RND_NEAREST): Likewise.
+	(FP_RND_ZERO): Likewise.
+	(FP_RND_PINF): Likewise.
+	(FP_RND_MINF): Likewise.
+	(FP_EX_INVALID): Likewise.
+	(FP_EX_OVERFLOW): Likewise.
+	(FP_EX_UNDERFLOW): Likewise.
+	(FP_EX_DIVZERO): Likewise.
+	(FP_EX_INEXACT): Likewise.
+	(FP_INIT_ROUNDMODE): Likewise.
+	* sysdeps/mips/nofpu/fesetenv.c: New file.
+	* sysdeps/mips/nofpu/feupdateenv.c: Likewise.
+
 2018-08-01  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-misc.c (do_test) [LDBL_MANT_DIG > DBL_MANT_DIG]: Make

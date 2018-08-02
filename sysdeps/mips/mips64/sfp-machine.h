@@ -74,6 +74,10 @@
   } while (0)
 #endif
 
+#define _FP_TININESS_AFTER_ROUNDING 1
+
+#ifdef __mips_hard_float
+
 #define _FP_DECL_EX		fpu_control_t _fcw
 
 #define FP_ROUNDMODE		(_fcw & 0x3)
@@ -89,9 +93,6 @@
 #define FP_EX_DIVZERO		FE_DIVBYZERO
 #define FP_EX_INEXACT		FE_INEXACT
 
-#define _FP_TININESS_AFTER_ROUNDING 1
-
-#ifdef __mips_hard_float
 #define FP_INIT_ROUNDMODE			\
 do {						\
   _FPU_GETCW (_fcw);				\
@@ -103,6 +104,4 @@ do {						\
     _FPU_SETCW (_fcw | _fex | (_fex << 10));	\
 } while (0)
 #define FP_TRAPPING_EXCEPTIONS ((_fcw >> 5) & 0x7c)
-#else
-#define FP_INIT_ROUNDMODE	_fcw = FP_RND_NEAREST
 #endif
