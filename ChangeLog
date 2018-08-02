@@ -1,5 +1,8 @@
 2018-08-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/compare_strings.py: Import traceback.
+	(parse_file): Pretty-print error.
+
 	* NEWS: Mention the change.
 	* elf/dl-tunables.list: Rename tune namespace to cpu.
 	* sysdeps/powerpc/dl-tunables.list: Likewise.

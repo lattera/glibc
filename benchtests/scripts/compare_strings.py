@@ -29,6 +29,7 @@ import os
 import json
 import pylab
 import argparse
+import traceback
 
 try:
     import jsonschema as validator
@@ -45,8 +46,8 @@ def parse_file(filename, schema_filename):
                 bench = json.load(benchfile)
                 validator.validate(bench, schema)
         return bench
-    except FileNotFoundError:
-        sys.stderr.write('Invalid input file %s.\n' % filename)
+    except:
+        print(traceback.format_exc(limit=1))
         sys.exit(os.EX_NOINPUT)
 
 def draw_graph(f, v, ifuncs, results):
