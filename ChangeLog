@@ -1,3 +1,24 @@
+2018-08-02  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* NEWS: Mention the change.
+	* elf/dl-tunables.list: Rename tune namespace to cpu.
+	* sysdeps/powerpc/dl-tunables.list: Likewise.
+	* sysdeps/x86/dl-tunables.list: Likewise.
+	* sysdeps/aarch64/dl-tunables.list: Rename tune.cpu to
+	cpu.name.
+	* elf/dl-hwcaps.c (_dl_important_hwcaps): Adjust.
+	* elf/dl-hwcaps.h (GET_HWCAP_MASK): Likewise.
+	* manual/README.tunables: Likewise.
+	* manual/tunables.texi: Likewise.
+	* sysdeps/powerpc/cpu-features.c: Likewise.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c
+	(init_cpu_features): Likewise.
+	* sysdeps/x86/cpu-features.c: Likewise.
+	* sysdeps/x86/cpu-features.h: Likewise.
+	* sysdeps/x86/cpu-tunables.c: Likewise.
+	* sysdeps/x86_64/Makefile: Likewise.
+	* sysdeps/x86/dl-cet.c: Likewise.
+
 2018-08-02  Joseph Myers  <joseph@codesourcery.com>
 
 	[BZ #23479]
