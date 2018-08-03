@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.27.9000\n"
 "POT-Creation-Date: 2018-07-26 22:19-0400\n"
-"PO-Revision-Date: 2018-08-01 17:35+0300\n"
+"PO-Revision-Date: 2018-08-03 17:09+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
 "Language: be\n"
@@ -1694,7 +1694,7 @@ msgstr "у кадаванні знакаў зашмат байтаў"
 #: locale/programs/charmap.c:591 locale/programs/charmap.c:739
 #: locale/programs/charmap.c:822 locale/programs/repertoire.c:295
 msgid "no symbolic name given for end of range"
-msgstr ""
+msgstr "няма сімвалічнай назвы для канца дыяпазону"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
 #: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
@@ -1707,11 +1707,11 @@ msgstr ""
 #: locale/programs/repertoire.c:312
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
-msgstr "%1$s: вызначэньне не завяршаецца на `END %1$s'"
+msgstr "%1$s: азначэнне не завяршаецца `END %1$s'"
 
 #: locale/programs/charmap.c:648
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
-msgstr ""
+msgstr "за азначэннем CHARMAP могуць ісці толькі азначэнні WIDTH"
 
 #: locale/programs/charmap.c:656 locale/programs/charmap.c:719
 #, c-format
@@ -1721,7 +1721,7 @@ msgstr "значэньне для %s павінна быць цэлым"
 #: locale/programs/charmap.c:847
 #, c-format
 msgid "%s: error in state machine"
-msgstr ""
+msgstr "%s: памылка ў машыне станаў"
 
 #: locale/programs/charmap.c:855 locale/programs/ld-address.c:540
 #: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
@@ -1734,39 +1734,39 @@ msgstr ""
 #: locale/programs/locfile.c:997 locale/programs/repertoire.c:323
 #, c-format
 msgid "%s: premature end of file"
-msgstr ""
+msgstr "%s: заўчасны канец файлу"
 
 #: locale/programs/charmap.c:874 locale/programs/charmap.c:885
 #, c-format
 msgid "unknown character `%s'"
-msgstr ""
+msgstr "невядомы знак `%s'"
 
 #: locale/programs/charmap.c:893
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
-msgstr ""
+msgstr "колькасць байтаў ў байтавай паслядоўнасці пачатку і канца дыяпазону розніцца: %d і %d"
 
 #: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2893
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
-msgstr ""
+msgstr "няправільныя назвы дыяпазону знакаў"
 
 #: locale/programs/charmap.c:1010 locale/programs/repertoire.c:430
 msgid "hexadecimal range format should use only capital characters"
-msgstr ""
+msgstr "у шаснаццаткавым фармаце дыяпазону належыць ужываць толькі загалоўныя знакі"
 
 #: locale/programs/charmap.c:1028 locale/programs/repertoire.c:448
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
-msgstr ""
+msgstr "<%s> і <%s> ёсць няправільнымі назвамі для дыяпазону"
 
 #: locale/programs/charmap.c:1034 locale/programs/repertoire.c:455
 msgid "upper limit in range is smaller than lower limit"
-msgstr ""
+msgstr "верхняя граніца дыяпазону меншая ад ніжняй"
 
 #: locale/programs/charmap.c:1092
 msgid "resulting bytes for range not representable."
-msgstr ""
+msgstr "выніковыя байты для дыяпазону не могуць быць прадстаўленыя"
 
 #: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1563
 #: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
@@ -1776,7 +1776,7 @@ msgstr ""
 #: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
 #, c-format
 msgid "No definition for %s category found"
-msgstr ""
+msgstr "Не знойдзена азначэння для катэгорыі %s"
 
 #: locale/programs/ld-address.c:144 locale/programs/ld-address.c:182
 #: locale/programs/ld-address.c:199 locale/programs/ld-address.c:228
@@ -1799,38 +1799,38 @@ msgstr "%s: поле `%s' нявызначана"
 #: locale/programs/ld-name.c:116 locale/programs/ld-telephone.c:115
 #, c-format
 msgid "%s: field `%s' must not be empty"
-msgstr "%s: поле `%s' не павінна быць парожнім"
+msgstr "%s: поле `%s' не павінна быць пустым"
 
 #: locale/programs/ld-address.c:168
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
-msgstr ""
+msgstr "%s: няправільная экранавальная паслядоўнасць `%%%c' у полі `%s'"
 
 #: locale/programs/ld-address.c:218
 #, c-format
 msgid "%s: terminology language code `%s' not defined"
-msgstr ""
+msgstr "%s: код мовы тэрміналогіі `%s' не азначаны"
 
 #: locale/programs/ld-address.c:243
 #, c-format
 msgid "%s: field `%s' must not be defined"
-msgstr ""
+msgstr "%s: поле `%s' мусіць быць нявызначаным"
 
 #: locale/programs/ld-address.c:257 locale/programs/ld-address.c:286
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
-msgstr ""
+msgstr "%s: скарачэнне мовы `%s' не азначана"
 
 #: locale/programs/ld-address.c:264 locale/programs/ld-address.c:292
 #: locale/programs/ld-address.c:325 locale/programs/ld-address.c:337
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
-msgstr "%s: `%s' значэньне ну супадае `%s' значэньне"
+msgstr "%s: значэнне `%s' не супадае з значэннем `%s'"
 
 #: locale/programs/ld-address.c:311
 #, c-format
 msgid "%s: numeric country code `%d' not valid"
-msgstr ""
+msgstr "%s: лічбавы код краіны `%d' няправільны"
 
 #: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
 #: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2478
@@ -1843,7 +1843,7 @@ msgstr ""
 #: locale/programs/ld-time.c:906
 #, c-format
 msgid "%s: field `%s' declared more than once"
-msgstr "%s: поле `%s' абвешчана больш чым адзін раз"
+msgstr "%s: поле `%s' абвешчана больш за адзін раз"
 
 #: locale/programs/ld-address.c:436 locale/programs/ld-address.c:474
 #: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
@@ -1853,7 +1853,7 @@ msgstr "%s: поле `%s' абвешчана больш чым адзін раз
 #: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
 #, c-format
 msgid "%s: unknown character in field `%s'"
-msgstr ""
+msgstr "%s: невядомы знак у полі `%s'"
 
 #: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
 #: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:394
@@ -1863,7 +1863,7 @@ msgstr ""
 #: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
 #, c-format
 msgid "%s: incomplete `END' line"
-msgstr ""
+msgstr "%s: няскончаны радок `END'"
 
 #: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
@@ -1878,43 +1878,43 @@ msgstr ""
 #: locale/programs/ld-telephone.c:283 locale/programs/ld-time.c:981
 #, c-format
 msgid "%s: syntax error"
-msgstr ""
+msgstr "%s: сінтаксічная памылка"
 
 #: locale/programs/ld-collate.c:425
 #, c-format
 msgid "`%.*s' already defined in charmap"
-msgstr ""
+msgstr "`%.*s' ужо азначаны ў знаказборы"
 
 #: locale/programs/ld-collate.c:434
 #, c-format
 msgid "`%.*s' already defined in repertoire"
-msgstr ""
+msgstr "`%.*s' ужо азначаны ў рэпертуары"
 
 #: locale/programs/ld-collate.c:441
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
-msgstr ""
+msgstr "`%.*s' ужо азначаны як сімвал сартавання"
 
 #: locale/programs/ld-collate.c:448
 #, c-format
 msgid "`%.*s' already defined as collating element"
-msgstr ""
+msgstr "`%.*s' ужо азначаны як элемент сартавання"
 
 #: locale/programs/ld-collate.c:479 locale/programs/ld-collate.c:505
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
-msgstr ""
+msgstr "%s: `forward' і `backward' нельга ўжываць разам"
 
 #: locale/programs/ld-collate.c:489 locale/programs/ld-collate.c:515
 #: locale/programs/ld-collate.c:531
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
-msgstr ""
+msgstr "%s: `%s' згаданы ў азначэнні вагі %d некалькі разоў"
 
 #: locale/programs/ld-collate.c:587
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
-msgstr ""
+msgstr "%s: зашмат правілаў; першы запіс меў толькі %d"
 
 #: locale/programs/ld-collate.c:623
 #, c-format
