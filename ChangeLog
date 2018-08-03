@@ -1,3 +1,8 @@
+2018-08-03  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.
+	* string/strstr.c (AVAILABLE): Likewise.
+
 2018-08-03  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/i386/i686/multiarch/bzero-ia32.S: Don't include

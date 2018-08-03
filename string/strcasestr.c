@@ -58,31 +58,22 @@
    case-insensitive comparison.  This function gives unspecified
    results in multibyte locales.  */
 char *
-STRCASESTR (const char *haystack_start, const char *needle_start)
+STRCASESTR (const char *haystack, const char *needle)
 {
-  const char *haystack = haystack_start;
-  const char *needle = needle_start;
   size_t needle_len; /* Length of NEEDLE.  */
   size_t haystack_len; /* Known minimum length of HAYSTACK.  */
-  bool ok = true; /* True if NEEDLE is prefix of HAYSTACK.  */
 
-  /* Determine length of NEEDLE, and in the process, make sure
-     HAYSTACK is at least as long (no point processing all of a long
-     NEEDLE if HAYSTACK is too short).  */
-  while (*haystack && *needle)
-    {
-      ok &= (TOLOWER ((unsigned char) *haystack)
-	     == TOLOWER ((unsigned char) *needle));
-      haystack++;
-      needle++;
-    }
-  if (*needle)
+  /* Handle empty NEEDLE special case.  */
+  if (needle[0] == '\0')
+    return (char *) haystack;
+
+  /* Ensure HAYSTACK length is at least as long as NEEDLE length.
+     Since a match may occur early on in a huge HAYSTACK, use strnlen
+     and read ahead a few cachelines for improved performance.  */
+  needle_len = strlen (needle);
+  haystack_len = __strnlen (haystack, needle_len + 256);
+  if (haystack_len < needle_len)
     return NULL;
-  if (ok)
-    return (char *) haystack_start;
-  needle_len = needle - needle_start;
-  haystack = haystack_start + 1;
-  haystack_len = needle_len - 1;
 
   /* Perform the search.  Abstract memory is considered to be an array
      of 'unsigned char' values, not an array of 'char' values.  See
@@ -90,10 +81,10 @@ STRCASESTR (const char *haystack_start, const char *needle_start)
   if (needle_len < LONG_NEEDLE_THRESHOLD)
     return two_way_short_needle ((const unsigned char *) haystack,
 				 haystack_len,
-				 (const unsigned char *) needle_start,
+				 (const unsigned char *) needle,
 				 needle_len);
   return two_way_long_needle ((const unsigned char *) haystack, haystack_len,
-			      (const unsigned char *) needle_start,
+			      (const unsigned char *) needle,
 			      needle_len);
 }
 

@@ -50,33 +50,32 @@
    if NEEDLE is empty, otherwise NULL if NEEDLE is not found in
    HAYSTACK.  */
 char *
-STRSTR (const char *haystack_start, const char *needle_start)
+STRSTR (const char *haystack, const char *needle)
 {
-  const char *haystack = haystack_start;
-  const char *needle = needle_start;
   size_t needle_len; /* Length of NEEDLE.  */
   size_t haystack_len; /* Known minimum length of HAYSTACK.  */
-  bool ok = true; /* True if NEEDLE is prefix of HAYSTACK.  */
 
-  /* Determine length of NEEDLE, and in the process, make sure
-     HAYSTACK is at least as long (no point processing all of a long
-     NEEDLE if HAYSTACK is too short).  */
-  while (*haystack && *needle)
-    ok &= *haystack++ == *needle++;
-  if (*needle)
-    return NULL;
-  if (ok)
-    return (char *) haystack_start;
-
-  /* Reduce the size of haystack using strchr, since it has a smaller
-     linear coefficient than the Two-Way algorithm.  */
-  needle_len = needle - needle_start;
-  haystack = strchr (haystack_start + 1, *needle_start);
-  if (!haystack || __builtin_expect (needle_len == 1, 0))
+  /* Handle empty NEEDLE special case.  */
+  if (needle[0] == '\0')
     return (char *) haystack;
-  needle -= needle_len;
-  haystack_len = (haystack > haystack_start + needle_len ? 1
-		  : needle_len + haystack_start - haystack);
+
+  /* Skip until we find the first matching char from NEEDLE.  */
+  haystack = strchr (haystack, needle[0]);
+  if (haystack == NULL || needle[1] == '\0')
+    return (char *) haystack;
+
+  /* Ensure HAYSTACK length is at least as long as NEEDLE length.
+     Since a match may occur early on in a huge HAYSTACK, use strnlen
+     and read ahead a few cachelines for improved performance.  */
+  needle_len = strlen (needle);
+  haystack_len = __strnlen (haystack, needle_len + 256);
+  if (haystack_len < needle_len)
+    return NULL;
+
+  /* Check whether we have a match.  This improves performance since we avoid
+     the initialization overhead of the two-way algorithm.  */
+  if (memcmp (haystack, needle, needle_len) == 0)
+    return (char *) haystack;
 
   /* Perform the search.  Abstract memory is considered to be an array
      of 'unsigned char' values, not an array of 'char' values.  See
