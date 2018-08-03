@@ -2,23 +2,5 @@
 
 #include <ldsodefs.h>
 
-#define rtld_global_ro_offsetof(mem) offsetof (struct rtld_global_ro, mem)
-
-RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET rtld_global_ro_offsetof (_dl_x86_cpu_features)
-
-CPU_FEATURES_SIZE	sizeof (struct cpu_features)
-CPUID_OFFSET		offsetof (struct cpu_features, cpuid)
-CPUID_SIZE		sizeof (struct cpuid_registers)
-CPUID_EAX_OFFSET	offsetof (struct cpuid_registers, eax)
-CPUID_EBX_OFFSET	offsetof (struct cpuid_registers, ebx)
-CPUID_ECX_OFFSET	offsetof (struct cpuid_registers, ecx)
-CPUID_EDX_OFFSET	offsetof (struct cpuid_registers, edx)
-FAMILY_OFFSET		offsetof (struct cpu_features, family)
-MODEL_OFFSET		offsetof (struct cpu_features, model)
+RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET offsetof (struct rtld_global_ro, _dl_x86_cpu_features)
 XSAVE_STATE_SIZE_OFFSET	offsetof (struct cpu_features, xsave_state_size)
-FEATURE_OFFSET		offsetof (struct cpu_features, feature)
-FEATURE_SIZE		sizeof (unsigned int)
-
-COMMON_CPUID_INDEX_1
-COMMON_CPUID_INDEX_7
-FEATURE_INDEX_1

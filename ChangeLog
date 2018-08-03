@@ -1,3 +1,23 @@
+2018-08-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features-offsets.sym
+	(rtld_global_ro_offsetof): Removed.
+	(CPU_FEATURES_SIZE): Likewise.
+	(CPUID_OFFSET): Likewise.
+	(CPUID_SIZE): Likewise.
+	(CPUID_EAX_OFFSET): Likewise.
+	(CPUID_EBX_OFFSET): Likewise.
+	(CPUID_ECX_OFFSET): Likewise.
+	(CPUID_EDX_OFFSET): Likewise.
+	(FAMILY_OFFSET): Likewise.
+	(MODEL_OFFSET): Likewise.
+	(FEATURE_OFFSET): Likewise.
+	(FEATURE_SIZ): Likewise.
+	(COMMON_CPUID_INDEX_1): Likewise.
+	(COMMON_CPUID_INDEX_7): Likewise.
+	(FEATURE_INDEX_1): Likewise.
+	(RTLD_GLOBAL_RO_DL_X86_CPU_FEATURES_OFFSET): Updated.
+
 2018-08-02  Carlos O'Donell <carlos@redhat.com>
 
 	* localedata/Makefile (INSTALL-SUPPORTED-LOCALES): Remove.
