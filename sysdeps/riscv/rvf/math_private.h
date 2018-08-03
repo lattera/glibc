@@ -72,8 +72,8 @@ libc_fesetround_riscv (int round)
 static __always_inline void
 libc_feholdexcept_setround_riscv (fenv_t *envp, int round)
 {
-  libc_fesetround_riscv (round);
   libc_feholdexcept_riscv (envp);
+  libc_fesetround_riscv (round);
 }
 
 #define libc_feholdexcept_setround  libc_feholdexcept_setround_riscv

@@ -1,3 +1,8 @@
+2018-08-03  DJ Delorie  <dj@redhat.com>
+
+	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):
+	Fix rounding save-restore bug.
+
 2018-08-03  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-ilogb.inc (ilogb_test_data): Use ',' not ';'
