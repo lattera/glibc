@@ -1,3 +1,10 @@
+2018-08-03  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-ilogb.inc (ilogb_test_data): Use ',' not ';'
+	after TEST_* calls.
+	* math/libm-test-llogb.inc (llogb_test_data): Likewise.
+	* math/libm-test-logb.inc (logb_test_data): Likewise.
+
 2018-08-03  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.

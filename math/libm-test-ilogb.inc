@@ -24,20 +24,20 @@ static const struct test_f_i_data ilogb_test_data[] =
     TEST_f_i (ilogb, lit_e, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, 1024, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, -2000, 10, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_i (ilogb, 0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, 0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, -0.5, -1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
 #if MANT_DIG >= 57
     TEST_f_i (ilogb, 0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (ilogb, -0x1.ffffffffffffffp1L, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #endif
 
-    TEST_f_i (ilogb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
-    TEST_f_i (ilogb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED);
+    TEST_f_i (ilogb, min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, -min_subnorm_value, MIN_EXP-MANT_DIG, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, -min_value, MIN_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (ilogb, -max_value, MAX_EXP-1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 
     /* ilogb (0.0) == FP_ILOGB0 plus invalid exception  */
     TEST_f_i (ilogb, 0.0, FP_ILOGB0, NO_INEXACT_EXCEPTION|INVALID_EXCEPTION|ERRNO_EDOM),
