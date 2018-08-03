@@ -1006,6 +1006,8 @@ ildouble: 2
 ldouble: 2
 
 Function: "cos":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
@@ -1348,9 +1350,9 @@ ildouble: 4
 ldouble: 4
 
 Function: Imaginary part of "ctan_towardzero":
-double: 1
+double: 2
 float: 2
-idouble: 1
+idouble: 2
 ifloat: 2
 ildouble: 5
 ldouble: 5
@@ -1898,10 +1900,12 @@ ldouble: 2
 Function: "log_upward":
 double: 1
 idouble: 1
-ildouble: 1
-ldouble: 1
+ildouble: 2
+ldouble: 2
 
 Function: "pow":
+double: 1
+idouble: 1
 ildouble: 2
 ldouble: 2
 
@@ -1930,6 +1934,8 @@ ildouble: 2
 ldouble: 2
 
 Function: "sin":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
@@ -1952,6 +1958,8 @@ ildouble: 3
 ldouble: 3
 
 Function: "sincos":
+double: 1
+idouble: 1
 ildouble: 1
 ldouble: 1
 
