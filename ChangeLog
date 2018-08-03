@@ -1,7 +1,7 @@
 2018-08-03  DJ Delorie  <dj@redhat.com>
 
 	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):
-	Fix rounding save-restore bug.
+	Move libc_fesetround_riscv after libc_feholdexcept_riscv.
 
 	* sysdeps/riscv/rv64/rvd/libm-test-ulps: Update.
 
