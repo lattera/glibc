@@ -19,7 +19,6 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
-#include <init-arch.h>
 
 #if IS_IN (libc)
 # define MEMSET_SYMBOL(p,s)	p##_sse2_##s

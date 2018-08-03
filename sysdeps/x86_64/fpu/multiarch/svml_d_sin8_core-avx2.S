@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <init-arch.h>
 
 #define _ZGVeN8v_sin _ZGVeN8v_sin_avx2_wrapper
 #include "../svml_d_sin8_core.S"

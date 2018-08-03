@@ -17,7 +17,6 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <init-arch.h>
 
 #if IS_IN (libc)
 # define __bzero __bzero_ia32

@@ -1,3 +1,11 @@
+2018-08-03  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i686/multiarch/bzero-ia32.S: Don't include
+	<init-arch.h>.
+	* sysdeps/x86_64/fpu/multiarch/svml_d_sin8_core-avx2.S: Likewise.
+	* sysdeps/x86_64/fpu/multiarch/svml_s_expf16_core-avx2.S: Likewise.
+	* sysdeps/x86_64/multiarch/memset-sse2-unaligned-erms.S: Likewise.
+
 2018-08-03  Carlos O'Donell  <carlos@redhat.com>
 
 	* po/be.po: Update translation.
