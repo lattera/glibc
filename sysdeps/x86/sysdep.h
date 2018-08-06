@@ -48,6 +48,15 @@ enum cf_protection_level
 # define SHSTK_ENABLED	0
 #endif
 
+/* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
+   space to preserve RCX, RDX, RSI, RDI, R8, R9 and RAX.  It must be
+   aligned to 16 bytes for fxsave and 64 bytes for xsave.  */
+#define STATE_SAVE_OFFSET (8 * 7 + 8)
+
+/* Save SSE, AVX, AVX512, mask and bound registers.  */
+#define STATE_SAVE_MASK \
+  ((1 << 1) | (1 << 2) | (1 << 3) | (1 << 5) | (1 << 6) | (1 << 7))
+
 #ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */

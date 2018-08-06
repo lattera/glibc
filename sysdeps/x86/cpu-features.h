@@ -92,18 +92,6 @@
 /* The current maximum size of the feature integer bit array.  */
 #define FEATURE_INDEX_MAX 1
 
-/* Offset for fxsave/xsave area used by _dl_runtime_resolve.  Also need
-   space to preserve RCX, RDX, RSI, RDI, R8, R9 and RAX.  It must be
-   aligned to 16 bytes for fxsave and 64 bytes for xsave.  */
-#define STATE_SAVE_OFFSET (8 * 7 + 8)
-
-/* Save SSE, AVX, AVX512, mask and bound registers.  */
-#define STATE_SAVE_MASK \
-  ((1 << 1) | (1 << 2) | (1 << 3) | (1 << 5) | (1 << 6) | (1 << 7))
-
-#ifdef	__ASSEMBLER__
-# include <cpu-features-offsets.h>
-#else	/* __ASSEMBLER__ */
 enum
   {
     COMMON_CPUID_INDEX_1 = 0,
@@ -266,8 +254,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_MathVec_Prefer_No_AVX512 FEATURE_INDEX_1
 # define index_arch_XSAVEC_Usable	FEATURE_INDEX_1
 # define index_arch_Prefer_FSRM		FEATURE_INDEX_1
-
-#endif	/* !__ASSEMBLER__ */
 
 #ifdef __x86_64__
 # define HAS_CPUID 1

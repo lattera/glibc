@@ -1,3 +1,13 @@
+2018-08-06  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/x86/cpu-features.h (STATE_SAVE_OFFSET): Removed.
+	(STATE_SAVE_MASK): Likewise.
+	Don't check __ASSEMBLER__ to include <cpu-features-offsets.h>.
+	* sysdeps/x86/sysdep.h (STATE_SAVE_OFFSET): New.
+	(STATE_SAVE_MASK): Likewise.
+	* sysdeps/x86_64/dl-trampoline.S: Include <cpu-features-offsets.h>
+	instead of <cpu-features.h>.
+
 2018-08-03  DJ Delorie  <dj@redhat.com>
 
 	* sysdeps/riscv/rvf/math_private.h (libc_feholdexcept_setround_riscv):

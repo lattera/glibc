@@ -18,7 +18,7 @@
 
 #include <config.h>
 #include <sysdep.h>
-#include <cpu-features.h>
+#include <cpu-features-offsets.h>
 #include <link-defines.h>
 
 #ifndef DL_STACK_ALIGNMENT
