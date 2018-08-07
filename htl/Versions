@@ -150,6 +150,8 @@ libpthread {
     __cthread_keycreate;
     __cthread_getspecific;
     __cthread_setspecific;
+    __pthread_getspecific;
+    __pthread_setspecific;
     __pthread_getattr_np;
     __pthread_attr_getstack;
   }

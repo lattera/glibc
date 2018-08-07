@@ -1,3 +1,8 @@
+2018-08-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
+
+	* htl/Versions (__pthread_getspecific, __pthread_setspecific): Add
+	symbols.
+
 2018-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-string.h (buf1_size, buf2_size): New
