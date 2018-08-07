@@ -1,3 +1,18 @@
+2018-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-string.h (buf1_size, buf2_size): New
+	variables.
+	(init_sizes): New function.
+	(test_init): Use it.
+	(alloc_buf, exit_error): New functions.
+	(alloc_bufs): Use ALLOC_BUF.
+	(realloc_bufs): Remove.
+	* benchtests/bench-memcmp.c (do_test): Adjust.
+	* benchtests/bench-memset-large.c (do_test): Likewise.
+	* benchtests/bench-memset-walk.c (do_test): Likewise.
+	* benchtests/bench-memset.c (do_test): Likewise.
+	* benchtests/bench-strncmp.c (do_test): Likewise.
+
 2018-08-06  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/riscv/nptl/tls.h (DB_THREAD_SELF): Use REGISTER instead

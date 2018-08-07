@@ -76,10 +76,8 @@ extern impl_t __start_impls[], __stop_impls[];
 
 # define INNER_LOOP_ITERS 64
 
-unsigned char *buf1, *buf2;
 int ret, do_srandom;
 unsigned int seed;
-size_t page_size;
 
 # ifndef ITERATIONS
 size_t iterations = 100000;
@@ -182,47 +180,57 @@ static impl_t *impl_array;
 #  define BUF1PAGES 1
 # endif
 
+unsigned char *buf1, *buf2;
+static size_t buf1_size, buf2_size, page_size;
+
 static void
-alloc_bufs (void)
+init_sizes (void)
 {
   page_size = 2 * getpagesize ();
 # ifdef MIN_PAGE_SIZE
   if (page_size < MIN_PAGE_SIZE)
     page_size = MIN_PAGE_SIZE;
 # endif
-  buf1 = mmap (0, (BUF1PAGES + 1) * page_size, PROT_READ | PROT_WRITE,
-	       MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (buf1 == MAP_FAILED)
-    error (EXIT_FAILURE, errno, "mmap failed for buf1");
-  if (mprotect (buf1 + BUF1PAGES * page_size, page_size, PROT_NONE))
-    error (EXIT_FAILURE, errno, "mprotect failed for buf1");
-  buf2 = mmap (0, 2 * page_size, PROT_READ | PROT_WRITE,
-	       MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (buf2 == MAP_FAILED)
-    error (EXIT_FAILURE, errno, "mmap failed for buf2");
-  if (mprotect (buf2 + page_size, page_size, PROT_NONE))
-    error (EXIT_FAILURE, errno, "mprotect failed for buf2");
+
+  buf1_size = BUF1PAGES * page_size;
+  buf2_size = page_size;
 }
 
 static void
-__attribute__ ((unused))
-realloc_bufs (void)
+exit_error (const char *id, const char *func)
 {
-  int ret = 0;
+  error (EXIT_FAILURE, errno, "%s: %s failed", id, func);
+}
 
-  if (buf1)
-    ret = munmap (buf1, (BUF1PAGES + 1) * page_size);
+/* Allocate a buffer of size SIZE with a guard page at the end.  */
+static void
+alloc_buf (const char *id, size_t size, unsigned char **retbuf)
+{
+  size_t alloc_size = size + page_size;
 
-  if (ret != 0)
-    error (EXIT_FAILURE, errno, "munmap failed for buf1");
+  if (*retbuf != NULL)
+    {
+	int ret = munmap (*retbuf, alloc_size);
+	if (ret != 0)
+	  exit_error (id, "munmap");
+    }
 
-  if (buf2)
-    ret = munmap (buf2, 2 * page_size);
+  unsigned char *buf = mmap (0, alloc_size, PROT_READ | PROT_WRITE,
+			     MAP_PRIVATE | MAP_ANON, -1, 0);
 
-  if (ret != 0)
-    error (EXIT_FAILURE, errno, "munmap failed for buf2");
+  if (buf == MAP_FAILED)
+    exit_error (id, "mmap");
+  if (mprotect (buf + size, page_size, PROT_NONE))
+    exit_error (id, "mprotect");
 
-  alloc_bufs ();
+  *retbuf = buf;
+}
+
+static void
+alloc_bufs (void)
+{
+  alloc_buf ("buf1", buf1_size, &buf1);
+  alloc_buf ("buf2", buf2_size, &buf2);
 }
 
 static void
@@ -234,6 +242,7 @@ test_init (void)
 					/ sizeof func_list[0]));
 # endif
 
+  init_sizes ();
   alloc_bufs ();
 
   if (do_srandom)

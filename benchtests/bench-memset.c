@@ -134,7 +134,7 @@ do_test (json_ctx_t *json_ctx, size_t align, int c, size_t len)
   FOR_EACH_IMPL (impl, 0)
     {
       do_one_test (json_ctx, impl, (CHAR *) (buf1) + align, c, len);
-      realloc_bufs ();
+      alloc_bufs ();
     }
 
   json_array_end (json_ctx);

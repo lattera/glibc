@@ -88,7 +88,7 @@ do_test (json_ctx_t *json_ctx, int c, size_t len)
     {
       do_one_test (json_ctx, impl, (CHAR *) buf1,
 		   (CHAR *) buf1 + MIN_PAGE_SIZE - len, c, len);
-      realloc_bufs ();
+      alloc_bufs ();
     }
 
   json_array_end (json_ctx);

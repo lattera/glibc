@@ -132,7 +132,7 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
       s2[len - 1] -= exp_result;
 
       do_one_test (json_ctx, impl, s1, s2, len, exp_result);
-      realloc_bufs ();
+      alloc_bufs ();
     }
 
   json_array_end (json_ctx);

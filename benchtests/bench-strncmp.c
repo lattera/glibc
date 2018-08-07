@@ -150,7 +150,7 @@ do_test_limit (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
 
   FOR_EACH_IMPL (impl, 0)
     {
-      realloc_bufs ();
+      alloc_bufs ();
       s1 = (CHAR *) (buf1 + page_size - n * CHARBYTES);
       s2 = (CHAR *) (buf2 + page_size - n * CHARBYTES);
 
@@ -207,7 +207,7 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, size_t
 
   FOR_EACH_IMPL (impl, 0)
     {
-      realloc_bufs ();
+      alloc_bufs ();
       s1 = (CHAR *) (buf1 + align1);
       s2 = (CHAR *) (buf2 + align2);
 
