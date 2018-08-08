@@ -1,3 +1,8 @@
+2018-08-08  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/libm-test-nextdown.inc (do_test): Move comment to ....
+	* math/libm-test-nexttoward.inc (nexttoward_test_data): ... here.
+
 2018-08-08  Samuel Thibault  <samuel.thibault@ens-lyon.org>
 
 	* htl/Versions (__pthread_getspecific, __pthread_setspecific): Add
