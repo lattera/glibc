@@ -12,6 +12,10 @@
 
 	* htl/Versions (__pthread_getspecific, __pthread_setspecific): Add
 	symbols.
+	* sysdeps/htl/pthreadP.h [IS_IN (libpthread)] (__pthread_getspecific,
+	__pthread_setspecific): Add hidden proto.
+	* sysdeps/htl/pt-getspecific.c (__pthread_getspecific): Add hidden def.
+	* sysdeps/htl/pt-setspecific.c (__pthread_setspecific): Add hidden def.
 
 2018-08-07  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 

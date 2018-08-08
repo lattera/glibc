@@ -36,3 +36,4 @@ __pthread_getspecific (pthread_key_t key)
   return self->thread_specifics[key];
 }
 strong_alias (__pthread_getspecific, pthread_getspecific);
+hidden_def (__pthread_getspecific)
