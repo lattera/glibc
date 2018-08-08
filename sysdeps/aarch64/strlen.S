@@ -54,7 +54,7 @@
 #define REP8_80 0x8080808080808080
 
 #ifdef TEST_PAGE_CROSS
-# define MIN_PAGE_SIZE 15
+# define MIN_PAGE_SIZE 16
 #else
 # define MIN_PAGE_SIZE 4096
 #endif

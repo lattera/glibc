@@ -1,3 +1,8 @@
+2018-08-08  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strlen.S [TEST_PAGE_CROSS](MIN_PAGE_SIZE):
+	Fix value.
+
 2018-08-08  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/libm-test-nextdown.inc (do_test): Move comment to ....
