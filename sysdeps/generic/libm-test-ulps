@@ -2,4 +2,4 @@
 # This file is the fallback and contains
 # no data
 # You can create a new file with e.g. `test-double -u'
-# followed by `gen-libm-test.pl -u ULPs -n'.
+# followed by `gen-libm-test.py -u ULPs -n'.

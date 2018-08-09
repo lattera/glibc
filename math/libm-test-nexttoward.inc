@@ -20,7 +20,7 @@
 
 /* Note, the second argument is always typed as long double.  The j type
    argument to TEST_ indicates the literal should not be post-processed by
-   gen-libm-test.pl.  */
+   gen-libm-test.py.  */
 
 static const struct test_fj_f_data nexttoward_test_data[] =
   {

@@ -3,10 +3,10 @@ README for libm-test math test suite
 
 The libm-test math test suite tests a number of function points of
 math functions in the GNU C library.  The following sections contain a
-brief overview.  Please note that the test drivers and the Perl script
-"gen-libm-test.pl" have some options.  A full list of options is
-available with --help (for the test drivers) and -h for
-"gen-libm-test.pl".
+brief overview.  Please note that the test drivers and the Python
+script "gen-libm-test.py" have some options.  A full list of options
+is available with --help (for the test drivers) and -h for
+"gen-libm-test.py".
 
 
 What is tested?
@@ -25,8 +25,8 @@ The main files are "libm-test-<func>.inc".  They are independent of
 the target platform and the specific real floating type and format and
 contain placeholder test "templates" for math functions defined in
 libm.  These files, along with generated files named
-"auto-libm-test-out-<func>", are preprocessed by the Perl script
-"gen-libm-test.pl" to expand the templates and produce a set of test
+"auto-libm-test-out-<func>", are preprocessed by the Python script
+"gen-libm-test.py" to expand the templates and produce a set of test
 cases for each math function that are specific to the target platform
 but still independent of the real floating type.  The results of the
 processing are "libm-test-<func>.c" and a file "libm-test-ulps.h" with
@@ -48,7 +48,7 @@ defines or undefines the __NO_MATH_INLINES macro just before including
 respectively.  Each driver is compiled into a single executable test
 program with the corresponding name.
 
-As mentioned above, the "gen-libm-test.pl" script looks for a file
+As mentioned above, the "gen-libm-test.py" script looks for a file
 named "libm-test-ulps" in the platform specific sysdep directory (or
 its fpu or nofpu subdirectory) and for each variant (real floating
 type and rounding mode) of every tested function reads from it the
@@ -80,17 +80,17 @@ This generates a file "ULPs" with all double ULPs in it, ignoring any
 previously calculated ULPs, and running with the newly built dynamic
 loader and math library (assumes you didn't install your build).  Now
 generate the ULPs for all other formats, the tests will be appending the
-data to the "ULPs" file.  As final step run "gen-libm-test.pl" with the
+data to the "ULPs" file.  As final step run "gen-libm-test.py" with the
 file as input and ask to generate a pretty printed output in the file
 "NewUlps":
-  gen-libm-test.pl -u ULPs -n NewUlps
+  gen-libm-test.py -u ULPs -n NewUlps
 Copy "NewUlps" to "libm-test-ulps" in the appropriate machine sysdep
 directory.
 
 Note that the test drivers have an option "-u" to output an unsorted
 list of all epsilons that the functions have.  The output can be read
 in directly but it's better to pretty print it first.
-"gen-libm-test.pl" has an option to generate a pretty-printed and
+"gen-libm-test.py" has an option to generate a pretty-printed and
 sorted new ULPs file from the output of the test drivers.
 
 Contents of libm-test-ulps

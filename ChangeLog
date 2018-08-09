@@ -1,3 +1,22 @@
+2018-08-09  Joseph Myers  <joseph@codesourcery.com>
+
+	* math/gen-libm-test.py: New file.
+	* math/gen-libm-test.pl: Remove.
+	* math/Makefile [$(PERL) != no]: Change condition to [PYTHON].
+	($(objpfx)libm-test-ulps.h): Use gen-libm-test.py instead of
+	gen-libm-test.pl.
+	($(libm-test-c-noauto-obj)): Likewise.
+	($(libm-test-c-auto-obj)): Likewise.
+	($(libm-test-c-narrow-obj)): Likewise.
+	(regen-ulps): Likewise.
+	* math/README.libm-test: Update references to gen-libm-test.pl.
+	* math/libm-test-driver.c (struct test_fj_f_data): Update comment
+	referencing gen-libm-test.pl.
+	* math/libm-test-nexttoward.inc (nexttoward_test_data): Likewise.
+	* math/libm-test-support.c: Likewise.
+	* math/libm-test-support.h: Likewise.
+	* sysdeps/generic/libm-test-ulps: Likewise.
+
 2018-08-08  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* sysdeps/aarch64/strlen.S [TEST_PAGE_CROSS](MIN_PAGE_SIZE):

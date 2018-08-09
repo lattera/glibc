@@ -252,7 +252,7 @@ tests += test-math-isinff test-math-iszero test-math-issignaling \
 	 test-math-iscanonical test-math-cxx11 test-math-iseqsig
 endif
 
-ifneq (no,$(PERL))
+ifdef PYTHON
 libm-vec-tests = $(addprefix test-,$(libmvec-tests))
 libm-test-support = $(foreach t,$(test-types),libm-test-support-$(t))
 test-extras += $(libm-test-support)
@@ -263,9 +263,9 @@ extra-test-objs += $(addsuffix .o, $(libm-vec-test-wrappers))
 
 ulps-file = $(firstword $(wildcard $(sysdirs:%=%/libm-test-ulps)))
 
-$(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.pl
+$(objpfx)libm-test-ulps.h: $(ulps-file) gen-libm-test.py
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -u $< -H $@
+	$(PYTHON) gen-libm-test.py -u $< -H $@
 
 libm-test-funcs-auto = acos acosh asin asinh atan atan2 atanh cabs cacos \
 		       cacosh carg casin casinh catan catanh cbrt ccos ccosh \
@@ -333,21 +333,21 @@ libm-test-c-noauto-obj = $(addprefix $(objpfx),$(libm-test-c-noauto))
 libm-test-c-narrow-obj = $(addprefix $(objpfx),$(libm-test-c-narrow))
 
 $(libm-test-c-noauto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
-						  gen-libm-test.pl
+						  gen-libm-test.py
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -c $< -a /dev/null -C $@
+	$(PYTHON) gen-libm-test.py -c $< -a /dev/null -C $@
 
 $(libm-test-c-auto-obj): $(objpfx)libm-test%.c: libm-test%.inc \
-						gen-libm-test.pl \
+						gen-libm-test.py \
 						auto-libm-test-out%
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
+	$(PYTHON) gen-libm-test.py -c $< -a auto-libm-test-out$* -C $@
 
 $(libm-test-c-narrow-obj): $(objpfx)libm-test%.c: libm-test%.inc \
-						  gen-libm-test.pl \
+						  gen-libm-test.py \
 						  auto-libm-test-out%
 	$(make-target-directory)
-	$(PERL) gen-libm-test.pl -c $< -a auto-libm-test-out$* -C $@
+	$(PYTHON) gen-libm-test.py -c $< -a auto-libm-test-out$* -C $@
 endif
 
 ifdef PYTHON
@@ -473,7 +473,7 @@ $(objpfx)gen-libm-templates.stmp: Makefile
 $(foreach t, $(call type-foreach, $(gen-all-calls)), \
              $(objpfx)$(t).c): $(objpfx)gen-libm-templates.stmp
 
-ifneq (no,$(PERL))
+ifdef PYTHON
 # This must come after the inclusion of sysdeps Makefiles via Rules.
 
 $(foreach t,$(libm-tests-normal),$(objpfx)$(t).c): $(objpfx)test-%.c:
@@ -628,15 +628,15 @@ regen-ulps: $(addprefix $(objpfx),$(libm-tests))
 	  cat $(objpfx)ULPs >> $(objpfx)libm-test-ulps; \
 	  rm $(objpfx)ULPs; \
 	done; \
-	$(PERL) gen-libm-test.pl -n $(objpfx)NewUlps \
-				 -u $(objpfx)libm-test-ulps; \
+	$(PYTHON) gen-libm-test.py -n $(objpfx)NewUlps \
+				   -u $(objpfx)libm-test-ulps; \
 	echo "Automatic regeneration of ULPs complete."; \
 	echo "Difference between the current baseline and the new baseline is:";\
 	diff -urN $(ulps-file) $(objpfx)NewUlps; \
 	echo "Copy $(objpfx)NewUlps to $(ulps-file) (relative to source)."
 else
 regen-ulps:
-	@echo "Automatic regeneration of ULPs requires perl."; \
+	@echo "Automatic regeneration of ULPs requires python."; \
 	exit 1;
 endif
 

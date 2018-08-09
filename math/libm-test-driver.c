@@ -154,7 +154,7 @@ struct test_ff_f_data
     int exceptions;
   } rd, rn, rz, ru;
 };
-/* Strictly speaking, a j type argument is one gen-libm-test.pl will not
+/* Strictly speaking, a j type argument is one gen-libm-test.py will not
    attempt to muck with.  For now, it is only used to prevent it from
    mucking up an explicitly long double argument.  */
 struct test_fj_f_data
