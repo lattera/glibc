@@ -1,5 +1,10 @@
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
+	Do not clobber R0.
+
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
 	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_profile):
 	Use symbolic offsets for stack variables.
 

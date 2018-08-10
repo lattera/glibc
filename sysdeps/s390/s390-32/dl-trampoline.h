@@ -26,8 +26,9 @@
  *   v24, v26, v28, v30, v25, v27, v29, v31 : vector parameter registers
  *   24(r15), 28(r15) : PLT arguments PLT1, PLT2
  *   96(r15) : additional stack parameters
- * The normal clobber rules for function calls apply:
- *   r0 - r5 : call clobbered
+ * The slightly tightened normal clobber rules for function calls apply:
+ *   r0 : call saved (for __fentry__)
+ *   r1 - r5 : call clobbered
  *   r6 - r13 :	call saved
  *   r14 : return address (call clobbered)
  *   r15 : stack pointer (call saved)
@@ -50,6 +51,7 @@
 #define V29_OFF -144
 #define V30_OFF -128
 #define V31_OFF -112
+#define R0_OFF -76
 #define PLT1_OFF -72
 #define PLT2_OFF -68
 #define R2_OFF -64
@@ -65,6 +67,8 @@
 	cfi_startproc
 	.align 16
 _dl_runtime_resolve:
+	st     %r0,CFA_OFF+R0_OFF(%r15)
+	cfi_offset (r0, R0_OFF)
 	stm    %r2,%r5,CFA_OFF+R2_OFF(%r15) # save registers
 	cfi_offset (r2, R2_OFF)
 	cfi_offset (r3, R3_OFF)
@@ -119,6 +123,7 @@ _dl_runtime_resolve:
 	ld     %f0,CFA_OFF+F0_OFF(%r15)
 	ld     %f2,CFA_OFF+F2_OFF(%r15)
 	lm     %r2,%r5,CFA_OFF+R2_OFF(%r15)
+	l      %r0,CFA_OFF+R0_OFF(%r15)
 	br     %r1
 1:	.long  _dl_fixup - 0b
 	cfi_endproc
@@ -131,6 +136,7 @@ _dl_runtime_resolve:
 #undef V29_OFF
 #undef V30_OFF
 #undef V31_OFF
+#undef R0_OFF
 #undef PLT1_OFF
 #undef PLT2_OFF
 #undef R2_OFF
