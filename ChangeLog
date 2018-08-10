@@ -1,5 +1,15 @@
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
+	* sysdeps/s390/Makefile: Register the new tests.
+	* sysdeps/s390/tst-dl-runtime-mod.S: New file.
+	* sysdeps/s390/tst-dl-runtime-profile-audit.c: New file.
+	* sysdeps/s390/tst-dl-runtime-profile-noaudit.c: New file.
+	* sysdeps/s390/tst-dl-runtime-resolve-audit.c: New file.
+	* sysdeps/s390/tst-dl-runtime-resolve-noaudit.c: New file.
+	* sysdeps/s390/tst-dl-runtime.c: New file.
+
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
 	* sysdeps/s390/s390-64/dl-trampoline.h (_dl_runtime_profile):
 	Do not clobber R0.
 
