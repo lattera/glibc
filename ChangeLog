@@ -261,7 +261,7 @@
 	(INSTALL-SUPPORTED-LOCALE-FILES): Define.
 	(install-locales): Depend on install-locale-archive.
 	(install-locale-archive): Define.
-	(install-lcoale-files): Define.
+	(install-locale-files): Define.
 	(build-one-locale): Define macro.
 	* manual/install.texi (Running make install): Document.
 	* manual/INSTALL: Regenerate.
