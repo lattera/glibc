@@ -1,3 +1,14 @@
+2018-08-10  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23497]
+	* sysdeps/unix/sysv/linux/getdents64.c (handle_overflow): New
+	function.
+	(__old_getdents64): Use getdents64.  Convert entries without
+	moving them.
+	* sysdeps/unix/sysv/linux/tst-readdir64-compat.c: New file.
+	* sysdeps/unix/sysv/linux/Makefile (tests-internal): Add
+	tst-readdir64-compat.
+
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
 	* sysdeps/s390/s390-32/s390-mcount.S (_mcount):

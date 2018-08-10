@@ -33,41 +33,80 @@ strong_alias (__getdents64, __getdents)
 # include <shlib-compat.h>
 
 # if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-# include <olddirent.h>
+#  include <olddirent.h>
+#  include <unistd.h>
 
-/* kernel definition of as of 3.2.  */
-struct compat_linux_dirent
+static ssize_t
+handle_overflow (int fd, __off64_t offset, ssize_t count)
 {
-  /* Both d_ino and d_off are compat_ulong_t which are defined in all
-     architectures as 'u32'.  */
-  uint32_t        d_ino;
-  uint32_t        d_off;
-  unsigned short  d_reclen;
-  char            d_name[1];
-};
+  /* If this is the first entry in the buffer, we can report the
+     error.  */
+  if (count == 0)
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+
+  /* Otherwise, seek to the overflowing entry, so that the next call
+     will report the error, and return the data read so far..  */
+  if (__lseek64 (fd, offset, SEEK_SET) != 0)
+    return -1;
+  return count;
+}
 
 ssize_t
 __old_getdents64 (int fd, char *buf, size_t nbytes)
 {
-  ssize_t retval = INLINE_SYSCALL_CALL (getdents, fd, buf, nbytes);
+  /* We do not move the individual directory entries.  This is only
+     possible if the target type (struct __old_dirent64) is smaller
+     than the source type.  */
+  _Static_assert (offsetof (struct __old_dirent64, d_name)
+		  <= offsetof (struct dirent64, d_name),
+		  "__old_dirent64 is larger than dirent64");
+  _Static_assert (__alignof__ (struct __old_dirent64)
+		  <= __alignof__ (struct dirent64),
+		  "alignment of __old_dirent64 is larger than dirent64");
 
-  /* The kernel added the d_type value after the name.  Change this now.  */
-  if (retval != -1)
+  ssize_t retval = INLINE_SYSCALL_CALL (getdents64, fd, buf, nbytes);
+  if (retval > 0)
     {
-      union
-      {
-	struct compat_linux_dirent k;
-	struct dirent u;
-      } *kbuf = (void *) buf;
-
-      while ((char *) kbuf < buf + retval)
+      char *p = buf;
+      char *end = buf + retval;
+      while (p < end)
 	{
-	  char d_type = *((char *) kbuf + kbuf->k.d_reclen - 1);
-	  memmove (kbuf->u.d_name, kbuf->k.d_name,
-		   strlen (kbuf->k.d_name) + 1);
-	  kbuf->u.d_type = d_type;
+	  struct dirent64 *source = (struct dirent64 *) p;
 
-	  kbuf = (void *) ((char *) kbuf + kbuf->k.d_reclen);
+	  /* Copy out the fixed-size data.  */
+	  __ino_t ino = source->d_ino;
+	  __off64_t offset = source->d_off;
+	  unsigned int reclen = source->d_reclen;
+	  unsigned char type = source->d_type;
+
+	  /* Check for ino_t overflow.  */
+	  if (__glibc_unlikely (ino != source->d_ino))
+	    return handle_overflow (fd, offset, p - buf);
+
+	  /* Convert to the target layout.  Use a separate struct and
+	     memcpy to side-step aliasing issues.  */
+	  struct __old_dirent64 result;
+	  result.d_ino = ino;
+	  result.d_off = offset;
+	  result.d_reclen = reclen;
+	  result.d_type = type;
+
+	  /* Write the fixed-sized part of the result to the
+	     buffer.  */
+	  size_t result_name_offset = offsetof (struct __old_dirent64, d_name);
+	  memcpy (p, &result, result_name_offset);
+
+	  /* Adjust the position of the name if necessary.  Copy
+	     everything until the end of the record, including the
+	     terminating NUL byte.  */
+	  if (result_name_offset != offsetof (struct dirent64, d_name))
+	    memmove (p + result_name_offset, source->d_name,
+		     reclen - offsetof (struct dirent64, d_name));
+
+	  p += reclen;
 	}
      }
   return retval;
