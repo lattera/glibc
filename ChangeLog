@@ -1,5 +1,11 @@
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
+	* stdlib/Versions: Remove __fentry__.
+	* sysdeps/i386/Versions: Add __fentry__.
+	* sysdeps/x86_64/Versions: Add __fentry__.
+
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
 	* sysdeps/s390/Makefile: Register the new tests.
 	* sysdeps/s390/tst-dl-runtime-mod.S: New file.
 	* sysdeps/s390/tst-dl-runtime-profile-audit.c: New file.

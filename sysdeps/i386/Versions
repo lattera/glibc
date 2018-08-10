@@ -25,6 +25,9 @@ libc {
     __strpbrk_cg; __strpbrk_g; __strrchr_c; __strrchr_g; __strspn_c1;
     __strspn_cg; __strspn_g; __strstr_cg; __strstr_g;
   }
+  GLIBC_2.13 {
+    __fentry__;
+  }
 }
 libm {
   GLIBC_2.1 {

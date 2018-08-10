@@ -2,6 +2,9 @@ libc {
   GLIBC_2.14 {
     memcpy;
   }
+  GLIBC_2.13 {
+    __fentry__;
+  }
 }
 libm {
   GLIBC_2.1 {
