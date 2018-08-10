@@ -1,5 +1,14 @@
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
+	* sysdeps/s390/s390-64/Versions (__fentry__): Add.
+	* sysdeps/s390/s390-64/s390x-mcount.S: Move the common
+	code to s390x-mcount.h and #include it.
+	* sysdeps/s390/s390-64/s390x-mcount.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+	(__fentry__): Add.
+
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
 	* stdlib/Versions: Remove __fentry__.
 	* sysdeps/i386/Versions: Add __fentry__.
 	* sysdeps/x86_64/Versions: Add __fentry__.
