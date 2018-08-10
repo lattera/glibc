@@ -145,122 +145,181 @@ _dl_runtime_resolve:
 #undef F6_OFF
 
 #ifndef PROF
+# define SIZEOF_STRUCT_LA_S390_64_REGS 200
+# define REGS_OFF -360
+# define R2_OFF -360
+# define R3_OFF -352
+# define R4_OFF -344
+# define R5_OFF -336
+# define R6_OFF -328
+# define F0_OFF -320
+# define F2_OFF -312
+# define F4_OFF -304
+# define F6_OFF -296
+# define V24_OFF -288
+# define V25_OFF -272
+# define V26_OFF -256
+# define V27_OFF -240
+# define V28_OFF -224
+# define V29_OFF -208
+# define V30_OFF -192
+# define V31_OFF -176
+# define R12_OFF -136
+# define R14_OFF -128
+# define FRAMESIZE_OFF -120
+# define PLT1_OFF -112
+# define PLT2_OFF -104
+# define PREGS_OFF -96
+# define RETVAL_OFF -88
+# define RET_R2_OFF -88
+# define RET_F0_OFF -80
+# define RET_V24_OFF -72
 	.globl _dl_runtime_profile
 	.type _dl_runtime_profile, @function
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
-	stg    %r12,24(%r15)		# r12 is used as backup of r15
-	cfi_offset (r12, -136)
-	stg    %r14,32(%r15)
-	cfi_offset (r14, -128)
-	lgr    %r12,%r15		# backup stack pointer
+	stg    %r12,CFA_OFF+R12_OFF(%r15)	# r12 is used as backup of r15
+	cfi_offset (r12, R12_OFF)
+	stg    %r14,CFA_OFF+R14_OFF(%r15)
+	cfi_offset (r14, R14_OFF)
+	lgr    %r12,%r15			# backup stack pointer
 	cfi_def_cfa_register (12)
-	aghi   %r15,-360		# create stack frame:
-					# 160 + sizeof(La_s390_64_regs)
-	stg    %r12,0(%r15)		# save backchain
+# define FRAME_SIZE (CFA_OFF + SIZEOF_STRUCT_LA_S390_64_REGS)
+	aghi   %r15,-FRAME_SIZE			# create stack frame:
+	stg    %r12,0(%r15)			# save backchain
 
-	stmg   %r2,%r6,160(%r15)	# save call-clobbered arg regs
-	cfi_offset (r2, -360)		# + r6 needed as arg for
-	cfi_offset (r3, -352)		#  _dl_profile_fixup
-	cfi_offset (r4, -344)
-	cfi_offset (r5, -336)
-	cfi_offset (r6, -328)
-	std    %f0,200(%r15)
-	cfi_offset (f0, -320)
-	std    %f2,208(%r15)
-	cfi_offset (f2, -312)
-	std    %f4,216(%r15)
-	cfi_offset (f4, -304)
-	std    %f6,224(%r15)
-	cfi_offset (f6, -296)
-#ifdef RESTORE_VRS
+	stmg   %r2,%r6,FRAME_OFF+R2_OFF(%r15)	# save call-clobbered arg regs
+	cfi_offset (r2, R2_OFF)			# + r6 needed as arg for
+	cfi_offset (r3, R3_OFF)			#  _dl_profile_fixup
+	cfi_offset (r4, R4_OFF)
+	cfi_offset (r5, R5_OFF)
+	cfi_offset (r6, R6_OFF)
+	std    %f0,FRAME_OFF+F0_OFF(%r15)
+	cfi_offset (f0, F0_OFF)
+	std    %f2,FRAME_OFF+F2_OFF(%r15)
+	cfi_offset (f2, F2_OFF)
+	std    %f4,FRAME_OFF+F4_OFF(%r15)
+	cfi_offset (f4, F4_OFF)
+	std    %f6,FRAME_OFF+F6_OFF(%r15)
+	cfi_offset (f6, F6_OFF)
+# ifdef RESTORE_VRS
 	.machine push
 	.machine "z13"
-	vstm   %v24,%v31,232(%r15)      # store call-clobbered vector arguments
-	cfi_offset (v24, -288)
-	cfi_offset (v25, -272)
-	cfi_offset (v26, -256)
-	cfi_offset (v27, -240)
-	cfi_offset (v28, -224)
-	cfi_offset (v29, -208)
-	cfi_offset (v30, -192)
-	cfi_offset (v31, -176)
+	vstm   %v24,%v31,FRAME_OFF+V24_OFF(%r15)	# store call-clobbered
+	cfi_offset (v24, V24_OFF)			# vr arguments
+	cfi_offset (v25, V25_OFF)
+	cfi_offset (v26, V26_OFF)
+	cfi_offset (v27, V27_OFF)
+	cfi_offset (v28, V28_OFF)
+	cfi_offset (v29, V29_OFF)
+	cfi_offset (v30, V30_OFF)
+	cfi_offset (v31, V31_OFF)
 	.machine pop
-#endif
-	lmg    %r2,%r3,48(%r12)		# load arguments saved by PLT
-	lgr    %r4,%r14			# return address as third parameter
-	la     %r5,160(%r15)		# pointer to struct La_s390_64_regs
-	la     %r6,40(%r12)		# long int * framesize
-	brasl  %r14,_dl_profile_fixup	# call resolver
-	lgr    %r1,%r2			# function addr returned in r2
-	ld     %f0,200(%r15)		# restore call-clobbered arg fprs
-	ld     %f2,208(%r15)
-	ld     %f4,216(%r15)
-	ld     %f6,224(%r15)
-#ifdef RESTORE_VRS
+# endif
+	lmg    %r2,%r3,CFA_OFF+PLT1_OFF(%r12)	# load arguments saved by PLT
+	lgr    %r4,%r14				# return address as 3rd parameter
+	la     %r5,FRAME_OFF+REGS_OFF(%r15)	# struct La_s390_64_regs *
+	la     %r6,CFA_OFF+FRAMESIZE_OFF(%r12)	# long int * framesize
+	brasl  %r14,_dl_profile_fixup		# call resolver
+	lgr    %r1,%r2				# function addr returned in r2
+	ld     %f0,FRAME_OFF+F0_OFF(%r15)	# restore call-clobbered
+	ld     %f2,FRAME_OFF+F2_OFF(%r15)	# arg fprs
+	ld     %f4,FRAME_OFF+F4_OFF(%r15)
+	ld     %f6,FRAME_OFF+F6_OFF(%r15)
+# ifdef RESTORE_VRS
 	.machine push
-	.machine "z13"
-	vlm    %v24,%v31,232(%r15)	# restore call-clobbered arg vrs
+	.machine "z13"				# restore call-clobbered
+	vlm    %v24,%v31,FRAME_OFF+V24_OFF(%r15)# arg vrs
 	.machine pop
-#endif
-	lg     %r0,40(%r12)		# load framesize
+# endif
+	lg     %r0,CFA_OFF+FRAMESIZE_OFF(%r12)	# load framesize
 	ltgr   %r0,%r0
 	jnm    1f
-
-	lmg    %r2,%r6,160(%r15)	# framesize < 0 means no pltexit call
-					# so we can do a tail call without
-					# copying the arg overflow area
-	lgr    %r15,%r12		# remove stack frame
+						# framesize < 0 means no
+	lmg    %r2,%r6,FRAME_OFF+R2_OFF(%r15)	# pltexit call, so we can do a
+						# tail call without copying the
+						# arg overflow area
+	lgr    %r15,%r12			# remove stack frame
 	cfi_def_cfa_register (15)
-	lg     %r14,32(%r15)		# restore registers
-	lg     %r12,24(%r15)
-	br     %r1			# tail-call to resolved function
+	lg     %r14,CFA_OFF+R14_OFF(%r15)	# restore registers
+	lg     %r12,CFA_OFF+R12_OFF(%r15)
+	br     %r1				# tail call
 
 	cfi_def_cfa_register (12)
-1:	la     %r4,160(%r15)		# pointer to struct La_s390_64_regs
-	stg    %r4,64(%r12)
-	jz     4f			# framesize == 0 ?
-	aghi   %r0,7			# align framesize to 8
+1:	la     %r4,FRAME_OFF+REGS_OFF(%r15)	# struct La_s390_64_regs *
+	stg    %r4,CFA_OFF+PREGS_OFF(%r12)
+	jz     4f				# framesize == 0 ?
+	aghi   %r0,7				# align framesize to 8
 	nill   %r0,0xfff8
-	slgr   %r15,%r0			# make room for framesize bytes
-	stg    %r12,0(%r15)		# save backchain
-	la     %r2,160(%r15)
-	la     %r3,160(%r12)
+	slgr   %r15,%r0				# make room for framesize bytes
+	stg    %r12,0(%r15)			# save backchain
+	la     %r2,FRAME_OFF+REGS_OFF(%r15)
+	la     %r3,CFA_OFF(%r12)
 	srlg   %r0,%r0,3
-3:	mvc    0(8,%r2),0(%r3)		# copy additional parameters
-	la     %r2,8(%r2)		# depending on framesize
+3:	mvc    0(8,%r2),0(%r3)			# copy additional parameters
+	la     %r2,8(%r2)			# depending on framesize
 	la     %r3,8(%r3)
 	brctg  %r0,3b
-4:	lmg    %r2,%r6,0(%r4)		# restore call-clobbered arg gprs
-	basr   %r14,%r1			# call resolved function
-	stg    %r2,72(%r12)		# store return values r2, f0
-	std    %f0,80(%r12)		# to struct La_s390_64_retval
-#ifdef RESTORE_VRS
+4:	lmg    %r2,%r6,0(%r4)			# load register parameters
+	basr   %r14,%r1				# call resolved function
+	stg    %r2,CFA_OFF+RET_R2_OFF(%r12)	# store return values r2, f0
+	std    %f0,CFA_OFF+RET_F0_OFF(%r12)	# to struct La_s390_64_retval
+# ifdef RESTORE_VRS
 	.machine push
 	.machine "z13"
-	vst    %v24,88(%r12)		# store return value v24
+	vst    %v24,CFA_OFF+RET_V24_OFF(%r12)	# store return value v24
 	.machine pop
-#endif
-	lmg    %r2,%r4,48(%r12)		# r2, r3: load arguments saved by PLT
-					# r4: pointer to struct La_s390_64_regs
-	la     %r5,72(%r12)		# pointer to struct La_s390_64_retval
+# endif
+	lmg    %r2,%r4,CFA_OFF+PLT1_OFF(%r12)	# r2, r3: args saved by PLT
+						# r4: struct La_s390_64_regs *
+	la     %r5,CFA_OFF+RETVAL_OFF(%r12)	# struct La_s390_64_retval *
 	brasl  %r14,_dl_call_pltexit
 
-	lgr    %r15,%r12		# remove stack frame
+	lgr    %r15,%r12			# remove stack frame
+# undef FRAME_SIZE
 	cfi_def_cfa_register (15)
-	lg     %r14,32(%r15)		# restore registers
-	lg     %r12,24(%r15)
-	lg     %r2,72(%r15)		# restore return values
-	ld     %f0,80(%r15)
-#ifdef RESTORE_VRS
+	lg     %r14,CFA_OFF+R14_OFF(%r15)	# restore registers
+	lg     %r12,CFA_OFF+R12_OFF(%r15)
+	lg     %r2,CFA_OFF+RET_R2_OFF(%r15)	# restore return values
+	ld     %f0,CFA_OFF+RET_F0_OFF(%r15)
+# ifdef RESTORE_VRS
 	.machine push
 	.machine "z13"
-	vl    %v24,88(%r15)		# restore return value v24
+	vl    %v24,CFA_OFF+RET_V24_OFF(%r15)	# restore return value v24
 	.machine pop
-#endif
+# endif
 	br     %r14			# Jump back to caller
 
 	cfi_endproc
 	.size _dl_runtime_profile, .-_dl_runtime_profile
+# undef SIZEOF_STRUCT_LA_S390_64_REGS
+# undef REGS_OFF
+# undef R2_OFF
+# undef R3_OFF
+# undef R4_OFF
+# undef R5_OFF
+# undef R6_OFF
+# undef F0_OFF
+# undef F2_OFF
+# undef F4_OFF
+# undef F6_OFF
+# undef V24_OFF
+# undef V25_OFF
+# undef V26_OFF
+# undef V27_OFF
+# undef V28_OFF
+# undef V29_OFF
+# undef V30_OFF
+# undef V31_OFF
+# undef R12_OFF
+# undef R14_OFF
+# undef FRAMESIZE_OFF
+# undef PLT1_OFF
+# undef PLT2_OFF
+# undef PREGS_OFF
+# undef RETVAL_OFF
+# undef RET_R2_OFF
+# undef RET_F0_OFF
+# undef RET_V24_OFF
 #endif
