@@ -1,6 +1,20 @@
 2018-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
 	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
+	* math/Makefile: Add s_sincosf_data.c.
+	* sysdeps/ia64/fpu/s_sincosf_data.c: New file.
+	* sysdeps/ieee754/flt-32/s_sincosf.h (abstop12): Add new function.
+	(sincosf_poly): Likewise.
+	(reduce_small): Likewise.
+	(reduce_large): Likewise.
+	* sysdeps/ieee754/flt-32/s_sincosf.c (sincosf): Rewrite.
+	* sysdeps/ieee754/flt-32/s_sincosf_data.c: New file with sincosf data.
+	* sysdeps/m68k/m680x0/fpu/s_sincosf_data.c: New file.
+	* sysdeps/x86_64/fpu/s_sincosf_data.c: New file.
+
+2018-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
 	* sysdeps/aarch64/fpu/math_private.h (roundtoint): Use round.
 	(converttoint): Use lround.
 	* sysdeps/ieee754/flt-32/math_config.h (roundtoint): Declare and
