@@ -2684,15 +2684,14 @@ parse_dup_op (bin_tree_t *elem, re_string_t *regexp, re_dfa_t *dfa,
 
 # ifdef RE_ENABLE_I18N
 /* Convert the byte B to the corresponding wide character.  In a
-   unibyte locale, treat B as itself if it is an encoding error.
-   In a multibyte locale, return WEOF if B is an encoding error.  */
+   unibyte locale, treat B as itself.  In a multibyte locale, return
+   WEOF if B is an encoding error.  */
 static wint_t
 parse_byte (unsigned char b, re_charset_t *mbcset)
 {
-  wint_t wc = __btowc (b);
-  return wc == WEOF && !mbcset ? b : wc;
+  return mbcset == NULL ? b : __btowc (b);
 }
-#endif
+# endif
 
   /* Local function for parse_bracket_exp only used in case of NOT _LIBC.
      Build the range expression which starts from START_ELEM, and ends
