@@ -40,45 +40,66 @@
  *   v16 - v31 : call clobbered
  */
 
-
+#define CFA_OFF 96
+#define FRAME_OFF CFA_OFF + FRAME_SIZE
+#define V24_OFF -224
+#define V25_OFF -208
+#define V26_OFF -192
+#define V27_OFF -176
+#define V28_OFF -160
+#define V29_OFF -144
+#define V30_OFF -128
+#define V31_OFF -112
+#define PLT1_OFF -72
+#define PLT2_OFF -68
+#define R2_OFF -64
+#define R3_OFF -60
+#define R4_OFF -56
+#define R5_OFF -52
+#define R14_OFF -48
+#define R15_OFF -44
+#define F0_OFF -40
+#define F2_OFF -32
 	.globl _dl_runtime_resolve
 	.type _dl_runtime_resolve, @function
 	cfi_startproc
 	.align 16
 _dl_runtime_resolve:
-	stm    %r2,%r5,32(%r15)		# save registers
-	cfi_offset (r2, -64)
-	cfi_offset (r3, -60)
-	cfi_offset (r4, -56)
-	cfi_offset (r5, -52)
-	stm    %r14,%r15,48(%r15)
-	cfi_offset (r14, -48)
-	cfi_offset (r15, -44)
-	std    %f0,56(%r15)
-	cfi_offset (f0, -40)
-	std    %f2,64(%r15)
-	cfi_offset (f2, -32)
+	stm    %r2,%r5,CFA_OFF+R2_OFF(%r15) # save registers
+	cfi_offset (r2, R2_OFF)
+	cfi_offset (r3, R3_OFF)
+	cfi_offset (r4, R4_OFF)
+	cfi_offset (r5, R5_OFF)
+	stm    %r14,%r15,CFA_OFF+R14_OFF(%r15)
+	cfi_offset (r14, R14_OFF)
+	cfi_offset (r15, R15_OFF)
+	std    %f0,CFA_OFF+F0_OFF(%r15)
+	cfi_offset (f0, F0_OFF)
+	std    %f2,CFA_OFF+F2_OFF(%r15)
+	cfi_offset (f2, F2_OFF)
 	lr     %r0,%r15
-	lm     %r2,%r3,24(%r15)		# load args saved by PLT
+	lm     %r2,%r3,CFA_OFF+PLT1_OFF(%r15) # load args saved by PLT
 #ifdef RESTORE_VRS
-	ahi    %r15,-224		# create stack frame
-	cfi_adjust_cfa_offset (224)
+# define FRAME_SIZE (CFA_OFF + 128)
+	ahi    %r15,-FRAME_SIZE # create stack frame
+	cfi_adjust_cfa_offset (FRAME_SIZE)
 	.machine push
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
-	vstm   %v24,%v31,96(%r15)	# store call-clobbered vr arguments
-	cfi_offset (v24, -224)
-	cfi_offset (v25, -208)
-	cfi_offset (v26, -192)
-	cfi_offset (v27, -176)
-	cfi_offset (v28, -160)
-	cfi_offset (v29, -144)
-	cfi_offset (v30, -128)
-	cfi_offset (v31, -112)
+	vstm   %v24,%v31,FRAME_OFF+V24_OFF(%r15) # save call-clobbered vr args
+	cfi_offset (v24, V24_OFF)
+	cfi_offset (v25, V25_OFF)
+	cfi_offset (v26, V26_OFF)
+	cfi_offset (v27, V27_OFF)
+	cfi_offset (v28, V28_OFF)
+	cfi_offset (v29, V29_OFF)
+	cfi_offset (v30, V30_OFF)
+	cfi_offset (v31, V31_OFF)
 	.machine pop
 #else
-	ahi    %r15,-96			# create stack frame
-	cfi_adjust_cfa_offset (96)
+# define FRAME_SIZE CFA_OFF
+	ahi    %r15,-FRAME_SIZE # create stack frame
+	cfi_adjust_cfa_offset (FRAME_SIZE)
 #endif
 	st     %r0,0(%r15)		# write backchain
 	basr   %r1,0
@@ -89,21 +110,37 @@ _dl_runtime_resolve:
 	.machine push
 	.machine "z13"
 	.machinemode "zarch_nohighgprs"
-	vlm    %v24,%v31,96(%r15)	# restore vector registers
+	vlm    %v24,%v31,FRAME_OFF+V24_OFF(%r15) # restore vector registers
 	.machine pop
-	lm     %r14,%r15,272(%r15)# remove stack frame and restore registers
-#else
-	lm     %r14,%r15,144(%r15)# remove stack frame and restore registers
 #endif
-	cfi_def_cfa_offset (96)
-	ld     %f0,56(%r15)
-	ld     %f2,64(%r15)
-	lm     %r2,%r5,32(%r15)
+	lm     %r14,%r15,FRAME_OFF+R14_OFF(%r15) # restore frame and registers
+#undef FRAME_SIZE
+	cfi_def_cfa_offset (CFA_OFF)
+	ld     %f0,CFA_OFF+F0_OFF(%r15)
+	ld     %f2,CFA_OFF+F2_OFF(%r15)
+	lm     %r2,%r5,CFA_OFF+R2_OFF(%r15)
 	br     %r1
 1:	.long  _dl_fixup - 0b
 	cfi_endproc
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-
+#undef V24_OFF
+#undef V25_OFF
+#undef V26_OFF
+#undef V27_OFF
+#undef V28_OFF
+#undef V29_OFF
+#undef V30_OFF
+#undef V31_OFF
+#undef PLT1_OFF
+#undef PLT2_OFF
+#undef R2_OFF
+#undef R3_OFF
+#undef R4_OFF
+#undef R5_OFF
+#undef R14_OFF
+#undef R15_OFF
+#undef F0_OFF
+#undef F2_OFF
 
 #ifndef PROF
 	.globl _dl_runtime_profile

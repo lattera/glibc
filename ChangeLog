@@ -1,3 +1,8 @@
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
+	* sysdeps/s390/s390-32/dl-trampoline.h (_dl_runtime_resolve):
+	Use symbolic offsets for stack variables.
+
 2018-08-09  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/gen-libm-test.py: New file.
