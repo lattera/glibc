@@ -1,5 +1,10 @@
 2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
 
+	* sysdeps/s390/s390-32/s390-mcount.S (_mcount):
+	Fix unwind.
+
+2018-08-10  Ilya Leoshkevich  <iii@linux.ibm.com>
+
 	* sysdeps/s390/s390-64/Versions (__fentry__): Add.
 	* sysdeps/s390/s390-64/s390x-mcount.S: Move the common
 	code to s390x-mcount.h and #include it.
