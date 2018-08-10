@@ -33,22 +33,6 @@
    : PREFIX ## long_double ARGS)
 #endif
 
-/* Indicate whether to run tests involving sNaN values for the float, double,
-   and long double C data types, respectively.  All are run unless
-   overridden.  */
-#ifndef SNAN_TESTS_float
-# define SNAN_TESTS_float	1
-#endif
-#ifndef SNAN_TESTS_double
-# define SNAN_TESTS_double	1
-#endif
-#ifndef SNAN_TESTS_long_double
-# define SNAN_TESTS_long_double	1
-#endif
-#ifndef SNAN_TESTS_float128
-# define SNAN_TESTS_float128	1
-#endif
-
 /* Return nonzero value if to run tests involving sNaN values for X.  */
 #define SNAN_TESTS(x) MATH_TESTS_TG (SNAN_TESTS_, , x)
 
@@ -109,5 +93,6 @@
 # define EXCEPTION_SET_FORCES_TRAP 0
 #endif
 
+#include <math-tests-snan.h>
 #include <math-tests-snan-cast.h>
 #include <math-tests-snan-payload.h>

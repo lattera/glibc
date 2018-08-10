@@ -1,3 +1,18 @@
+2018-08-10  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-snan.h: New file.
+	* sysdeps/generic/math-tests.h: Include <math-tests-snan.h>.
+	(SNAN_TESTS_float): Do not define here.
+	(SNAN_TESTS_double): Likewise.
+	(SNAN_TESTS_long_double): Likewise.
+	(SNAN_TESTS_float128): Likewise.
+	* sysdeps/i386/fpu/math-tests-snan.h: New file.
+	* sysdeps/i386/fpu/math-tests.h: Remove file.
+	* sysdeps/ia64/math-tests-snan.h: New file.
+	* sysdeps/ia64/math-tests.h: Remove file.
+	* sysdeps/x86/math-tests.h: Likewise.
+	* sysdeps/x86_64/fpu/math-tests-snan.h: New file.
+
 2018-08-10  Wilco Dijkstra  <wdijkstr@arm.com>
 	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
 

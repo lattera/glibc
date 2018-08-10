@@ -1,5 +1,5 @@
-/* Configuration for math tests.  ia64 version.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: sNaN support.  32-bit x86 version.
+   Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,24 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef I386_MATH_TESTS_SNAN_H
+#define I386_MATH_TESTS_SNAN_H 1
+
+/* On 32-bit x86, versions of GCC up to at least 4.8 are happy to use
+   FPU load instructions for sNaN values, and loading a float or
+   double sNaN value will already raise an INVALID exception as well
+   as turn the sNaN into a qNaN, rendering certain tests infeasible in
+   this scenario.  <https://gcc.gnu.org/PR56831>.  */
+#define SNAN_TESTS_float	0
+#define SNAN_TESTS_double	0
+#define SNAN_TESTS_long_double	1
+
 /* Before GCC 7, there is no built-in function to provide a __float128
    sNaN, so most sNaN tests for this type cannot work.  */
-#if !__GNUC_PREREQ (7, 0)
+#if __GNUC_PREREQ (7, 0)
+# define SNAN_TESTS_float128	1
+#else
 # define SNAN_TESTS_float128	0
 #endif
 
-#include_next <math-tests.h>
+#endif /* math-tests-snan.h.  */
