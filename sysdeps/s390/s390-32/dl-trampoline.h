@@ -166,6 +166,7 @@ _dl_runtime_resolve:
 # define V29_OFF -144
 # define V30_OFF -128
 # define V31_OFF -112
+# define R0_OFF -88
 # define R12_OFF -84
 # define R14_OFF -80
 # define FRAMESIZE_OFF -76
@@ -182,6 +183,8 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 16
 _dl_runtime_profile:
+	st     %r0,CFA_OFF+R0_OFF(%r15)
+	cfi_offset (r0, R0_OFF)
 	st     %r12,CFA_OFF+R12_OFF(%r15)	# r12 is used as backup of r15
 	cfi_offset (r12, R12_OFF)
 	st     %r14,CFA_OFF+R14_OFF(%r15)
@@ -245,6 +248,7 @@ _dl_runtime_profile:
 	cfi_def_cfa_register (15)
 	l      %r14,CFA_OFF+R14_OFF(%r15)	# restore registers
 	l      %r12,CFA_OFF+R12_OFF(%r15)
+	l      %r0,CFA_OFF+R0_OFF(%r15)
 	br     %r1				# tail call
 
 	cfi_def_cfa_register (12)
@@ -285,6 +289,7 @@ _dl_runtime_profile:
 	cfi_def_cfa_register (15)
 	l      %r14,CFA_OFF+R14_OFF(%r15)	# restore registers
 	l      %r12,CFA_OFF+R12_OFF(%r15)
+	l      %r0,CFA_OFF+R0_OFF(%r15)
 	lm     %r2,%r3,CFA_OFF+RET_R2_OFF(%r15)	# restore return values
 	ld     %f0,CFA_OFF+RET_F0_OFF(%r15)
 # ifdef RESTORE_VRS
@@ -316,6 +321,7 @@ _dl_runtime_profile:
 # undef V29_OFF
 # undef V30_OFF
 # undef V31_OFF
+# undef R0_OFF
 # undef R12_OFF
 # undef R14_OFF
 # undef FRAMESIZE_OFF
