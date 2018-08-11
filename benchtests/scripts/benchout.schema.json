@@ -23,6 +23,10 @@
                 "max": {"type": "number"},
                 "min": {"type": "number"},
                 "mean": {"type": "number"},
+                "latency": {"type": "number"},
+                "min-throughput": {"type": "number"},
+                "max-throughput": {"type": "number"},
+                "reciprocal-throughput": {"type": "number"},
                 "timings": {
                   "type": "array",
                   "items": {"type": "number"}

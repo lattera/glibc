@@ -1,5 +1,8 @@
 2018-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/scripts/benchout.schema.json (properties): Add
+	new properties.
+
 	* benchtests/bench-skeleton.c (main): Add duration and
 	iterations attributes.
 
