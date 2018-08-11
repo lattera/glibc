@@ -144,6 +144,8 @@ main (int argc, char **argv)
 
       if (is_bench)
 	{
+	  json_attr_double (&json_ctx, "duration", throughput + latency);
+	  json_attr_double (&json_ctx, "iterations", 2 * d_total_i);
 	  json_attr_double (&json_ctx, "reciprocal-throughput",
 			    throughput / d_total_i);
 	  json_attr_double (&json_ctx, "latency", latency / d_total_i);

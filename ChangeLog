@@ -1,3 +1,8 @@
+2018-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-skeleton.c (main): Add duration and
+	iterations attributes.
+
 2018-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	regex: Gnulib unibyte RRI uses bytes not chars
