@@ -1,3 +1,7 @@
+2018-08-13  Florian Weimer  <fweimer@redhat.com>
+
+	* stdlib/mbstowcs.c (mbstowcs): Remove outdated comment.
+
 2018-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/scripts/benchout.schema.json (properties): Add
