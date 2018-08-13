@@ -1,5 +1,10 @@
 2018-08-13  Florian Weimer  <fweimer@redhat.com>
 
+	* misc/error.c (error): Add missing va_end call.
+	(error_at_line): Likewise.
+
+2018-08-13  Florian Weimer  <fweimer@redhat.com>
+
 	* stdlib/mbstowcs.c (mbstowcs): Remove outdated comment.
 
 2018-08-11  Siddhesh Poyarekar  <siddhesh@sourceware.org>

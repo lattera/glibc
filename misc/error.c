@@ -319,6 +319,7 @@ error (int status, int errnum, const char *message, ...)
 
   va_start (args, message);
   error_tail (status, errnum, message, args);
+  va_end (args);
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
@@ -390,6 +391,7 @@ error_at_line (int status, int errnum, const char *file_name,
 
   va_start (args, message);
   error_tail (status, errnum, message, args);
+  va_end (args);
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
