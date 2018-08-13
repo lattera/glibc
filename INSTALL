@@ -296,38 +296,6 @@ You can specify 'stop-on-test-failure=y' when running 'make check' to
 make the test run stop and exit with an error status immediately when a
 failure occurs.
 
-   The GNU C Library pretty printers come with their own set of scripts
-for testing, which run together with the rest of the testsuite through
-'make check'.  These scripts require the following tools to run
-successfully:
-
-   * Python 2.7/3.4 or later
-
-     Python is required for running the printers' test scripts.  As of
-     release time, Python 3.6 is the newest verified to work to test the
-     pretty printers.
-
-   * PExpect 4.0
-
-     The printer tests drive GDB through test programs and compare its
-     output to the printers'.  PExpect is used to capture the output of
-     GDB, and should be compatible with the Python version in your
-     system.  As of release time PExpect 4.3 is the newest verified to
-     work to test the pretty printers.
-
-   * GDB 7.8 or later with support for Python 2.7/3.4 or later
-
-     GDB itself needs to be configured with Python support in order to
-     use the pretty printers.  Notice that your system having Python
-     available doesn't imply that GDB supports it, nor that your
-     system's Python and GDB's have the same version.  As of release
-     time GNU 'debugger' 8.0.1 is the newest verified to work to test
-     the pretty printers.
-
-If these tools are absent, the printer tests will report themselves as
-'UNSUPPORTED'.  Notice that some of the printer tests require the GNU C
-Library to be compiled with debugging symbols.
-
    To format the 'GNU C Library Reference Manual' for printing, type
 'make dvi'.  You need a working TeX installation to do this.  The
 distribution builds the on-line formatted version of the manual, as Info
@@ -532,16 +500,44 @@ build the GNU C Library:
 
    * Perl 5
 
-     Perl is not required, but it is used if present to test the
-     installation.  We may decide to use it elsewhere in the future.  As
-     of release time 'perl' version 5.28.0 is the newest verified to
-     work to build the GNU C Library.
+     Perl is not required, but if present it is used in some tests and
+     the 'mtrace' program, to build the GNU C Library manual, as well as
+     to regenerate 'locale/C-translit.h' if its source files are
+     modified.  As of release time 'perl' version 5.28.0 is the newest
+     verified to work to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
 
      'Sed' is used in several places to generate files.  Most scripts
      work with any version of 'sed'.  As of release time, 'sed' version
      4.5 is the newest verified to work to build the GNU C Library.
+
+   * Python 2.7/3.4 or later
+
+     Python is required to run some tests.  As of release time, Python
+     3.6 is the newest verified to work for testing the GNU C Library.
+
+   * PExpect 4.0
+
+     The pretty printer tests drive GDB through test programs and
+     compare its output to the printers'.  PExpect is used to capture
+     the output of GDB, and should be compatible with the Python version
+     in your system.  As of release time PExpect 4.3 is the newest
+     verified to work to test the pretty printers.
+
+   * GDB 7.8 or later with support for Python 2.7/3.4 or later
+
+     GDB itself needs to be configured with Python support in order to
+     use the pretty printers.  Notice that your system having Python
+     available doesn't imply that GDB supports it, nor that your
+     system's Python and GDB's have the same version.  As of release
+     time GNU 'debugger' 8.0.1 is the newest verified to work to test
+     the pretty printers.
+
+     Unless Python, PExpect and GDB with Python support are present, the
+     printer tests will report themselves as 'UNSUPPORTED'.  Notice that
+     some of the printer tests require the GNU C Library to be compiled
+     with debugging symbols.
 
 If you change any of the 'configure.ac' files you will also need
 

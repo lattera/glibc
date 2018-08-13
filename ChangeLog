@@ -1,5 +1,11 @@
 2018-08-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* manual/install.texi (Configuring and compiling): Do not list
+	tools used for testing pretty printers here.
+	(Tools for Compilation): List Python, PExpect and GDB here.
+	Update descriptions of uses of Perl and Python.
+	* INSTALL: Regenerate.
+
 	* scripts/build-many-glibcs.py (Context.checkout): Default Linux
 	version to 4.18.
 
