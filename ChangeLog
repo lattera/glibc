@@ -1,5 +1,10 @@
 2018-08-13  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/syscall-names.list: Update kernel
+	version to 4.18.
+	(io_pgetevents): New syscall.
+	(rseq): Likewise.
+
 	* manual/install.texi (Configuring and compiling): Do not list
 	tools used for testing pretty printers here.
 	(Tools for Compilation): List Python, PExpect and GDB here.

@@ -22,8 +22,8 @@
 # names are only used if the installed kernel headers also provide
 # them.
 
-# The list of system calls is current as of Linux 4.17.
-kernel 4.17
+# The list of system calls is current as of Linux 4.18.
+kernel 4.18
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -186,6 +186,7 @@ inotify_rm_watch
 io_cancel
 io_destroy
 io_getevents
+io_pgetevents
 io_setup
 io_submit
 ioctl
@@ -431,6 +432,7 @@ renameat2
 request_key
 restart_syscall
 rmdir
+rseq
 rt_sigaction
 rt_sigpending
 rt_sigprocmask
