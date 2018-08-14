@@ -1,5 +1,5 @@
 /* Compute cosine of argument.
-   Copyright (C) 2017-2018 Free Software Foundation, Inc.
+   Copyright (C) 2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#include <stdint.h>
 #include <math.h>
-#include <math_private.h>
+#include <math-barriers.h>
 #include <libm-alias-float.h>
+#include "math_config.h"
 #include "s_sincosf.h"
 
 #ifndef COSF
@@ -28,121 +29,57 @@
 # define COSF_FUNC COSF
 #endif
 
+/* Fast cosf implementation.  Worst-case ULP is 0.5607, maximum relative
+   error is 0.5303 * 2^-23.  A single-step range reduction is used for
+   small values.  Large inputs have their range reduced using fast integer
+   arithmetic.
+*/
 float
-COSF_FUNC (float x)
+COSF_FUNC (float y)
 {
-  double theta = x;
-  double abstheta = fabs (theta);
-  if (isless (abstheta, M_PI_4))
+  double x = y;
+  double s;
+  int n;
+  const sincos_t *p = &__sincosf_table[0];
+
+  if (abstop12 (y) < abstop12 (pio4))
     {
-      double cx;
-      if (abstheta >= 0x1p-5)
-	{
-	  const double theta2 = theta * theta;
-	  /* Chebyshev polynomial of the form for cos:
-	   * 1 + x^2 (C0 + x^2 (C1 + x^2 (C2 + x^2 (C3 + x^2 * C4)))).  */
-	  cx = C3 + theta2 * C4;
-	  cx = C2 + theta2 * cx;
-	  cx = C1 + theta2 * cx;
-	  cx = C0 + theta2 * cx;
-	  cx = 1. + theta2 * cx;
-	  return cx;
-	}
-      else if (abstheta >= 0x1p-27)
-	{
-	  /* A simpler Chebyshev approximation is close enough for this range:
-	   * 1 + x^2 (CC0 + x^3 * CC1).  */
-	  const double theta2 = theta * theta;
-	  cx = CC0 + theta * theta2 * CC1;
-	  cx = 1.0 + theta2 * cx;
-	  return cx;
-	}
-      else
-	{
-	  /* For small enough |theta|, this is close enough.  */
-	  return 1.0 - abstheta;
-	}
+      double x2 = x * x;
+
+      if (__glibc_unlikely (abstop12 (y) < abstop12 (0x1p-12f)))
+	return 1.0f;
+
+      return sinf_poly (x, x2, p, 1);
     }
-  else /* |theta| >= Pi/4.  */
+  else if (__glibc_likely (abstop12 (y) < abstop12 (120.0f)))
     {
-      if (isless (abstheta, 9 * M_PI_4))
-	{
-	  /* There are cases where FE_UPWARD rounding mode can
-	     produce a result of abstheta * inv_PI_4 == 9,
-	     where abstheta < 9pi/4, so the domain for
-	     pio2_table must go to 5 (9 / 2 + 1).  */
-	  unsigned int n = (abstheta * inv_PI_4) + 1;
-	  theta = abstheta - pio2_table[n / 2];
-	  return reduced_cos (theta, n);
-	}
-      else if (isless (abstheta, INFINITY))
-	{
-	  if (abstheta < 0x1p+23)
-	    {
-	      unsigned int n = ((unsigned int) (abstheta * inv_PI_4)) + 1;
-	      double x = n / 2;
-	      theta = (abstheta - x * PI_2_hi) - x * PI_2_lo;
-	      /* Argument reduction needed.  */
-	      return reduced_cos (theta, n);
-	    }
-	  else /* |theta| >= 2^23.  */
-	    {
-	      x = fabsf (x);
-	      int exponent;
-	      GET_FLOAT_WORD (exponent, x);
-	      exponent = (exponent >> FLOAT_EXPONENT_SHIFT)
-			 - FLOAT_EXPONENT_BIAS;
-	      exponent += 3;
-	      exponent /= 28;
-	      double a = invpio4_table[exponent] * x;
-	      double b = invpio4_table[exponent + 1] * x;
-	      double c = invpio4_table[exponent + 2] * x;
-	      double d = invpio4_table[exponent + 3] * x;
-	      uint64_t l = a;
-	      l &= ~0x7;
-	      a -= l;
-	      double e = a + b;
-	      l = e;
-	      e = a - l;
-	      if (l & 1)
-		{
-		  e -= 1.0;
-		  e += b;
-		  e += c;
-		  e += d;
-		  e *= M_PI_4;
-		  return reduced_cos (e, l + 1);
-		}
-	      else
-		{
-		  e += b;
-		  e += c;
-		  e += d;
-		  if (e <= 1.0)
-		    {
-		      e *= M_PI_4;
-		      return reduced_cos (e, l + 1);
-		    }
-		  else
-		    {
-		      l++;
-		      e -= 2.0;
-		      e *= M_PI_4;
-		      return reduced_cos (e, l + 1);
-		    }
-		}
-	    }
-	}
-      else
-	{
-	  int32_t ix;
-	  GET_FLOAT_WORD (ix, abstheta);
-	  /* cos(Inf or NaN) is NaN.  */
-	  if (ix == 0x7f800000) /* Inf.  */
-	    __set_errno (EDOM);
-	  return x - x;
-	}
+      x = reduce_fast (x, p, &n);
+
+      /* Setup the signs for sin and cos.  */
+      s = p->sign[n & 3];
+
+      if (n & 2)
+	p = &__sincosf_table[1];
+
+      return sinf_poly (x * s, x * x, p, n ^ 1);
     }
+  else if (abstop12 (y) < abstop12 (INFINITY))
+    {
+      uint32_t xi = asuint (y);
+      int sign = xi >> 31;
+
+      x = reduce_large (xi, &n);
+
+      /* Setup signs for sin and cos - include original sign.  */
+      s = p->sign[(n + sign) & 3];
+
+      if ((n + sign) & 2)
+	p = &__sincosf_table[1];
+
+      return sinf_poly (x * s, x * x, p, n ^ 1);
+    }
+  else
+    return __math_invalidf (y);
 }
 
 #ifndef COSF

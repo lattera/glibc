@@ -1,3 +1,18 @@
+2018-08-14  Wilco Dijkstra  <wdijkstr@arm.com>
+	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* NEWS: Mention sinf, cosf, sincosf.
+	* sysdeps/aarch64/libm-test-ulps: Update ULP for sinf, cosf, sincosf.
+	* sysdeps/x86_64/fpu/libm-test-ulps: Update ULP for sinf and cosf.
+	* sysdeps/x86_64/fpu/multiarch/s_sincosf-fma.c: Add definitions of
+	constants rather than including generic sincosf.h.
+	* sysdeps/x86_64/fpu/s_sincosf_data.c: Remove.
+	* sysdeps/ieee754/flt-32/s_cosf.c (cosf): Rewrite.
+	* sysdeps/ieee754/flt-32/s_sincosf.h (reduced_sin): Remove.
+	(reduced_cos): Remove.
+	(sinf_poly): New function.
+	* sysdeps/ieee754/flt-32/s_sinf.c (sinf): Rewrite.
+
 2018-08-14  Florian Weimer  <fweimer@redhat.com>
 
 	[BZ #23521]

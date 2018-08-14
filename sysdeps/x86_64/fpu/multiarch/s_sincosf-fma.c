@@ -21,7 +21,6 @@
 #include <math_private.h>
 #include <x86intrin.h>
 #include <libm-alias-float.h>
-#include "s_sincosf.h"
 
 #define SINCOSF __sincosf_fma
 
@@ -30,6 +29,38 @@
 #else
 # define SINCOSF_FUNC SINCOSF
 #endif
+
+/* PI/2 with 98 bits of accuracy.  */
+static const double PI_2_hi = 0x1.921fb544p+0;
+static const double PI_2_lo = 0x1.0b4611a626332p-34;
+
+static const double SMALL = 0x1p-50; /* 2^-50.  */
+static const double inv_PI_4 = 0x1.45f306dc9c883p+0; /* 4/PI.  */
+
+#define FLOAT_EXPONENT_SHIFT 23
+#define FLOAT_EXPONENT_BIAS 127
+
+static const double pio2_table[] = {
+  0 * M_PI_2,
+  1 * M_PI_2,
+  2 * M_PI_2,
+  3 * M_PI_2,
+  4 * M_PI_2,
+  5 * M_PI_2
+};
+
+static const double invpio4_table[] = {
+  0x0p+0,
+  0x1.45f306cp+0,
+  0x1.c9c882ap-28,
+  0x1.4fe13a8p-58,
+  0x1.f47d4dp-85,
+  0x1.bb81b6cp-112,
+  0x1.4acc9ep-142,
+  0x1.0e4107cp-169
+};
+
+static const double ones[] = { 1.0, -1.0 };
 
 /* Chebyshev constants for sin and cos, range -PI/4 - PI/4.  */
 static const __v2df V0 = { -0x1.5555555551cd9p-3, -0x1.ffffffffe98aep-2};

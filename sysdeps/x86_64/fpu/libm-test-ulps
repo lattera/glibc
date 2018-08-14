@@ -1271,24 +1271,30 @@ ldouble: 1
 
 Function: "cos_downward":
 double: 1
+float: 1
 float128: 3
 idouble: 1
+ifloat: 1
 ifloat128: 3
 ildouble: 3
 ldouble: 3
 
 Function: "cos_towardzero":
 double: 1
+float: 1
 float128: 1
 idouble: 1
+ifloat: 1
 ifloat128: 1
 ildouble: 2
 ldouble: 2
 
 Function: "cos_upward":
 double: 1
+float: 1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 2
 ldouble: 2
@@ -2539,24 +2545,30 @@ ldouble: 1
 
 Function: "sin_downward":
 double: 1
+float: 1
 float128: 3
 idouble: 1
+ifloat:1
 ifloat128: 3
 ildouble: 3
 ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
+float:1
 float128: 2
 idouble: 1
+ifloat: 1
 ifloat128: 2
 ildouble: 2
 ldouble: 2
 
 Function: "sin_upward":
 double: 1
+float:1
 float128: 3
 idouble: 1
+ifloat: 1
 ifloat128: 3
 ildouble: 3
 ldouble: 3
