@@ -126,6 +126,8 @@ extern int __fxprintf (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
 extern int __fxprintf_nocancel (FILE *__fp, const char *__fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3))) attribute_hidden;
+int __vfxprintf (FILE *__fp, const char *__fmt, __gnuc_va_list)
+  attribute_hidden;
 
 /* Read the next line from FP into BUFFER, of LENGTH bytes.  LINE will
    include the line terminator and a NUL terminator.  On success,

@@ -62,18 +62,22 @@ locked_vfxprintf (FILE *fp, const char *fmt, va_list ap)
 }
 
 int
-__fxprintf (FILE *fp, const char *fmt, ...)
+__vfxprintf (FILE *fp, const char *fmt, va_list ap)
 {
   if (fp == NULL)
     fp = stderr;
+  _IO_flockfile (fp);
+  int res = locked_vfxprintf (fp, fmt, ap);
+  _IO_funlockfile (fp);
+  return res;
+}
 
+int
+__fxprintf (FILE *fp, const char *fmt, ...)
+{
   va_list ap;
   va_start (ap, fmt);
-  _IO_flockfile (fp);
-
-  int res = locked_vfxprintf (fp, fmt, ap);
-
-  _IO_funlockfile (fp);
+  int res = __vfxprintf (fp, fmt, ap);
   va_end (ap);
   return res;
 }

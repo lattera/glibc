@@ -203,72 +203,14 @@ static void _GL_ATTRIBUTE_FORMAT_PRINTF (3, 0) _GL_ARG_NONNULL ((3))
 error_tail (int status, int errnum, const char *message, va_list args)
 {
 #if _LIBC
-  if (_IO_fwide (stderr, 0) > 0)
-    {
-      size_t len = strlen (message) + 1;
-      wchar_t *wmessage = NULL;
-      mbstate_t st;
-      size_t res;
-      const char *tmp;
-      bool use_malloc = false;
-
-      while (1)
-	{
-	  if (__libc_use_alloca (len * sizeof (wchar_t)))
-	    wmessage = (wchar_t *) alloca (len * sizeof (wchar_t));
-	  else
-	    {
-	      if (!use_malloc)
-		wmessage = NULL;
-
-	      wchar_t *p = (wchar_t *) realloc (wmessage,
-						len * sizeof (wchar_t));
-	      if (p == NULL)
-		{
-		  free (wmessage);
-		  fputws_unlocked (L"out of memory\n", stderr);
-		  return;
-		}
-	      wmessage = p;
-	      use_malloc = true;
-	    }
-
-	  memset (&st, '\0', sizeof (st));
-	  tmp = message;
-
-	  res = mbsrtowcs (wmessage, &tmp, len, &st);
-	  if (res != len)
-	    break;
-
-	  if (__builtin_expect (len >= SIZE_MAX / sizeof (wchar_t) / 2, 0))
-	    {
-	      /* This really should not happen if everything is fine.  */
-	      res = (size_t) -1;
-	      break;
-	    }
-
-	  len *= 2;
-	}
-
-      if (res == (size_t) -1)
-	{
-	  /* The string cannot be converted.  */
-	  if (use_malloc)
-	    {
-	      free (wmessage);
-	      use_malloc = false;
-	    }
-	  wmessage = (wchar_t *) L"???";
-	}
-
-      __vfwprintf (stderr, wmessage, args);
-
-      if (use_malloc)
-	free (wmessage);
-    }
-  else
+  int ret = __vfxprintf (stderr, message, args);
+  if (ret < 0 && errno == ENOMEM && _IO_fwide (stderr, 0) > 0)
+    /* Leave a trace in case the heap allocation of the message string
+       failed.  */
+    fputws_unlocked (L"out of memory\n", stderr);
+#else
+  vfprintf (stderr, message, args);
 #endif
-    vfprintf (stderr, message, args);
   va_end (args);
 
   ++error_message_count;

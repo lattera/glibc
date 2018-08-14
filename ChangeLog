@@ -1,3 +1,15 @@
+2018-08-14  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #23519]
+	* include/stdio.h (__vfxprintf): Declare.
+	* stdio-common/fxprintf.c (__vfxprintf): New function.
+	(__fxprintf): Call it.
+	* misc/err.c (convert_and_print): Remove function.
+	(vwarnx, vwarn): Call __fxprintf and __vfxprintf.
+	* misc/error.c [_LIBC] (error_tail): Call __vfxprintf.
+	* misc/Makefile (tests): Add tst-warn-wide.
+	* misc/tst-warn-wide.c: New file.
+
 2018-08-14  Wilco Dijkstra  <wdijkstr@arm.com>
 	    Szabolcs Nagy  <szabolcs.nagy@arm.com>
 
