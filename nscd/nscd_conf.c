@@ -190,7 +190,10 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	  if (!arg1)
 	    error (0, 0, _("Must specify user name for server-user option"));
 	  else
-	    server_user = xstrdup (arg1);
+	    {
+	      free ((char *) server_user);
+	      server_user = xstrdup (arg1);
+	    }
 	}
       else if (strcmp (entry, "stat-user") == 0)
 	{
@@ -198,6 +201,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 	    error (0, 0, _("Must specify user name for stat-user option"));
 	  else
 	    {
+	      free ((char *) stat_user);
 	      stat_user = xstrdup (arg1);
 
 	      struct passwd *pw = getpwnam (stat_user);
