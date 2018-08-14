@@ -1,5 +1,18 @@
 2018-08-14  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #23521]
+	[BZ #23522]
+	* nss/nss_files/files-alias.c (get_next_alias): During :include:
+	processing, bail out if no room, and close the stream before
+	returning ERANGE.
+	* nss/Makefile (tests): Add tst-nss-files-alias-leak.
+	(tst-nss-files-alias-leak): Link with libdl.
+	(tst-nss-files-alias-leak.out): Depend on nss_files.
+
+	* nss/tst-nss-files-alias-leak.c: New file.
+
+2018-08-14  Florian Weimer  <fweimer@redhat.com>
+
 	* nscd/nscd_conf.c (nscd_parse_file): Deallocate old storage for
 	server_user, stat_user.
 
