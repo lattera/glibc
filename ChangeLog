@@ -1,3 +1,15 @@
+2018-08-15  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strlen.S (__strlen): Rename to STRLEN.
+	[!STRLEN](STRLEN): Set to __strlen.
+	* sysdeps/aarch64/multiarch/strlen.c: New file.
+	* sysdeps/aarch64/multiarch/strlen_generic.S: Likewise.
+	* sysdeps/aarch64/multiarch/strlen_asimd.S: Likewise.
+	* sysdeps/aarch64/multiarch/ifunc-impl-list.c
+	(__libc_ifunc_impl_list): Add strlen.
+	* sysdeps/aarch64/multiarch/Makefile (sysdep_routines): Add
+	strlen_generic and strlen_asimd.
+
 2018-08-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (sin_pif): Use __sinf/__cosf.

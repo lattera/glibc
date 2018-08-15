@@ -23,6 +23,10 @@
  * ARMv8-a, AArch64, unaligned accesses, min page size 4k.
  */
 
+#ifndef STRLEN
+# define STRLEN __strlen
+#endif
+
 /* To test the page crossing code path more thoroughly, compile with
    -DTEST_PAGE_CROSS - this will force all calls through the slower
    entry path.  This option is not intended for production use.  */
@@ -84,7 +88,7 @@
 	   whether the first fetch, which may be misaligned, crosses a page
 	   boundary.  */
 
-ENTRY_ALIGN (__strlen, 6)
+ENTRY_ALIGN (STRLEN, 6)
 	DELOUSE (0)
 	DELOUSE (1)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
@@ -215,6 +219,6 @@ L(page_cross):
 	csel	data1, data1, tmp4, eq
 	csel	data2, data2, tmp2, eq
 	b	L(page_cross_entry)
-END (__strlen)
-weak_alias (__strlen, strlen)
+END (STRLEN)
+weak_alias (STRLEN, strlen)
 libc_hidden_builtin_def (strlen)
