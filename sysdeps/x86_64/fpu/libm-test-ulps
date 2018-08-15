@@ -2548,14 +2548,14 @@ double: 1
 float: 1
 float128: 3
 idouble: 1
-ifloat:1
+ifloat: 1
 ifloat128: 3
 ildouble: 3
 ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
-float:1
+float: 1
 float128: 2
 idouble: 1
 ifloat: 1
@@ -2565,7 +2565,7 @@ ldouble: 2
 
 Function: "sin_upward":
 double: 1
-float:1
+float: 1
 float128: 3
 idouble: 1
 ifloat: 1
