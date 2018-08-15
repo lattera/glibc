@@ -1,5 +1,11 @@
 2018-08-15  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* sysdeps/ieee754/flt-32/e_lgammaf_r.c (sin_pif): Use __sinf/__cosf.
+	* sysdeps/ieee754/flt-32/k_cosf.c (__kernel_cosf): Remove all code.
+	* sysdeps/ieee754/flt-32/k_sinf.c (__kernel_sinf): Likewise.
+
+2018-08-15  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/x86_64/fpu/libm-test-ulps: Regenerate to fix spaces.
 
 2018-08-14  Florian Weimer  <fweimer@redhat.com>
