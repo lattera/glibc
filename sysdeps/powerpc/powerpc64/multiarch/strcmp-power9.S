@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#if defined __LITTLE_ENDIAN__ && IS_IN (libc)
 #define STRCMP __strcmp_power9
 
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
-#include <sysdeps/powerpc/powerpc64/power9/strcmp.S>
+#include <sysdeps/powerpc/powerpc64/le/power9/strcmp.S>
 #endif

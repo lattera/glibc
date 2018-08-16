@@ -15,7 +15,6 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
-#ifdef __LITTLE_ENDIAN__
 #include <sysdep.h>
 
 /* Implements the function
@@ -31,16 +30,16 @@
 #endif
 
 /* TODO: Change this to actual instructions when minimum binutils is upgraded
-   to 2.27. Macros are defined below for these newer instructions in order
+   to 2.27.  Macros are defined below for these newer instructions in order
    to maintain compatibility.  */
-# define VCTZLSBB(r,v) .long (0x10010602 | ((r)<<(32-11)) | ((v)<<(32-21)))
+#define VCTZLSBB(r,v) .long (0x10010602 | ((r)<<(32-11)) | ((v)<<(32-21)))
 
-# define VEXTUBRX(t,a,b) .long (0x1000070d \
+#define VEXTUBRX(t,a,b) .long (0x1000070d \
 				| ((t)<<(32-11))  \
 				| ((a)<<(32-16))  \
 				| ((b)<<(32-21)) )
 
-# define VCMPNEZB(t,a,b) .long (0x10000507 \
+#define VCMPNEZB(t,a,b) .long (0x10000507 \
 				| ((t)<<(32-11))  \
 				| ((a)<<(32-16))  \
 				| ((b)<<(32-21)) )
@@ -49,7 +48,7 @@
    reg1: Vector to hold next 16 bytes.
    reg2: Address to read from.
    reg3: Permute control vector.  */
-# define GET16BYTES(reg1, reg2, reg3) \
+#define GET16BYTES(reg1, reg2, reg3) \
 	lvx	reg1, 0, reg2; \
 	vperm	v8, v2, reg1, reg3; \
 	vcmpequb.	v8, v0, v8; \
@@ -374,6 +373,3 @@ L(byte_ne_3):
 	b	L(byte_ne_1)
 END(STRNCMP)
 libc_hidden_builtin_def(strncmp)
-#else
-#include <sysdeps/powerpc/powerpc64/power8/strncmp.S>
-#endif

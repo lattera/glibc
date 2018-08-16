@@ -12,7 +12,7 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   strnlen-power8 strnlen-power7 strnlen-ppc64 \
 		   strcasecmp-power7 strcasecmp_l-power7 \
 		   strncase-power7 strncase_l-power7 \
-		   strncmp-power9 strncmp-power8 strncmp-power7 \
+		   strncmp-power8 strncmp-power7 \
 		   strncmp-power4 strncmp-ppc64 \
 		   strchr-power8 strchr-power7 strchr-ppc64 \
 		   strchrnul-power8 strchrnul-power7 strchrnul-ppc64 \
@@ -22,7 +22,7 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   strncat-power8 strncat-power7 strncat-ppc64 \
 		   strncpy-power7 strncpy-ppc64 \
 		   stpncpy-power8 stpncpy-power7 stpncpy-ppc64 \
-		   strcmp-power9 strcmp-power8 strcmp-power7 strcmp-ppc64 \
+		   strcmp-power8 strcmp-power7 strcmp-ppc64 \
 		   strcat-power8 strcat-power7 strcat-ppc64 \
 		   memmove-power7 memmove-ppc64 wordcopy-ppc64 bcopy-ppc64 \
 		   strncpy-power8 strstr-power7 strstr-ppc64 \
@@ -31,6 +31,9 @@ sysdep_routines += memcpy-power8-cached memcpy-power7 memcpy-a2 memcpy-power6 \
 		   strcasecmp-ppc64 strcasecmp-power8 strncase-ppc64 \
 		   strncase-power8
 
+ifneq (,$(filter %le,$(config-machine)))
+sysdep_routines += strcmp-power9 strncmp-power9
+endif
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
 endif
