@@ -1,3 +1,7 @@
+2018-08-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* benchtests/bench-strlen.c: Print performance numbers in json.
+
 2018-08-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/multiarch/Makefile
