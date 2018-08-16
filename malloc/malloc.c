@@ -4076,6 +4076,9 @@ _int_malloc (mstate av, size_t bytes)
       victim = av->top;
       size = chunksize (victim);
 
+      if (__glibc_unlikely (size > av->system_mem))
+        malloc_printerr ("malloc(): corrupted top size");
+
       if ((unsigned long) (size) >= (unsigned long) (nb + MINSIZE))
         {
           remainder_size = size - nb;

@@ -1,3 +1,7 @@
+2018-08-16  Pochang Chen  <johnchen902@gmail.com>
+
+	* malloc/malloc.c (_int_malloc.c): Verify size of top chunk.
+
 2018-08-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
 	* benchtests/bench-strlen.c (do_test): Allocate buffers before
