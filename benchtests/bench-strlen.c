@@ -96,12 +96,6 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t len)
   if (align + sizeof(CHAR) * len >= page_size)
     return;
 
-  CHAR *buf = (CHAR *) (buf1);
-
-  for (i = 0; i < len; ++i)
-    buf[align + i] = 1 + 11111 * i % MAX_CHAR;
-  buf[align + len] = 0;
-
   json_element_object_begin (json_ctx);
   json_attr_uint (json_ctx, "length", len);
   json_attr_uint (json_ctx, "alignment", align);
@@ -109,7 +103,16 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t len)
 
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, (CHAR *) (buf + align), len);
+    {
+      CHAR *buf = (CHAR *) (buf1);
+
+      for (i = 0; i < len; ++i)
+	buf[align + i] = 1 + 11111 * i % MAX_CHAR;
+      buf[align + len] = 0;
+
+      do_one_test (json_ctx, impl, (CHAR *) (buf + align), len);
+      alloc_bufs ();
+    }
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);

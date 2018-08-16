@@ -1,5 +1,8 @@
 2018-08-16  Siddhesh Poyarekar  <siddhesh@sourceware.org>
 
+	* benchtests/bench-strlen.c (do_test): Allocate buffers before
+	every strlen call.
+
 	* benchtests/bench-strlen.c: Print performance numbers in json.
 
 2018-08-16  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
