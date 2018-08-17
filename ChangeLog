@@ -1,4 +1,4 @@
-2018-08-16  DJ Delorie  <dj@delorie.com>
+2018-08-16  Moritz Eckert  <m.eckert@cs.ucsb.edu>
 
 	* malloc/malloc.c (_int_free): Check for corrupt prev_size vs size.
 	(malloc_consolidate): Likewise.
