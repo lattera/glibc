@@ -684,6 +684,7 @@ force_install
 bindnow
 hardcoded_path_in_tests
 enable_timezone_tools
+extra_nonshared_cflags
 use_default_link
 sysheaders
 ac_ct_CXX
@@ -762,6 +763,7 @@ with_binutils
 with_selinux
 with_headers
 with_default_link
+with_nonshared_cflags
 enable_sanity_checks
 enable_shared
 enable_profile
@@ -1482,6 +1484,8 @@ Optional Packages:
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
   --with-default-link     do not use explicit linker scripts
+  --with-nonshared-cflags=CFLAGS
+                          build nonshared libraries with additional CFLAGS
   --with-cpu=CPU          select code for CPU variant
 
 Some influential environment variables:
@@ -3337,6 +3341,16 @@ if test "${with_default_link+set}" = set; then :
 else
   use_default_link=default
 fi
+
+
+
+# Check whether --with-nonshared-cflags was given.
+if test "${with_nonshared_cflags+set}" = set; then :
+  withval=$with_nonshared_cflags; extra_nonshared_cflags=$withval
+else
+  extra_nonshared_cflags=
+fi
+
 
 
 # Check whether --enable-sanity-checks was given.

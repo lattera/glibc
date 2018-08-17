@@ -1,5 +1,15 @@
 2018-08-16  Florian Weimer  <fweimer@redhat.com>
 
+	* configure.ac: Add --with-nonshared-cflags option.
+	* config.make.in (extra-nonshared-cflags): Set variable.
+	* Makeconfig (CFLAGS-.oS): Use it.
+	* manual/install.texi (Configuring and compiling): Document
+	--with-nonshared-cflags.
+	* configure: Regenerate.
+	* INSTALL: Likewise.
+
+2018-08-16  Florian Weimer  <fweimer@redhat.com>
+
 	* Makeconfig (ASFLAGS): Always append required assembler flags.
 
 2018-08-16  Moritz Eckert  <m.eckert@cs.ucsb.edu>

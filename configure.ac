@@ -154,6 +154,14 @@ AC_ARG_WITH([default-link],
 	    [use_default_link=$withval],
 	    [use_default_link=default])
 
+dnl Additional build flags injection.
+AC_ARG_WITH([nonshared-cflags],
+	    AC_HELP_STRING([--with-nonshared-cflags=CFLAGS],
+			   [build nonshared libraries with additional CFLAGS]),
+	    [extra_nonshared_cflags=$withval],
+	    [extra_nonshared_cflags=])
+AC_SUBST(extra_nonshared_cflags)
+
 AC_ARG_ENABLE([sanity-checks],
 	      AC_HELP_STRING([--disable-sanity-checks],
 			     [really do not use threads (should not be used except in special situations) @<:@default=yes@:>@]),

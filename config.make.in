@@ -110,6 +110,7 @@ BUILD_CC = @BUILD_CC@
 CFLAGS = @CFLAGS@
 CPPFLAGS-config = @CPPFLAGS@
 CPPUNDEFS = @CPPUNDEFS@
+extra-nonshared-cflags = @extra_nonshared_cflags@
 ASFLAGS-config = @ASFLAGS_config@
 AR = @AR@
 NM = @NM@

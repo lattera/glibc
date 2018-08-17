@@ -90,6 +90,22 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      library will still be usable, but functionality may be lost--for
      example, you can't build a shared libc with old binutils.
 
+'--with-nonshared-cflags=CFLAGS'
+     Use additional compiler flags CFLAGS to build the parts of the
+     library which are always statically linked into applications and
+     libraries even with shared linking (that is, the object files
+     contained in 'lib*_nonshared.a' libraries).  The build process will
+     automatically use the appropriate flags, but this option can be
+     used to set additional flags required for building applications and
+     libraries, to match local policy.  For example, if such a policy
+     requires that all code linked into applications must be built with
+     source fortification,
+     '--with-nonshared-cflags=-Wp,-D_FORTIFY_SOURCE=2' will make sure
+     that the objects in 'libc_nonshared.a' are compiled with this flag
+     (although this will not affect the generated code in this
+     particular case and potentially change debugging information and
+     metadata only).
+
 '--disable-shared'
      Don't build shared libraries even if it is possible.  Not all
      systems support shared libraries; you need ELF support and

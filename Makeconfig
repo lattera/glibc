@@ -1038,7 +1038,7 @@ object-suffixes-for-libc += .oS
 # Must build the routines as PIC, though, because they can end up in (users')
 # shared objects.  We don't want to use CFLAGS-os because users may, for
 # example, make that processor-specific.
-CFLAGS-.oS = $(CFLAGS-.o) $(PIC-ccflag)
+CFLAGS-.oS = $(CFLAGS-.o) $(PIC-ccflag) $(extra-nonshared-cflags)
 CPPFLAGS-.oS = $(CPPFLAGS-.o) -DPIC -DLIBC_NONSHARED=1
 libtype.oS = lib%_nonshared.a
 endif
