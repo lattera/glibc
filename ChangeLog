@@ -1,3 +1,8 @@
+2018-08-16  DJ Delorie  <dj@delorie.com>
+
+	* malloc/malloc.c (_int_free): Check for corrupt prev_size vs size.
+	(malloc_consolidate): Likewise.
+
 2018-08-16  Pochang Chen  <johnchen902@gmail.com>
 
 	* malloc/malloc.c (_int_malloc.c): Verify size of top chunk.

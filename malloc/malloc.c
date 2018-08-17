@@ -4281,6 +4281,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       prevsize = prev_size (p);
       size += prevsize;
       p = chunk_at_offset(p, -((long) prevsize));
+      if (__glibc_unlikely (chunksize(p) != prevsize))
+        malloc_printerr ("corrupted size vs. prev_size while consolidating");
       unlink(av, p, bck, fwd);
     }
 
@@ -4442,6 +4444,8 @@ static void malloc_consolidate(mstate av)
 	  prevsize = prev_size (p);
 	  size += prevsize;
 	  p = chunk_at_offset(p, -((long) prevsize));
+	  if (__glibc_unlikely (chunksize(p) != prevsize))
+	    malloc_printerr ("corrupted size vs. prev_size in fastbins");
 	  unlink(av, p, bck, fwd);
 	}
 
