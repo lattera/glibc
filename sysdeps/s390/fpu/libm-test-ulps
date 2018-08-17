@@ -1013,19 +1013,25 @@ ldouble: 1
 
 Function: "cos_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
 Function: "cos_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
 Function: "cos_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
@@ -1939,19 +1945,25 @@ ldouble: 1
 
 Function: "sin_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sin_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
@@ -1963,19 +1975,25 @@ ldouble: 1
 
 Function: "sincos_downward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
 Function: "sincos_towardzero":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
 
 Function: "sincos_upward":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 3
 ldouble: 3
 
