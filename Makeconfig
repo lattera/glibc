@@ -1047,7 +1047,7 @@ endif
 ifndef ASFLAGS
 ASFLAGS := $(filter -g% -fdebug-prefix-map=%,$(CFLAGS))
 endif
-ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
+override ASFLAGS += -Werror=undef $(ASFLAGS-config) $(asflags-cpu)
 
 ifndef BUILD_CC
 BUILD_CC = $(CC)

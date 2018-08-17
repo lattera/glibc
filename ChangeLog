@@ -1,3 +1,7 @@
+2018-08-16  Florian Weimer  <fweimer@redhat.com>
+
+	* Makeconfig (ASFLAGS): Always append required assembler flags.
+
 2018-08-16  Moritz Eckert  <m.eckert@cs.ucsb.edu>
 
 	* malloc/malloc.c (_int_free): Check for corrupt prev_size vs size.
