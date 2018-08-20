@@ -3730,7 +3730,7 @@ _int_malloc (mstate av, size_t bytes)
           if (__glibc_unlikely (bck->fd != victim)
               || __glibc_unlikely (victim->fd != unsorted_chunks (av)))
             malloc_printerr ("malloc(): unsorted double linked list corrupted");
-          if (__glibc_unlikely (prev_inuse(next)))
+          if (__glibc_unlikely (prev_inuse (next)))
             malloc_printerr ("malloc(): invalid next->prev_inuse (unsorted)");
 
           /*

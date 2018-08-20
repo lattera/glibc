@@ -20,6 +20,10 @@
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
 
+2018-08-17  Istvan Kurucsai  <pistukem@gmail.com>
+
+	* malloc/malloc.c (_int_malloc): Additional binning code checks.
+
 2018-08-16  Florian Weimer  <fweimer@redhat.com>
 
 	* configure.ac: Add --with-nonshared-cflags option.
