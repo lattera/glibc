@@ -808,6 +808,7 @@ typedef struct
 #define NT_ARM_SYSTEM_CALL	0x404	/* ARM system call number */
 #define NT_ARM_SVE	0x405		/* ARM Scalable Vector Extension
 					   registers */
+#define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note.  */
 
 /* Legal values for the note segment descriptor types for object files.  */
 
@@ -1213,6 +1214,9 @@ typedef struct
 #define AT_L2_CACHEGEOMETRY	45
 #define AT_L3_CACHESIZE		46
 #define AT_L3_CACHEGEOMETRY	47
+
+#define AT_MINSIGSTKSZ		51 /* Stack needed for signal delivery
+				      (AArch64).  */
 
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */
