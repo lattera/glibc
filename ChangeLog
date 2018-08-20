@@ -1,5 +1,9 @@
 2018-08-20  Joseph Myers  <joseph@codesourcery.com>
 
+	* sysdeps/unix/sysv/linux/sys/signalfd.h (struct
+	signalfd_siginfo): Add ssi_addr_lsb, ssi_syscall, ssi_call_addr
+	and ssi_arch members.
+
 	* elf/elf.c (NT_VMCOREDD): New macro.
 	(AT_MINSIGSTKSZ): Likewise.
 
