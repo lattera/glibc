@@ -1,3 +1,21 @@
+2018-08-20  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/Makefile
+	(libm-sysdep_routines): Remove s_sinf-ppc64, s_sinf-power8,
+	s_cosf-ppc64 and s_cosf-power8.
+	* sysdeps/powerpc/fpu/s_cosf.c: Remove file.
+	* sysdeps/powerpc/fpu/s_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/k_sinf.c: Likewise.
+	* sysdeps/powerpc/fpu/k_cosf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_cosf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-power8.S: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf-ppc64.c: Likewise.
+	* sysdeps/powerpc/powerpc64/fpu/multiarch/s_sinf.c: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_cosf.S: Likewise.
+	* sysdeps/powerpc/powerpc64/power8/fpu/s_sinf.S: Likewise.
+
 2018-08-17  Florian Weimer  <fweimer@redhat.com>
 
 	* sysdeps/s390/fpu/libm-test-ulps: Regenerate.
