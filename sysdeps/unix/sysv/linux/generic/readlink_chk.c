@@ -19,10 +19,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/param.h>
-#ifdef HAVE_INLINED_SYSCALLS
 # include <errno.h>
 # include <sysdep.h>
-#endif
 
 
 ssize_t
@@ -31,9 +29,5 @@ __readlink_chk (const char *path, void *buf, size_t len, size_t buflen)
   if (len > buflen)
     __chk_fail ();
 
-#ifdef HAVE_INLINED_SYSCALLS
-  return INLINE_SYSCALL (readlinkat, 4, AT_FDCWD, path, buf, len);
-#else
-  return __readlink (path, buf, len);
-#endif
+  return INLINE_SYSCALL_CALL (readlinkat, AT_FDCWD, path, buf, len);
 }
