@@ -1,3 +1,10 @@
+2018-08-21  Tobias Klauser  <tklauser@distanz.ch>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_MAX): Set to 45.
+	(PF_XDP): New macro.
+	(AF_XDP): New macro.
+	(SOL_XDP): New macro.
+
 2018-08-21  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/gnu/netinet/tcp.h (TCP_ZEROCOPY_RECEIVE): New macro.

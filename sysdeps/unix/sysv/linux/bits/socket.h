@@ -85,7 +85,8 @@ typedef __socklen_t socklen_t;
 #define PF_KCM		41	/* Kernel Connection Multiplexor.  */
 #define PF_QIPCRTR	42	/* Qualcomm IPC Router.  */
 #define PF_SMC		43	/* SMC sockets.  */
-#define PF_MAX		44	/* For now..  */
+#define PF_XDP		44	/* XDP sockets.  */
+#define PF_MAX		45	/* For now..  */
 
 /* Address families.  */
 #define AF_UNSPEC	PF_UNSPEC
@@ -135,6 +136,7 @@ typedef __socklen_t socklen_t;
 #define AF_KCM		PF_KCM
 #define AF_QIPCRTR	PF_QIPCRTR
 #define AF_SMC		PF_SMC
+#define AF_XDP		PF_XDP
 #define AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -164,6 +166,7 @@ typedef __socklen_t socklen_t;
 #define SOL_NFC		280
 #define SOL_KCM		281
 #define SOL_TLS		282
+#define SOL_XDP		283
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
