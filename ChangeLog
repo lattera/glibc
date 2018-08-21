@@ -1,5 +1,10 @@
 2018-08-21  Florian Weimer  <fweimer@redhat.com>
 
+	[BZ #17248]
+	* Makeconfig (+cflags): Do not sort (and deduplicate).
+
+2018-08-21  Florian Weimer  <fweimer@redhat.com>
+
 	* debug/readlink_chk.c (__readlink_chk): Always call __readlink.
 	* sysdeps/unix/sysv/linux/generic/readlink_chk.c: Remove file.
 

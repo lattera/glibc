@@ -902,9 +902,6 @@ endif	# $(+cflags) == ""
 	   $(+stack-protector)
 +gcc-nowarn := -w
 
-# Don't duplicate options if we inherited variables from the parent.
-+cflags	:= $(sort $(+cflags))
-
 # Each sysdeps directory can contain header files that both will be
 # used to compile and will be installed.  Each can also contain an
 # include/ subdirectory, whose header files will be used to compile
