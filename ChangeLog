@@ -1,3 +1,13 @@
+2018-08-21  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/gnu/netinet/tcp.h (TCP_ZEROCOPY_RECEIVE): New macro.
+	(TCP_INQ): Likewise.
+	(TCP_CM_INQ): Likewise.
+	(TCP_REPAIR_ON): Likewise.
+	(TCP_REPAIR_OFF): Likewise.
+	(TCP_REPAIR_OFF_NO_WP): Likewise.
+	(struct tcp_zerocopy_receive): New type.
+
 2018-08-21  Florian Weimer  <fweimer@redhat.com>
 
 	* support/support.h (support_descriptor_supports_holes): Declare.
