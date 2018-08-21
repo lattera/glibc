@@ -65,6 +65,12 @@ void support_write_file_string (const char *path, const char *contents);
    the result).  */
 char *support_quote_blob (const void *blob, size_t length);
 
+/* Returns non-zero if the file descriptor is a regular file on a file
+   system which supports holes (that is, seeking and writing does not
+   allocate storage for the range of zeros).  FD must refer to a
+   regular file open for writing, and initially empty.  */
+int support_descriptor_supports_holes (int fd);
+
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 

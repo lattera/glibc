@@ -739,7 +739,12 @@ do_test (void)
     *p = rand () >> 24;
 
   infd = create_temp_file ("tst-copy_file_range-in-", &infile);
-  xclose (create_temp_file ("tst-copy_file_range-out-", &outfile));
+  {
+    int outfd = create_temp_file ("tst-copy_file_range-out-", &outfile);
+    if (!support_descriptor_supports_holes (outfd))
+      FAIL_UNSUPPORTED ("File %s does not support holes", outfile);
+    xclose (outfd);
+  }
 
   /* Try to find a different directory from the default input/output
      file.  */

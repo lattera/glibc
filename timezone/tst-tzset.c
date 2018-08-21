@@ -24,6 +24,7 @@
 #include <sys/resource.h>
 #include <time.h>
 #include <unistd.h>
+#include <support/check.h>
 
 #define TIMEOUT 5
 static int do_test (void);
@@ -38,6 +39,8 @@ create_tz_file (off64_t size)
   int fd = create_temp_file ("tst-tzset-", &path);
   if (fd < 0)
     exit (1);
+  if (!support_descriptor_supports_holes (fd))
+    FAIL_UNSUPPORTED ("File %s does not support holes", path);
 
   // Reopen for large-file support.
   close (fd);

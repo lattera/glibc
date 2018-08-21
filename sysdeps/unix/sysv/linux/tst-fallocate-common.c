@@ -41,6 +41,8 @@ do_prepare (int argc, char **argv)
   temp_fd = create_temp_file ("tst-fallocate.", &temp_filename);
   if (temp_fd == -1)
     FAIL_EXIT1 ("cannot create temporary file: %m");
+  if (!support_descriptor_supports_holes (temp_fd))
+    FAIL_UNSUPPORTED ("File %s does not support holes", temp_filename);
 }
 #define PREPARE do_prepare
 

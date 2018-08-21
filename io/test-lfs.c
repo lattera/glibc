@@ -25,6 +25,7 @@
 #include <error.h>
 #include <errno.h>
 #include <sys/resource.h>
+#include <support/check.h>
 
 /* Prototype for our test function.  */
 extern void do_prepare (int argc, char *argv[]);
@@ -70,6 +71,8 @@ do_prepare (int argc, char *argv[])
       else
 	error (EXIT_FAILURE, errno, "cannot create temporary file");
     }
+  if (!support_descriptor_supports_holes (fd))
+    FAIL_UNSUPPORTED ("File %s does not support holes", name);
   add_temp_file (name);
 
   if (getrlimit64 (RLIMIT_FSIZE, &rlim) != 0)

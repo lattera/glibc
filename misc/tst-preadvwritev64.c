@@ -26,6 +26,12 @@ do_test (void)
 
   ret = do_test_with_offset (0);
 
+  if (!temp_fd_supports_holes)
+    {
+      puts ("warning: partial test due to lack of support for holes");
+      return ret;
+    }
+
   /* Create a sparse file larger than 4GB to check if offset is handled
      correctly in p{write,read}v64. */
   off_t base_offset = UINT32_MAX + 2048LL;
