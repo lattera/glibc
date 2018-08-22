@@ -1,4 +1,4 @@
-/* Definitions for double vector tests with vector length 2.
+/* Configuration for math tests: rounding mode support.  RISC-V no-FPU version.
    Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,12 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double.h"
-#include "test-math-no-inline.h"
-#include "test-math-vector.h"
-#include <math-tests-rounding.h>
+#ifndef RISCV_NOFPU_MATH_TESTS_ROUNDING_H
+#define RISCV_NOFPU_MATH_TESTS_ROUNDING_H 1
 
-#undef ROUNDING_TESTS_double
-#define ROUNDING_TESTS_double(MODE) ((MODE) == FE_TONEAREST)
+/* On soft-float targets we only support the "to nearest" rounding mode.  */
+#define ROUNDING_TESTS_float(MODE)		((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_double(MODE)		((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 
-#define VEC_SUFF _vlen2
-#define VEC_LEN 2
+#endif /* math-tests-rounding.h.  */

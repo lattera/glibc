@@ -29,11 +29,4 @@
 # define EXCEPTION_TESTS_long_double   0
 #endif
 
-/* On soft-float targets we only support the "to nearest" rounding mode.  */
-#ifndef __riscv_flen
-# define ROUNDING_TESTS_float(MODE)		((MODE) == FE_TONEAREST)
-# define ROUNDING_TESTS_double(MODE)		((MODE) == FE_TONEAREST)
-# define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
-#endif
-
 #include_next <math-tests.h>

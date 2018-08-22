@@ -36,22 +36,6 @@
 /* Return nonzero value if to run tests involving sNaN values for X.  */
 #define SNAN_TESTS(x) MATH_TESTS_TG (SNAN_TESTS_, , x)
 
-/* Indicate whether to run tests involving a given rounding mode for a
-   given floating-point type, given that fesetround succeeds for that
-   mode.  All are run if fesetround succeeds unless overridden.  */
-#ifndef ROUNDING_TESTS_float
-# define ROUNDING_TESTS_float(MODE)	1
-#endif
-#ifndef ROUNDING_TESTS_double
-# define ROUNDING_TESTS_double(MODE)	1
-#endif
-#ifndef ROUNDING_TESTS_long_double
-# define ROUNDING_TESTS_long_double(MODE)	1
-#endif
-#ifndef ROUNDING_TESTS_float128
-# define ROUNDING_TESTS_float128(MODE)	1
-#endif
-
 #define ROUNDING_TESTS(TYPE, MODE)		\
   MATH_TESTS_TG (ROUNDING_TESTS_, (MODE), TYPE)
 
@@ -93,6 +77,7 @@
 # define EXCEPTION_SET_FORCES_TRAP 0
 #endif
 
+#include <math-tests-rounding.h>
 #include <math-tests-snan.h>
 #include <math-tests-snan-cast.h>
 #include <math-tests-snan-payload.h>

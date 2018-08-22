@@ -1,3 +1,45 @@
+2018-08-22  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-rounding.h: New file.
+	* sysdeps/generic/math-tests.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Do not define here.
+	(ROUNDING_TESTS_double): Likewise.
+	(ROUNDING_TESTS_long_double): Likewise.
+	(ROUNDING_TESTS_float128): Likewise.
+	* math/test-double-vlen2.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Undefine before defining.
+	* math/test-double-vlen4.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Undefine before defining.
+	* math/test-double-vlen8.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Undefine before defining.
+	* math/test-float-vlen16.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Undefine before defining.
+	* math/test-float-vlen4.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Undefine before defining.
+	* math/test-float-vlen8.h: Include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Undefine before defining.
+	* sysdeps/arm/nofpu/math-tests-rounding.h: New file.
+	* sysdeps/arm/math-tests.h [__SOFTFP__] (ROUNDING_TESTS_float): Do
+	not define here.
+	[__SOFTFP__] (ROUNDING_TESTS_double): Likewise.
+	[__SOFTFP__] (ROUNDING_TESTS_long_double): Likewise.
+	* sysdeps/riscv/nofpu/math-tests-rounding.h: New file.
+	* sysdeps/riscv/math-tests.h [!__riscv_flen]
+	(ROUNDING_TESTS_float): Do not define here.
+	[!__riscv_flen] (ROUNDING_TESTS_double): Likewise.
+	[!__risv_flen] (ROUNDING_TESTS_long_double): Likewise.
+	* sysdeps/m68k/coldfire/math-tests.h [!__mcffpu__]
+	(ROUNDING_TESTS_float): Likewise.
+	[!__mcffpu__] (ROUNDING_TESTS_double): Likewise.
+	[!__mcffpu__] (ROUNDING_TESTS_long_double): Likewise.
+	* sysdeps/mips/math-tests.h [__mips_soft_float]
+	(ROUNDING_TESTS_float): Likewise.
+	[__mips_soft_float] (ROUNDING_TESTS_double): Likewise.
+	[__mips_soft_float] (ROUNDING_TESTS_long_double): Likewise.
+	* sysdeps/nios2/math-tests.h (ROUNDING_TESTS_float): Likewise.
+	(ROUNDING_TESTS_double): Likewise.
+	(ROUNDING_TESTS_long_double): Likewise.
+
 2018-08-21  Tobias Klauser  <tklauser@distanz.ch>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_MAX): Set to 45.

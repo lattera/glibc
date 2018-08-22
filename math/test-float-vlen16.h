@@ -19,7 +19,9 @@
 #include "test-float.h"
 #include "test-math-no-inline.h"
 #include "test-math-vector.h"
+#include <math-tests-rounding.h>
 
+#undef ROUNDING_TESTS_float
 #define ROUNDING_TESTS_float(MODE) ((MODE) == FE_TONEAREST)
 
 #define VEC_SUFF _vlen16

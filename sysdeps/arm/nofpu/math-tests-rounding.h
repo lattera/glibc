@@ -1,5 +1,5 @@
-/* Definitions for double vector tests with vector length 2.
-   Copyright (C) 2014-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: rounding mode support.  ARM no-FPU version.
+   Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include "test-double.h"
-#include "test-math-no-inline.h"
-#include "test-math-vector.h"
-#include <math-tests-rounding.h>
+#ifndef ARM_NOFPU_MATH_TESTS_ROUNDING_H
+#define ARM_NOFPU_MATH_TESTS_ROUNDING_H 1
 
-#undef ROUNDING_TESTS_double
-#define ROUNDING_TESTS_double(MODE) ((MODE) == FE_TONEAREST)
+/* On systems with VFP support, but where glibc is built for
+   soft-float, the libgcc functions used in libc and libm do not
+   support rounding modes, although fesetround succeeds.  */
+#define ROUNDING_TESTS_float(MODE)	((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_double(MODE)	((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 
-#define VEC_SUFF _vlen2
-#define VEC_LEN 2
+#endif /* math-tests-rounding.h.  */

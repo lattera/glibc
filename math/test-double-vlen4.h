@@ -19,7 +19,9 @@
 #include "test-double.h"
 #include "test-math-no-inline.h"
 #include "test-math-vector.h"
+#include <math-tests-rounding.h>
 
+#undef ROUNDING_TESTS_double
 #define ROUNDING_TESTS_double(MODE) ((MODE) == FE_TONEAREST)
 
 #define VEC_SUFF _vlen4
