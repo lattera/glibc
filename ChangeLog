@@ -1,5 +1,22 @@
 2018-08-22  Joseph Myers  <joseph@codesourcery.com>
 
+	* math/test-double-vlen2.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Remove.
+	* math/test-double-vlen4.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Remove.
+	* math/test-double-vlen8.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_double): Remove.
+	* math/test-float-vlen16.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Remove.
+	* math/test-float-vlen4.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Remove.
+	* math/test-float-vlen8.h: Don't include <math-tests-rounding.h>.
+	(ROUNDING_TESTS_float): Remove.
+	* math/libm-test-driver.c (IF_ROUND_INIT_FE_DOWNWARD): Check
+	!TEST_MATHVEC here.
+	(IF_ROUND_INIT_FE_TOWARDZERO): Likewise.
+	(IF_ROUND_INIT_FE_UPWARD): Likewise.
+
 	* sysdeps/generic/math-tests-rounding.h: New file.
 	* sysdeps/generic/math-tests.h: Include <math-tests-rounding.h>.
 	(ROUNDING_TESTS_float): Do not define here.
