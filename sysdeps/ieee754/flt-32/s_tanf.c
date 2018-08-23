@@ -21,6 +21,33 @@ static char rcsid[] = "$NetBSD: s_tanf.c,v 1.4 1995/05/10 20:48:20 jtc Exp $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-float.h>
+#include "s_sincosf.h"
+
+/* Reduce range of X to a multiple of PI/2.  The modulo result is between
+   -PI/4 and PI/4 and returned as a high part y[0] and a low part y[1].
+   The low bit in the return value indicates the first or 2nd half of tanf.  */
+static inline int32_t
+rem_pio2f (float x, float *y)
+{
+  double dx = x;
+  int n;
+  const sincos_t *p = &__sincosf_table[0];
+
+  if (__glibc_likely (abstop12 (x) < abstop12 (120.0f)))
+    dx = reduce_fast (dx, p, &n);
+  else
+    {
+      uint32_t xi = asuint (x);
+      int sign = xi >> 31;
+
+      dx = reduce_large (xi, &n);
+      dx = sign ? -dx : dx;
+    }
+
+  y[0] = dx;
+  y[1] = dx - y[0];
+  return n;
+}
 
 float __tanf(float x)
 {
@@ -42,7 +69,7 @@ float __tanf(float x)
 
     /* argument reduction needed */
 	else {
-	    n = __ieee754_rem_pio2f(x,y);
+	    n = rem_pio2f(x,y);
 	    return __kernel_tanf(y[0],y[1],1-((n&1)<<1)); /*   1 -- n even
 							      -1 -- n odd */
 	}
