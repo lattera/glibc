@@ -1,5 +1,9 @@
 2018-08-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
+	* NEWS: Move optimized sinf entry to 2.29.
+
+2018-08-23  Wilco Dijkstra  <wdijkstr@arm.com>
+
 	* sysdeps/ieee754/flt-32/s_tanf.c (__tanf): Use fast range reduction.
 
 2018-08-22  DJ Delorie  <dj@redhat.com>
