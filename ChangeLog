@@ -1,3 +1,11 @@
+2018-08-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	regex: port Gnulib code to z/OS POSIX environment
+	Problem reported by Arnold Robbins in:
+	https://lists.gnu.org/r/bug-gnulib/2018-08/msg00129.html
+	* posix/regex_internal.h (__iswalnum, __towlower, __towupper) [!_LIBC]:
+	Undef.
+
 2018-08-22  Joseph Myers  <joseph@codesourcery.com>
 
 	* math/test-double-vlen2.h: Don't include <math-tests-rounding.h>.
