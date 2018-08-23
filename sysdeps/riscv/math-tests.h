@@ -20,13 +20,4 @@
 /* Trapping exceptions are not supported on RISC-V.  */
 #define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
 
-/* Despite not supporting trapping exceptions, we support setting
-   floating-point exception flags on hard-float targets.  These are not
-   supported on soft-float targets.  */
-#ifndef __riscv_flen
-# define EXCEPTION_TESTS_float 0
-# define EXCEPTION_TESTS_double        0
-# define EXCEPTION_TESTS_long_double   0
-#endif
-
 #include_next <math-tests.h>

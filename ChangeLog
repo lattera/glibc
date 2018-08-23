@@ -1,3 +1,25 @@
+2018-08-23  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-exceptions.h: New file.
+	* sysdeps/generic/math-tests.h: Include <math-tests-exceptions.h>.
+	(EXCEPTION_TESTS_float): Do not define here.
+	(EXCEPTION_TESTS_double): Likewise.
+	(EXCEPTION_TESTS_long_double): Likewise.
+	(EXCEPTION_TESTS_float128): Likewise.
+	* sysdeps/arm/math-tests.h [__SOFTFP__] (EXCEPTION_TESTS_float):
+	Likewise.
+	[__SOFTFP__] (EXCEPTION_TESTS_double): Likewise.
+	[__SOFTFP__] (EXCEPTION_TESTS_long_double): Likewise.
+	* sysdeps/arm/nofpu/math-tests-exceptions.h: New file.
+	* sysdeps/m68k/coldfire/math-tests.h: Remove file.
+	* sysdeps/mips/math-tests.h: Likewise.
+	* sysdeps/nios2/math-tests.h: Likewise.
+	* sysdeps/riscv/math-tests.h [!__riscv_flen]
+	(EXCEPTION_TESTS_float): Do not define here.
+	[!__riscv_flen] (EXCEPTION_TESTS_double): Likewise.
+	[!__riscv_flen] (EXCEPTION_TESTS_long_double): Likewise.
+	* sysdeps/riscv/nofpu/math-tests-exceptions.h: New file.
+
 2018-08-23  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* NEWS: Move optimized sinf entry to 2.29.

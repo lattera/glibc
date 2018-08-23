@@ -1,4 +1,4 @@
-/* Configuration for math tests.  MIPS version.
+/* Configuration for math tests: support for exceptions.  ARM no-FPU version.
    Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,14 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <features.h>
-#include <sgidefs.h>
+#ifndef ARM_NOFPU_MATH_TESTS_EXCEPTIONS_H
+#define ARM_NOFPU_MATH_TESTS_EXCEPTIONS_H 1
 
-/* MIPS soft float does not support exceptions and rounding modes.  */
-#ifdef __mips_soft_float
-# define EXCEPTION_TESTS_float	0
-# define EXCEPTION_TESTS_double	0
-# define EXCEPTION_TESTS_long_double	0
-#endif
+/* On systems with VFP support, but where glibc is built for
+   soft-float, the libgcc functions used in libc and libm do not
+   support exceptions.  */
+#define EXCEPTION_TESTS_float	0
+#define EXCEPTION_TESTS_double	0
+#define EXCEPTION_TESTS_long_double	0
 
-#include_next <math-tests.h>
+#endif /* math-tests-exceptions.h.  */

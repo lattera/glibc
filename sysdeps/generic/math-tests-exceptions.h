@@ -1,5 +1,5 @@
-/* Configuration for math tests.  Nios II version.
-   Copyright (C) 2015-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: support for exceptions.  Generic version.
+   Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Current Nios II soft-float does not support exceptions or rounding
-   modes.  */
-#define EXCEPTION_TESTS_float	0
-#define EXCEPTION_TESTS_double	0
-#define EXCEPTION_TESTS_long_double	0
+#ifndef _MATH_TESTS_EXCEPTIONS_H
+#define _MATH_TESTS_EXCEPTIONS_H 1
 
-#include_next <math-tests.h>
+/* Indicate whether to run tests of floating-point exceptions for a
+   given floating-point type, given that the exception macros are
+   defined.  All are run unless overridden.  */
+#define EXCEPTION_TESTS_float	1
+#define EXCEPTION_TESTS_double	1
+#define EXCEPTION_TESTS_long_double	1
+#define EXCEPTION_TESTS_float128	1
+
+#endif /* math-tests-exceptions.h.  */

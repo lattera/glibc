@@ -39,22 +39,6 @@
 #define ROUNDING_TESTS(TYPE, MODE)		\
   MATH_TESTS_TG (ROUNDING_TESTS_, (MODE), TYPE)
 
-/* Indicate whether to run tests of floating-point exceptions for a
-   given floating-point type, given that the exception macros are
-   defined.  All are run unless overridden.  */
-#ifndef EXCEPTION_TESTS_float
-# define EXCEPTION_TESTS_float	1
-#endif
-#ifndef EXCEPTION_TESTS_double
-# define EXCEPTION_TESTS_double	1
-#endif
-#ifndef EXCEPTION_TESTS_long_double
-# define EXCEPTION_TESTS_long_double	1
-#endif
-#ifndef EXCEPTION_TESTS_float128
-# define EXCEPTION_TESTS_float128	1
-#endif
-
 #define EXCEPTION_TESTS(TYPE) MATH_TESTS_TG (EXCEPTION_TESTS_, , TYPE)
 
 /* Indicate whether the given exception trap(s) can be enabled
@@ -77,6 +61,7 @@
 # define EXCEPTION_SET_FORCES_TRAP 0
 #endif
 
+#include <math-tests-exceptions.h>
 #include <math-tests-rounding.h>
 #include <math-tests-snan.h>
 #include <math-tests-snan-cast.h>

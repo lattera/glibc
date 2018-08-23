@@ -1,5 +1,6 @@
-/* Configuration for math tests.  ColdFire version.
-   Copyright (C) 2018 Free Software Foundation, Inc.
+/* Configuration for math tests: support for exceptions.  RISC-V
+   no-FPU version.
+   Copyright (C) 2013-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +17,13 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* ColdFire soft float does not support exceptions and rounding modes.  */
-#ifndef __mcffpu__
-# define EXCEPTION_TESTS_float	0
-# define EXCEPTION_TESTS_double	0
-# define EXCEPTION_TESTS_long_double	0
-#endif
+#ifndef RISCV_NOFPU_MATH_TESTS_EXCEPTIONS_H
+#define RISCV_NOFPU_MATH_TESTS_EXCEPTIONS_H 1
 
-#include_next <math-tests.h>
+/* We support setting floating-point exception flags on hard-float
+   targets.  These are not supported on soft-float targets.  */
+#define EXCEPTION_TESTS_float 0
+#define EXCEPTION_TESTS_double        0
+#define EXCEPTION_TESTS_long_double   0
+
+#endif /* math-tests-exceptions.h.  */

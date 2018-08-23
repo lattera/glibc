@@ -16,16 +16,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* On systems with VFP support, but where glibc is built for
-   soft-float, the libgcc functions used in libc and libm do not
-   support rounding modes, although fesetround succeeds, and do not
-   support exceptions.  */
-#ifdef __SOFTFP__
-# define EXCEPTION_TESTS_float	0
-# define EXCEPTION_TESTS_double	0
-# define EXCEPTION_TESTS_long_double	0
-#endif
-
 /* Not all VFP implementations support trapping exceptions.  */
 #define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
 
