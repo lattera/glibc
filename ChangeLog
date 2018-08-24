@@ -1,3 +1,24 @@
+2018-08-24  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* math/Makefile: Remove empty files k_sin(f).c, k_cos(f).c.
+	Remove unused files e_rem_pio2(f).c, k_rem_pio2f.c.
+	* sysdeps/i386/fpu/e_rem_pio2.c: Delete file.
+	* sysdeps/ia64/fpu/e_rem_pio2.c: Likewise.
+	* sysdeps/ia64/fpu/e_rem_pio2f.c: Likewise.
+	* sysdeps/ia64/fpu/k_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/dbl-64/e_rem_pio2.c: Likewise.
+	* sysdeps/ieee754/dbl-64/k_cos.c: Likewise.
+	* sysdeps/ieee754/dbl-64/k_sin.c: Likewise.
+	* sysdeps/ieee754/flt-32/e_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_cosf.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_rem_pio2f.c: Likewise.
+	* sysdeps/ieee754/flt-32/k_sinf.c: Likewise.
+	* sysdeps/m68k/m680x0/fpu/e_rem_pio2.c: Likewise
+	* sysdeps/m68k/m680x0/fpu/e_rem_pio2f.c: Likewise
+	* sysdeps/m68k/m680x0/fpu/k_rem_pio2f.c: Likewise
+	* sysdeps/powerpc/fpu/e_rem_pio2f.c: Likewise.
+	* sysdeps/powerpc/fpu/k_rem_pio2f.c: Likewise.
+
 2018-08-23  Joseph Myers  <joseph@codesourcery.com>
 
 	* sysdeps/generic/math-tests-exceptions.h: New file.

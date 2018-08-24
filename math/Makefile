@@ -64,9 +64,9 @@ gen-libm-calls = cargF conjF cimagF crealF cabsF s_cacosF		  \
 libm-calls =								  \
 	e_acosF e_acoshF e_asinF e_atan2F e_atanhF e_coshF e_expF e_fmodF \
 	e_hypotF e_j0F e_j1F e_jnF e_lgammaF_r e_logF e_log10F e_powF	  \
-	e_rem_pio2F e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
+	e_remainderF e_scalbF e_sinhF e_sqrtF e_gammaF_r	  \
 	e_ilogbF							  \
-	k_cosF k_sinF k_tanF s_asinhF s_atanF s_cbrtF			  \
+	k_tanF s_asinhF s_atanF s_cbrtF					  \
 	s_ceilF s_cosF s_erfF s_expm1F s_fabsF				  \
 	s_floorF s_log1pF s_logbF				  \
 	s_nextafterF s_nexttowardF s_rintF s_scalblnF			  \
@@ -119,23 +119,25 @@ test-types-basic = ldouble double float
 
 # long double support
 type-ldouble-suffix := l
-type-ldouble-routines := t_sincosl k_sincosl s_iscanonicall
+type-ldouble-routines := t_sincosl k_sinl k_cosl k_sincosl s_iscanonicall \
+			 e_rem_pio2l
 type-ldouble-yes := ldouble
 
 # double support
 type-double-suffix :=
 type-double-routines := branred doasin dosincos mpa mpatan2	\
-		       mpatan mpsqrt mptan sincos32	\
-		       sincostab k_rem_pio2
+		       k_rem_pio2 mpatan mpsqrt mptan sincos32	\
+		       sincostab
 
 # float support
 type-float-suffix := f
-type-float-routines := k_rem_pio2f math_errf e_exp2f_data e_logf_data	\
+type-float-routines := math_errf e_exp2f_data e_logf_data	\
 		       e_log2f_data e_powf_log2_data s_sincosf_data
 
 # _Float128 support
 type-float128-suffix := f128
-type-float128-routines := t_sincosf128 k_sincosf128
+type-float128-routines := t_sincosf128 k_sinf128 k_cosf128 k_sincosf128 \
+			  e_rem_pio2f128
 type-float128-yes := float128
 
 # _Float64x may be supported, only as an alias type.
