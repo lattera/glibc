@@ -1,7 +1,7 @@
-/* Configuration for math tests.  RISC-V version
+/* Configuration for math tests: support for enabling exception traps.
+   RISC-V version.
    Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Copied from the aarch64 version
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef RISCV_MATH_TESTS_TRAP_H
+#define RISCV_MATH_TESTS_TRAP_H 1
+
 /* Trapping exceptions are not supported on RISC-V.  */
 #define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
 
-#include_next <math-tests.h>
+#endif /* math-tests-trap.h.  */

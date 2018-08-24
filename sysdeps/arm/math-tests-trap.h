@@ -1,5 +1,6 @@
-/* Configuration for math tests.  ARM version.
-   Copyright (C) 2013-2018 Free Software Foundation, Inc.
+/* Configuration for math tests: support for enabling exception traps.
+   ARM version.
+   Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +17,10 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#ifndef ARM_MATH_TESTS_TRAP_H
+#define ARM_MATH_TESTS_TRAP_H 1
+
 /* Not all VFP implementations support trapping exceptions.  */
 #define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
 
-#include_next <math-tests.h>
+#endif /* math-tests-trap.h.  */

@@ -1,3 +1,15 @@
+2018-08-24  Joseph Myers  <joseph@codesourcery.com>
+
+	* sysdeps/generic/math-tests-trap.h: New file.
+	* sysdeps/generic/math-tests.h: Include <math-tests-trap.h>.
+	(EXCEPTION_ENABLE_SUPPORTED): Do not define here.
+	* sysdeps/aarch64/math-tests.h: Remove file.
+	* sysdeps/arm/math-tests.h: Likewise.
+	* sysdeps/riscv/math-tests.h: Likewise.
+	* sysdeps/aarch64/math-tests-trap.h: New file.
+	* sysdeps/arm/math-tests-trap.h: Likewise.
+	* sysdeps/riscv/math-tests-trap.h: Likewise.
+
 2018-08-24  Wilco Dijkstra  <wdijkstr@arm.com>
 
 	* math/Makefile: Remove empty files k_sin(f).c, k_cos(f).c.

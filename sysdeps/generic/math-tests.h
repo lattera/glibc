@@ -41,17 +41,6 @@
 
 #define EXCEPTION_TESTS(TYPE) MATH_TESTS_TG (EXCEPTION_TESTS_, , TYPE)
 
-/* Indicate whether the given exception trap(s) can be enabled
-   in feenableexcept.  If non-zero, the traps are always supported.
-   If zero, traps may or may not be supported depending on the
-   target (this can be determined by checking the return value
-   of feenableexcept).  This enables skipping of tests which use
-   traps.  By default traps are supported unless overridden.  */
-#ifndef EXCEPTION_ENABLE_SUPPORTED
-# define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)			\
-   (EXCEPTION_TESTS_float || EXCEPTION_TESTS_double)
-#endif
-
 /* Indicate whether exception traps, if enabled, occur whenever an
    exception flag is set explicitly, so it is not possible to set flag
    bits with traps enabled without causing traps to be taken.  If
@@ -66,3 +55,4 @@
 #include <math-tests-snan.h>
 #include <math-tests-snan-cast.h>
 #include <math-tests-snan-payload.h>
+#include <math-tests-trap.h>

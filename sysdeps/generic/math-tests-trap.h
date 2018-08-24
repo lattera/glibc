@@ -1,4 +1,5 @@
-/* Configuration for math tests.  AArch64 version.
+/* Configuration for math tests: support for enabling exception traps.
+   Generic version.
    Copyright (C) 2014-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,7 +17,16 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-/* Trapping exceptions are optional on AArch64.  */
-#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)	((EXCEPT) == 0)
+#ifndef _MATH_TESTS_TRAP_H
+#define _MATH_TESTS_TRAP_H 1
 
-#include_next <math-tests.h>
+/* Indicate whether the given exception trap(s) can be enabled in
+   feenableexcept.  If non-zero, the traps are always supported.  If
+   zero, traps may or may not be supported depending on the target
+   (this can be determined by checking the return value of
+   feenableexcept).  This enables skipping of tests which use traps.
+   By default traps are supported unless overridden.  */
+#define EXCEPTION_ENABLE_SUPPORTED(EXCEPT)		\
+  (EXCEPTION_TESTS_float || EXCEPTION_TESTS_double)
+
+#endif /* math-tests-trap.h.  */
